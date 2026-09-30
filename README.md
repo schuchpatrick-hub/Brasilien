@@ -16,7 +16,7 @@ Legende für den Status: ✅ gebucht · 🟡 gebucht, Details prüfen · ⏳ gep
 
 | Gruppe | Personen | Zeitraum |
 |---|---|---|
-| **A: Vorhut** | Jonas, Patrick, Steini, Lubo | 27.12.26 – ca. 20.01.27 |
+| **A: Vorhut** | Jonas, Patrick, Simon, Marco | 27.12.26 – ca. 20.01.27 |
 | **B: Nachzügler** | Dajo, Greisel | 06.01.27 – nach dem 21.01.27 (danach noch Rio) |
 
 Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha Grande wieder trennen.
@@ -55,9 +55,9 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | 11.–12.01. | Dschungel: Bootstouren, rosa Flussdelfine, Kaimansafari, Regenwald-Wanderungen, „Meeting of the Waters“ |
 | **Mi 13.01.** | Abfahrt von der Lodge 08:00, Ankunft Manaus ca. 11:00. Tag in Manaus ohne Hotel, mit Gepäck. Abends zum Flughafen |
 | **Do 14.01.** | **01:45 Nachtflug MAO → Rio (Ankunft ca. 06:40).** Danach Transfer nach Paraty (Uber ist laut Recherche für die Gruppe am günstigsten, ca. 4 h) |
-| 15.01. | Paraty: koloniale Altstadt, Bootsausflug zu den Inseln, Wasserfälle |
-| **Sa 16.01.** | Boot oder Fähre nach Ilha Grande (Vila do Abraão) |
-| 17.–19.01. | Lopes Mendes Beach, Schnorcheln, Kajak, Wandern, Entspannen |
+| 15.01. | Paraty: Bootstour zu Inseln und Schnorchelspots; alternativ Steinrutsche oder Trindade. Abends Live-Musik in der Altstadt |
+| **Sa 16.01.** | Boot oder Fähre nach Ilha Grande (Vila do Abraão), vorher buchen, z. B. bei Paraty Tours |
+| 17.–19.01. | Lopes Mendes, Cachoeira da Feiticeira, Palmas, Bootstouren, Footvolley (Details unten) |
 | **Mi 20.01.** | Gruppe A: Rückreise nach Hause (Details siehe unten) |
 | **Do 21.01.** | Gruppe B: weiter nach Rio (evtl. noch São Paulo), später Rückflug über São Paulo nach München |
 
@@ -69,9 +69,9 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 
 | Wer | Strecke | Datum | Details | Preis p. P. | Status |
 |---|---|---|---|---|---|
-| A (Jonas, Patrick, Steini) | MUC → Rom → São Paulo GRU | 27.12.26 | ca. 1,5 h + 1 h 10 min Umstieg + 12 h; keine Sitzplätze reserviert (beim Check-in versuchen) | 1.120 € | ✅ gebucht am 19.08. |
-| A (Jonas, Patrick, Steini) | Rückflug nach MUC | ca. 20.01.27 | **Flughafen und Uhrzeit stehen nicht im Chat.** Gabelflug wurde verworfen, also vermutlich ab São Paulo | inkl. | 🟡 |
-| Lubo | wie Gruppe A? | 27.12.26 | wohl separat gebucht; Rückflug 15./16. oder 20.01. war offen | ? | ❓ |
+| A (Jonas, Patrick, Simon) | MUC → Rom → São Paulo GRU | 27.12.26 | ca. 1,5 h + 1 h 10 min Umstieg + 12 h; keine Sitzplätze reserviert (beim Check-in versuchen) | 1.120 € | ✅ gebucht am 19.08. |
+| A (Jonas, Patrick, Simon) | Rückflug nach MUC | ca. 20.01.27 | **Flughafen und Uhrzeit stehen nicht im Chat.** Gabelflug wurde verworfen, also vermutlich ab São Paulo | inkl. | 🟡 |
+| Marco | wie Gruppe A? | 27.12.26 | wohl separat gebucht; Rückflug 15./16. oder 20.01. war offen | ? | ❓ |
 | B (Dajo, Greisel) | MUC → Frankfurt → Rio GIG | an 06.01.27, 06:10 | | 1.300 € | ✅ |
 | B (Dajo, Greisel) | Rio → São Paulo (Umstieg) → MUC | nach dem 21.01. | Datum im Chat nicht genannt | inkl. | ✅ |
 
@@ -96,7 +96,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | Rio | **Tabas – Cena Carioca** | 30.12.–06.01. | **nicht stornierbar**, Gym vorhanden | – | Jonas (01.09.) |
 | Foz do Iguaçu | Name prüfen. Im Gespräch waren Hotel Portinari Ponte da Amizade (im Chat angepinnt), Della Foz, Hotel Baviera Iguassu, Che Hermano Suítes | 06.–09.01. | laut Greisel ca. 600 € p. P. für Amazonas plus Unterkunft Wasserfälle | ca. 80 € p. P. | beim Treffen am 09.09. |
 | Manaus | **Casa 307** | 09.–10.01. | Lage und Bewertung top, 2er-Zimmer für Dajo & Greisel | 14 € p. P. | Jonas (14.09.) |
-| Amazonas | **Juma Kabanas: Nature Experience Package** (3 Nächte) | 10.–13.01. | Übernachtung, Essen, Abholung und Rückfahrt zum Hotel inklusive, Bar extra. Rückfahrt 13.01. um 08:00, in Manaus ca. 11:00 | 520 € p. P. | Buchungsnummer hat Lubo/Greisel |
+| Amazonas | **Juma Kabanas: Nature Experience Package** (3 Nächte) | 10.–13.01. | Übernachtung, Essen, Abholung und Rückfahrt zum Hotel inklusive, Bar extra. Rückfahrt 13.01. um 08:00, in Manaus ca. 11:00 | 520 € p. P. | Buchungsnummer liegt bei Marco oder Greisel |
 | Paraty | **Geko Pousada Paraty** | 14.–16.01. | 3 Zimmer für 6 Personen, **inkl. Frühstück**, Frühstück am Strand, **kostenlos stornierbar** | 526 € gesamt (88 € p. P., über Check24) | Dajo & Greisel (16.09.) |
 | Ilha Grande | **offen**, muss in **Vila do Abraão** liegen. Vorschlag: Balaio Hostel | 16.–20.01. (A) / 21.01. (B) | | – | – |
 
@@ -128,14 +128,34 @@ Abgerechnet wird über **Splitwise**, mit zwei Gruppen: eine für die Vierer-Vor
 2. **Flug CGH → SDU am 30.12. buchen** (Patrick). Dafür braucht er die Reisepassdaten von allen.
 3. **Unterkunft Ilha Grande** in Vila do Abraão für 16.–20.01. bzw. 21.01. buchen.
 4. **Rückreise Gruppe A am 20.01. festhalten**: Flughafen und Uhrzeit. Falls ab São Paulo-GRU: von Ilha Grande sind das Boot plus ca. 5–6 h Straße. Dann eher früh am 20.01. starten oder die letzte Nacht woanders verbringen.
-5. **Lubo:** Rückflugdatum (15./16. oder 20.01.) klären. Prüfen, ob er in der Guarujá-Buchung mitgezählt ist (gebucht wurde für 3 Personen).
+5. **Marco:** Rückflugdatum (15./16. oder 20.01.) klären. Prüfen, ob er in der Guarujá-Buchung mitgezählt ist (gebucht wurde für 3 Personen).
 6. **Iguaçu-Hotel:** Name und Buchungsbestätigung zentral ablegen.
 7. **Gepäck am 13.01. in Manaus:** Das Hotel lagert nur, wenn eine weitere Nacht gebucht ist. Plan ist, das Gepäck mit in die Lodge zu nehmen (Jonas hat angefragt). Bestätigung festhalten.
 8. **Umstieg am 06.01. (Gruppe B):** Landung 06:10, Weiterflug 10:40 auf getrennten Tickets. Wenn der Flieger aus Frankfurt Verspätung hat, gibt es keinen Anspruch auf Umbuchung, also am besten einen flexiblen Tarif wählen.
-9. **Transfers organisieren:** GRU → Guarujá (27.12.), Rio → Paraty (14.01.), Paraty → Ilha Grande (16.01.), Ilha Grande → Flughafen (20./21.01.).
-10. **Silvester-Outfit:** komplett weiß.
+9. **Weiterreise Paraty → Ilha Grande (16.01.)** vorher buchen, z. B. bei Paraty Tours.
+10. **Transfers organisieren:** GRU → Guarujá (27.12.), Rio → Paraty (14.01.), Paraty → Ilha Grande (16.01.), Ilha Grande → Flughafen (20./21.01.).
+11. **Silvester-Outfit:** komplett weiß.
 
 ---
+
+## Tipps vor Ort
+
+### Paraty
+- **Bootstouren** mit Taxiboot oder Privatboot zu Inseln und Schnorchelspots, an Bord meist Drinks und Musik
+- Natürliche **Steinrutsche** im Fluss
+- Ausflug nach **Trindade**, Surfer- und Fischerdorf
+- **Nachtleben** in der kolonialen, autofreien Altstadt: Tische auf der Straße, überall Live-Musik
+- Lokaler Drink: **Gabriela Cravo e Canela**
+- Weiterreise nach Ilha Grande vorher buchen, z. B. bei **Paraty Tours**
+
+### Ilha Grande
+- Traumstrand **Lopes Mendes**, mit dem Bootstaxi oder zu Fuß
+- **Footvolley** am Strand von Vila do Abraão
+- Wanderung zum Wasserfall **Cachoeira da Feiticeira**
+- Wanderung zum Strand von **Palmas**
+- **Bootstouren**
+- Party: **Aquario Hostel Bar & Night Club**
+- Essen: Restaurant **Lua e Mar**, Fisch und Moqueca (Fischeintopf)
 
 ## Gesundheit & Einreise
 
