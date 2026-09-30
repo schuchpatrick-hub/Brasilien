@@ -17,9 +17,26 @@
     <div class="fact"><strong>4</strong><span>Inlandsflüge, alle noch offen</span></div>
     <div class="fact"><strong>6 / 7</strong><span>Unterkünfte gebucht</span></div>
   </div>
+  <nav class="toc" aria-label="Inhalt">
+    <a href="#heute">Heute</a><a href="#route">Route</a><a href="#tage">Tag für Tag</a><a href="#todos">To-dos</a><a href="#fluege">Flüge</a><a href="#kosten">Kosten</a><a href="#praktisch">Praktisches</a><a href="#packen">Packen</a><a href="#downloads">Downloads</a>
+  </nav>
 </header>
 
-<section>
+
+<section id="heute" class="today-wrap">
+  <div class="today-head">
+    <h2>Heute</h2>
+    <div class="seg" role="group" aria-label="Ansicht für">
+      <button type="button" id="g-a" data-g="a" aria-pressed="true">Vorhut</button>
+      <button type="button" id="g-b" data-g="b" aria-pressed="false">Dajo &amp; Greisel</button>
+    </div>
+  </div>
+  <div id="today" class="today" aria-live="polite">
+    <p class="note">Die Heute-Ansicht braucht JavaScript. Alle Tage stehen weiter unten.</p>
+  </div>
+</section>
+
+<section id="route">
   <h2>Die Route</h2>
   <figure>
     %%MAP%%
@@ -67,30 +84,27 @@
   </div>
 </section>
 
-<section>
+
+<section id="tage">
   <h2>Tag für Tag</h2>
-  <dl class="days">
-    <dt class="k">So 27.12.</dt><dd>Vorhut fliegt morgens ab München (laut Chat ab ca. 06:25): MUC → Rom → São Paulo GRU, ca. 12 h über den Atlantik. Danach mit Uber oder Transfer nach Guarujá (ca. 1,5–2 h).</dd>
-    <dt>28.–29.12.</dt><dd>Strandtage an der Praia da Enseada</dd>
-    <dt class="k">Mi 30.12.</dt><dd>Flug <span class="code">CGH → SDU</span>. Das sind die Stadtflughäfen, nicht die internationalen. Check-in in Rio</dd>
-    <dt class="k">Do 31.12.</dt><dd>Silvester an der Copacabana, Dresscode ganz in Weiß</dd>
-    <dt>01.–05.01.</dt><dd>Rio</dd>
-    <dt class="k">Mi 06.01.</dt><dd>Dajo & Greisel landen ca. 06:10 in <span class="code">GIG</span>. Gemeinsamer Flug <span class="code">GIG → IGU</span> ca. 10:40</dd>
-    <dt>07.–08.01.</dt><dd>Iguaçu-Fälle, beide Seiten</dd>
-    <dt class="k">Sa 09.01.</dt><dd>Flug <span class="code">IGU → MAO</span> mit Umstieg, 1 Nacht in der Casa 307</dd>
-    <dt class="k">So 10.01.</dt><dd>Abholung zur Juma Lodge</dd>
-    <dt>11.–12.01.</dt><dd>Dschungel</dd>
-    <dt class="k">Mi 13.01.</dt><dd>08:00 ab Lodge, ca. 11:00 in Manaus. Kein Hotel, abends zum Flughafen</dd>
-    <dt class="k">Do 14.01.</dt><dd><span class="code">01:45 MAO → GIG</span>, an 06:40. Danach Uber oder Transfer nach Paraty (ca. 4 h)</dd>
-    <dt>15.01.</dt><dd>Paraty</dd>
-    <dt class="k">Sa 16.01.</dt><dd>Boot oder Fähre nach Ilha Grande</dd>
-    <dt>17.–19.01.</dt><dd>Inselzeit</dd>
-    <dt class="k">Mi 20.01.</dt><dd>Vorhut reist heim</dd>
-    <dt class="k">Do 21.01.</dt><dd>Dajo & Greisel fahren weiter nach Rio</dd>
-  </dl>
+  <p class="note sub-lead">Zeigt die Tage der oben gewählten Gruppe. „Idee“ heißt: Vorschlag, noch nichts gebucht.</p>
+  <div id="days" class="days2"></div>
 </section>
 
-<section>
+
+<section id="todos">
+  <h2>To-dos</h2>
+  <p class="note sub-lead" id="todo-mode">Abhaken und eintragen, wer sich kümmert. Das sehen alle, die die Seite öffnen.</p>
+  <ol id="todo-list" class="todo2"></ol>
+  <form id="todo-add" class="todo-add" hidden>
+    <label for="todo-new" class="sr">Neuer Punkt</label>
+    <input id="todo-new" type="text" maxlength="140" placeholder="Eigenen Punkt hinzufügen, z. B. „Adapter kaufen“" autocomplete="off">
+    <button type="submit">Hinzufügen</button>
+  </form>
+  <p id="todo-status" class="note" role="status"></p>
+</section>
+
+<section id="fluege">
   <h2>Flüge</h2>
   <h3>Langstrecke</h3>
   <div class="tbl"><table>
@@ -116,23 +130,7 @@
   <p class="note" style="margin-top:10px">Richtpreise von Skyscanner (24.08.). Laut Jonas werden Flüge 8–10 Wochen vorher günstiger, also Ende Oktober bis Anfang November. Dann ist voraussichtlich auch Dajos neuer Reisepass da (ab der Woche vom 19.10.).</p>
 </section>
 
-<section>
-  <h2>Offene Punkte</h2>
-  <ol class="todo">
-    <li class="hot"><div><b>Inlandsflüge buchen</b>, sobald Dajos Pass da ist. Beim Nachtflug aufpassen: <b>Abflug 14.01. um 01:45</b> heißt, ihr müsst <b>am Abend des 13.01.</b> am Flughafen sein. Auf das richtige Datum achten!</div></li>
-    <li class="hot"><div><b>CGH → SDU am 30.12.</b> buchen (Patrick). Dafür braucht er die Passdaten von allen.</div></li>
-    <li class="hot"><div><b>Unterkunft Ilha Grande</b> in Vila do Abraão für 16.–20.01. bzw. 21.01. buchen.</div></li>
-    <li><div><b>Rückflug der Vorhut am 20.01.</b> festhalten (Flughafen, Uhrzeit). Falls ab São Paulo-GRU: von Ilha Grande sind das Boot plus ca. 5–6 h Straße, also früh losfahren oder die letzte Nacht woanders verbringen.</div></li>
-    <li><div><b>Lubo:</b> Rückflugdatum klären und prüfen, ob er in der Guarujá-Buchung mitgezählt ist (gebucht für 3 Personen).</div></li>
-    <li><div><b>Iguaçu-Hotel:</b> Name und Bestätigung zentral ablegen.</div></li>
-    <li><div><b>Gepäck am 13.01.:</b> Das Hotel in Manaus lagert nur, wenn eine Nacht gebucht ist. Plan ist, das Gepäck mit in die Lodge zu nehmen. Bestätigung der Lodge festhalten.</div></li>
-    <li><div><b>06.01. Umstieg in Rio:</b> Dajo & Greisel landen 06:10 und fliegen 10:40 weiter, auf getrennten Tickets. Bei Verspätung aus Frankfurt gibt es keinen Umbuchungsanspruch, also am besten einen flexiblen Tarif wählen.</div></li>
-    <li><div><b>Transfers:</b> GRU → Guarujá (27.12.), Rio → Paraty (14.01., Uber ist für die Gruppe meist am günstigsten), Paraty → Ilha Grande (16.01.), Ilha Grande → Flughafen.</div></li>
-    <li><div><b>Silvester-Outfit:</b> komplett weiß.</div></li>
-  </ol>
-</section>
-
-<section>
+<section id="kosten">
   <h2>Kosten pro Person</h2>
   <div class="tbl"><table style="min-width:420px">
     <thead><tr><th>Posten</th><th style="text-align:right">Vorhut</th><th style="text-align:right">Dajo & Greisel</th></tr></thead>
@@ -152,7 +150,22 @@
   <p class="note" style="margin-top:10px">Abgerechnet wird über zwei Splitwise-Gruppen: eine für die Vorhut (Guarujá, Rio), eine für alle sechs.</p>
 </section>
 
-<section class="cols">
+
+<section id="praktisch">
+  <h2>Praktisches</h2>
+  <p class="note sub-lead">Allgemeine Reiseinfos, nicht aus dem Chat. Vor Abflug kurz gegenchecken.</p>
+  <div class="grid-info">
+    <div class="info"><h3>Zeit</h3><p>Rio, São Paulo, Foz do Iguaçu: <b>4 h hinter Deutschland</b> (UTC−3, keine Sommerzeit). Manaus: <b>5 h</b> (UTC−4). Flugzeiten auf dieser Seite sind Ortszeit.</p></div>
+    <div class="info"><h3>Geld</h3><p>Brasilianischer Real (R$). Karte geht fast überall, etwas Bargeld für Strand und Boote. Im Restaurant stehen oft 10 % „serviço“ schon auf der Rechnung. Für Argentinien reicht meist die Karte.</p></div>
+    <div class="info"><h3>Strom</h3><p>Steckdosen Typ N (auch C), Spannung je nach Region 127 V oder 220 V. Flache Eurostecker passen meist, Schuko-Stecker nicht, also Adapter mitnehmen. Handy- und Laptop-Netzteile können beides.</p></div>
+    <div class="info"><h3>Unterwegs</h3><p>Uber und 99 funktionieren in allen Städten; für die Transfers mit sechs Leuten oft günstiger als Shuttles. eSIM vorab besorgen, Offline-Karten und Portugiesisch in Google Übersetzer laden (in der Lodge kaum Netz).</p></div>
+    <div class="info"><h3>Wetter im Januar</h3><p>Hochsommer. Rio und Küste: 25–35 °C, schwül, nachmittags Gewitter. Iguaçu: heiß, feucht. Amazonas: Regenzeit, um 30 °C. Sonne sehr stark: hoher Lichtschutzfaktor.</p></div>
+    <div class="info"><h3>Sicherheit</h3><p>Handy nicht offen auf der Straße, am Strand keine Wertsachen liegen lassen, nachts Uber statt zu Fuß. Leitungswasser nicht trinken. Kopien von Pass und Impfpass separat speichern.</p></div>
+    <div class="info"><h3>Notruf</h3><p><b>190</b> Polizei · <b>192</b> Rettungsdienst · <b>193</b> Feuerwehr. Auslandskrankenversicherung vorher prüfen.</p></div>
+  </div>
+</section>
+
+<section class="cols" id="gesundheit">
   <div>
     <h2>Gesundheit & Einreise</h2>
     <ul class="plain">
@@ -163,13 +176,47 @@
       <li>CPF (Steuernummer) wird bewusst nicht beantragt.</li>
     </ul>
   </div>
-  <div>
-    <h2>Packliste Dschungel</h2>
-    <div class="pack">
-      <span class="chip">lange Hosen & Shorts</span><span class="chip">Langarmshirts</span><span class="chip">Tagesrucksack</span><span class="chip">Sonnenbrille</span><span class="chip">Insektenschutz</span><span class="chip">Regenjacke</span><span class="chip">Cap / Hut</span><span class="chip">geschlossene Schuhe</span><span class="chip">Taschenlampe</span><span class="chip">Fernglas</span><span class="chip">Badesachen</span><span class="chip">Kamera</span><span class="chip">Ersatzakkus</span>
-    </div>
-    <p class="note" style="margin-top:10px">Empfehlung der Juma Lodge</p>
+</section>
+
+
+<section id="packen">
+  <h2>Packlisten</h2>
+  <p class="note sub-lead">Häkchen werden nur auf deinem Gerät gespeichert, jeder hat seine eigene Liste.</p>
+  <div class="cols">
+    <div><h3>Allgemein</h3><ul class="pack2" data-list="allg">
+      <li>Reisepass (mind. 6 Monate gültig)</li><li>Impfpass mit Gelbfieber</li><li>Kopien von Pass und Buchungen</li><li>Kreditkarten (zwei verschiedene)</li><li>Auslandskrankenversicherung</li><li>Steckdosen-Adapter</li><li>Powerbank</li><li>Sonnencreme LSF 50</li><li>Mückenspray mit DEET</li><li>Weißes Silvester-Outfit</li><li>Badesachen, Flip-Flops</li><li>Leichte Regenjacke</li><li>Wasserdichter Beutel für Bootstouren</li><li>Reiseapotheke</li><li>Schlafmaske &amp; Ohrstöpsel (Nachtflug)</li><li>Trinkflasche</li>
+    </ul></div>
+    <div><h3>Dschungel <span class="note">(Empfehlung der Juma Lodge)</span></h3><ul class="pack2" data-list="jungle">
+      <li>Lange Hosen und Shorts</li><li>Langarmshirts und T-Shirts</li><li>Kleiner Tagesrucksack</li><li>Sonnenbrille</li><li>Insektenschutz</li><li>Regenjacke</li><li>Cap oder Hut</li><li>Geschlossene Schuhe</li><li>Taschenlampe</li><li>Fernglas</li><li>Badesachen</li><li>Kamera</li><li>Ersatzakkus und Ladegerät</li>
+    </ul></div>
   </div>
+</section>
+
+
+<section id="downloads">
+  <h2>Downloads &amp; Kalender</h2>
+  <div class="cols">
+    <div class="dl">
+      <h3>Offline-Version</h3>
+      <p>Die ganze Übersicht als PDF, für die Lodge ohne Netz.</p>
+      <button type="button" id="pdf-btn" class="btn">PDF speichern</button>
+      <p class="note">Falls der Button nicht geht: <a href="https://github.com/schuchpatrick-hub/Brasilien/blob/claude/brazil-trip-overview-rqdl1r/brasilien-reise.pdf" target="_blank" rel="noopener">PDF auf GitHub</a></p>
+    </div>
+    <div class="dl">
+      <h3>Kalender fürs Handy</h3>
+      <p>Alle Flüge, Unterkünfte und Termine als Kalenderdatei. Auf GitHub „Download raw file“ tippen und die Datei öffnen.</p>
+      <p><a class="btn ghost" href="https://github.com/schuchpatrick-hub/Brasilien/blob/claude/brazil-trip-overview-rqdl1r/kalender/vorhut.ics" target="_blank" rel="noopener">Kalender Vorhut</a>
+         <a class="btn ghost" href="https://github.com/schuchpatrick-hub/Brasilien/blob/claude/brazil-trip-overview-rqdl1r/kalender/dajo-greisel.ics" target="_blank" rel="noopener">Kalender Dajo &amp; Greisel</a></p>
+      <p class="note">Einzelne Flüge direkt in Google Kalender:</p>
+      <ul id="gcal" class="gcal"></ul>
+    </div>
+  </div>
+</section>
+
+<section id="whatsapp">
+  <h2>Kurzfassung für WhatsApp</h2>
+  <pre id="wa-text" class="wa" tabindex="0"></pre>
+  <button type="button" id="wa-copy" class="btn">Text kopieren</button> <span id="wa-status" class="note" role="status"></span>
 </section>
 
 <section>

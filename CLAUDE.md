@@ -8,23 +8,30 @@ Reiseübersicht, die bei neuen Infos (Buchungen, Chat-Exporte, Screenshots) aktu
 | Datei | Zweck |
 |---|---|
 | `README.md` | Hauptübersicht (Route, Tag für Tag, Flüge, Unterkünfte, Kosten, offene Punkte, Gesundheit) |
-| `web/page_body.html` | Inhalt der Webseite, gleiche Fakten wie README; `%%MAP%%` = Platzhalter für die Karte |
+| `web/trip.json` | **Datenquelle** für Heute-Ansicht, Tag für Tag, To-do-Liste und Kalenderdateien (Tage, Termine mit UTC-Zeiten, Unterkünfte, To-dos) |
+| `web/page_body.html` | Statischer Inhalt der Webseite (Stationen, Flüge, Kosten, Praktisches, Packlisten, Downloads); `%%MAP%%` = Karte |
+| `web/page_script.html` | JavaScript der Webseite: Heute/Countdown, Gruppen-Umschalter, gemeinsame To-dos (`db`), Packlisten (localStorage), PDF-Download, WhatsApp-Text; `%%TRIP%%` = trip.json |
 | `web/page_head.html` | Titel + CSS der Webseite (Farb-Tokens, Hell/Dunkel) |
 | `web/poster_template.html` | Rahmen für das Reisebild (Titel, Stationsleiste unten) |
 | `tools/gen_map.py` | Zeichnet die Karte: Orte, Flugbögen, Beschriftungen, Südost-Ausschnitt |
 | `tools/build.py` | Baut `reisebild.svg`, `reisebild.png` und `web/brasilien-reise.html` neu |
 
-Generiert (nicht von Hand bearbeiten): `reisebild.svg`, `reisebild.png`, `web/brasilien-reise.html`.
+Generiert (nicht von Hand bearbeiten): `reisebild.svg`, `reisebild.png`, `web/brasilien-reise.html`,
+`kalender/*.ics`, `brasilien-reise.pdf`.
 
 ## Aktualisieren
 
-1. Fakten ändern in **beiden**: `README.md` und `web/page_body.html` (plus ggf. Stationsleiste in
-   `web/poster_template.html` und Beschriftungen/Daten in `tools/gen_map.py`).
+1. Fakten ändern in `README.md`, `web/page_body.html` **und** `web/trip.json` (plus ggf. Stationsleiste in
+   `web/poster_template.html`, Beschriftungen in `tools/gen_map.py`, WhatsApp-Text in `web/page_script.html`).
+   Erledigte To-dos nicht aus trip.json löschen, solange die geteilte Liste sie abhakt; neue To-dos mit neuer `id`.
 2. `pip install playwright` (einmalig, für das PNG; Chromium liegt in `/opt/pw-browsers`), dann
    `python3 tools/build.py`. Die Natural-Earth-Daten werden beim ersten Lauf nach `tools/data/` geladen (gitignored).
 3. Karte nach Änderungen einmal ansehen (`reisebild.png`), auf überlappende Beschriftungen achten.
 4. Webseite neu veröffentlichen: Artifact-Publish von `web/brasilien-reise.html` mit
-   `url: https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE` (vorher `action: read`), damit der Link gleich bleibt.
+   `url: https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE` (vorher `action: read`), damit der Link gleich bleibt,
+   und `files: {"brasilien-reise.pdf": "brasilien-reise.pdf"}` (PDF-Button). `capabilities` weglassen, dann bleiben
+   `db`, `user`, `downloads` erhalten. Stand der geteilten To-dos: `ArtifactData` `list` auf Collection `todos`
+   (Dokument-ID = To-do-`id`, Felder `done`, `who`; eigene Punkte mit `custom: true`, `title`).
 5. „Stand“-Datum in README und Webseite anpassen, committen, pushen.
 
 ## Regeln

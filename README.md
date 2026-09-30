@@ -4,6 +4,10 @@
 
 ![Reisebild: Route durch Brasilien](reisebild.png)
 
+**Webseite mit Heute-Ansicht und gemeinsamen To-dos:** https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE ·
+**Offline:** [PDF](brasilien-reise.pdf) · **Kalender fürs Handy:** [Vorhut](kalender/vorhut.ics) · [Dajo & Greisel](kalender/dajo-greisel.ics)
+(auf GitHub „Download raw file“, dann öffnen)
+
 Legende für den Status: ✅ gebucht · 🟡 gebucht, Details prüfen · ⏳ geplant, noch nicht gebucht · ❓ unklar
 
 ---
