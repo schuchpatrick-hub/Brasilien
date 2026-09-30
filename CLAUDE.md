@@ -11,7 +11,7 @@ Reiseübersicht, die bei neuen Infos (Buchungen, Chat-Exporte, Screenshots) aktu
 | `web/trip.json` | **Datenquelle** für Heute-Ansicht, Tag für Tag und Kalenderdateien (Tage, Termine mit UTC-Zeiten, Unterkünfte, Crew, Drinks, Real-Rechner) |
 | `web/trip.json` → `flights`, `costs` | Flüge als Bordkarten (Status `booked`/`open`/`check`, Warnhinweise, Suchlinks für offene Flüge) und Kosten pro Gruppe; auf der Webseite nicht mehr in `page_body.html` pflegen |
 | `web/page_body.html` | Statischer Inhalt der Webseite; jede `<section>` hat `data-tab` = Kapitel, zu dem der Reiter oben springt; alles bleibt untereinander sichtbar (Reihenfolge: uebersicht, tage-tab, reise, crew-tab, drinks-tab, unterwegs-tab = Sprache + Real-Rechner, infos, vorfreude-tab, extras; Reiter und Kapitel müssen in derselben Reihenfolge stehen) (Stationen, Flüge, Kosten, Praktisches, Packlisten, Downloads); `%%MAP%%` = Karte |
-| `web/page_script.html` | JavaScript der Webseite: Heute/Countdown, Gruppen-Umschalter, Drinks und Check-ins (`db`), Real-Rechner, Packlisten (localStorage), PDF-Download, WhatsApp-Text; `%%TRIP%%` = trip.json |
+| `web/page_script.html` | JavaScript der Webseite: Heute/Countdown, Gruppen-Umschalter, Drinks und Check-ins (`db`), Real-Rechner, Packlisten (localStorage), PDF-Download, Vorfreude-Kalender, Zeitkapsel; `%%TRIP%%` = trip.json |
 | `web/page_head.html` | Titel + CSS der Webseite (Farb-Tokens, Hell/Dunkel) |
 | `web/poster_template.html` | Rahmen für das Reisebild (Titel, Stationsleiste unten) |
 | `tools/gen_map.py` | Zeichnet die Karte: Orte, Flugbögen, Beschriftungen, Südost-Ausschnitt |
@@ -34,7 +34,7 @@ Die Webseite erst nach dem Merge neu veröffentlichen.
 
 
 1. Fakten ändern in `README.md`, `web/page_body.html` **und** `web/trip.json` (plus ggf. Stationsleiste in
-   `web/poster_template.html`, Beschriftungen in `tools/gen_map.py`, WhatsApp-Text in `web/page_script.html`). Offene Punkte stehen nur in der README (eine To-do-Liste gibt es auf der Webseite nicht mehr).
+   `web/poster_template.html`, Beschriftungen in `tools/gen_map.py`). Offene Punkte stehen nur in der README (eine To-do-Liste gibt es auf der Webseite nicht mehr).
 2. `pip install playwright` (einmalig, für das PNG; Chromium liegt in `/opt/pw-browsers`), dann
    `python3 tools/build.py`. Die Natural-Earth-Daten werden beim ersten Lauf nach `tools/data/` geladen (gitignored).
 3. Karte nach Änderungen einmal ansehen (`reisebild.png`), auf überlappende Beschriftungen achten.

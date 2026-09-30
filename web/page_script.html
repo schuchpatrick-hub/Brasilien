@@ -208,35 +208,6 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   });
 })();
 
-/* ---------- WhatsApp-Kurzfassung ---------- */
-function renderWhatsApp() {
-  const txt = [
-    '🇧🇷 Brasilien 26/27, Stand 30.09.',
-    '',
-    '27.–31.12. Guarujá, Casa Praiana ✅',
-    '31.12.–06.01. Rio, Tabas – Cena Carioca ✅ (ab Silvester, in Weiß!)',
-    '06.–09.01. Foz do Iguaçu 🟡 Hotelname prüfen',
-    '09.–14.01. Manaus + Juma Lodge ✅',
-    '14.–16.01. Paraty, Geko Pousada ✅',
-    '16.–20./21.01. Ilha Grande ❗ Unterkunft offen',
-    '',
-    'Noch zu buchen:\n• Inlandsflüge (31.12., 06.01., 09.01., 14.01.)\n• Unterkunft Ilha Grande',
-    '',
-    'Alles mit Karte, Tagen und Drinks: https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE'
-  ].join('\n');
-  document.getElementById('wa-text').textContent = txt;
-}
-document.getElementById('wa-copy').addEventListener('click', () => {
-  const txt = document.getElementById('wa-text').textContent;
-  const done = () => { document.getElementById('wa-status').textContent = 'Kopiert.'; };
-  const fallback = () => {
-    const r = document.createRange(); r.selectNodeContents(document.getElementById('wa-text'));
-    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
-    document.getElementById('wa-status').textContent = 'Text ist markiert, jetzt kopieren.';
-  };
-  try { navigator.clipboard.writeText(txt).then(done, fallback); } catch (e) { fallback(); }
-});
-
 /* ---------- Sprachfuehrer mit Sprachausgabe ---------- */
 (function () {
   const box = document.getElementById('phrases');
@@ -1082,5 +1053,4 @@ if (!PRINT) {
 
 /* ---------- Start ---------- */
 setGroup(G);
-renderWhatsApp();
 </script>

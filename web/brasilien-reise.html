@@ -640,7 +640,7 @@ ul.pack2{list-style:none;margin:0;padding:0;display:grid;gap:2px}
 @media (max-width:560px){.day{grid-template-columns:1fr}.today li{grid-template-columns:4.5rem 1fr}}
 @media print{
   body{background:#fff;color:#000}
-  .toc,.seg,#heute,#downloads,#whatsapp,.btn{display:none!important}
+  .toc,.seg,#heute,#downloads,.btn{display:none!important}
   section{break-inside:auto}.day,.stop,tr,.info{break-inside:avoid}
   figure{break-inside:avoid}
   .wrap{gap:26px;padding-block:0}
@@ -1107,12 +1107,6 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
   </div>
 </section>
 
-<section id="whatsapp" data-tab="extras">
-  <h2>Kurzfassung für WhatsApp</h2>
-  <pre id="wa-text" class="wa" tabindex="0"></pre>
-  <button type="button" id="wa-copy" class="btn">Text kopieren</button> <span id="wa-status" class="note" role="status"></span>
-</section>
-
 <section id="ideen" data-tab="extras">
   <div class="warnbox"><b>Ideen am Rand:</b> Búzios statt Paraty · Florianópolis (1,5 h Flug von Rio, Strand und Nachtleben) · Ilhabela statt Guarujá (schöner, aber 3,5 h von São Paulo). Einen Gabelflug hattet ihr verworfen, weil er nicht günstiger war.</div>
 </section>
@@ -1330,35 +1324,6 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     }
   });
 })();
-
-/* ---------- WhatsApp-Kurzfassung ---------- */
-function renderWhatsApp() {
-  const txt = [
-    '🇧🇷 Brasilien 26/27, Stand 30.09.',
-    '',
-    '27.–31.12. Guarujá, Casa Praiana ✅',
-    '31.12.–06.01. Rio, Tabas – Cena Carioca ✅ (ab Silvester, in Weiß!)',
-    '06.–09.01. Foz do Iguaçu 🟡 Hotelname prüfen',
-    '09.–14.01. Manaus + Juma Lodge ✅',
-    '14.–16.01. Paraty, Geko Pousada ✅',
-    '16.–20./21.01. Ilha Grande ❗ Unterkunft offen',
-    '',
-    'Noch zu buchen:\n• Inlandsflüge (31.12., 06.01., 09.01., 14.01.)\n• Unterkunft Ilha Grande',
-    '',
-    'Alles mit Karte, Tagen und Drinks: https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE'
-  ].join('\n');
-  document.getElementById('wa-text').textContent = txt;
-}
-document.getElementById('wa-copy').addEventListener('click', () => {
-  const txt = document.getElementById('wa-text').textContent;
-  const done = () => { document.getElementById('wa-status').textContent = 'Kopiert.'; };
-  const fallback = () => {
-    const r = document.createRange(); r.selectNodeContents(document.getElementById('wa-text'));
-    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
-    document.getElementById('wa-status').textContent = 'Text ist markiert, jetzt kopieren.';
-  };
-  try { navigator.clipboard.writeText(txt).then(done, fallback); } catch (e) { fallback(); }
-});
 
 /* ---------- Sprachfuehrer mit Sprachausgabe ---------- */
 (function () {
@@ -2205,5 +2170,4 @@ if (!PRINT) {
 
 /* ---------- Start ---------- */
 setGroup(G);
-renderWhatsApp();
 </script>
