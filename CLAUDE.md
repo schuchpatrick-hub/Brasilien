@@ -38,7 +38,7 @@ Generiert (nicht von Hand bearbeiten): `reisebild.svg`, `reisebild.png`, `web/br
 ## Crew-Profile
 
 Steckbriefe stehen in `web/trip.json` → `crew` (ein Eintrag mit `facts`/`quote` wird als große Karte gezeigt).
-**Fotos liegen nur im Artifact** (`crew/<id>.jpg`, 480×480, rund zugeschnitten), nicht im öffentlichen Repo
+**Fotos liegen nur im Artifact** (`crew/<id>.jpg` 480×480 fürs runde Profilbild, `crew/<id>-gross.jpg` max. 1200 px für die Vergrößerung per Klick), nicht im öffentlichen Repo
 (`web/crew/` ist gitignored). Beim Neuveröffentlichen `crew/...` nicht in `files` auf `null` setzen, dann bleiben sie
 erhalten; bei Bedarf mit `Artifact` `action: read` + `path: "crew/<id>.jpg"` zurückholen. Im PDF werden keine Fotos gezeigt.
 Alle sechs haben der Verwendung ihres Fotos zugestimmt (laut Patrick, 30.09.).

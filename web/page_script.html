@@ -317,7 +317,7 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   const el = document.getElementById('crew-list');
   el.innerHTML = TRIP.crew.map(p => {
     const full = !!(p.facts && p.facts.length);
-    const pic = p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="Foto von ' + esc(p.name) + '" loading="lazy">' : esc(p.name[0]);
+    const pic = p.photo && !PRINT ? '<button type="button" class="zoom" data-id="' + esc(p.id) + '" aria-label="Foto von ' + esc(p.name) + ' vergrößern"><img src="' + esc(p.photo) + '" alt="Foto von ' + esc(p.name) + '" loading="lazy"></button>' : esc(p.name[0]);
     let h = '<article class="pcard' + (full ? ' full' : '') + '"><div class="avatar">' + pic + '</div><div>';
     h += '<h3>' + esc(p.name) + (p.nick ? '<span class="nick">' + esc(p.nick) + '</span>' : '') + '</h3>';
     if (p.role) h += '<span class="role">' + esc(p.role) + '</span>';
@@ -326,6 +326,27 @@ document.getElementById('wa-copy').addEventListener('click', () => {
     if (!full) h += '<div class="team">' + esc(gName(p.team)) + '</div><div class="soon">Steckbrief folgt</div>';
     return h + '</div></article>';
   }).join('');
+
+  const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lightbox-img');
+  let lastFocus = null;
+  function open(p) {
+    lastFocus = document.activeElement;
+    lbImg.src = p.photoLarge || p.photo; lbImg.alt = 'Foto von ' + p.name;
+    document.getElementById('lightbox-cap').textContent = p.name + (p.role ? ' · ' + p.role : '');
+    lb.hidden = false; document.body.style.overflow = 'hidden';
+    document.getElementById('lightbox-close').focus();
+  }
+  function close() {
+    if (lb.hidden) return;
+    lb.hidden = true; document.body.style.overflow = '';
+    if (lastFocus) lastFocus.focus();
+  }
+  el.addEventListener('click', e => {
+    const b = e.target.closest('.zoom'); if (!b) return;
+    open(TRIP.crew.find(p => p.id === b.dataset.id));
+  });
+  lb.addEventListener('click', close);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 })();
 
 /* ---------- Reiter = Kapitel-Sprungmarken (alles bleibt untereinander sichtbar) ---------- */
