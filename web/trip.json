@@ -860,13 +860,44 @@
       "photoLarge": "crew/jonas-gross.jpg"
     },
     {
-      "id": "patrick",
-      "name": "Patrick",
-      "team": "a"
-    },
-    {
       "id": "simon",
       "name": "Simon",
+      "nick": "Steini",
+      "team": "a",
+      "photo": "crew/simon.jpg",
+      "photoLarge": "crew/simon-gross.jpg",
+      "role": "Unterkunfts-TÜV & Brasilien-Connection",
+      "facts": [
+        [
+          "Superkraft",
+          "Entscheidet Unterkünfte in Sekunden: „Find des fast bissl schöner und is näher am Strand“"
+        ],
+        [
+          "Qualitätsstandard",
+          "Hauptsache nicht so wie El Nido 😂"
+        ],
+        [
+          "Geheimwaffe",
+          "Ein Cousin, der schon mehrmals in Brasilien war und Insider-Tipps liefert"
+        ],
+        [
+          "Erster Wunsch",
+          "Ein Gruppenbild, „leicht Latina-brasilianisch-mäßig“ 😍"
+        ],
+        [
+          "Nebenjob",
+          "Blitzerwarner beim Essenholen"
+        ],
+        [
+          "Dresscode",
+          "Herzchen-Sonnenbrille und Liverpool-Trikot"
+        ]
+      ],
+      "quote": "Prioritäten setzen 😂"
+    },
+    {
+      "id": "patrick",
+      "name": "Patrick",
       "team": "a"
     },
     {
