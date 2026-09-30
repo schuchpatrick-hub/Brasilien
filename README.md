@@ -47,7 +47,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | 28.–30.12. | Strand an der Praia da Enseada, Footvolley-Netze direkt vor der Tür |
 | **Do 31.12.** | Inlandsflug São Paulo-**Congonhas (CGH)** → Rio-**Santos Dumont (SDU)**, möglichst vormittags. Achtung: nicht die internationalen Flughäfen. Check-in Tabas – Cena Carioca. Abends **Silvester an der Copacabana, Dresscode ganz in Weiß** |
 | 01.–05.01. | Rio: Christusstatue, Zuckerhut, Copacabana/Ipanema, Santa Teresa & Lapa, Sonnenuntergang am Arpoador |
-| **Mi 06.01.** | Dajo & Greisel landet ca. **06:10 in Rio-Galeão (GIG)**. Treffpunkt GIG, gemeinsamer Flug GIG → Foz do Iguaçu (IGU) ca. **10:40** |
+| **Mi 06.01.** | Dajo & Greisel landen ca. **06:10 in Rio-Galeão (GIG)**. Treffpunkt GIG, gemeinsamer Flug GIG → Foz do Iguaçu (IGU) ca. **10:40** |
 | 07.–08.01. | Iguaçu-Fälle: brasilianische und argentinische Seite (Reisepass mitnehmen!), optional Helikopter- oder Bootstour |
 | **Sa 09.01.** | Flug IGU → Manaus (MAO), mit Umstieg. 1 Nacht in der Casa 307 |
 | **So 10.01.** | Abholung am Hotel zur **Juma Lodge** (3 Nächte, alles inklusive außer Bar) |
@@ -123,18 +123,18 @@ Abgerechnet wird über **Splitwise**, mit zwei Gruppen: eine für die Gringos pl
 
 ## Offene Punkte (nach Dringlichkeit)
 
-0. **Neue Reisedaten:** Rio erst ab **31.12.** (vorher 30.12.). Prüfen, ob die Casa Praiana in Guarujá um eine Nacht verlängert und die Buchung im Tabas (nicht stornierbar!) auf den 31.12. umgestellt ist.
-1. **Inlandsflüge buchen**, sobald Dajos Reisepass da ist (ab ca. 19.10.). Beim Nachtflug Manaus → Rio aufpassen: **Abflug 14.01. um 01:45** heißt, man muss **am Abend des 13.01.** am Flughafen sein.
-2. **Flug CGH → SDU am 31.12. buchen** (Patrick), am Silvestertag möglichst vormittags. Dafür braucht er die Reisepassdaten von allen.
-3. **Unterkunft Ilha Grande** in Vila do Abraão für 16.–20.01. bzw. 21.01. buchen.
-4. **Rückreise Gringos plus 1 Cevapi am 20.01. festhalten**: Flughafen und Uhrzeit. Falls ab São Paulo-GRU: von Ilha Grande sind das Boot plus ca. 5–6 h Straße. Dann eher früh am 20.01. starten oder die letzte Nacht woanders verbringen.
-5. **Marco:** Rückflugdatum (15./16. oder 20.01.) klären. Prüfen, ob er in der Guarujá-Buchung mitgezählt ist (gebucht wurde für 3 Personen).
-6. **Iguaçu-Hotel:** Name und Buchungsbestätigung zentral ablegen.
-7. **Gepäck am 13.01. in Manaus:** Das Hotel lagert nur, wenn eine weitere Nacht gebucht ist. Plan ist, das Gepäck mit in die Lodge zu nehmen (Jonas hat angefragt). Bestätigung festhalten.
-8. **Umstieg am 06.01. (Dajo & Greisel):** Landung 06:10, Weiterflug 10:40 auf getrennten Tickets. Wenn der Flieger aus Frankfurt Verspätung hat, gibt es keinen Anspruch auf Umbuchung, also am besten einen flexiblen Tarif wählen.
-9. **Weiterreise Paraty → Ilha Grande (16.01.)** vorher buchen, z. B. bei Paraty Tours.
-10. **Transfers organisieren:** GRU → Guarujá (27.12.), Rio → Paraty (14.01.), Paraty → Ilha Grande (16.01.), Ilha Grande → Flughafen (20./21.01.).
-11. **Silvester-Outfit:** komplett weiß.
+1. **Neue Reisedaten:** Rio erst ab **31.12.** (vorher 30.12.). Prüfen, ob die Casa Praiana in Guarujá um eine Nacht verlängert und die Buchung im Tabas (nicht stornierbar!) auf den 31.12. umgestellt ist.
+2. **Inlandsflüge buchen**, sobald Dajos Reisepass da ist (ab ca. 19.10.). Beim Nachtflug Manaus → Rio aufpassen: **Abflug 14.01. um 01:45** heißt, man muss **am Abend des 13.01.** am Flughafen sein.
+3. **Flug CGH → SDU am 31.12. buchen** (Patrick), am Silvestertag möglichst vormittags. Dafür braucht er die Reisepassdaten von allen.
+4. **Unterkunft Ilha Grande** in Vila do Abraão für 16.–20.01. bzw. 21.01. buchen.
+5. **Rückreise Gringos plus 1 Cevapi am 20.01. festhalten**: Flughafen und Uhrzeit. Falls ab São Paulo-GRU: von Ilha Grande sind das Boot plus ca. 5–6 h Straße. Dann eher früh am 20.01. starten oder die letzte Nacht woanders verbringen.
+6. **Marco:** Rückflugdatum (15./16. oder 20.01.) klären. Prüfen, ob er in der Guarujá-Buchung mitgezählt ist (gebucht wurde für 3 Personen).
+7. **Iguaçu-Hotel:** Name und Buchungsbestätigung zentral ablegen.
+8. **Gepäck am 13.01. in Manaus:** Das Hotel lagert nur, wenn eine weitere Nacht gebucht ist. Plan ist, das Gepäck mit in die Lodge zu nehmen (Jonas hat angefragt). Bestätigung festhalten.
+9. **Umstieg am 06.01. (Dajo & Greisel):** Landung 06:10, Weiterflug 10:40 auf getrennten Tickets. Wenn der Flieger aus Frankfurt Verspätung hat, gibt es keinen Anspruch auf Umbuchung, also am besten einen flexiblen Tarif wählen.
+10. **Weiterreise Paraty → Ilha Grande (16.01.)** vorher buchen, z. B. bei Paraty Tours.
+11. **Transfers organisieren:** GRU → Guarujá (27.12.), Rio → Paraty (14.01.), Paraty → Ilha Grande (16.01.), Ilha Grande → Flughafen (20./21.01.).
+12. **Silvester-Outfit:** komplett weiß.
 
 ---
 

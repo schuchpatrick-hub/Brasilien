@@ -364,7 +364,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
   </div>
 </header>
 
-<nav class="tabs" aria-label="Bereiche"><div class="tabs-in" role="tablist"><a role="tab" href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht">Übersicht</a><a role="tab" href="#crew-tab" id="tab-crew-tab" data-tab="crew-tab">Crew</a><a role="tab" href="#drinks-tab" id="tab-drinks-tab" data-tab="drinks-tab">Drinks</a><a role="tab" href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab">Tage</a><a role="tab" href="#todos-tab" id="tab-todos-tab" data-tab="todos-tab">To-dos</a><a role="tab" href="#reise" id="tab-reise" data-tab="reise">Flüge & Kosten</a><a role="tab" href="#sprache-tab" id="tab-sprache-tab" data-tab="sprache-tab">Sprache</a><a role="tab" href="#infos" id="tab-infos" data-tab="infos">Infos & Packen</a><a role="tab" href="#extras" id="tab-extras" data-tab="extras">Downloads</a></div></nav>
+<nav class="tabs" aria-label="Bereiche"><div class="tabs-in"><a href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht">Übersicht</a><a href="#crew-tab" id="tab-crew-tab" data-tab="crew-tab">Crew</a><a href="#drinks-tab" id="tab-drinks-tab" data-tab="drinks-tab">Drinks</a><a href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab">Tage</a><a href="#todos-tab" id="tab-todos-tab" data-tab="todos-tab">To-dos</a><a href="#reise" id="tab-reise" data-tab="reise">Flüge & Kosten</a><a href="#sprache-tab" id="tab-sprache-tab" data-tab="sprache-tab">Sprache</a><a href="#infos" id="tab-infos" data-tab="infos">Infos & Packen</a><a href="#extras" id="tab-extras" data-tab="extras">Downloads</a></div></nav>
 
 
 <section id="heute" data-tab="uebersicht" class="today-wrap">
@@ -895,11 +895,14 @@ async function writeTodo(id, patch) {
   const prev = pending.get(id) || Promise.resolve();
   const next = prev.then(async () => {
     const base = TRIP.todos.find(x => x.id === id);
-    const cur = Object.assign({}, remote.get(id) || {}, base ? {} : {custom: true});
+    const had = remote.has(id), before = remote.get(id);
+    const cur = Object.assign({}, before || {}, base ? {} : {custom: true});
     const body = Object.assign(cur, patch, {updated: Date.now()});
     remote.set(id, body); renderTodos();
     try { await db.doc('todos/' + id).set(body); status(''); }
     catch (e) {
+      if (had) remote.set(id, before); else remote.delete(id);
+      renderTodos();
       if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) readOnly('Nur ansehen: Abhaken können eingeladene Mitreisende mit Bearbeiten-Recht.');
       else if (e && e.code === 'quota_exceeded') status('Speicher voll, bitte erledigte eigene Punkte löschen.');
       else status('Konnte nicht speichern, bitte nochmal versuchen.');
@@ -1204,7 +1207,8 @@ document.getElementById('wa-copy').addEventListener('click', () => {
       const n = drinks.filter(d => d.who === sel.who).length + (drinks.some(d => d.id === ref.id) ? 0 : 1);
       $('dr-status').textContent = 'Saúde, ' + byId[sel.who].name + '! Getränk Nr. ' + n + '.';
     } catch (e) {
-      $('dr-status').textContent = e && e.code === 'quota_exceeded' ? 'Speicher voll.' : (e && e.code === 'invalid_argument' ? 'Nur ansehen: Eintragen dürfen eingeladene Mitreisende.' : 'Hat nicht geklappt, bitte nochmal.');
+      if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) { setMode('Nur ansehen: Eintragen dürfen nur eingeladene Mitreisende mit Bearbeiten-Recht.', false); return; }
+      $('dr-status').textContent = e && e.code === 'quota_exceeded' ? 'Speicher voll.' : 'Hat nicht geklappt, bitte nochmal.';
     }
     paintSel();
   });
@@ -1408,6 +1412,7 @@ function markTab(tab) {
   document.querySelectorAll('.tabs a').forEach(a => {
     const on = a.dataset.tab === tab;
     a.setAttribute('aria-selected', String(on));
+    if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
     if (on) { const bar = a.parentElement; bar.scrollTo({left: a.offsetLeft - bar.clientWidth / 2 + a.offsetWidth / 2, behavior: 'auto'}); }
   });
 }

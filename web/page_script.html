@@ -130,11 +130,14 @@ async function writeTodo(id, patch) {
   const prev = pending.get(id) || Promise.resolve();
   const next = prev.then(async () => {
     const base = TRIP.todos.find(x => x.id === id);
-    const cur = Object.assign({}, remote.get(id) || {}, base ? {} : {custom: true});
+    const had = remote.has(id), before = remote.get(id);
+    const cur = Object.assign({}, before || {}, base ? {} : {custom: true});
     const body = Object.assign(cur, patch, {updated: Date.now()});
     remote.set(id, body); renderTodos();
     try { await db.doc('todos/' + id).set(body); status(''); }
     catch (e) {
+      if (had) remote.set(id, before); else remote.delete(id);
+      renderTodos();
       if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) readOnly('Nur ansehen: Abhaken können eingeladene Mitreisende mit Bearbeiten-Recht.');
       else if (e && e.code === 'quota_exceeded') status('Speicher voll, bitte erledigte eigene Punkte löschen.');
       else status('Konnte nicht speichern, bitte nochmal versuchen.');
@@ -439,7 +442,8 @@ document.getElementById('wa-copy').addEventListener('click', () => {
       const n = drinks.filter(d => d.who === sel.who).length + (drinks.some(d => d.id === ref.id) ? 0 : 1);
       $('dr-status').textContent = 'Saúde, ' + byId[sel.who].name + '! Getränk Nr. ' + n + '.';
     } catch (e) {
-      $('dr-status').textContent = e && e.code === 'quota_exceeded' ? 'Speicher voll.' : (e && e.code === 'invalid_argument' ? 'Nur ansehen: Eintragen dürfen eingeladene Mitreisende.' : 'Hat nicht geklappt, bitte nochmal.');
+      if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) { setMode('Nur ansehen: Eintragen dürfen nur eingeladene Mitreisende mit Bearbeiten-Recht.', false); return; }
+      $('dr-status').textContent = e && e.code === 'quota_exceeded' ? 'Speicher voll.' : 'Hat nicht geklappt, bitte nochmal.';
     }
     paintSel();
   });
@@ -643,6 +647,7 @@ function markTab(tab) {
   document.querySelectorAll('.tabs a').forEach(a => {
     const on = a.dataset.tab === tab;
     a.setAttribute('aria-selected', String(on));
+    if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
     if (on) { const bar = a.parentElement; bar.scrollTo({left: a.offsetLeft - bar.clientWidth / 2 + a.offsetWidth / 2, behavior: 'auto'}); }
   });
 }
