@@ -53,6 +53,13 @@ Lesen/Korrigieren: `ArtifactData` `list`/`delete` auf `drinks`. Schreiben dürfe
 eingeladene Editoren (nicht, solange ein öffentlicher Link aktiv ist). Ohne Schreibrecht bleibt die
 Eingabemaske sichtbar, aber gesperrt, mit Hinweis „Eintragen nur durch den Admin (Patrick)“.
 
+## Karte: Fortschritt und Check-ins
+
+Routenlinien und Stopps in `tools/gen_map.py` tragen Daten (`data-d`, `data-from`/`data-to`); die Seite färbt
+Erledigtes gelb und lässt den heutigen Stopp pulsieren. Check-ins (Koordinaten aus Google Maps) liegen in der
+Collection `checkins` (`lat`, `lon`, `label`, `ts`) und erscheinen als rote Pins. Echtes GPS-Tracking ist im
+claude.ai-Viewer nicht möglich (Standortzugriff gesperrt), daher manuelles Einchecken durch den Admin.
+
 ## Regeln
 
 - **Repo ist öffentlich:** keine Roh-Chats, Telefonnummern, IBANs, Nachnamen, Passdaten,

@@ -42,8 +42,23 @@
   <h2>Die Route</h2>
   <figure>
     %%MAP%%
-    <figcaption>Gestrichelt: Flug · durchgezogen: Straße · gepunktet: Boot. Guarujá, Rio, Paraty und Ilha Grande liegen dicht beieinander und sind rechts unten vergrößert.</figcaption>
+    <figcaption>Gestrichelt: Flug · durchgezogen: Straße · gepunktet: Boot. <span class="lg-done">Gelb</span> = schon geschafft, <span class="lg-here">pulsierend</span> = hier sind wir, <span class="lg-pin">rot</span> = letzter Check-in. Guarujá, Rio, Paraty und Ilha Grande sind rechts unten vergrößert.</figcaption>
   </figure>
+  <div class="here-bar" id="here-bar"><span id="here-text">Noch zu Hause.</span> <a id="here-gmaps" href="https://www.google.com/maps" target="_blank" rel="noopener" hidden>In Google Maps öffnen</a></div>
+  <details class="checkin" id="checkin" open>
+    <summary>📍 Standort einchecken</summary>
+    <p class="dr-lock" id="ci-lock" hidden>🔒 <b>Einchecken nur durch den Admin (Patrick).</b></p>
+    <div class="ci-form">
+      <label for="ci-coords">Koordinaten</label>
+      <input id="ci-coords" type="text" inputmode="decimal" placeholder="z. B. -22.9711, -43.1822 oder Google-Maps-Link" autocomplete="off">
+      <label for="ci-label">Ort (optional)</label>
+      <input id="ci-label" type="text" maxlength="60" placeholder="z. B. Strandbar Ipanema">
+      <button type="button" class="btn" id="ci-save">Einchecken</button>
+    </div>
+    <p class="note">So kommst du an die Koordinaten: In Google Maps den blauen Punkt (deinen Standort) lange antippen, die Zahlen oben im Suchfeld kopieren und hier einfügen. Ein kopierter Google-Maps-Link geht auch.</p>
+    <p id="ci-status" class="note" role="status"></p>
+    <ol id="ci-list" class="ci-list"></ol>
+  </details>
 </section>
 
 <section id="stationen" data-tab="uebersicht">

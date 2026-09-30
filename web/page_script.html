@@ -611,6 +611,110 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   })();
 })();
 
+/* ---------- Karte: Fortschritt, "Hier sind wir", Check-ins (db-Collection "checkins") ---------- */
+(function () {
+  const svg = document.querySelector('#route svg.tripmap'); if (!svg) return;
+  const [LON0, LAT0, K, COS, ILON0, ILON1, ILAT0, ILAT1, IX, IY, IK, ICOS] = svg.dataset.proj.split(',').map(Number);
+  const xy = (lat, lon) => (lon >= ILON0 && lon <= ILON1 && lat <= ILAT0 && lat >= ILAT1)
+    ? [IX + (lon - ILON0) * IK * ICOS, IY + (ILAT0 - lat) * IK]
+    : [(lon - LON0) * K * COS, (LAT0 - lat) * K];
+  const $ = id => document.getElementById(id);
+  const NS = 'http://www.w3.org/2000/svg';
+  const mk = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+  let checkins = [], dbc = null, canCheck = false;
+
+  function progress() {
+    const t = isoToday();
+    svg.querySelectorAll('[data-d]').forEach(p => p.classList.toggle('done', p.dataset.d <= t));
+    let here = null;
+    svg.querySelectorAll('.stopg').forEach(g => {
+      const on = g.dataset.from <= t && t <= g.dataset.to;
+      g.classList.toggle('here', on); g.classList.toggle('past', g.dataset.to < t);
+      if (on) here = g.querySelector('.lbl').textContent;
+    });
+    const last = checkins[0];
+    let txt;
+    if (last) txt = '📍 Zuletzt eingecheckt: ' + (last.label || 'ohne Ortsname') + ', ' + fmtDay(new Date(last.ts).toISOString().slice(0, 10)).dm + ' ' + new Intl.DateTimeFormat('de-DE', {timeZone: TZ, hour: '2-digit', minute: '2-digit'}).format(new Date(last.ts));
+    else if (here) txt = '📍 Hier sind wir laut Plan: ' + here;
+    else if (t < '2026-12-27') txt = '🏠 Noch zu Hause. Abflug am 27.12.';
+    else if (t > '2027-01-21') txt = '🏁 Reise geschafft.';
+    else txt = '✈ Unterwegs.';
+    $('here-text').textContent = txt;
+    const a = $('here-gmaps');
+    if (last) { a.href = 'https://www.google.com/maps/search/?api=1&query=' + last.lat + ',' + last.lon; a.hidden = false; }
+    else if (here) { a.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(here + ', Brasil'); a.hidden = false; }
+    else a.hidden = true;
+  }
+  function drawPins() {
+    const g = svg.querySelector('#map-pins'); g.innerHTML = '';
+    const list = checkins.slice(0, 40).slice().reverse();
+    if (list.length > 1) g.appendChild(mk('polyline', {class: 'pin-trail', points: list.map(c => xy(c.lat, c.lon).map(v => v.toFixed(1)).join(',')).join(' ')}));
+    list.forEach((c, i) => {
+      const [x, y] = xy(c.lat, c.lon), last = i === list.length - 1;
+      g.appendChild(mk('circle', {class: last ? 'pin' : 'pin-old', cx: x, cy: y, r: last ? 9 : 5}));
+      if (last && c.label) {
+        const W = svg.viewBox.baseVal.width, right = x > W - 160;
+        const tx = mk('text', {class: 'pin-lbl', x: right ? x - 13 : x + 13, y: y + 24, 'text-anchor': right ? 'end' : 'start'});
+        tx.textContent = c.label; g.appendChild(tx);
+      }
+    });
+  }
+  function renderList() {
+    $('ci-list').innerHTML = checkins.slice(0, 30).map(c => '<li data-id="' + esc(c.id) + '"><span class="t">' + fmtDay(new Date(c.ts).toISOString().slice(0, 10)).dm + ' ' +
+      new Intl.DateTimeFormat('de-DE', {timeZone: TZ, hour: '2-digit', minute: '2-digit'}).format(new Date(c.ts)) + '</span><span>' + esc(c.label || '–') +
+      ' <a href="https://www.google.com/maps/search/?api=1&query=' + c.lat + ',' + c.lon + '" target="_blank" rel="noopener">' + c.lat.toFixed(4) + ', ' + c.lon.toFixed(4) + '</a></span>' +
+      (canCheck ? '<button type="button" class="del" aria-label="Check-in löschen">×</button>' : '<span></span>') + '</li>').join('');
+  }
+  function parseCoords(s) {
+    s = String(s || '').replace(/−/g, '-');
+    const m = s.match(/@(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)/) || s.match(/(-?\d{1,2}(?:[.,]\d+)?)\s*[,; ]\s*(-?\d{1,3}(?:[.,]\d+)?)/);
+    if (!m) return null;
+    const lat = parseFloat(m[1].replace(',', '.')), lon = parseFloat(m[2].replace(',', '.'));
+    if (!(Math.abs(lat) <= 90 && Math.abs(lon) <= 180)) return null;
+    return {lat, lon};
+  }
+  function lock(on, msg) {
+    canCheck = !on;
+    $('checkin').classList.toggle('locked', on);
+    $('ci-lock').hidden = !on;
+    if (msg) $('ci-lock').innerHTML = msg;
+    $('checkin').querySelectorAll('.ci-form input, .ci-form button').forEach(el => { el.disabled = on; });
+    renderList();
+  }
+  $('ci-save').addEventListener('click', async () => {
+    const c = parseCoords($('ci-coords').value);
+    if (!c) { $('ci-status').textContent = 'Keine Koordinaten erkannt. Beispiel: -22.9711, -43.1822'; return; }
+    if (c.lat > 10 || c.lat < -40 || c.lon < -80 || c.lon > -25) { $('ci-status').textContent = 'Die Koordinaten liegen nicht in Südamerika. Breite und Länge vertauscht?'; return; }
+    try {
+      await dbc.collection('checkins').doc().set({lat: c.lat, lon: c.lon, label: $('ci-label').value.trim().slice(0, 60), ts: Date.now()});
+      $('ci-coords').value = ''; $('ci-label').value = '';
+      $('ci-status').textContent = 'Eingecheckt ✅';
+    } catch (e) {
+      if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) lock(true); else $('ci-status').textContent = 'Hat nicht geklappt, bitte nochmal.';
+    }
+  });
+  $('ci-list').addEventListener('click', async e => {
+    const b = e.target.closest('.del'); if (!b || !dbc) return;
+    try { await dbc.doc('checkins/' + b.closest('li').dataset.id).delete(); } catch (err) { $('ci-status').textContent = 'Konnte nicht löschen.'; }
+  });
+
+  lock(true); progress();
+  if (PRINT) return;
+  setInterval(progress, 10 * 60000);
+  (async () => {
+    if (!window.claude || !window.claude.use) return;
+    dbc = await window.claude.use('db'); if (!dbc) return;
+    const user = await window.claude.use('user');
+    const w = user ? await user.can('data.write') : null;
+    lock(w === false);
+    dbc.collection('checkins').onSnapshot(snap => {
+      checkins = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data()))
+        .filter(c => typeof c.lat === 'number' && typeof c.lon === 'number' && typeof c.ts === 'number').sort((a, b) => b.ts - a.ts);
+      drawPins(); renderList(); progress();
+    }, () => {});
+  })();
+})();
+
 /* ---------- Kapitel auf-/zuklappen (startet immer aufgeklappt) ---------- */
 (function () {
   if (PRINT) return;
