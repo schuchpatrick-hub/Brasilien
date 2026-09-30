@@ -16,7 +16,7 @@ Legende für den Status: ✅ gebucht · 🟡 gebucht, Details prüfen · ⏳ gep
 
 | Gruppe | Personen | Zeitraum |
 |---|---|---|
-| **Gringos plus 1 Cevapi** | Jonas, Patrick, Simon, Marco | 27.12.26 – ca. 20.01.27 |
+| **Gringos plus 1 Cevapi** | Jonas, Patrick, Simon, Marco | 27.12.26 – 20.01.27 (alle vier bis zum Schluss) |
 | **Dajo & Greisel** | Dajo, Greisel | 06.01.27 – nach dem 21.01.27 (danach noch Rio) |
 
 Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha Grande wieder trennen.
@@ -69,8 +69,8 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | Wer | Strecke | Datum | Details | Preis p. P. | Status |
 |---|---|---|---|---|---|
 | Jonas, Patrick, Simon | MUC → Rom → São Paulo GRU | 27.12.26 | ca. 1,5 h + 1 h 10 min Umstieg + 12 h; keine Sitzplätze reserviert (beim Check-in versuchen) | 1.120 € | ✅ gebucht am 19.08. |
-| Jonas, Patrick, Simon | Rückflug nach MUC | ca. 20.01.27 | **Flughafen und Uhrzeit stehen nicht im Chat.** Gabelflug wurde verworfen, also vermutlich ab São Paulo | inkl. | 🟡 |
-| Marco | wie Gringos plus 1 Cevapi? | 27.12.26 | wohl separat gebucht; Rückflug 15./16. oder 20.01. war offen | ? | ❓ |
+| Jonas, Patrick, Simon, Marco | Rückflug nach MUC | 20.01.27 | **Flughafen und Uhrzeit stehen nicht im Chat.** Gabelflug wurde verworfen, also vermutlich ab São Paulo | inkl. | 🟡 |
+| Marco | Hinflug wie Gringos plus 1 Cevapi? | 27.12.26 | wohl separat gebucht; **bleibt bis 20.01. und fliegt mit den drei anderen heim** | ? | 🟡 Hinflug prüfen |
 | Dajo & Greisel | MUC → Frankfurt → Rio GIG | an 06.01.27, 06:10 | | 1.300 € | ✅ |
 | Dajo & Greisel | Rio → São Paulo (Umstieg) → MUC | nach dem 21.01. | Datum im Chat nicht genannt | inkl. | ✅ |
 
@@ -129,7 +129,7 @@ Transfers laufen per **Uber** (GRU → Guarujá, Rio → Paraty, zum Flughafen a
 2. **Flug CGH → SDU am 31.12. buchen** (Patrick), am Silvestertag möglichst vormittags. Dafür braucht er die Reisepassdaten von allen.
 3. **Unterkunft Ilha Grande** in Vila do Abraão für 16.–20.01. bzw. 21.01. buchen.
 4. **Rückreise Gringos plus 1 Cevapi am 20.01. festhalten**: Flughafen und Uhrzeit. Falls ab São Paulo-GRU: von Ilha Grande sind das Boot plus ca. 5–6 h Straße. Dann eher früh am 20.01. starten oder die letzte Nacht woanders verbringen.
-5. **Marco:** Rückflugdatum (15./16. oder 20.01.) klären. Prüfen, ob er in der Guarujá-Buchung mitgezählt ist (gebucht wurde für 3 Personen).
+5. **Marco:** bleibt bis 20.01. und fliegt mit den anderen dreien heim ✅. Noch prüfen, ob er in der Guarujá-Buchung mitgezählt ist (gebucht wurde für 3 Personen).
 6. **Iguaçu-Hotel:** Name und Buchungsbestätigung zentral ablegen.
 7. **Gepäck am 13.01. in Manaus:** Das Hotel lagert nur, wenn eine weitere Nacht gebucht ist. Plan ist, das Gepäck mit in die Lodge zu nehmen (Jonas hat angefragt). Bestätigung festhalten.
 8. **Umstieg am 06.01. (Dajo & Greisel):** Landung 06:10, Weiterflug 10:40 auf getrennten Tickets. Wenn der Flieger aus Frankfurt Verspätung hat, gibt es keinen Anspruch auf Umbuchung, also am besten einen flexiblen Tarif wählen.
