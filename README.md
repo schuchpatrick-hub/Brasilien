@@ -157,6 +157,10 @@ Abgerechnet wird über **Splitwise**, mit zwei Gruppen: eine für die Gringos pl
 - Party: **Aquario Hostel Bar & Night Club**
 - Essen: Restaurant **Lua e Mar**, Fisch und Moqueca (Fischeintopf)
 
+## Mini-Sprachführer
+
+42 Sätze Brasilianisch-Portugiesisch (Grundlagen, Restaurant & Bar, Unterwegs, Strand & Boot, Party, Notfall) mit Aussprache und Vorlese-Funktion stehen auf der [Webseite](https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE#sprache) und im [PDF](brasilien-reise.pdf).
+
 ## Gesundheit & Einreise
 
 - **Gelbfieber-Impfung:** unbedingt machen, gerade für Manaus/Amazonas und Iguaçu. Sie muss **mindestens 10 Tage vor der Einreise** erfolgt sein.

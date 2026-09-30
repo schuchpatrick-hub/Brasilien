@@ -258,6 +258,48 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   try { navigator.clipboard.writeText(txt).then(done, fallback); } catch (e) { fallback(); }
 });
 
+/* ---------- Sprachfuehrer mit Sprachausgabe ---------- */
+(function () {
+  const box = document.getElementById('phrases');
+  box.innerHTML = TRIP.phrases.map((c, ci) => '<div class="pcat"><h3>' + esc(c.cat) + '</h3>' +
+    c.items.map((p, pi) => '<div class="phr"><div class="txt"><div class="de">' + esc(p.de) + '</div><div class="pt" lang="pt-BR">' + esc(p.pt) +
+      '</div><div class="say">' + esc(p.say) + '</div></div>' +
+      '<button type="button" class="play" data-c="' + ci + '" data-p="' + pi + '" aria-label="Vorsprechen: ' + esc(p.pt) + '">▶</button></div>').join('') +
+    '</div>').join('');
+  const st = document.getElementById('speak-status');
+  const synth = window.speechSynthesis;
+  if (!synth || typeof SpeechSynthesisUtterance === 'undefined') {
+    box.querySelectorAll('.play').forEach(b => b.hidden = true);
+    document.querySelector('.speak-bar').hidden = true;
+    return;
+  }
+  let voice = null;
+  const pick = () => {
+    const vs = synth.getVoices();
+    voice = vs.find(v => /^pt[-_]BR/i.test(v.lang)) || vs.find(v => /^pt/i.test(v.lang)) || null;
+  };
+  pick();
+  if (synth.addEventListener) synth.addEventListener('voiceschanged', pick);
+  const slow = document.getElementById('speak-slow');
+  try { if (store.get('slow') === '0') slow.checked = false; } catch (e) {}
+  slow.addEventListener('change', () => store.set('slow', slow.checked ? '1' : '0'));
+  box.addEventListener('click', e => {
+    const b = e.target.closest('.play'); if (!b) return;
+    const p = TRIP.phrases[+b.dataset.c].items[+b.dataset.p];
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(p.pt.replace(/…/g, ''));
+    u.lang = 'pt-BR';
+    if (voice) u.voice = voice;
+    u.rate = slow.checked ? 0.75 : 1;
+    box.querySelectorAll('.play.on').forEach(x => x.classList.remove('on'));
+    b.classList.add('on');
+    u.onend = u.onerror = () => b.classList.remove('on');
+    setTimeout(() => b.classList.remove('on'), 8000);
+    st.textContent = voice ? '' : 'Keine portugiesische Stimme gefunden, es klingt evtl. nach Deutsch. Tipp: in den Handy-Einstellungen eine portugiesische Stimme laden.';
+    synth.speak(u);
+  });
+})();
+
 /* ---------- Start ---------- */
 setGroup(G);
 renderTodos();

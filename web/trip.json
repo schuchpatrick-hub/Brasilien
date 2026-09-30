@@ -579,5 +579,247 @@
       "title": "Silvester-Outfit komplett in Weiß",
       "detail": "Jeder für sich."
     }
+  ],
+  "phrases": [
+    {
+      "cat": "Grundlagen",
+      "items": [
+        {
+          "de": "Hallo",
+          "pt": "Oi!",
+          "say": "oi"
+        },
+        {
+          "de": "Guten Morgen",
+          "pt": "Bom dia!",
+          "say": "bong DSCHI-a"
+        },
+        {
+          "de": "Guten Tag (nachmittags)",
+          "pt": "Boa tarde!",
+          "say": "BO-a TAR-dschi"
+        },
+        {
+          "de": "Guten Abend / Gute Nacht",
+          "pt": "Boa noite!",
+          "say": "BO-a NOI-tschi"
+        },
+        {
+          "de": "Wie geht's? – Gut!",
+          "pt": "Tudo bem? – Tudo bom!",
+          "say": "TU-du beng – TU-du bong"
+        },
+        {
+          "de": "Danke (Mann / Frau sagt)",
+          "pt": "Obrigado / Obrigada",
+          "say": "o-bri-GA-du / o-bri-GA-da"
+        },
+        {
+          "de": "Bitte",
+          "pt": "Por favor",
+          "say": "pur fa-WOR"
+        },
+        {
+          "de": "Entschuldigung, darf ich durch?",
+          "pt": "Com licença",
+          "say": "kong li-SEN-sa"
+        },
+        {
+          "de": "Sorry!",
+          "pt": "Desculpa!",
+          "say": "dsches-KUL-pa"
+        },
+        {
+          "de": "Ja / Nein",
+          "pt": "Sim / Não",
+          "say": "sing / naun"
+        },
+        {
+          "de": "Ich verstehe nicht",
+          "pt": "Não entendo",
+          "say": "naun en-TEN-du"
+        },
+        {
+          "de": "Sprichst du Englisch?",
+          "pt": "Você fala inglês?",
+          "say": "wo-SE FA-la ing-GLES"
+        }
+      ]
+    },
+    {
+      "cat": "Restaurant & Bar",
+      "items": [
+        {
+          "de": "Ein Bier, bitte",
+          "pt": "Uma cerveja, por favor",
+          "say": "U-ma ser-WE-scha, pur fa-WOR"
+        },
+        {
+          "de": "Zwei Caipirinhas",
+          "pt": "Duas caipirinhas",
+          "say": "DU-as kai-pi-RIN-jas"
+        },
+        {
+          "de": "Noch eine Runde!",
+          "pt": "Mais uma rodada!",
+          "say": "mais U-ma ho-DA-da"
+        },
+        {
+          "de": "Prost!",
+          "pt": "Saúde!",
+          "say": "sa-U-dschi"
+        },
+        {
+          "de": "Die Rechnung, bitte",
+          "pt": "A conta, por favor",
+          "say": "a KON-ta, pur fa-WOR"
+        },
+        {
+          "de": "Wie viel kostet das?",
+          "pt": "Quanto custa?",
+          "say": "KWAN-tu KUS-ta"
+        },
+        {
+          "de": "Kann ich mit Karte zahlen?",
+          "pt": "Aceita cartão?",
+          "say": "a-SEI-ta kar-TAUN"
+        },
+        {
+          "de": "Wasser ohne Kohlensäure",
+          "pt": "Água sem gás",
+          "say": "A-gwa seng GAS"
+        },
+        {
+          "de": "Ohne Eis",
+          "pt": "Sem gelo",
+          "say": "seng SCHE-lu"
+        },
+        {
+          "de": "Sehr lecker!",
+          "pt": "Está uma delícia!",
+          "say": "is-TA U-ma de-LI-sja"
+        }
+      ]
+    },
+    {
+      "cat": "Unterwegs",
+      "items": [
+        {
+          "de": "Wo ist …?",
+          "pt": "Onde fica …?",
+          "say": "ON-dschi FI-ka"
+        },
+        {
+          "de": "Zum Flughafen, bitte",
+          "pt": "Para o aeroporto, por favor",
+          "say": "PA-ra u a-e-ro-POR-tu"
+        },
+        {
+          "de": "Wie lange dauert es?",
+          "pt": "Quanto tempo demora?",
+          "say": "KWAN-tu TEM-pu de-MO-ra"
+        },
+        {
+          "de": "Wo ist die Toilette?",
+          "pt": "Onde é o banheiro?",
+          "say": "ON-dschi E u ba-NJEI-ru"
+        },
+        {
+          "de": "Links / rechts / geradeaus",
+          "pt": "À esquerda / à direita / em frente",
+          "say": "a is-KER-da / a dschi-REI-ta / eng FREN-tschi"
+        }
+      ]
+    },
+    {
+      "cat": "Strand & Boot",
+      "items": [
+        {
+          "de": "Was kostet die Bootstour?",
+          "pt": "Quanto custa o passeio de barco?",
+          "say": "KWAN-tu KUS-ta u pa-SEI-u dschi BAR-ku"
+        },
+        {
+          "de": "Wann fährt das Boot?",
+          "pt": "A que horas sai o barco?",
+          "say": "a ki O-ras sai u BAR-ku"
+        },
+        {
+          "de": "Zwei Stühle und ein Sonnenschirm",
+          "pt": "Duas cadeiras e um guarda-sol",
+          "say": "DU-as ka-DEI-ras i ung GWAR-da-sol"
+        },
+        {
+          "de": "Spielen wir Footvolley?",
+          "pt": "Vamos jogar futevôlei?",
+          "say": "WA-mus scho-GAR fu-tschi-WO-lei"
+        }
+      ]
+    },
+    {
+      "cat": "Party & Smalltalk",
+      "items": [
+        {
+          "de": "Wie heißt du?",
+          "pt": "Como você se chama?",
+          "say": "KO-mu wo-SE si SCHA-ma"
+        },
+        {
+          "de": "Ich heiße …",
+          "pt": "Meu nome é …",
+          "say": "meu NO-mi E"
+        },
+        {
+          "de": "Woher kommst du?",
+          "pt": "De onde você é?",
+          "say": "dschi ON-dschi wo-SE E"
+        },
+        {
+          "de": "Wir kommen aus Deutschland",
+          "pt": "Somos da Alemanha",
+          "say": "SO-mus da a-le-MA-nja"
+        },
+        {
+          "de": "Wollen wir tanzen?",
+          "pt": "Vamos dançar?",
+          "say": "WA-mus dan-SAR"
+        },
+        {
+          "de": "Frohes neues Jahr!",
+          "pt": "Feliz Ano Novo!",
+          "say": "fe-LIS A-nu NO-wu"
+        },
+        {
+          "de": "Cool! / Geil!",
+          "pt": "Que legal! / Que massa!",
+          "say": "ki le-GAU / ki MA-sa"
+        }
+      ]
+    },
+    {
+      "cat": "Notfall",
+      "items": [
+        {
+          "de": "Hilfe!",
+          "pt": "Socorro!",
+          "say": "so-KO-hu"
+        },
+        {
+          "de": "Ich brauche einen Arzt",
+          "pt": "Preciso de um médico",
+          "say": "pre-SI-su dschi ung ME-dschi-ku"
+        },
+        {
+          "de": "Rufen Sie die Polizei!",
+          "pt": "Chame a polícia!",
+          "say": "SCHA-mi a po-LI-sja"
+        },
+        {
+          "de": "Ich habe mich verlaufen",
+          "pt": "Estou perdido",
+          "say": "is-TO per-DSCHI-du"
+        }
+      ]
+    }
   ]
 }
