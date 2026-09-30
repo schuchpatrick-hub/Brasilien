@@ -832,6 +832,76 @@
           "say": "is-TO per-DSCHI-du"
         }
       ]
+    },
+    {
+      "cat": "Überlebenssätze (schwarzer Humor)",
+      "items": [
+        {
+          "de": "Noch eine Caipirinha, mein Arzt ist in Deutschland.",
+          "pt": "Mais uma caipirinha, meu médico está na Alemanha.",
+          "say": "mais U-ma kai-pi-RIN-ja, meu ME-dschi-ku is-TA na a-le-MA-nja"
+        },
+        {
+          "de": "Er zahlt alles. (auf Jonas zeigen)",
+          "pt": "Ele paga tudo.",
+          "say": "E-li PA-ga TU-du"
+        },
+        {
+          "de": "Mein Freund ist Single und verzweifelt. (auf Simon zeigen)",
+          "pt": "Meu amigo está solteiro e desesperado.",
+          "say": "meu a-MI-gu is-TA sol-TEI-ru i de-zes-pe-RA-du"
+        },
+        {
+          "de": "Ich tanze nicht, das ist nur ein Krampf.",
+          "pt": "Eu não estou dançando, é só uma cãibra.",
+          "say": "eu naun is-TO dan-SAN-du, E so U-ma KAIN-bra"
+        },
+        {
+          "de": "Wo ist das nächste Krankenhaus? Mein Freund hat Footvolley gespielt.",
+          "pt": "Onde fica o hospital mais próximo? Meu amigo jogou futevôlei.",
+          "say": "ON-dschi FI-ka u os-pi-TAU mais PRO-si-mu? meu a-MI-gu scho-GO fu-tschi-WO-lei"
+        },
+        {
+          "de": "Mehr Fleisch, bitte. Er lebt noch. (Churrascaria, auf Patrick zeigen)",
+          "pt": "Mais carne, por favor. Ele ainda está vivo.",
+          "say": "mais KAR-ni, pur fa-WOR. E-li a-IN-da is-TA WI-wu"
+        },
+        {
+          "de": "Willst du eine Wohnung im vierten Stock kaufen? (Marcos Standardsatz)",
+          "pt": "Você quer comprar um apartamento no quarto andar?",
+          "say": "wo-SE kär kom-PRAR ung a-par-ta-MEN-tu nu KWAR-tu an-DAR"
+        },
+        {
+          "de": "Ist dieser Fisch giftig? Frage für einen Freund.",
+          "pt": "Esse peixe é venenoso? Pergunta para um amigo.",
+          "say": "E-si PEI-schi E we-ne-NO-su? per-GUN-ta PA-ra ung a-MI-gu"
+        },
+        {
+          "de": "Das war schon kaputt, als ich kam.",
+          "pt": "Já estava quebrado quando eu cheguei.",
+          "say": "scha is-TA-wa ke-BRA-du KWAN-du eu sche-GEI"
+        },
+        {
+          "de": "Bitte ruf nicht meine Mutter an.",
+          "pt": "Por favor, não liga para a minha mãe.",
+          "say": "pur fa-WOR, naun LI-ga PA-ra a MI-nja main"
+        },
+        {
+          "de": "Wenn ich sterbe, begrabt mich mit einer Caipirinha.",
+          "pt": "Se eu morrer, me enterra com uma caipirinha.",
+          "say": "si eu mo-HER, mi en-TE-ha kong U-ma kai-pi-RIN-ja"
+        },
+        {
+          "de": "Sorry, mein Freund ist Deutscher.",
+          "pt": "Desculpa, meu amigo é alemão.",
+          "say": "dsches-KUL-pa, meu a-MI-gu E a-le-MAUN"
+        },
+        {
+          "de": "Wie viele Kater-Tage sind hier normal?",
+          "pt": "Quantos dias de ressaca são normais aqui?",
+          "say": "KWAN-tus DSCHI-as dschi he-SA-ka saun nor-MAIS a-KI"
+        }
+      ]
     }
   ],
   "crew": [
