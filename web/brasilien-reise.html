@@ -2,10 +2,12 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
 <style>
-/* Layout: eine Lesespalte; Karte volle Breite; Tabellen scrollen in eigenem Container */
+/* Layout: eine Lesespalte; Kopf als dunkelgrünes Band mit Copacabana-Wellen; Farben aus der Flagge (Verde, Amarelo, Azul) */
 :root{
-  --bg:#f2f5f1; --surface:#ffffff; --fg:#10231d; --muted:#4f625a; --line:#d6ded7;
-  --accent:#1d6b55; --sky:#0d4f7a; --sun:#8a6100; --sunbg:#fbf1d2;
+  --bg:#f3f6f1; --surface:#ffffff; --fg:#0f2419; --muted:#4d6157; --line:#d4ddd5;
+  --accent:#00843d; --sky:#1f3f8f; --sun:#8a6100; --sunbg:#fdf2cc;
+  --verde:#00843d; --amarelo:#ffcf1f; --azul:#1f3f8f; --hero:#08361f; --hero-wave:#0c4a2b;
+  --wave:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22120%22%20height%3D%2240%22%20viewBox%3D%220%200%20120%2040%22%3E%3Cpath%20d%3D%22M0%2010C20-2%2040-2%2060%2010S100%2022%20120%2010L120%2030C100%2042%2080%2042%2060%2030S20%2018%200%2030Z%22/%3E%3C/svg%3E");
   --ok:#1d7a4f; --okbg:#e2f2e8; --warn:#8a5a00; --warnbg:#fbeccc; --open:#a33a2a; --openbg:#f8e2dd;
   --sea:#dcecef; --land:#eceee8; --landline:#c7cec3; --br:#f7f2da; --brline:#1d6b55; --legbg:#ffffff;
   --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
@@ -14,14 +16,16 @@
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0d1714; --surface:#14211c; --fg:#e4eee8; --muted:#9db0a7; --line:#26382f;
-  --accent:#5cc09a; --sky:#7cbde6; --sun:#f2c230; --sunbg:#2f2a14;
+  --accent:#3ccf7f; --sky:#93b1ff; --sun:#ffd54a; --sunbg:#2f2a14;
   --ok:#7fd4a4; --okbg:#173326; --warn:#f0c46a; --warnbg:#35290f; --open:#f09a8a; --openbg:#3a1d18;
-  --sea:#10282b; --land:#1a2420; --landline:#2f3d37; --br:#23302a; --brline:#5cc09a; --legbg:#14211c; color-scheme:dark}}
+  --sea:#10282b; --land:#1a2420; --landline:#2f3d37; --br:#23302a; --brline:#3ccf7f; --legbg:#14211c;
+  --verde:#3ccf7f; --hero:#062817; --hero-wave:#0a3b22; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0d1714; --surface:#14211c; --fg:#e4eee8; --muted:#9db0a7; --line:#26382f;
-  --accent:#5cc09a; --sky:#7cbde6; --sun:#f2c230; --sunbg:#2f2a14;
+  --accent:#3ccf7f; --sky:#93b1ff; --sun:#ffd54a; --sunbg:#2f2a14;
   --ok:#7fd4a4; --okbg:#173326; --warn:#f0c46a; --warnbg:#35290f; --open:#f09a8a; --openbg:#3a1d18;
-  --sea:#10282b; --land:#1a2420; --landline:#2f3d37; --br:#23302a; --brline:#5cc09a; --legbg:#14211c; color-scheme:dark}
+  --sea:#10282b; --land:#1a2420; --landline:#2f3d37; --br:#23302a; --brline:#3ccf7f; --legbg:#14211c;
+  --verde:#3ccf7f; --hero:#062817; --hero-wave:#0a3b22; color-scheme:dark}
 body{background:var(--bg);color:var(--fg);font:16px/1.55 var(--body)}
 .wrap{max-width:1080px;margin:0 auto;padding-inline:16px;padding-block:28px 64px;display:grid;gap:44px}
 h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
@@ -32,7 +36,19 @@ h3{font-size:1.05rem;font-weight:600;margin:18px 0 8px}
 p{margin:0;max-width:68ch}
 .eyebrow{font:600 .75rem var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .wrap > *{min-width:0}
-header{display:grid;gap:14px}
+header{display:grid;gap:14px;position:relative;overflow:hidden;isolation:isolate;margin:-28px -16px 0;padding:34px 20px 26px;background:var(--hero);color:#f4f7f2;border-radius:0 0 26px 26px}
+header::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--hero-wave);-webkit-mask:var(--wave) 0 0/120px 40px repeat;mask:var(--wave) 0 0/120px 40px repeat}
+header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:linear-gradient(90deg,var(--verde) 0 33%,var(--amarelo) 33% 66%,var(--azul) 66%)}
+header .eyebrow{color:#b9d3c3}
+header h1{color:#fff}
+header h1 em{color:var(--amarelo)}
+header .dates{color:var(--amarelo)}
+header .note{color:#c6d8cc}
+header .chip{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.25);color:#fff}
+@media (min-width:1112px){header{margin-inline:0;border-radius:0 0 26px 26px}}
+h2::after{content:"";display:block;width:72px;height:10px;margin-top:8px;background:var(--amarelo);-webkit-mask:var(--wave) 0 0/36px 12px repeat-x;mask:var(--wave) 0 0/36px 12px repeat-x}
+.today-head h2::after{display:none}
+.tabs a[aria-selected="true"]{box-shadow:inset 0 -3px 0 var(--amarelo)}
 .meta{display:flex;flex-wrap:wrap;gap:10px 28px;align-items:baseline}
 .dates{font:600 1.25rem var(--mono);color:var(--sun)}
 .crew{display:flex;flex-wrap:wrap;gap:8px}
@@ -129,13 +145,13 @@ ul.plain{margin:0;padding-left:18px;display:grid;gap:6px}
 @media print{.tabs{display:none}}
 /* Crew */
 .crew-ov{display:grid;grid-template-columns:4fr 2fr;gap:14px;margin-bottom:22px}
-.crew-ov .grp{background:var(--fg);color:var(--bg);border-radius:14px;padding:14px 12px 16px;min-width:0}
+.crew-ov .grp{background:var(--hero);color:#f4f7f2;border-radius:14px;padding:14px 12px 16px;min-width:0}
 .crew-ov .grp h3{margin:0 0 12px;font:600 .72rem var(--mono);letter-spacing:.12em;text-transform:uppercase;text-align:center;opacity:.8}
 .crew-ov .row{display:grid;gap:10px}
 .crew-ov .grp.a .row{grid-template-columns:repeat(4,1fr)}
 .crew-ov .grp.b .row{grid-template-columns:repeat(2,1fr)}
 .crew-ov a{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;text-align:center;text-decoration:none;color:inherit;min-width:0}
-.crew-ov .av{width:84px;height:84px;max-width:100%;border-radius:50%;overflow:hidden;box-shadow:0 0 0 3px var(--sun);background:var(--accent);display:grid;place-items:center;font:800 1.6rem var(--display);color:var(--bg);transition:transform .15s}
+.crew-ov .av{width:84px;height:84px;max-width:100%;border-radius:50%;overflow:hidden;box-shadow:0 0 0 3px var(--amarelo);background:var(--accent);display:grid;place-items:center;font:800 1.6rem var(--display);color:#fff;transition:transform .15s}
 .crew-ov a:hover .av,.crew-ov a:focus-visible .av{transform:scale(1.06)}
 .crew-ov .av img{width:100%;height:100%;object-fit:cover;display:block}
 .crew-ov b{font:700 .98rem var(--display)}
@@ -320,16 +336,18 @@ a{color:var(--accent)}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;background:var(--surface);padding:3px}
 .seg button{font:600 .88rem var(--body);border:0;background:transparent;color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--accent);color:var(--bg)}
-.today{background:var(--fg);color:var(--bg);border-radius:14px;padding:22px 22px 20px;display:grid;gap:14px}
+.today{background:var(--hero);color:#f4f7f2;position:relative;isolation:isolate;overflow:hidden;border-radius:14px;padding:22px 22px 20px;display:grid;gap:14px}
 .today .kicker{font:600 .75rem var(--mono);letter-spacing:.12em;text-transform:uppercase;opacity:.75}
 .today .big{font:800 clamp(2rem,6vw,3rem)/1.05 var(--display);text-wrap:balance}
 .today .big small{display:block;font:600 1rem var(--body);opacity:.8;margin-top:6px}
 .today ul{margin:0;padding:0;list-style:none;display:grid;gap:8px}
 .today li{display:grid;grid-template-columns:5.5rem 1fr;gap:10px}
-.today li .t{font:600 .9rem var(--mono);color:var(--sun)}
+.today li .t{font:600 .9rem var(--mono);color:var(--amarelo)}
+.today .unsure{color:#ffd98a}
 .today .stay{font-size:.92rem;opacity:.85}
 .today .next{border-top:1px solid color-mix(in srgb,var(--bg) 25%,transparent);padding-top:12px;font-size:.92rem;opacity:.9}
-.today a{color:var(--sun)}
+.today a{color:var(--amarelo)}
+.today::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--hero-wave);opacity:.6;-webkit-mask:var(--wave) 0 0/120px 40px repeat;mask:var(--wave) 0 0/120px 40px repeat}
 /* Tag fuer Tag */
 .days2{display:grid;border:1px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
 .day{display:grid;grid-template-columns:7.2rem 1fr;gap:4px 14px;padding:11px 14px;border-bottom:1px solid var(--line)}
@@ -381,7 +399,9 @@ ul.pack2{list-style:none;margin:0;padding:0;display:grid;gap:2px}
   figure{break-inside:avoid}
   .wrap{gap:26px;padding-block:0}
 }
-footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:14px}
+footer{color:var(--muted);font-size:.85rem;padding-top:26px;position:relative}
+footer::before{content:"";position:absolute;left:0;right:0;top:0;height:14px;background:var(--verde);opacity:.55;-webkit-mask:var(--wave) 0 0/60px 20px repeat-x;mask:var(--wave) 0 0/60px 20px repeat-x}
+footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);margin-bottom:6px}
 @media (max-width:560px){.days{grid-template-columns:1fr}.days dt{border-bottom:0;padding-bottom:0}}
 </style>
 <div class="wrap">
@@ -834,7 +854,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
   <div class="warnbox"><b>Ideen am Rand:</b> Búzios statt Paraty · Florianópolis (1,5 h Flug von Rio, Strand und Nachtleben) · Ilhabela statt Guarujá (schöner, aber 3,5 h von São Paulo). Einen Gabelflug hattet ihr verworfen, weil er nicht günstiger war.</div>
 </section>
 
-<footer>Alle Angaben stammen aus den WhatsApp-Chats. Bilder und Screenshots (Buchungsbestätigungen, Dajos Excel-Übersicht) waren im Export nicht enthalten. Gelb markierte Punkte bitte gegen die Bestätigungen prüfen.</footer>
+<footer><span class="boa">Boa viagem! 🇧🇷</span>Alle Angaben stammen aus den WhatsApp-Chats. Bilder und Screenshots (Buchungsbestätigungen, Dajos Excel-Übersicht) waren im Export nicht enthalten. Gelb markierte Punkte bitte gegen die Bestätigungen prüfen.</footer>
 </div>
 
 <script>
