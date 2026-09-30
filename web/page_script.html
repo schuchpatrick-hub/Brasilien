@@ -1,0 +1,805 @@
+<script>
+/* TRIP wird von tools/build.py aus web/trip.json eingesetzt. */
+const TRIP = %%TRIP%%;
+const TZ = 'America/Sao_Paulo';
+const PEOPLE = ['Jonas', 'Patrick', 'Simon', 'Marco', 'Dajo', 'Greisel', 'Alle'];
+const PRINT = location.hash === '#print';
+
+const store = {
+  get(k) { try { return localStorage.getItem('br26.' + k); } catch (e) { return null; } },
+  set(k, v) { try { localStorage.setItem('br26.' + k, v); } catch (e) {} }
+};
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+
+function isoToday() {
+  return new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
+}
+function dateObj(iso) { return new Date(iso + 'T12:00:00Z'); }
+function fmtDay(iso) {
+  const d = dateObj(iso);
+  const wd = new Intl.DateTimeFormat('de-DE', {weekday: 'short', timeZone: 'UTC'}).format(d).replace('.', '');
+  return {wd, dm: String(d.getUTCDate()).padStart(2, '0') + '.' + String(d.getUTCMonth() + 1).padStart(2, '0') + '.'};
+}
+function daysBetween(a, b) { return Math.round((dateObj(b) - dateObj(a)) / 864e5); }
+const forGroup = (g) => TRIP.days.filter(d => g === 'all' || d.g === 'all' || d.g === g);
+const gName = g => g === 'a' ? 'Gringos plus 1 Cevapi' : 'Dajo & Greisel';
+
+let G = PRINT ? 'all' : (store.get('group') === 'b' ? 'b' : 'a');
+
+/* ---------- Heute ---------- */
+function itemsHtml(items) {
+  return '<ul>' + items.map(it =>
+    '<li><span class="t">' + esc(it.time || '') + '</span><span>' + esc(it.text) +
+    (it.unsicher ? ' <span class="unsure">(offen)</span>' : '') + '</span></li>').join('') + '</ul>';
+}
+function renderToday() {
+  const el = document.getElementById('today');
+  const t = isoToday();
+  const list = forGroup(G);
+  const first = list[0].date, last = list[list.length - 1].date;
+  const openTodos = TRIP.todos.filter(x => !todoState(x.id).done).length;
+  let html;
+  if (t < first) {
+    const n = daysBetween(t, first);
+    const d0 = list[0];
+    html = '<div class="kicker">' + esc(gName(G)) + ' · Countdown</div>' +
+      '<div class="big">Noch ' + n + (n === 1 ? ' Tag' : ' Tage') + '<small>bis zum Abflug am ' + fmtDay(first).wd + ' ' + fmtDay(first).dm + ' · erster Stopp: ' + esc(list.find(d => d.place !== 'München')?.place || d0.place) + '</small></div>' +
+      itemsHtml(d0.items) +
+      '<div class="next">Noch <b>' + openTodos + '</b> offene To-dos. <a href="#todos">Zu den To-dos</a></div>';
+  } else if (t > last) {
+    html = '<div class="kicker">' + esc(gName(G)) + '</div><div class="big">Tchau, Brasil<small>Die Reise ist vorbei. Obrigado und willkommen zurück!</small></div>';
+  } else {
+    const today = list.filter(d => d.date === t);
+    const tomorrow = list.filter(d => d.date > t).filter((d, i, a) => d.date === a[0].date);
+    const f = fmtDay(t);
+    html = '<div class="kicker">' + f.wd + ' ' + f.dm + ' · Tag ' + (daysBetween(first, t) + 1) + ' von ' + (daysBetween(first, last) + 1) + ' · ' + esc(gName(G)) + '</div>';
+    if (today.length) {
+      const d = today[0];
+      html += '<div class="big">' + esc(d.place) + '<small>' + esc(d.title) + '</small></div>' +
+        itemsHtml(today.flatMap(x => x.items)) +
+        '<div class="stay">Schlafen: <b>' + esc(d.stay) + '</b></div>';
+    }
+    if (tomorrow.length) {
+      const n = tomorrow[0], nf = fmtDay(n.date);
+      html += '<div class="next">Morgen, ' + nf.wd + ' ' + nf.dm + ': <b>' + esc(n.title) + '</b> · ' + esc(n.place) +
+        (n.items.find(i => i.time) ? ' · ab ' + esc(n.items.find(i => i.time).time) : '') + '</div>';
+    }
+  }
+  el.innerHTML = html;
+}
+
+/* ---------- Tag fuer Tag ---------- */
+function renderDays() {
+  const t = isoToday();
+  document.getElementById('days').innerHTML = forGroup(G).map(d => {
+    const f = fmtDay(d.date);
+    const tag = d.g === 'all' ? '' : '<span class="gtag">' + esc(gName(d.g)) + '</span>';
+    return '<div class="day' + (d.date === t ? ' is-today' : '') + '"><div class="dt"><b>' + f.wd + ' ' + f.dm + '</b></div>' +
+      '<div class="bd"><div class="ttl">' + esc(d.title) + tag + '</div><div class="plc">' + esc(d.place) + ' · ' + esc(d.stay) + '</div><ul>' +
+      d.items.map(it => '<li>' + (it.time ? '<span class="tm">' + esc(it.time) + '</span> ' : '') + esc(it.text) +
+        (it.unsicher ? ' <span class="unsure">(offen)</span>' : '') + '</li>').join('') +
+      '</ul></div></div>';
+  }).join('');
+}
+
+function setGroup(g) {
+  G = g; if (!PRINT) store.set('group', g);
+  document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.g === g)));
+  renderToday(); renderDays();
+}
+document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => setGroup(b.dataset.g)));
+
+/* ---------- To-dos (geteilt ueber db) ---------- */
+let db = null, canWrite = false;
+const remote = new Map();           // id -> Daten aus der db
+const pending = new Map();          // id -> laufender Schreibvorgang
+function todoState(id) {
+  const base = TRIP.todos.find(x => x.id === id) || {};
+  const r = remote.get(id) || {};
+  return {done: !!r.done, who: r.who !== undefined ? r.who : (base.who || '')};
+}
+function allTodos() {
+  const custom = [...remote.entries()].filter(([, v]) => v.custom && v.title)
+    .sort((a, b) => (a[1].created || 0) - (b[1].created || 0))
+    .map(([id, v]) => ({id, title: v.title, detail: '', prio: 3, custom: true}));
+  return [...TRIP.todos, ...custom];
+}
+function renderTodos() {
+  const ol = document.getElementById('todo-list');
+  const items = allTodos();
+  ol.innerHTML = items.map(x => {
+    const s = todoState(x.id);
+    const opts = ['<option value="">wer?</option>'].concat(PEOPLE.map(p => '<option' + (p === s.who ? ' selected' : '') + '>' + p + '</option>')).join('');
+    return '<li class="p' + x.prio + (s.done ? ' done' : '') + '" data-id="' + esc(x.id) + '">' +
+      '<input type="checkbox" id="todo-cb-' + esc(x.id) + '"' + (s.done ? ' checked' : '') + (canWrite ? '' : ' disabled') + ' aria-label="Erledigt">' +
+      '<label for="todo-cb-' + esc(x.id) + '"><div class="tt">' + esc(x.title) + '</div>' + (x.detail ? '<div class="dd">' + esc(x.detail) + '</div>' : '') + '</label>' +
+      '<div class="ctl"><select aria-label="Wer kümmert sich" id="todo-who-' + esc(x.id) + '"' + (canWrite ? '' : ' disabled') + '>' + opts + '</select>' +
+      (x.custom && canWrite ? '<button type="button" class="del" aria-label="Punkt löschen" title="Löschen">×</button>' : '') + '</div></li>';
+  }).join('');
+  renderToday();
+  renderWhatsApp();
+}
+function status(msg) { document.getElementById('todo-status').textContent = msg || ''; }
+function readOnly(msg) {
+  canWrite = false;
+  document.getElementById('todo-add').hidden = true;
+  document.getElementById('todo-mode').textContent = msg;
+  renderTodos();
+}
+async function writeTodo(id, patch) {
+  const prev = pending.get(id) || Promise.resolve();
+  const next = prev.then(async () => {
+    const base = TRIP.todos.find(x => x.id === id);
+    const had = remote.has(id), before = remote.get(id);
+    const cur = Object.assign({}, before || {}, base ? {} : {custom: true});
+    const body = Object.assign(cur, patch, {updated: Date.now()});
+    remote.set(id, body); renderTodos();
+    try { await db.doc('todos/' + id).set(body); status(''); }
+    catch (e) {
+      if (had) remote.set(id, before); else remote.delete(id);
+      renderTodos();
+      if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) readOnly('Nur ansehen: Abhaken macht der Admin (Patrick).');
+      else if (e && e.code === 'quota_exceeded') status('Speicher voll, bitte erledigte eigene Punkte löschen.');
+      else status('Konnte nicht speichern, bitte nochmal versuchen.');
+    }
+  });
+  pending.set(id, next.catch(() => {}));
+  return next;
+}
+document.getElementById('todo-list').addEventListener('change', e => {
+  const li = e.target.closest('li'); if (!li || !db) return;
+  const id = li.dataset.id;
+  if (e.target.type === 'checkbox') writeTodo(id, {done: e.target.checked});
+  else if (e.target.tagName === 'SELECT') writeTodo(id, {who: e.target.value});
+});
+document.getElementById('todo-list').addEventListener('click', async e => {
+  if (!e.target.classList.contains('del') || !db) return;
+  const id = e.target.closest('li').dataset.id;
+  remote.delete(id); renderTodos();
+  try { await db.doc('todos/' + id).delete(); } catch (err) { status('Konnte nicht löschen.'); }
+});
+document.getElementById('todo-add').addEventListener('submit', async e => {
+  e.preventDefault();
+  const inp = document.getElementById('todo-new');
+  const title = inp.value.trim(); if (!title || !db) return;
+  inp.value = '';
+  const ref = db.collection('todos').doc();
+  const body = {custom: true, title: title.slice(0, 140), done: false, who: '', created: Date.now()};
+  remote.set(ref.id, body); renderTodos();
+  try { await ref.set(body); } catch (err) { remote.delete(ref.id); renderTodos(); status(err && err.code === 'quota_exceeded' ? 'Speicher voll.' : 'Konnte nicht hinzufügen.'); }
+});
+
+async function initDb() {
+  if (!window.claude || !window.claude.use) { readOnly('Offline-Ansicht: Abhaken macht der Admin (Patrick) auf claude.ai.'); return; }
+  db = await window.claude.use('db');
+  if (!db) { readOnly('Nur ansehen: Abhaken macht der Admin (Patrick). Den aktuellen Stand sehen angemeldete claude.ai-Nutzer.'); return; }
+  const user = await window.claude.use('user');
+  const w = user ? await user.can('data.write') : null;
+  canWrite = w !== false;
+  if (!canWrite) { readOnly('Nur ansehen: Abhaken macht der Admin (Patrick).'); }
+  else { document.getElementById('todo-add').hidden = false; }
+  db.collection('todos').onSnapshot(snap => {
+    remote.clear();
+    snap.docs.forEach(d => { if (d.exists) remote.set(d.id, Object.assign({}, d.data())); });
+    renderTodos();
+  }, () => readOnly('Die gemeinsame Liste ist gerade nicht erreichbar.'));
+}
+
+/* ---------- Packlisten (nur auf diesem Geraet) ---------- */
+document.querySelectorAll('ul.pack2').forEach(ul => {
+  const key = 'pack.' + ul.dataset.list;
+  let saved = {}; try { saved = JSON.parse(store.get(key) || '{}'); } catch (e) {}
+  [...ul.children].forEach((li, i) => {
+    const id = 'pk-' + ul.dataset.list + '-' + i;
+    li.innerHTML = '<label for="' + id + '"><input type="checkbox" id="' + id + '"' + (saved[i] ? ' checked' : '') + '><span>' + li.innerHTML + '</span></label>';
+  });
+  ul.addEventListener('change', e => {
+    const i = [...ul.querySelectorAll('input')].indexOf(e.target);
+    saved[i] = e.target.checked; store.set(key, JSON.stringify(saved));
+  });
+});
+
+/* ---------- Google-Kalender-Links ---------- */
+function gcalLink(ev, fallbackDate) {
+  let dates;
+  if (ev.start) dates = ev.start + '/' + ev.end;
+  else {
+    const d = dateObj(fallbackDate); d.setUTCDate(d.getUTCDate() + 1);
+    dates = ev.date + '/' + d.toISOString().slice(0, 10).replace(/-/g, '');
+  }
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(ev.summary) +
+    '&dates=' + dates + '&details=' + encodeURIComponent((ev.desc || '') + '\nBrasilien 26/27');
+}
+document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filter(i => i.ics && /✈|🛬/.test(i.ics.summary)).map(i => {
+  const f = fmtDay(d.date);
+  return '<li><a href="' + esc(gcalLink(i.ics, d.date)) + '" target="_blank" rel="noopener">' + f.dm + ' ' + esc(i.ics.summary.replace(/^\S+\s/, '')) + '</a></li>';
+})).join('');
+
+/* ---------- PDF ---------- */
+(async () => {
+  const btn = document.getElementById('pdf-btn');
+  const dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null;
+  if (!dl) { btn.hidden = true; return; }
+  btn.addEventListener('click', async () => {
+    try {
+      const res = await fetch('brasilien-reise.pdf');
+      if (!res.ok) throw new Error('fetch');
+      await dl.save({filename: 'Brasilien-26-27.pdf', data: await res.blob()});
+    } catch (e) {
+      if (!(e && e.code === 'declined')) btn.insertAdjacentHTML('afterend', ' <span class="note">Ging nicht, bitte den GitHub-Link nehmen.</span>');
+    }
+  });
+})();
+
+/* ---------- WhatsApp-Kurzfassung ---------- */
+function renderWhatsApp() {
+  const open = allTodos().filter(x => !todoState(x.id).done && x.prio === 1).map(x => '• ' + x.title + (todoState(x.id).who ? ' (' + todoState(x.id).who + ')' : ''));
+  const txt = [
+    '🇧🇷 Brasilien 26/27, Stand 30.09.',
+    '',
+    '27.–31.12. Guarujá, Casa Praiana 🟡 (eine Nacht länger)',
+    '31.12.–06.01. Rio, Tabas – Cena Carioca 🟡 (ab Silvester, in Weiß!)',
+    '06.–09.01. Foz do Iguaçu 🟡 Hotelname prüfen',
+    '09.–14.01. Manaus + Juma Lodge ✅',
+    '14.–16.01. Paraty, Geko Pousada ✅',
+    '16.–20./21.01. Ilha Grande ❗ Unterkunft offen',
+    '',
+    open.length ? 'Wichtigste offene Punkte:\n' + open.join('\n') : 'Die wichtigsten Punkte sind erledigt 🎉',
+    '',
+    'Alles mit Karte und To-dos: https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE'
+  ].join('\n');
+  document.getElementById('wa-text').textContent = txt;
+}
+document.getElementById('wa-copy').addEventListener('click', () => {
+  const txt = document.getElementById('wa-text').textContent;
+  const done = () => { document.getElementById('wa-status').textContent = 'Kopiert.'; };
+  const fallback = () => {
+    const r = document.createRange(); r.selectNodeContents(document.getElementById('wa-text'));
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    document.getElementById('wa-status').textContent = 'Text ist markiert, jetzt kopieren.';
+  };
+  try { navigator.clipboard.writeText(txt).then(done, fallback); } catch (e) { fallback(); }
+});
+
+/* ---------- Sprachfuehrer mit Sprachausgabe ---------- */
+(function () {
+  const box = document.getElementById('phrases');
+  box.innerHTML = TRIP.phrases.map((c, ci) => '<div class="pcat"><h3>' + esc(c.cat) + '</h3>' +
+    c.items.map((p, pi) => '<div class="phr"><div class="txt"><div class="de">' + esc(p.de) + '</div><div class="pt" lang="pt-BR">' + esc(p.pt) +
+      '</div><div class="say">' + esc(p.say) + '</div></div>' +
+      '<button type="button" class="play" data-c="' + ci + '" data-p="' + pi + '" aria-label="Vorsprechen: ' + esc(p.pt) + '">▶</button></div>').join('') +
+    '</div>').join('');
+  const st = document.getElementById('speak-status');
+  const slow = document.getElementById('speak-slow');
+  const dev = document.getElementById('speak-device');
+  if (store.get('slow') === '0') slow.checked = false;
+  slow.addEventListener('change', () => store.set('slow', slow.checked ? '1' : '0'));
+
+  const synth = window.speechSynthesis && typeof SpeechSynthesisUtterance !== 'undefined' ? window.speechSynthesis : null;
+  let voice = null;
+  const pick = () => {
+    const vs = synth.getVoices();
+    voice = vs.find(v => /^pt[-_]BR/i.test(v.lang)) || vs.find(v => /^pt/i.test(v.lang)) || null;
+    document.getElementById('speak-device-wrap').hidden = !voice;
+  };
+  if (synth) { pick(); if (synth.addEventListener) synth.addEventListener('voiceschanged', pick); }
+  if (store.get('device') === '1') dev.checked = true;
+  dev.addEventListener('change', () => store.set('device', dev.checked ? '1' : '0'));
+
+  let audio = null, current = null;
+  const done = () => { if (current) current.classList.remove('on'); current = null; };
+  function speakDevice(p) {
+    synth.cancel();
+    const de = new SpeechSynthesisUtterance(p.de.replace(/\s*\([^)]*\)/g, '').replace(/…/g, ''));
+    de.lang = 'de-DE'; de.rate = slow.checked ? 0.85 : 1;
+    const vde = synth.getVoices().find(v => /^de[-_]/i.test(v.lang)); if (vde) de.voice = vde;
+    const u = new SpeechSynthesisUtterance(p.pt.replace(/…/g, ''));
+    u.lang = 'pt-BR'; if (voice) u.voice = voice;
+    u.rate = slow.checked ? 0.75 : 1;
+    u.onend = u.onerror = done;
+    synth.speak(de); synth.speak(u);
+  }
+  box.addEventListener('click', e => {
+    const b = e.target.closest('.play'); if (!b) return;
+    const p = TRIP.phrases[+b.dataset.c].items[+b.dataset.p];
+    if (audio) audio.pause();
+    if (synth) synth.cancel();
+    done(); current = b; b.classList.add('on'); st.textContent = '';
+    if (dev.checked && synth && voice) { speakDevice(p); return; }
+    audio = new Audio(p.audio);
+    audio.playbackRate = slow.checked ? 0.8 : 1;
+    audio.onended = done;
+    audio.onerror = () => {
+      done();
+      if (synth) { current = b; b.classList.add('on'); speakDevice(p); }
+      else st.textContent = 'Die Aufnahme konnte nicht geladen werden.';
+    };
+    audio.play().catch(err => { if (err && err.name !== 'AbortError') audio.onerror(); });
+  });
+})();
+
+/* ---------- Crew ---------- */
+(function () {
+  const el = document.getElementById('crew-list');
+  el.innerHTML = TRIP.crew.map(p => {
+    const full = !!(p.facts && p.facts.length);
+    const pic = p.photo && !PRINT ? '<button type="button" class="zoom" data-id="' + esc(p.id) + '" aria-label="Foto von ' + esc(p.name) + ' vergrößern"><img src="' + esc(p.photo) + '" alt="Foto von ' + esc(p.name) + '" loading="lazy"></button>' : esc(p.name[0]);
+    let h = '<article class="pcard' + (full ? ' full' : '') + '" id="crew-' + esc(p.id) + '"><div class="avatar">' + pic + '</div><div>';
+    h += '<h3>' + esc(p.name) + (p.nick ? '<span class="nick">' + esc(p.nick) + '</span>' : '') + '</h3>';
+    if (p.role) h += '<span class="role">' + esc(p.role) + '</span>';
+    if (full) h += '<dl>' + p.facts.map(f => '<dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd>').join('') + '</dl>';
+    if (p.quote) h += '<blockquote>„' + esc(p.quote) + '“</blockquote>';
+    if (!full) h += '<div class="team">' + esc(gName(p.team)) + '</div><div class="soon">Steckbrief folgt</div>';
+    return h + '</div></article>';
+  }).join('');
+
+  const short = r => (r || '').split(/ & |\. /)[0].replace(/\.$/, '');
+  document.getElementById('crew-overview').innerHTML = ['a', 'b'].map(g =>
+    '<div class="grp ' + g + '"><h3>' + esc(gName(g)) + '</h3><div class="row">' +
+    TRIP.crew.filter(p => p.team === g).map(p =>
+      '<a href="#crew-' + esc(p.id) + '"><span class="av">' +
+      (p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="" loading="lazy">' : esc(p.name[0])) +
+      '</span><b>' + esc(p.name) + '</b><small>' + esc(short(p.role)) + '</small></a>').join('') +
+    '</div></div>').join('');
+
+  const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lightbox-img');
+  let lastFocus = null;
+  function open(p) {
+    lastFocus = document.activeElement;
+    lbImg.src = p.photoLarge || p.photo; lbImg.alt = 'Foto von ' + p.name;
+    document.getElementById('lightbox-cap').textContent = p.name + (p.role ? ' · ' + p.role : '');
+    lb.hidden = false; document.body.style.overflow = 'hidden';
+    document.getElementById('lightbox-close').focus();
+  }
+  function close() {
+    if (lb.hidden) return;
+    lb.hidden = true; document.body.style.overflow = '';
+    if (lastFocus) lastFocus.focus();
+  }
+  el.addEventListener('click', e => {
+    const b = e.target.closest('.zoom'); if (!b) return;
+    open(TRIP.crew.find(p => p.id === b.dataset.id));
+  });
+  lb.addEventListener('click', close);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+})();
+
+/* ---------- Drinks-Counter (geteilt ueber db, Collection "drinks") ---------- */
+(function () {
+  const D = TRIP.drinks, CREW = TRIP.crew;
+  const CAT = Object.fromEntries(D.cats.map(c => [c[0], {name: c[1], icon: c[2]}]));
+  const byId = Object.fromEntries(CREW.map(p => [p.id, p]));
+  const $ = id => document.getElementById(id);
+  const avatar = (p, cls) => '<span class="' + (cls || 'av') + '">' + (p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="">' : esc(p.name[0])) + '</span>';
+  const fmt1 = n => n.toLocaleString('de-DE', {minimumFractionDigits: 1, maximumFractionDigits: 1});
+  const fmt2 = n => n.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const grams = d => d.ml * d.abv / 100 * 0.789;
+  const dayOf = ts => new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date(ts));
+  const timeOf = ts => new Intl.DateTimeFormat('de-DE', {timeZone: TZ, hour: '2-digit', minute: '2-digit'}).format(new Date(ts));
+
+  let drinks = [];            // [{id, who, cat, name, ml, abv, ts}]
+  const body = {};            // id -> {sex, kg} (Overrides aus db)
+  let dbRef = null, writable = false, metric = 'count';
+  let sel = {who: new Set((store.get('drinkWho') || '').split(',').filter(id => byId[id])), preset: null};
+  const saveWho = () => store.set('drinkWho', [...sel.who].join(','));
+
+  /* --- Promille nach Widmark: Summe der Getraenke minus Abbau --- */
+  const BETA = 0.15; // Promille pro Stunde
+  function bodyOf(id) {
+    const d = D.body[id] || ['m', 80], o = body[id] || {};
+    const sex = o.sex || d[0], kg = +o.kg || d[1];
+    return {sex, kg, r: sex === 'w' ? 0.55 : 0.68};
+  }
+  function bacTimeline(id) {                // liefert Funktion t -> Promille und Tages-Peaks
+    const b = bodyOf(id), list = drinks.filter(d => d.who === id).sort((a, z) => a.ts - z.ts);
+    let bac = 0, last = null; const peaks = {}; const pts = [];
+    for (const d of list) {
+      if (last !== null) bac = Math.max(0, bac - BETA * (d.ts - last) / 36e5);
+      bac += grams(d) / (b.kg * b.r);
+      last = d.ts; pts.push([d.ts, bac]);
+      const day = dayOf(d.ts); peaks[day] = Math.max(peaks[day] || 0, bac);
+    }
+    const at = t => { if (last === null || t < list[0].ts) return 0; let v = 0; for (const [ts, x] of pts) { if (ts <= t) v = x - BETA * (t - ts) / 36e5; } return Math.max(0, v); };
+    return {at, peaks, max: Math.max(0, ...Object.values(peaks))};
+  }
+  function level(v) {
+    if (v < 0.1) return 'nüchtern, leider';
+    if (v < 0.5) return 'angeheitert';
+    if (v < 1.0) return 'beschwipst, Samba-Modus';
+    if (v < 1.5) return 'blau wie das Meer vor Ilha Grande';
+    if (v < 2.0) return 'Portugiesisch fließend';
+    return 'Caipirinha-Koma, bitte Wasser';
+  }
+
+  /* --- Eingabe --- */
+  $('dr-who').innerHTML = CREW.map(p => '<button type="button" role="checkbox" aria-checked="false" data-id="' + esc(p.id) + '">' + avatar(p) + esc(p.name) + '</button>').join('');
+  $('dr-what').innerHTML = D.cats.map(c => {
+    const items = D.presets.map((d, i) => [d, i]).filter(([d]) => d.cat === c[0]);
+    if (!items.length) return '';
+    return '<details class="dr-cat" data-fold="cat-' + c[0] + '" open><summary>' + c[2] + ' ' + esc(c[1]) + '<small>' + items.length + '</small></summary><div class="chips">' +
+      items.map(([d, i]) => '<button type="button" aria-pressed="false" data-i="' + i + '">' + esc(d.name) + ' <small>' + d.ml + ' ml · ' + fmt1(d.abv) + ' %</small></button>').join('') + '</div></details>';
+  }).join('');
+  $('dr-c-cat').innerHTML = D.cats.map(c => '<option value="' + c[0] + '">' + c[2] + ' ' + esc(c[1]) + '</option>').join('');
+  function paintSel() {
+    document.querySelectorAll('#dr-who button').forEach(b => b.setAttribute('aria-checked', String(sel.who.has(b.dataset.id))));
+    document.querySelectorAll('#dr-what button').forEach(b => b.setAttribute('aria-pressed', String(sel.preset && sel.preset.i === +b.dataset.i)));
+    $('dr-submit').disabled = !(writable && sel.who.size && sel.preset);
+    const q = +$('dr-qty').value || 1, n = sel.who.size * q;
+    $('dr-submit').textContent = n > 1 ? n + ' Drinks eintragen 🍻' : 'Eintragen 🍻';
+  }
+  $('dr-who').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; const id = b.dataset.id; if (sel.who.has(id)) sel.who.delete(id); else sel.who.add(id); saveWho(); paintSel(); });
+  $('dr-all').addEventListener('click', () => { CREW.forEach(p => sel.who.add(p.id)); saveWho(); paintSel(); });
+  $('dr-none').addEventListener('click', () => { sel.who.clear(); saveWho(); paintSel(); });
+  $('dr-qty').addEventListener('change', paintSel);
+  $('dr-what').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; sel.preset = Object.assign({i: +b.dataset.i}, D.presets[+b.dataset.i]); paintSel(); });
+  $('dr-c-use').addEventListener('click', () => {
+    const ml = +$('dr-c-ml').value, abv = +$('dr-c-abv').value, name = $('dr-c-name').value.trim() || 'Eigenes Getränk';
+    if (!(ml > 0 && ml <= 2000 && abv >= 0 && abv <= 80)) { $('dr-status').textContent = 'Menge 10–2000 ml, Alkohol 0–80 %.'; return; }
+    sel.preset = {i: -1, cat: $('dr-c-cat').value, name: name.slice(0, 40), ml, abv};
+    paintSel(); $('dr-status').textContent = 'Ausgewählt: ' + sel.preset.name;
+  });
+  $('dr-now').addEventListener('change', () => { $('dr-time').hidden = $('dr-now').checked; });
+  $('dr-submit').addEventListener('click', async () => {
+    if (!dbRef || !sel.who.size || !sel.preset) return;
+    let ts = Date.now();
+    if (!$('dr-now').checked) { const v = $('dr-time').value; if (!v) { $('dr-status').textContent = 'Bitte eine Uhrzeit wählen.'; return; } ts = new Date(v).getTime(); }
+    const who = CREW.map(p => p.id).filter(id => sel.who.has(id)), q = +$('dr-qty').value || 1;
+    const btn = $('dr-submit'); btn.disabled = true;
+    let ok = 0;
+    try {
+      for (const id of who) {
+        for (let i = 0; i < q; i++) {
+          // bei mehreren Drinks pro Person je 1 Minute Abstand, damit die Reihenfolge eindeutig bleibt
+          await dbRef.collection('drinks').doc().set({who: id, cat: sel.preset.cat, name: sel.preset.name, ml: sel.preset.ml, abv: sel.preset.abv, ts: ts - (q - 1 - i) * 60000});
+          ok++;
+        }
+      }
+      const names = who.map(id => byId[id].name);
+      const list = names.length > 1 ? names.slice(0, -1).join(', ') + ' & ' + names[names.length - 1] : names[0];
+      $('dr-status').textContent = 'Saúde, ' + list + '! ' + (ok === 1 ? '1 ' + sel.preset.name + ' eingetragen.' : ok + '× ' + sel.preset.name + ' eingetragen.');
+    } catch (e) {
+      if (ok) $('dr-status').textContent = ok + ' von ' + (who.length * q) + ' eingetragen, dann ging etwas schief. Bitte im Verlauf prüfen.';
+      if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) { setMode('Nur ansehen: Eintragen macht der Admin (Patrick).', false); return; }
+      $('dr-status').textContent = e && e.code === 'quota_exceeded' ? 'Speicher voll.' : 'Hat nicht geklappt, bitte nochmal.';
+    }
+    paintSel();
+  });
+
+  /* --- Ranking mit wandernden Zeilen --- */
+  const ROW = 56, rank = $('dr-rank');
+  rank.style.height = (CREW.length * ROW) + 'px';
+  rank.innerHTML = CREW.map(p => '<div class="dr-row" data-id="' + esc(p.id) + '"><span class="pl"></span>' + avatar(p) + '<div class="bd"><div class="nm">' + esc(p.name) + '<span></span></div><div class="track"><div class="bar"></div></div></div></div>').join('');
+  document.querySelectorAll('#drinks .seg.small button').forEach(b => b.addEventListener('click', () => {
+    metric = b.dataset.m;
+    document.querySelectorAll('#drinks .seg.small button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    render();
+  }));
+  function stats() {
+    const s = Object.fromEntries(CREW.map(p => [p.id, {count: 0, grams: 0, liters: 0, cats: {}, days: new Set()}]));
+    for (const d of drinks) {
+      const x = s[d.who]; if (!x) continue;
+      x.count++; x.grams += grams(d); x.liters += d.ml / 1000; x.cats[d.cat] = (x.cats[d.cat] || 0) + 1; x.days.add(dayOf(d.ts));
+    }
+    return s;
+  }
+  function renderRank(st) {
+    const val = id => st[id][metric];
+    const order = CREW.map(p => p.id).sort((a, b) => val(b) - val(a) || CREW.findIndex(p => p.id === a) - CREW.findIndex(p => p.id === b));
+    const max = Math.max(...order.map(val), 0);
+    order.forEach((id, i) => {
+      const row = rank.querySelector('.dr-row[data-id="' + id + '"]');
+      row.style.transform = 'translateY(' + (i * ROW) + 'px)';
+      row.classList.toggle('lead', i === 0 && max > 0);
+      row.querySelector('.pl').textContent = (i + 1) + '.';
+      const v = val(id);
+      row.querySelector('.nm span').textContent = metric === 'count' ? v + (v === 1 ? ' Drink' : ' Drinks') : metric === 'grams' ? Math.round(v) + ' g' : fmt2(v) + ' l';
+      row.querySelector('.bar').style.width = (max ? v / max * 100 : 0) + '%';
+    });
+  }
+  function renderBac() {
+    const now = Date.now();
+    const rows = CREW.map(p => ({p, v: bacTimeline(p.id).at(now)})).sort((a, b) => b.v - a.v);
+    $('dr-bac').innerHTML = rows.map(({p, v}) => '<div class="b">' + avatar(p) + '<div><b>' + esc(p.name) + '</b> <span class="l">' + level(v) + '</span></div><span class="v">' + fmt2(v) + ' ‰</span></div>').join('');
+  }
+  function tripDays() {
+    const out = [], d = new Date('2026-12-27T12:00:00Z'), end = new Date('2027-01-21T12:00:00Z');
+    for (; d <= end; d.setUTCDate(d.getUTCDate() + 1)) out.push(d.toISOString().slice(0, 10));
+    const extra = [...new Set(drinks.map(x => dayOf(x.ts)))].filter(x => !out.includes(x));
+    return [...extra.filter(x => x < out[0]).sort(), ...out, ...extra.filter(x => x > out[out.length - 1]).sort()];
+  }
+  function renderDays() {
+    const days = tripDays(), t = isoToday();
+    const per = {}; drinks.forEach(d => { const k = dayOf(d.ts); (per[k] = per[k] || []).push(d); });
+    const max = Math.max(1, ...days.map(k => (per[k] || []).length));
+    const lab = k => { const f = fmtDay(k); return f.dm; };
+    $('dr-days').innerHTML = days.map(k => {
+      const n = (per[k] || []).length;
+      return '<div class="col' + (k === t ? ' is-today' : '') + '" data-day="' + k + '">' + (n ? '<b style="bottom:' + (n / max * 100) + '%">' + n + '</b>' : '') + '<i style="height:' + (n / max * 100) + '%"></i></div>';
+    }).join('') + '';
+    let ax = $('dr-days').nextElementSibling;
+    if (!ax || !ax.classList.contains('dr-days-ax')) { ax = document.createElement('div'); ax.className = 'dr-days-ax'; $('dr-days').after(ax); }
+    ax.innerHTML = days.map((k, i) => '<span>' + (i % 4 === 0 ? lab(k).slice(0, 6) : '') + '</span>').join('');
+  }
+  function tip(html, x, y) { const el = $('dr-tip'); el.innerHTML = html; el.hidden = false; const w = el.offsetWidth; el.style.left = Math.min(innerWidth - w - 8, Math.max(8, x - w / 2)) + 'px'; el.style.top = (y - el.offsetHeight - 10) + 'px'; }
+  $('dr-days').addEventListener('pointermove', e => {
+    const c = e.target.closest('.col'); if (!c) { $('dr-tip').hidden = true; return; }
+    const k = c.dataset.day, list = drinks.filter(d => dayOf(d.ts) === k), f = fmtDay(k);
+    const per = CREW.map(p => [p.name, list.filter(d => d.who === p.id).length]).filter(x => x[1]);
+    const r = c.getBoundingClientRect();
+    tip('<b>' + f.wd + ' ' + f.dm + ': ' + list.length + ' Drinks</b>' + (per.length ? '<br>' + per.map(x => esc(x[0]) + ' ' + x[1]).join(' · ') : ''), r.left + r.width / 2, r.top + r.height - (list.length ? c.querySelector('i').offsetHeight : 0));
+  });
+  $('dr-days').addEventListener('pointerleave', () => { $('dr-tip').hidden = true; });
+
+  function renderDayTable() {
+    const tl = Object.fromEntries(CREW.map(p => [p.id, bacTimeline(p.id)]));
+    const days = [...new Set(drinks.map(d => dayOf(d.ts)))].sort().reverse();
+    const head = '<thead><tr><th>Tag</th>' + CREW.map(p => '<th class="pp">' + avatar(p, 'mini') + '<br>' + esc(p.name) + '</th>').join('') + '</tr></thead>';
+    if (!days.length) { $('dr-daytable').innerHTML = head + '<tbody><tr><td colspan="' + (CREW.length + 1) + '" class="z">Noch keine Einträge. Das ändert sich spätestens am 27.12.</td></tr></tbody>'; return; }
+    $('dr-daytable').innerHTML = head + '<tbody>' + days.map(k => {
+      const f = fmtDay(k);
+      return '<tr><td class="d">' + f.wd + ' ' + f.dm + '</td>' + CREW.map(p => {
+        const n = drinks.filter(d => d.who === p.id && dayOf(d.ts) === k).length, pk = tl[p.id].peaks[k] || 0;
+        return n ? '<td class="pp" title="' + esc(drinks.filter(d => d.who === p.id && dayOf(d.ts) === k).map(d => d.name).join(', ')) + '">' + n + ' · ' + fmt1(pk) + ' ‰</td>' : '<td class="pp z">–</td>';
+      }).join('') + '</tr>';
+    }).join('') + '</tbody>';
+  }
+  function renderTotal(st) {
+    const tl = Object.fromEntries(CREW.map(p => [p.id, bacTimeline(p.id)]));
+    const rows = CREW.map(p => p.id).sort((a, b) => st[b].grams - st[a].grams);
+    $('dr-total').innerHTML = '<thead><tr><th>Wer</th>' + D.cats.map(c => '<th class="pp" title="' + esc(c[1]) + '">' + c[2] + '<br>' + esc(c[1]) + '</th>').join('') +
+      '<th class="pp">Gesamt</th><th class="pp">Liter</th><th class="pp">Reinalkohol</th><th class="pp">Höchster Pegel</th><th class="pp">Trinktage</th></tr></thead><tbody>' +
+      rows.map(id => { const p = byId[id], x = st[id];
+        return '<tr><td>' + avatar(p, 'mini') + ' ' + esc(p.name) + '</td>' + D.cats.map(c => '<td class="pp' + (x.cats[c[0]] ? '' : ' z') + '">' + (x.cats[c[0]] || 0) + '</td>').join('') +
+          '<td class="pp"><b>' + x.count + '</b></td><td class="pp">' + fmt2(x.liters) + '</td><td class="pp">' + Math.round(x.grams) + ' g</td><td class="pp">' + fmt2(tl[id].max) + ' ‰</td><td class="pp">' + x.days.size + '</td></tr>';
+      }).join('') + '</tbody>';
+  }
+  function renderLog() {
+    const list = drinks.slice().sort((a, b) => b.ts - a.ts).slice(0, 40);
+    $('dr-log').innerHTML = list.length ? list.map(d => { const f = fmtDay(dayOf(d.ts)), p = byId[d.who] || {name: '?'};
+      return '<li data-id="' + esc(d.id) + '"><span class="t">' + f.dm + ' ' + timeOf(d.ts) + '</span><span><b>' + esc(p.name) + '</b>: ' + (CAT[d.cat] ? CAT[d.cat].icon : '') + ' ' + esc(d.name) + ' <span class="note">' + d.ml + ' ml · ' + fmt1(d.abv) + ' %</span></span>' +
+        (writable ? '<button type="button" class="del" aria-label="Eintrag löschen" title="Löschen">×</button>' : '<span></span>') + '</li>'; }).join('')
+      : '<li><span></span><span class="note">Noch nichts getrunken. Erste Runde am 27.12. in Guarujá?</span><span></span></li>';
+  }
+  $('dr-log').addEventListener('click', async e => {
+    const b = e.target.closest('.del'); if (!b || !dbRef) return;
+    const id = b.closest('li').dataset.id;
+    try { await dbRef.doc('drinks/' + id).delete(); } catch (err) { $('dr-status').textContent = 'Konnte nicht löschen.'; }
+  });
+  function renderBodyForm() {
+    $('dr-bodyform').innerHTML = CREW.map(p => { const b = bodyOf(p.id);
+      return '<div class="p" data-id="' + esc(p.id) + '"><b>' + esc(p.name) + '</b><input type="number" min="40" max="200" step="1" value="' + b.kg + '" aria-label="Gewicht ' + esc(p.name) + ' in kg"' + (writable ? '' : ' disabled') + '> kg <select aria-label="Geschlecht ' + esc(p.name) + '"' + (writable ? '' : ' disabled') + '><option value="m"' + (b.sex === 'm' ? ' selected' : '') + '>m</option><option value="w"' + (b.sex === 'w' ? ' selected' : '') + '>w</option></select></div>'; }).join('');
+  }
+  $('dr-bodyform').addEventListener('change', async e => {
+    const row = e.target.closest('.p'); if (!row || !dbRef) return;
+    const id = row.dataset.id, kg = +row.querySelector('input').value, sex = row.querySelector('select').value;
+    if (!(kg >= 40 && kg <= 200)) return;
+    body[id] = {kg, sex}; render();
+    try { await dbRef.doc('people/' + id).set({kg, sex}); } catch (err) { $('dr-status').textContent = 'Gewicht konnte nicht gespeichert werden.'; }
+  });
+
+  function render() {
+    const st = stats();
+    renderRank(st); renderBac(); renderDays(); renderDayTable(); renderTotal(st); renderLog();
+  }
+  function setMode(msg, canWriteNow) {
+    writable = canWriteNow;
+    $('dr-mode').textContent = msg;
+    $('dr-add').classList.toggle('locked', !canWriteNow);
+    $('dr-lock').hidden = canWriteNow;
+    $('dr-add').querySelectorAll('button, input, select').forEach(el => { el.disabled = !canWriteNow; });
+    paintSel(); renderBodyForm(); render();
+  }
+
+  render(); renderBodyForm(); paintSel();
+  $('dr-add').classList.add('locked');
+  $('dr-add').querySelectorAll('button, input, select').forEach(el => { el.disabled = true; });
+  if (PRINT) { $('dr-add').hidden = true; document.querySelectorAll('#drinks details.dr-card').forEach(d => d.open = true); return; }
+  setInterval(renderBac, 60000);
+  (async () => {
+    if (!window.claude || !window.claude.use) { setMode('Offline-Ansicht: Eintragen geht nur auf claude.ai durch den Admin (Patrick).', false); return; }
+    dbRef = await window.claude.use('db');
+    if (!dbRef) { setMode('Nur ansehen: Eintragen macht der Admin (Patrick). Das Live-Ranking sehen angemeldete claude.ai-Nutzer.', false); return; }
+    const user = await window.claude.use('user');
+    const w = user ? await user.can('data.write') : null;
+    setMode(w === false ? 'Nur ansehen: Eintragen macht der Admin (Patrick).' : 'Person antippen, Getränk wählen, eintragen. Das Ranking aktualisiert sich live für alle.', w !== false);
+    dbRef.collection('drinks').onSnapshot(snap => {
+      drinks = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data()))
+        .filter(d => byId[d.who] && d.ml > 0 && typeof d.ts === 'number');
+      render();
+    }, () => setMode('Der Counter ist gerade nicht erreichbar.', false));
+    dbRef.collection('people').onSnapshot(snap => {
+      snap.docs.forEach(d => { if (d.exists) body[d.id] = Object.assign({}, d.data()); });
+      renderBodyForm(); render();
+    }, () => {});
+  })();
+})();
+
+/* ---------- Karte: Fortschritt, "Hier sind wir", Check-ins (db-Collection "checkins") ---------- */
+(function () {
+  const svg = document.querySelector('#route svg.tripmap'); if (!svg) return;
+  const [LON0, LAT0, K, COS, ILON0, ILON1, ILAT0, ILAT1, IX, IY, IK, ICOS] = svg.dataset.proj.split(',').map(Number);
+  const xy = (lat, lon) => (lon >= ILON0 && lon <= ILON1 && lat <= ILAT0 && lat >= ILAT1)
+    ? [IX + (lon - ILON0) * IK * ICOS, IY + (ILAT0 - lat) * IK]
+    : [(lon - LON0) * K * COS, (LAT0 - lat) * K];
+  const $ = id => document.getElementById(id);
+  const NS = 'http://www.w3.org/2000/svg';
+  const mk = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); return e; };
+  let checkins = [], dbc = null, canCheck = false;
+
+  function progress() {
+    const t = isoToday();
+    svg.querySelectorAll('[data-d]').forEach(p => p.classList.toggle('done', p.dataset.d <= t));
+    let here = null;
+    svg.querySelectorAll('.stopg').forEach(g => {
+      const on = g.dataset.from <= t && t <= g.dataset.to;
+      g.classList.toggle('here', on); g.classList.toggle('past', g.dataset.to < t);
+      if (on) here = g.querySelector('.lbl').textContent;
+    });
+    const last = checkins[0];
+    let txt;
+    if (last) txt = '📍 Zuletzt eingecheckt: ' + (last.label || 'ohne Ortsname') + ', ' + fmtDay(new Date(last.ts).toISOString().slice(0, 10)).dm + ' ' + new Intl.DateTimeFormat('de-DE', {timeZone: TZ, hour: '2-digit', minute: '2-digit'}).format(new Date(last.ts));
+    else if (here) txt = '📍 Hier sind wir laut Plan: ' + here;
+    else if (t < '2026-12-27') txt = '🏠 Noch zu Hause. Abflug am 27.12.';
+    else if (t > '2027-01-21') txt = '🏁 Reise geschafft.';
+    else txt = '✈ Unterwegs.';
+    $('here-text').textContent = txt;
+    const a = $('here-gmaps');
+    if (last) { a.href = 'https://www.google.com/maps/search/?api=1&query=' + last.lat + ',' + last.lon; a.hidden = false; }
+    else if (here) { a.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(here + ', Brasil'); a.hidden = false; }
+    else a.hidden = true;
+  }
+  function drawPins() {
+    const g = svg.querySelector('#map-pins'); g.innerHTML = '';
+    const list = checkins.slice(0, 40).slice().reverse();
+    if (list.length > 1) g.appendChild(mk('polyline', {class: 'pin-trail', points: list.map(c => xy(c.lat, c.lon).map(v => v.toFixed(1)).join(',')).join(' ')}));
+    list.forEach((c, i) => {
+      const [x, y] = xy(c.lat, c.lon), last = i === list.length - 1;
+      g.appendChild(mk('circle', {class: last ? 'pin' : 'pin-old', cx: x, cy: y, r: last ? 9 : 5}));
+      if (last && c.label) {
+        const W = svg.viewBox.baseVal.width, right = x > W - 160;
+        const tx = mk('text', {class: 'pin-lbl', x: right ? x - 13 : x + 13, y: y + 24, 'text-anchor': right ? 'end' : 'start'});
+        tx.textContent = c.label; g.appendChild(tx);
+      }
+    });
+  }
+  function renderList() {
+    $('ci-list').innerHTML = checkins.slice(0, 30).map(c => '<li data-id="' + esc(c.id) + '"><span class="t">' + fmtDay(new Date(c.ts).toISOString().slice(0, 10)).dm + ' ' +
+      new Intl.DateTimeFormat('de-DE', {timeZone: TZ, hour: '2-digit', minute: '2-digit'}).format(new Date(c.ts)) + '</span><span>' + esc(c.label || '–') +
+      ' <a href="https://www.google.com/maps/search/?api=1&query=' + c.lat + ',' + c.lon + '" target="_blank" rel="noopener">' + c.lat.toFixed(4) + ', ' + c.lon.toFixed(4) + '</a></span>' +
+      (canCheck ? '<button type="button" class="del" aria-label="Check-in löschen">×</button>' : '<span></span>') + '</li>').join('');
+  }
+  function parseCoords(s) {
+    s = String(s || '').replace(/−/g, '-');
+    const m = s.match(/@(-?\d+(?:\.\d+)?),\s*(-?\d+(?:\.\d+)?)/) || s.match(/(-?\d{1,2}(?:[.,]\d+)?)\s*[,; ]\s*(-?\d{1,3}(?:[.,]\d+)?)/);
+    if (!m) return null;
+    const lat = parseFloat(m[1].replace(',', '.')), lon = parseFloat(m[2].replace(',', '.'));
+    if (!(Math.abs(lat) <= 90 && Math.abs(lon) <= 180)) return null;
+    return {lat, lon};
+  }
+  function lock(on, msg) {
+    canCheck = !on;
+    $('checkin').classList.toggle('locked', on);
+    $('ci-lock').hidden = !on;
+    if (msg) $('ci-lock').innerHTML = msg;
+    $('checkin').querySelectorAll('.ci-form input, .ci-form button').forEach(el => { el.disabled = on; });
+    renderList();
+  }
+  $('ci-save').addEventListener('click', async () => {
+    const c = parseCoords($('ci-coords').value);
+    if (!c) { $('ci-status').textContent = 'Keine Koordinaten erkannt. Beispiel: -22.9711, -43.1822'; return; }
+    if (c.lat > 10 || c.lat < -40 || c.lon < -80 || c.lon > -25) { $('ci-status').textContent = 'Die Koordinaten liegen nicht in Südamerika. Breite und Länge vertauscht?'; return; }
+    try {
+      await dbc.collection('checkins').doc().set({lat: c.lat, lon: c.lon, label: $('ci-label').value.trim().slice(0, 60), ts: Date.now()});
+      $('ci-coords').value = ''; $('ci-label').value = '';
+      $('ci-status').textContent = 'Eingecheckt ✅';
+    } catch (e) {
+      if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) lock(true); else $('ci-status').textContent = 'Hat nicht geklappt, bitte nochmal.';
+    }
+  });
+  $('ci-list').addEventListener('click', async e => {
+    const b = e.target.closest('.del'); if (!b || !dbc) return;
+    try { await dbc.doc('checkins/' + b.closest('li').dataset.id).delete(); } catch (err) { $('ci-status').textContent = 'Konnte nicht löschen.'; }
+  });
+
+  lock(true); progress();
+  if (PRINT) return;
+  setInterval(progress, 10 * 60000);
+  (async () => {
+    if (!window.claude || !window.claude.use) return;
+    dbc = await window.claude.use('db'); if (!dbc) return;
+    const user = await window.claude.use('user');
+    const w = user ? await user.can('data.write') : null;
+    lock(w === false);
+    dbc.collection('checkins').onSnapshot(snap => {
+      checkins = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data()))
+        .filter(c => typeof c.lat === 'number' && typeof c.lon === 'number' && typeof c.ts === 'number').sort((a, b) => b.ts - a.ts);
+      drawPins(); renderList(); progress();
+    }, () => {});
+  })();
+})();
+
+/* ---------- Kapitel auf-/zuklappen (startet immer aufgeklappt) ---------- */
+(function () {
+  if (PRINT) return;
+  document.querySelectorAll('section[data-tab]').forEach(sec => {
+    const h = sec.querySelector('h2'); if (!h) return;
+    let head = h;
+    while (head.parentElement !== sec) head = head.parentElement;
+    const hide = [...sec.children].filter(c => c !== head && !c.classList.contains('lightbox') && !c.classList.contains('dr-tip'));
+    if (head !== h && !head.classList.contains('today-head')) hide.push(...[...head.children].filter(c => c !== h));
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'fold-btn'; btn.setAttribute('aria-expanded', 'true');
+    btn.innerHTML = h.innerHTML + '<span class="chev" aria-hidden="true"></span>';
+    h.textContent = ''; h.appendChild(btn);
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(open));
+      sec.classList.toggle('folded', !open);
+      hide.forEach(el => el.classList.toggle('fold-hidden', !open));
+    });
+  });
+  const all = document.createElement('div');
+  all.className = 'fold-all';
+  all.innerHTML = '<button type="button" class="btn ghost" data-a="close">Alles zuklappen</button><button type="button" class="btn ghost" data-a="open">Alles aufklappen</button>';
+  const tabs = document.querySelector('.tabs');
+  tabs.after(all);
+  all.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const want = b.dataset.a === 'open';
+    document.querySelectorAll('.fold-btn').forEach(f => { if ((f.getAttribute('aria-expanded') === 'true') !== want) f.click(); });
+  });
+})();
+
+/* ---------- Reiter = Kapitel-Sprungmarken (alles bleibt untereinander sichtbar) ---------- */
+const TAB_IDS = [...document.querySelectorAll('.tabs a')].map(a => a.dataset.tab);
+const SECTIONS = [...document.querySelectorAll('section[data-tab]')];
+const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+function barHeight() { const bar = document.querySelector('.tabs'); return bar ? bar.offsetHeight : 0; }
+function targetFor(id) {
+  if (TAB_IDS.includes(id)) return SECTIONS.find(s => s.dataset.tab === id);
+  return id ? document.getElementById(id) : null;
+}
+function jump(id, smooth) {
+  const el = targetFor(id); if (!el) return false;
+  const y = el.getBoundingClientRect().top + scrollY - barHeight() - 10;
+  scrollTo({top: Math.max(0, y), behavior: smooth && !reduceMotion ? 'smooth' : 'auto'});
+  return true;
+}
+let activeTab = null;
+function markTab(tab) {
+  if (tab === activeTab) return;
+  activeTab = tab;
+  document.querySelectorAll('.tabs a').forEach(a => {
+    const on = a.dataset.tab === tab;
+    a.setAttribute('aria-selected', String(on));
+    if (on) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current');
+    if (on) { const bar = a.parentElement; bar.scrollTo({left: a.offsetLeft - bar.clientWidth / 2 + a.offsetWidth / 2, behavior: 'auto'}); }
+  });
+}
+function spy() {
+  const line = barHeight() + 40;
+  let cur = SECTIONS[0];
+  for (const s of SECTIONS) { if (s.getBoundingClientRect().top <= line) cur = s; else break; }
+  markTab(cur.dataset.tab);
+}
+if (!PRINT) {
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]'); if (!a) return;
+    const id = a.getAttribute('href').slice(1);
+    if (!targetFor(id)) return;
+    e.preventDefault();
+    try { history.replaceState(null, '', '#' + id); } catch (err) {}
+    jump(id, true);
+  });
+  let ticking = false;
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { spy(); ticking = false; }); } }, {passive: true});
+  addEventListener('hashchange', () => jump(location.hash.slice(1), true));
+  spy();
+  if (location.hash.length > 1) setTimeout(() => jump(location.hash.slice(1), false), 50);
+}
+
+/* ---------- Start ---------- */
+setGroup(G);
+renderTodos();
+if (!PRINT) initDb(); else readOnly('Stand beim Erstellen der PDF.');
+</script>

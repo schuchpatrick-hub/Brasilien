@@ -1,0 +1,193 @@
+"""Erzeugt die Routenkarte (SVG) fuer die Brasilienreise aus Natural-Earth-Daten."""
+import json, math, os, urllib.request
+
+DATA = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+NE = 'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/'
+
+def load(name):
+    """Laedt Natural-Earth-Laendergrenzen (wird beim ersten Lauf heruntergeladen, nicht im Repo)."""
+    os.makedirs(DATA, exist_ok=True)
+    path = os.path.join(DATA, name)
+    if not os.path.exists(path):
+        urllib.request.urlretrieve(NE + name, path)
+    with open(path) as f:
+        return json.load(f)
+
+# ---- Projektion Hauptkarte ----
+LON0, LON1, LAT0, LAT1 = -76.0, -25.0, 7.0, -37.0
+K = 23.2
+COS = math.cos(math.radians(15))
+W = round((LON1 - LON0) * K * COS)
+H = round((LAT0 - LAT1) * K)
+
+def P(lon, lat):
+    return ((lon - LON0) * K * COS, (LAT0 - lat) * K)
+
+# ---- Projektion Ausschnitt Suedost-Kueste ----
+ILON0, ILON1, ILAT0, ILAT1 = -47.0, -42.85, -22.45, -24.2
+ICOS = math.cos(math.radians(23.2))
+IX, IY, IW = 636, 786, 494
+IK = IW / ((ILON1 - ILON0) * ICOS)
+IH = round((ILAT0 - ILAT1) * IK)
+
+def PI(lon, lat):
+    return (IX + (lon - ILON0) * IK * ICOS, IY + (ILAT0 - lat) * IK)
+
+def rings(feat):
+    g = feat['geometry']
+    polys = g['coordinates'] if g['type'] == 'MultiPolygon' else [g['coordinates']]
+    for poly in polys:
+        for ring in poly:
+            yield ring
+
+def bbox_hit(ring, lo0, lo1, la0, la1, pad=2):
+    xs = [p[0] for p in ring]; ys = [p[1] for p in ring]
+    return not (max(xs) < lo0 - pad or min(xs) > lo1 + pad or max(ys) < la1 - pad or min(ys) > la0 + pad)
+
+def path(ring, proj, minstep):
+    out, last = [], None
+    for lon, lat in ring:
+        x, y = proj(lon, lat)
+        if last and abs(x - last[0]) + abs(y - last[1]) < minstep:
+            continue
+        out.append(f'{x:.1f},{y:.1f}')
+        last = (x, y)
+    return 'M' + 'L'.join(out) + 'Z' if len(out) > 2 else ''
+
+def country_paths(data, proj, box, minstep):
+    br, other = [], []
+    for f in data['features']:
+        for ring in rings(f):
+            if not bbox_hit(ring, *box):
+                continue
+            d = path(ring, proj, minstep)
+            if d:
+                (br if f['properties']['ADM0_A3'] == 'BRA' else other).append(d)
+    return ''.join(other), ''.join(br)
+
+def arc(a, b, bend=0.18):
+    (x1, y1), (x2, y2) = a, b
+    mx, my = (x1 + x2) / 2, (y1 + y2) / 2
+    dx, dy = x2 - x1, y2 - y1
+    cx, cy = mx - dy * bend, my + dx * bend
+    return f'M{x1:.1f},{y1:.1f} Q{cx:.1f},{cy:.1f} {x2:.1f},{y2:.1f}'
+
+# Orte
+GRU = (-46.47, -23.43); CGH = (-46.66, -23.63); GUA = (-46.25, -23.99)
+RIO = (-43.20, -22.93); GIG = (-43.25, -22.81); SDU = (-43.16, -22.91)
+IGU = (-54.58, -25.52); MAO = (-60.02, -3.12); JUMA = (-59.95, -3.72)
+PAR = (-44.71, -23.22); ILG = (-44.17, -23.14); ANG = (-44.32, -23.01)
+
+def build(standalone=False):
+    d50 = load('ne_50m_admin_0_countries.geojson')
+    d10 = load('ne_10m_admin_0_countries.geojson')
+    o_main, b_main = country_paths(d50, P, (LON0, LON1, LAT0, LAT1), 1.2)
+    o_in, b_in = country_paths(d10, PI, (ILON0, ILON1, ILAT0, ILAT1), 0.8)
+
+    s = []
+    s.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" class="tripmap" role="img" '
+             f'data-proj="{LON0},{LAT0},{K},{COS},{ILON0},{ILON1},{ILAT0},{ILAT1},{IX},{IY},{IK},{ICOS},{IW},{IH}" '
+             f'aria-label="Karte der Reiseroute durch Brasilien: Guarujá, Rio de Janeiro, Foz do Iguaçu, Manaus, Paraty, Ilha Grande">')
+    if standalone:
+        s.append('''<style>
+.sea{fill:#dfeef0}.land{fill:#eef0ea;stroke:#c9cfc4;stroke-width:.8}.br{fill:#f7f3dc;stroke:#1d6b55;stroke-width:1.4}
+.fl{fill:none;stroke:#0d4f7a;stroke-width:2.6;stroke-dasharray:7 6;stroke-linecap:round}
+.gr{fill:none;stroke:#1d6b55;stroke-width:3.2;stroke-linecap:round}
+.bt{fill:none;stroke:#1d8aa8;stroke-width:3;stroke-dasharray:2 5;stroke-linecap:round}
+.dot{fill:#1d6b55;stroke:#fff;stroke-width:2.5}.dot2{fill:#fff;stroke:#0d4f7a;stroke-width:2}
+.num{fill:#fff;font:700 15px 'DejaVu Sans',sans-serif;text-anchor:middle;dominant-baseline:central}
+.lbl{fill:#10231d;font:700 19px 'DejaVu Sans',sans-serif}.sub{fill:#4b5d56;font:500 14px 'DejaVu Sans',sans-serif}
+.tag{fill:#0d4f7a;font:600 13px 'DejaVu Sans Mono',monospace}.ctry{fill:#8a968f;font:600 13px 'DejaVu Sans',sans-serif;letter-spacing:3px}
+.frame{fill:none;stroke:#10231d;stroke-width:1.5}.framebg{fill:#dfeef0;stroke:#10231d;stroke-width:1.5}
+.lead{fill:none;stroke:#10231d;stroke-width:1;stroke-dasharray:3 3}
+.head{fill:#10231d;font:700 34px 'DejaVu Sans',sans-serif}.headsub{fill:#4b5d56;font:500 17px 'DejaVu Sans',sans-serif}
+.legtxt{fill:#10231d;font:500 14px 'DejaVu Sans',sans-serif}.legbg{fill:#ffffff;fill-opacity:.85;stroke:#c9cfc4}
+.arrowhead{fill:#0d4f7a}.halo{display:none}
+</style>''')
+    s.append('<defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse">'
+             '<path d="M0,0L10,5L0,10z" class="arrowhead"/></marker>'
+             f'<clipPath id="clipMain"><rect width="{W}" height="{H}"/></clipPath>'
+             f'<clipPath id="clipIn"><rect x="{IX}" y="{IY}" width="{IW}" height="{IH}"/></clipPath></defs>')
+    s.append(f'<rect class="sea" width="{W}" height="{H}"/>')
+    s.append(f'<g clip-path="url(#clipMain)"><path class="land" d="{o_main}"/><path class="br" d="{b_main}"/></g>')
+
+    # Laenderbeschriftung
+    for name, lon, lat in [('BRASILIEN', -49.5, -7.5), ('ARGENTINIEN', -65.5, -30.5), ('PARAGUAY', -58.8, -22.6),
+                           ('BOLIVIEN', -65.5, -16.8), ('PERU', -74.2, -9.0), ('KOLUMBIEN', -74.0, 3.0),
+                           ('VENEZUELA', -66.5, 6.0), ('ATLANTIK', -32.5, -12.0)]:
+        x, y = P(lon, lat)
+        s.append(f'<text class="ctry" x="{x:.0f}" y="{y:.0f}" text-anchor="middle">{name}</text>')
+
+    # Markierung Suedost-Ausschnitt in der Hauptkarte
+    a0 = P(ILON0, ILAT0); a1 = P(ILON1, ILAT1)
+    s.append(f'<rect class="frame" x="{a0[0]:.1f}" y="{a0[1]:.1f}" width="{a1[0]-a0[0]:.1f}" height="{a1[1]-a0[1]:.1f}"/>')
+    s.append(f'<path class="lead" d="M{a1[0]:.1f},{a0[1]:.1f} L{IX+IW},{IY}"/>')
+    s.append(f'<path class="lead" d="M{a0[0]:.1f},{a1[1]:.1f} L{IX},{IY+IH}"/>')
+
+    # Hinflug aus Europa
+    g = P(*GRU)
+    s.append(f'<path class="fl" data-d="2026-12-27" marker-end="url(#arr)" d="{arc((W-20, 40), (g[0]+6, g[1]-8), -0.12)}"/>')
+    s.append(f'<text class="tag" x="{W-24}" y="30" text-anchor="end">27.12. MUC → FCO → GRU</text>')
+    s.append(f'<text class="sub" x="{W-24}" y="50" text-anchor="end">Hinflug über Rom</text>')
+
+    # Fluege Hauptkarte
+    r = P(*GIG); i = P(*IGU); m = P(*MAO)
+    s.append(f'<path class="fl" data-d="2027-01-06" marker-end="url(#arr)" d="{arc(r, i, 0.22)}"/>')
+    s.append(f'<path class="fl" data-d="2027-01-09" marker-end="url(#arr)" d="{arc(i, m, 0.16)}"/>')
+    s.append(f'<path class="fl" data-d="2027-01-14" marker-end="url(#arr)" d="{arc(m, r, 0.14)}"/>')
+    tx, ty = (r[0]+i[0])/2, (r[1]+i[1])/2
+    s.append(f'<text class="tag" x="{tx-60:.0f}" y="{ty+62:.0f}" text-anchor="middle">06.01. GIG → IGU</text>')
+    tx, ty = (i[0]+m[0])/2, (i[1]+m[1])/2
+    s.append(f'<text class="tag" x="{tx-118:.0f}" y="{ty+10:.0f}" text-anchor="middle">09.01. IGU → MAO</text>')
+    s.append(f'<text class="sub" x="{tx-118:.0f}" y="{ty+28:.0f}" text-anchor="middle">mit Umstieg</text>')
+    tx, ty = (m[0]+r[0])/2, (m[1]+r[1])/2
+    s.append(f'<text class="tag" x="{tx+70:.0f}" y="{ty-40:.0f}" text-anchor="middle">14.01. 01:45 MAO → GIG</text>')
+    s.append(f'<text class="sub" x="{tx+70:.0f}" y="{ty-22:.0f}" text-anchor="middle">Nachtflug</text>')
+
+    def stop(pt, n, name, sub, dx=16, dy=0, anchor='start', proj=P, r_=15, frm='', to=''):
+        x, y = proj(*pt)
+        s.append(f'<g class="stopg" data-from="{frm}" data-to="{to}">')
+        s.append(f'<circle class="halo" cx="{x:.1f}" cy="{y:.1f}" r="{r_+9}"/>')
+        s.append(f'<circle class="dot" cx="{x:.1f}" cy="{y:.1f}" r="{r_}"/>')
+        s.append(f'<text class="num" x="{x:.1f}" y="{y:.1f}">{n}</text>')
+        lx = x + dx if anchor == 'start' else x - dx
+        s.append(f'<text class="lbl" x="{lx:.1f}" y="{y+dy-2:.1f}" text-anchor="{anchor}">{name}</text>')
+        s.append(f'<text class="sub" x="{lx:.1f}" y="{y+dy+16:.1f}" text-anchor="{anchor}">{sub}</text>')
+        s.append('</g>')
+
+    stop(IGU, 3, 'Foz do Iguaçu', '06.–09.01. · Wasserfälle', dx=20, dy=4, anchor='end', frm='2027-01-06', to='2027-01-08')
+    stop(MAO, 4, 'Manaus &amp; Amazonas', '09.–14.01. · Dschungel-Lodge', dx=20, frm='2027-01-09', to='2027-01-13')
+    # Suedost-Cluster in der Hauptkarte als Sammelpunkt
+    x, y = P(-50.2, -20.6)
+    s.append(f'<text class="lbl" x="{x:.0f}" y="{y:.0f}" text-anchor="middle">Südost-Küste</text>')
+    s.append(f'<text class="sub" x="{x:.0f}" y="{y+18:.0f}" text-anchor="middle">Stopps 1 · 2 · 5 · 6 (Ausschnitt)</text>')
+
+    # ---- Ausschnitt ----
+    s.append(f'<rect class="framebg" x="{IX}" y="{IY}" width="{IW}" height="{IH}"/>')
+    s.append(f'<g clip-path="url(#clipIn)"><path class="land" d="{o_in}"/><path class="br" d="{b_in}"/>')
+    gi, ci, gu = PI(*GRU), PI(*CGH), PI(*GUA)
+    sd, gg, pa, il, an = PI(*SDU), PI(*GIG), PI(*PAR), PI(*ILG), PI(*ANG)
+    s.append(f'<path class="gr" data-d="2026-12-27" marker-end="url(#arr)" d="M{gi[0]:.1f},{gi[1]:.1f} Q{gi[0]+30:.1f},{gi[1]+40:.1f} {gu[0]-4:.1f},{gu[1]-14:.1f}"/>')
+    s.append(f'<path class="fl" data-d="2026-12-31" marker-end="url(#arr)" d="{arc(ci, sd, -0.16)}"/>')
+    s.append(f'<path class="gr" data-d="2027-01-14" marker-end="url(#arr)" d="M{gg[0]:.1f},{gg[1]:.1f} Q{an[0]+60:.1f},{an[1]+10:.1f} {pa[0]+13:.1f},{pa[1]-10:.1f}"/>')
+    s.append(f'<path class="bt" data-d="2027-01-16" marker-end="url(#arr)" d="M{pa[0]+12:.1f},{pa[1]+6:.1f} Q{(pa[0]+il[0])/2:.1f},{pa[1]+30:.1f} {il[0]-12:.1f},{il[1]+6:.1f}"/>')
+    s.append('</g>')
+    s.append(f'<circle class="dot2" cx="{gi[0]:.1f}" cy="{gi[1]:.1f}" r="5"/><text class="tag" x="{gi[0]-8:.1f}" y="{gi[1]-8:.1f}" text-anchor="end">GRU</text>')
+    s.append(f'<circle class="dot2" cx="{ci[0]:.1f}" cy="{ci[1]:.1f}" r="5"/><text class="tag" x="{ci[0]-8:.1f}" y="{ci[1]+18:.1f}" text-anchor="end">CGH</text>')
+    s.append(f'<text class="tag" x="{(ci[0]+sd[0])/2:.0f}" y="{IY+24}" text-anchor="middle">31.12. CGH → SDU</text>')
+
+    stop(GUA, 1, 'Guarujá', '27.–31.12.', dx=20, dy=6, proj=PI, r_=13, frm='2026-12-27', to='2026-12-30')
+    stop(RIO, 2, 'Rio de Janeiro', '31.12.–06.01.', dx=-30, dy=-40, anchor='end', proj=PI, r_=13, frm='2026-12-31', to='2027-01-05')
+    stop(PAR, 5, 'Paraty', '14.–16.01.', dx=18, dy=4, anchor='end', proj=PI, r_=13, frm='2027-01-14', to='2027-01-15')
+    stop(ILG, 6, 'Ilha Grande', '16.–20./21.01.', dx=-8, dy=40, proj=PI, r_=13, frm='2027-01-16', to='2027-01-21')
+    s.append(f'<text class="ctry" x="{IX+IW-10}" y="{IY+IH-12}" text-anchor="end">AUSSCHNITT SÜDOST</text>')
+
+    s.append('<g id="map-pins"></g>')
+    # Legende
+    lx, ly = 24, H - 128
+    s.append(f'<rect class="legbg" x="{lx}" y="{ly}" width="236" height="110" rx="6"/>')
+    s.append(f'<path class="fl" d="M{lx+16},{ly+26} h46"/><text class="legtxt" x="{lx+74}" y="{ly+31}">Flug</text>')
+    s.append(f'<path class="gr" d="M{lx+16},{ly+56} h46"/><text class="legtxt" x="{lx+74}" y="{ly+61}">Straße (Uber / Transfer)</text>')
+    s.append(f'<path class="bt" d="M{lx+16},{ly+86} h46"/><text class="legtxt" x="{lx+74}" y="{ly+91}">Boot / Fähre</text>')
+    s.append('</svg>')
+    return '\n'.join(s)

@@ -1,0 +1,4 @@
+tools/data/
+tools/__pycache__/
+web/_poster.html
+web/crew/

@@ -1,0 +1,366 @@
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Reiseübersicht · Stand 30.09.2026</div>
+  <h1>Brasilien <em>26/27</em></h1>
+  <div class="meta">
+    <span class="dates">27.12.2026 → 20./21.01.2027</span>
+    <span class="note">zusammengefasst aus den Gruppen „Brazil“ und „Drei Cevape Drei Kartoffeln“</span>
+  </div>
+  <div class="crew">
+    <span class="chip"><b>Jonas</b></span><span class="chip"><b>Patrick</b></span><span class="chip"><b>Simon</b></span><span class="chip"><b>Marco</b></span>
+    <span class="chip b"><b>Dajo</b> ab 06.01.</span><span class="chip b"><b>Greisel</b> ab 06.01.</span>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="Bereiche"><div class="tabs-in"><a href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht">Übersicht</a><a href="#crew-tab" id="tab-crew-tab" data-tab="crew-tab">Crew</a><a href="#drinks-tab" id="tab-drinks-tab" data-tab="drinks-tab">Drinks</a><a href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab">Tage</a><a href="#todos-tab" id="tab-todos-tab" data-tab="todos-tab">To-dos</a><a href="#reise" id="tab-reise" data-tab="reise">Flüge & Kosten</a><a href="#sprache-tab" id="tab-sprache-tab" data-tab="sprache-tab">Sprache</a><a href="#infos" id="tab-infos" data-tab="infos">Infos & Packen</a><a href="#extras" id="tab-extras" data-tab="extras">Downloads</a></div></nav>
+
+
+<section id="heute" data-tab="uebersicht" class="today-wrap">
+  <div class="today-head">
+    <h2>Heute</h2>
+    <div class="seg" role="group" aria-label="Ansicht für">
+      <button type="button" id="g-a" data-g="a" aria-pressed="true">Gringos plus 1 Cevapi</button>
+      <button type="button" id="g-b" data-g="b" aria-pressed="false">Dajo &amp; Greisel</button>
+    </div>
+  </div>
+  <div id="today" class="today" aria-live="polite">
+    <p class="note">Die Heute-Ansicht braucht JavaScript. Alle Tage stehen weiter unten.</p>
+  </div>
+</section>
+
+<section id="eckdaten" data-tab="uebersicht">
+<div class="facts">
+    <div class="fact"><strong>24</strong><span>Nächte für die Gringos plus 1 Cevapi</span></div>
+    <div class="fact"><strong>6</strong><span>Stationen</span></div>
+    <div class="fact"><strong>4</strong><span>Inlandsflüge, alle noch offen</span></div>
+    <div class="fact"><strong>6 / 7</strong><span>Unterkünfte gebucht</span></div>
+  </div>
+</section>
+
+<section id="route" data-tab="uebersicht">
+  <h2>Die Route</h2>
+  <figure>
+    %%MAP%%
+    <figcaption>Gestrichelt: Flug · durchgezogen: Straße · gepunktet: Boot. <span class="lg-done">Gelb</span> = schon geschafft, <span class="lg-here">pulsierend</span> = hier sind wir, <span class="lg-pin">rot</span> = letzter Check-in. Guarujá, Rio, Paraty und Ilha Grande sind rechts unten vergrößert.</figcaption>
+  </figure>
+  <div class="here-bar" id="here-bar"><span id="here-text">Noch zu Hause.</span> <a id="here-gmaps" href="https://www.google.com/maps" target="_blank" rel="noopener" hidden>In Google Maps öffnen</a></div>
+  <details class="checkin" id="checkin" open>
+    <summary>📍 Standort einchecken</summary>
+    <p class="dr-lock" id="ci-lock" hidden>🔒 <b>Einchecken nur durch den Admin (Patrick).</b></p>
+    <div class="ci-form">
+      <label for="ci-coords">Koordinaten</label>
+      <input id="ci-coords" type="text" inputmode="decimal" placeholder="z. B. -22.9711, -43.1822 oder Google-Maps-Link" autocomplete="off">
+      <label for="ci-label">Ort (optional)</label>
+      <input id="ci-label" type="text" maxlength="60" placeholder="z. B. Strandbar Ipanema">
+      <button type="button" class="btn" id="ci-save">Einchecken</button>
+    </div>
+    <p class="note">So kommst du an die Koordinaten: In Google Maps den blauen Punkt (deinen Standort) lange antippen, die Zahlen oben im Suchfeld kopieren und hier einfügen. Ein kopierter Google-Maps-Link geht auch.</p>
+    <p id="ci-status" class="note" role="status"></p>
+    <ol id="ci-list" class="ci-list"></ol>
+  </details>
+</section>
+
+<section id="stationen" data-tab="uebersicht">
+  <h2>Stationen</h2>
+  <div class="stops">
+    <div class="stop"><span class="no">1</span>
+      <div class="top"><h3>Guarujá</h3><span class="d">27.–31.12. · 4 Nächte</span><span class="pill warn">Verlängerung prüfen</span></div>
+      <p><b>Casa Praiana</b> nahe Praia da Enseada: 75 m zum Strand, kein Pool, kein Frühstück, Footvolley-Netze. Nur Gringos plus 1 Cevapi, gebucht für 3 Personen. Neu eine Nacht länger bis 31.12.</p>
+      <p class="links"><a href="https://www.booking.com/Share-q0Nagir" target="_blank" rel="noopener">Booking</a><a href="https://www.google.com/maps/search/?api=1&query=Casa+Praiana+Guaruj%C3%A1+Enseada" target="_blank" rel="noopener">Karte</a></p>
+    </div>
+    <div class="stop"><span class="no">2</span>
+      <div class="top"><h3>Rio de Janeiro</h3><span class="d">31.12.–06.01. · 6 Nächte</span><span class="pill warn">Datum prüfen</span></div>
+      <p><b>Tabas – Cena Carioca</b>, mit Gym, <b>nicht stornierbar</b>. Neue Anreise am 31.12., also direkt am Silvestertag. Abends Copacabana, ganz in Weiß.</p>
+      <p class="links"><a href="https://www.booking.com/Share-UjjihY" target="_blank" rel="noopener">Booking</a><a href="https://www.google.com/maps/search/?api=1&query=Tabas+Cena+Carioca+Rio+de+Janeiro" target="_blank" rel="noopener">Karte</a></p>
+      <ul><li>Christusstatue & Zuckerhut, Copacabana & Ipanema, Santa Teresa & Lapa, Sonnenuntergang am Arpoador</li></ul>
+    </div>
+    <div class="stop"><span class="no">3</span>
+      <div class="top"><h3>Foz do Iguaçu</h3><span class="d">06.–09.01. · 3 Nächte</span><span class="pill warn">Hotelname prüfen</span></div>
+      <p>Ab hier sind alle sechs zusammen. Die Unterkunft wurde beim Treffen am 09.09. festgelegt (ca. 80 € p. P.). Im Gespräch waren Hotel Portinari Ponte da Amizade (im Chat angepinnt), Della Foz, Baviera Iguassu und Che Hermano Suítes.</p>
+      <p class="links"><a href="https://c.24.de/ho/NUEN87" target="_blank" rel="noopener">Portinari</a><a href="https://c.24.de/ho/5ESDAM" target="_blank" rel="noopener">Della Foz</a><a href="https://c.24.de/ho/WRNADK" target="_blank" rel="noopener">Baviera</a><a href="https://www.google.com/maps/search/?api=1&query=Che+Hermano+Su%C3%ADtes+Foz+do+Igua%C3%A7u" target="_blank" rel="noopener">Che Hermano</a><a href="https://www.google.com/maps/search/?api=1&query=Foz+do+Igua%C3%A7u+hotels" target="_blank" rel="noopener">Karte Foz</a></p>
+      <ul><li>Brasilianische und argentinische Seite (Reisepass mitnehmen), optional Helikopter- oder Bootstour</li></ul>
+    </div>
+    <div class="stop"><span class="no">4</span>
+      <div class="top"><h3>Manaus & Amazonas</h3><span class="d">09.–14.01. · 4 Nächte + Nachtflug</span><span class="pill ok">gebucht</span></div>
+      <p><b>Casa 307</b> in Manaus für eine Nacht (14 € p. P.), danach 3 Nächte <b>Juma Kabanas „Nature Experience“</b> (520 € p. P., alles inklusive außer Bar, Abholung am Hotel).</p>
+      <p class="links"><a href="https://www.booking.com/Share-xSVoEp" target="_blank" rel="noopener">Casa 307 (Booking)</a><a href="https://www.google.com/maps/search/?api=1&query=Casa+307+Manaus" target="_blank" rel="noopener">Karte Casa 307</a><a href="https://www.jumakabanas.com/package/nature-experience-package-3-nights/" target="_blank" rel="noopener">Juma Kabanas</a></p>
+      <ul><li>Rosa Flussdelfine, Kaimansafari, Regenwald-Wanderungen, „Meeting of the Waters“</li>
+      <li>Rückfahrt am 13.01. um 08:00, in Manaus gegen 11:00. Danach den Tag mit Gepäck in der Stadt verbringen, abends zum Flughafen</li>
+        <li>Packliste für den Dschungel: <a href="#pack-dschungel">lange Hosen, Langarmshirts, Mückenschutz, Taschenlampe, Fernglas …</a></li></ul>
+    </div>
+    <div class="stop"><span class="no">5</span>
+      <div class="top"><h3>Paraty</h3><span class="d">14.–16.01. · 2 Nächte</span><span class="pill ok">gebucht</span></div>
+      <p><b>Geko Pousada Paraty</b>: 3 Zimmer inkl. Frühstück am Strand, 526 € gesamt (88 € p. P.), kostenlos stornierbar.</p>
+      <p class="links"><a href="https://www.booking.com/Share-zfyVPQM" target="_blank" rel="noopener">Booking</a><a href="https://www.google.com/maps/search/?api=1&query=Geko+Pousada+Paraty" target="_blank" rel="noopener">Karte</a></p>
+      <ul>
+        <li><b>Bootstour</b> mit Taxiboot oder Privatboot zu Inseln und Schnorchelspots, an Bord meist Drinks und Musik</li>
+        <li>Natürliche <b>Steinrutsche</b> im Fluss</li>
+        <li>Ausflug nach <b>Trindade</b>, Surfer- und Fischerdorf</li>
+        <li>Abends: koloniales Nachtleben in der autofreien Altstadt, Tische auf der Straße, überall Live-Musik</li>
+        <li>Probieren: <b>Gabriela Cravo e Canela</b>, der lokale Drink</li>
+        <li>Weiterreise nach Ilha Grande vorher buchen, z. B. bei Paraty Tours</li>
+      </ul>
+    </div>
+    <div class="stop"><span class="no">6</span>
+      <div class="top"><h3>Ilha Grande</h3><span class="d">16.–20.01. (Gringos plus 1 Cevapi) / 21.01. (Dajo & Greisel)</span><span class="pill open">noch offen</span></div>
+      <p>Unterkunft muss in <b>Vila do Abraão</b> liegen. Vorschlag: Balaio Hostel.</p>
+      <p class="links"><a href="https://www.booking.com/Share-dnNyRa" target="_blank" rel="noopener">Balaio Hostel (Booking)</a><a href="https://www.google.com/maps/search/?api=1&query=Vila+do+Abra%C3%A3o+Ilha+Grande" target="_blank" rel="noopener">Karte Vila do Abraão</a></p>
+      <ul>
+        <li>Traumstrand <b>Lopes Mendes</b>, mit dem Bootstaxi oder zu Fuß</li>
+        <li><b>Footvolley</b> am Strand von Vila do Abraão</li>
+        <li>Wanderung zum Wasserfall <b>Cachoeira da Feiticeira</b></li>
+        <li>Wanderung zum Strand von <b>Palmas</b></li>
+        <li>Bootstouren</li>
+        <li>Party: <b>Aquario Hostel Bar &amp; Night Club</b></li>
+        <li>Essen: Restaurant <b>Lua e Mar</b>, Fisch und Moqueca (Fischeintopf)</li>
+      </ul>
+    </div>
+    <div class="stop"><span class="no x">→</span>
+      <div class="top"><h3>Heimreise</h3><span class="d">20.01. / nach 21.01.</span><span class="pill warn">Details fehlen</span></div>
+      <p>Die Gringos plus 1 Cevapi fliegen am 20.01. heim. Dajo & Greisel hängen noch Rio (evtl. São Paulo) dran und fliegen dann über São Paulo nach München.</p>
+    </div>
+  </div>
+</section>
+
+
+<section id="crew" data-tab="crew-tab">
+  <h2>Die Crew</h2>
+  <div id="crew-overview" class="crew-ov"></div>
+  <div id="crew-list" class="crew-grid"></div>
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Foto vergrößert" hidden>
+    <button type="button" class="x" id="lightbox-close" aria-label="Schließen">×</button>
+    <figure><img id="lightbox-img" alt=""><figcaption id="lightbox-cap"></figcaption></figure>
+  </div>
+</section>
+
+<section id="drinks" data-tab="drinks-tab">
+  <h2>Drinks-Counter</h2>
+  <p class="note sub-lead" id="dr-mode">Jeder trägt seine Getränke ein, das Ranking aktualisiert sich live für alle.</p>
+
+  <details class="dr-add" id="dr-add" data-fold="add" open>
+    <summary class="dr-head"><h3>Getränk eintragen</h3></summary>
+    <p class="dr-lock" id="dr-lock" hidden>🔒 <b>Eintragen nur durch den Admin (Patrick).</b> Schick ihm deine Drinks einfach per WhatsApp, zum Beispiel „Jonas 2 Caipi 22:30“.</p>
+    <div class="dr-step"><div class="dr-whohead"><span class="eyebrow">Wer? <span class="note">(mehrere möglich)</span></span>
+      <span class="dr-quick"><button type="button" id="dr-all">Alle</button><button type="button" id="dr-none">Keiner</button></span></div>
+      <div id="dr-who" class="dr-who" role="group" aria-label="Wer trinkt"></div></div>
+    <div class="dr-step"><span class="eyebrow">Was?</span><div id="dr-what" class="dr-what"></div>
+      <details class="dr-custom" open><summary>Eigenes Getränk</summary>
+        <div class="dr-cf">
+          <label for="dr-c-name">Name</label><input id="dr-c-name" type="text" maxlength="40" placeholder="z. B. Caipi mit Maracuja">
+          <label for="dr-c-cat">Art</label><select id="dr-c-cat"></select>
+          <label for="dr-c-ml">Menge (ml)</label><input id="dr-c-ml" type="number" min="10" max="2000" step="10" value="300">
+          <label for="dr-c-abv">Alkohol (%)</label><input id="dr-c-abv" type="number" min="0" max="80" step="0.1" value="5">
+          <button type="button" class="btn ghost" id="dr-c-use">Auswählen</button>
+        </div>
+      </details>
+    </div>
+    <div class="dr-step dr-qty"><label class="eyebrow" for="dr-qty">Wie viele pro Person?</label>
+      <select id="dr-qty"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+    <div class="dr-step dr-when"><span class="eyebrow">Wann?</span>
+      <label class="slow"><input type="checkbox" id="dr-now" checked> Jetzt</label>
+      <input type="datetime-local" id="dr-time" aria-label="Uhrzeit (Ortszeit)" hidden>
+    </div>
+    <div class="dr-go"><button type="button" class="btn" id="dr-submit" disabled>Eintragen 🍻</button><span id="dr-status" class="note" role="status"></span></div>
+  </details>
+
+  <div class="dr-grid">
+    <details class="dr-card" data-fold="rank" open>
+      <summary class="dr-head"><h3>Ranking</h3></summary>
+      <div class="seg small dr-metric" role="group" aria-label="Ranking nach">
+        <button type="button" data-m="count" aria-pressed="true">Anzahl</button><button type="button" data-m="grams" aria-pressed="false">Reinalkohol</button><button type="button" data-m="liters" aria-pressed="false">Liter</button>
+      </div>
+      <div id="dr-rank" class="dr-rank" aria-live="polite"></div>
+    </details>
+    <details class="dr-card" data-fold="bac" open>
+      <summary class="dr-head"><h3>Pegel jetzt</h3></summary>
+      <div id="dr-bac" class="dr-bac"></div>
+      <p class="note dr-disc">Grobe Spaß-Schätzung nach der Widmark-Formel (Gewicht, Geschlecht, Abbau ca. 0,15 ‰ pro Stunde). Sagt nichts darüber, ob jemand fahren, schwimmen oder Boot fahren darf.</p>
+    </details>
+  </div>
+
+  <details class="dr-card" data-fold="days" open>
+    <summary class="dr-head"><h3>Getränke pro Tag</h3><span class="note">alle zusammen</span></summary>
+    <div class="dr-days-wrap"><div id="dr-days" class="dr-days"></div></div>
+  </details>
+
+  <details class="dr-card" data-fold="daytable" open>
+    <summary class="dr-head"><h3>Tagesübersicht</h3><span class="note">Anzahl und höchster Pegel pro Person</span></summary>
+    <div class="tbl"><table id="dr-daytable" class="dr-table"></table></div>
+  </details>
+
+  <details class="dr-card" data-fold="total" open>
+    <summary class="dr-head"><h3>Gesamtstatistik</h3><span class="note">die Abrechnung nach dem Urlaub</span></summary>
+    <div class="tbl"><table id="dr-total" class="dr-table"></table></div>
+  </details>
+
+  <details class="dr-card" data-fold="log" open>
+    <summary class="dr-head"><h3>Letzte Einträge</h3><span class="note">zum Korrigieren</span></summary>
+    <ol id="dr-log" class="dr-log"></ol>
+  </details>
+
+  <details class="dr-body" open><summary>Gewicht für die Promille-Schätzung anpassen</summary>
+    <div id="dr-bodyform" class="dr-bodyform"></div>
+  </details>
+  <div id="dr-tip" class="dr-tip" role="tooltip" hidden></div>
+</section>
+
+<section id="tage" data-tab="tage-tab">
+  <div class="today-head">
+    <h2>Tag für Tag</h2>
+    <div class="seg" role="group" aria-label="Tage anzeigen für">
+      <button type="button" id="g-a2" data-g="a" aria-pressed="true">Gringos plus 1 Cevapi</button>
+      <button type="button" id="g-b2" data-g="b" aria-pressed="false">Dajo &amp; Greisel</button>
+    </div>
+  </div>
+  <p class="note sub-lead">„Idee“ heißt: Vorschlag, noch nichts gebucht.</p>
+  <div id="days" class="days2"></div>
+</section>
+
+
+<section id="todos" data-tab="todos-tab">
+  <h2>To-dos</h2>
+  <p class="note sub-lead" id="todo-mode">Abhaken und eintragen, wer sich kümmert. Das sehen alle, die die Seite öffnen.</p>
+  <ol id="todo-list" class="todo2"></ol>
+  <form id="todo-add" class="todo-add" hidden>
+    <label for="todo-new" class="sr">Neuer Punkt</label>
+    <input id="todo-new" type="text" maxlength="140" placeholder="Eigenen Punkt hinzufügen, z. B. „Adapter kaufen“" autocomplete="off">
+    <button type="submit">Hinzufügen</button>
+  </form>
+  <p id="todo-status" class="note" role="status"></p>
+</section>
+
+<section id="fluege" data-tab="reise">
+  <h2>Flüge</h2>
+  <h3>Langstrecke</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Wer</th><th>Strecke</th><th>Datum</th><th>Details</th><th>p. P.</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Jonas, Patrick, Simon</td><td class="code">MUC → FCO → GRU</td><td class="d">27.12.</td><td>1,5 h + 1 h 10 min Umstieg + 12 h, keine Sitzplätze reserviert</td><td class="n">1.120 €</td><td><span class="pill ok">gebucht 19.08.</span></td></tr>
+      <tr><td>Jonas, Patrick, Simon</td><td class="code">→ MUC</td><td class="d">ca. 20.01.</td><td>Flughafen und Uhrzeit stehen nicht im Chat, vermutlich ab São Paulo</td><td class="n">inkl.</td><td><span class="pill warn">prüfen</span></td></tr>
+      <tr><td>Marco</td><td class="code">wie Gringos plus 1 Cevapi?</td><td class="d">27.12.</td><td>wohl separat gebucht; Rückflug 15./16. oder 20.01. war offen</td><td class="n">?</td><td><span class="pill warn">klären</span></td></tr>
+      <tr><td>Dajo & Greisel</td><td class="code">MUC → FRA → GIG</td><td class="d">an 06.01. 06:10</td><td></td><td class="n">1.300 €</td><td><span class="pill ok">gebucht</span></td></tr>
+      <tr><td>Dajo & Greisel</td><td class="code">GIG → GRU → MUC</td><td class="d">nach 21.01.</td><td>Umstieg in São Paulo, Datum nicht im Chat</td><td class="n">inkl.</td><td><span class="pill ok">gebucht</span></td></tr>
+    </tbody>
+  </table></div>
+  <h3>Inlandsflüge</h3>
+  <div class="tbl"><table>
+    <thead><tr><th>Datum</th><th>Strecke</th><th>Zeit</th><th>Wer</th><th>Richtpreis</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td class="d">31.12.</td><td class="code">CGH → SDU</td><td>vormittags, damit es vor Silvester klappt</td><td>Gringos plus 1 Cevapi</td><td class="n">–</td><td><span class="pill open">offen, Patrick bucht</span></td></tr>
+      <tr><td class="d">06.01.</td><td class="code">GIG → IGU</td><td class="d">ca. 10:40</td><td>alle 6</td><td class="n">ca. 140 €</td><td><span class="pill open">offen</span></td></tr>
+      <tr><td class="d">09.01.</td><td class="code">IGU → MAO</td><td>vormittags, mit Umstieg</td><td>alle 6</td><td class="n">ca. 370 €</td><td><span class="pill open">offen</span></td></tr>
+      <tr><td class="d">14.01.</td><td class="code">MAO → GIG</td><td class="d">01:45 → 06:40</td><td>alle 6</td><td class="n">ca. 190 €</td><td><span class="pill open">offen</span></td></tr>
+    </tbody>
+  </table></div>
+  <p class="note" style="margin-top:10px">Richtpreise von Skyscanner (24.08.). Laut Jonas werden Flüge 8–10 Wochen vorher günstiger, also Ende Oktober bis Anfang November. Dann ist voraussichtlich auch Dajos neuer Reisepass da (ab der Woche vom 19.10.).</p>
+</section>
+
+<section id="kosten" data-tab="reise">
+  <h2>Kosten pro Person</h2>
+  <div class="tbl"><table style="min-width:420px">
+    <thead><tr><th>Posten</th><th style="text-align:right">Gringos plus 1 Cevapi</th><th style="text-align:right">Dajo & Greisel</th></tr></thead>
+    <tbody>
+      <tr><td>Langstreckenflug</td><td class="n">1.120 €</td><td class="n">1.300 €</td></tr>
+      <tr><td>Inlandsflüge GIG–IGU–MAO–GIG (Richtpreis)</td><td class="n">ca. 700 €</td><td class="n">ca. 700 €</td></tr>
+      <tr><td>Flug CGH → SDU</td><td class="n">offen</td><td class="n">–</td></tr>
+      <tr><td>Guarujá + Rio</td><td class="n">Splitwise</td><td class="n">–</td></tr>
+      <tr><td>Foz do Iguaçu</td><td class="n">ca. 80 €</td><td class="n">ca. 80 €</td></tr>
+      <tr><td>Manaus Casa 307</td><td class="n">14 €</td><td class="n">14 €</td></tr>
+      <tr><td>Juma Lodge</td><td class="n">520 €</td><td class="n">520 €</td></tr>
+      <tr><td>Paraty</td><td class="n">88 €</td><td class="n">88 €</td></tr>
+      <tr><td>Ilha Grande</td><td class="n">offen</td><td class="n">offen</td></tr>
+      <tr><td><b>Summe bekannter Posten</b></td><td class="n"><b>ca. 2.520 €</b></td><td class="n"><b>ca. 2.700 €</b></td></tr>
+    </tbody>
+  </table></div>
+  <p class="note" style="margin-top:10px">Abgerechnet wird über zwei Splitwise-Gruppen: eine für die Gringos plus 1 Cevapi (Guarujá, Rio), eine für alle sechs.</p>
+</section>
+
+
+<section id="sprache" data-tab="sprache-tab">
+  <h2>Mini-Sprachführer</h2>
+  <p class="note sub-lead">Brasilianisches Portugiesisch. Auf ▶ tippen: Erst kommt der Satz auf Deutsch, nach einer kurzen Pause auf Portugiesisch. Die Aussprache darunter ist eine grobe deutsche Umschrift, die Silbe in Großbuchstaben wird betont.</p>
+  <div class="speak-bar">
+    <label class="slow"><input type="checkbox" id="speak-slow" checked> Langsam sprechen</label>
+    <label class="slow" id="speak-device-wrap" hidden><input type="checkbox" id="speak-device"> Stimme des Handys verwenden</label>
+    <span id="speak-status" class="note" role="status"></span>
+  </div>
+  <div id="phrases" class="phrases"></div>
+  <p class="note" style="margin-top:12px">Faustregeln: R am Wortanfang klingt wie ein H (Rio = „HI-u“), „de“ und „te“ am Ende wie „dschi“ und „tschi“, „ão“ ist ein nasales „aun“. Männer sagen „obrigado“, Frauen „obrigada“.</p>
+  <p class="note">Aufnahmen: Computerstimmen „de4“ und „br3“ (eSpeak NG mit MBROLA), bewusst langsam gesprochen. Die Handy-Stimme ist oft natürlicher, falls verfügbar.</p>
+</section>
+
+<section id="praktisch" data-tab="infos">
+  <h2>Praktisches</h2>
+  <p class="note sub-lead">Allgemeine Reiseinfos, nicht aus dem Chat. Vor Abflug kurz gegenchecken.</p>
+  <div class="grid-info">
+    <div class="info"><h3>Zeit</h3><p>Rio, São Paulo, Foz do Iguaçu: <b>4 h hinter Deutschland</b> (UTC−3, keine Sommerzeit). Manaus: <b>5 h</b> (UTC−4). Flugzeiten auf dieser Seite sind Ortszeit.</p></div>
+    <div class="info"><h3>Geld</h3><p>Brasilianischer Real (R$). Karte geht fast überall, etwas Bargeld für Strand und Boote. Im Restaurant stehen oft 10 % „serviço“ schon auf der Rechnung. Für Argentinien reicht meist die Karte.</p></div>
+    <div class="info"><h3>Strom</h3><p>Steckdosen Typ N (auch C), Spannung je nach Region 127 V oder 220 V. Flache Eurostecker passen meist, Schuko-Stecker nicht, also Adapter mitnehmen. Handy- und Laptop-Netzteile können beides.</p></div>
+    <div class="info"><h3>Unterwegs</h3><p>Uber und 99 funktionieren in allen Städten; für die Transfers mit sechs Leuten oft günstiger als Shuttles. eSIM vorab besorgen, Offline-Karten und Portugiesisch in Google Übersetzer laden (in der Lodge kaum Netz).</p></div>
+    <div class="info"><h3>Wetter im Januar</h3><p>Hochsommer. Rio und Küste: 25–35 °C, schwül, nachmittags Gewitter. Iguaçu: heiß, feucht. Amazonas: Regenzeit, um 30 °C. Sonne sehr stark: hoher Lichtschutzfaktor.</p></div>
+    <div class="info"><h3>Sicherheit</h3><p>Handy nicht offen auf der Straße, am Strand keine Wertsachen liegen lassen, nachts Uber statt zu Fuß. Leitungswasser nicht trinken. Kopien von Pass und Impfpass separat speichern.</p></div>
+    <div class="info"><h3>Notruf</h3><p><b>190</b> Polizei · <b>192</b> Rettungsdienst · <b>193</b> Feuerwehr. Auslandskrankenversicherung vorher prüfen.</p></div>
+  </div>
+</section>
+
+<section class="cols" id="gesundheit" data-tab="infos">
+  <div>
+    <h2>Gesundheit & Einreise</h2>
+    <ul class="plain">
+      <li><b>Gelbfieber-Impfung</b> ist dringend empfohlen (Manaus, Iguaçu) und muss mindestens 10 Tage vor der Einreise erfolgt sein.</li>
+      <li>Hepatitis A (+ B), Standardimpfungen prüfen. Tollwut und Typhus sind optional.</li>
+      <li>Malaria-Risiko im Amazonas mit dem Tropenarzt klären. Mückenschutz auch wegen Dengue.</li>
+      <li>Deutsche brauchen bis 90 Tage kein Visum. Der Pass sollte noch 6 Monate gültig sein. Vor Abflug beim Auswärtigen Amt gegenchecken.</li>
+      <li>CPF (Steuernummer) wird bewusst nicht beantragt.</li>
+    </ul>
+  </div>
+</section>
+
+
+<section id="packen" data-tab="infos">
+  <h2>Packlisten</h2>
+  <p class="note sub-lead">Häkchen werden nur auf deinem Gerät gespeichert, jeder hat seine eigene Liste.</p>
+  <div class="cols">
+    <div><h3>Allgemein</h3><ul class="pack2" data-list="allg">
+      <li>Reisepass (mind. 6 Monate gültig)</li><li>Impfpass mit Gelbfieber</li><li>Kopien von Pass und Buchungen</li><li>Kreditkarten (zwei verschiedene)</li><li>Auslandskrankenversicherung</li><li>Steckdosen-Adapter</li><li>Powerbank</li><li>Sonnencreme LSF 50</li><li>Mückenspray mit DEET</li><li>Weißes Silvester-Outfit</li><li>Badesachen, Flip-Flops</li><li>Leichte Regenjacke</li><li>Wasserdichter Beutel für Bootstouren</li><li>Reiseapotheke</li><li>Schlafmaske &amp; Ohrstöpsel (Nachtflug)</li><li>Trinkflasche</li>
+    </ul></div>
+    <div id="pack-dschungel"><h3>Dschungel <span class="note">(Empfehlung der Juma Lodge)</span></h3><ul class="pack2" data-list="jungle">
+      <li>Lange Hosen und Shorts</li><li>Langarmshirts und T-Shirts</li><li>Kleiner Tagesrucksack</li><li>Sonnenbrille</li><li>Insektenschutz</li><li>Regenjacke</li><li>Cap oder Hut</li><li>Geschlossene Schuhe, Stiefel oder bequeme Sneaker</li><li>Taschenlampe</li><li>Fernglas</li><li>Badesachen</li><li>Kamera</li><li>Ersatzakkus und Ladegerät</li>
+    </ul></div>
+  </div>
+</section>
+
+
+<section id="downloads" data-tab="extras">
+  <h2>Downloads &amp; Kalender</h2>
+  <div class="cols">
+    <div class="dl">
+      <h3>Offline-Version</h3>
+      <p>Die ganze Übersicht als PDF, für die Lodge ohne Netz.</p>
+      <button type="button" id="pdf-btn" class="btn">PDF speichern</button>
+      <p class="note">Falls der Button nicht geht: <a href="https://github.com/schuchpatrick-hub/Brasilien/blob/main/brasilien-reise.pdf" target="_blank" rel="noopener">PDF auf GitHub</a></p>
+    </div>
+    <div class="dl">
+      <h3>Kalender fürs Handy</h3>
+      <p>Alle Flüge, Unterkünfte und Termine als Kalenderdatei. Auf GitHub „Download raw file“ tippen und die Datei öffnen.</p>
+      <p><a class="btn ghost" href="https://github.com/schuchpatrick-hub/Brasilien/blob/main/kalender/gringos-plus-1-cevapi.ics" target="_blank" rel="noopener">Kalender Gringos plus 1 Cevapi</a>
+         <a class="btn ghost" href="https://github.com/schuchpatrick-hub/Brasilien/blob/main/kalender/dajo-greisel.ics" target="_blank" rel="noopener">Kalender Dajo &amp; Greisel</a></p>
+      <p class="note">Einzelne Flüge direkt in Google Kalender:</p>
+      <ul id="gcal" class="gcal"></ul>
+    </div>
+  </div>
+</section>
+
+<section id="whatsapp" data-tab="extras">
+  <h2>Kurzfassung für WhatsApp</h2>
+  <pre id="wa-text" class="wa" tabindex="0"></pre>
+  <button type="button" id="wa-copy" class="btn">Text kopieren</button> <span id="wa-status" class="note" role="status"></span>
+</section>
+
+<section id="ideen" data-tab="extras">
+  <div class="warnbox"><b>Ideen am Rand:</b> Búzios statt Paraty · Florianópolis (1,5 h Flug von Rio, Strand und Nachtleben) · Ilhabela statt Guarujá (schöner, aber 3,5 h von São Paulo). Einen Gabelflug hattet ihr verworfen, weil er nicht günstiger war.</div>
+</section>
+
+<footer>Alle Angaben stammen aus den WhatsApp-Chats. Bilder und Screenshots (Buchungsbestätigungen, Dajos Excel-Übersicht) waren im Export nicht enthalten. Gelb markierte Punkte bitte gegen die Bestätigungen prüfen.</footer>
+</div>
