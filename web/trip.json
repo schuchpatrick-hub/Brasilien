@@ -1478,5 +1478,229 @@
         "t": "{n} Nächte im Juma-Dschungel mit Kaimanen als Nachbarn 🐊"
       }
     ]
-  }
+  },
+  "flights": [
+    {
+      "date": "2026-12-27",
+      "g": "a",
+      "to": "GRU",
+      "via": [
+        "FCO"
+      ],
+      "fromCity": "München",
+      "toCity": "São Paulo (Guarulhos)",
+      "time": "ab ca. 06:25",
+      "timeUnsure": true,
+      "dur": "1,5 h + 1 h 10 min Umstieg in Rom + ca. 12 h",
+      "price": "1.120 €",
+      "status": "booked",
+      "statusText": "gebucht am 19.08.",
+      "note": "Keine Sitzplätze reserviert, beim Check-in versuchen.",
+      "from": "MUC"
+    },
+    {
+      "date": "2026-12-31",
+      "g": "a",
+      "to": "SDU",
+      "fromCity": "São Paulo (Congonhas)",
+      "toCity": "Rio (Santos Dumont)",
+      "time": "vormittags",
+      "dur": "ca. 1 h",
+      "price": "offen",
+      "status": "open",
+      "statusText": "Patrick bucht, braucht die Passdaten",
+      "warn": "Congonhas und Santos Dumont, nicht die internationalen Flughäfen GRU und GIG! Vormittags, damit Silvester sicher klappt.",
+      "from": "CGH"
+    },
+    {
+      "date": "2027-01-06",
+      "g": "b",
+      "to": "GIG",
+      "via": [
+        "FRA"
+      ],
+      "fromCity": "München",
+      "toCity": "Rio (Galeão)",
+      "time": "an 06:10",
+      "dur": "über Frankfurt",
+      "price": "1.300 €",
+      "status": "booked",
+      "statusText": "gebucht",
+      "from": "MUC"
+    },
+    {
+      "date": "2027-01-06",
+      "g": "all",
+      "to": "IGU",
+      "fromCity": "Rio (Galeão)",
+      "toCity": "Foz do Iguaçu",
+      "time": "ca. 10:40",
+      "dur": "ca. 2 h",
+      "price": "ca. 140 €",
+      "status": "open",
+      "statusText": "noch nicht gebucht",
+      "warn": "Dajo & Greisel landen um 06:10 auf einem getrennten Ticket: flexiblen Tarif wählen, falls Frankfurt Verspätung hat.",
+      "from": "GIG"
+    },
+    {
+      "date": "2027-01-09",
+      "g": "all",
+      "to": "MAO",
+      "via": [
+        "Umstieg"
+      ],
+      "fromCity": "Foz do Iguaçu",
+      "toCity": "Manaus",
+      "time": "vormittags",
+      "dur": "mit Umstieg",
+      "price": "ca. 370 €",
+      "status": "open",
+      "statusText": "noch nicht gebucht",
+      "from": "IGU"
+    },
+    {
+      "date": "2027-01-14",
+      "g": "all",
+      "to": "GIG",
+      "fromCity": "Manaus",
+      "toCity": "Rio (Galeão)",
+      "time": "01:45 → 06:40",
+      "dur": "ca. 4 h",
+      "price": "ca. 190 €",
+      "status": "open",
+      "statusText": "noch nicht gebucht",
+      "warn": "Nachtflug: schon am Abend des 13.01. zum Flughafen!",
+      "from": "MAO"
+    },
+    {
+      "date": "2027-01-20",
+      "g": "a",
+      "to": "MUC",
+      "fromCity": "vermutlich São Paulo",
+      "toCity": "München",
+      "fromUnsure": true,
+      "time": "Uhrzeit fehlt",
+      "timeUnsure": true,
+      "dur": "",
+      "price": "inkl.",
+      "status": "check",
+      "statusText": "gebucht, Details fehlen",
+      "note": "Flughafen und Uhrzeit stehen nicht im Chat. Von Ilha Grande nach GRU: Boot plus ca. 5–6 h Straße.",
+      "from": "GRU"
+    },
+    {
+      "date": "2027-01-21",
+      "g": "b",
+      "to": "MUC",
+      "via": [
+        "GRU"
+      ],
+      "fromCity": "Rio (Galeão)",
+      "toCity": "München",
+      "time": "Datum nicht im Chat",
+      "timeUnsure": true,
+      "dateText": "nach 21.01.",
+      "dur": "Umstieg in São Paulo",
+      "price": "inkl.",
+      "status": "booked",
+      "statusText": "gebucht",
+      "from": "GIG"
+    }
+  ],
+  "flightsNote": {
+    "window": "2026-10-19",
+    "text": "Laut Jonas werden Flüge 8–10 Wochen vorher günstiger, also Ende Oktober bis Anfang November. Dann ist auch Dajos neuer Reisepass da (ab der Woche vom 19.10.). Richtpreise von Skyscanner (24.08.)."
+  },
+  "costs": [
+    {
+      "label": "Langstreckenflug",
+      "a": {
+        "v": 1120,
+        "k": "fix"
+      },
+      "b": {
+        "v": 1300,
+        "k": "fix"
+      }
+    },
+    {
+      "label": "Inlandsflüge GIG–IGU–MAO–GIG",
+      "a": {
+        "v": 700,
+        "k": "ca"
+      },
+      "b": {
+        "v": 700,
+        "k": "ca"
+      }
+    },
+    {
+      "label": "Flug CGH → SDU",
+      "a": {
+        "k": "open"
+      },
+      "b": null
+    },
+    {
+      "label": "Guarujá + Rio",
+      "a": {
+        "k": "split",
+        "t": "über Splitwise"
+      },
+      "b": null
+    },
+    {
+      "label": "Foz do Iguaçu",
+      "a": {
+        "v": 80,
+        "k": "ca"
+      },
+      "b": {
+        "v": 80,
+        "k": "ca"
+      }
+    },
+    {
+      "label": "Manaus, Casa 307",
+      "a": {
+        "v": 14,
+        "k": "fix"
+      },
+      "b": {
+        "v": 14,
+        "k": "fix"
+      }
+    },
+    {
+      "label": "Juma Lodge",
+      "a": {
+        "v": 520,
+        "k": "fix"
+      },
+      "b": {
+        "v": 520,
+        "k": "fix"
+      }
+    },
+    {
+      "label": "Paraty",
+      "a": {
+        "v": 88,
+        "k": "fix"
+      },
+      "b": {
+        "v": 88,
+        "k": "fix"
+      }
+    },
+    {
+      "label": "Ilha Grande",
+      "a": {
+        "k": "open"
+      },
+      "b": {
+        "k": "open"
+      }
+    }
+  ]
 }
