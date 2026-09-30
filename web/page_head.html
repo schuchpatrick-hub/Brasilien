@@ -37,7 +37,24 @@ p{margin:0;max-width:68ch}
 .eyebrow{font:600 .75rem var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .wrap > *{min-width:0}
 header{display:grid;gap:14px;position:relative;overflow:hidden;isolation:isolate;margin:-28px -16px 0;padding:34px 20px 26px;background:var(--hero);color:#f4f7f2;border-radius:0 0 26px 26px}
-header::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--hero-wave);-webkit-mask:var(--wave) 0 0/120px 40px repeat;mask:var(--wave) 0 0/120px 40px repeat}
+header{min-height:340px;align-content:end;padding-top:60px}
+.hero-bg{position:absolute;inset:0;z-index:-2}
+.hero-bg svg{width:100%;height:100%;display:block}
+header::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(4,20,12,.15) 0%,rgba(4,20,12,.35) 45%,rgba(4,20,12,.82) 100%),linear-gradient(90deg,rgba(4,20,12,.55),rgba(4,20,12,0) 70%)}
+header h1,header .dates,header .eyebrow,header .note{text-shadow:0 2px 12px rgba(0,0,0,.45)}
+header{--sky1:#2f8fd8;--sky2:#8fd0f2;--sky3:#ffe9bf;--sun-c:#ffe27a;--moon-cut:transparent;--sea1:#1aa3b8;--sea2:#0d6f8f;--hill1:#1f5e3c;--hill2:#2d7a4f;--sand:#f1d9a4;--palm:#0f2a1c}
+header[data-time="morning"]{--sky1:#7ab8e8;--sky2:#f7c9a6;--sky3:#ffe7c2;--sun-c:#ffd98a}
+header[data-time="sunset"]{--sky1:#2b2d6e;--sky2:#e9676a;--sky3:#ffb35c;--sun-c:#ffcf5c;--sea1:#b85a6a;--sea2:#3a2f6b;--hill1:#2a1f3d;--hill2:#3b2c52;--sand:#d8a878;--palm:#1a1026}
+header[data-time="night"]{--sky1:#070b24;--sky2:#16225a;--sky3:#2e3b7a;--sun-c:#f4f1d6;--moon-cut:#0c1440;--sea1:#14224f;--sea2:#0a1233;--hill1:#0b1430;--hill2:#121d40;--sand:#3a3a55;--palm:#05070f}
+.hero-scene .stars{opacity:0}
+header[data-time="night"] .hero-scene .stars{opacity:.9}
+header[data-time="night"] .hero-scene .glint{opacity:.25}
+.stop-img,.divider-scene,.today-img{border-radius:16px;overflow:hidden;line-height:0}
+.stop-img{height:110px;margin:4px 0 8px;max-width:640px}
+.stop-img svg,.divider-scene svg,.today-img svg{width:100%;height:100%;display:block}
+.divider-scene{height:clamp(90px,16vw,150px);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.today-img{height:96px;margin:-8px -8px 4px;border-radius:12px}
+@media print{.divider-scene{display:none}.stop-img{height:70px}}
 header::after{content:"";position:absolute;left:0;right:0;bottom:0;height:6px;background:linear-gradient(90deg,var(--verde) 0 33%,var(--amarelo) 33% 66%,var(--azul) 66%)}
 header .eyebrow{color:#b9d3c3}
 header h1{color:#fff}
