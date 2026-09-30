@@ -135,11 +135,6 @@ td.n{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
 .days dt.k{color:var(--fg)}
 .days dd{min-width:0}
 .days > :nth-last-child(-n+2){border-bottom:0}
-/* To-dos */
-ol.todo{margin:0;padding:0;list-style:none;counter-reset:t;display:grid;gap:10px}
-ol.todo li{counter-increment:t;display:grid;grid-template-columns:2.2rem 1fr;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
-ol.todo li::before{content:counter(t);font:800 1.3rem var(--display);color:var(--accent)}
-ol.todo li.hot{border-color:var(--open)}ol.todo li.hot::before{color:var(--open)}
 .cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
 .cols > *{min-width:0}
 ul.plain{margin:0;padding-left:18px;display:grid;gap:6px}
@@ -394,21 +389,6 @@ a{color:var(--accent)}
 .day .tm{font:600 .85rem var(--mono);color:var(--sky)}
 .gtag{display:inline-block;font:600 .68rem var(--body);border:1px solid var(--line);border-radius:999px;padding:1px 7px;margin-left:6px;color:var(--muted);vertical-align:middle}
 .unsure{color:var(--warn);font-weight:600;font-size:.8rem}
-/* To-dos */
-ol.todo2{margin:0;padding:0;list-style:none;display:grid;gap:10px}
-.todo2 li{display:grid;grid-template-columns:auto 1fr auto;gap:6px 12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
-.todo2 li.p1{border-left:4px solid var(--open)}
-.todo2 li.done{opacity:.6}
-.todo2 li.done .tt{text-decoration:line-through}
-.todo2 input[type=checkbox]{width:20px;height:20px;margin-top:2px;accent-color:var(--accent)}
-.todo2 .tt{font-weight:600}
-.todo2 .dd{color:var(--muted);font-size:.9rem}
-.todo2 .ctl{display:flex;gap:6px;align-items:center}
-.todo2 select{font:500 .85rem var(--body);background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:6px;padding:4px 6px}
-.todo2 .del{background:none;border:0;color:var(--muted);cursor:pointer;font-size:1.1rem;padding:2px 6px}
-.todo-add{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.todo-add input{flex:1 1 220px;min-width:0;font:500 .95rem var(--body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
-@media (max-width:560px){.todo2 li{grid-template-columns:auto 1fr}.todo2 .ctl{grid-column:2}}
 /* Real-Rechner */
 .fx{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;max-width:640px}
 .fx-dir{display:inline-flex;justify-self:start;border:1px solid var(--line);border-radius:999px;background:var(--bg);padding:3px}
@@ -448,8 +428,8 @@ ul.pack2{list-style:none;margin:0;padding:0;display:grid;gap:2px}
 @media (max-width:560px){.day{grid-template-columns:1fr}.today li{grid-template-columns:4.5rem 1fr}}
 @media print{
   body{background:#fff;color:#000}
-  .toc,.seg,#heute,#downloads,#whatsapp,.todo-add,.todo2 .ctl,#todo-status,.btn{display:none!important}
-  section{break-inside:auto}.day,.todo2 li,.stop,tr,.info{break-inside:avoid}
+  .toc,.seg,#heute,#downloads,#whatsapp,.btn{display:none!important}
+  section{break-inside:auto}.day,.stop,tr,.info{break-inside:avoid}
   figure{break-inside:avoid}
   .wrap{gap:26px;padding-block:0}
 }

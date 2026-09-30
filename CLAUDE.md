@@ -8,9 +8,9 @@ Reiseübersicht, die bei neuen Infos (Buchungen, Chat-Exporte, Screenshots) aktu
 | Datei | Zweck |
 |---|---|
 | `README.md` | Hauptübersicht (Route, Tag für Tag, Flüge, Unterkünfte, Kosten, offene Punkte, Gesundheit) |
-| `web/trip.json` | **Datenquelle** für Heute-Ansicht, Tag für Tag, To-do-Liste und Kalenderdateien (Tage, Termine mit UTC-Zeiten, Unterkünfte, To-dos) |
-| `web/page_body.html` | Statischer Inhalt der Webseite; jede `<section>` hat `data-tab` = Kapitel, zu dem der Reiter oben springt; alles bleibt untereinander sichtbar ( uebersicht, tage-tab, todos-tab, reise, sprache-tab, infos, extras) (Stationen, Flüge, Kosten, Praktisches, Packlisten, Downloads); `%%MAP%%` = Karte |
-| `web/page_script.html` | JavaScript der Webseite: Heute/Countdown, Gruppen-Umschalter, gemeinsame To-dos (`db`), Packlisten (localStorage), PDF-Download, WhatsApp-Text; `%%TRIP%%` = trip.json |
+| `web/trip.json` | **Datenquelle** für Heute-Ansicht, Tag für Tag und Kalenderdateien (Tage, Termine mit UTC-Zeiten, Unterkünfte, Crew, Drinks, Real-Rechner) |
+| `web/page_body.html` | Statischer Inhalt der Webseite; jede `<section>` hat `data-tab` = Kapitel, zu dem der Reiter oben springt; alles bleibt untereinander sichtbar (uebersicht, crew-tab, drinks-tab, tage-tab, reise, sprache-tab, infos, extras) (Stationen, Flüge, Kosten, Praktisches, Packlisten, Downloads); `%%MAP%%` = Karte |
+| `web/page_script.html` | JavaScript der Webseite: Heute/Countdown, Gruppen-Umschalter, Drinks und Check-ins (`db`), Real-Rechner, Packlisten (localStorage), PDF-Download, WhatsApp-Text; `%%TRIP%%` = trip.json |
 | `web/page_head.html` | Titel + CSS der Webseite (Farb-Tokens, Hell/Dunkel) |
 | `web/poster_template.html` | Rahmen für das Reisebild (Titel, Stationsleiste unten) |
 | `tools/gen_map.py` | Zeichnet die Karte: Orte, Flugbögen, Beschriftungen, Südost-Ausschnitt |
@@ -33,16 +33,14 @@ Die Webseite erst nach dem Merge neu veröffentlichen.
 
 
 1. Fakten ändern in `README.md`, `web/page_body.html` **und** `web/trip.json` (plus ggf. Stationsleiste in
-   `web/poster_template.html`, Beschriftungen in `tools/gen_map.py`, WhatsApp-Text in `web/page_script.html`).
-   Erledigte To-dos nicht aus trip.json löschen, solange die geteilte Liste sie abhakt; neue To-dos mit neuer `id`.
+   `web/poster_template.html`, Beschriftungen in `tools/gen_map.py`, WhatsApp-Text in `web/page_script.html`). Offene Punkte stehen nur in der README (eine To-do-Liste gibt es auf der Webseite nicht mehr).
 2. `pip install playwright` (einmalig, für das PNG; Chromium liegt in `/opt/pw-browsers`), dann
    `python3 tools/build.py`. Die Natural-Earth-Daten werden beim ersten Lauf nach `tools/data/` geladen (gitignored).
 3. Karte nach Änderungen einmal ansehen (`reisebild.png`), auf überlappende Beschriftungen achten.
 4. Webseite neu veröffentlichen: Artifact-Publish von `web/brasilien-reise.html` mit
    `url: https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE` (vorher `action: read`), damit der Link gleich bleibt,
    und `files`: `brasilien-reise.pdf`, alle `fotos/<name>.jpg` → `web/fotos/<name>.jpg`, plus alle `audio/<name>.mp3` → `web/audio/<name>.mp3` (Sprachführer). `capabilities` weglassen, dann bleiben
-   `db`, `user`, `downloads` erhalten. Stand der geteilten To-dos: `ArtifactData` `list` auf Collection `todos`
-   (Dokument-ID = To-do-`id`, Felder `done`, `who`; eigene Punkte mit `custom: true`, `title`).
+   `db`, `user`, `downloads` erhalten.
 5. „Stand“-Datum in README und Webseite anpassen, committen, pushen.
 
 ## Crew-Profile

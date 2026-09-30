@@ -54,15 +54,13 @@ function renderToday() {
   const t = isoToday();
   const list = forGroup(G);
   const first = list[0].date, last = list[list.length - 1].date;
-  const openTodos = TRIP.todos.filter(x => !todoState(x.id).done).length;
   let html;
   if (t < first) {
     const n = daysBetween(t, first);
     const d0 = list[0];
     html = sceneHtml(list.find(d => SCENE_OF[d.place]).place) + '<div class="kicker">' + esc(gName(G)) + ' · Countdown</div>' +
       '<div class="big">Noch ' + n + (n === 1 ? ' Tag' : ' Tage') + '<small>bis zum Abflug am ' + fmtDay(first).wd + ' ' + fmtDay(first).dm + ' · erster Stopp: ' + esc(list.find(d => d.place !== 'München')?.place || d0.place) + '</small></div>' +
-      itemsHtml(d0.items) +
-      '<div class="next">Noch <b>' + openTodos + '</b> offene To-dos. <a href="#todos">Zu den To-dos</a></div>';
+      itemsHtml(d0.items);
   } else if (t > last) {
     html = '<div class="kicker">' + esc(gName(G)) + '</div><div class="big">Tchau, Brasil<small>Die Reise ist vorbei. Obrigado und willkommen zurück!</small></div>';
   } else {
@@ -105,102 +103,6 @@ function setGroup(g) {
   renderToday(); renderDays();
 }
 document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => setGroup(b.dataset.g)));
-
-/* ---------- To-dos (geteilt ueber db) ---------- */
-let db = null, canWrite = false;
-const remote = new Map();           // id -> Daten aus der db
-const pending = new Map();          // id -> laufender Schreibvorgang
-function todoState(id) {
-  const base = TRIP.todos.find(x => x.id === id) || {};
-  const r = remote.get(id) || {};
-  return {done: !!r.done, who: r.who !== undefined ? r.who : (base.who || '')};
-}
-function allTodos() {
-  const custom = [...remote.entries()].filter(([, v]) => v.custom && v.title)
-    .sort((a, b) => (a[1].created || 0) - (b[1].created || 0))
-    .map(([id, v]) => ({id, title: v.title, detail: '', prio: 3, custom: true}));
-  return [...TRIP.todos, ...custom];
-}
-function renderTodos() {
-  const ol = document.getElementById('todo-list');
-  const items = allTodos();
-  ol.innerHTML = items.map(x => {
-    const s = todoState(x.id);
-    const opts = ['<option value="">wer?</option>'].concat(PEOPLE.map(p => '<option' + (p === s.who ? ' selected' : '') + '>' + p + '</option>')).join('');
-    return '<li class="p' + x.prio + (s.done ? ' done' : '') + '" data-id="' + esc(x.id) + '">' +
-      '<input type="checkbox" id="todo-cb-' + esc(x.id) + '"' + (s.done ? ' checked' : '') + (canWrite ? '' : ' disabled') + ' aria-label="Erledigt">' +
-      '<label for="todo-cb-' + esc(x.id) + '"><div class="tt">' + esc(x.title) + '</div>' + (x.detail ? '<div class="dd">' + esc(x.detail) + '</div>' : '') + '</label>' +
-      '<div class="ctl"><select aria-label="Wer kümmert sich" id="todo-who-' + esc(x.id) + '"' + (canWrite ? '' : ' disabled') + '>' + opts + '</select>' +
-      (x.custom && canWrite ? '<button type="button" class="del" aria-label="Punkt löschen" title="Löschen">×</button>' : '') + '</div></li>';
-  }).join('');
-  renderToday();
-  renderWhatsApp();
-}
-function status(msg) { document.getElementById('todo-status').textContent = msg || ''; }
-function readOnly(msg) {
-  canWrite = false;
-  document.getElementById('todo-add').hidden = true;
-  document.getElementById('todo-mode').textContent = msg;
-  renderTodos();
-}
-async function writeTodo(id, patch) {
-  const prev = pending.get(id) || Promise.resolve();
-  const next = prev.then(async () => {
-    const base = TRIP.todos.find(x => x.id === id);
-    const had = remote.has(id), before = remote.get(id);
-    const cur = Object.assign({}, before || {}, base ? {} : {custom: true});
-    const body = Object.assign(cur, patch, {updated: Date.now()});
-    remote.set(id, body); renderTodos();
-    try { await db.doc('todos/' + id).set(body); status(''); }
-    catch (e) {
-      if (had) remote.set(id, before); else remote.delete(id);
-      renderTodos();
-      if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) readOnly('Nur ansehen: Abhaken macht der Admin (Patrick).');
-      else if (e && e.code === 'quota_exceeded') status('Speicher voll, bitte erledigte eigene Punkte löschen.');
-      else status('Konnte nicht speichern, bitte nochmal versuchen.');
-    }
-  });
-  pending.set(id, next.catch(() => {}));
-  return next;
-}
-document.getElementById('todo-list').addEventListener('change', e => {
-  const li = e.target.closest('li'); if (!li || !db) return;
-  const id = li.dataset.id;
-  if (e.target.type === 'checkbox') writeTodo(id, {done: e.target.checked});
-  else if (e.target.tagName === 'SELECT') writeTodo(id, {who: e.target.value});
-});
-document.getElementById('todo-list').addEventListener('click', async e => {
-  if (!e.target.classList.contains('del') || !db) return;
-  const id = e.target.closest('li').dataset.id;
-  remote.delete(id); renderTodos();
-  try { await db.doc('todos/' + id).delete(); } catch (err) { status('Konnte nicht löschen.'); }
-});
-document.getElementById('todo-add').addEventListener('submit', async e => {
-  e.preventDefault();
-  const inp = document.getElementById('todo-new');
-  const title = inp.value.trim(); if (!title || !db) return;
-  inp.value = '';
-  const ref = db.collection('todos').doc();
-  const body = {custom: true, title: title.slice(0, 140), done: false, who: '', created: Date.now()};
-  remote.set(ref.id, body); renderTodos();
-  try { await ref.set(body); } catch (err) { remote.delete(ref.id); renderTodos(); status(err && err.code === 'quota_exceeded' ? 'Speicher voll.' : 'Konnte nicht hinzufügen.'); }
-});
-
-async function initDb() {
-  if (!window.claude || !window.claude.use) { readOnly('Offline-Ansicht: Abhaken macht der Admin (Patrick) auf claude.ai.'); return; }
-  db = await window.claude.use('db');
-  if (!db) { readOnly('Nur ansehen: Abhaken macht der Admin (Patrick). Den aktuellen Stand sehen angemeldete claude.ai-Nutzer.'); return; }
-  const user = await window.claude.use('user');
-  const w = user ? await user.can('data.write') : null;
-  canWrite = w !== false;
-  if (!canWrite) { readOnly('Nur ansehen: Abhaken macht der Admin (Patrick).'); }
-  else { document.getElementById('todo-add').hidden = false; }
-  db.collection('todos').onSnapshot(snap => {
-    remote.clear();
-    snap.docs.forEach(d => { if (d.exists) remote.set(d.id, Object.assign({}, d.data())); });
-    renderTodos();
-  }, () => readOnly('Die gemeinsame Liste ist gerade nicht erreichbar.'));
-}
 
 /* ---------- Packlisten (nur auf diesem Geraet) ---------- */
 document.querySelectorAll('ul.pack2').forEach(ul => {
@@ -250,20 +152,19 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
 
 /* ---------- WhatsApp-Kurzfassung ---------- */
 function renderWhatsApp() {
-  const open = allTodos().filter(x => !todoState(x.id).done && x.prio === 1).map(x => '• ' + x.title + (todoState(x.id).who ? ' (' + todoState(x.id).who + ')' : ''));
   const txt = [
     '🇧🇷 Brasilien 26/27, Stand 30.09.',
     '',
-    '27.–31.12. Guarujá, Casa Praiana 🟡 (eine Nacht länger)',
-    '31.12.–06.01. Rio, Tabas – Cena Carioca 🟡 (ab Silvester, in Weiß!)',
+    '27.–31.12. Guarujá, Casa Praiana ✅',
+    '31.12.–06.01. Rio, Tabas – Cena Carioca ✅ (ab Silvester, in Weiß!)',
     '06.–09.01. Foz do Iguaçu 🟡 Hotelname prüfen',
     '09.–14.01. Manaus + Juma Lodge ✅',
     '14.–16.01. Paraty, Geko Pousada ✅',
     '16.–20./21.01. Ilha Grande ❗ Unterkunft offen',
     '',
-    open.length ? 'Wichtigste offene Punkte:\n' + open.join('\n') : 'Die wichtigsten Punkte sind erledigt 🎉',
+    'Noch zu buchen:\n• Inlandsflüge (31.12., 06.01., 09.01., 14.01.)\n• Unterkunft Ilha Grande',
     '',
-    'Alles mit Karte und To-dos: https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE'
+    'Alles mit Karte, Tagen und Drinks: https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE'
   ].join('\n');
   document.getElementById('wa-text').textContent = txt;
 }
@@ -868,6 +769,5 @@ if (!PRINT) {
 
 /* ---------- Start ---------- */
 setGroup(G);
-renderTodos();
-if (!PRINT) initDb(); else readOnly('Stand beim Erstellen der PDF.');
+renderWhatsApp();
 </script>
