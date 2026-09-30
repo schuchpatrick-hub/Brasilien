@@ -312,44 +312,51 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   });
 })();
 
-/* ---------- Reiter ---------- */
+/* ---------- Reiter = Kapitel-Sprungmarken (alles bleibt untereinander sichtbar) ---------- */
 const TAB_IDS = [...document.querySelectorAll('.tabs a')].map(a => a.dataset.tab);
-function tabFor(hash) {
-  const id = (hash || '').replace('#', '');
-  if (TAB_IDS.includes(id)) return id;
-  const el = id && document.getElementById(id);
-  const sec = el && el.closest('section[data-tab]');
-  return sec ? sec.dataset.tab : null;
+const SECTIONS = [...document.querySelectorAll('section[data-tab]')];
+const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+function barHeight() { const bar = document.querySelector('.tabs'); return bar ? bar.offsetHeight : 0; }
+function targetFor(id) {
+  if (TAB_IDS.includes(id)) return SECTIONS.find(s => s.dataset.tab === id);
+  return id ? document.getElementById(id) : null;
 }
-function showTab(tab, target) {
-  document.querySelectorAll('section[data-tab]').forEach(s => s.classList.toggle('tab-on', s.dataset.tab === tab));
+function jump(id, smooth) {
+  const el = targetFor(id); if (!el) return false;
+  const y = el.getBoundingClientRect().top + scrollY - barHeight() - 10;
+  scrollTo({top: Math.max(0, y), behavior: smooth && !reduceMotion ? 'smooth' : 'auto'});
+  return true;
+}
+let activeTab = null;
+function markTab(tab) {
+  if (tab === activeTab) return;
+  activeTab = tab;
   document.querySelectorAll('.tabs a').forEach(a => {
     const on = a.dataset.tab === tab;
     a.setAttribute('aria-selected', String(on));
-    if (on && a.scrollIntoView) a.scrollIntoView({block: 'nearest', inline: 'nearest'});
+    if (on) { const bar = a.parentElement; bar.scrollTo({left: a.offsetLeft - bar.clientWidth / 2 + a.offsetWidth / 2, behavior: 'auto'}); }
   });
-  store.set('tab', tab);
-  const bar = document.querySelector('.tabs');
-  const el = target && document.getElementById(target);
-  const y = el && !TAB_IDS.includes(target) ? el.getBoundingClientRect().top + scrollY - bar.offsetHeight - 8
-          : bar.getBoundingClientRect().top + scrollY;
-  if (scrollY > y || el) scrollTo({top: Math.max(0, y)});
+}
+function spy() {
+  const line = barHeight() + 40;
+  let cur = SECTIONS[0];
+  for (const s of SECTIONS) { if (s.getBoundingClientRect().top <= line) cur = s; else break; }
+  markTab(cur.dataset.tab);
 }
 if (!PRINT) {
-  document.documentElement.classList.add('js-tabs');
   document.addEventListener('click', e => {
     const a = e.target.closest('a[href^="#"]'); if (!a) return;
-    const id = a.getAttribute('href').slice(1), tab = tabFor('#' + id);
-    if (!tab) return;
+    const id = a.getAttribute('href').slice(1);
+    if (!targetFor(id)) return;
     e.preventDefault();
     try { history.replaceState(null, '', '#' + id); } catch (err) {}
-    showTab(tab, id);
+    jump(id, true);
   });
-  window.addEventListener('hashchange', () => { const t = tabFor(location.hash); if (t) showTab(t, location.hash.slice(1)); });
-  const start = tabFor(location.hash);
-  document.querySelectorAll('section[data-tab]').forEach(s => s.classList.toggle('tab-on', s.dataset.tab === (start || store.get('tab') || 'uebersicht')));
-  document.querySelectorAll('.tabs a').forEach(a => a.setAttribute('aria-selected', String(a.dataset.tab === (start || store.get('tab') || 'uebersicht'))));
-  if (start && !TAB_IDS.includes(location.hash.slice(1))) setTimeout(() => showTab(start, location.hash.slice(1)), 0);
+  let ticking = false;
+  addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { spy(); ticking = false; }); } }, {passive: true});
+  addEventListener('hashchange', () => jump(location.hash.slice(1), true));
+  spy();
+  if (location.hash.length > 1) setTimeout(() => jump(location.hash.slice(1), false), 50);
 }
 
 /* ---------- Start ---------- */
