@@ -35,6 +35,14 @@ Generiert (nicht von Hand bearbeiten): `reisebild.svg`, `reisebild.png`, `web/br
    (Dokument-ID = To-do-`id`, Felder `done`, `who`; eigene Punkte mit `custom: true`, `title`).
 5. „Stand“-Datum in README und Webseite anpassen, committen, pushen.
 
+## Crew-Profile
+
+Steckbriefe stehen in `web/trip.json` → `crew` (ein Eintrag mit `facts`/`quote` wird als große Karte gezeigt).
+**Fotos liegen nur im Artifact** (`crew/<id>.jpg`, 480×480, rund zugeschnitten), nicht im öffentlichen Repo
+(`web/crew/` ist gitignored). Beim Neuveröffentlichen `crew/...` nicht in `files` auf `null` setzen, dann bleiben sie
+erhalten; bei Bedarf mit `Artifact` `action: read` + `path: "crew/<id>.jpg"` zurückholen. Im PDF werden keine Fotos gezeigt.
+Alle sechs haben der Verwendung ihres Fotos zugestimmt (laut Patrick, 30.09.).
+
 ## Regeln
 
 - **Repo ist öffentlich:** keine Roh-Chats, Telefonnummern, IBANs, Nachnamen, Passdaten,

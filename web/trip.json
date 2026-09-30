@@ -821,5 +821,67 @@
         }
       ]
     }
+  ],
+  "crew": [
+    {
+      "id": "jonas",
+      "name": "Jonas",
+      "nick": "Joni · „Papi“",
+      "team": "a",
+      "photo": "crew/jonas.jpg",
+      "role": "Chef-Organisator & Splitwise-Boss",
+      "facts": [
+        [
+          "Superkraft",
+          "Bucht schneller, als die anderen antworten. Wenn keiner reagiert: „Stille 😂“"
+        ],
+        [
+          "Rekord",
+          "113 Kopfbälle am Stück (mit dem Fuß: 9)"
+        ],
+        [
+          "Schwachstelle",
+          "Pokert bei Flugpreisen: „Ich poker, dass die Preise sinken 😉“"
+        ],
+        [
+          "Nebenjob",
+          "Aufpasser für Sohnemann Marco, Taschengeld kommt per PayPal von Greisel"
+        ],
+        [
+          "Mission Brasilien",
+          "Am Strand beim Footvolley „einen aufzaubern“"
+        ],
+        [
+          "Silvester-Problem",
+          "Braucht noch eine weiße Hose, am besten vom Trikotsatz"
+        ]
+      ],
+      "quote": "Also ich buch das Ding 👌🏼"
+    },
+    {
+      "id": "patrick",
+      "name": "Patrick",
+      "team": "a"
+    },
+    {
+      "id": "simon",
+      "name": "Simon",
+      "team": "a"
+    },
+    {
+      "id": "marco",
+      "name": "Marco",
+      "team": "a"
+    },
+    {
+      "id": "dajo",
+      "name": "Dajo",
+      "team": "b"
+    },
+    {
+      "id": "greisel",
+      "name": "Greisel",
+      "team": "b"
+    }
   ]
 }

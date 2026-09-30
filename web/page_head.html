@@ -127,6 +127,24 @@ ul.plain{margin:0;padding-left:18px;display:grid;gap:6px}
 .tabs a:hover{color:var(--fg)}
 .tabs a[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
 @media print{.tabs{display:none}}
+/* Crew */
+.crew-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.pcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:10px;align-content:start;justify-items:center;text-align:center;min-width:0}
+.pcard.full{grid-column:1/-1;grid-template-columns:auto 1fr;justify-items:start;text-align:left;gap:14px 22px;align-items:start}
+.avatar{width:96px;height:96px;border-radius:50%;overflow:hidden;background:var(--accent);color:var(--bg);display:grid;place-items:center;font:800 2.2rem var(--display);box-shadow:0 0 0 4px var(--bg),0 0 0 7px var(--sun)}
+.pcard.full .avatar{width:150px;height:150px;font-size:3rem}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.pcard h3{margin:0;font-size:1.35rem}
+.pcard .nick{display:block;font:500 .9rem var(--body);color:var(--muted);margin-top:3px}
+.pcard .role{display:inline-block;font:600 .75rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--sun);margin-top:6px}
+.pcard dl{margin:10px 0 0;display:grid;grid-template-columns:max-content 1fr;gap:6px 14px;font-size:.93rem}
+.pcard dt{font-weight:600;color:var(--muted)}
+.pcard dd{margin:0;min-width:0}
+.pcard blockquote{margin:12px 0 0;padding:10px 14px;background:var(--sunbg);border-radius:12px 12px 12px 2px;font-weight:600;display:inline-block}
+.pcard .soon{font-size:.85rem;color:var(--muted)}
+.pcard .team{font-size:.72rem;color:var(--muted)}
+@media (max-width:620px){.pcard.full{grid-template-columns:1fr;justify-items:center;text-align:center}.pcard dl{grid-template-columns:1fr;gap:2px;text-align:left}.pcard dd{margin-bottom:6px}}
+@media print{.avatar img{display:none}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}

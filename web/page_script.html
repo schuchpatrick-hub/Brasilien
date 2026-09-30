@@ -312,6 +312,22 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   });
 })();
 
+/* ---------- Crew ---------- */
+(function () {
+  const el = document.getElementById('crew-list');
+  el.innerHTML = TRIP.crew.map(p => {
+    const full = !!(p.facts && p.facts.length);
+    const pic = p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="Foto von ' + esc(p.name) + '" loading="lazy">' : esc(p.name[0]);
+    let h = '<article class="pcard' + (full ? ' full' : '') + '"><div class="avatar">' + pic + '</div><div>';
+    h += '<h3>' + esc(p.name) + (p.nick ? '<span class="nick">' + esc(p.nick) + '</span>' : '') + '</h3>';
+    if (p.role) h += '<span class="role">' + esc(p.role) + '</span>';
+    if (full) h += '<dl>' + p.facts.map(f => '<dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd>').join('') + '</dl>';
+    if (p.quote) h += '<blockquote>„' + esc(p.quote) + '“</blockquote>';
+    if (!full) h += '<div class="team">' + esc(gName(p.team)) + '</div><div class="soon">Steckbrief folgt</div>';
+    return h + '</div></article>';
+  }).join('');
+})();
+
 /* ---------- Reiter = Kapitel-Sprungmarken (alles bleibt untereinander sichtbar) ---------- */
 const TAB_IDS = [...document.querySelectorAll('.tabs a')].map(a => a.dataset.tab);
 const SECTIONS = [...document.querySelectorAll('section[data-tab]')];
