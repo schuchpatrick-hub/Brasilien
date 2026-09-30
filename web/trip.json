@@ -1062,7 +1062,54 @@
     {
       "id": "dajo",
       "name": "Dajo",
-      "team": "b"
+      "nick": "„Die Excel-Queen“ · „Bald-Tschechin“",
+      "team": "b",
+      "photo": "crew/dajo.jpg",
+      "photoLarge": "crew/dajo-gross.jpg",
+      "role": "Einzige Erwachsene der Gruppe & Chef-Controllerin",
+      "facts": [
+        [
+          "Nationalität",
+          "Bald Tschechin. Der neue Pass kommt direkt nach dem Standesamt. Falls die Ehe nicht hält, bleibt ihr wenigstens eine neue Staatsbürgerschaft."
+        ],
+        [
+          "Stärke",
+          "Dompteurin für freche Männer aus dem Lubo-Clan. Einen hat sie geheiratet, den anderen erzieht sie nebenbei. Peitsche braucht sie nicht, ein Blick reicht."
+        ],
+        [
+          "Trinkfestigkeit",
+          "Trinkfester als Lubo. Während er nach dem 12. Gin Tonic Wohnungen an die Crew verkauft, bestellt sie die nächste Runde und zahlt mit seiner Karte."
+        ],
+        [
+          "Schwäche",
+          "Boeing-Flugzeuge. Prüft vor jedem Flug den Flugzeugtyp, die Türschrauben und ihr Testament. Im Airbus schläft sie, in der Boeing betet sie auf Tschechisch."
+        ],
+        [
+          "Hinflug",
+          "Schlaftabletten. Offiziell wegen der 12 Stunden, in Wahrheit wegen des Flugzeugtyps und der vier Kerle, die in Rio auf sie warten."
+        ],
+        [
+          "Excel",
+          "Hat die ganze Reise in eine Excel gegossen, mit Links, Farben und Formeln. Die Jungs haben sie nie geöffnet. Aber einmal angepinnt."
+        ],
+        [
+          "Beruf",
+          "Einkäuferin von Beruf. Zahlt 1.300 € für den Flug. Ihr Arbeitgeber darf das nie erfahren, Jonas erzählt es trotzdem jedem."
+        ],
+        [
+          "Schnäppchenjagd",
+          "Findet Paraty 40 € günstiger als Jonas. Seitdem kommuniziert er mit ihr nur noch über seinen Anwalt."
+        ],
+        [
+          "Gesundheit",
+          "Lässt sich gegen alles impfen, was die Menschheit kennt, und gegen drei Sachen, die erst noch entdeckt werden. Der Tropenarzt hat nach dem Termin gekündigt."
+        ],
+        [
+          "Flitterwochen",
+          "Die Hochzeitsreise teilt sie mit einem Buffet-Mammut, einem Latin Lover und einem Nachtportier. Tschechische Gelassenheit kann sie also schon."
+        ]
+      ],
+      "quote": "Fast wie auf Malle: 4er-Zimmer für 10 Leute 😂"
     }
   ]
 }
