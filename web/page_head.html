@@ -389,6 +389,117 @@ a{color:var(--accent)}
 .day .tm{font:600 .85rem var(--mono);color:var(--sky)}
 .gtag{display:inline-block;font:600 .68rem var(--body);border:1px solid var(--line);border-radius:999px;padding:1px 7px;margin-left:6px;color:var(--muted);vertical-align:middle}
 .unsure{color:var(--warn);font-weight:600;font-size:.8rem}
+/* Vorfreude-Kalender */
+.adv{display:grid;gap:14px;max-width:760px}
+.adv-feature{position:relative;border-radius:18px;overflow:hidden;background:var(--hero);color:#f4f7f2;min-height:260px;isolation:isolate}
+.adv-feature::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--hero-wave);opacity:.6;-webkit-mask:var(--wave) 0 0/120px 40px repeat;mask:var(--wave) 0 0/120px 40px repeat}
+.adv-card{padding:22px 22px 20px;display:grid;gap:10px;animation:advIn .5s ease both}
+@keyframes advIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.adv-card .kick{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font:600 .74rem var(--mono);letter-spacing:.1em;text-transform:uppercase;opacity:.9}
+.adv-card .cat{background:var(--amarelo);color:#1a1a1a;border-radius:999px;padding:2px 10px;letter-spacing:.06em}
+.adv-card .emo{font-size:3rem;line-height:1}
+.adv-card h3{margin:0;font:800 clamp(1.5rem,5vw,2rem)/1.1 var(--display);color:#fff}
+.adv-card p{margin:0;font-size:1.02rem;line-height:1.55;color:#e8f0ea;max-width:62ch}
+.adv-pt{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:10px 14px;display:grid;gap:2px}
+.adv-pt b{font:800 1.25rem var(--display);color:var(--amarelo)}
+.adv-pt span{font:500 .85rem var(--mono);opacity:.85}
+.adv-link{justify-self:start;font:700 .9rem var(--body);color:#1a1a1a;background:var(--amarelo);border-radius:999px;padding:8px 16px;text-decoration:none}
+.adv-nav{display:flex;justify-content:space-between;gap:8px;margin-top:4px}
+.adv-nav button{font:600 .82rem var(--body);background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:6px 12px;cursor:pointer}
+.adv-nav button[disabled]{opacity:.35;cursor:default}
+/* geschlossene Tür */
+.adv-closed{padding:22px;display:grid;justify-items:center;gap:14px;text-align:center}
+.adv-door{position:relative;width:min(210px,58vw);aspect-ratio:4/5;perspective:900px}
+.adv-door .leaf{position:absolute;top:0;bottom:0;width:50%;background:linear-gradient(135deg,#00843d,#006b31);border:3px solid var(--amarelo);display:grid;place-items:center;transition:transform .9s cubic-bezier(.3,.7,.2,1);backface-visibility:hidden;box-shadow:inset 0 0 0 6px rgba(255,255,255,.06)}
+.adv-door .leaf.l{left:0;border-radius:14px 0 0 14px;transform-origin:left center}
+.adv-door .leaf.r{right:0;border-radius:0 14px 14px 0;transform-origin:right center;background:linear-gradient(225deg,#1f3f8f,#16306e)}
+.adv-door .leaf span{font:800 3.2rem var(--display);color:var(--amarelo);text-shadow:0 3px 0 rgba(0,0,0,.25)}
+.adv-door .knob{position:absolute;top:50%;width:10px;height:10px;border-radius:50%;background:var(--amarelo)}
+.adv-door .leaf.l .knob{right:10px}.adv-door .leaf.r .knob{left:10px}
+.adv-door .bow{position:absolute;left:50%;top:-14px;transform:translateX(-50%);font-size:2.2rem;z-index:2;transition:opacity .3s}
+.adv-door .inside{position:absolute;inset:0;border-radius:14px;background:radial-gradient(circle,#fff6c9,#ffcf1f);display:grid;place-items:center;font-size:4rem}
+.adv-door.open .leaf.l{transform:rotateY(-115deg)}
+.adv-door.open .leaf.r{transform:rotateY(115deg)}
+.adv-door.open .bow{opacity:0}
+.adv-closed .btn{background:var(--amarelo);color:#1a1a1a;font-size:1rem;padding:11px 22px;border-radius:999px}
+.adv-closed .lock{font:600 .9rem var(--body);opacity:.9}
+.adv-closed h3{margin:0;color:#fff;font:800 1.4rem var(--display)}
+.adv-stats{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:.92rem;color:var(--muted)}
+.adv-stats b{color:var(--fg)}
+.adv-all>summary{cursor:pointer;font-weight:700;margin-bottom:10px}
+.adv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(52px,1fr));gap:6px}
+.adv-grid button{all:unset;box-sizing:border-box;cursor:pointer;aspect-ratio:1;border-radius:10px;display:grid;place-items:center;align-content:center;gap:1px;text-align:center;font:800 1.05rem var(--display);border:1px solid var(--line);background:var(--surface);color:var(--fg);position:relative;transition:transform .15s}
+.adv-grid button small{display:block;font:600 .58rem var(--mono);color:var(--muted);letter-spacing:.02em}
+.adv-grid button.av{background:linear-gradient(135deg,#00843d,#1f3f8f);color:var(--amarelo);border-color:transparent}
+.adv-grid button.av small{color:#dfe9e2}
+.adv-grid button.op{background:var(--sunbg);font-size:1.4rem}
+.adv-grid button.fu{opacity:.55;cursor:default}
+.adv-grid button.td{box-shadow:0 0 0 3px var(--amarelo);animation:advPulse 1.6s ease-in-out infinite}
+.adv-grid button.sel{outline:3px solid var(--accent);outline-offset:2px}
+.adv-grid button:not(.fu):hover{transform:translateY(-2px)}
+.adv-grid button.shake{animation:advShake .4s}
+@keyframes advPulse{50%{box-shadow:0 0 0 6px rgba(255,207,31,.45)}}
+@keyframes advShake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:3}
+.confetti i{position:absolute;top:-10px;width:8px;height:12px;border-radius:2px;animation:confFall 1.6s ease-in forwards}
+@keyframes confFall{to{transform:translateY(340px) rotate(540deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){.adv-door .leaf,.adv-card{transition:none;animation:none}.adv-grid button.td{animation:none}.confetti{display:none}}
+@media print{#kalender,#kapsel{display:none}}
+/* Zeitkapsel */
+.ka{display:grid;gap:14px;max-width:760px}
+.ka-seal{position:relative;border-radius:18px;overflow:hidden;padding:22px;color:#f4f7f2;background:radial-gradient(circle at 80% 20%,#2b4fb3 0,#1f3f8f 35%,#0c1f4f 100%);display:grid;gap:12px;isolation:isolate}
+.ka-seal::after{content:"";position:absolute;right:-30px;bottom:-30px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,#ffcf1f55,transparent 70%);z-index:-1}
+.ka-seal .big{font:800 clamp(1.5rem,5vw,2rem)/1.15 var(--display);color:#fff}
+.ka-seal .when{font-size:.95rem;opacity:.9}
+.ka-cd{display:flex;gap:8px;flex-wrap:wrap}
+.ka-cd div{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:8px 12px;min-width:64px;text-align:center}
+.ka-cd b{display:block;font:800 1.6rem var(--display);color:var(--amarelo);font-variant-numeric:tabular-nums}
+.ka-cd span{font:600 .66rem var(--mono);letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+.ka-who{display:flex;flex-wrap:wrap;gap:10px}
+.ka-who .p{display:grid;justify-items:center;gap:3px;font:600 .75rem var(--body);width:58px;text-align:center}
+.ka-who .av{width:46px;height:46px;border-radius:50%;overflow:hidden;background:var(--accent);display:grid;place-items:center;color:#fff;font:800 1.1rem var(--display);position:relative;box-shadow:0 0 0 2px rgba(255,255,255,.35)}
+.ka-who .av img{width:100%;height:100%;object-fit:cover}
+.ka-who .p.done .av{box-shadow:0 0 0 3px var(--amarelo)}
+.ka-who .p .st{font-size:.9rem}
+.ka-form{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:grid;gap:14px}
+.ka-form.locked .ka-q,.ka-form.locked .ka-pick,.ka-form.locked .ka-go{opacity:.55}
+.ka-form>summary{cursor:pointer;font:800 1.1rem var(--display)}
+.ka-pick{display:flex;flex-wrap:wrap;gap:10px}
+.ka-pick button{all:unset;cursor:pointer;display:grid;justify-items:center;gap:4px;font:600 .8rem var(--body);width:60px}
+.ka-pick .av{width:50px;height:50px;border-radius:50%;overflow:hidden;background:var(--accent);display:grid;place-items:center;color:#fff;font:800 1.1rem var(--display);box-shadow:0 0 0 2px var(--line)}
+.ka-pick img{width:100%;height:100%;object-fit:cover}
+.ka-pick button[aria-checked="true"] .av{box-shadow:0 0 0 3px var(--bg),0 0 0 6px var(--amarelo)}
+.ka-qs{display:grid;gap:10px;counter-reset:q}
+.ka-q{display:grid;gap:6px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.ka-q label{font-weight:600}
+.ka-q .hint{font-size:.8rem;color:var(--muted)}
+.ka-q select,.ka-q input,.ka-q textarea{font:500 .95rem var(--body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;min-width:0;max-width:100%}
+.ka-q textarea{min-height:56px;resize:vertical}
+.ka-q .num{display:flex;gap:8px;align-items:center}
+.ka-q .num input{width:7rem}
+.ka-yn{display:flex;gap:6px}
+.ka-yn button{font:600 .88rem var(--body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+.ka-yn button[aria-pressed="true"]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.ka-go{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.ka-go .btn{font-size:1rem;padding:11px 20px}
+.ka-msg{font-size:.9rem;color:var(--muted)}
+.ka-lock{margin:0;background:var(--sunbg);border-radius:10px;padding:10px 12px;font-size:.9rem}
+.ka-sealed{position:relative;text-align:center;padding:26px 16px;border-radius:16px;background:var(--sunbg);font:800 1.3rem var(--display);overflow:hidden}
+.ka-sealed small{display:block;font:500 .9rem var(--body);color:var(--muted);margin-top:6px}
+.ka-res{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:10px}
+.ka-res h3{margin:0;font-size:1.05rem}
+.ka-ans{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.ka-ans li{display:grid;grid-template-columns:30px 1fr auto;gap:10px;align-items:center;font-size:.95rem}
+.ka-ans li .av{width:30px;height:30px;border-radius:50%;overflow:hidden;background:var(--accent);display:grid;place-items:center;color:#fff;font:800 .8rem var(--display)}
+.ka-ans li .av img{width:100%;height:100%;object-fit:cover}
+.ka-ans li.win{font-weight:700}
+.ka-ans li.win::after{content:"🏆"}
+.ka-sol{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:.9rem;color:var(--muted)}
+.ka-sol select,.ka-sol input{font:500 .9rem var(--body);background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+.ka-rank{background:var(--hero);color:#f4f7f2;border-radius:16px;padding:16px 18px;display:grid;gap:8px}
+.ka-rank h3{margin:0;color:#fff}
+.ka-rank ol{margin:0;padding-left:22px;display:grid;gap:4px}
+@media print{.ka{display:none}}
 /* Flüge als Bordkarten */
 .fl-seg{margin-bottom:12px}
 .fl-head{display:grid;gap:10px;margin-bottom:16px;max-width:680px}

@@ -4,7 +4,7 @@
 
 ![Reisebild: Route durch Brasilien](reisebild.png)
 
-**Webseite mit Heute-Ansicht, Karte und Drinks-Counter:** https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE ·
+**Webseite mit Heute-Ansicht, Karte, Drinks-Counter, Vorfreude-Kalender und Zeitkapsel:** https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE ·
 **Offline:** [PDF](brasilien-reise.pdf) · **Kalender fürs Handy:** [Gringos plus 1 Cevapi](kalender/gringos-plus-1-cevapi.ics) · [Dajo & Greisel](kalender/dajo-greisel.ics)
 (auf GitHub „Download raw file“, dann öffnen)
 

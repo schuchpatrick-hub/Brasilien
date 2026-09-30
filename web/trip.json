@@ -1702,5 +1702,820 @@
         "k": "open"
       }
     }
-  ]
+  ],
+  "advent": [
+    {
+      "d": "2026-10-01",
+      "cat": "special",
+      "e": "🎁",
+      "t": "Türchen 1: Los geht’s!",
+      "x": "Ab heute gibt es jeden Tag ein Türchen bis zum Abflug am 27.12.: Fun Facts, Portugiesisch, Songs, Crew-Wahrheiten und kleine Aufgaben. Wer am Abflugtag alle 88 geöffnet hat, darf sich am Flughafen als Brasilien-Experte bezeichnen."
+    },
+    {
+      "d": "2026-10-02",
+      "cat": "fact",
+      "e": "🗺️",
+      "t": "Ziemlich groß",
+      "x": "Brasilien ist das fünftgrößte Land der Welt und etwa 24-mal so groß wie Deutschland. Von São Paulo nach Manaus fliegt man rund vier Stunden, länger als von München nach Lissabon."
+    },
+    {
+      "d": "2026-10-03",
+      "cat": "word",
+      "e": "🗣️",
+      "t": "Tudo bem?",
+      "x": "Heißt „Alles gut?“ und ist die Standardbegrüßung. Die Antwort: „Tudo bom!“ oder einfach nochmal „Tudo bem!“.",
+      "pt": "Tudo bem? – Tudo bom!",
+      "say": "tu-du bäing? – tu-du bong!"
+    },
+    {
+      "d": "2026-10-04",
+      "cat": "song",
+      "e": "🎶",
+      "t": "Song des Tages: Garota de Ipanema",
+      "x": "Tom Jobim und Vinicius de Moraes, 1962. Der meistgecoverte Bossa-Nova-Song der Welt, geschrieben über ein Mädchen, das an ihrer Bar in Ipanema vorbeiging. Die Bar heißt heute „Garota de Ipanema“ und wir können dort hin.",
+      "link": "https://open.spotify.com/search/Garota%20de%20Ipanema%20Tom%20Jobim"
+    },
+    {
+      "d": "2026-10-05",
+      "cat": "task",
+      "e": "⏳",
+      "t": "Die Zeitkapsel ist offen",
+      "x": "Ab heute könnt ihr eure Prognosen für die Reise abgeben: Wer holt sich die erste Zerrung? Wie viele Nummern bekommt Simon? Die Tipps werden versiegelt und erst am letzten Abend auf der Ilha Grande geöffnet. Schickt eure Antworten an Patrick.",
+      "link": "#kapsel"
+    },
+    {
+      "d": "2026-10-06",
+      "cat": "crew",
+      "e": "🧢",
+      "t": "Crew-Wahrheit: Jonas",
+      "x": "Jonas hat die halbe Reise gebucht, bevor die anderen „Ja“ gesagt haben. Demokratie in dieser Gruppe heißt: Jonas bucht, alle anderen überweisen."
+    },
+    {
+      "d": "2026-10-07",
+      "cat": "food",
+      "e": "🧀",
+      "t": "Pão de queijo",
+      "x": "Kleine Käsebällchen aus Tapiokamehl, außen knusprig, innen zäh-weich. Kommt aus Minas Gerais und ist zufällig glutenfrei. Patrick-Einheit: 1 Portion = 12 Stück."
+    },
+    {
+      "d": "2026-10-08",
+      "cat": "fact",
+      "e": "⛰️",
+      "t": "Christus auf 700 Metern",
+      "x": "Die Christusstatue steht auf dem Corcovado, 30 Meter hoch plus 8 Meter Sockel, eingeweiht 1931. Seit 2007 gehört sie zu den „neuen sieben Weltwundern“. Die ausgebreiteten Arme messen 28 Meter, fast so viel wie Patricks Teller am Buffet."
+    },
+    {
+      "d": "2026-10-09",
+      "cat": "word",
+      "e": "🙏",
+      "t": "Obrigado!",
+      "x": "Danke. Männer sagen „obrigado“, Frauen „obrigada“. Also: Dajo sagt obrigada, alle anderen obrigado. Locker unter Freunden: „Valeu!“",
+      "pt": "Obrigado! / Valeu!",
+      "say": "o-bri-GA-du / wa-LEU"
+    },
+    {
+      "d": "2026-10-10",
+      "cat": "song",
+      "e": "🎶",
+      "t": "Song des Tages: Mas Que Nada",
+      "x": "Jorge Ben Jor hat ihn 1963 geschrieben, Sergio Mendes machte ihn weltberühmt. Garantiert der Song, bei dem sogar Greisel mitwippt.",
+      "link": "https://open.spotify.com/search/Mas%20Que%20Nada%20Sergio%20Mendes"
+    },
+    {
+      "d": "2026-10-11",
+      "cat": "fact",
+      "e": "🕐",
+      "t": "Zeitzonen-Falle",
+      "x": "Brasilien hat vier Zeitzonen. Manaus liegt eine Stunde hinter Rio und São Paulo. Heißt: Im Dschungel kann man eine Stunde länger schlafen, oder eine Stunde früher an der Bar sitzen."
+    },
+    {
+      "d": "2026-10-12",
+      "cat": "place",
+      "e": "🏖️",
+      "t": "Vorschau: Guarujá",
+      "x": "Unsere erste Station, etwa 1,5 bis 2 Stunden von São Paulo entfernt. Die Praia da Enseada ist ein langer Stadtstrand mit Footvolley-Netzen, 75 Meter von der Casa Praiana. Perfekt, um den Jetlag im Sand zu vergraben."
+    },
+    {
+      "d": "2026-10-13",
+      "cat": "crew",
+      "e": "😎",
+      "t": "Crew-Wahrheit: Simon",
+      "x": "Simon hat angekündigt, in Brasilien die Liebe seines Lebens zu finden. Er hat 25 Tage. Die Statistik sagt: 0 Nummern, 3 Sonnenbrände, 1 Samba-Verletzung."
+    },
+    {
+      "d": "2026-10-14",
+      "cat": "food",
+      "e": "🍹",
+      "t": "Caipirinha 101",
+      "x": "Cachaça (Zuckerrohrschnaps), Limetten, Zucker, Eis. Mehr nicht. Die Caipi ist der Nationalcocktail. Profi-Tipp: „Caipiroska“ ist mit Wodka, „Caipifruta“ mit Früchten wie Maracuja oder Kiwi."
+    },
+    {
+      "d": "2026-10-15",
+      "cat": "word",
+      "e": "🍻",
+      "t": "Saúde!",
+      "x": "Prost! Wörtlich „Gesundheit“. Beim Anstoßen in die Augen schauen, das gilt auch in Brasilien.",
+      "pt": "Saúde!",
+      "say": "sa-U-dschi"
+    },
+    {
+      "d": "2026-10-16",
+      "cat": "fact",
+      "e": "🇧🇷",
+      "t": "Die Sterne auf der Flagge",
+      "x": "Die 27 Sterne auf der blauen Kugel zeigen den Himmel über Rio am Morgen des 15. November 1889, dem Tag der Republik. Jeder Stern steht für einen Bundesstaat. Das Motto „Ordem e Progresso“ heißt „Ordnung und Fortschritt“, also das Gegenteil von Greisels Pünktlichkeit."
+    },
+    {
+      "d": "2026-10-17",
+      "cat": "song",
+      "e": "🎶",
+      "t": "Song des Tages: País Tropical",
+      "x": "Jorge Ben Jor, 1969: „Moro num país tropical, abençoado por Deus e bonito por natureza“, ich wohne in einem tropischen Land, von Gott gesegnet und von Natur aus schön. Die inoffizielle Hymne für unsere Reise.",
+      "link": "https://open.spotify.com/search/País%20Tropical%20Jorge%20Ben%20Jor"
+    },
+    {
+      "d": "2026-10-18",
+      "cat": "task",
+      "e": "🩴",
+      "t": "Aufgabe: Flip-Flop-Check",
+      "x": "Postet heute in der Gruppe ein Foto eurer Flip-Flops oder Badeschlappen. Wer keine hat: Havaianas gibt es in Brasilien überall und günstiger als hier."
+    },
+    {
+      "d": "2026-10-19",
+      "cat": "special",
+      "e": "✈️",
+      "t": "Pass-Tag: Flüge buchen!",
+      "x": "Diese Woche sollte Dajos neuer Reisepass da sein. Damit können die Inlandsflüge gebucht werden: GIG → IGU, IGU → MAO, MAO → GIG und CGH → SDU. Die Bordkarten mit Suchlinks stehen im Reiter „Flüge & Kosten“.",
+      "link": "#fluege"
+    },
+    {
+      "d": "2026-10-20",
+      "cat": "fact",
+      "e": "💦",
+      "t": "Iguaçu: 275 Wasserfälle",
+      "x": "An den Iguaçu-Fällen stürzen je nach Wasserstand rund 275 einzelne Fälle in die Tiefe. Der größte heißt „Garganta do Diabo“, Teufelsschlund. Eleanor Roosevelt soll beim Anblick gesagt haben: „Poor Niagara!“"
+    },
+    {
+      "d": "2026-10-21",
+      "cat": "crew",
+      "e": "🍽️",
+      "t": "Crew-Wahrheit: Patrick",
+      "x": "Patrick ist der Älteste der Gruppe. Am Buffet merkt man davon nichts: Er stapelt Teller wie Tetris und gilt in drei Bundesstaaten bereits als Naturereignis."
+    },
+    {
+      "d": "2026-10-22",
+      "cat": "word",
+      "e": "🍺",
+      "t": "Mais uma!",
+      "x": "Noch eins! Der wichtigste Satz an jeder Strandbar. Kombinierbar: „Mais uma cerveja, por favor.“",
+      "pt": "Mais uma, por favor!",
+      "say": "mais U-ma, por fa-WOR"
+    },
+    {
+      "d": "2026-10-23",
+      "cat": "food",
+      "e": "🥩",
+      "t": "Rodízio",
+      "x": "Im Rodízio kommen Kellner mit Fleischspießen an den Tisch und schneiden ab, bis man die Karte auf Rot dreht. Grün heißt „mehr“, Rot heißt „Pause“. Patricks Karte hat nur eine Seite."
+    },
+    {
+      "d": "2026-10-24",
+      "cat": "fact",
+      "e": "⚽",
+      "t": "Fünf Sterne",
+      "x": "Brasilien ist fünfmaliger Weltmeister: 1958, 1962, 1970, 1994 und 2002. Tipp für Gespräche mit Einheimischen: Das Spiel von 2014 gegen Deutschland einfach nicht erwähnen. Wirklich nicht."
+    },
+    {
+      "d": "2026-10-25",
+      "cat": "song",
+      "e": "🎶",
+      "t": "Song des Tages: Aquarela do Brasil",
+      "x": "Ary Barroso, 1939. Einer der bekanntesten brasilianischen Songs überhaupt, auch als „Brazil“ bekannt. Klingt nach Carnaval, Kolonialzeit und Kaffee in einem.",
+      "link": "https://open.spotify.com/search/Aquarela%20do%20Brasil%20Ary%20Barroso"
+    },
+    {
+      "d": "2026-10-26",
+      "cat": "special",
+      "e": "🔎",
+      "t": "Buchungsfenster offen",
+      "x": "Laut Jonas sind Flüge etwa 8 bis 10 Wochen vorher am günstigsten. Das ist jetzt. Heute ist ein guter Tag, um die Preise zu checken.",
+      "link": "#fluege"
+    },
+    {
+      "d": "2026-10-27",
+      "cat": "place",
+      "e": "🌆",
+      "t": "Vorschau: Rio de Janeiro",
+      "x": "Sechs Nächte Rio, direkt ab Silvester: Copacabana, Ipanema, Zuckerhut, Christus, Maracanã, Lapa. „Cidade Maravilhosa“, die wunderbare Stadt. Der Reiter „Übersicht“ hat die komplette Liste."
+    },
+    {
+      "d": "2026-10-28",
+      "cat": "word",
+      "e": "👍",
+      "t": "Beleza!",
+      "x": "Heißt wörtlich „Schönheit“, bedeutet aber „passt“, „okay“, „alles klar“. Dazu der Daumen hoch, auf Portugiesisch „joinha“.",
+      "pt": "Beleza!",
+      "say": "be-LE-sa"
+    },
+    {
+      "d": "2026-10-29",
+      "cat": "fact",
+      "e": "👌",
+      "t": "Achtung, Handzeichen!",
+      "x": "Das „OK“-Zeichen mit Daumen und Zeigefinger ist in Brasilien eine üble Beleidigung. Also: Daumen hoch statt Kreis. Simon, das gilt besonders bei Flirtversuchen."
+    },
+    {
+      "d": "2026-10-30",
+      "cat": "crew",
+      "e": "🍊",
+      "t": "Crew-Wahrheit: Marco",
+      "x": "Marco stellt in jeder Unterkunft als Erstes einen Obstkorb hin. Nach drei Tagen liegt nur noch eine Banane drin, und die hat Patrick schon angebissen."
+    },
+    {
+      "d": "2026-10-31",
+      "cat": "task",
+      "e": "🎤",
+      "t": "Aufgabe: Aussprache-Duell",
+      "x": "Wer schafft es heute als Erster, „Obrigado, até amanhã“ fehlerfrei als Sprachnachricht in die Gruppe zu schicken? Der Sprachführer mit Vorlesefunktion hilft.",
+      "link": "#sprache"
+    },
+    {
+      "d": "2026-11-01",
+      "cat": "food",
+      "e": "🍇",
+      "t": "Açaí",
+      "x": "Eine Beere aus dem Amazonas, in Brasilien als eiskalter, dicker Brei gegessen, mit Granola, Banane und manchmal Kondensmilch. Das perfekte Katerfrühstück. Im Amazonas selbst isst man Açaí übrigens oft herzhaft, zum Fisch."
+    },
+    {
+      "d": "2026-11-02",
+      "cat": "fact",
+      "e": "🚡",
+      "t": "Zuckerhut seit 1912",
+      "x": "Der Pão de Açúcar ist 396 Meter hoch, die erste Seilbahn fuhr schon 1912. Heute sind die Gondeln verglast, und von oben sieht man die Copacabana, Botafogo und den Christus. Tipp: Fastlane buchen."
+    },
+    {
+      "d": "2026-11-03",
+      "cat": "word",
+      "e": "😍",
+      "t": "Que legal!",
+      "x": "Wie cool! Universell einsetzbar, zum Beispiel wenn Jonas erzählt, was er schon wieder gebucht hat.",
+      "pt": "Que legal!",
+      "say": "ki le-GAU"
+    },
+    {
+      "d": "2026-11-04",
+      "cat": "song",
+      "e": "🎶",
+      "t": "Song des Tages: Ai Se Eu Te Pego",
+      "x": "Michel Teló, 2011. Der Song, bei dem jede Hochzeit in Europa eskaliert ist. In Brasilien läuft er immer noch. Simons offizieller Flirt-Soundtrack.",
+      "link": "https://open.spotify.com/search/Ai%20Se%20Eu%20Te%20Pego%20Michel%20Teló"
+    },
+    {
+      "d": "2026-11-05",
+      "cat": "fact",
+      "e": "🐬",
+      "t": "Die Legende vom Boto",
+      "x": "Im Amazonas erzählt man sich, dass sich der rosa Flussdelfin nachts in einen gutaussehenden Mann in Weiß verwandelt, auf Feste geht und Frauen verführt. Morgens ist er wieder ein Delfin. Simon hat da eine Idee."
+    },
+    {
+      "d": "2026-11-06",
+      "cat": "place",
+      "e": "🌊",
+      "t": "Vorschau: Iguaçu",
+      "x": "Ab dem 06.01. sind wir zu sechst. Die Wasserfälle kann man von der brasilianischen Seite (Panorama) und der argentinischen Seite (direkt über dem Teufelsschlund) sehen. Reisepass mitnehmen, es geht über die Grenze."
+    },
+    {
+      "d": "2026-11-07",
+      "cat": "special",
+      "e": "5️⃣0️⃣",
+      "t": "Noch 50 Tage!",
+      "x": "Halbzeit-Gefühl: In 50 Tagen sitzen wir im Flieger nach São Paulo. Zeit für die Zwischenbilanz: Flüge gebucht? Zeitkapsel ausgefüllt? Badehose gefunden?"
+    },
+    {
+      "d": "2026-11-08",
+      "cat": "crew",
+      "e": "🦵",
+      "t": "Crew-Wahrheit: Greisel",
+      "x": "Greisel hat eine Pistole im Fuß. Wenn er abzieht, duckt sich die dritte Reihe. Leider trifft er am liebsten das eigene Standbein, das inzwischen einen Anwalt hat."
+    },
+    {
+      "d": "2026-11-09",
+      "cat": "food",
+      "e": "🍲",
+      "t": "Feijoada",
+      "x": "Der Eintopf aus schwarzen Bohnen und verschiedenem Schweinefleisch ist das Nationalgericht. In Rio gibt es ihn traditionell mittwochs und samstags, mit Reis, Farofa, Grünkohl und Orangenscheiben. Danach: Siesta."
+    },
+    {
+      "d": "2026-11-10",
+      "cat": "word",
+      "e": "🍽️",
+      "t": "A conta, por favor",
+      "x": "Die Rechnung, bitte. Meist stehen schon 10 % „serviço“ drauf, das ist das Trinkgeld. Man muss es nicht zahlen, macht es aber normalerweise.",
+      "pt": "A conta, por favor.",
+      "say": "a KON-ta, por fa-WOR"
+    },
+    {
+      "d": "2026-11-11",
+      "cat": "fact",
+      "e": "🏝️",
+      "t": "Ilha Grande ohne Autos",
+      "x": "Auf der Ilha Grande gibt es keine Autos für Touristen, nur Boote und Fußwege. Die Insel war bis 1994 ein Gefängnisstandort. Heute ist sie mit Paraty zusammen UNESCO-Welterbe. Vom Knast zum Paradies."
+    },
+    {
+      "d": "2026-11-12",
+      "cat": "task",
+      "e": "📸",
+      "t": "Aufgabe: Christus-Pose",
+      "x": "Übt schon mal: Arme ausbreiten, Blick nach vorne, würdevoll. Wer heute das beste Christus-Pose-Foto in die Gruppe schickt, bekommt in Rio die erste Caipi ausgegeben."
+    },
+    {
+      "d": "2026-11-13",
+      "cat": "song",
+      "e": "🎶",
+      "t": "Song des Tages: Taj Mahal",
+      "x": "Jorge Ben Jor, 1972. Wenn euch der Refrain bekannt vorkommt: Rod Stewart hat sich für „Da Ya Think I’m Sexy?“ ziemlich stark davon inspirieren lassen.",
+      "link": "https://open.spotify.com/search/Taj%20Mahal%20Jorge%20Ben%20Jor"
+    },
+    {
+      "d": "2026-11-14",
+      "cat": "fact",
+      "e": "🏟️",
+      "t": "Das Maracanã",
+      "x": "Beim WM-Finale 1950 gegen Uruguay waren rund 200.000 Menschen im Maracanã, Brasilien verlor 1:2. Das nennt man bis heute „Maracanazo“. Heute passen noch etwa 78.000 Menschen rein."
+    },
+    {
+      "d": "2026-11-15",
+      "cat": "word",
+      "e": "😮",
+      "t": "Nossa!",
+      "x": "Wow! Krass! Kurz für „Nossa Senhora“ (Unsere liebe Frau). Das passende Wort für den ersten Blick auf die Iguaçu-Fälle, oder auf Patricks Teller.",
+      "pt": "Nossa!",
+      "say": "NO-ssa"
+    },
+    {
+      "d": "2026-11-16",
+      "cat": "place",
+      "e": "🌳",
+      "t": "Vorschau: Juma Lodge",
+      "x": "Drei Nächte im Amazonas, rund drei Stunden von Manaus. Auf dem Programm: rosa Flussdelfine, Kaimane bei Nacht, Piranha-Angeln und Regenwald-Wanderungen. Packliste im Reiter „Infos & Packen“.",
+      "link": "#pack-dschungel"
+    },
+    {
+      "d": "2026-11-17",
+      "cat": "crew",
+      "e": "👩‍⚖️",
+      "t": "Crew-Wahrheit: Dajo",
+      "x": "Dajo ist die einzige Erwachsene der Gruppe und trinkfester als Lubo. Während Marco nach dem zwölften Gin Tonic Wohnungen verkauft, bestellt sie die nächste Runde. Mit seiner Karte."
+    },
+    {
+      "d": "2026-11-18",
+      "cat": "food",
+      "e": "🥥",
+      "t": "Água de coco",
+      "x": "Am Strand wird die grüne Kokosnuss mit der Machete aufgeschlagen, Strohhalm rein, fertig. Das perfekte Getränk gegen Hitze und Kater. Danach kann man das Fruchtfleisch auslöffeln lassen."
+    },
+    {
+      "d": "2026-11-19",
+      "cat": "fact",
+      "e": "👏",
+      "t": "Applaus für die Sonne",
+      "x": "Am Arpoador zwischen Copacabana und Ipanema klatschen die Leute, wenn die Sonne hinter den Bergen Dois Irmãos untergeht. Kein Witz. Wir klatschen mit."
+    },
+    {
+      "d": "2026-11-20",
+      "cat": "task",
+      "e": "📝",
+      "t": "Erinnerung: Zeitkapsel",
+      "x": "Hast du deine Tipps schon an Patrick geschickt? Wer bis zum Abflug keine Prognosen abgibt, kann am letzten Abend auch nicht gewinnen. Die Fragen stehen im Reiter „Vorfreude“.",
+      "link": "#kapsel"
+    },
+    {
+      "d": "2026-11-21",
+      "cat": "word",
+      "e": "🥺",
+      "t": "Saudade",
+      "x": "Das berühmteste unübersetzbare Wort: eine Mischung aus Sehnsucht, Wehmut und Liebe zu etwas, das fehlt. Das Gefühl, das wir am 20.01. im Flieger haben werden.",
+      "pt": "Saudade",
+      "say": "sau-DA-dschi"
+    },
+    {
+      "d": "2026-11-22",
+      "cat": "song",
+      "e": "🎶",
+      "t": "Song des Tages: Chega de Saudade",
+      "x": "João Gilberto, 1959. Mit diesem Song fing die Bossa Nova an. Der Titel heißt „Genug der Sehnsucht“, passt also perfekt zum Countdown.",
+      "link": "https://open.spotify.com/search/Chega%20de%20Saudade%20João%20Gilberto"
+    },
+    {
+      "d": "2026-11-23",
+      "cat": "fact",
+      "e": "🏐",
+      "t": "Footvolley kommt aus Rio",
+      "x": "Footvolley wurde in den 60er Jahren an der Copacabana erfunden: Beachvolleyball, aber ohne Hände. Die Einheimischen spielen es auf einem unfassbaren Niveau. Wir spielen es auf unserem Niveau."
+    },
+    {
+      "d": "2026-11-24",
+      "cat": "place",
+      "e": "🏘️",
+      "t": "Vorschau: Paraty",
+      "x": "Eine Kolonialstadt mit Kopfsteinpflaster, weißen Häusern und bunten Türen. Bei Springflut stehen manche Gassen unter Wasser, das war früher so gewollt. Abends Live-Musik in der autofreien Altstadt."
+    },
+    {
+      "d": "2026-11-25",
+      "cat": "crew",
+      "e": "🧢",
+      "t": "Crew-Wahrheit: Jonas, Teil 2",
+      "x": "Jonas’ Rekord: 113 Kopfbälle am Stück. Die Geheimratsecken helfen dabei, sie bieten eine großzügige Landefläche. Der Fischerhut ist deshalb kein Style, sondern Sonnenschutz."
+    },
+    {
+      "d": "2026-11-26",
+      "cat": "word",
+      "e": "🚕",
+      "t": "Onde fica…?",
+      "x": "Wo ist …? Unverzichtbar. Zum Beispiel: „Onde fica o banheiro?“ (Wo ist das Klo?) oder „Onde fica a praia?“ (Wo ist der Strand?).",
+      "pt": "Onde fica o banheiro?",
+      "say": "ON-dschi FI-ka u ban-JEI-ru"
+    },
+    {
+      "d": "2026-11-27",
+      "cat": "special",
+      "e": "3️⃣0️⃣",
+      "t": "Noch 30 Tage!",
+      "x": "Ein Monat. Jetzt ist ein guter Zeitpunkt für: Impfungen checken, eSIM aussuchen, Kreditkarte fürs Ausland prüfen und die Badehose anprobieren. Die Packliste steht im Reiter „Infos & Packen“.",
+      "link": "#packen"
+    },
+    {
+      "d": "2026-11-28",
+      "cat": "food",
+      "e": "🍗",
+      "t": "Coxinha",
+      "x": "Frittierter Teig in Tropfenform, gefüllt mit Hühnchen und Frischkäse. Gibt es an jeder Ecke für ein paar Reais. Wer eine Coxinha isst, isst meistens zwei."
+    },
+    {
+      "d": "2026-11-29",
+      "cat": "fact",
+      "e": "🌊",
+      "t": "Das Treffen der Wasser",
+      "x": "Bei Manaus fließen der dunkle Rio Negro und der sandfarbene Rio Solimões kilometerweit nebeneinander, ohne sich zu mischen. Grund: unterschiedliche Temperatur, Geschwindigkeit und Dichte. Sieht aus wie Kaffee und Milchkaffee."
+    },
+    {
+      "d": "2026-11-30",
+      "cat": "song",
+      "e": "🎶",
+      "t": "Song des Tages: Aquele Abraço",
+      "x": "Gilberto Gil, 1969. Eine Liebeserklärung an Rio, geschrieben kurz bevor er ins Exil musste. „O Rio de Janeiro continua lindo“: Rio ist immer noch schön.",
+      "link": "https://open.spotify.com/search/Aquele%20Abraço%20Gilberto%20Gil"
+    },
+    {
+      "d": "2026-12-01",
+      "cat": "crew",
+      "e": "😎",
+      "t": "Crew-Wahrheit: Simon, Teil 2",
+      "x": "Simon kann exakt einen Satz Portugiesisch: „Oi, gatinha.“ Den Rest improvisiert er mit Hüftschwung. Der Hüftschwung ist das größere Risiko."
+    },
+    {
+      "d": "2026-12-02",
+      "cat": "word",
+      "e": "🫶",
+      "t": "Cara",
+      "x": "Heißt eigentlich „Gesicht“, wird aber wie „Alter“ oder „Digga“ benutzt. „Cara, que praia linda!“, Alter, was für ein Strand!",
+      "pt": "Cara, que praia linda!",
+      "say": "KA-ra, ki PRAI-a LIN-da"
+    },
+    {
+      "d": "2026-12-03",
+      "cat": "fact",
+      "e": "🎆",
+      "t": "Réveillon an der Copacabana",
+      "x": "Silvester an der Copacabana ist eine der größten Neujahrsfeiern der Welt, mit über zwei Millionen Menschen am Strand. Alle tragen Weiß, das bringt Frieden fürs neue Jahr. Wir sind dabei."
+    },
+    {
+      "d": "2026-12-04",
+      "cat": "food",
+      "e": "🍫",
+      "t": "Brigadeiro",
+      "x": "Kondensmilch, Kakao, Butter, einkochen, zu Kugeln rollen, in Schokostreuseln wälzen. Auf keinem brasilianischen Kindergeburtstag fehlt er. Und auf keinem unserer Abende."
+    },
+    {
+      "d": "2026-12-05",
+      "cat": "fact",
+      "e": "🌡️",
+      "t": "Hochsommer",
+      "x": "Wenn wir landen, ist in Brasilien Hochsommer. In Rio sind 30 Grad und mehr normal, im Amazonas ist es schwül und regnet fast täglich kurz und heftig. Sonnencreme, Mückenspray und leichte Klamotten."
+    },
+    {
+      "d": "2026-12-06",
+      "cat": "task",
+      "e": "👕",
+      "t": "Aufgabe: Das weiße Outfit",
+      "x": "Silvester in Rio heißt: komplett in Weiß. Zeigt heute in der Gruppe euer geplantes Outfit. Wer kein weißes Hemd hat, hat noch drei Wochen."
+    },
+    {
+      "d": "2026-12-07",
+      "cat": "word",
+      "e": "🙋",
+      "t": "Fala sério!",
+      "x": "Heißt „Sag ernsthaft!“ und bedeutet: „Das kann nicht dein Ernst sein!“ Perfekt, wenn Greisel zum dritten Mal „a bissle später“ sagt.",
+      "pt": "Fala sério!",
+      "say": "FA-la SE-rio"
+    },
+    {
+      "d": "2026-12-08",
+      "cat": "place",
+      "e": "🏝️",
+      "t": "Vorschau: Ilha Grande",
+      "x": "Das große Finale. Die Lagoa Azul mit türkisem Wasser, der Traumstrand Lopes Mendes, Wanderwege durch den Regenwald. Und am letzten Abend: die Zeitkapsel wird geöffnet."
+    },
+    {
+      "d": "2026-12-09",
+      "cat": "song",
+      "e": "🎶",
+      "t": "Song des Tages: Show das Poderosas",
+      "x": "Anitta, 2013. Anitta ist der größte Popstar Brasiliens. Wenn dieser Song in einem Club läuft, wird’s voll auf der Tanzfläche.",
+      "link": "https://open.spotify.com/search/Show%20das%20Poderosas%20Anitta"
+    },
+    {
+      "d": "2026-12-10",
+      "cat": "crew",
+      "e": "🍽️",
+      "t": "Crew-Wahrheit: Patrick, Teil 2",
+      "x": "Patrick hat vor der Reise einen Plan gemacht: Rodízio in Rio, bis der Grill ausgeht. Die Rinder in Mato Grosso haben schon von ihm gehört und sich eine Woche freigenommen."
+    },
+    {
+      "d": "2026-12-11",
+      "cat": "fact",
+      "e": "💬",
+      "t": "Ein Kuss oder zwei?",
+      "x": "In Rio begrüßt man sich meist mit zwei Küsschen auf die Wangen, in São Paulo oft nur mit einem. Unter Männern reichen Handschlag und Schulterklopfer. Simon, das ist kein Freifahrtschein."
+    },
+    {
+      "d": "2026-12-12",
+      "cat": "word",
+      "e": "🆘",
+      "t": "Socorro!",
+      "x": "Hilfe! Hoffentlich brauchen wir es nie. Notrufnummern in Brasilien: 190 Polizei, 192 Rettungsdienst, 193 Feuerwehr.",
+      "pt": "Socorro!",
+      "say": "so-KO-ru"
+    },
+    {
+      "d": "2026-12-13",
+      "cat": "task",
+      "e": "📱",
+      "t": "Aufgabe: Apps laden",
+      "x": "Heute ist App-Tag: Uber, 99 (brasilianische Taxi-App), Google Maps offline für Rio, Übersetzer mit Portugiesisch offline. Und die Reiseseite als App auf den Startbildschirm."
+    },
+    {
+      "d": "2026-12-14",
+      "cat": "food",
+      "e": "🍢",
+      "t": "Queijo coalho",
+      "x": "Grillkäse am Spieß, direkt am Strand über kleiner Holzkohle gegrillt, manchmal mit Oregano oder Honig. Kostet ein paar Reais und macht süchtig."
+    },
+    {
+      "d": "2026-12-15",
+      "cat": "crew",
+      "e": "🦵",
+      "t": "Crew-Wahrheit: Greisel, Teil 2",
+      "x": "Greisels Standardsatz: „Bei uns wird’s a bissle später.“ Deshalb planen wir ihn am 06.01. einfach zwei Stunden früher ein. Die Flitterwochen mit Dajo teilt er sich mit vier Kerlen. Romantischer geht’s nicht."
+    },
+    {
+      "d": "2026-12-16",
+      "cat": "song",
+      "e": "🎶",
+      "t": "Song des Tages: Descobridor dos Sete Mares",
+      "x": "Tim Maia, 1983. Soul auf Brasilianisch, gute Laune garantiert. Tim Maia ist eine Legende und war berüchtigt dafür, zu eigenen Konzerten nicht aufzutauchen. Greisel wäre stolz.",
+      "link": "https://open.spotify.com/search/Descobridor%20dos%20Sete%20Mares%20Tim%20Maia"
+    },
+    {
+      "d": "2026-12-17",
+      "cat": "crew",
+      "e": "🍊",
+      "t": "Crew-Wahrheit: Marco, Teil 2",
+      "x": "Marco sieht aus wie Dani Olmo und spielt auch so, nur ohne Ball, ohne Tempo und ohne Vertrag. Hauptberuflich verkauft er Omas Wohnungen im vierten Stock ohne Aufzug. Reklamationen gab es noch nie."
+    },
+    {
+      "d": "2026-12-18",
+      "cat": "fact",
+      "e": "🏛️",
+      "t": "Rio war mal Hauptstadt",
+      "x": "Bis 1960 war Rio de Janeiro die Hauptstadt Brasiliens. Dann wurde Brasília mitten im Land aus dem Nichts gebaut, in nur rund vier Jahren. Rio ist trotzdem die Stadt geblieben, die jeder kennt."
+    },
+    {
+      "d": "2026-12-19",
+      "cat": "word",
+      "e": "☀️",
+      "t": "Bom dia, boa tarde, boa noite",
+      "x": "Guten Morgen, guten Tag (ab Mittag), guten Abend bzw. gute Nacht. Wer damit grüßt, wird sofort freundlicher bedient.",
+      "pt": "Bom dia! Boa tarde! Boa noite!",
+      "say": "bong DSCHI-a! BO-a TAR-dschi! BO-a NOI-tschi!"
+    },
+    {
+      "d": "2026-12-20",
+      "cat": "special",
+      "e": "7️⃣",
+      "t": "Noch eine Woche!",
+      "x": "Sieben Tage. Checkliste: Reisepass (gültig!), Kreditkarte, Impfpass, eSIM, Adapter, weißes Outfit, Badehose, Sonnencreme. Die Zeitkapsel schließt am Abflugtag."
+    },
+    {
+      "d": "2026-12-21",
+      "cat": "food",
+      "e": "🧋",
+      "t": "Mate und Biscoito Globo",
+      "x": "Der Klassiker am Strand von Rio: eiskalter Mate-Tee aus dem Kanister und Biscoito Globo, luftige Kringel aus Maniokmehl, süß oder salzig. Die Verkäufer rufen „Olha o Mate!“ über den ganzen Strand."
+    },
+    {
+      "d": "2026-12-22",
+      "cat": "fact",
+      "e": "🎄",
+      "t": "Weihnachten bei 35 Grad",
+      "x": "In Brasilien feiert man Weihnachten am 24. abends mit großem Essen, oft Truthahn, Panettone („Chocotone“ mit Schoko) und Obst. Der Weihnachtsmann heißt „Papai Noel“ und schwitzt im Kostüm."
+    },
+    {
+      "d": "2026-12-23",
+      "cat": "word",
+      "e": "🎅",
+      "t": "Feliz Natal!",
+      "x": "Frohe Weihnachten! Und für den 31.12.: „Feliz Ano Novo!“, frohes neues Jahr.",
+      "pt": "Feliz Natal! Feliz Ano Novo!",
+      "say": "fe-LIS na-TAU! fe-LIS A-nu NO-wu"
+    },
+    {
+      "d": "2026-12-24",
+      "cat": "special",
+      "e": "🎄",
+      "t": "Frohe Weihnachten!",
+      "x": "Feliz Natal, Gringos und Cevapi! In drei Tagen geht’s los. Heute: Familie, Essen, und heimlich die Badehose in den Koffer."
+    },
+    {
+      "d": "2026-12-25",
+      "cat": "task",
+      "e": "🎁",
+      "t": "Noch zwei Tage",
+      "x": "Weihnachten ist durch, jetzt zählt nur noch Brasilien. Aufgabe: Schickt heute ein Foto von eurem halb gepackten Koffer. Der schönste Chaos-Koffer gewinnt."
+    },
+    {
+      "d": "2026-12-26",
+      "cat": "task",
+      "e": "🧳",
+      "t": "Packtag",
+      "x": "Morgen früh geht der Flieger. Letzter Check: Pass, Geld, Handy-Ladekabel, Adapter, Medikamente, weißes Outfit. Die Packliste im Reiter „Infos & Packen“ zum Abhaken. Und: Zeitkapsel-Tipps bis heute Nacht an Patrick!",
+      "link": "#packen"
+    },
+    {
+      "d": "2026-12-27",
+      "cat": "special",
+      "e": "✈️",
+      "t": "Boa viagem!",
+      "x": "Heute geht’s los: München → Rom → São Paulo. Alle 88 Türchen geschafft. Die Zeitkapsel ist versiegelt, die Badehosen sind eingepackt. Bis gleich in Brasilien! 🇧🇷"
+    }
+  ],
+  "kapsel": {
+    "_hinweis": "Tipps in db-Collection kapsel (Dokument-ID = Crew-id, Feld a = {Frage-id: Antwort}, ts); Auflösung in kapselres/solution (Feld s = {Frage-id: Wert}). revealAt = UTC.",
+    "revealAt": "2027-01-19T23:00:00Z",
+    "revealText": "letzten Abend auf der Ilha Grande (19.01., 20 Uhr)",
+    "closeText": "Abgabe bis zum Abflug am 27.12.",
+    "questions": [
+      {
+        "id": "zerrung",
+        "type": "crew",
+        "q": "Wer holt sich die erste Zerrung?",
+        "emoji": "🦵"
+      },
+      {
+        "id": "sonnenbrand",
+        "type": "crew",
+        "q": "Wer hat als Erster einen Sonnenbrand?",
+        "emoji": "🦞"
+      },
+      {
+        "id": "handy",
+        "type": "crew",
+        "q": "Wer verliert als Erster Handy, Geldbeutel oder Pass?",
+        "emoji": "📱"
+      },
+      {
+        "id": "wasser",
+        "type": "crew",
+        "q": "Wer fällt als Erster unfreiwillig ins Wasser?",
+        "emoji": "🌊"
+      },
+      {
+        "id": "einschlafen",
+        "type": "crew",
+        "q": "Wer schläft als Erster auf einer Party ein?",
+        "emoji": "😴"
+      },
+      {
+        "id": "samba",
+        "type": "crew",
+        "q": "Wer tanzt am meisten Samba?",
+        "emoji": "💃"
+      },
+      {
+        "id": "souvenir",
+        "type": "crew",
+        "q": "Wer kauft das hässlichste Souvenir?",
+        "emoji": "🗿"
+      },
+      {
+        "id": "portugiesisch",
+        "type": "crew",
+        "q": "Wer spricht am Ende am besten Portugiesisch?",
+        "emoji": "🗣️"
+      },
+      {
+        "id": "heimweh",
+        "type": "crew",
+        "q": "Wer ruft als Erster zuhause an, weil er Heimweh hat?",
+        "emoji": "☎️"
+      },
+      {
+        "id": "weinen",
+        "type": "crew",
+        "q": "Wer weint beim Abschied am 20.01.?",
+        "emoji": "😭"
+      },
+      {
+        "id": "teller",
+        "type": "number",
+        "q": "Wie viele Teller schafft Patrick beim ersten Buffet?",
+        "emoji": "🍽️",
+        "unit": "Teller"
+      },
+      {
+        "id": "nummern",
+        "type": "number",
+        "q": "Wie viele Handynummern bekommt Simon auf der ganzen Reise?",
+        "emoji": "📞",
+        "unit": "Nummern"
+      },
+      {
+        "id": "caipis",
+        "type": "number",
+        "q": "Wie viele Caipirinhas trinkt die Crew insgesamt?",
+        "emoji": "🍹",
+        "unit": "Caipis",
+        "hint": "Wird mit dem Drinks-Counter abgeglichen."
+      },
+      {
+        "id": "kopfbaelle",
+        "type": "number",
+        "q": "Wie viele Kopfbälle am Stück schafft Jonas am Strand?",
+        "emoji": "⚽",
+        "unit": "Kopfbälle"
+      },
+      {
+        "id": "kaimane",
+        "type": "number",
+        "q": "Wie viele Kaimane sehen wir im Dschungel?",
+        "emoji": "🐊",
+        "unit": "Kaimane"
+      },
+      {
+        "id": "greisel",
+        "type": "number",
+        "q": "Wie viele Minuten kommt Greisel im Schnitt zu spät?",
+        "emoji": "⏰",
+        "unit": "Minuten"
+      },
+      {
+        "id": "lieblingsort",
+        "type": "choice",
+        "q": "Welcher Ort wird der Lieblingsort der Reise?",
+        "emoji": "📍",
+        "options": [
+          "Guarujá",
+          "Rio",
+          "Iguaçu",
+          "Amazonas",
+          "Paraty",
+          "Ilha Grande"
+        ]
+      },
+      {
+        "id": "wohnung",
+        "type": "yesno",
+        "q": "Verkauft Marco in Brasilien eine Wohnung?",
+        "emoji": "🏚️"
+      },
+      {
+        "id": "footvolley",
+        "type": "yesno",
+        "q": "Gewinnt die Crew ein Footvolley-Spiel gegen Einheimische?",
+        "emoji": "🏐"
+      },
+      {
+        "id": "peinlich",
+        "type": "text",
+        "q": "Was wird die größte Peinlichkeit der Reise?",
+        "emoji": "🙈"
+      },
+      {
+        "id": "brief",
+        "type": "text",
+        "q": "Ein Satz an dein Ich vom 19.01.:",
+        "emoji": "💌"
+      }
+    ]
+  }
 }

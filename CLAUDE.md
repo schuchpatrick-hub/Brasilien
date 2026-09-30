@@ -62,6 +62,16 @@ Lesen/Korrigieren: `ArtifactData` `list`/`delete` auf `drinks`. Schreiben dürfe
 eingeladene Editoren (nicht, solange ein öffentlicher Link aktiv ist). Ohne Schreibrecht bleibt die
 Eingabemaske sichtbar, aber gesperrt, mit Hinweis „Eintragen nur durch den Admin (Patrick)“.
 
+## Vorfreude: Kalender und Zeitkapsel
+
+Reiter „Vorfreude“ (`vorfreude-tab`). **Kalender** (`#kalender`): 88 Türchen vom 01.10. bis Abflug 27.12. in `trip.json` → `advent`
+(`d` Datum, `cat` fact/word/song/crew/food/task/place/special, `e` Emoji, `t` Titel, `x` Text, optional `pt`/`say`
+Portugiesisch mit Aussprache, `link` Spotify-Suche oder `#anker`). Datum nach Berliner Zeit, geöffnete Türchen pro Handy im
+localStorage. **Zeitkapsel** (`#kapsel`): Fragen in `trip.json` → `kapsel.questions` (Typen crew, number, choice, yesno, text).
+Tipps in db-Collection `kapsel` (Dokument-ID = Crew-`id`, `a` = {Frage-id: Antwort}, `ts`), eintragen nur Admin; bis
+`revealAt` (19.01.2027 20 Uhr Rio) zeigt die Seite nur, wer getippt hat. Danach Antworten, Auflösung durch den Admin in
+`kapselres/solution` (`s`), Hellseher-Ranking (Zahlen: am nächsten dran gewinnt).
+
 ## Real-Rechner
 
 Kapitel „Real-Rechner“ (`#rechner`, eigener Reiter `rechner-tab`). Kurs und lustige Vergleiche in `trip.json` → `money`
