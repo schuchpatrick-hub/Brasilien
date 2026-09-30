@@ -172,7 +172,7 @@ Abgerechnet wird über **Splitwise**, mit zwei Gruppen: eine für die Gringos pl
 
 ## Packliste Dschungel (Empfehlung der Juma Lodge)
 
-Lange Hosen und Shorts · langärmlige Shirts und T-Shirts · kleiner Tagesrucksack · Sonnenbrille · Insektenschutz · Regenjacke · Cap oder Hut · geschlossene Schuhe oder Wanderschuhe · Taschenlampe · Fernglas · Badesachen · Kamera · Ersatzakkus und Ladegerät
+Lange Hosen und Shorts · langärmlige Shirts und T-Shirts · kleiner Tagesrucksack · Sonnenbrille · Insektenschutz · Regenjacke · Cap oder Hut · geschlossene Schuhe, Stiefel oder bequeme Sneaker · Taschenlampe · Fernglas · Badesachen · Kamera · Ersatzakkus und Ladegerät
 
 ## Ideen, die verworfen wurden oder noch offen sind
 
