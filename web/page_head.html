@@ -499,6 +499,38 @@ a{color:var(--accent)}
 .ka-rank{background:var(--hero);color:#f4f7f2;border-radius:16px;padding:16px 18px;display:grid;gap:8px}
 .ka-rank h3{margin:0;color:#fff}
 .ka-rank ol{margin:0;padding-left:22px;display:grid;gap:4px}
+.ka-pts{font-size:.8rem;opacity:.8}
+.ka-ans li{grid-template-columns:30px 1fr auto auto}
+.ka-ans .plus{font:700 .85rem var(--mono);color:var(--ok)}
+.ka-dist{display:grid;gap:5px}
+.ka-dist .r{display:grid;grid-template-columns:minmax(70px,auto) 1fr 2.4rem;gap:10px;align-items:center;font-size:.9rem}
+.ka-dist .l{white-space:nowrap}
+.ka-dist .b{height:10px;background:var(--bg);border-radius:999px;overflow:hidden;border:1px solid var(--line)}
+.ka-dist .b i{display:block;height:100%;background:var(--sky);border-radius:999px}
+.ka-dist .r.ok .b i{background:var(--ok)}
+.ka-dist .r.ok .l{font-weight:700;color:var(--ok)}
+.ka-dist .c{font:600 .8rem var(--mono);color:var(--muted);text-align:right}
+.ka-stat{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:.9rem;color:var(--muted)}
+.ka-stat b{color:var(--fg)}
+.ka-podium{display:flex;justify-content:center;align-items:flex-end;gap:10px;margin:6px 0 4px}
+.ka-podium .pod{display:grid;justify-items:center;gap:4px;width:100px;text-align:center}
+.ka-podium .av{width:52px;height:52px;border-radius:50%;overflow:hidden;background:var(--accent);display:grid;place-items:center;color:#fff;font:800 1.2rem var(--display);box-shadow:0 0 0 3px var(--amarelo)}
+.ka-podium .av img{width:100%;height:100%;object-fit:cover}
+.ka-podium .p1 .av{width:66px;height:66px}
+.ka-podium .pp{font:600 .78rem var(--mono);opacity:.85}
+.ka-podium .step{width:100%;border-radius:10px 10px 0 0;background:rgba(255,255,255,.14);display:grid;place-items:center;font-size:1.6rem}
+.ka-podium .p1 .step{height:86px;background:rgba(255,207,31,.35)}
+.ka-podium .p2 .step{height:62px}
+.ka-podium .p3 .step{height:44px}
+.ka-table{width:100%;min-width:0;border-collapse:collapse;font-size:.92rem;color:#f4f7f2}
+.ka-table th{background:transparent;color:#cfe0d5;border-bottom:1px solid rgba(255,255,255,.2);padding:6px 8px}
+.ka-table td{border-bottom:1px solid rgba(255,255,255,.12);padding:7px 8px}
+.ka-foot{font-size:.82rem;opacity:.85;margin:0}
+.ka-titles{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.ka-titles li{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 12px;padding:7px 0;border-bottom:1px solid var(--line);font-size:.95rem}
+.ka-titles li:last-child{border-bottom:0}
+.ka-titles .t{font-weight:700}
+.ka-titles small{color:var(--muted)}
 @media print{.ka{display:none}}
 /* Flüge als Bordkarten */
 .fl-seg{margin-bottom:12px}

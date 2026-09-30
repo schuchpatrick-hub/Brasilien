@@ -2370,7 +2370,7 @@
     }
   ],
   "kapsel": {
-    "_hinweis": "Tipps in db-Collection kapsel (Dokument-ID = Crew-id, Feld a = {Frage-id: Antwort}, ts); Auflösung in kapselres/solution (Feld s = {Frage-id: Wert}). revealAt = UTC.",
+    "_hinweis": "Tipps in db-Collection kapsel (Dokument-ID = Crew-id, Feld a = {Frage-id: Antwort}, ts); Auflösung in kapselres/solution (Feld s = {Frage-id: Wert}). revealAt = UTC. Punkte: Treffer 3; Zahlen: exakt 5, am nächsten 3, zweitnächster 1.",
     "revealAt": "2027-01-19T23:00:00Z",
     "revealText": "letzten Abend auf der Ilha Grande (19.01., 20 Uhr)",
     "closeText": "Abgabe bis zum Abflug am 27.12.",
@@ -2379,55 +2379,64 @@
         "id": "zerrung",
         "type": "crew",
         "q": "Wer holt sich die erste Zerrung?",
-        "emoji": "🦵"
+        "emoji": "🦵",
+        "title": "Zerrungskönig"
       },
       {
         "id": "sonnenbrand",
         "type": "crew",
         "q": "Wer hat als Erster einen Sonnenbrand?",
-        "emoji": "🦞"
+        "emoji": "🦞",
+        "title": "Hummer der Reise"
       },
       {
         "id": "handy",
         "type": "crew",
         "q": "Wer verliert als Erster Handy, Geldbeutel oder Pass?",
-        "emoji": "📱"
+        "emoji": "📱",
+        "title": "Verlierer vom Dienst"
       },
       {
         "id": "einschlafen",
         "type": "crew",
         "q": "Wer schläft als Erster auf einer Party ein?",
-        "emoji": "😴"
+        "emoji": "😴",
+        "title": "Partyschläfer"
       },
       {
         "id": "samba",
         "type": "crew",
         "q": "Wer tanzt am meisten Samba?",
-        "emoji": "💃"
+        "emoji": "💃",
+        "title": "Samba-König"
       },
       {
         "id": "souvenir",
         "type": "crew",
         "q": "Wer kauft das hässlichste Souvenir?",
-        "emoji": "🗿"
+        "emoji": "🗿",
+        "title": "Kitsch-Sammler"
       },
       {
         "id": "portugiesisch",
         "type": "crew",
         "q": "Wer spricht am Ende am besten Portugiesisch?",
-        "emoji": "🗣️"
+        "emoji": "🗣️",
+        "title": "Sprachtalent"
       },
       {
         "id": "heimweh",
         "type": "crew",
         "q": "Wer ruft als Erster zuhause an, weil er Heimweh hat?",
-        "emoji": "☎️"
+        "emoji": "☎️",
+        "title": "Mama-Kind"
       },
       {
         "id": "weinen",
         "type": "crew",
         "q": "Wer weint beim Abschied am 20.01.?",
-        "emoji": "😭"
+        "emoji": "😭",
+        "title": "Heulsuse vom Dienst"
       },
       {
         "id": "teller",
@@ -2498,6 +2507,12 @@
         "q": "Was wird die größte Peinlichkeit der Reise?",
         "emoji": "🙈"
       }
-    ]
+    ],
+    "points": {
+      "hit": 3,
+      "exact": 5,
+      "closest": 3,
+      "second": 1
+    }
   }
 }

@@ -914,14 +914,32 @@ document.getElementById('wa-copy').addEventListener('click', () => {
     for (let i = 0; i < 30; i++) { const p = document.createElement('i'); p.style.left = Math.random() * 100 + '%'; p.style.background = ['#00843d', '#ffcf1f', '#1f3f8f'][i % 3]; p.style.animationDelay = Math.random() * .3 + 's'; c.appendChild(p); }
     el.appendChild(c); setTimeout(() => c.remove(), 2000);
   }
-  function winners(q) {
-    const s = sol[q.id]; if (s === undefined || s === '' || q.type === 'text') return [];
-    const ent = CREW.filter(p => tips[p.id] && tips[p.id].a[q.id] !== undefined && tips[p.id].a[q.id] !== '');
+  const PT = K.points || {hit: 3, exact: 5, closest: 3, second: 1};
+  const answered = q => CREW.filter(p => tips[p.id] && tips[p.id].a[q.id] !== undefined && tips[p.id].a[q.id] !== '');
+  const solved = q => q.type !== 'text' && sol[q.id] !== undefined && sol[q.id] !== '';
+  // Punkte je Person für eine Frage
+  function score(q) {
+    const out = {}; if (!solved(q)) return out;
+    const s = sol[q.id], ent = answered(q);
     if (q.type === 'number') {
-      const diffs = ent.map(p => Math.abs(Number(tips[p.id].a[q.id]) - Number(s))); const m = Math.min(...diffs);
-      return ent.filter((p, i) => diffs[i] === m).map(p => p.id);
+      const diff = p => Math.abs(Number(tips[p.id].a[q.id]) - Number(s));
+      const ds = [...new Set(ent.map(diff))].sort((x, y) => x - y);
+      ent.forEach(p => { const d = diff(p); out[p.id] = d === 0 ? PT.exact : d === ds[0] ? PT.closest : d === ds[1] ? PT.second : 0; });
+    } else ent.forEach(p => { out[p.id] = tips[p.id].a[q.id] === s ? PT.hit : 0; });
+    return out;
+  }
+  function winners(q) { const sc = score(q); const m = Math.max(0, ...Object.values(sc)); return m ? Object.keys(sc).filter(k => sc[k] === m) : []; }
+  function dist(q) {
+    const ent = answered(q), n = ent.length || 1, s = sol[q.id];
+    if (q.type === 'number') {
+      const vals = ent.map(p => Number(tips[p.id].a[q.id])); if (!vals.length) return '';
+      const avg = vals.reduce((x, y) => x + y, 0) / vals.length;
+      return '<div class="ka-stat"><span>Tipps von <b>' + Math.min(...vals) + '</b> bis <b>' + Math.max(...vals) + '</b></span><span>Ø <b>' + (Math.round(avg * 10) / 10).toLocaleString('de-DE') + '</b> ' + esc(q.unit || '') + '</span>' + (solved(q) ? '<span>Richtig: <b>' + esc(String(s)) + '</b></span>' : '') + '</div>';
     }
-    return ent.filter(p => tips[p.id].a[q.id] === s).map(p => p.id);
+    if (q.type === 'text') return '';
+    const opts = q.type === 'crew' ? CREW.map(p => [p.id, p.name]) : q.type === 'choice' ? q.options.map(o => [o, o]) : [[true, 'Ja'], [false, 'Nein']];
+    const rows = opts.map(([v, l]) => [v, l, ent.filter(p => tips[p.id].a[q.id] === v).length]).filter(r => r[2] > 0 || (solved(q) && r[0] === s)).sort((x, y) => y[2] - x[2]);
+    return '<div class="ka-dist">' + rows.map(([v, l, c]) => '<div class="r' + (solved(q) && v === s ? ' ok' : '') + '"><span class="l">' + esc(l) + (solved(q) && v === s ? ' ✓' : '') + '</span><span class="b"><i style="width:' + (c / n * 100) + '%"></i></span><span class="c">' + c + '×</span></div>').join('') + '</div>';
   }
   function solInput(q) {
     const s = sol[q.id];
@@ -934,15 +952,40 @@ document.getElementById('wa-copy').addEventListener('click', () => {
     return '<div class="ka-sol">Auflösung (Admin): ' + f + '</div>';
   }
   function renderOpen() {
-    const pts = Object.fromEntries(CREW.map(p => [p.id, 0]));
-    Q.forEach(q => winners(q).forEach(id => pts[id]++));
-    const ranked = CREW.filter(p => tips[p.id]).sort((a, b) => pts[b.id] - pts[a.id]);
-    const anySol = Object.keys(sol).length > 0;
-    let h = '<div class="ka-seal"><div class="big">🎉 Die Zeitkapsel ist offen!</div><div class="when">' + Object.keys(tips).length + ' von ' + CREW.length + ' haben getippt. ' + (writable ? 'Trag unten die Auflösungen ein, dann steht der Hellseher der Reise fest.' : 'Die Auflösung trägt Patrick ein.') + '</div></div>';
-    if (anySol && ranked.length) h += '<div class="ka-rank"><h3>🔮 Hellseher der Reise</h3><ol>' + ranked.map(p => '<li>' + esc(p.name) + ': <b>' + pts[p.id] + '</b> ' + (pts[p.id] === 1 ? 'Treffer' : 'Treffer') + '</li>').join('') + '</ol></div>';
-    h += Q.map(q => { const w = winners(q);
-      return '<div class="ka-res"><h3>' + q.emoji + ' ' + esc(q.q) + '</h3><ul class="ka-ans">' + CREW.filter(p => tips[p.id]).map(p =>
-        '<li class="' + (w.includes(p.id) ? 'win' : '') + '">' + av(p) + '<span><b>' + esc(p.name) + ':</b> ' + esc(fmtAns(q, tips[p.id].a[q.id])) + '</span></li>').join('') + '</ul>' + solInput(q) + '</div>'; }).join('');
+    const tipped = CREW.filter(p => tips[p.id]);
+    const pts = Object.fromEntries(CREW.map(p => [p.id, 0])), hits = Object.fromEntries(CREW.map(p => [p.id, 0]));
+    const scores = Object.fromEntries(Q.map(q => [q.id, score(q)]));
+    Q.forEach(q => Object.entries(scores[q.id]).forEach(([id, v]) => { pts[id] += v; if (v > 0) hits[id]++; }));
+    const nSolved = Q.filter(solved).length, nScorable = Q.filter(q => q.type !== 'text').length;
+    const ranked = tipped.slice().sort((a, b) => pts[b.id] - pts[a.id] || hits[b.id] - hits[a.id]);
+    const place = p => 1 + ranked.filter(x => pts[x.id] > pts[p.id]).length;
+    let h = '<div class="ka-seal"><div class="big">🎉 Die Zeitkapsel ist offen!</div><div class="when">' + tipped.length + ' von ' + CREW.length + ' haben getippt · ' + nSolved + ' von ' + nScorable + ' Fragen aufgelöst. ' +
+      (nSolved < nScorable ? (writable ? 'Trag bei jeder Frage die Auflösung ein, das Ranking rechnet sich live.' : 'Die Auflösungen trägt Patrick ein, das Ranking aktualisiert sich live.') : 'Alles aufgelöst!') + '</div>' +
+      '<div class="ka-pts">Punkte: Treffer ' + PT.hit + ' · Zahlen genau ' + PT.exact + ', am nächsten dran ' + PT.closest + ', Zweitnächster ' + PT.second + '</div></div>';
+    if (nSolved && ranked.length) {
+      const top = ranked.slice(0, 3), order = [top[1], top[0], top[2]].filter(Boolean);
+      h += '<div class="ka-rank"><h3>🔮 Hellseher der Reise</h3><div class="ka-podium">' + order.map(p => { const pl = place(p);
+        return '<div class="pod p' + Math.min(pl, 3) + '">' + av(p) + '<b>' + esc(p.name) + '</b><span class="pp">' + pts[p.id] + ' Punkte</span><div class="step">' + ['', '🥇', '🥈', '🥉'][Math.min(pl, 3)] + '</div></div>'; }).join('') + '</div>' +
+        '<table class="ka-table"><thead><tr><th>Platz</th><th>Wer</th><th>Punkte</th><th>Treffer</th></tr></thead><tbody>' + ranked.map((p, i) => {
+          const tag = i === 0 ? ' 🔮' : i === ranked.length - 1 && ranked.length > 2 ? ' 🙈' : '';
+          return '<tr><td>' + place(p) + '.</td><td>' + esc(p.name) + tag + '</td><td><b>' + pts[p.id] + '</b></td><td>' + hits[p.id] + ' / ' + nSolved + '</td></tr>'; }).join('') + '</tbody></table>' +
+        (ranked.length > 2 ? '<p class="ka-foot">🔮 Hellseher der Reise · 🙈 Blindgänger der Reise</p>' : '') + '</div>';
+    }
+    // Was die Crew über sich denkt (funktioniert auch ohne Auflösung)
+    const cq = Q.filter(q => q.type === 'crew' && q.title);
+    const nom = Object.fromEntries(CREW.map(p => [p.id, 0]));
+    const titles = cq.map(q => { const cnt = {}; answered(q).forEach(p => { const v = tips[p.id].a[q.id]; cnt[v] = (cnt[v] || 0) + 1; nom[v] = (nom[v] || 0) + 1; });
+      const m = Math.max(0, ...Object.values(cnt)); return [q, Object.keys(cnt).filter(k => cnt[k] === m && m > 0), m]; }).filter(x => x[1].length);
+    if (titles.length) {
+      const maxN = Math.max(1, ...Object.values(nom));
+      h += '<div class="ka-res"><h3>👥 Was die Crew über sich denkt</h3><p class="ka-foot" style="margin:0">Die Titel, die die Crew vergeben hat, egal ob es am Ende gestimmt hat.</p><ul class="ka-titles">' +
+        titles.map(([q, ids, m]) => '<li><span class="t">' + q.emoji + ' ' + esc(q.title) + '</span><span>' + ids.map(id => esc(byId[id] ? byId[id].name : id)).join(' & ') + ' <small>(' + m + ' ' + (m === 1 ? 'Stimme' : 'Stimmen') + ')</small></span></li>').join('') + '</ul>' +
+        '<h3 style="margin-top:6px">📣 Am häufigsten getippt</h3><div class="ka-dist">' + CREW.slice().sort((a, b) => nom[b.id] - nom[a.id]).map(p =>
+          '<div class="r"><span class="l">' + esc(p.name) + '</span><span class="b"><i style="width:' + (nom[p.id] / maxN * 100) + '%"></i></span><span class="c">' + nom[p.id] + '×</span></div>').join('') + '</div></div>';
+    }
+    h += Q.map(q => { const w = winners(q), sc = scores[q.id];
+      return '<div class="ka-res"><h3>' + q.emoji + ' ' + esc(q.q) + '</h3>' + dist(q) + '<ul class="ka-ans">' + tipped.map(p =>
+        '<li class="' + (w.includes(p.id) ? 'win' : '') + '">' + av(p) + '<span><b>' + esc(p.name) + ':</b> ' + esc(fmtAns(q, tips[p.id].a[q.id])) + '</span>' + (sc[p.id] ? '<span class="plus">+' + sc[p.id] + '</span>' : '') + '</li>').join('') + '</ul>' + solInput(q) + '</div>'; }).join('');
     box.innerHTML = h;
   }
   function render() { (isOpen() ? renderOpen : renderSealed)(); }

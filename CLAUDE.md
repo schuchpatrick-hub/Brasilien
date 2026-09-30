@@ -70,7 +70,9 @@ Portugiesisch mit Aussprache, `link` Spotify-Suche oder `#anker`). Datum nach Be
 localStorage. **Zeitkapsel** (`#kapsel`): Fragen in `trip.json` → `kapsel.questions` (Typen crew, number, choice, yesno, text).
 Tipps in db-Collection `kapsel` (Dokument-ID = Crew-`id`, `a` = {Frage-id: Antwort}, `ts`), eintragen nur Admin; bis
 `revealAt` (19.01.2027 20 Uhr Rio) zeigt die Seite nur, wer getippt hat. Danach Antworten, Auflösung durch den Admin in
-`kapselres/solution` (`s`), Hellseher-Ranking (Zahlen: am nächsten dran gewinnt).
+`kapselres/solution` (`s`). Auswertung: Punkte nach `kapsel.points` (Treffer 3; Zahlen genau 5, am nächsten 3,
+Zweitnächster 1), Podest + Tabelle „Hellseher der Reise“ (Letzter = „Blindgänger“), Stimmenverteilung je Frage und
+„Was die Crew über sich denkt“ (Titel aus `title` je Crew-Frage, meistgetippte Person).
 
 ## Real-Rechner
 
