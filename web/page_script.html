@@ -318,7 +318,7 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   el.innerHTML = TRIP.crew.map(p => {
     const full = !!(p.facts && p.facts.length);
     const pic = p.photo && !PRINT ? '<button type="button" class="zoom" data-id="' + esc(p.id) + '" aria-label="Foto von ' + esc(p.name) + ' vergrößern"><img src="' + esc(p.photo) + '" alt="Foto von ' + esc(p.name) + '" loading="lazy"></button>' : esc(p.name[0]);
-    let h = '<article class="pcard' + (full ? ' full' : '') + '"><div class="avatar">' + pic + '</div><div>';
+    let h = '<article class="pcard' + (full ? ' full' : '') + '" id="crew-' + esc(p.id) + '"><div class="avatar">' + pic + '</div><div>';
     h += '<h3>' + esc(p.name) + (p.nick ? '<span class="nick">' + esc(p.nick) + '</span>' : '') + '</h3>';
     if (p.role) h += '<span class="role">' + esc(p.role) + '</span>';
     if (full) h += '<dl>' + p.facts.map(f => '<dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd>').join('') + '</dl>';
@@ -326,6 +326,15 @@ document.getElementById('wa-copy').addEventListener('click', () => {
     if (!full) h += '<div class="team">' + esc(gName(p.team)) + '</div><div class="soon">Steckbrief folgt</div>';
     return h + '</div></article>';
   }).join('');
+
+  const short = r => (r || '').split(/ & |\. /)[0].replace(/\.$/, '');
+  document.getElementById('crew-overview').innerHTML = ['a', 'b'].map(g =>
+    '<div class="grp ' + g + '"><h3>' + esc(gName(g)) + '</h3><div class="row">' +
+    TRIP.crew.filter(p => p.team === g).map(p =>
+      '<a href="#crew-' + esc(p.id) + '"><span class="av">' +
+      (p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="" loading="lazy">' : esc(p.name[0])) +
+      '</span><b>' + esc(p.name) + '</b><small>' + esc(short(p.role)) + '</small></a>').join('') +
+    '</div></div>').join('');
 
   const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lightbox-img');
   let lastFocus = null;
