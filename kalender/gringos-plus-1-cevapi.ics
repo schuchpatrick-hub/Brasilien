@@ -66,7 +66,7 @@ DESCRIPTION:Achtung: Abflug in der Nacht vom 13. auf den 14.01. Noch nicht
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20260930T120000Z
-UID:2027-01-20-0-a@brasilien-26-27
+UID:2027-01-20-1-a@brasilien-26-27
 DTSTART;VALUE=DATE:20270120
 DTEND;VALUE=DATE:20270121
 SUMMARY:✈ Heimreise nach München (Details offen)
