@@ -170,10 +170,10 @@ def build(standalone=False):
     s.append('</g>')
     s.append(f'<circle class="dot2" cx="{gi[0]:.1f}" cy="{gi[1]:.1f}" r="5"/><text class="tag" x="{gi[0]-8:.1f}" y="{gi[1]-8:.1f}" text-anchor="end">GRU</text>')
     s.append(f'<circle class="dot2" cx="{ci[0]:.1f}" cy="{ci[1]:.1f}" r="5"/><text class="tag" x="{ci[0]-8:.1f}" y="{ci[1]+18:.1f}" text-anchor="end">CGH</text>')
-    s.append(f'<text class="tag" x="{(ci[0]+sd[0])/2:.0f}" y="{IY+24}" text-anchor="middle">30.12. CGH → SDU</text>')
+    s.append(f'<text class="tag" x="{(ci[0]+sd[0])/2:.0f}" y="{IY+24}" text-anchor="middle">31.12. CGH → SDU</text>')
 
-    stop(GUA, 1, 'Guarujá', '27.–30.12.', dx=20, dy=6, proj=PI, r_=13)
-    stop(RIO, 2, 'Rio de Janeiro', '30.12.–06.01.', dx=-30, dy=-40, anchor='end', proj=PI, r_=13)
+    stop(GUA, 1, 'Guarujá', '27.–31.12.', dx=20, dy=6, proj=PI, r_=13)
+    stop(RIO, 2, 'Rio de Janeiro', '31.12.–06.01.', dx=-30, dy=-40, anchor='end', proj=PI, r_=13)
     stop(PAR, 5, 'Paraty', '14.–16.01.', dx=18, dy=4, anchor='end', proj=PI, r_=13)
     stop(ILG, 6, 'Ilha Grande', '16.–20./21.01.', dx=-8, dy=40, proj=PI, r_=13)
     s.append(f'<text class="ctry" x="{IX+IW-10}" y="{IY+IH-12}" text-anchor="end">AUSSCHNITT SÜDOST</text>')

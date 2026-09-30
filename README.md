@@ -27,8 +27,8 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 
 | # | Station | Datum | Nächte | Wer | Unterkunft | Status |
 |---|---|---|---|---|---|---|
-| 1 | **Guarujá** (Praia da Enseada) | 27.12. – 30.12. | 3 | A | Casa Praiana | ✅ |
-| 2 | **Rio de Janeiro** (Silvester!) | 30.12. – 06.01. | 7 | A | Tabas – Cena Carioca | ✅ |
+| 1 | **Guarujá** (Praia da Enseada) | 27.12. – 31.12. | 4 | A | Casa Praiana | 🟡 Verlängerung prüfen |
+| 2 | **Rio de Janeiro** (Silvester!) | 31.12. – 06.01. | 6 | A | Tabas – Cena Carioca | 🟡 Datum prüfen |
 | 3 | **Foz do Iguaçu** (Wasserfälle) | 06.01. – 09.01. | 3 | alle | Hotel in Foz (Name prüfen) | 🟡 |
 | 4a | **Manaus** | 09.01. – 10.01. | 1 | alle | Casa 307 | ✅ |
 | 4b | **Amazonas: Juma Lodge** | 10.01. – 13.01. | 3 | alle | Juma Kabanas, „Nature Experience“ | ✅ |
@@ -44,9 +44,8 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | Datum | Was passiert |
 |---|---|
 | **So 27.12.** | Gringos plus 1 Cevapi: Abflug München morgens (laut Chat ab ca. 06:25), MUC → Rom (ca. 1,5 h), 1 h 10 min Umstieg, Rom → São Paulo-Guarulhos (GRU, ca. 12 h). Danach mit Uber oder Transfer nach Guarujá (ca. 1,5–2 h). |
-| 28.–29.12. | Strand an der Praia da Enseada, Footvolley-Netze direkt vor der Tür |
-| **Mi 30.12.** | Inlandsflug São Paulo-**Congonhas (CGH)** → Rio-**Santos Dumont (SDU)**. Achtung: nicht die internationalen Flughäfen. Check-in Tabas – Cena Carioca |
-| **Do 31.12.** | **Silvester an der Copacabana, Dresscode ganz in Weiß** |
+| 28.–30.12. | Strand an der Praia da Enseada, Footvolley-Netze direkt vor der Tür |
+| **Do 31.12.** | Inlandsflug São Paulo-**Congonhas (CGH)** → Rio-**Santos Dumont (SDU)**, möglichst vormittags. Achtung: nicht die internationalen Flughäfen. Check-in Tabas – Cena Carioca. Abends **Silvester an der Copacabana, Dresscode ganz in Weiß** |
 | 01.–05.01. | Rio: Christusstatue, Zuckerhut, Copacabana/Ipanema, Santa Teresa & Lapa, Sonnenuntergang am Arpoador |
 | **Mi 06.01.** | Dajo & Greisel landet ca. **06:10 in Rio-Galeão (GIG)**. Treffpunkt GIG, gemeinsamer Flug GIG → Foz do Iguaçu (IGU) ca. **10:40** |
 | 07.–08.01. | Iguaçu-Fälle: brasilianische und argentinische Seite (Reisepass mitnehmen!), optional Helikopter- oder Bootstour |
@@ -79,7 +78,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 
 | # | Datum | Strecke | Uhrzeit | Wer | Richtpreis* | Status |
 |---|---|---|---|---|---|---|
-| 1 | 30.12. | São Paulo **CGH** → Rio **SDU** | früh genug für den Check-in | A | – | ⏳ Patrick bucht, braucht die Passdaten |
+| 1 | 31.12. | São Paulo **CGH** → Rio **SDU** | vormittags (Silvestertag) | A | – | ⏳ Patrick bucht, braucht die Passdaten |
 | 2 | 06.01. | Rio **GIG** → Foz do Iguaçu **IGU** | ca. 10:40 | alle 6 | ca. 140 € | ⏳ |
 | 3 | 09.01. | **IGU** → Manaus **MAO** (mit Umstieg) | vormittags | alle 6 | ca. 370 € | ⏳ |
 | 4 | **14.01.** | **MAO** → Rio **GIG** | **01:45** (an 06:40) | alle 6 | ca. 190 € | ⏳ |
@@ -92,8 +91,8 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 
 | Ort | Unterkunft | Zeitraum | Details | Kosten | Gebucht von |
 |---|---|---|---|---|---|
-| Guarujá | [**Casa Praiana**](https://www.booking.com/Share-q0Nagir) (nahe Praia da Enseada) | 27.–30.12. | 75 m zum Strand, kein Pool, **kein Frühstück**, gebucht für 3 Personen. Alternative war die Pousada Villa Virgínia | – | Jonas (29.09.) |
-| Rio | [**Tabas – Cena Carioca**](https://www.booking.com/Share-UjjihY) | 30.12.–06.01. | **nicht stornierbar**, Gym vorhanden | – | Jonas (01.09.) |
+| Guarujá | [**Casa Praiana**](https://www.booking.com/Share-q0Nagir) (nahe Praia da Enseada) | 27.–31.12. | 75 m zum Strand, kein Pool, **kein Frühstück**, gebucht für 3 Personen. Alternative war die Pousada Villa Virgínia | – | Jonas (29.09.) |
+| Rio | [**Tabas – Cena Carioca**](https://www.booking.com/Share-UjjihY) | 31.12.–06.01. | **nicht stornierbar**, Gym vorhanden; Anreise auf 31.12. geändert, Buchung prüfen | – | Jonas (01.09.) |
 | Foz do Iguaçu | Name prüfen. Im Gespräch waren [Hotel Portinari Ponte da Amizade](https://c.24.de/ho/NUEN87) (im Chat angepinnt), [Della Foz](https://c.24.de/ho/5ESDAM), [Hotel Baviera Iguassu](https://c.24.de/ho/WRNADK), Che Hermano Suítes | 06.–09.01. | laut Greisel ca. 600 € p. P. für Amazonas plus Unterkunft Wasserfälle | ca. 80 € p. P. | beim Treffen am 09.09. |
 | Manaus | [**Casa 307**](https://www.booking.com/Share-xSVoEp) | 09.–10.01. | Lage und Bewertung top, 2er-Zimmer für Dajo & Greisel | 14 € p. P. | Jonas (14.09.) |
 | Amazonas | [**Juma Kabanas: Nature Experience Package**](https://www.jumakabanas.com/package/nature-experience-package-3-nights/) (3 Nächte) | 10.–13.01. | Übernachtung, Essen, Abholung und Rückfahrt zum Hotel inklusive, Bar extra. Rückfahrt 13.01. um 08:00, in Manaus ca. 11:00 | 520 € p. P. | Buchungsnummer liegt bei Marco oder Greisel |
@@ -124,8 +123,9 @@ Abgerechnet wird über **Splitwise**, mit zwei Gruppen: eine für die Gringos pl
 
 ## Offene Punkte (nach Dringlichkeit)
 
+0. **Neue Reisedaten:** Rio erst ab **31.12.** (vorher 30.12.). Prüfen, ob die Casa Praiana in Guarujá um eine Nacht verlängert und die Buchung im Tabas (nicht stornierbar!) auf den 31.12. umgestellt ist.
 1. **Inlandsflüge buchen**, sobald Dajos Reisepass da ist (ab ca. 19.10.). Beim Nachtflug Manaus → Rio aufpassen: **Abflug 14.01. um 01:45** heißt, man muss **am Abend des 13.01.** am Flughafen sein.
-2. **Flug CGH → SDU am 30.12. buchen** (Patrick). Dafür braucht er die Reisepassdaten von allen.
+2. **Flug CGH → SDU am 31.12. buchen** (Patrick), am Silvestertag möglichst vormittags. Dafür braucht er die Reisepassdaten von allen.
 3. **Unterkunft Ilha Grande** in Vila do Abraão für 16.–20.01. bzw. 21.01. buchen.
 4. **Rückreise Gringos plus 1 Cevapi am 20.01. festhalten**: Flughafen und Uhrzeit. Falls ab São Paulo-GRU: von Ilha Grande sind das Boot plus ca. 5–6 h Straße. Dann eher früh am 20.01. starten oder die letzte Nacht woanders verbringen.
 5. **Marco:** Rückflugdatum (15./16. oder 20.01.) klären. Prüfen, ob er in der Guarujá-Buchung mitgezählt ist (gebucht wurde für 3 Personen).

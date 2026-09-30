@@ -61,28 +61,19 @@
       "stay": "Casa Praiana",
       "items": [
         {
-          "text": "Letzter Abend in Guarujá, Sachen für den Flug packen"
+          "text": "Strand, Footvolley, Churrasco"
         }
       ]
     },
     {
       "date": "2026-12-30",
       "g": "a",
-      "place": "Rio de Janeiro",
-      "title": "Weiter nach Rio",
-      "stay": "Tabas – Cena Carioca",
+      "place": "Guarujá",
+      "title": "Letzter Strandtag in Guarujá",
+      "stay": "Casa Praiana",
       "items": [
         {
-          "text": "Flug São Paulo-Congonhas (CGH) → Rio-Santos Dumont (SDU), Uhrzeit offen",
-          "unsicher": true,
-          "ics": {
-            "summary": "✈ CGH → SDU (Uhrzeit offen)",
-            "date": "20261230",
-            "desc": "Inlandsflug São Paulo-Congonhas → Rio-Santos Dumont. Noch nicht gebucht (Stand 30.09.)."
-          }
-        },
-        {
-          "text": "Check-in Tabas – Cena Carioca"
+          "text": "Letzter Abend in Guarujá, Sachen für den Flug packen, weißes Outfit griffbereit"
         }
       ]
     },
@@ -90,11 +81,23 @@
       "date": "2026-12-31",
       "g": "a",
       "place": "Rio de Janeiro",
-      "title": "Silvester an der Copacabana",
+      "title": "Flug nach Rio und Silvester an der Copacabana",
       "stay": "Tabas – Cena Carioca",
       "items": [
         {
-          "text": "Dresscode: alles in Weiß"
+          "text": "Flug São Paulo-Congonhas (CGH) → Rio-Santos Dumont (SDU), Uhrzeit offen, am besten vormittags",
+          "unsicher": true,
+          "ics": {
+            "summary": "✈ CGH → SDU (Uhrzeit offen)",
+            "date": "20261231",
+            "desc": "Inlandsflug São Paulo-Congonhas → Rio-Santos Dumont am Silvestertag. Noch nicht gebucht (Stand 30.09.). Möglichst früh fliegen, abends ist in Rio alles gesperrt."
+          }
+        },
+        {
+          "text": "Check-in Tabas – Cena Carioca"
+        },
+        {
+          "text": "Abends: Silvester an der Copacabana, Dresscode alles in Weiß"
         },
         {
           "text": "Wenig mitnehmen: Handy gut verstauen, etwas Bargeld, kein Rucksack",
@@ -459,12 +462,12 @@
       "g": "a",
       "name": "Casa Praiana, Guarujá",
       "from": "20261227",
-      "to": "20261230"
+      "to": "20261231"
     },
     {
       "g": "a",
       "name": "Tabas – Cena Carioca, Rio",
-      "from": "20261230",
+      "from": "20261231",
       "to": "20270106"
     },
     {
@@ -506,6 +509,12 @@
   ],
   "todos": [
     {
+      "id": "umbuchung-3112",
+      "prio": 1,
+      "title": "Unterkünfte auf neue Daten umstellen",
+      "detail": "Neu: Guarujá bis 31.12. (eine Nacht länger), Rio erst ab 31.12. Prüfen, ob Casa Praiana verlängert und Tabas (nicht stornierbar!) umgebucht ist."
+    },
+    {
       "id": "inlandsfluege",
       "prio": 1,
       "title": "Inlandsflüge GIG → IGU → MAO → GIG buchen",
@@ -514,8 +523,8 @@
     {
       "id": "cgh-sdu",
       "prio": 1,
-      "title": "Flug CGH → SDU am 30.12. buchen",
-      "detail": "Patrick; braucht die Passdaten der Gringos plus 1 Cevapi.",
+      "title": "Flug CGH → SDU am 31.12. buchen",
+      "detail": "Patrick; braucht die Passdaten der Gringos plus 1 Cevapi. Am Silvestertag möglichst vormittags fliegen.",
       "who": "Patrick"
     },
     {

@@ -58,15 +58,15 @@
 </g>
 <circle class="dot2" cx="699.1" cy="912.9" r="5"/><text class="tag" x="691.1" y="904.9" text-anchor="end">GRU</text>
 <circle class="dot2" cx="676.5" cy="938.8" r="5"/><text class="tag" x="668.5" y="956.8" text-anchor="end">CGH</text>
-<text class="tag" x="885" y="810" text-anchor="middle">30.12. CGH → SDU</text>
+<text class="tag" x="885" y="810" text-anchor="middle">31.12. CGH → SDU</text>
 <circle class="dot" cx="725.3" cy="985.4" r="13"/>
 <text class="num" x="725.3" y="985.4">1</text>
 <text class="lbl" x="745.3" y="989.4" text-anchor="start">Guarujá</text>
-<text class="sub" x="745.3" y="1007.4" text-anchor="start">27.–30.12.</text>
+<text class="sub" x="745.3" y="1007.4" text-anchor="start">27.–31.12.</text>
 <circle class="dot" cx="1088.3" cy="848.2" r="13"/>
 <text class="num" x="1088.3" y="848.2">2</text>
 <text class="lbl" x="1118.3" y="806.2" text-anchor="end">Rio de Janeiro</text>
-<text class="sub" x="1118.3" y="824.2" text-anchor="end">30.12.–06.01.</text>
+<text class="sub" x="1118.3" y="824.2" text-anchor="end">31.12.–06.01.</text>
 <circle class="dot" cx="908.6" cy="885.7" r="13"/>
 <text class="num" x="908.6" y="885.7">5</text>
 <text class="lbl" x="890.6" y="887.7" text-anchor="end">Paraty</text>
