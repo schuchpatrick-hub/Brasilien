@@ -1390,5 +1390,174 @@
         60
       ]
     }
+  },
+  "money": {
+    "_hinweis": "rate = Reais pro Euro (Richtwert). Vergleiche: brl = Preis pro Stück in R$ (grobe Richtwerte), t = Text mit {n}; always = auch bei sehr kleinen/großen Zahlen zeigen.",
+    "rate": 6.2,
+    "rateNote": "Richtwert vom 30.09.2026, vor Ort in der Bank-App prüfen",
+    "quick": [
+      10,
+      25,
+      50,
+      100,
+      200,
+      500
+    ],
+    "compare": [
+      {
+        "brl": 25,
+        "t": "{n} Caipirinhas 🍹"
+      },
+      {
+        "brl": 12,
+        "t": "{n} Chopps (frisch gezapftes Bier) 🍺"
+      },
+      {
+        "brl": 10,
+        "t": "{n} Dosen Brahma vom Strandverkäufer 🍻"
+      },
+      {
+        "brl": 10,
+        "t": "{n} Kokosnüsse mit Strohhalm 🥥"
+      },
+      {
+        "brl": 8,
+        "t": "{n} Coxinhas 🍗"
+      },
+      {
+        "brl": 5,
+        "t": "{n} Pão de queijo 🧀"
+      },
+      {
+        "brl": 25,
+        "t": "{n} Açaí-Bowls 🍇"
+      },
+      {
+        "brl": 12,
+        "t": "{n} Pastéis vom Markt 🥟"
+      },
+      {
+        "brl": 6,
+        "t": "{n} Dosen Guaraná 🥤"
+      },
+      {
+        "brl": 4,
+        "t": "{n} Brigadeiros 🍫"
+      },
+      {
+        "brl": 7,
+        "t": "{n} eiskalte Mate vom Strandverkäufer 🧋"
+      },
+      {
+        "brl": 10,
+        "t": "{n} Spieße Queijo coalho vom Grill 🔥"
+      },
+      {
+        "brl": 8,
+        "t": "{n} Becher Caldo de Cana (Zuckerrohrsaft) 🥤"
+      },
+      {
+        "brl": 50,
+        "t": "{n} Paar Havaianas 🩴"
+      },
+      {
+        "brl": 20,
+        "t": "{n} Tage Sonnenschirm an der Copacabana ⛱️"
+      },
+      {
+        "brl": 20,
+        "t": "{n} kurze Uber-Fahrten 🚗"
+      },
+      {
+        "brl": 7.5,
+        "t": "{n} Metro-Fahrten in Rio 🚇"
+      },
+      {
+        "brl": 150,
+        "t": "{n}× Rodízio all you can eat 🥩"
+      },
+      {
+        "brl": 60,
+        "t": "{n} Tuben Sonnencreme LSF 50 🧴"
+      },
+      {
+        "brl": 30,
+        "t": "{n} Flaschen Mückenspray für den Dschungel 🦟"
+      },
+      {
+        "brl": 100,
+        "t": "{n} Minuten Helikopterflug über die Iguaçu-Fälle 🚁"
+      },
+      {
+        "brl": 40,
+        "t": "{n} Plüsch-Flussdelfine (rosa) 🐬"
+      },
+      {
+        "brl": 45,
+        "t": "{n} Teller am Kilo-Buffet für Patrick 🍽️ (ein Teller = ein Turm)"
+      },
+      {
+        "brl": 90,
+        "t": "{n} Kilo Picanha, also etwa eine halbe Mahlzeit für Patrick 🐂"
+      },
+      {
+        "brl": 60,
+        "t": "{n} Tuben Sonnencreme für Jonas' Landebahn 👨‍🦲"
+      },
+      {
+        "brl": 40,
+        "t": "{n} Fischerhüte für Jonas, einer pro Geheimratsecke 🎣"
+      },
+      {
+        "brl": 15,
+        "t": "{n} Rosen, die Simon Kellnerinnen schenkt (die sie wegwerfen) 🌹"
+      },
+      {
+        "brl": 3,
+        "t": "{n} Pflaster für Simon, reicht knapp für Tag 1 🩹"
+      },
+      {
+        "brl": 40,
+        "t": "{n} Fio-Dental-Tangas, damit Simon endlich dazugehört 👙"
+      },
+      {
+        "brl": 35,
+        "t": "{n} Obstkörbe von Marco (eine Banane hat Patrick schon angebissen) 🧺"
+      },
+      {
+        "brl": 35,
+        "t": "{n} Gin Tonics für Marcos Langstrecken-Therapie 🍸"
+      },
+      {
+        "brl": 450000,
+        "t": "{n} Wohnungen im 4. Stock ohne Aufzug (Marco macht dir einen Freundschaftspreis) 🏚️",
+        "always": true
+      },
+      {
+        "brl": 60,
+        "t": "{n} Schienbeinschoner für Greisels Standbein 🦵"
+      },
+      {
+        "brl": 100,
+        "t": "{n} Runden, die Dajo mit Lubos Karte zahlt 💳"
+      },
+      {
+        "brl": 15,
+        "t": "{n} Flirtversuche von Simon, wenn jeder einen Drink kostet (Erfolgsquote: 0 %) 💔"
+      },
+      {
+        "brl": 1,
+        "t": "{n} Kopfbälle von Jonas, wenn jeder einen Real kostet (sein Rekord: 113 am Stück) ⚽"
+      },
+      {
+        "brl": 2400000,
+        "t": "{n} Maracanãs (das Stadion ist leider nicht zu verkaufen) 🏟️",
+        "always": true
+      },
+      {
+        "brl": 900,
+        "t": "{n} Nächte im Juma-Dschungel mit Kaimanen als Nachbarn 🐊"
+      }
+    ]
   }
 }

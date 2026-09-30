@@ -768,6 +768,57 @@ document.getElementById('wa-copy').addEventListener('click', () => {
 })();
 
 /* ---------- Reiter = Kapitel-Sprungmarken (alles bleibt untereinander sichtbar) ---------- */
+/* Real-Rechner mit lustigen Vergleichen */
+(function () {
+  const M = TRIP.money; if (!M || !document.getElementById('fx-amount')) return;
+  const $ = id => document.getElementById(id);
+  const amt = $('fx-amount'), rateIn = $('fx-rate');
+  let dir = store.get('fx.dir') === 'eur' ? 'eur' : 'brl';
+  let rate = parseFloat(store.get('fx.rate')) || M.rate;
+  const num = (v, d) => v.toLocaleString('de-DE', {minimumFractionDigits: d, maximumFractionDigits: d});
+  const money = (v, cur) => cur === '€' ? num(v, 2) + ' €' : 'R$ ' + num(v, 2);
+  const count = n => n >= 100 ? num(Math.round(n), 0) : n >= 10 ? num(Math.round(n * 10) / 10, n % 1 ? 1 : 0)
+    : n >= 0.1 ? num(Math.round(n * 10) / 10, 1).replace(/,0$/, '') : n.toLocaleString('de-DE', {maximumSignificantDigits: 2});
+  let deck = [], last = null;
+  function pick(brl) {
+    const ok = M.compare.filter(c => c.always ? brl > 0 : brl / c.brl >= 0.5 && brl / c.brl <= 400);
+    if (!ok.length) return '';
+    deck = deck.filter(c => ok.includes(c));
+    if (!deck.length) deck = ok.slice().sort(() => Math.random() - 0.5);
+    let c = deck.shift();
+    if (c === last && deck.length) { deck.push(c); c = deck.shift(); }
+    last = c;
+    return 'Das sind ' + c.t.replace('{n}', count(brl / c.brl));
+  }
+  function render(newJoke) {
+    const v = Math.max(0, parseFloat(String(amt.value).replace(',', '.')) || 0);
+    const brl = dir === 'brl' ? v : v * rate, eur = dir === 'brl' ? v / rate : v;
+    $('fx-cur').textContent = dir === 'brl' ? 'R$' : '€';
+    $('fx-res').textContent = dir === 'brl' ? money(v, 'R$') + ' = ' + money(eur, '€') : money(v, '€') + ' = ' + money(brl, 'R$');
+    if (newJoke) {
+      const j = $('fx-joke'); j.classList.add('fade');
+      setTimeout(() => { j.textContent = brl > 0 ? pick(brl) : 'Nix eingetippt, nix getrunken. 🙃'; j.classList.remove('fade'); }, reduceMotionFx ? 0 : 180);
+    }
+    document.querySelectorAll('.fx-dir button').forEach(b => b.setAttribute('aria-pressed', b.dataset.dir === dir));
+  }
+  const reduceMotionFx = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  $('fx-quick').innerHTML = M.quick.map(q => '<button type="button" data-v="' + q + '">' + q + '</button>').join('');
+  $('fx-quick').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; amt.value = b.dataset.v; render(true); });
+  document.querySelector('.fx-dir').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b || b.dataset.dir === dir) return;
+    const v = parseFloat(amt.value) || 0;
+    amt.value = Math.round((dir === 'brl' ? v / rate : v * rate) * 100) / 100;
+    dir = b.dataset.dir; store.set('fx.dir', dir); render(true);
+  });
+  let t; amt.addEventListener('input', () => { render(false); clearTimeout(t); t = setTimeout(() => render(true), 450); });
+  $('fx-more').addEventListener('click', () => render(true));
+  rateIn.value = rate;
+  rateIn.addEventListener('input', () => { const r = parseFloat(String(rateIn.value).replace(',', '.')); if (r > 0) { rate = r; store.set('fx.rate', r); render(false); } });
+  $('fx-note').textContent = 'Kurs: ' + M.rateNote + '. Eigenen Kurs oben eintragen, er wird auf diesem Handy gespeichert. Vergleiche mit groben Richtpreisen, alle Angaben ohne Gewähr, Promille-Garantie keine.';
+  if (dir === 'eur') amt.value = Math.round(50 / rate);
+  render(true);
+})();
+
 const TAB_IDS = [...document.querySelectorAll('.tabs a')].map(a => a.dataset.tab);
 const SECTIONS = [...document.querySelectorAll('section[data-tab]')];
 const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;

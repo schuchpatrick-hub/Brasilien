@@ -63,6 +63,12 @@ Lesen/Korrigieren: `ArtifactData` `list`/`delete` auf `drinks`. Schreiben dürfe
 eingeladene Editoren (nicht, solange ein öffentlicher Link aktiv ist). Ohne Schreibrecht bleibt die
 Eingabemaske sichtbar, aber gesperrt, mit Hinweis „Eintragen nur durch den Admin (Patrick)“.
 
+## Real-Rechner
+
+Kapitel „Real-Rechner“ (`#rechner`, Reiter Infos & Packen). Kurs und lustige Vergleiche in `trip.json` → `money`
+(`rate` = R$ pro €, `compare`: `brl` = Richtpreis pro Stück, `t` = Text mit `{n}`, `always` = auch bei winzigen
+Anteilen zeigen). Eigener Kurs wird pro Handy im localStorage gespeichert. Vergleiche werden gemischt, ohne direkte Wiederholung.
+
 ## Karte: Fortschritt und Check-ins
 
 Routenlinien und Stopps in `tools/gen_map.py` tragen Daten (`data-d`, `data-from`/`data-to`); die Seite färbt

@@ -409,6 +409,28 @@ ol.todo2{margin:0;padding:0;list-style:none;display:grid;gap:10px}
 .todo-add{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
 .todo-add input{flex:1 1 220px;min-width:0;font:500 .95rem var(--body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:9px 12px}
 @media (max-width:560px){.todo2 li{grid-template-columns:auto 1fr}.todo2 .ctl{grid-column:2}}
+/* Real-Rechner */
+.fx{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;max-width:640px}
+.fx-dir{display:inline-flex;justify-self:start;border:1px solid var(--line);border-radius:999px;background:var(--bg);padding:3px}
+.fx-dir button{font:600 .88rem var(--body);border:0;background:transparent;color:var(--muted);padding:6px 14px;border-radius:999px;cursor:pointer}
+.fx-dir button[aria-pressed="true"]{background:var(--accent);color:var(--bg)}
+.fx-in{display:flex;align-items:center;gap:10px;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:6px 14px}
+.fx-in:focus-within{border-color:var(--accent)}
+.fx-cur{font:800 1.4rem var(--display);color:var(--muted)}
+.fx-in input{flex:1;min-width:0;border:0;background:transparent;color:var(--fg);font:800 2rem var(--display);padding:4px 0;outline:none}
+.fx-quick{display:flex;flex-wrap:wrap;gap:6px}
+.fx-quick button{font:600 .85rem var(--body);background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:5px 12px;cursor:pointer}
+.fx-quick button:hover{border-color:var(--accent)}
+.fx-out{background:var(--hero);color:#f4f7f2;border-radius:12px;padding:14px 16px;display:grid;gap:6px}
+.fx-res{font:800 clamp(1.6rem,6vw,2.2rem)/1.1 var(--display);color:var(--amarelo)}
+.fx-joke{font-size:1rem;min-height:1.5em;transition:opacity .25s}
+.fx-joke.fade{opacity:0}
+.fx-foot{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between}
+.fx-foot .btn{margin:0}
+.fx-rate{font-size:.9rem;color:var(--muted);display:flex;align-items:center;gap:6px}
+.fx-rate input{width:5.5rem;font:600 .95rem var(--body);background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:5px 8px}
+@media print{#rechner{display:none}}
+@media (prefers-reduced-motion:reduce){.fx-joke{transition:none}}
 /* Praktisches */
 .grid-info{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
 .info{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
