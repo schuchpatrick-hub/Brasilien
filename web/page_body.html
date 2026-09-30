@@ -13,7 +13,8 @@
   </div>
 </header>
 
-<nav class="tabs" aria-label="Bereiche"><div class="tabs-in"><a href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht">Übersicht</a><a href="#vorfreude-tab" id="tab-vorfreude-tab" data-tab="vorfreude-tab">Vorfreude</a><a href="#crew-tab" id="tab-crew-tab" data-tab="crew-tab">Crew</a><a href="#drinks-tab" id="tab-drinks-tab" data-tab="drinks-tab">Drinks</a><a href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab">Tage</a><a href="#reise" id="tab-reise" data-tab="reise">Flüge & Kosten</a><a href="#sprache-tab" id="tab-sprache-tab" data-tab="sprache-tab">Sprache</a><a href="#rechner-tab" id="tab-rechner-tab" data-tab="rechner-tab">Real-Rechner</a><a href="#infos" id="tab-infos" data-tab="infos">Infos & Packen</a><a href="#extras" id="tab-extras" data-tab="extras">Downloads</a></div></nav>
+<nav class="tabs" aria-label="Bereiche"><div class="tabs-in"><a href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht">Übersicht</a><a href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab">Tage</a><a href="#reise" id="tab-reise" data-tab="reise">Flüge & Kosten</a><a href="#drinks-tab" id="tab-drinks-tab" data-tab="drinks-tab">Drinks</a><a href="#unterwegs-tab" id="tab-unterwegs-tab" data-tab="unterwegs-tab">Unterwegs</a><a href="#infos" id="tab-infos" data-tab="infos">Infos & Packen</a><a href="#crew-tab" id="tab-crew-tab" data-tab="crew-tab">Crew</a><a href="#vorfreude-tab" id="tab-vorfreude-tab" data-tab="vorfreude-tab">Vorfreude</a><a href="#extras" id="tab-extras" data-tab="extras">Downloads</a></div></nav>
+
 
 
 <section id="heute" data-tab="uebersicht" class="today-wrap">
@@ -137,34 +138,35 @@
   </div>
 </section>
 
+<div class="divider-scene" aria-hidden="true">%%SCENE:paraty%%</div>
 
-<section id="kalender" data-tab="vorfreude-tab">
-  <h2>Vorfreude-Kalender 🎁</h2>
-  <p class="note sub-lead">Jeden Tag ein Türchen bis zum Abflug am 27.12.: Fun Facts, Portugiesisch, Songs, Crew-Wahrheiten und kleine Aufgaben für die Gruppe. Verpasste Türchen kann man nachholen.</p>
-  <div class="adv">
-    <div id="adv-feature" class="adv-feature" aria-live="polite"></div>
-    <div id="adv-stats" class="adv-stats"></div>
-    <details class="adv-all">
-      <summary>Alle 88 Türchen anzeigen</summary>
-      <div id="adv-grid" class="adv-grid"></div>
-    </details>
+<section id="tage" data-tab="tage-tab">
+  <div class="today-head">
+    <h2>Tag für Tag</h2>
+    <div class="seg" role="group" aria-label="Tage anzeigen für">
+      <button type="button" id="g-a2" data-g="a" aria-pressed="true">Gringos plus 1 Cevapi</button>
+      <button type="button" id="g-b2" data-g="b" aria-pressed="false">Dajo &amp; Greisel</button>
+    </div>
   </div>
+  <p class="note sub-lead">„Idee“ heißt: Vorschlag, noch nichts gebucht.</p>
+  <div id="days" class="days2"></div>
 </section>
 
-<section id="kapsel" data-tab="vorfreude-tab">
-  <h2>Zeitkapsel ⏳</h2>
-  <p class="note sub-lead">Jeder gibt vor der Reise seine Prognosen ab. Die Tipps werden versiegelt, niemand sieht sie, und am letzten Abend auf der Ilha Grande wird die Kapsel gemeinsam geöffnet. Wer am meisten richtig hat, ist der Hellseher der Reise.</p>
-  <div id="ka-box" class="ka"></div>
+<section id="fluege" data-tab="reise">
+  <h2>Flüge</h2>
+  <div class="seg fl-seg" role="group" aria-label="Flüge anzeigen für">
+    <button type="button" data-g="a" aria-pressed="true">Gringos plus 1 Cevapi</button>
+    <button type="button" data-g="b" aria-pressed="false">Dajo &amp; Greisel</button>
+  </div>
+  <div id="fl-head" class="fl-head"></div>
+  <ol id="fl-list" class="fl-list"></ol>
+  <p class="note" id="fl-note"></p>
 </section>
 
-<section id="crew" data-tab="crew-tab">
-  <h2>Die Crew</h2>
-  <div id="crew-overview" class="crew-ov"></div>
-  <div id="crew-list" class="crew-grid"></div>
-  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Foto vergrößert" hidden>
-    <button type="button" class="x" id="lightbox-close" aria-label="Schließen">×</button>
-    <figure><img id="lightbox-img" alt=""><figcaption id="lightbox-cap"></figcaption></figure>
-  </div>
+<section id="kosten" data-tab="reise">
+  <h2>Kosten pro Person</h2>
+  <div id="co-box"></div>
+  <p class="note" style="margin-top:10px">Abgerechnet wird über zwei Splitwise-Gruppen: eine für die Gringos plus 1 Cevapi (Guarujá, Rio), eine für alle sechs.</p>
 </section>
 
 <div class="divider-scene" aria-hidden="true">%%SCENE:ilha%%</div>
@@ -240,43 +242,9 @@
   <div id="dr-tip" class="dr-tip" role="tooltip" hidden></div>
 </section>
 
-<div class="divider-scene" aria-hidden="true">%%SCENE:paraty%%</div>
-
-<section id="tage" data-tab="tage-tab">
-  <div class="today-head">
-    <h2>Tag für Tag</h2>
-    <div class="seg" role="group" aria-label="Tage anzeigen für">
-      <button type="button" id="g-a2" data-g="a" aria-pressed="true">Gringos plus 1 Cevapi</button>
-      <button type="button" id="g-b2" data-g="b" aria-pressed="false">Dajo &amp; Greisel</button>
-    </div>
-  </div>
-  <p class="note sub-lead">„Idee“ heißt: Vorschlag, noch nichts gebucht.</p>
-  <div id="days" class="days2"></div>
-</section>
-
-
-
-<section id="fluege" data-tab="reise">
-  <h2>Flüge</h2>
-  <div class="seg fl-seg" role="group" aria-label="Flüge anzeigen für">
-    <button type="button" data-g="a" aria-pressed="true">Gringos plus 1 Cevapi</button>
-    <button type="button" data-g="b" aria-pressed="false">Dajo &amp; Greisel</button>
-  </div>
-  <div id="fl-head" class="fl-head"></div>
-  <ol id="fl-list" class="fl-list"></ol>
-  <p class="note" id="fl-note"></p>
-</section>
-
-<section id="kosten" data-tab="reise">
-  <h2>Kosten pro Person</h2>
-  <div id="co-box"></div>
-  <p class="note" style="margin-top:10px">Abgerechnet wird über zwei Splitwise-Gruppen: eine für die Gringos plus 1 Cevapi (Guarujá, Rio), eine für alle sechs.</p>
-</section>
-
-
 <div class="divider-scene" aria-hidden="true">%%SCENE:rio%%</div>
 
-<section id="sprache" data-tab="sprache-tab">
+<section id="sprache" data-tab="unterwegs-tab">
   <h2>Mini-Sprachführer</h2>
   <p class="note sub-lead">Brasilianisches Portugiesisch. Auf ▶ tippen: Erst kommt der Satz auf Deutsch, nach einer kurzen Pause auf Portugiesisch. Die Aussprache darunter ist eine grobe deutsche Umschrift, die Silbe in Großbuchstaben wird betont.</p>
   <div class="speak-bar">
@@ -289,9 +257,7 @@
   <p class="note">Aufnahmen: Computerstimmen „de4“ und „br3“ (eSpeak NG mit MBROLA), bewusst langsam gesprochen. Die Handy-Stimme ist oft natürlicher, falls verfügbar.</p>
 </section>
 
-<div class="divider-scene" aria-hidden="true">%%SCENE:iguacu%%</div>
-
-<section id="rechner" data-tab="rechner-tab">
+<section id="rechner" data-tab="unterwegs-tab">
   <h2>Real-Rechner 💸</h2>
   <div class="fx">
     <div class="fx-dir" role="group" aria-label="Richtung">
@@ -308,6 +274,8 @@
     <p class="note" id="fx-note"></p>
   </div>
 </section>
+
+<div class="divider-scene" aria-hidden="true">%%SCENE:iguacu%%</div>
 
 <section id="praktisch" data-tab="infos">
   <h2>Praktisches</h2>
@@ -350,8 +318,36 @@
   </div>
 </section>
 
-
 <div class="divider-scene" aria-hidden="true">%%SCENE:manaus%%</div>
+
+<section id="crew" data-tab="crew-tab">
+  <h2>Die Crew</h2>
+  <div id="crew-overview" class="crew-ov"></div>
+  <div id="crew-list" class="crew-grid"></div>
+  <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Foto vergrößert" hidden>
+    <button type="button" class="x" id="lightbox-close" aria-label="Schließen">×</button>
+    <figure><img id="lightbox-img" alt=""><figcaption id="lightbox-cap"></figcaption></figure>
+  </div>
+</section>
+
+<section id="kalender" data-tab="vorfreude-tab">
+  <h2>Vorfreude-Kalender 🎁</h2>
+  <p class="note sub-lead">Jeden Tag ein Türchen bis zum Abflug am 27.12.: Fun Facts, Portugiesisch, Songs, Crew-Wahrheiten und kleine Aufgaben für die Gruppe. Verpasste Türchen kann man nachholen.</p>
+  <div class="adv">
+    <div id="adv-feature" class="adv-feature" aria-live="polite"></div>
+    <div id="adv-stats" class="adv-stats"></div>
+    <details class="adv-all">
+      <summary>Alle 88 Türchen anzeigen</summary>
+      <div id="adv-grid" class="adv-grid"></div>
+    </details>
+  </div>
+</section>
+
+<section id="kapsel" data-tab="vorfreude-tab">
+  <h2>Zeitkapsel ⏳</h2>
+  <p class="note sub-lead">Jeder gibt vor der Reise seine Prognosen ab. Die Tipps werden versiegelt, niemand sieht sie, und am letzten Abend auf der Ilha Grande wird die Kapsel gemeinsam geöffnet. Wer am meisten richtig hat, ist der Hellseher der Reise.</p>
+  <div id="ka-box" class="ka"></div>
+</section>
 
 <section id="downloads" data-tab="extras">
   <h2>Downloads &amp; Kalender</h2>
@@ -382,6 +378,7 @@
 <section id="ideen" data-tab="extras">
   <div class="warnbox"><b>Ideen am Rand:</b> Búzios statt Paraty · Florianópolis (1,5 h Flug von Rio, Strand und Nachtleben) · Ilhabela statt Guarujá (schöner, aber 3,5 h von São Paulo). Einen Gabelflug hattet ihr verworfen, weil er nicht günstiger war.</div>
 </section>
+
 
 <footer><span class="boa">Boa viagem! 🇧🇷</span>Alle Angaben stammen aus den WhatsApp-Chats. Bilder und Screenshots (Buchungsbestätigungen, Dajos Excel-Übersicht) waren im Export nicht enthalten. Gelb markierte Punkte bitte gegen die Bestätigungen prüfen.</footer>
 </div>
