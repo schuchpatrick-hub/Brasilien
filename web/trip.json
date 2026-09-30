@@ -2394,12 +2394,6 @@
         "emoji": "📱"
       },
       {
-        "id": "wasser",
-        "type": "crew",
-        "q": "Wer fällt als Erster unfreiwillig ins Wasser?",
-        "emoji": "🌊"
-      },
-      {
         "id": "einschlafen",
         "type": "crew",
         "q": "Wer schläft als Erster auf einer Party ein?",
@@ -2493,12 +2487,6 @@
         ]
       },
       {
-        "id": "wohnung",
-        "type": "yesno",
-        "q": "Verkauft Marco in Brasilien eine Wohnung?",
-        "emoji": "🏚️"
-      },
-      {
         "id": "footvolley",
         "type": "yesno",
         "q": "Gewinnt die Crew ein Footvolley-Spiel gegen Einheimische?",
@@ -2509,12 +2497,6 @@
         "type": "text",
         "q": "Was wird die größte Peinlichkeit der Reise?",
         "emoji": "🙈"
-      },
-      {
-        "id": "brief",
-        "type": "text",
-        "q": "Ein Satz an dein Ich vom 19.01.:",
-        "emoji": "💌"
       }
     ]
   }
