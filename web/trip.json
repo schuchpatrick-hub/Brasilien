@@ -964,6 +964,54 @@
       "quote": "Ist das Buffet schon eröffnet? Dann bin ich es auch."
     },
     {
+      "id": "greisel",
+      "name": "Greisel",
+      "nick": "„Der Honeymooner“",
+      "team": "b",
+      "photo": "crew/greisel.jpg",
+      "photoLarge": "crew/greisel-gross.jpg",
+      "role": "Scharfschütze mit Ladehemmung & Jugo auf Flitterwochen",
+      "facts": [
+        [
+          "Stärke",
+          "Hat eine Pistole im Fuß. Wenn er abzieht, ducken sich Torwart, Schiri und die Zuschauer in der dritten Reihe."
+        ],
+        [
+          "Schwäche",
+          "Schießt sich am liebsten selbst gegen das Bein. Sein Standbein hat inzwischen einen Anwalt und eine einstweilige Verfügung."
+        ],
+        [
+          "Flitterwochen",
+          "Romantische Reise mit Dajo. Und vier Kerlen, von denen einer im Foyer schläft und einer das Buffet leer frisst. Mehr Honeymoon geht nicht."
+        ],
+        [
+          "Pünktlichkeit",
+          "„Bei uns wird's a bissle später 🥴“. Kommt deshalb vorsichtshalber erst am 06.01., wenn die anderen schon eine Woche feiern."
+        ],
+        [
+          "Einkaufstalent",
+          "1.300 € für den Flug, 180 € mehr als die anderen. Jonas hat ihm eine Schulung angeboten. Greisel zahlt lieber."
+        ],
+        [
+          "Anreise",
+          "Schlaftabletten auf dem Hinflug. Wacht in Rio auf, sieht die anderen und nimmt direkt noch eine."
+        ],
+        [
+          "Vaterpflichten",
+          "Überweist Sohnemann Marco Taschengeld per PayPal. Jonas verwaltet es. Marco hat es nie gesehen."
+        ],
+        [
+          "Lieblingsbier",
+          "Schneider Weisse. Gibt es im Amazonas nicht. Er bestellt es trotzdem jeden Abend, notfalls bei den Piranhas."
+        ],
+        [
+          "Dresscode",
+          "Lila Fischerhut, lila Trikot. Sieht aus wie eine Aubergine auf Stadionbesuch, und er ist stolz darauf."
+        ]
+      ],
+      "quote": "Sprengts euch weg. Wir buchen."
+    },
+    {
       "id": "marco",
       "name": "Marco",
       "team": "a"
@@ -971,11 +1019,6 @@
     {
       "id": "dajo",
       "name": "Dajo",
-      "team": "b"
-    },
-    {
-      "id": "greisel",
-      "name": "Greisel",
       "team": "b"
     }
   ]
