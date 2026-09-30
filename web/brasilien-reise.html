@@ -171,6 +171,11 @@ ul.plain{margin:0;padding-left:18px;display:grid;gap:6px}
 /* Drinks */
 .dr-add{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:14px;margin-bottom:16px}
 .dr-step{display:grid;gap:8px;min-width:0}
+.dr-whohead{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;justify-content:space-between}
+.dr-quick{display:flex;gap:6px}
+.dr-quick button{font:600 .78rem var(--body);background:var(--bg);color:var(--accent);border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer}
+.dr-qty{display:flex;gap:12px;align-items:center}
+.dr-qty select{font:600 .95rem var(--body);background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
 .dr-lock{margin:0;background:var(--sunbg);border-radius:10px;padding:10px 12px;font-size:.9rem}
 .dr-add.locked .dr-step,.dr-add.locked .dr-go .btn{opacity:.5}
 .dr-add.locked button,.dr-add.locked input,.dr-add.locked select{cursor:not-allowed}
@@ -548,7 +553,9 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
   <details class="dr-add" id="dr-add" data-fold="add" open>
     <summary class="dr-head"><h3>Getränk eintragen</h3></summary>
     <p class="dr-lock" id="dr-lock" hidden>🔒 <b>Eintragen nur durch den Admin (Patrick).</b> Schick ihm deine Drinks einfach per WhatsApp, zum Beispiel „Jonas 2 Caipi 22:30“.</p>
-    <div class="dr-step"><span class="eyebrow">Wer?</span><div id="dr-who" class="dr-who" role="radiogroup" aria-label="Wer trinkt"></div></div>
+    <div class="dr-step"><div class="dr-whohead"><span class="eyebrow">Wer? <span class="note">(mehrere möglich)</span></span>
+      <span class="dr-quick"><button type="button" id="dr-all">Alle</button><button type="button" id="dr-none">Keiner</button></span></div>
+      <div id="dr-who" class="dr-who" role="group" aria-label="Wer trinkt"></div></div>
     <div class="dr-step"><span class="eyebrow">Was?</span><div id="dr-what" class="dr-what"></div>
       <details class="dr-custom" open><summary>Eigenes Getränk</summary>
         <div class="dr-cf">
@@ -560,6 +567,8 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
         </div>
       </details>
     </div>
+    <div class="dr-step dr-qty"><label class="eyebrow" for="dr-qty">Wie viele pro Person?</label>
+      <select id="dr-qty"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
     <div class="dr-step dr-when"><span class="eyebrow">Wann?</span>
       <label class="slow"><input type="checkbox" id="dr-now" checked> Jetzt</label>
       <input type="datetime-local" id="dr-time" aria-label="Uhrzeit (Ortszeit)" hidden>
@@ -1147,7 +1156,8 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   let drinks = [];            // [{id, who, cat, name, ml, abv, ts}]
   const body = {};            // id -> {sex, kg} (Overrides aus db)
   let dbRef = null, writable = false, metric = 'count';
-  let sel = {who: store.get('drinkWho') || null, preset: null};
+  let sel = {who: new Set((store.get('drinkWho') || '').split(',').filter(id => byId[id])), preset: null};
+  const saveWho = () => store.set('drinkWho', [...sel.who].join(','));
 
   /* --- Promille nach Widmark: Summe der Getraenke minus Abbau --- */
   const BETA = 0.15; // Promille pro Stunde
@@ -1178,7 +1188,7 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   }
 
   /* --- Eingabe --- */
-  $('dr-who').innerHTML = CREW.map(p => '<button type="button" role="radio" aria-checked="false" data-id="' + esc(p.id) + '">' + avatar(p) + esc(p.name) + '</button>').join('');
+  $('dr-who').innerHTML = CREW.map(p => '<button type="button" role="checkbox" aria-checked="false" data-id="' + esc(p.id) + '">' + avatar(p) + esc(p.name) + '</button>').join('');
   $('dr-what').innerHTML = D.cats.map(c => {
     const items = D.presets.map((d, i) => [d, i]).filter(([d]) => d.cat === c[0]);
     if (!items.length) return '';
@@ -1187,11 +1197,16 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   }).join('');
   $('dr-c-cat').innerHTML = D.cats.map(c => '<option value="' + c[0] + '">' + c[2] + ' ' + esc(c[1]) + '</option>').join('');
   function paintSel() {
-    document.querySelectorAll('#dr-who button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.id === sel.who)));
+    document.querySelectorAll('#dr-who button').forEach(b => b.setAttribute('aria-checked', String(sel.who.has(b.dataset.id))));
     document.querySelectorAll('#dr-what button').forEach(b => b.setAttribute('aria-pressed', String(sel.preset && sel.preset.i === +b.dataset.i)));
-    $('dr-submit').disabled = !(writable && sel.who && sel.preset);
+    $('dr-submit').disabled = !(writable && sel.who.size && sel.preset);
+    const q = +$('dr-qty').value || 1, n = sel.who.size * q;
+    $('dr-submit').textContent = n > 1 ? n + ' Drinks eintragen 🍻' : 'Eintragen 🍻';
   }
-  $('dr-who').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; sel.who = b.dataset.id; store.set('drinkWho', sel.who); paintSel(); });
+  $('dr-who').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; const id = b.dataset.id; if (sel.who.has(id)) sel.who.delete(id); else sel.who.add(id); saveWho(); paintSel(); });
+  $('dr-all').addEventListener('click', () => { CREW.forEach(p => sel.who.add(p.id)); saveWho(); paintSel(); });
+  $('dr-none').addEventListener('click', () => { sel.who.clear(); saveWho(); paintSel(); });
+  $('dr-qty').addEventListener('change', paintSel);
   $('dr-what').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; sel.preset = Object.assign({i: +b.dataset.i}, D.presets[+b.dataset.i]); paintSel(); });
   $('dr-c-use').addEventListener('click', () => {
     const ml = +$('dr-c-ml').value, abv = +$('dr-c-abv').value, name = $('dr-c-name').value.trim() || 'Eigenes Getränk';
@@ -1201,17 +1216,25 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   });
   $('dr-now').addEventListener('change', () => { $('dr-time').hidden = $('dr-now').checked; });
   $('dr-submit').addEventListener('click', async () => {
-    if (!dbRef || !sel.who || !sel.preset) return;
+    if (!dbRef || !sel.who.size || !sel.preset) return;
     let ts = Date.now();
     if (!$('dr-now').checked) { const v = $('dr-time').value; if (!v) { $('dr-status').textContent = 'Bitte eine Uhrzeit wählen.'; return; } ts = new Date(v).getTime(); }
-    const doc = {who: sel.who, cat: sel.preset.cat, name: sel.preset.name, ml: sel.preset.ml, abv: sel.preset.abv, ts};
+    const who = CREW.map(p => p.id).filter(id => sel.who.has(id)), q = +$('dr-qty').value || 1;
     const btn = $('dr-submit'); btn.disabled = true;
+    let ok = 0;
     try {
-      const ref = dbRef.collection('drinks').doc();
-      await ref.set(doc);
-      const n = drinks.filter(d => d.who === sel.who).length + (drinks.some(d => d.id === ref.id) ? 0 : 1);
-      $('dr-status').textContent = 'Saúde, ' + byId[sel.who].name + '! Getränk Nr. ' + n + '.';
+      for (const id of who) {
+        for (let i = 0; i < q; i++) {
+          // bei mehreren Drinks pro Person je 1 Minute Abstand, damit die Reihenfolge eindeutig bleibt
+          await dbRef.collection('drinks').doc().set({who: id, cat: sel.preset.cat, name: sel.preset.name, ml: sel.preset.ml, abv: sel.preset.abv, ts: ts - (q - 1 - i) * 60000});
+          ok++;
+        }
+      }
+      const names = who.map(id => byId[id].name);
+      const list = names.length > 1 ? names.slice(0, -1).join(', ') + ' & ' + names[names.length - 1] : names[0];
+      $('dr-status').textContent = 'Saúde, ' + list + '! ' + (ok === 1 ? '1 ' + sel.preset.name + ' eingetragen.' : ok + '× ' + sel.preset.name + ' eingetragen.');
     } catch (e) {
+      if (ok) $('dr-status').textContent = ok + ' von ' + (who.length * q) + ' eingetragen, dann ging etwas schief. Bitte im Verlauf prüfen.';
       if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) { setMode('Nur ansehen: Eintragen macht der Admin (Patrick).', false); return; }
       $('dr-status').textContent = e && e.code === 'quota_exceeded' ? 'Speicher voll.' : 'Hat nicht geklappt, bitte nochmal.';
     }
