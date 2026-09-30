@@ -171,6 +171,10 @@ ul.plain{margin:0;padding-left:18px;display:grid;gap:6px}
 /* Drinks */
 .dr-add{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:14px;margin-bottom:16px}
 .dr-step{display:grid;gap:8px;min-width:0}
+.dr-lock{margin:0;background:var(--sunbg);border-radius:10px;padding:10px 12px;font-size:.9rem}
+.dr-add.locked .dr-step,.dr-add.locked .dr-go .btn{opacity:.5}
+.dr-add.locked button,.dr-add.locked input,.dr-add.locked select{cursor:not-allowed}
+.dr-add.locked summary{cursor:pointer}
 .dr-who{display:flex;flex-wrap:wrap;gap:10px}
 .dr-who button{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font:600 .8rem var(--body);width:62px}
 .dr-who .av{width:52px;height:52px;border-radius:50%;overflow:hidden;background:var(--accent);color:var(--bg);display:grid;place-items:center;font:800 1.2rem var(--display);box-shadow:0 0 0 2px var(--line);transition:box-shadow .15s}
@@ -543,6 +547,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
 
   <details class="dr-add" id="dr-add" data-fold="add" open>
     <summary class="dr-head"><h3>Getränk eintragen</h3></summary>
+    <p class="dr-lock" id="dr-lock" hidden>🔒 <b>Eintragen nur durch den Admin (Patrick).</b> Schick ihm deine Drinks einfach per WhatsApp, zum Beispiel „Jonas 2 Caipi 22:30“.</p>
     <div class="dr-step"><span class="eyebrow">Wer?</span><div id="dr-who" class="dr-who" role="radiogroup" aria-label="Wer trinkt"></div></div>
     <div class="dr-step"><span class="eyebrow">Was?</span><div id="dr-what" class="dr-what"></div>
       <details class="dr-custom" open><summary>Eigenes Getränk</summary>
@@ -903,7 +908,7 @@ async function writeTodo(id, patch) {
     catch (e) {
       if (had) remote.set(id, before); else remote.delete(id);
       renderTodos();
-      if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) readOnly('Nur ansehen: Abhaken können eingeladene Mitreisende mit Bearbeiten-Recht.');
+      if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) readOnly('Nur ansehen: Abhaken macht der Admin (Patrick).');
       else if (e && e.code === 'quota_exceeded') status('Speicher voll, bitte erledigte eigene Punkte löschen.');
       else status('Konnte nicht speichern, bitte nochmal versuchen.');
     }
@@ -935,13 +940,13 @@ document.getElementById('todo-add').addEventListener('submit', async e => {
 });
 
 async function initDb() {
-  if (!window.claude || !window.claude.use) { readOnly('Offline-Ansicht: Zum Abhaken die Seite auf claude.ai öffnen.'); return; }
+  if (!window.claude || !window.claude.use) { readOnly('Offline-Ansicht: Abhaken macht der Admin (Patrick) auf claude.ai.'); return; }
   db = await window.claude.use('db');
-  if (!db) { readOnly('Nur ansehen: Zum Abhaken mit claude.ai-Konto anmelden und von Patrick einladen lassen.'); return; }
+  if (!db) { readOnly('Nur ansehen: Abhaken macht der Admin (Patrick). Den aktuellen Stand sehen angemeldete claude.ai-Nutzer.'); return; }
   const user = await window.claude.use('user');
   const w = user ? await user.can('data.write') : null;
   canWrite = w !== false;
-  if (!canWrite) { readOnly('Nur ansehen: Abhaken können eingeladene Mitreisende mit Bearbeiten-Recht.'); }
+  if (!canWrite) { readOnly('Nur ansehen: Abhaken macht der Admin (Patrick).'); }
   else { document.getElementById('todo-add').hidden = false; }
   db.collection('todos').onSnapshot(snap => {
     remote.clear();
@@ -1207,7 +1212,7 @@ document.getElementById('wa-copy').addEventListener('click', () => {
       const n = drinks.filter(d => d.who === sel.who).length + (drinks.some(d => d.id === ref.id) ? 0 : 1);
       $('dr-status').textContent = 'Saúde, ' + byId[sel.who].name + '! Getränk Nr. ' + n + '.';
     } catch (e) {
-      if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) { setMode('Nur ansehen: Eintragen dürfen nur eingeladene Mitreisende mit Bearbeiten-Recht.', false); return; }
+      if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) { setMode('Nur ansehen: Eintragen macht der Admin (Patrick).', false); return; }
       $('dr-status').textContent = e && e.code === 'quota_exceeded' ? 'Speicher voll.' : 'Hat nicht geklappt, bitte nochmal.';
     }
     paintSel();
@@ -1332,20 +1337,24 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   function setMode(msg, canWriteNow) {
     writable = canWriteNow;
     $('dr-mode').textContent = msg;
-    $('dr-add').hidden = !canWriteNow;
+    $('dr-add').classList.toggle('locked', !canWriteNow);
+    $('dr-lock').hidden = canWriteNow;
+    $('dr-add').querySelectorAll('button, input, select').forEach(el => { el.disabled = !canWriteNow; });
     paintSel(); renderBodyForm(); render();
   }
 
   render(); renderBodyForm(); paintSel();
+  $('dr-add').classList.add('locked');
+  $('dr-add').querySelectorAll('button, input, select').forEach(el => { el.disabled = true; });
   if (PRINT) { $('dr-add').hidden = true; document.querySelectorAll('#drinks details.dr-card').forEach(d => d.open = true); return; }
   setInterval(renderBac, 60000);
   (async () => {
-    if (!window.claude || !window.claude.use) { setMode('Offline-Ansicht: Zum Eintragen die Seite auf claude.ai öffnen.', false); return; }
+    if (!window.claude || !window.claude.use) { setMode('Offline-Ansicht: Eintragen geht nur auf claude.ai durch den Admin (Patrick).', false); return; }
     dbRef = await window.claude.use('db');
-    if (!dbRef) { setMode('Nur ansehen: Zum Eintragen mit claude.ai-Konto anmelden und von Patrick einladen lassen.', false); return; }
+    if (!dbRef) { setMode('Nur ansehen: Eintragen macht der Admin (Patrick). Das Live-Ranking sehen angemeldete claude.ai-Nutzer.', false); return; }
     const user = await window.claude.use('user');
     const w = user ? await user.can('data.write') : null;
-    setMode(w === false ? 'Nur ansehen: Eintragen dürfen eingeladene Mitreisende mit Bearbeiten-Recht.' : 'Person antippen, Getränk wählen, eintragen. Das Ranking aktualisiert sich live für alle.', w !== false);
+    setMode(w === false ? 'Nur ansehen: Eintragen macht der Admin (Patrick).' : 'Person antippen, Getränk wählen, eintragen. Das Ranking aktualisiert sich live für alle.', w !== false);
     dbRef.collection('drinks').onSnapshot(snap => {
       drinks = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data()))
         .filter(d => byId[d.who] && d.ml > 0 && typeof d.ts === 'number');
