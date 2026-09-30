@@ -918,7 +918,50 @@
     {
       "id": "patrick",
       "name": "Patrick",
-      "team": "a"
+      "nick": "„Das Mammut“",
+      "team": "a",
+      "photo": "crew/patrick.jpg",
+      "photoLarge": "crew/patrick-gross.jpg",
+      "role": "Buffet-Terminator & Senior der Reisegruppe",
+      "facts": [
+        [
+          "Buffet-Strategie",
+          "Stapelt Teller wie Tetris und geht nach wie ein Rentner auf Kreuzfahrt. In Paraty stellt die Pousada einen zweiten Koch ein. Der erste hat gekündigt."
+        ],
+        [
+          "Mission Brasilien",
+          "Churrascaria mit Rodízio: Fleisch, bis die Kellner kapitulieren und der Grill ausgeht. Die Rinder in Mato Grosso haben schon von ihm gehört."
+        ],
+        [
+          "Alter",
+          "Ältester der Gruppe. Die Stewardess fragt beim Boarding, ob er Hilfe braucht. Die Versicherung hat ihn als „Seniorenreise mit Vorerkrankungen“ eingestuft."
+        ],
+        [
+          "Look",
+          "Vokuhila und Goldkette: exakt der Style, mit dem er 1987 schon mal in Brasilien war."
+        ],
+        [
+          "Fußball",
+          "Linksfuß. Nicht aus Talent, sondern weil das rechte Bein seit Jahren nur noch aus Tape besteht."
+        ],
+        [
+          "Krankenakte",
+          "Mehr Oberschenkelzerrungen als die medizinische Fachliteratur kennt. Drei Physiotherapeuten haben ihn als Dauerauftrag, einer davon ist inzwischen in Rente gegangen, von dem Geld."
+        ],
+        [
+          "Footvolley-Prognose",
+          "Erste Zerrung beim Aussteigen aus dem Uber in Guarujá. Zweite beim Hinsetzen am Buffet."
+        ],
+        [
+          "Splitwise",
+          "„Ich bin immer gerne im Minus in Splitwise 😄“. Jonas' Inkasso hat den Pferdekopf schon bestellt."
+        ],
+        [
+          "Leidensfähigkeit",
+          "Laut eigener Aussage „musste Jesus am Kreuz weniger leiden als wir damals in El Nido“. Seitdem schläft er nur noch in Hotels mit Buffet."
+        ]
+      ],
+      "quote": "Ist das Buffet schon eröffnet? Dann bin ich es auch."
     },
     {
       "id": "marco",
