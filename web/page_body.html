@@ -240,46 +240,18 @@
 
 <section id="fluege" data-tab="reise">
   <h2>Flüge</h2>
-  <h3>Langstrecke</h3>
-  <div class="tbl"><table>
-    <thead><tr><th>Wer</th><th>Strecke</th><th>Datum</th><th>Details</th><th>p. P.</th><th>Status</th></tr></thead>
-    <tbody>
-      <tr><td>Jonas, Patrick, Simon, Marco</td><td class="code">MUC → FCO → GRU</td><td class="d">27.12.</td><td>alle vier auf denselben Flügen; 1,5 h + 1 h 10 min Umstieg + 12 h, keine Sitzplätze reserviert</td><td class="n">1.120 €</td><td><span class="pill ok">gebucht 19.08.</span></td></tr>
-      <tr><td>Jonas, Patrick, Simon, Marco</td><td class="code">→ MUC</td><td class="d">20.01.</td><td>Flughafen und Uhrzeit stehen nicht im Chat, vermutlich ab São Paulo</td><td class="n">inkl.</td><td><span class="pill warn">prüfen</span></td></tr>
-      <tr><td>Dajo & Greisel</td><td class="code">MUC → FRA → GIG</td><td class="d">an 06.01. 06:10</td><td></td><td class="n">1.300 €</td><td><span class="pill ok">gebucht</span></td></tr>
-      <tr><td>Dajo & Greisel</td><td class="code">GIG → GRU → MUC</td><td class="d">nach 21.01.</td><td>Umstieg in São Paulo, Datum nicht im Chat</td><td class="n">inkl.</td><td><span class="pill ok">gebucht</span></td></tr>
-    </tbody>
-  </table></div>
-  <h3>Inlandsflüge</h3>
-  <div class="tbl"><table>
-    <thead><tr><th>Datum</th><th>Strecke</th><th>Zeit</th><th>Wer</th><th>Richtpreis</th><th>Status</th></tr></thead>
-    <tbody>
-      <tr><td class="d">31.12.</td><td class="code">CGH → SDU</td><td>vormittags, damit es vor Silvester klappt</td><td>Gringos plus 1 Cevapi</td><td class="n">–</td><td><span class="pill open">offen, Patrick bucht</span></td></tr>
-      <tr><td class="d">06.01.</td><td class="code">GIG → IGU</td><td class="d">ca. 10:40</td><td>alle 6</td><td class="n">ca. 140 €</td><td><span class="pill open">offen</span></td></tr>
-      <tr><td class="d">09.01.</td><td class="code">IGU → MAO</td><td>vormittags, mit Umstieg</td><td>alle 6</td><td class="n">ca. 370 €</td><td><span class="pill open">offen</span></td></tr>
-      <tr><td class="d">14.01.</td><td class="code">MAO → GIG</td><td class="d">01:45 → 06:40</td><td>alle 6</td><td class="n">ca. 190 €</td><td><span class="pill open">offen</span></td></tr>
-    </tbody>
-  </table></div>
-  <p class="note" style="margin-top:10px">Richtpreise von Skyscanner (24.08.). Laut Jonas werden Flüge 8–10 Wochen vorher günstiger, also Ende Oktober bis Anfang November. Dann ist voraussichtlich auch Dajos neuer Reisepass da (ab der Woche vom 19.10.).</p>
+  <div class="seg fl-seg" role="group" aria-label="Flüge anzeigen für">
+    <button type="button" data-g="a" aria-pressed="true">Gringos plus 1 Cevapi</button>
+    <button type="button" data-g="b" aria-pressed="false">Dajo &amp; Greisel</button>
+  </div>
+  <div id="fl-head" class="fl-head"></div>
+  <ol id="fl-list" class="fl-list"></ol>
+  <p class="note" id="fl-note"></p>
 </section>
 
 <section id="kosten" data-tab="reise">
   <h2>Kosten pro Person</h2>
-  <div class="tbl"><table style="min-width:420px">
-    <thead><tr><th>Posten</th><th style="text-align:right">Gringos plus 1 Cevapi</th><th style="text-align:right">Dajo & Greisel</th></tr></thead>
-    <tbody>
-      <tr><td>Langstreckenflug</td><td class="n">1.120 €</td><td class="n">1.300 €</td></tr>
-      <tr><td>Inlandsflüge GIG–IGU–MAO–GIG (Richtpreis)</td><td class="n">ca. 700 €</td><td class="n">ca. 700 €</td></tr>
-      <tr><td>Flug CGH → SDU</td><td class="n">offen</td><td class="n">–</td></tr>
-      <tr><td>Guarujá + Rio</td><td class="n">Splitwise</td><td class="n">–</td></tr>
-      <tr><td>Foz do Iguaçu</td><td class="n">ca. 80 €</td><td class="n">ca. 80 €</td></tr>
-      <tr><td>Manaus Casa 307</td><td class="n">14 €</td><td class="n">14 €</td></tr>
-      <tr><td>Juma Lodge</td><td class="n">520 €</td><td class="n">520 €</td></tr>
-      <tr><td>Paraty</td><td class="n">88 €</td><td class="n">88 €</td></tr>
-      <tr><td>Ilha Grande</td><td class="n">offen</td><td class="n">offen</td></tr>
-      <tr><td><b>Summe bekannter Posten</b></td><td class="n"><b>ca. 2.520 €</b></td><td class="n"><b>ca. 2.700 €</b></td></tr>
-    </tbody>
-  </table></div>
+  <div id="co-box"></div>
   <p class="note" style="margin-top:10px">Abgerechnet wird über zwei Splitwise-Gruppen: eine für die Gringos plus 1 Cevapi (Guarujá, Rio), eine für alle sechs.</p>
 </section>
 

@@ -97,10 +97,67 @@ function renderDays() {
   }).join('');
 }
 
+/* ---------- Flüge als Bordkarten ---------- */
+const PLANE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5z" transform="rotate(90 12 12)"/></svg>';
+const GROUP_IDS = {a: ['jonas', 'patrick', 'simon', 'marco'], b: ['dajo', 'greisel']};
+function crewAv(ids) {
+  return '<span class="pass-av">' + ids.map(id => { const p = TRIP.crew.find(c => c.id === id) || {name: id};
+    return '<span title="' + esc(p.name) + '">' + (p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="' + esc(p.name) + '" loading="lazy">' : esc((p.name || '?')[0])) + '</span>'; }).join('') + '</span>';
+}
+function renderFlights() {
+  const list = TRIP.flights.filter(f => G === 'all' || f.g === 'all' || f.g === G);
+  const nB = list.filter(f => f.status === 'booked').length, nC = list.filter(f => f.status === 'check').length, nO = list.filter(f => f.status === 'open').length;
+  const tdy = isoToday(), win = TRIP.flightsNote.window, dleft = daysBetween(tdy, win);
+  document.getElementById('fl-head').innerHTML =
+    '<div class="fl-prog"><div class="row"><span><b class="big">' + (nB + nC) + ' von ' + list.length + '</b> Flügen gebucht</span><span class="note">' + (G === 'all' ? 'alle' : esc(gName(G))) + '</span></div>' +
+    '<div class="fl-bar" role="img" aria-label="' + (nB + nC) + ' von ' + list.length + ' gebucht"><i style="width:' + (nB / list.length * 100) + '%"></i><i class="chk" style="width:' + (nC / list.length * 100) + '%"></i></div>' +
+    (nO ? '<div class="fl-tip">Noch <b>' + nO + ' offen</b>. ' + (dleft > 0 ? 'Buchen ab ca. <b>19.10.</b> (Dajos Pass), am günstigsten Ende Oktober bis Anfang November: <b>noch ' + dleft + ' Tage</b>.' : 'Das Buchungsfenster ist offen: jetzt buchen!') + '</div>' : '<div class="fl-tip">Alles gebucht 🎉</div>') + '</div>';
+  document.getElementById('fl-list').innerHTML = list.map(f => {
+    const d = fmtDay(f.date), ids = f.g === 'all' ? GROUP_IDS.a.concat(GROUP_IDS.b) : GROUP_IDS[f.g];
+    const whoTxt = f.g === 'all' ? 'alle 6' : gName(f.g);
+    const stampTxt = {booked: 'Gebucht', open: 'Offen', check: 'Prüfen'}[f.status];
+    let links = '';
+    if (f.status === 'open') {
+      const n = ids.length, ymd = f.date.slice(2).replace(/-/g, '');
+      links = '<div class="pass-links"><a href="https://www.google.com/travel/flights?q=' + encodeURIComponent('Flights from ' + f.from + ' to ' + f.to + ' on ' + f.date + ' for ' + n + ' adults') + '" target="_blank" rel="noopener">🔍 Google Flights</a>' +
+        '<a href="https://www.skyscanner.de/transport/fluge/' + f.from.toLowerCase() + '/' + f.to.toLowerCase() + '/' + ymd + '/?adultsv2=' + n + '" target="_blank" rel="noopener">🔍 Skyscanner</a></div>';
+    }
+    return '<li class="fl-item st-' + f.status + '"><article class="pass" aria-label="Flug ' + esc(f.from + ' nach ' + f.to) + '">' +
+      '<div class="pass-top"><span>' + (f.dateText ? esc(f.dateText) : d.wd + ' ' + d.dm + f.date.slice(2, 4)) + '</span><span class="stamp st-' + f.status + '">' + stampTxt + '</span></div>' +
+      '<div class="pass-main"><div class="ap"><span class="code' + (f.fromUnsure ? ' uns' : '') + '">' + esc(f.from) + (f.fromUnsure ? '?' : '') + '</span><span class="city">' + esc(f.fromCity) + '</span></div>' +
+      '<div class="mid">' + PLANE + '<span class="line"></span>' + (f.via ? '<span class="via">' + (f.via[0] === 'Umstieg' ? '1 Umstieg' : 'über ' + esc(f.via.join(', '))) + '</span>' : '<span class="via">direkt</span>') + '</div>' +
+      '<div class="ap to"><span class="code">' + esc(f.to) + '</span><span class="city">' + esc(f.toCity) + '</span></div></div>' +
+      '<div class="pass-cut"></div>' +
+      '<div class="pass-foot">' + (f.dur ? '<div class="dur"><span class="k">Dauer</span><span class="v">' + esc(f.dur) + '</span></div>' : '') + '<div><span class="k">Zeit</span><span class="v mono' + (f.timeUnsure ? ' uns' : '') + '">' + esc(f.time) + '</span></div>' +
+      '<div><span class="k">Preis p. P.</span><span class="v">' + esc(f.price) + '</span></div>' +
+      '<div class="who"><span class="k">Wer · ' + esc(whoTxt) + '</span>' + crewAv(ids) + '</div></div>' +
+      '<div class="pass-state st-' + f.status + '">' + (f.status === 'booked' ? '✅ ' : f.status === 'open' ? '⏳ ' : '🟡 ') + esc(f.statusText) + '</div>' +
+      (f.warn ? '<div class="pass-warn">⚠️ ' + esc(f.warn) + '</div>' : '') +
+      (f.note ? '<p class="pass-note">' + esc(f.note) + '</p>' : '') + links + '</article></li>';
+  }).join('');
+  document.getElementById('fl-note').textContent = TRIP.flightsNote.text;
+}
+
+/* ---------- Kosten ---------- */
+function renderCosts() {
+  const eur = v => v.toLocaleString('de-DE') + ' €';
+  const box = g => {
+    const rows = TRIP.costs.filter(c => c[g]).map(c => ({label: c.label, ...c[g]}));
+    const fix = rows.filter(r => r.k === 'fix').reduce((s, r) => s + r.v, 0), ca = rows.filter(r => r.k === 'ca').reduce((s, r) => s + r.v, 0);
+    const open = rows.filter(r => r.k === 'open' || r.k === 'split').length, tot = fix + ca;
+    return '<div class="co"><div class="co-sum"><span class="grp">' + esc(gName(g)) + ' · bekannte Posten</span><b>ca. ' + eur(Math.round(tot / 10) * 10) + '</b></div>' +
+      '<div class="co-bar" role="img" aria-label="' + eur(fix) + ' fest, ' + eur(ca) + ' geschätzt"><i class="fix" style="width:' + (fix / tot * 100) + '%"></i><i class="ca" style="width:' + (ca / tot * 100) + '%"></i></div>' +
+      '<div class="co-leg"><span><i style="background:var(--ok)"></i>fest ' + eur(fix) + '</span><span><i style="background:var(--amarelo)"></i>geschätzt ' + eur(ca) + '</span>' + (open ? '<span>+ ' + open + ' Posten noch offen</span>' : '') + '</div>' +
+      '<ul class="co-list">' + rows.map(r => '<li><span>' + esc(r.label) + '</span><span class="v ' + r.k + '">' +
+        (r.k === 'open' ? 'offen' : r.k === 'split' ? esc(r.t) : (r.k === 'ca' ? 'ca. ' : '') + eur(r.v)) + '</span></li>').join('') + '</ul></div>';
+  };
+  document.getElementById('co-box').innerHTML = G === 'all' ? box('a') + box('b') : box(G);
+}
+
 function setGroup(g) {
   G = g; if (!PRINT) store.set('group', g);
   document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.g === g)));
-  renderToday(); renderDays();
+  renderToday(); renderDays(); renderFlights(); renderCosts();
 }
 document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => setGroup(b.dataset.g)));
 
