@@ -409,7 +409,7 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   $('dr-what').innerHTML = D.cats.map(c => {
     const items = D.presets.map((d, i) => [d, i]).filter(([d]) => d.cat === c[0]);
     if (!items.length) return '';
-    return '<details class="dr-cat" data-fold="cat-' + c[0] + '"' + (c[0] === 'bier' || c[0] === 'cocktail' ? ' open' : '') + '><summary>' + c[2] + ' ' + esc(c[1]) + '<small>' + items.length + '</small></summary><div class="chips">' +
+    return '<details class="dr-cat" data-fold="cat-' + c[0] + '" open><summary>' + c[2] + ' ' + esc(c[1]) + '<small>' + items.length + '</small></summary><div class="chips">' +
       items.map(([d, i]) => '<button type="button" aria-pressed="false" data-i="' + i + '">' + esc(d.name) + ' <small>' + d.ml + ' ml · ' + fmt1(d.abv) + ' %</small></button>').join('') + '</div></details>';
   }).join('');
   $('dr-c-cat').innerHTML = D.cats.map(c => '<option value="' + c[0] + '">' + c[2] + ' ' + esc(c[1]) + '</option>').join('');
@@ -568,12 +568,6 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   }
 
   render(); renderBodyForm(); paintSel();
-  /* Auf-/Zuklappen pro Geraet merken */
-  document.querySelectorAll('#drinks details[data-fold]').forEach(d => {
-    const v = store.get('fold.' + d.dataset.fold);
-    if (v === '1') d.open = true; else if (v === '0') d.open = false;
-    d.addEventListener('toggle', () => store.set('fold.' + d.dataset.fold, d.open ? '1' : '0'));
-  });
   if (PRINT) { $('dr-add').hidden = true; document.querySelectorAll('#drinks details.dr-card').forEach(d => d.open = true); return; }
   setInterval(renderBac, 60000);
   (async () => {
@@ -593,6 +587,38 @@ document.getElementById('wa-copy').addEventListener('click', () => {
       renderBodyForm(); render();
     }, () => {});
   })();
+})();
+
+/* ---------- Kapitel auf-/zuklappen (startet immer aufgeklappt) ---------- */
+(function () {
+  if (PRINT) return;
+  document.querySelectorAll('section[data-tab]').forEach(sec => {
+    const h = sec.querySelector('h2'); if (!h) return;
+    let head = h;
+    while (head.parentElement !== sec) head = head.parentElement;
+    const hide = [...sec.children].filter(c => c !== head && !c.classList.contains('lightbox') && !c.classList.contains('dr-tip'));
+    if (head !== h && !head.classList.contains('today-head')) hide.push(...[...head.children].filter(c => c !== h));
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'fold-btn'; btn.setAttribute('aria-expanded', 'true');
+    btn.innerHTML = h.innerHTML + '<span class="chev" aria-hidden="true"></span>';
+    h.textContent = ''; h.appendChild(btn);
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(open));
+      sec.classList.toggle('folded', !open);
+      hide.forEach(el => el.classList.toggle('fold-hidden', !open));
+    });
+  });
+  const all = document.createElement('div');
+  all.className = 'fold-all';
+  all.innerHTML = '<button type="button" class="btn ghost" data-a="close">Alles zuklappen</button><button type="button" class="btn ghost" data-a="open">Alles aufklappen</button>';
+  const tabs = document.querySelector('.tabs');
+  tabs.after(all);
+  all.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const want = b.dataset.a === 'open';
+    document.querySelectorAll('.fold-btn').forEach(f => { if ((f.getAttribute('aria-expanded') === 'true') !== want) f.click(); });
+  });
 })();
 
 /* ---------- Reiter = Kapitel-Sprungmarken (alles bleibt untereinander sichtbar) ---------- */

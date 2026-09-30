@@ -255,6 +255,18 @@ details.dr-card:not([open]){padding-bottom:14px}
 @media (max-width:560px){.dr-who button{width:54px}.dr-who .av{width:46px;height:46px}}
 @media (prefers-reduced-motion:reduce){.dr-row,.dr-row .bar,.dr-who .av{transition:none}}
 @media print{.dr-add,.dr-body,.dr-log .del,.seg.small{display:none!important}.dr-row .av img,.dr-bac .av img,.dr-table .mini img{display:none}}
+/* Kapitel klappen */
+.fold-btn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:10px;font:inherit;color:inherit;border-radius:6px}
+.fold-btn:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.fold-btn .chev{width:.55em;height:.55em;border-right:3px solid var(--muted);border-bottom:3px solid var(--muted);transform:rotate(45deg) translateY(-3px);transition:transform .2s}
+.fold-btn[aria-expanded="false"] .chev{transform:rotate(-45deg)}
+.fold-btn:hover .chev{border-color:var(--accent)}
+.fold-hidden{display:none!important}
+section.folded{padding-bottom:0}
+.fold-all{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:-28px}
+.fold-all .btn{font-size:.8rem;padding:5px 12px;margin:0}
+@media (prefers-reduced-motion:reduce){.fold-btn .chev{transition:none}}
+@media print{.fold-all{display:none}.fold-hidden{display:revert!important}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}

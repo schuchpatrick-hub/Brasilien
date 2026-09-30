@@ -255,6 +255,18 @@ details.dr-card:not([open]){padding-bottom:14px}
 @media (max-width:560px){.dr-who button{width:54px}.dr-who .av{width:46px;height:46px}}
 @media (prefers-reduced-motion:reduce){.dr-row,.dr-row .bar,.dr-who .av{transition:none}}
 @media print{.dr-add,.dr-body,.dr-log .del,.seg.small{display:none!important}.dr-row .av img,.dr-bac .av img,.dr-table .mini img{display:none}}
+/* Kapitel klappen */
+.fold-btn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:10px;font:inherit;color:inherit;border-radius:6px}
+.fold-btn:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.fold-btn .chev{width:.55em;height:.55em;border-right:3px solid var(--muted);border-bottom:3px solid var(--muted);transform:rotate(45deg) translateY(-3px);transition:transform .2s}
+.fold-btn[aria-expanded="false"] .chev{transform:rotate(-45deg)}
+.fold-btn:hover .chev{border-color:var(--accent)}
+.fold-hidden{display:none!important}
+section.folded{padding-bottom:0}
+.fold-all{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin-top:-28px}
+.fold-all .btn{font-size:.8rem;padding:5px 12px;margin:0}
+@media (prefers-reduced-motion:reduce){.fold-btn .chev{transition:none}}
+@media print{.fold-all{display:none}.fold-hidden{display:revert!important}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
@@ -532,7 +544,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
     <summary class="dr-head"><h3>Getränk eintragen</h3></summary>
     <div class="dr-step"><span class="eyebrow">Wer?</span><div id="dr-who" class="dr-who" role="radiogroup" aria-label="Wer trinkt"></div></div>
     <div class="dr-step"><span class="eyebrow">Was?</span><div id="dr-what" class="dr-what"></div>
-      <details class="dr-custom"><summary>Eigenes Getränk</summary>
+      <details class="dr-custom" open><summary>Eigenes Getränk</summary>
         <div class="dr-cf">
           <label for="dr-c-name">Name</label><input id="dr-c-name" type="text" maxlength="40" placeholder="z. B. Caipi mit Maracuja">
           <label for="dr-c-cat">Art</label><select id="dr-c-cat"></select>
@@ -579,12 +591,12 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
     <div class="tbl"><table id="dr-total" class="dr-table"></table></div>
   </details>
 
-  <details class="dr-card" data-fold="log">
+  <details class="dr-card" data-fold="log" open>
     <summary class="dr-head"><h3>Letzte Einträge</h3><span class="note">zum Korrigieren</span></summary>
     <ol id="dr-log" class="dr-log"></ol>
   </details>
 
-  <details class="dr-body"><summary>Gewicht für die Promille-Schätzung anpassen</summary>
+  <details class="dr-body" open><summary>Gewicht für die Promille-Schätzung anpassen</summary>
     <div id="dr-bodyform" class="dr-bodyform"></div>
   </details>
   <div id="dr-tip" class="dr-tip" role="tooltip" hidden></div>
@@ -1161,7 +1173,7 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   $('dr-what').innerHTML = D.cats.map(c => {
     const items = D.presets.map((d, i) => [d, i]).filter(([d]) => d.cat === c[0]);
     if (!items.length) return '';
-    return '<details class="dr-cat" data-fold="cat-' + c[0] + '"' + (c[0] === 'bier' || c[0] === 'cocktail' ? ' open' : '') + '><summary>' + c[2] + ' ' + esc(c[1]) + '<small>' + items.length + '</small></summary><div class="chips">' +
+    return '<details class="dr-cat" data-fold="cat-' + c[0] + '" open><summary>' + c[2] + ' ' + esc(c[1]) + '<small>' + items.length + '</small></summary><div class="chips">' +
       items.map(([d, i]) => '<button type="button" aria-pressed="false" data-i="' + i + '">' + esc(d.name) + ' <small>' + d.ml + ' ml · ' + fmt1(d.abv) + ' %</small></button>').join('') + '</div></details>';
   }).join('');
   $('dr-c-cat').innerHTML = D.cats.map(c => '<option value="' + c[0] + '">' + c[2] + ' ' + esc(c[1]) + '</option>').join('');
@@ -1320,12 +1332,6 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   }
 
   render(); renderBodyForm(); paintSel();
-  /* Auf-/Zuklappen pro Geraet merken */
-  document.querySelectorAll('#drinks details[data-fold]').forEach(d => {
-    const v = store.get('fold.' + d.dataset.fold);
-    if (v === '1') d.open = true; else if (v === '0') d.open = false;
-    d.addEventListener('toggle', () => store.set('fold.' + d.dataset.fold, d.open ? '1' : '0'));
-  });
   if (PRINT) { $('dr-add').hidden = true; document.querySelectorAll('#drinks details.dr-card').forEach(d => d.open = true); return; }
   setInterval(renderBac, 60000);
   (async () => {
@@ -1345,6 +1351,38 @@ document.getElementById('wa-copy').addEventListener('click', () => {
       renderBodyForm(); render();
     }, () => {});
   })();
+})();
+
+/* ---------- Kapitel auf-/zuklappen (startet immer aufgeklappt) ---------- */
+(function () {
+  if (PRINT) return;
+  document.querySelectorAll('section[data-tab]').forEach(sec => {
+    const h = sec.querySelector('h2'); if (!h) return;
+    let head = h;
+    while (head.parentElement !== sec) head = head.parentElement;
+    const hide = [...sec.children].filter(c => c !== head && !c.classList.contains('lightbox') && !c.classList.contains('dr-tip'));
+    if (head !== h && !head.classList.contains('today-head')) hide.push(...[...head.children].filter(c => c !== h));
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'fold-btn'; btn.setAttribute('aria-expanded', 'true');
+    btn.innerHTML = h.innerHTML + '<span class="chev" aria-hidden="true"></span>';
+    h.textContent = ''; h.appendChild(btn);
+    btn.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') !== 'true';
+      btn.setAttribute('aria-expanded', String(open));
+      sec.classList.toggle('folded', !open);
+      hide.forEach(el => el.classList.toggle('fold-hidden', !open));
+    });
+  });
+  const all = document.createElement('div');
+  all.className = 'fold-all';
+  all.innerHTML = '<button type="button" class="btn ghost" data-a="close">Alles zuklappen</button><button type="button" class="btn ghost" data-a="open">Alles aufklappen</button>';
+  const tabs = document.querySelector('.tabs');
+  tabs.after(all);
+  all.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const want = b.dataset.a === 'open';
+    document.querySelectorAll('.fold-btn').forEach(f => { if ((f.getAttribute('aria-expanded') === 'true') !== want) f.click(); });
+  });
 })();
 
 /* ---------- Reiter = Kapitel-Sprungmarken (alles bleibt untereinander sichtbar) ---------- */

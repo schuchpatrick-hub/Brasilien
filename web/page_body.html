@@ -126,7 +126,7 @@
     <summary class="dr-head"><h3>Getränk eintragen</h3></summary>
     <div class="dr-step"><span class="eyebrow">Wer?</span><div id="dr-who" class="dr-who" role="radiogroup" aria-label="Wer trinkt"></div></div>
     <div class="dr-step"><span class="eyebrow">Was?</span><div id="dr-what" class="dr-what"></div>
-      <details class="dr-custom"><summary>Eigenes Getränk</summary>
+      <details class="dr-custom" open><summary>Eigenes Getränk</summary>
         <div class="dr-cf">
           <label for="dr-c-name">Name</label><input id="dr-c-name" type="text" maxlength="40" placeholder="z. B. Caipi mit Maracuja">
           <label for="dr-c-cat">Art</label><select id="dr-c-cat"></select>
@@ -173,12 +173,12 @@
     <div class="tbl"><table id="dr-total" class="dr-table"></table></div>
   </details>
 
-  <details class="dr-card" data-fold="log">
+  <details class="dr-card" data-fold="log" open>
     <summary class="dr-head"><h3>Letzte Einträge</h3><span class="note">zum Korrigieren</span></summary>
     <ol id="dr-log" class="dr-log"></ol>
   </details>
 
-  <details class="dr-body"><summary>Gewicht für die Promille-Schätzung anpassen</summary>
+  <details class="dr-body" open><summary>Gewicht für die Promille-Schätzung anpassen</summary>
     <div id="dr-bodyform" class="dr-bodyform"></div>
   </details>
   <div id="dr-tip" class="dr-tip" role="tooltip" hidden></div>
