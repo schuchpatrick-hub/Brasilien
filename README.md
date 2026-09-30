@@ -92,13 +92,13 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 
 | Ort | Unterkunft | Zeitraum | Details | Kosten | Gebucht von |
 |---|---|---|---|---|---|
-| Guarujá | **Casa Praiana** (nahe Praia da Enseada) | 27.–30.12. | 75 m zum Strand, kein Pool, **kein Frühstück**, gebucht für 3 Personen. Alternative war die Pousada Villa Virgínia | – | Jonas (29.09.) |
-| Rio | **Tabas – Cena Carioca** | 30.12.–06.01. | **nicht stornierbar**, Gym vorhanden | – | Jonas (01.09.) |
-| Foz do Iguaçu | Name prüfen. Im Gespräch waren Hotel Portinari Ponte da Amizade (im Chat angepinnt), Della Foz, Hotel Baviera Iguassu, Che Hermano Suítes | 06.–09.01. | laut Greisel ca. 600 € p. P. für Amazonas plus Unterkunft Wasserfälle | ca. 80 € p. P. | beim Treffen am 09.09. |
-| Manaus | **Casa 307** | 09.–10.01. | Lage und Bewertung top, 2er-Zimmer für Dajo & Greisel | 14 € p. P. | Jonas (14.09.) |
-| Amazonas | **Juma Kabanas: Nature Experience Package** (3 Nächte) | 10.–13.01. | Übernachtung, Essen, Abholung und Rückfahrt zum Hotel inklusive, Bar extra. Rückfahrt 13.01. um 08:00, in Manaus ca. 11:00 | 520 € p. P. | Buchungsnummer liegt bei Marco oder Greisel |
-| Paraty | **Geko Pousada Paraty** | 14.–16.01. | 3 Zimmer für 6 Personen, **inkl. Frühstück**, Frühstück am Strand, **kostenlos stornierbar** | 526 € gesamt (88 € p. P., über Check24) | Dajo & Greisel (16.09.) |
-| Ilha Grande | **offen**, muss in **Vila do Abraão** liegen. Vorschlag: Balaio Hostel | 16.–20.01. (Gringos plus 1 Cevapi) / 21.01. (Dajo & Greisel) | | – | – |
+| Guarujá | [**Casa Praiana**](https://www.booking.com/Share-q0Nagir) (nahe Praia da Enseada) | 27.–30.12. | 75 m zum Strand, kein Pool, **kein Frühstück**, gebucht für 3 Personen. Alternative war die Pousada Villa Virgínia | – | Jonas (29.09.) |
+| Rio | [**Tabas – Cena Carioca**](https://www.booking.com/Share-UjjihY) | 30.12.–06.01. | **nicht stornierbar**, Gym vorhanden | – | Jonas (01.09.) |
+| Foz do Iguaçu | Name prüfen. Im Gespräch waren [Hotel Portinari Ponte da Amizade](https://c.24.de/ho/NUEN87) (im Chat angepinnt), [Della Foz](https://c.24.de/ho/5ESDAM), [Hotel Baviera Iguassu](https://c.24.de/ho/WRNADK), Che Hermano Suítes | 06.–09.01. | laut Greisel ca. 600 € p. P. für Amazonas plus Unterkunft Wasserfälle | ca. 80 € p. P. | beim Treffen am 09.09. |
+| Manaus | [**Casa 307**](https://www.booking.com/Share-xSVoEp) | 09.–10.01. | Lage und Bewertung top, 2er-Zimmer für Dajo & Greisel | 14 € p. P. | Jonas (14.09.) |
+| Amazonas | [**Juma Kabanas: Nature Experience Package**](https://www.jumakabanas.com/package/nature-experience-package-3-nights/) (3 Nächte) | 10.–13.01. | Übernachtung, Essen, Abholung und Rückfahrt zum Hotel inklusive, Bar extra. Rückfahrt 13.01. um 08:00, in Manaus ca. 11:00 | 520 € p. P. | Buchungsnummer liegt bei Marco oder Greisel |
+| Paraty | [**Geko Pousada Paraty**](https://www.booking.com/Share-zfyVPQM) | 14.–16.01. | 3 Zimmer für 6 Personen, **inkl. Frühstück**, Frühstück am Strand, **kostenlos stornierbar** | 526 € gesamt (88 € p. P., über Check24) | Dajo & Greisel (16.09.) |
+| Ilha Grande | **offen**, muss in **Vila do Abraão** liegen. Vorschlag: [Balaio Hostel](https://www.booking.com/Share-dnNyRa) | 16.–20.01. (Gringos plus 1 Cevapi) / 21.01. (Dajo & Greisel) | | – | – |
 
 ---
 
