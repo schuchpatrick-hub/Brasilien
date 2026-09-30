@@ -13,7 +13,7 @@
   </div>
 </header>
 
-<nav class="tabs" aria-label="Bereiche"><div class="tabs-in" role="tablist"><a role="tab" href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht">Übersicht</a><a role="tab" href="#crew-tab" id="tab-crew-tab" data-tab="crew-tab">Crew</a><a role="tab" href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab">Tage</a><a role="tab" href="#todos-tab" id="tab-todos-tab" data-tab="todos-tab">To-dos</a><a role="tab" href="#reise" id="tab-reise" data-tab="reise">Flüge & Kosten</a><a role="tab" href="#sprache-tab" id="tab-sprache-tab" data-tab="sprache-tab">Sprache</a><a role="tab" href="#infos" id="tab-infos" data-tab="infos">Infos & Packen</a><a role="tab" href="#extras" id="tab-extras" data-tab="extras">Downloads</a></div></nav>
+<nav class="tabs" aria-label="Bereiche"><div class="tabs-in" role="tablist"><a role="tab" href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht">Übersicht</a><a role="tab" href="#crew-tab" id="tab-crew-tab" data-tab="crew-tab">Crew</a><a role="tab" href="#drinks-tab" id="tab-drinks-tab" data-tab="drinks-tab">Drinks</a><a role="tab" href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab">Tage</a><a role="tab" href="#todos-tab" id="tab-todos-tab" data-tab="todos-tab">To-dos</a><a role="tab" href="#reise" id="tab-reise" data-tab="reise">Flüge & Kosten</a><a role="tab" href="#sprache-tab" id="tab-sprache-tab" data-tab="sprache-tab">Sprache</a><a role="tab" href="#infos" id="tab-infos" data-tab="infos">Infos & Packen</a><a role="tab" href="#extras" id="tab-extras" data-tab="extras">Downloads</a></div></nav>
 
 
 <section id="heute" data-tab="uebersicht" class="today-wrap">
@@ -116,6 +116,71 @@
     <button type="button" class="x" id="lightbox-close" aria-label="Schließen">×</button>
     <figure><img id="lightbox-img" alt=""><figcaption id="lightbox-cap"></figcaption></figure>
   </div>
+</section>
+
+<section id="drinks" data-tab="drinks-tab">
+  <h2>Drinks-Counter</h2>
+  <p class="note sub-lead" id="dr-mode">Jeder trägt seine Getränke ein, das Ranking aktualisiert sich live für alle.</p>
+
+  <div class="dr-add" id="dr-add">
+    <div class="dr-step"><span class="eyebrow">Wer?</span><div id="dr-who" class="dr-who" role="radiogroup" aria-label="Wer trinkt"></div></div>
+    <div class="dr-step"><span class="eyebrow">Was?</span><div id="dr-what" class="dr-what"></div>
+      <details class="dr-custom"><summary>Eigenes Getränk</summary>
+        <div class="dr-cf">
+          <label for="dr-c-name">Name</label><input id="dr-c-name" type="text" maxlength="40" placeholder="z. B. Caipi mit Maracuja">
+          <label for="dr-c-cat">Art</label><select id="dr-c-cat"></select>
+          <label for="dr-c-ml">Menge (ml)</label><input id="dr-c-ml" type="number" min="10" max="2000" step="10" value="300">
+          <label for="dr-c-abv">Alkohol (%)</label><input id="dr-c-abv" type="number" min="0" max="80" step="0.1" value="5">
+          <button type="button" class="btn ghost" id="dr-c-use">Auswählen</button>
+        </div>
+      </details>
+    </div>
+    <div class="dr-step dr-when"><span class="eyebrow">Wann?</span>
+      <label class="slow"><input type="checkbox" id="dr-now" checked> Jetzt</label>
+      <input type="datetime-local" id="dr-time" aria-label="Uhrzeit (Ortszeit)" hidden>
+    </div>
+    <div class="dr-go"><button type="button" class="btn" id="dr-submit" disabled>Eintragen 🍻</button><span id="dr-status" class="note" role="status"></span></div>
+  </div>
+
+  <div class="dr-grid">
+    <div class="dr-card">
+      <div class="dr-head"><h3>Ranking</h3>
+        <div class="seg small" role="group" aria-label="Ranking nach">
+          <button type="button" data-m="count" aria-pressed="true">Anzahl</button><button type="button" data-m="grams" aria-pressed="false">Reinalkohol</button><button type="button" data-m="liters" aria-pressed="false">Liter</button>
+        </div></div>
+      <div id="dr-rank" class="dr-rank" aria-live="polite"></div>
+    </div>
+    <div class="dr-card">
+      <div class="dr-head"><h3>Pegel jetzt</h3></div>
+      <div id="dr-bac" class="dr-bac"></div>
+      <p class="note dr-disc">Grobe Spaß-Schätzung nach der Widmark-Formel (Gewicht, Geschlecht, Abbau ca. 0,15 ‰ pro Stunde). Sagt nichts darüber, ob jemand fahren, schwimmen oder Boot fahren darf.</p>
+    </div>
+  </div>
+
+  <div class="dr-card">
+    <div class="dr-head"><h3>Getränke pro Tag</h3><span class="note">alle zusammen</span></div>
+    <div class="dr-days-wrap"><div id="dr-days" class="dr-days"></div></div>
+  </div>
+
+  <div class="dr-card">
+    <div class="dr-head"><h3>Tagesübersicht</h3><span class="note">Anzahl und höchster Pegel pro Person</span></div>
+    <div class="tbl"><table id="dr-daytable" class="dr-table"></table></div>
+  </div>
+
+  <div class="dr-card">
+    <div class="dr-head"><h3>Gesamtstatistik</h3><span class="note">die Abrechnung nach dem Urlaub</span></div>
+    <div class="tbl"><table id="dr-total" class="dr-table"></table></div>
+  </div>
+
+  <div class="dr-card">
+    <div class="dr-head"><h3>Letzte Einträge</h3></div>
+    <ol id="dr-log" class="dr-log"></ol>
+  </div>
+
+  <details class="dr-body"><summary>Gewicht für die Promille-Schätzung anpassen</summary>
+    <div id="dr-bodyform" class="dr-bodyform"></div>
+  </details>
+  <div id="dr-tip" class="dr-tip" role="tooltip" hidden></div>
 </section>
 
 <section id="tage" data-tab="tage-tab">

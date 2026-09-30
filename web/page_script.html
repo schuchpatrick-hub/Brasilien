@@ -358,6 +358,232 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
 })();
 
+/* ---------- Drinks-Counter (geteilt ueber db, Collection "drinks") ---------- */
+(function () {
+  const D = TRIP.drinks, CREW = TRIP.crew;
+  const CAT = Object.fromEntries(D.cats.map(c => [c[0], {name: c[1], icon: c[2]}]));
+  const byId = Object.fromEntries(CREW.map(p => [p.id, p]));
+  const $ = id => document.getElementById(id);
+  const avatar = (p, cls) => '<span class="' + (cls || 'av') + '">' + (p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="">' : esc(p.name[0])) + '</span>';
+  const fmt1 = n => n.toLocaleString('de-DE', {minimumFractionDigits: 1, maximumFractionDigits: 1});
+  const fmt2 = n => n.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const grams = d => d.ml * d.abv / 100 * 0.789;
+  const dayOf = ts => new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date(ts));
+  const timeOf = ts => new Intl.DateTimeFormat('de-DE', {timeZone: TZ, hour: '2-digit', minute: '2-digit'}).format(new Date(ts));
+
+  let drinks = [];            // [{id, who, cat, name, ml, abv, ts}]
+  const body = {};            // id -> {sex, kg} (Overrides aus db)
+  let dbRef = null, writable = false, metric = 'count';
+  let sel = {who: store.get('drinkWho') || null, preset: null};
+
+  /* --- Promille nach Widmark: Summe der Getraenke minus Abbau --- */
+  const BETA = 0.15; // Promille pro Stunde
+  function bodyOf(id) {
+    const d = D.body[id] || ['m', 80], o = body[id] || {};
+    const sex = o.sex || d[0], kg = +o.kg || d[1];
+    return {sex, kg, r: sex === 'w' ? 0.55 : 0.68};
+  }
+  function bacTimeline(id) {                // liefert Funktion t -> Promille und Tages-Peaks
+    const b = bodyOf(id), list = drinks.filter(d => d.who === id).sort((a, z) => a.ts - z.ts);
+    let bac = 0, last = null; const peaks = {}; const pts = [];
+    for (const d of list) {
+      if (last !== null) bac = Math.max(0, bac - BETA * (d.ts - last) / 36e5);
+      bac += grams(d) / (b.kg * b.r);
+      last = d.ts; pts.push([d.ts, bac]);
+      const day = dayOf(d.ts); peaks[day] = Math.max(peaks[day] || 0, bac);
+    }
+    const at = t => { if (last === null || t < list[0].ts) return 0; let v = 0; for (const [ts, x] of pts) { if (ts <= t) v = x - BETA * (t - ts) / 36e5; } return Math.max(0, v); };
+    return {at, peaks, max: Math.max(0, ...Object.values(peaks))};
+  }
+  function level(v) {
+    if (v < 0.1) return 'nüchtern, leider';
+    if (v < 0.5) return 'angeheitert';
+    if (v < 1.0) return 'beschwipst, Samba-Modus';
+    if (v < 1.5) return 'blau wie das Meer vor Ilha Grande';
+    if (v < 2.0) return 'Portugiesisch fließend';
+    return 'Caipirinha-Koma, bitte Wasser';
+  }
+
+  /* --- Eingabe --- */
+  $('dr-who').innerHTML = CREW.map(p => '<button type="button" role="radio" aria-checked="false" data-id="' + esc(p.id) + '">' + avatar(p) + esc(p.name) + '</button>').join('');
+  $('dr-what').innerHTML = D.presets.map((d, i) => '<button type="button" aria-pressed="false" data-i="' + i + '">' + CAT[d.cat].icon + ' ' + esc(d.name) + ' <small>' + d.ml + ' ml · ' + fmt1(d.abv) + ' %</small></button>').join('');
+  $('dr-c-cat').innerHTML = D.cats.map(c => '<option value="' + c[0] + '">' + c[2] + ' ' + esc(c[1]) + '</option>').join('');
+  function paintSel() {
+    document.querySelectorAll('#dr-who button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.id === sel.who)));
+    document.querySelectorAll('#dr-what button').forEach(b => b.setAttribute('aria-pressed', String(sel.preset && sel.preset.i === +b.dataset.i)));
+    $('dr-submit').disabled = !(writable && sel.who && sel.preset);
+  }
+  $('dr-who').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; sel.who = b.dataset.id; store.set('drinkWho', sel.who); paintSel(); });
+  $('dr-what').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; sel.preset = Object.assign({i: +b.dataset.i}, D.presets[+b.dataset.i]); paintSel(); });
+  $('dr-c-use').addEventListener('click', () => {
+    const ml = +$('dr-c-ml').value, abv = +$('dr-c-abv').value, name = $('dr-c-name').value.trim() || 'Eigenes Getränk';
+    if (!(ml > 0 && ml <= 2000 && abv >= 0 && abv <= 80)) { $('dr-status').textContent = 'Menge 10–2000 ml, Alkohol 0–80 %.'; return; }
+    sel.preset = {i: -1, cat: $('dr-c-cat').value, name: name.slice(0, 40), ml, abv};
+    paintSel(); $('dr-status').textContent = 'Ausgewählt: ' + sel.preset.name;
+  });
+  $('dr-now').addEventListener('change', () => { $('dr-time').hidden = $('dr-now').checked; });
+  $('dr-submit').addEventListener('click', async () => {
+    if (!dbRef || !sel.who || !sel.preset) return;
+    let ts = Date.now();
+    if (!$('dr-now').checked) { const v = $('dr-time').value; if (!v) { $('dr-status').textContent = 'Bitte eine Uhrzeit wählen.'; return; } ts = new Date(v).getTime(); }
+    const doc = {who: sel.who, cat: sel.preset.cat, name: sel.preset.name, ml: sel.preset.ml, abv: sel.preset.abv, ts};
+    const btn = $('dr-submit'); btn.disabled = true;
+    try {
+      const ref = dbRef.collection('drinks').doc();
+      await ref.set(doc);
+      const n = drinks.filter(d => d.who === sel.who).length + (drinks.some(d => d.id === ref.id) ? 0 : 1);
+      $('dr-status').textContent = 'Saúde, ' + byId[sel.who].name + '! Getränk Nr. ' + n + '.';
+    } catch (e) {
+      $('dr-status').textContent = e && e.code === 'quota_exceeded' ? 'Speicher voll.' : (e && e.code === 'invalid_argument' ? 'Nur ansehen: Eintragen dürfen eingeladene Mitreisende.' : 'Hat nicht geklappt, bitte nochmal.');
+    }
+    paintSel();
+  });
+
+  /* --- Ranking mit wandernden Zeilen --- */
+  const ROW = 56, rank = $('dr-rank');
+  rank.style.height = (CREW.length * ROW) + 'px';
+  rank.innerHTML = CREW.map(p => '<div class="dr-row" data-id="' + esc(p.id) + '"><span class="pl"></span>' + avatar(p) + '<div class="bd"><div class="nm">' + esc(p.name) + '<span></span></div><div class="track"><div class="bar"></div></div></div></div>').join('');
+  document.querySelectorAll('#drinks .seg.small button').forEach(b => b.addEventListener('click', () => {
+    metric = b.dataset.m;
+    document.querySelectorAll('#drinks .seg.small button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    render();
+  }));
+  function stats() {
+    const s = Object.fromEntries(CREW.map(p => [p.id, {count: 0, grams: 0, liters: 0, cats: {}, days: new Set()}]));
+    for (const d of drinks) {
+      const x = s[d.who]; if (!x) continue;
+      x.count++; x.grams += grams(d); x.liters += d.ml / 1000; x.cats[d.cat] = (x.cats[d.cat] || 0) + 1; x.days.add(dayOf(d.ts));
+    }
+    return s;
+  }
+  function renderRank(st) {
+    const val = id => st[id][metric];
+    const order = CREW.map(p => p.id).sort((a, b) => val(b) - val(a) || CREW.findIndex(p => p.id === a) - CREW.findIndex(p => p.id === b));
+    const max = Math.max(...order.map(val), 0);
+    order.forEach((id, i) => {
+      const row = rank.querySelector('.dr-row[data-id="' + id + '"]');
+      row.style.transform = 'translateY(' + (i * ROW) + 'px)';
+      row.classList.toggle('lead', i === 0 && max > 0);
+      row.querySelector('.pl').textContent = (i + 1) + '.';
+      const v = val(id);
+      row.querySelector('.nm span').textContent = metric === 'count' ? v + (v === 1 ? ' Drink' : ' Drinks') : metric === 'grams' ? Math.round(v) + ' g' : fmt2(v) + ' l';
+      row.querySelector('.bar').style.width = (max ? v / max * 100 : 0) + '%';
+    });
+  }
+  function renderBac() {
+    const now = Date.now();
+    const rows = CREW.map(p => ({p, v: bacTimeline(p.id).at(now)})).sort((a, b) => b.v - a.v);
+    $('dr-bac').innerHTML = rows.map(({p, v}) => '<div class="b">' + avatar(p) + '<div><b>' + esc(p.name) + '</b> <span class="l">' + level(v) + '</span></div><span class="v">' + fmt2(v) + ' ‰</span></div>').join('');
+  }
+  function tripDays() {
+    const out = [], d = new Date('2026-12-27T12:00:00Z'), end = new Date('2027-01-21T12:00:00Z');
+    for (; d <= end; d.setUTCDate(d.getUTCDate() + 1)) out.push(d.toISOString().slice(0, 10));
+    const extra = [...new Set(drinks.map(x => dayOf(x.ts)))].filter(x => !out.includes(x));
+    return [...extra.filter(x => x < out[0]).sort(), ...out, ...extra.filter(x => x > out[out.length - 1]).sort()];
+  }
+  function renderDays() {
+    const days = tripDays(), t = isoToday();
+    const per = {}; drinks.forEach(d => { const k = dayOf(d.ts); (per[k] = per[k] || []).push(d); });
+    const max = Math.max(1, ...days.map(k => (per[k] || []).length));
+    const lab = k => { const f = fmtDay(k); return f.dm; };
+    $('dr-days').innerHTML = days.map(k => {
+      const n = (per[k] || []).length;
+      return '<div class="col' + (k === t ? ' today' : '') + '" data-day="' + k + '">' + (n ? '<b style="bottom:' + (n / max * 100) + '%">' + n + '</b>' : '') + '<i style="height:' + (n / max * 100) + '%"></i></div>';
+    }).join('') + '';
+    let ax = $('dr-days').nextElementSibling;
+    if (!ax || !ax.classList.contains('dr-days-ax')) { ax = document.createElement('div'); ax.className = 'dr-days-ax'; $('dr-days').after(ax); }
+    ax.innerHTML = days.map((k, i) => '<span>' + (i % 4 === 0 ? lab(k).slice(0, 6) : '') + '</span>').join('');
+  }
+  function tip(html, x, y) { const el = $('dr-tip'); el.innerHTML = html; el.hidden = false; const w = el.offsetWidth; el.style.left = Math.min(innerWidth - w - 8, Math.max(8, x - w / 2)) + 'px'; el.style.top = (y - el.offsetHeight - 10) + 'px'; }
+  $('dr-days').addEventListener('pointermove', e => {
+    const c = e.target.closest('.col'); if (!c) { $('dr-tip').hidden = true; return; }
+    const k = c.dataset.day, list = drinks.filter(d => dayOf(d.ts) === k), f = fmtDay(k);
+    const per = CREW.map(p => [p.name, list.filter(d => d.who === p.id).length]).filter(x => x[1]);
+    const r = c.getBoundingClientRect();
+    tip('<b>' + f.wd + ' ' + f.dm + ': ' + list.length + ' Drinks</b>' + (per.length ? '<br>' + per.map(x => esc(x[0]) + ' ' + x[1]).join(' · ') : ''), r.left + r.width / 2, r.top + r.height - (list.length ? c.querySelector('i').offsetHeight : 0));
+  });
+  $('dr-days').addEventListener('pointerleave', () => { $('dr-tip').hidden = true; });
+
+  function renderDayTable() {
+    const tl = Object.fromEntries(CREW.map(p => [p.id, bacTimeline(p.id)]));
+    const days = [...new Set(drinks.map(d => dayOf(d.ts)))].sort().reverse();
+    const head = '<thead><tr><th>Tag</th>' + CREW.map(p => '<th class="pp">' + avatar(p, 'mini') + '<br>' + esc(p.name) + '</th>').join('') + '</tr></thead>';
+    if (!days.length) { $('dr-daytable').innerHTML = head + '<tbody><tr><td colspan="' + (CREW.length + 1) + '" class="z">Noch keine Einträge. Das ändert sich spätestens am 27.12.</td></tr></tbody>'; return; }
+    $('dr-daytable').innerHTML = head + '<tbody>' + days.map(k => {
+      const f = fmtDay(k);
+      return '<tr><td class="d">' + f.wd + ' ' + f.dm + '</td>' + CREW.map(p => {
+        const n = drinks.filter(d => d.who === p.id && dayOf(d.ts) === k).length, pk = tl[p.id].peaks[k] || 0;
+        return n ? '<td class="pp" title="' + esc(drinks.filter(d => d.who === p.id && dayOf(d.ts) === k).map(d => d.name).join(', ')) + '">' + n + ' · ' + fmt1(pk) + ' ‰</td>' : '<td class="pp z">–</td>';
+      }).join('') + '</tr>';
+    }).join('') + '</tbody>';
+  }
+  function renderTotal(st) {
+    const tl = Object.fromEntries(CREW.map(p => [p.id, bacTimeline(p.id)]));
+    const rows = CREW.map(p => p.id).sort((a, b) => st[b].grams - st[a].grams);
+    $('dr-total').innerHTML = '<thead><tr><th>Wer</th>' + D.cats.map(c => '<th class="pp" title="' + esc(c[1]) + '">' + c[2] + '<br>' + esc(c[1]) + '</th>').join('') +
+      '<th class="pp">Gesamt</th><th class="pp">Liter</th><th class="pp">Reinalkohol</th><th class="pp">Höchster Pegel</th><th class="pp">Trinktage</th></tr></thead><tbody>' +
+      rows.map(id => { const p = byId[id], x = st[id];
+        return '<tr><td>' + avatar(p, 'mini') + ' ' + esc(p.name) + '</td>' + D.cats.map(c => '<td class="pp' + (x.cats[c[0]] ? '' : ' z') + '">' + (x.cats[c[0]] || 0) + '</td>').join('') +
+          '<td class="pp"><b>' + x.count + '</b></td><td class="pp">' + fmt2(x.liters) + '</td><td class="pp">' + Math.round(x.grams) + ' g</td><td class="pp">' + fmt2(tl[id].max) + ' ‰</td><td class="pp">' + x.days.size + '</td></tr>';
+      }).join('') + '</tbody>';
+  }
+  function renderLog() {
+    const list = drinks.slice().sort((a, b) => b.ts - a.ts).slice(0, 40);
+    $('dr-log').innerHTML = list.length ? list.map(d => { const f = fmtDay(dayOf(d.ts)), p = byId[d.who] || {name: '?'};
+      return '<li data-id="' + esc(d.id) + '"><span class="t">' + f.dm + ' ' + timeOf(d.ts) + '</span><span><b>' + esc(p.name) + '</b>: ' + (CAT[d.cat] ? CAT[d.cat].icon : '') + ' ' + esc(d.name) + ' <span class="note">' + d.ml + ' ml · ' + fmt1(d.abv) + ' %</span></span>' +
+        (writable ? '<button type="button" class="del" aria-label="Eintrag löschen" title="Löschen">×</button>' : '<span></span>') + '</li>'; }).join('')
+      : '<li><span></span><span class="note">Noch nichts getrunken. Erste Runde am 27.12. in Guarujá?</span><span></span></li>';
+  }
+  $('dr-log').addEventListener('click', async e => {
+    const b = e.target.closest('.del'); if (!b || !dbRef) return;
+    const id = b.closest('li').dataset.id;
+    try { await dbRef.doc('drinks/' + id).delete(); } catch (err) { $('dr-status').textContent = 'Konnte nicht löschen.'; }
+  });
+  function renderBodyForm() {
+    $('dr-bodyform').innerHTML = CREW.map(p => { const b = bodyOf(p.id);
+      return '<div class="p" data-id="' + esc(p.id) + '"><b>' + esc(p.name) + '</b><input type="number" min="40" max="200" step="1" value="' + b.kg + '" aria-label="Gewicht ' + esc(p.name) + ' in kg"' + (writable ? '' : ' disabled') + '> kg <select aria-label="Geschlecht ' + esc(p.name) + '"' + (writable ? '' : ' disabled') + '><option value="m"' + (b.sex === 'm' ? ' selected' : '') + '>m</option><option value="w"' + (b.sex === 'w' ? ' selected' : '') + '>w</option></select></div>'; }).join('');
+  }
+  $('dr-bodyform').addEventListener('change', async e => {
+    const row = e.target.closest('.p'); if (!row || !dbRef) return;
+    const id = row.dataset.id, kg = +row.querySelector('input').value, sex = row.querySelector('select').value;
+    if (!(kg >= 40 && kg <= 200)) return;
+    body[id] = {kg, sex}; render();
+    try { await dbRef.doc('people/' + id).set({kg, sex}); } catch (err) { $('dr-status').textContent = 'Gewicht konnte nicht gespeichert werden.'; }
+  });
+
+  function render() {
+    const st = stats();
+    renderRank(st); renderBac(); renderDays(); renderDayTable(); renderTotal(st); renderLog();
+  }
+  function setMode(msg, canWriteNow) {
+    writable = canWriteNow;
+    $('dr-mode').textContent = msg;
+    $('dr-add').hidden = !canWriteNow;
+    paintSel(); renderBodyForm(); render();
+  }
+
+  render(); renderBodyForm(); paintSel();
+  if (PRINT) { $('dr-add').hidden = true; return; }
+  setInterval(renderBac, 60000);
+  (async () => {
+    if (!window.claude || !window.claude.use) { setMode('Offline-Ansicht: Zum Eintragen die Seite auf claude.ai öffnen.', false); return; }
+    dbRef = await window.claude.use('db');
+    if (!dbRef) { setMode('Nur ansehen: Zum Eintragen mit claude.ai-Konto anmelden und von Patrick einladen lassen.', false); return; }
+    const user = await window.claude.use('user');
+    const w = user ? await user.can('data.write') : null;
+    setMode(w === false ? 'Nur ansehen: Eintragen dürfen eingeladene Mitreisende mit Bearbeiten-Recht.' : 'Person antippen, Getränk wählen, eintragen. Das Ranking aktualisiert sich live für alle.', w !== false);
+    dbRef.collection('drinks').onSnapshot(snap => {
+      drinks = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data()))
+        .filter(d => byId[d.who] && d.ml > 0 && typeof d.ts === 'number');
+      render();
+    }, () => setMode('Der Counter ist gerade nicht erreichbar.', false));
+    dbRef.collection('people').onSnapshot(snap => {
+      snap.docs.forEach(d => { if (d.exists) body[d.id] = Object.assign({}, d.data()); });
+      renderBodyForm(); render();
+    }, () => {});
+  })();
+})();
+
 /* ---------- Reiter = Kapitel-Sprungmarken (alles bleibt untereinander sichtbar) ---------- */
 const TAB_IDS = [...document.querySelectorAll('.tabs a')].map(a => a.dataset.tab);
 const SECTIONS = [...document.querySelectorAll('section[data-tab]')];

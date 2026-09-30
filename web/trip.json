@@ -1111,5 +1111,169 @@
       ],
       "quote": "Fast wie auf Malle: 4er-Zimmer für 10 Leute 😂"
     }
-  ]
+  ],
+  "drinks": {
+    "cats": [
+      [
+        "bier",
+        "Bier",
+        "🍺"
+      ],
+      [
+        "cocktail",
+        "Cocktail",
+        "🍹"
+      ],
+      [
+        "longdrink",
+        "Longdrink",
+        "🥃"
+      ],
+      [
+        "wein",
+        "Wein & Sekt",
+        "🍷"
+      ],
+      [
+        "shot",
+        "Shot",
+        "🥂"
+      ],
+      [
+        "sonst",
+        "Sonstiges",
+        "🍸"
+      ]
+    ],
+    "presets": [
+      {
+        "cat": "bier",
+        "name": "Brahma/Skol Dose",
+        "ml": 350,
+        "abv": 4.7
+      },
+      {
+        "cat": "bier",
+        "name": "Long Neck",
+        "ml": 355,
+        "abv": 5.0
+      },
+      {
+        "cat": "bier",
+        "name": "Chopp (Fassbier)",
+        "ml": 300,
+        "abv": 4.5
+      },
+      {
+        "cat": "bier",
+        "name": "Garrafa 600 ml",
+        "ml": 600,
+        "abv": 4.7
+      },
+      {
+        "cat": "bier",
+        "name": "Schneider Weisse",
+        "ml": 500,
+        "abv": 5.4
+      },
+      {
+        "cat": "cocktail",
+        "name": "Caipirinha",
+        "ml": 250,
+        "abv": 10
+      },
+      {
+        "cat": "cocktail",
+        "name": "Caipiroska",
+        "ml": 250,
+        "abv": 10
+      },
+      {
+        "cat": "cocktail",
+        "name": "Aperol Spritz",
+        "ml": 200,
+        "abv": 8
+      },
+      {
+        "cat": "cocktail",
+        "name": "Piña Colada",
+        "ml": 300,
+        "abv": 8
+      },
+      {
+        "cat": "longdrink",
+        "name": "Gin Tonic",
+        "ml": 300,
+        "abv": 7
+      },
+      {
+        "cat": "longdrink",
+        "name": "Rum-Cola",
+        "ml": 300,
+        "abv": 7
+      },
+      {
+        "cat": "longdrink",
+        "name": "Vodka-Energy",
+        "ml": 300,
+        "abv": 7
+      },
+      {
+        "cat": "wein",
+        "name": "Glas Wein",
+        "ml": 150,
+        "abv": 12
+      },
+      {
+        "cat": "wein",
+        "name": "Glas Sekt",
+        "ml": 100,
+        "abv": 11
+      },
+      {
+        "cat": "shot",
+        "name": "Cachaça pur",
+        "ml": 40,
+        "abv": 40
+      },
+      {
+        "cat": "shot",
+        "name": "Tequila",
+        "ml": 20,
+        "abv": 38
+      },
+      {
+        "cat": "shot",
+        "name": "Jägermeister",
+        "ml": 20,
+        "abv": 35
+      }
+    ],
+    "body": {
+      "jonas": [
+        "m",
+        80
+      ],
+      "simon": [
+        "m",
+        80
+      ],
+      "patrick": [
+        "m",
+        85
+      ],
+      "marco": [
+        "m",
+        78
+      ],
+      "greisel": [
+        "m",
+        80
+      ],
+      "dajo": [
+        "w",
+        60
+      ]
+    }
+  }
 }

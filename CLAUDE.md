@@ -43,6 +43,15 @@ Steckbriefe stehen in `web/trip.json` → `crew` (ein Eintrag mit `facts`/`quote
 erhalten; bei Bedarf mit `Artifact` `action: read` + `path: "crew/<id>.jpg"` zurückholen. Im PDF werden keine Fotos gezeigt. Unbeteiligte Personen im Hintergrund werden weichgezeichnet.
 Alle sechs haben der Verwendung ihres Fotos zugestimmt (laut Patrick, 30.09.).
 
+## Drinks-Counter
+
+Kapitel „Drinks“ (`#drinks`). Daten in der Artifact-Datenbank: Collection `drinks` (ein Dokument pro Getränk:
+`who` = Crew-`id`, `cat`, `name`, `ml`, `abv`, `ts` = Millisekunden UTC) und `people/<id>` (`kg`, `sex` für die
+Promille-Schätzung, Standardwerte in `trip.json` → `drinks.body`). Getränke-Vorlagen und Kategorien in
+`trip.json` → `drinks`. Auswertung (Ranking, Pegel nach Widmark, Tage, Gesamtstatistik) passiert im Browser.
+Lesen/Korrigieren: `ArtifactData` `list`/`delete` auf `drinks`. Schreiben dürfen nur Owner und per E-Mail
+eingeladene Editoren (nicht, solange ein öffentlicher Link aktiv ist).
+
 ## Regeln
 
 - **Repo ist öffentlich:** keine Roh-Chats, Telefonnummern, IBANs, Nachnamen, Passdaten,
