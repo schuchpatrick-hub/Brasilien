@@ -139,7 +139,7 @@ def main():
 
     script = read('web', 'page_script.html').replace('%%TRIP%%', json.dumps(trip, ensure_ascii=False).replace('</', '<\\/'))
     scenes = gen_scenes.render_all()
-    PHOTO_POS = {'rio': ('30% 38%', '30% 24%'), 'iguacu': ('50% 38%', '50% 30%'), 'manaus': ('46% 70%', '46% 76%')}  # Bildausschnitt je Foto: Station/Heute, breiter Trenner
+    PHOTO_POS = {'rio': ('30% 38%', '30% 24%'), 'iguacu': ('50% 38%', '50% 30%'), 'manaus': ('46% 70%', '46% 76%'), 'juma': ('58% 45%', '58% 48%')}  # Bildausschnitt je Foto: Station/Heute, breiter Trenner
     counter = [0]
 
     def scene(m):

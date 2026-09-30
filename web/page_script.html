@@ -33,7 +33,7 @@ function itemsHtml(items) {
     (it.unsicher ? ' <span class="unsure">(offen)</span>' : '') + '</span></li>').join('') + '</ul>';
 }
 /* Bild zur Station (Kopie aus den Stationen, IDs eindeutig gemacht) */
-const SCENE_OF = {'Guarujá': 'guaruja', 'Rio de Janeiro': 'rio', 'Foz do Iguaçu': 'iguacu', 'Manaus': 'manaus', 'Juma Lodge': 'manaus', 'Paraty': 'paraty', 'Ilha Grande': 'ilha'};
+const SCENE_OF = {'Guarujá': 'guaruja', 'Rio de Janeiro': 'rio', 'Foz do Iguaçu': 'iguacu', 'Manaus': 'manaus', 'Juma Lodge': 'juma', 'Paraty': 'paraty', 'Ilha Grande': 'ilha'};
 let sceneN = 0;
 function sceneHtml(place) {
   const src = document.querySelector('.stop-img[data-scene="' + SCENE_OF[place] + '"]');
