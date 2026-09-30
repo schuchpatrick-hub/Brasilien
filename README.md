@@ -27,7 +27,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 
 | # | Station | Datum | Nächte | Wer | Unterkunft | Status |
 |---|---|---|---|---|---|---|
-| 1 | **Guarujá** (Praia da Enseada) | 27.12. – 31.12. | 4 | A | Casa Praiana | 🟡 Verlängerung prüfen |
+| 1 | **Guarujá** (Praia da Enseada) | 27.12. – 31.12. | 4 | A | Casa Praiana | ✅ bis 31.12. verlängert |
 | 2 | **Rio de Janeiro** (Silvester!) | 31.12. – 06.01. | 6 | A | Tabas – Cena Carioca | 🟡 Datum prüfen |
 | 3 | **Foz do Iguaçu** (Wasserfälle) | 06.01. – 09.01. | 3 | alle | Hotel in Foz (Name prüfen) | 🟡 |
 | 4a | **Manaus** | 09.01. – 10.01. | 1 | alle | Casa 307 | ✅ |
@@ -91,7 +91,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 
 | Ort | Unterkunft | Zeitraum | Details | Kosten | Gebucht von |
 |---|---|---|---|---|---|
-| Guarujá | [**Casa Praiana**](https://www.booking.com/Share-q0Nagir) (nahe Praia da Enseada) | 27.–31.12. | 75 m zum Strand, kein Pool, **kein Frühstück**, gebucht für 3 Personen. Alternative war die Pousada Villa Virgínia | – | Jonas (29.09.) |
+| Guarujá | [**Casa Praiana**](https://www.booking.com/Share-q0Nagir) (nahe Praia da Enseada) | 27.–31.12. | 75 m zum Strand, kein Pool, **kein Frühstück**, gebucht für 3 Personen, bis 31.12. verlängert. Alternative war die Pousada Villa Virgínia | – | Jonas (29.09.) |
 | Rio | [**Tabas – Cena Carioca**](https://www.booking.com/Share-UjjihY) | 31.12.–06.01. | **nicht stornierbar**, Gym vorhanden; Anreise auf 31.12. geändert, Buchung prüfen | – | Jonas (01.09.) |
 | Foz do Iguaçu | Name prüfen. Im Gespräch waren [Hotel Portinari Ponte da Amizade](https://c.24.de/ho/NUEN87) (im Chat angepinnt), [Della Foz](https://c.24.de/ho/5ESDAM), [Hotel Baviera Iguassu](https://c.24.de/ho/WRNADK), Che Hermano Suítes | 06.–09.01. | laut Greisel ca. 600 € p. P. für Amazonas plus Unterkunft Wasserfälle | ca. 80 € p. P. | beim Treffen am 09.09. |
 | Manaus | [**Casa 307**](https://www.booking.com/Share-xSVoEp) | 09.–10.01. | Lage und Bewertung top, 2er-Zimmer für Dajo & Greisel | 14 € p. P. | Jonas (14.09.) |
@@ -123,7 +123,7 @@ Abgerechnet wird über **Splitwise**, mit zwei Gruppen: eine für die Gringos pl
 
 ## Offene Punkte (nach Dringlichkeit)
 
-1. **Neue Reisedaten:** Rio erst ab **31.12.** (vorher 30.12.). Prüfen, ob die Casa Praiana in Guarujá um eine Nacht verlängert und die Buchung im Tabas (nicht stornierbar!) auf den 31.12. umgestellt ist.
+1. **Neue Reisedaten:** Rio erst ab **31.12.** (vorher 30.12.). Prüfen, ob die Buchung im Tabas (nicht stornierbar!) auf den 31.12. umgestellt ist. Guarujá ist bis 31.12. verlängert ✅
 2. **Inlandsflüge buchen**, sobald Dajos Reisepass da ist (ab ca. 19.10.). Beim Nachtflug Manaus → Rio aufpassen: **Abflug 14.01. um 01:45** heißt, man muss **am Abend des 13.01.** am Flughafen sein.
 3. **Flug CGH → SDU am 31.12. buchen** (Patrick), am Silvestertag möglichst vormittags. Dafür braucht er die Reisepassdaten von allen.
 4. **Unterkunft Ilha Grande** in Vila do Abraão für 16.–20.01. bzw. 21.01. buchen.
