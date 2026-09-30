@@ -60,7 +60,8 @@ function renderToday() {
     const d0 = list[0];
     html = sceneHtml(list.find(d => SCENE_OF[d.place]).place) + '<div class="kicker">' + esc(gName(G)) + ' · Countdown</div>' +
       '<div class="big">Noch ' + n + (n === 1 ? ' Tag' : ' Tage') + '<small>bis zum Abflug am ' + fmtDay(first).wd + ' ' + fmtDay(first).dm + ' · erster Stopp: ' + esc(list.find(d => d.place !== 'München')?.place || d0.place) + '</small></div>' +
-      itemsHtml(d0.items);
+      itemsHtml(d0.items) +
+      '<div class="next">🎁 <a href="#kalender">Heutiges Türchen öffnen</a> · ⏳ <a href="#kapsel">Zeitkapsel</a></div>';
   } else if (t > last) {
     html = '<div class="kicker">' + esc(gName(G)) + '</div><div class="big">Tchau, Brasil<small>Die Reise ist vorbei. Obrigado und willkommen zurück!</small></div>';
   } else {
@@ -775,6 +776,218 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   $('fx-note').textContent = 'Kurs: ' + M.rateNote + '. Eigenen Kurs oben eintragen, er wird auf diesem Handy gespeichert. Vergleiche mit groben Richtpreisen, alle Angaben ohne Gewähr, Promille-Garantie keine.';
   if (dir === 'eur') amt.value = Math.round(50 / rate);
   render(true);
+})();
+
+/* ---------- Vorfreude-Kalender (ein Türchen pro Tag bis zum Abflug) ---------- */
+(function () {
+  const A = TRIP.advent; const feat = document.getElementById('adv-feature'); if (!A || !feat || PRINT) return;
+  const CAT = {fact: 'Fun Fact', word: 'Portugiesisch', song: 'Song des Tages', crew: 'Crew-Wahrheit', food: 'Essen & Trinken', task: 'Aufgabe', place: 'Vorschau', special: 'Spezial'};
+  const COLORS = ['#00843d', '#ffcf1f', '#1f3f8f', '#ffffff', '#3ccf7f'];
+  const berlinToday = () => new Intl.DateTimeFormat('en-CA', {timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
+  let opened; try { opened = new Set(JSON.parse(store.get('adv.open') || '[]')); } catch (e) { opened = new Set(); }
+  const save = () => store.set('adv.open', JSON.stringify([...opened]));
+  let sel = null;
+  const state = i => { const t = berlinToday(); return A[i].d > t ? 'fu' : opened.has(A[i].d) ? 'op' : 'av'; };
+  const lastAvail = () => { const t = berlinToday(); let k = -1; A.forEach((x, i) => { if (x.d <= t) k = i; }); return k; };
+  function confetti(el) {
+    if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const c = document.createElement('div'); c.className = 'confetti';
+    for (let i = 0; i < 40; i++) {
+      const p = document.createElement('i');
+      p.style.left = Math.random() * 100 + '%'; p.style.background = COLORS[i % COLORS.length];
+      p.style.animationDelay = (Math.random() * .4) + 's'; p.style.transform = 'rotate(' + (Math.random() * 180) + 'deg)';
+      c.appendChild(p);
+    }
+    el.appendChild(c); setTimeout(() => c.remove(), 2200);
+  }
+  function card(i) {
+    const x = A[i], d = fmtDay(x.d);
+    let link = '';
+    if (x.link) link = x.link[0] === '#' ? '<a class="adv-link" href="' + esc(x.link) + '">Hinspringen →</a>'
+      : '<a class="adv-link" href="' + esc(x.link) + '" target="_blank" rel="noopener">▶ Auf Spotify anhören</a>';
+    const prev = i > 0, next = i < A.length - 1 && state(i + 1) !== 'fu';
+    return '<div class="adv-card"><div class="kick"><span>Türchen ' + (i + 1) + ' · ' + d.wd + ' ' + d.dm + '</span><span class="cat">' + CAT[x.cat] + '</span></div>' +
+      '<div class="emo" aria-hidden="true">' + x.e + '</div><h3>' + esc(x.t) + '</h3><p>' + esc(x.x) + '</p>' +
+      (x.pt ? '<div class="adv-pt"><b>' + esc(x.pt) + '</b>' + (x.say ? '<span>Aussprache: ' + esc(x.say) + '</span>' : '') + '</div>' : '') + link +
+      '<div class="adv-nav"><button type="button" data-go="' + (i - 1) + '"' + (prev ? '' : ' disabled') + '>← Türchen ' + i + '</button>' +
+      '<button type="button" data-go="' + (i + 1) + '"' + (next ? '' : ' disabled') + '>Türchen ' + (i + 2) + ' →</button></div></div>';
+  }
+  function closed(i) {
+    const x = A[i], fut = state(i) === 'fu', t = berlinToday();
+    const n = daysBetween(t, x.d);
+    return '<div class="adv-closed"><div class="adv-door" id="adv-door"><span class="bow" aria-hidden="true">🎀</span><div class="inside" aria-hidden="true">' + x.e + '</div>' +
+      '<div class="leaf l"><span>' + (i + 1) + '</span><i class="knob"></i></div><div class="leaf r"><span>★</span><i class="knob"></i></div></div>' +
+      (fut ? '<h3>Türchen ' + (i + 1) + '</h3><div class="lock">🔒 Öffnet ' + (n === 1 ? 'morgen' : 'in ' + n + ' Tagen') + ' (' + fmtDay(x.d).wd + ' ' + fmtDay(x.d).dm + ')</div>'
+        : '<h3>' + (x.d === t ? 'Das heutige Türchen' : 'Türchen ' + (i + 1) + ' vom ' + fmtDay(x.d).dm) + '</h3><button type="button" class="btn" id="adv-open">Türchen öffnen 🎁</button>') + '</div>';
+  }
+  function show(i, animate) {
+    sel = i;
+    if (state(i) === 'op') feat.innerHTML = card(i);
+    else feat.innerHTML = closed(i);
+    const b = document.getElementById('adv-open');
+    if (b) b.addEventListener('click', () => {
+      opened.add(A[i].d); save();
+      const door = document.getElementById('adv-door'); door.classList.add('open'); b.disabled = true;
+      confetti(feat);
+      setTimeout(() => { feat.innerHTML = card(i); renderGrid(); }, reduced ? 0 : 950);
+    });
+    renderGrid();
+    if (animate) feat.scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block: 'center'});
+  }
+  const reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  feat.addEventListener('click', e => { const b = e.target.closest('[data-go]'); if (b && !b.disabled) show(+b.dataset.go, false); });
+  function renderGrid() {
+    const t = berlinToday();
+    document.getElementById('adv-grid').innerHTML = A.map((x, i) => {
+      const s = state(i), d = fmtDay(x.d);
+      return '<button type="button" class="' + s + (x.d === t ? ' td' : '') + (i === sel ? ' sel' : '') + '" data-i="' + i + '" aria-label="Türchen ' + (i + 1) + ', ' + d.dm + (s === 'fu' ? ', noch verschlossen' : s === 'op' ? ', geöffnet: ' + esc(x.t) : ', bereit zum Öffnen') + '">' +
+        (s === 'op' ? x.e : (i + 1)) + '<small>' + (s === 'fu' ? '🔒 ' : '') + d.dm + '</small></button>';
+    }).join('');
+    const avail = A.filter(x => x.d <= t).length, op = A.filter(x => opened.has(x.d) && x.d <= t).length;
+    const dep = daysBetween(t, '2026-12-27');
+    document.getElementById('adv-stats').innerHTML = (avail ? '<span><b>' + op + '</b> von ' + avail + ' verfügbaren Türchen geöffnet</span>' : '<span>🎁 Das erste Türchen öffnet <b>' + (daysBetween(t, A[0].d) === 1 ? 'morgen' : 'am ' + fmtDay(A[0].d).dm) + '</b></span>') +
+      (dep > 0 ? '<span>Noch <b>' + dep + '</b> ' + (dep === 1 ? 'Tag' : 'Tage') + ' bis zum Abflug</span>' : dep === 0 ? '<span><b>Heute geht’s los!</b> ✈️</span>' : '<span>Alle Türchen sind offen, die Reise läuft 🇧🇷</span>') +
+      (avail > op ? '<span>' + (avail - op) + ' Türchen warten noch auf dich</span>' : '');
+  }
+  document.getElementById('adv-grid').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    const i = +b.dataset.i;
+    if (b.classList.contains('fu')) { b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); show(i, true); return; }
+    show(i, true);
+  });
+  const t = berlinToday();
+  const ti = A.findIndex(x => x.d === t);
+  show(ti >= 0 ? ti : (t < A[0].d ? 0 : Math.max(0, lastAvail())), false);
+})();
+
+/* ---------- Zeitkapsel (db-Collections "kapsel" und "kapselres") ---------- */
+(function () {
+  const K = TRIP.kapsel, box = document.getElementById('ka-box'); if (!K || !box || PRINT) return;
+  const Q = K.questions, CREW = TRIP.crew;
+  const byId = Object.fromEntries(CREW.map(c => [c.id, c]));
+  const reveal = Date.parse(K.revealAt);
+  let dbK = null, writable = false, tips = {}, sol = {}, who = null, draft = {}, msg = '', justSealed = null;
+  const av = (p, cls) => '<span class="' + (cls || 'av') + '">' + (p.photo ? '<img src="' + esc(p.photo) + '" alt="">' : esc(p.name[0])) + '</span>';
+  const isOpen = () => Date.now() >= reveal;
+  const fmtAns = (q, v) => v === undefined || v === '' || v === null ? '–' : q.type === 'crew' ? (byId[v] ? byId[v].name : v) : q.type === 'yesno' ? (v ? 'Ja' : 'Nein') : q.type === 'number' ? v + ' ' + (q.unit || '') : String(v);
+  function countdown() {
+    let s = Math.max(0, Math.floor((reveal - Date.now()) / 1000));
+    const d = Math.floor(s / 86400); s -= d * 86400; const h = Math.floor(s / 3600); s -= h * 3600; const m = Math.floor(s / 60);
+    return '<div class="ka-cd" aria-label="Noch ' + d + ' Tage, ' + h + ' Stunden, ' + m + ' Minuten"><div><b>' + d + '</b><span>Tage</span></div><div><b>' + h + '</b><span>Std</span></div><div><b>' + m + '</b><span>Min</span></div></div>';
+  }
+  function whoRow() {
+    return '<div class="ka-who">' + CREW.map(p => { const t = tips[p.id];
+      return '<div class="p' + (t ? ' done' : '') + '">' + av(p) + '<span>' + esc(p.name) + '</span><span class="st">' + (t ? '🔒' : '⏳') + '</span></div>'; }).join('') + '</div>';
+  }
+  function input(q) {
+    const v = draft[q.id], dis = writable ? '' : ' disabled';
+    let f = '';
+    if (q.type === 'crew') f = '<select data-q="' + q.id + '"' + dis + '><option value="">– wählen –</option>' + CREW.map(p => '<option value="' + p.id + '"' + (v === p.id ? ' selected' : '') + '>' + esc(p.name) + '</option>').join('') + '</select>';
+    else if (q.type === 'choice') f = '<select data-q="' + q.id + '"' + dis + '><option value="">– wählen –</option>' + q.options.map(o => '<option' + (v === o ? ' selected' : '') + '>' + esc(o) + '</option>').join('') + '</select>';
+    else if (q.type === 'number') f = '<span class="num"><input type="number" inputmode="numeric" min="0" step="1" data-q="' + q.id + '" value="' + (v ?? '') + '"' + dis + '> ' + esc(q.unit || '') + '</span>';
+    else if (q.type === 'yesno') f = '<span class="ka-yn" data-q="' + q.id + '"><button type="button" data-v="1" aria-pressed="' + (v === true) + '"' + dis + '>Ja</button><button type="button" data-v="0" aria-pressed="' + (v === false) + '"' + dis + '>Nein</button></span>';
+    else f = '<textarea data-q="' + q.id + '" maxlength="200"' + dis + '>' + esc(v || '') + '</textarea>';
+    return '<div class="ka-q"><label>' + q.emoji + ' ' + esc(q.q) + '</label>' + (q.hint ? '<span class="hint">' + esc(q.hint) + '</span>' : '') + f + '</div>';
+  }
+  function waText() {
+    return '⏳ Zeitkapsel Brasilien 26/27\nBitte deine Tipps an Patrick schicken (' + K.closeText + '). Geöffnet wird am ' + K.revealText + '.\n\n' +
+      Q.map((q, i) => (i + 1) + '. ' + q.q + (q.type === 'crew' ? ' (Jonas, Patrick, Simon, Marco, Dajo, Greisel)' : q.type === 'choice' ? ' (' + q.options.join(', ') + ')' : q.type === 'yesno' ? ' (Ja/Nein)' : q.type === 'number' ? ' (Zahl)' : '')).join('\n');
+  }
+  function renderSealed() {
+    const n = Object.keys(tips).length;
+    let h = '<div class="ka-seal"><div class="big">🔒 Versiegelt bis zum ' + esc(K.revealText) + '</div>' + countdown() +
+      '<div class="when">' + n + ' von ' + CREW.length + ' haben schon getippt · ' + esc(K.closeText) + '</div>' + whoRow() + '</div>';
+    if (justSealed) h += '<div class="ka-sealed" id="ka-done">🔒 Tipps von ' + esc(byId[justSealed].name) + ' versiegelt!<small>Niemand sieht sie bis zum ' + esc(K.revealText) + '.</small></div>';
+    h += '<details class="ka-form' + (writable ? '' : ' locked') + '" open><summary>✍️ Tipps eintragen</summary>' +
+      (writable ? '' : '<p class="ka-lock">Eintragen nur durch den Admin (Patrick). Schick ihm deine Tipps per WhatsApp, die Fragen kannst du unten kopieren.</p>') +
+      '<div><div class="eyebrow" style="margin-bottom:8px">1. Wer tippt?</div><div class="ka-pick" role="radiogroup">' + CREW.map(p => '<button type="button" role="radio" data-p="' + p.id + '" aria-checked="' + (who === p.id) + '"' + (writable ? '' : ' disabled') + '>' + av(p) + esc(p.name) + (tips[p.id] ? ' 🔒' : '') + '</button>').join('') + '</div></div>' +
+      (who && tips[who] ? '<p class="ka-lock">⚠️ ' + esc(byId[who].name) + ' hat schon am ' + new Date(tips[who].ts).toLocaleDateString('de-DE') + ' getippt. Neu versiegeln überschreibt die alten Tipps (die bleiben geheim).</p>' : '') +
+      '<div class="eyebrow">2. Die Prognosen</div><div class="ka-qs">' + Q.map(input).join('') + '</div>' +
+      '<div class="ka-go"><button type="button" class="btn" id="ka-save"' + (writable && who ? '' : ' disabled') + '>🔒 Versiegeln</button><span class="ka-msg" id="ka-msg">' + esc(msg) + '</span></div></details>' +
+      '<div class="ka-go"><button type="button" class="btn ghost" id="ka-wa">📋 Fragen für WhatsApp kopieren</button><span class="ka-msg" id="ka-wa-msg"></span></div>';
+    box.innerHTML = h;
+    if (justSealed) { const el = document.getElementById('ka-done'); confettiIn(el); justSealed = null; }
+  }
+  function confettiIn(el) {
+    if (!el || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    const c = document.createElement('div'); c.className = 'confetti';
+    for (let i = 0; i < 30; i++) { const p = document.createElement('i'); p.style.left = Math.random() * 100 + '%'; p.style.background = ['#00843d', '#ffcf1f', '#1f3f8f'][i % 3]; p.style.animationDelay = Math.random() * .3 + 's'; c.appendChild(p); }
+    el.appendChild(c); setTimeout(() => c.remove(), 2000);
+  }
+  function winners(q) {
+    const s = sol[q.id]; if (s === undefined || s === '' || q.type === 'text') return [];
+    const ent = CREW.filter(p => tips[p.id] && tips[p.id].a[q.id] !== undefined && tips[p.id].a[q.id] !== '');
+    if (q.type === 'number') {
+      const diffs = ent.map(p => Math.abs(Number(tips[p.id].a[q.id]) - Number(s))); const m = Math.min(...diffs);
+      return ent.filter((p, i) => diffs[i] === m).map(p => p.id);
+    }
+    return ent.filter(p => tips[p.id].a[q.id] === s).map(p => p.id);
+  }
+  function solInput(q) {
+    const s = sol[q.id];
+    if (q.type === 'text' || !writable) return s !== undefined && q.type !== 'text' ? '<div class="ka-sol">Auflösung: <b>' + esc(fmtAns(q, s)) + '</b></div>' : '';
+    let f;
+    if (q.type === 'crew') f = '<select data-s="' + q.id + '"><option value="">–</option>' + CREW.map(p => '<option value="' + p.id + '"' + (s === p.id ? ' selected' : '') + '>' + esc(p.name) + '</option>').join('') + '</select>';
+    else if (q.type === 'choice') f = '<select data-s="' + q.id + '"><option value="">–</option>' + q.options.map(o => '<option' + (s === o ? ' selected' : '') + '>' + esc(o) + '</option>').join('') + '</select>';
+    else if (q.type === 'yesno') f = '<select data-s="' + q.id + '"><option value="">–</option><option value="1"' + (s === true ? ' selected' : '') + '>Ja</option><option value="0"' + (s === false ? ' selected' : '') + '>Nein</option></select>';
+    else f = '<input type="number" data-s="' + q.id + '" value="' + (s ?? '') + '" style="width:6rem"> ' + esc(q.unit || '');
+    return '<div class="ka-sol">Auflösung (Admin): ' + f + '</div>';
+  }
+  function renderOpen() {
+    const pts = Object.fromEntries(CREW.map(p => [p.id, 0]));
+    Q.forEach(q => winners(q).forEach(id => pts[id]++));
+    const ranked = CREW.filter(p => tips[p.id]).sort((a, b) => pts[b.id] - pts[a.id]);
+    const anySol = Object.keys(sol).length > 0;
+    let h = '<div class="ka-seal"><div class="big">🎉 Die Zeitkapsel ist offen!</div><div class="when">' + Object.keys(tips).length + ' von ' + CREW.length + ' haben getippt. ' + (writable ? 'Trag unten die Auflösungen ein, dann steht der Hellseher der Reise fest.' : 'Die Auflösung trägt Patrick ein.') + '</div></div>';
+    if (anySol && ranked.length) h += '<div class="ka-rank"><h3>🔮 Hellseher der Reise</h3><ol>' + ranked.map(p => '<li>' + esc(p.name) + ': <b>' + pts[p.id] + '</b> ' + (pts[p.id] === 1 ? 'Treffer' : 'Treffer') + '</li>').join('') + '</ol></div>';
+    h += Q.map(q => { const w = winners(q);
+      return '<div class="ka-res"><h3>' + q.emoji + ' ' + esc(q.q) + '</h3><ul class="ka-ans">' + CREW.filter(p => tips[p.id]).map(p =>
+        '<li class="' + (w.includes(p.id) ? 'win' : '') + '">' + av(p) + '<span><b>' + esc(p.name) + ':</b> ' + esc(fmtAns(q, tips[p.id].a[q.id])) + '</span></li>').join('') + '</ul>' + solInput(q) + '</div>'; }).join('');
+    box.innerHTML = h;
+  }
+  function render() { (isOpen() ? renderOpen : renderSealed)(); }
+  box.addEventListener('click', async e => {
+    const p = e.target.closest('[data-p]'); if (p && writable) { who = p.dataset.p; draft = {}; msg = ''; render(); return; }
+    const yn = e.target.closest('.ka-yn button'); if (yn && writable) { const qid = yn.parentElement.dataset.q; draft[qid] = yn.dataset.v === '1'; yn.parentElement.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b === yn)); return; }
+    if (e.target.id === 'ka-wa') {
+      const txt = waText(), out = document.getElementById('ka-wa-msg');
+      try { await navigator.clipboard.writeText(txt); out.textContent = 'Kopiert, jetzt in WhatsApp einfügen.'; }
+      catch (err) { out.textContent = ''; const pre = document.createElement('pre'); pre.className = 'wa'; pre.textContent = txt; e.target.parentElement.after(pre); }
+      return;
+    }
+    if (e.target.id === 'ka-save' && writable && who && dbK) {
+      const a = {}; Object.entries(draft).forEach(([k, v]) => { if (v !== '' && v !== undefined && v !== null) a[k] = v; });
+      const cnt = Object.keys(a).length;
+      if (!cnt) { msg = 'Noch keine Antwort ausgefüllt.'; document.getElementById('ka-msg').textContent = msg; return; }
+      e.target.disabled = true; document.getElementById('ka-msg').textContent = 'Versiegle …';
+      try { await dbK.doc('kapsel/' + who).set({a, ts: Date.now()}); justSealed = who; who = null; draft = {}; msg = ''; }
+      catch (err) { msg = err && err.code === 'not_granted' ? 'Keine Schreibrechte.' : 'Konnte nicht speichern, bitte nochmal.'; e.target.disabled = false; }
+      render();
+    }
+  });
+  box.addEventListener('input', e => {
+    const q = e.target.dataset.q; if (q) { const def = Q.find(x => x.id === q); draft[q] = def.type === 'number' ? (e.target.value === '' ? '' : Number(e.target.value)) : e.target.value; }
+  });
+  box.addEventListener('change', async e => {
+    const q = e.target.dataset.s; if (!q || !writable || !dbK) return;
+    const def = Q.find(x => x.id === q); let v = e.target.value;
+    if (v === '') { delete sol[q]; } else sol[q] = def.type === 'number' ? Number(v) : def.type === 'yesno' ? v === '1' : v;
+    try { await dbK.doc('kapselres/solution').set({s: sol}); } catch (err) {}
+    render();
+  });
+  render();
+  setInterval(() => { if (!box.contains(document.activeElement)) render(); }, 60000);
+  (async () => {
+    if (!window.claude || !window.claude.use) return;
+    dbK = await window.claude.use('db'); if (!dbK) return;
+    const user = await window.claude.use('user');
+    const w = user ? await user.can('data.write') : null; writable = w !== false; render();
+    dbK.collection('kapsel').onSnapshot(snap => {
+      tips = {}; snap.docs.forEach(d => { if (d.exists && byId[d.id]) { const x = d.data(); if (x && x.a) tips[d.id] = x; } });
+      if (!box.contains(document.activeElement) || isOpen()) render(); else { const w2 = box.querySelector('.ka-seal'); if (w2) { const n = document.createElement('div'); n.innerHTML = whoRow(); w2.querySelector('.ka-who').replaceWith(n.firstChild); } }
+    }, () => {});
+    dbK.collection('kapselres').onSnapshot(snap => { snap.docs.forEach(d => { if (d.exists && d.id === 'solution') sol = Object.assign({}, (d.data() || {}).s); }); if (isOpen()) render(); }, () => {});
+  })();
 })();
 
 const TAB_IDS = [...document.querySelectorAll('.tabs a')].map(a => a.dataset.tab);
