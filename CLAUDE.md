@@ -9,7 +9,7 @@ Reiseübersicht, die bei neuen Infos (Buchungen, Chat-Exporte, Screenshots) aktu
 |---|---|
 | `README.md` | Hauptübersicht (Route, Tag für Tag, Flüge, Unterkünfte, Kosten, offene Punkte, Gesundheit) |
 | `web/trip.json` | **Datenquelle** für Heute-Ansicht, Tag für Tag und Kalenderdateien (Tage, Termine mit UTC-Zeiten, Unterkünfte, Crew, Drinks, Real-Rechner) |
-| `web/page_body.html` | Statischer Inhalt der Webseite; jede `<section>` hat `data-tab` = Kapitel, zu dem der Reiter oben springt; alles bleibt untereinander sichtbar (uebersicht, crew-tab, drinks-tab, tage-tab, reise, sprache-tab, infos, extras) (Stationen, Flüge, Kosten, Praktisches, Packlisten, Downloads); `%%MAP%%` = Karte |
+| `web/page_body.html` | Statischer Inhalt der Webseite; jede `<section>` hat `data-tab` = Kapitel, zu dem der Reiter oben springt; alles bleibt untereinander sichtbar (uebersicht, crew-tab, drinks-tab, tage-tab, reise, sprache-tab, rechner-tab, infos, extras) (Stationen, Flüge, Kosten, Praktisches, Packlisten, Downloads); `%%MAP%%` = Karte |
 | `web/page_script.html` | JavaScript der Webseite: Heute/Countdown, Gruppen-Umschalter, Drinks und Check-ins (`db`), Real-Rechner, Packlisten (localStorage), PDF-Download, WhatsApp-Text; `%%TRIP%%` = trip.json |
 | `web/page_head.html` | Titel + CSS der Webseite (Farb-Tokens, Hell/Dunkel) |
 | `web/poster_template.html` | Rahmen für das Reisebild (Titel, Stationsleiste unten) |
@@ -63,7 +63,7 @@ Eingabemaske sichtbar, aber gesperrt, mit Hinweis „Eintragen nur durch den Adm
 
 ## Real-Rechner
 
-Kapitel „Real-Rechner“ (`#rechner`, Reiter Infos & Packen). Kurs und lustige Vergleiche in `trip.json` → `money`
+Kapitel „Real-Rechner“ (`#rechner`, eigener Reiter `rechner-tab`). Kurs und lustige Vergleiche in `trip.json` → `money`
 (`rate` = R$ pro €, `compare`: `brl` = Richtpreis pro Stück, `t` = Text mit `{n}`, `always` = auch bei winzigen
 Anteilen zeigen). Eigener Kurs wird pro Handy im localStorage gespeichert. Vergleiche werden gemischt, ohne direkte Wiederholung.
 
