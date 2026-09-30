@@ -312,6 +312,46 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   });
 })();
 
+/* ---------- Reiter ---------- */
+const TAB_IDS = [...document.querySelectorAll('.tabs a')].map(a => a.dataset.tab);
+function tabFor(hash) {
+  const id = (hash || '').replace('#', '');
+  if (TAB_IDS.includes(id)) return id;
+  const el = id && document.getElementById(id);
+  const sec = el && el.closest('section[data-tab]');
+  return sec ? sec.dataset.tab : null;
+}
+function showTab(tab, target) {
+  document.querySelectorAll('section[data-tab]').forEach(s => s.classList.toggle('tab-on', s.dataset.tab === tab));
+  document.querySelectorAll('.tabs a').forEach(a => {
+    const on = a.dataset.tab === tab;
+    a.setAttribute('aria-selected', String(on));
+    if (on && a.scrollIntoView) a.scrollIntoView({block: 'nearest', inline: 'nearest'});
+  });
+  store.set('tab', tab);
+  const bar = document.querySelector('.tabs');
+  const el = target && document.getElementById(target);
+  const y = el && !TAB_IDS.includes(target) ? el.getBoundingClientRect().top + scrollY - bar.offsetHeight - 8
+          : bar.getBoundingClientRect().top + scrollY;
+  if (scrollY > y || el) scrollTo({top: Math.max(0, y)});
+}
+if (!PRINT) {
+  document.documentElement.classList.add('js-tabs');
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]'); if (!a) return;
+    const id = a.getAttribute('href').slice(1), tab = tabFor('#' + id);
+    if (!tab) return;
+    e.preventDefault();
+    try { history.replaceState(null, '', '#' + id); } catch (err) {}
+    showTab(tab, id);
+  });
+  window.addEventListener('hashchange', () => { const t = tabFor(location.hash); if (t) showTab(t, location.hash.slice(1)); });
+  const start = tabFor(location.hash);
+  document.querySelectorAll('section[data-tab]').forEach(s => s.classList.toggle('tab-on', s.dataset.tab === (start || store.get('tab') || 'uebersicht')));
+  document.querySelectorAll('.tabs a').forEach(a => a.setAttribute('aria-selected', String(a.dataset.tab === (start || store.get('tab') || 'uebersicht'))));
+  if (start && !TAB_IDS.includes(location.hash.slice(1))) setTimeout(() => showTab(start, location.hash.slice(1)), 0);
+}
+
 /* ---------- Start ---------- */
 setGroup(G);
 renderTodos();

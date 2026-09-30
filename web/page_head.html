@@ -118,6 +118,16 @@ ul.plain{margin:0;padding-left:18px;display:grid;gap:6px}
 .play{width:40px;height:40px;border-radius:50%;border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;cursor:pointer;display:grid;place-items:center}
 .play:hover,.play.on{background:var(--accent);color:var(--bg)}
 @media print{.play,.speak-bar{display:none!important}.pcat{break-inside:avoid}}
+/* Reiter */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);margin-inline:-16px;padding-inline:16px;border-bottom:1px solid var(--line)}
+.tabs-in{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tabs-in::-webkit-scrollbar{display:none}
+@media (max-width:700px){.tabs-in{mask-image:linear-gradient(90deg,#000 85%,transparent);-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent)}}
+.tabs a{flex:none;font:600 .9rem var(--body);color:var(--muted);text-decoration:none;padding:12px 12px 10px;border-bottom:3px solid transparent;white-space:nowrap}
+.tabs a:hover{color:var(--fg)}
+.tabs a[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.js-tabs section[data-tab]:not(.tab-on){display:none}
+@media print{.tabs{display:none}.js-tabs section[data-tab]{display:block!important}.js-tabs section.cols[data-tab]{display:grid!important}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}

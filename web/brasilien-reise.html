@@ -118,6 +118,16 @@ ul.plain{margin:0;padding-left:18px;display:grid;gap:6px}
 .play{width:40px;height:40px;border-radius:50%;border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;cursor:pointer;display:grid;place-items:center}
 .play:hover,.play.on{background:var(--accent);color:var(--bg)}
 @media print{.play,.speak-bar{display:none!important}.pcat{break-inside:avoid}}
+/* Reiter */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);margin-inline:-16px;padding-inline:16px;border-bottom:1px solid var(--line)}
+.tabs-in{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tabs-in::-webkit-scrollbar{display:none}
+@media (max-width:700px){.tabs-in{mask-image:linear-gradient(90deg,#000 85%,transparent);-webkit-mask-image:linear-gradient(90deg,#000 85%,transparent)}}
+.tabs a{flex:none;font:600 .9rem var(--body);color:var(--muted);text-decoration:none;padding:12px 12px 10px;border-bottom:3px solid transparent;white-space:nowrap}
+.tabs a:hover{color:var(--fg)}
+.tabs a[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.js-tabs section[data-tab]:not(.tab-on){display:none}
+@media print{.tabs{display:none}.js-tabs section[data-tab]{display:block!important}.js-tabs section.cols[data-tab]{display:grid!important}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
@@ -213,19 +223,12 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
     <span class="chip"><b>Jonas</b></span><span class="chip"><b>Patrick</b></span><span class="chip"><b>Simon</b></span><span class="chip"><b>Marco</b></span>
     <span class="chip b"><b>Dajo</b> ab 06.01.</span><span class="chip b"><b>Greisel</b> ab 06.01.</span>
   </div>
-  <div class="facts">
-    <div class="fact"><strong>24</strong><span>Nächte für die Gringos plus 1 Cevapi</span></div>
-    <div class="fact"><strong>6</strong><span>Stationen</span></div>
-    <div class="fact"><strong>4</strong><span>Inlandsflüge, alle noch offen</span></div>
-    <div class="fact"><strong>6 / 7</strong><span>Unterkünfte gebucht</span></div>
-  </div>
-  <nav class="toc" aria-label="Inhalt">
-    <a href="#heute">Heute</a><a href="#route">Route</a><a href="#tage">Tag für Tag</a><a href="#todos">To-dos</a><a href="#fluege">Flüge</a><a href="#kosten">Kosten</a><a href="#sprache">Sprache</a><a href="#praktisch">Praktisches</a><a href="#packen">Packen</a><a href="#downloads">Downloads</a>
-  </nav>
 </header>
 
+<nav class="tabs" aria-label="Bereiche"><div class="tabs-in" role="tablist"><a role="tab" href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht">Übersicht</a><a role="tab" href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab">Tage</a><a role="tab" href="#todos-tab" id="tab-todos-tab" data-tab="todos-tab">To-dos</a><a role="tab" href="#reise" id="tab-reise" data-tab="reise">Flüge & Kosten</a><a role="tab" href="#sprache-tab" id="tab-sprache-tab" data-tab="sprache-tab">Sprache</a><a role="tab" href="#infos" id="tab-infos" data-tab="infos">Infos & Packen</a><a role="tab" href="#extras" id="tab-extras" data-tab="extras">Downloads</a></div></nav>
 
-<section id="heute" class="today-wrap">
+
+<section id="heute" data-tab="uebersicht" class="today-wrap">
   <div class="today-head">
     <h2>Heute</h2>
     <div class="seg" role="group" aria-label="Ansicht für">
@@ -238,7 +241,16 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
   </div>
 </section>
 
-<section id="route">
+<section id="eckdaten" data-tab="uebersicht">
+<div class="facts">
+    <div class="fact"><strong>24</strong><span>Nächte für die Gringos plus 1 Cevapi</span></div>
+    <div class="fact"><strong>6</strong><span>Stationen</span></div>
+    <div class="fact"><strong>4</strong><span>Inlandsflüge, alle noch offen</span></div>
+    <div class="fact"><strong>6 / 7</strong><span>Unterkünfte gebucht</span></div>
+  </div>
+</section>
+
+<section id="route" data-tab="uebersicht">
   <h2>Die Route</h2>
   <figure>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1143 1021" class="tripmap" role="img" aria-label="Karte der Reiseroute durch Brasilien: Guarujá, Rio de Janeiro, Foz do Iguaçu, Manaus, Paraty, Ilha Grande">
@@ -313,7 +325,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
   </figure>
 </section>
 
-<section>
+<section id="stationen" data-tab="uebersicht">
   <h2>Stationen</h2>
   <div class="stops">
     <div class="stop"><span class="no">1</span>
@@ -375,14 +387,20 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
 </section>
 
 
-<section id="tage">
-  <h2>Tag für Tag</h2>
-  <p class="note sub-lead">Zeigt die Tage der oben gewählten Gruppe. „Idee“ heißt: Vorschlag, noch nichts gebucht.</p>
+<section id="tage" data-tab="tage-tab">
+  <div class="today-head">
+    <h2>Tag für Tag</h2>
+    <div class="seg" role="group" aria-label="Tage anzeigen für">
+      <button type="button" id="g-a2" data-g="a" aria-pressed="true">Gringos plus 1 Cevapi</button>
+      <button type="button" id="g-b2" data-g="b" aria-pressed="false">Dajo &amp; Greisel</button>
+    </div>
+  </div>
+  <p class="note sub-lead">„Idee“ heißt: Vorschlag, noch nichts gebucht.</p>
   <div id="days" class="days2"></div>
 </section>
 
 
-<section id="todos">
+<section id="todos" data-tab="todos-tab">
   <h2>To-dos</h2>
   <p class="note sub-lead" id="todo-mode">Abhaken und eintragen, wer sich kümmert. Das sehen alle, die die Seite öffnen.</p>
   <ol id="todo-list" class="todo2"></ol>
@@ -394,7 +412,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
   <p id="todo-status" class="note" role="status"></p>
 </section>
 
-<section id="fluege">
+<section id="fluege" data-tab="reise">
   <h2>Flüge</h2>
   <h3>Langstrecke</h3>
   <div class="tbl"><table>
@@ -420,7 +438,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
   <p class="note" style="margin-top:10px">Richtpreise von Skyscanner (24.08.). Laut Jonas werden Flüge 8–10 Wochen vorher günstiger, also Ende Oktober bis Anfang November. Dann ist voraussichtlich auch Dajos neuer Reisepass da (ab der Woche vom 19.10.).</p>
 </section>
 
-<section id="kosten">
+<section id="kosten" data-tab="reise">
   <h2>Kosten pro Person</h2>
   <div class="tbl"><table style="min-width:420px">
     <thead><tr><th>Posten</th><th style="text-align:right">Gringos plus 1 Cevapi</th><th style="text-align:right">Dajo & Greisel</th></tr></thead>
@@ -441,7 +459,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
 </section>
 
 
-<section id="sprache">
+<section id="sprache" data-tab="sprache-tab">
   <h2>Mini-Sprachführer</h2>
   <p class="note sub-lead">Brasilianisches Portugiesisch. Auf ▶ tippen, dann wird der Satz vorgesprochen. Die Aussprache darunter ist eine grobe deutsche Umschrift, die Silbe in Großbuchstaben wird betont.</p>
   <div class="speak-bar">
@@ -454,7 +472,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
   <p class="note">Aufnahmen: Computerstimme „Edresson“ (Piper, <a href="https://github.com/Edresson/TTS-Portuguese-Corpus" target="_blank" rel="noopener">CC BY 4.0</a>). Klingt etwas blechern; die Handy-Stimme ist oft natürlicher, falls verfügbar.</p>
 </section>
 
-<section id="praktisch">
+<section id="praktisch" data-tab="infos">
   <h2>Praktisches</h2>
   <p class="note sub-lead">Allgemeine Reiseinfos, nicht aus dem Chat. Vor Abflug kurz gegenchecken.</p>
   <div class="grid-info">
@@ -468,7 +486,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
   </div>
 </section>
 
-<section class="cols" id="gesundheit">
+<section class="cols" id="gesundheit" data-tab="infos">
   <div>
     <h2>Gesundheit & Einreise</h2>
     <ul class="plain">
@@ -482,7 +500,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
 </section>
 
 
-<section id="packen">
+<section id="packen" data-tab="infos">
   <h2>Packlisten</h2>
   <p class="note sub-lead">Häkchen werden nur auf deinem Gerät gespeichert, jeder hat seine eigene Liste.</p>
   <div class="cols">
@@ -496,7 +514,7 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
 </section>
 
 
-<section id="downloads">
+<section id="downloads" data-tab="extras">
   <h2>Downloads &amp; Kalender</h2>
   <div class="cols">
     <div class="dl">
@@ -516,13 +534,13 @@ footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padd
   </div>
 </section>
 
-<section id="whatsapp">
+<section id="whatsapp" data-tab="extras">
   <h2>Kurzfassung für WhatsApp</h2>
   <pre id="wa-text" class="wa" tabindex="0"></pre>
   <button type="button" id="wa-copy" class="btn">Text kopieren</button> <span id="wa-status" class="note" role="status"></span>
 </section>
 
-<section>
+<section id="ideen" data-tab="extras">
   <div class="warnbox"><b>Ideen am Rand:</b> Búzios statt Paraty · Florianópolis (1,5 h Flug von Rio, Strand und Nachtleben) · Ilhabela statt Guarujá (schöner, aber 3,5 h von São Paulo). Einen Gabelflug hattet ihr verworfen, weil er nicht günstiger war.</div>
 </section>
 
@@ -842,6 +860,46 @@ document.getElementById('wa-copy').addEventListener('click', () => {
     audio.play().catch(err => { if (err && err.name !== 'AbortError') audio.onerror(); });
   });
 })();
+
+/* ---------- Reiter ---------- */
+const TAB_IDS = [...document.querySelectorAll('.tabs a')].map(a => a.dataset.tab);
+function tabFor(hash) {
+  const id = (hash || '').replace('#', '');
+  if (TAB_IDS.includes(id)) return id;
+  const el = id && document.getElementById(id);
+  const sec = el && el.closest('section[data-tab]');
+  return sec ? sec.dataset.tab : null;
+}
+function showTab(tab, target) {
+  document.querySelectorAll('section[data-tab]').forEach(s => s.classList.toggle('tab-on', s.dataset.tab === tab));
+  document.querySelectorAll('.tabs a').forEach(a => {
+    const on = a.dataset.tab === tab;
+    a.setAttribute('aria-selected', String(on));
+    if (on && a.scrollIntoView) a.scrollIntoView({block: 'nearest', inline: 'nearest'});
+  });
+  store.set('tab', tab);
+  const bar = document.querySelector('.tabs');
+  const el = target && document.getElementById(target);
+  const y = el && !TAB_IDS.includes(target) ? el.getBoundingClientRect().top + scrollY - bar.offsetHeight - 8
+          : bar.getBoundingClientRect().top + scrollY;
+  if (scrollY > y || el) scrollTo({top: Math.max(0, y)});
+}
+if (!PRINT) {
+  document.documentElement.classList.add('js-tabs');
+  document.addEventListener('click', e => {
+    const a = e.target.closest('a[href^="#"]'); if (!a) return;
+    const id = a.getAttribute('href').slice(1), tab = tabFor('#' + id);
+    if (!tab) return;
+    e.preventDefault();
+    try { history.replaceState(null, '', '#' + id); } catch (err) {}
+    showTab(tab, id);
+  });
+  window.addEventListener('hashchange', () => { const t = tabFor(location.hash); if (t) showTab(t, location.hash.slice(1)); });
+  const start = tabFor(location.hash);
+  document.querySelectorAll('section[data-tab]').forEach(s => s.classList.toggle('tab-on', s.dataset.tab === (start || store.get('tab') || 'uebersicht')));
+  document.querySelectorAll('.tabs a').forEach(a => a.setAttribute('aria-selected', String(a.dataset.tab === (start || store.get('tab') || 'uebersicht'))));
+  if (start && !TAB_IDS.includes(location.hash.slice(1))) setTimeout(() => showTab(start, location.hash.slice(1)), 0);
+}
 
 /* ---------- Start ---------- */
 setGroup(G);
