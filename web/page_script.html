@@ -22,7 +22,7 @@ function fmtDay(iso) {
 }
 function daysBetween(a, b) { return Math.round((dateObj(b) - dateObj(a)) / 864e5); }
 const forGroup = (g) => TRIP.days.filter(d => g === 'all' || d.g === 'all' || d.g === g);
-const gName = g => g === 'a' ? 'Copa-Crew' : 'Dajo & Greisel';
+const gName = g => g === 'a' ? 'Gringos plus 1 Cevapi' : 'Dajo & Greisel';
 
 let G = PRINT ? 'all' : (store.get('group') === 'b' ? 'b' : 'a');
 

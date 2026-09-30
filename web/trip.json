@@ -1,8 +1,8 @@
 {
-  "_hinweis": "Gemeinsame Datenquelle fuer 'Heute'-Ansicht, 'Tag fuer Tag' und die Kalenderdateien. g: a = Copa-Crew, b = Dajo & Greisel, all = alle. ics-Zeiten in UTC (Rio = UTC-3, Manaus = UTC-4, Deutschland = UTC+1). unsicher: true = noch nicht bestaetigt.",
+  "_hinweis": "Gemeinsame Datenquelle fuer 'Heute'-Ansicht, 'Tag fuer Tag' und die Kalenderdateien. g: a = Gringos plus 1 Cevapi, b = Dajo & Greisel, all = alle. ics-Zeiten in UTC (Rio = UTC-3, Manaus = UTC-4, Deutschland = UTC+1). unsicher: true = noch nicht bestaetigt.",
   "groups": {
     "a": {
-      "name": "Copa-Crew",
+      "name": "Gringos plus 1 Cevapi",
       "people": "Jonas, Patrick, Simon, Marco",
       "start": "2026-12-27T05:25:00Z",
       "end": "2027-01-20"
@@ -436,7 +436,7 @@
       "stay": "Ilha Grande (noch offen)",
       "items": [
         {
-          "text": "Die Copa-Crew reist ab"
+          "text": "Die Gringos plus 1 Cevapi reisen ab"
         }
       ]
     },
@@ -515,14 +515,14 @@
       "id": "cgh-sdu",
       "prio": 1,
       "title": "Flug CGH → SDU am 30.12. buchen",
-      "detail": "Patrick; braucht die Passdaten der Copa-Crew.",
+      "detail": "Patrick; braucht die Passdaten der Gringos plus 1 Cevapi.",
       "who": "Patrick"
     },
     {
       "id": "ilha-grande",
       "prio": 1,
       "title": "Unterkunft Ilha Grande buchen",
-      "detail": "Vila do Abraão, 16.–20.01. (Copa-Crew) bzw. bis 21.01. (Dajo & Greisel). Vorschlag: Balaio Hostel."
+      "detail": "Vila do Abraão, 16.–20.01. (Gringos plus 1 Cevapi) bzw. bis 21.01. (Dajo & Greisel). Vorschlag: Balaio Hostel."
     },
     {
       "id": "weiterreise-ilha",
@@ -533,7 +533,7 @@
     {
       "id": "rueckflug-a",
       "prio": 2,
-      "title": "Rückflug der Copa-Crew am 20.01. festhalten",
+      "title": "Rückflug der Gringos plus 1 Cevapi am 20.01. festhalten",
       "detail": "Flughafen und Uhrzeit eintragen. Ab São Paulo-GRU heißt das: Boot plus ca. 5–6 h Straße."
     },
     {

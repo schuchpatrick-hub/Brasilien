@@ -39,5 +39,5 @@ Generiert (nicht von Hand bearbeiten): `reisebild.svg`, `reisebild.png`, `web/br
 - **Repo ist öffentlich:** keine Roh-Chats, Telefonnummern, IBANs, Nachnamen, Passdaten,
   Buchungsnummern oder Splitwise-Einladungslinks einchecken. Nur Vornamen/Spitznamen.
 - Unsichere Angaben kennzeichnen (🟡 prüfen / ❓ unklar) statt raten.
-- Personen: Copa-Crew = Jonas, Patrick, Simon, Marco (ab 27.12.); Dajo & Greisel stoßen am 06.01. in Rio dazu.
+- Personen: Gringos plus 1 Cevapi = Jonas, Patrick, Simon, Marco (ab 27.12.); Dajo & Greisel stoßen am 06.01. in Rio dazu.
   Echte Vornamen verwenden (nicht die Chat-Spitznamen Steini = Simon, Lubo = Marco). Greisel und Dajo bleiben so.
