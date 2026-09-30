@@ -32,6 +32,23 @@ function itemsHtml(items) {
     '<li><span class="t">' + esc(it.time || '') + '</span><span>' + esc(it.text) +
     (it.unsicher ? ' <span class="unsure">(offen)</span>' : '') + '</span></li>').join('') + '</ul>';
 }
+/* Bild zur Station (Kopie aus den Stationen, IDs eindeutig gemacht) */
+const SCENE_OF = {'Guarujá': 'guaruja', 'Rio de Janeiro': 'rio', 'Foz do Iguaçu': 'iguacu', 'Manaus': 'manaus', 'Juma Lodge': 'manaus', 'Paraty': 'paraty', 'Ilha Grande': 'ilha'};
+let sceneN = 0;
+function sceneHtml(place) {
+  const src = document.querySelector('.stop-img[data-scene="' + SCENE_OF[place] + '"] svg');
+  if (!src) return '';
+  const n = 't' + (++sceneN);
+  let h = src.outerHTML;
+  (h.match(/id="([^"]+)"/g) || []).forEach(m => { const id = m.slice(4, -1); h = h.split('id="' + id + '"').join('id="' + id + n + '"').split('url(#' + id + ')').join('url(#' + id + n + ')'); });
+  return '<div class="today-img" aria-hidden="true">' + h + '</div>';
+}
+function setSkyTime() {
+  const hr = +new Intl.DateTimeFormat('en-GB', {timeZone: TZ, hour: '2-digit', hour12: false}).format(new Date()) % 24;
+  const t = hr >= 5 && hr < 8 ? 'morning' : hr >= 8 && hr < 17 ? 'day' : hr >= 17 && hr < 20 ? 'sunset' : 'night';
+  const h = document.querySelector('header'); if (h) h.dataset.time = t;
+}
+setSkyTime(); setInterval(setSkyTime, 10 * 60000);
 function renderToday() {
   const el = document.getElementById('today');
   const t = isoToday();
@@ -42,7 +59,7 @@ function renderToday() {
   if (t < first) {
     const n = daysBetween(t, first);
     const d0 = list[0];
-    html = '<div class="kicker">' + esc(gName(G)) + ' · Countdown</div>' +
+    html = sceneHtml(list.find(d => SCENE_OF[d.place]).place) + '<div class="kicker">' + esc(gName(G)) + ' · Countdown</div>' +
       '<div class="big">Noch ' + n + (n === 1 ? ' Tag' : ' Tage') + '<small>bis zum Abflug am ' + fmtDay(first).wd + ' ' + fmtDay(first).dm + ' · erster Stopp: ' + esc(list.find(d => d.place !== 'München')?.place || d0.place) + '</small></div>' +
       itemsHtml(d0.items) +
       '<div class="next">Noch <b>' + openTodos + '</b> offene To-dos. <a href="#todos">Zu den To-dos</a></div>';
@@ -52,7 +69,7 @@ function renderToday() {
     const today = list.filter(d => d.date === t);
     const tomorrow = list.filter(d => d.date > t).filter((d, i, a) => d.date === a[0].date);
     const f = fmtDay(t);
-    html = '<div class="kicker">' + f.wd + ' ' + f.dm + ' · Tag ' + (daysBetween(first, t) + 1) + ' von ' + (daysBetween(first, last) + 1) + ' · ' + esc(gName(G)) + '</div>';
+    html = (today.length ? sceneHtml(today[0].place) : '') + '<div class="kicker">' + f.wd + ' ' + f.dm + ' · Tag ' + (daysBetween(first, t) + 1) + ' von ' + (daysBetween(first, last) + 1) + ' · ' + esc(gName(G)) + '</div>';
     if (today.length) {
       const d = today[0];
       html += '<div class="big">' + esc(d.place) + '<small>' + esc(d.title) + '</small></div>' +

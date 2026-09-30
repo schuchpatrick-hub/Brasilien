@@ -14,6 +14,8 @@ import json, os, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'tools'))
 import gen_map
+import gen_scenes
+import re
 from gen_audio import audio_name
 
 
@@ -136,7 +138,18 @@ def main():
     write(standalone, 'reisebild.svg')
 
     script = read('web', 'page_script.html').replace('%%TRIP%%', json.dumps(trip, ensure_ascii=False).replace('</', '<\\/'))
-    page = read('web', 'page_head.html') + read('web', 'page_body.html').replace('%%MAP%%', inline) + '\n' + script
+    scenes = gen_scenes.render_all()
+    counter = [0]
+
+    def scene(m):
+        counter[0] += 1
+        sv, n = scenes[m.group(1)], counter[0]
+        ids = re.findall(r'id="([^"]+)"', sv)
+        for i in ids:
+            sv = sv.replace(f'id="{i}"', f'id="{i}-{n}"').replace(f'url(#{i})', f'url(#{i}-{n})')
+        return sv
+    body = re.sub(r'%%SCENE:(\w+)%%', scene, read('web', 'page_body.html'))
+    page = read('web', 'page_head.html') + body.replace('%%MAP%%', inline) + '\n' + script
     write(page, 'web', 'brasilien-reise.html')
 
     write(build_ics(trip, 'a'), 'kalender', 'gringos-plus-1-cevapi.ics')
