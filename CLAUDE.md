@@ -22,8 +22,12 @@ Generiert (nicht von Hand bearbeiten): `reisebild.svg`, `reisebild.png`, `web/br
 
 ## Aktualisieren
 
-Hauptversion ist der Branch `main` (Links auf der Webseite zeigen auf `blob/main/...`). Änderungen auf einem
-Arbeits-Branch machen und per Pull Request nach `main` bringen; die Webseite erst nach dem Merge neu veröffentlichen.
+Hauptversion ist der Branch `main` (Links auf der Webseite zeigen auf `blob/main/...`). Standard-Branch auf GitHub
+ist aber weiterhin `claude/brazil-trip-overview-rqdl1r` (Umstellen auf `main` schlug in den Einstellungen fehl).
+Deshalb **beide Branches immer gleich halten**: auf `claude/brazil-trip-overview-rqdl1r` arbeiten, per Pull Request
+nach `main` mergen, danach den Arbeits-Branch per Fast-Forward auf `main` setzen
+(`git fetch origin && git merge --ff-only origin/main && git push origin claude/brazil-trip-overview-rqdl1r`).
+Die Webseite erst nach dem Merge neu veröffentlichen.
 
 
 1. Fakten ändern in `README.md`, `web/page_body.html` **und** `web/trip.json` (plus ggf. Stationsleiste in
