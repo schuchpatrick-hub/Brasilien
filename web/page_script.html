@@ -267,36 +267,48 @@ document.getElementById('wa-copy').addEventListener('click', () => {
       '<button type="button" class="play" data-c="' + ci + '" data-p="' + pi + '" aria-label="Vorsprechen: ' + esc(p.pt) + '">▶</button></div>').join('') +
     '</div>').join('');
   const st = document.getElementById('speak-status');
-  const synth = window.speechSynthesis;
-  if (!synth || typeof SpeechSynthesisUtterance === 'undefined') {
-    box.querySelectorAll('.play').forEach(b => b.hidden = true);
-    document.querySelector('.speak-bar').hidden = true;
-    return;
-  }
+  const slow = document.getElementById('speak-slow');
+  const dev = document.getElementById('speak-device');
+  if (store.get('slow') === '0') slow.checked = false;
+  slow.addEventListener('change', () => store.set('slow', slow.checked ? '1' : '0'));
+
+  const synth = window.speechSynthesis && typeof SpeechSynthesisUtterance !== 'undefined' ? window.speechSynthesis : null;
   let voice = null;
   const pick = () => {
     const vs = synth.getVoices();
     voice = vs.find(v => /^pt[-_]BR/i.test(v.lang)) || vs.find(v => /^pt/i.test(v.lang)) || null;
+    document.getElementById('speak-device-wrap').hidden = !voice;
   };
-  pick();
-  if (synth.addEventListener) synth.addEventListener('voiceschanged', pick);
-  const slow = document.getElementById('speak-slow');
-  try { if (store.get('slow') === '0') slow.checked = false; } catch (e) {}
-  slow.addEventListener('change', () => store.set('slow', slow.checked ? '1' : '0'));
+  if (synth) { pick(); if (synth.addEventListener) synth.addEventListener('voiceschanged', pick); }
+  if (store.get('device') === '1') dev.checked = true;
+  dev.addEventListener('change', () => store.set('device', dev.checked ? '1' : '0'));
+
+  let audio = null, current = null;
+  const done = () => { if (current) current.classList.remove('on'); current = null; };
+  function speakDevice(p) {
+    synth.cancel();
+    const u = new SpeechSynthesisUtterance(p.pt.replace(/…/g, ''));
+    u.lang = 'pt-BR'; if (voice) u.voice = voice;
+    u.rate = slow.checked ? 0.75 : 1;
+    u.onend = u.onerror = done;
+    synth.speak(u);
+  }
   box.addEventListener('click', e => {
     const b = e.target.closest('.play'); if (!b) return;
     const p = TRIP.phrases[+b.dataset.c].items[+b.dataset.p];
-    synth.cancel();
-    const u = new SpeechSynthesisUtterance(p.pt.replace(/…/g, ''));
-    u.lang = 'pt-BR';
-    if (voice) u.voice = voice;
-    u.rate = slow.checked ? 0.75 : 1;
-    box.querySelectorAll('.play.on').forEach(x => x.classList.remove('on'));
-    b.classList.add('on');
-    u.onend = u.onerror = () => b.classList.remove('on');
-    setTimeout(() => b.classList.remove('on'), 8000);
-    st.textContent = voice ? '' : 'Keine portugiesische Stimme gefunden, es klingt evtl. nach Deutsch. Tipp: in den Handy-Einstellungen eine portugiesische Stimme laden.';
-    synth.speak(u);
+    if (audio) audio.pause();
+    if (synth) synth.cancel();
+    done(); current = b; b.classList.add('on'); st.textContent = '';
+    if (dev.checked && synth && voice) { speakDevice(p); return; }
+    audio = new Audio(p.audio);
+    audio.playbackRate = slow.checked ? 0.8 : 1;
+    audio.onended = done;
+    audio.onerror = () => {
+      done();
+      if (synth) { current = b; b.classList.add('on'); speakDevice(p); }
+      else st.textContent = 'Die Aufnahme konnte nicht geladen werden.';
+    };
+    audio.play().catch(err => { if (err && err.name !== 'AbortError') audio.onerror(); });
   });
 })();
 

@@ -14,6 +14,7 @@ import json, os, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, 'tools'))
 import gen_map
+from gen_audio import audio_name
 
 
 def read(*p):
@@ -125,6 +126,11 @@ def render_pdf(sp, html_path, pdf_path):
 
 def main():
     trip = json.loads(read('web', 'trip.json'))
+    for c in trip.get('phrases', []):
+        for ph in c['items']:
+            ph['audio'] = 'audio/' + audio_name(ph['pt'])
+            if not os.path.exists(os.path.join(ROOT, 'web', ph['audio'])):
+                print('WARNUNG: Audio fehlt, bitte python3 tools/gen_audio.py ausführen:', ph['pt'])
     standalone = gen_map.build(standalone=True)
     inline = gen_map.build(standalone=False)
     write(standalone, 'reisebild.svg')
