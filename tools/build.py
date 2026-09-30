@@ -133,7 +133,7 @@ def main():
     page = read('web', 'page_head.html') + read('web', 'page_body.html').replace('%%MAP%%', inline) + '\n' + script
     write(page, 'web', 'brasilien-reise.html')
 
-    write(build_ics(trip, 'a'), 'kalender', 'vorhut.ics')
+    write(build_ics(trip, 'a'), 'kalender', 'copa-crew.ics')
     write(build_ics(trip, 'b'), 'kalender', 'dajo-greisel.ics')
 
     sp = browser()
