@@ -290,11 +290,14 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   const done = () => { if (current) current.classList.remove('on'); current = null; };
   function speakDevice(p) {
     synth.cancel();
+    const de = new SpeechSynthesisUtterance(p.de.replace(/\s*\([^)]*\)/g, '').replace(/…/g, ''));
+    de.lang = 'de-DE'; de.rate = slow.checked ? 0.85 : 1;
+    const vde = synth.getVoices().find(v => /^de[-_]/i.test(v.lang)); if (vde) de.voice = vde;
     const u = new SpeechSynthesisUtterance(p.pt.replace(/…/g, ''));
     u.lang = 'pt-BR'; if (voice) u.voice = voice;
     u.rate = slow.checked ? 0.75 : 1;
     u.onend = u.onerror = done;
-    synth.speak(u);
+    synth.speak(de); synth.speak(u);
   }
   box.addEventListener('click', e => {
     const b = e.target.closest('.play'); if (!b) return;

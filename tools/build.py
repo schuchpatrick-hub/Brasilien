@@ -128,7 +128,7 @@ def main():
     trip = json.loads(read('web', 'trip.json'))
     for c in trip.get('phrases', []):
         for ph in c['items']:
-            ph['audio'] = 'audio/' + audio_name(ph['pt'])
+            ph['audio'] = 'audio/' + audio_name(ph['pt'], ph['de'])
             if not os.path.exists(os.path.join(ROOT, 'web', ph['audio'])):
                 print('WARNUNG: Audio fehlt, bitte python3 tools/gen_audio.py ausführen:', ph['pt'])
     standalone = gen_map.build(standalone=True)
