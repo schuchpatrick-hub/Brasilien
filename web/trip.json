@@ -964,6 +964,54 @@
       "quote": "Ist das Buffet schon eröffnet? Dann bin ich es auch."
     },
     {
+      "id": "marco",
+      "name": "Marco",
+      "nick": "„Lubo“ · „Dani Olmo“ · „Cevape Jr.“",
+      "team": "a",
+      "photo": "crew/marco.jpg",
+      "photoLarge": "crew/marco-gross.jpg",
+      "role": "Feelgood-Manager, Obstkorb-Beauftragter & Sohnemann",
+      "facts": [
+        [
+          "Doppelgänger",
+          "Sieht aus wie Dani Olmo. Spielt auch so, nur ohne Ball, ohne Tempo und ohne Vertrag."
+        ],
+        [
+          "Beruf",
+          "Verkauft Omas Wohnungen im 4. Stock ohne Aufzug. Reklamationen gab es noch nie. Die Omas kommen einfach nicht mehr runter."
+        ],
+        [
+          "Stärke",
+          "Der Obstkorb. Stellt im Hostel als Erstes einen hin. Nach drei Tagen ist nur noch eine Banane übrig, und die hat Patrick schon angebissen."
+        ],
+        [
+          "Feelgood-Manager",
+          "Sorgt für Stimmung. Mit 12 Gin Tonic fühlt sich laut ihm ein Langstreckenflug an wie 2 Stunden. Der Rest der Reihe fühlt alle 14."
+        ],
+        [
+          "Ansprüche",
+          "„Mir reicht a Matratze.“ Oder die Couch im Foyer. Nachts macht er die Rezeption und verkauft den Gästen eine Wohnung im 4. Stock."
+        ],
+        [
+          "Rekord",
+          "17 Mal jonglieren. Papa Jonas schafft 113 Kopfbälle. Daher der Vater-Sohn-Konflikt, den keine Familientherapie lösen kann."
+        ],
+        [
+          "Impfschutz",
+          "„Einfach von innen desinfizieren.“ Das Gelbfieber hat mehr Angst vor ihm als er vor dem Gelbfieber."
+        ],
+        [
+          "Karriereplan",
+          "„Zur Not wird gekündigt.“ Der Urlaub steht. Der Job wackelt. Die Omas im 4. Stock beten jeden Abend für Letzteres."
+        ],
+        [
+          "Lebensgefühl",
+          "„Bin seit gestern im Karussell.“ Das Foto beweist: Er ist nie wieder ausgestiegen."
+        ]
+      ],
+      "quote": "Idemo! 🚀"
+    },
+    {
       "id": "greisel",
       "name": "Greisel",
       "nick": "„Der Honeymooner“",
@@ -1010,11 +1058,6 @@
         ]
       ],
       "quote": "Sprengts euch weg. Wir buchen."
-    },
-    {
-      "id": "marco",
-      "name": "Marco",
-      "team": "a"
     },
     {
       "id": "dajo",
