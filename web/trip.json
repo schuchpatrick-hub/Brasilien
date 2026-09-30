@@ -116,7 +116,7 @@
       "stay": "Tabas – Cena Carioca",
       "items": [
         {
-          "text": "Idee: Strand Ipanema, abends Sonnenuntergang am Arpoador"
+          "text": "Idee: Strand Ipanema, Footvolley, abends Sonnenuntergang am Arpoador"
         }
       ]
     },
@@ -128,7 +128,10 @@
       "stay": "Tabas – Cena Carioca",
       "items": [
         {
-          "text": "Idee: Christusstatue (früh hin, bevor es voll wird)"
+          "text": "Idee: Christusstatue (vorher buchen, Bahn oder Shuttle ab der Mittelstation, früh hin)"
+        },
+        {
+          "text": "Abends: Rodízio (Fleischspieße, so viel man will)"
         }
       ]
     },
@@ -140,7 +143,7 @@
       "stay": "Tabas – Cena Carioca",
       "items": [
         {
-          "text": "Idee: Zuckerhut, Copacabana"
+          "text": "Idee: Zuckerhut mit der Seilbahn (Fastlane empfohlen), danach Copacabana"
         }
       ]
     },
@@ -152,7 +155,10 @@
       "stay": "Tabas – Cena Carioca",
       "items": [
         {
-          "text": "Idee: Santa Teresa, abends Lapa"
+          "text": "Idee: Maracanã und Favela Vidigal, Centro nur tagsüber"
+        },
+        {
+          "text": "Abends: Santa Teresa und Lapa"
         }
       ]
     },
@@ -163,6 +169,9 @@
       "title": "Letzter Tag Rio (vorerst)",
       "stay": "Tabas – Cena Carioca",
       "items": [
+        {
+          "text": "Idee: lokale Strände Praia da Joatinga oder Praia dos Amores (unter einer Brücke durchs Wasser)"
+        },
         {
           "text": "Packen: Morgen früh geht's zum Flughafen Galeão (GIG)"
         }
@@ -548,6 +557,12 @@
       "prio": 2,
       "title": "Weiterreise Paraty → Ilha Grande",
       "detail": "Voraussichtlich Uber zum Bootsanleger, dann Boot; Bootstickets ggf. vorher reservieren."
+    },
+    {
+      "id": "rio-tickets",
+      "prio": 2,
+      "title": "Rio: Tickets vorab buchen",
+      "detail": "Christusstatue (Bahn oder Shuttle ab der Mittelstation) und Zuckerhut-Seilbahn mit Fastlane."
     },
     {
       "id": "rueckflug-a",
