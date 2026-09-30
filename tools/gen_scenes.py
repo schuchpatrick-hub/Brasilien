@@ -232,7 +232,7 @@ def ilha():
     return svg(b, label='Traumstrand auf der Ilha Grande')
 
 
-SCENES = {'hero': hero, 'guaruja': guaruja, 'rio': rio, 'iguacu': iguacu, 'manaus': manaus, 'paraty': paraty, 'ilha': ilha}
+SCENES = {'hero': hero, 'guaruja': guaruja, 'rio': rio, 'iguacu': iguacu, 'manaus': manaus, 'juma': manaus, 'paraty': paraty, 'ilha': ilha}
 
 
 def render_all():
