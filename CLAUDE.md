@@ -22,6 +22,10 @@ Generiert (nicht von Hand bearbeiten): `reisebild.svg`, `reisebild.png`, `web/br
 
 ## Aktualisieren
 
+Hauptversion ist der Branch `main` (Links auf der Webseite zeigen auf `blob/main/...`). Änderungen auf einem
+Arbeits-Branch machen und per Pull Request nach `main` bringen; die Webseite erst nach dem Merge neu veröffentlichen.
+
+
 1. Fakten ändern in `README.md`, `web/page_body.html` **und** `web/trip.json` (plus ggf. Stationsleiste in
    `web/poster_template.html`, Beschriftungen in `tools/gen_map.py`, WhatsApp-Text in `web/page_script.html`).
    Erledigte To-dos nicht aus trip.json löschen, solange die geteilte Liste sie abhakt; neue To-dos mit neuer `id`.
