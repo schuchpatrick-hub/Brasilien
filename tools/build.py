@@ -147,6 +147,9 @@ def main():
         ids = re.findall(r'id="([^"]+)"', sv)
         for i in ids:
             sv = sv.replace(f'id="{i}"', f'id="{i}-{n}"').replace(f'url(#{i})', f'url(#{i}-{n})')
+        # eigenes Foto web/fotos/<szene>.jpg liegt über der Zeichnung (Kopfbild: copacabana.jpg in page_body.html)
+        if m.group(1) != 'hero' and os.path.exists(os.path.join(ROOT, 'web', 'fotos', m.group(1) + '.jpg')):
+            sv += f'<img class="scene-photo" src="fotos/{m.group(1)}.jpg" alt="" loading="lazy" onerror="this.remove()">'
         return sv
     body = re.sub(r'%%SCENE:(\w+)%%', scene, read('web', 'page_body.html'))
     page = read('web', 'page_head.html') + body.replace('%%MAP%%', inline) + '\n' + script

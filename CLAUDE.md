@@ -15,7 +15,7 @@ Reiseübersicht, die bei neuen Infos (Buchungen, Chat-Exporte, Screenshots) aktu
 | `web/poster_template.html` | Rahmen für das Reisebild (Titel, Stationsleiste unten) |
 | `tools/gen_map.py` | Zeichnet die Karte: Orte, Flugbögen, Beschriftungen, Südost-Ausschnitt |
 | `tools/gen_scenes.py` | Selbst gezeichnete SVG-Szenen (Copacabana-Kopfbild mit Tageszeit-Himmel, Bild je Station, Trenner); im HTML als `%%SCENE:name%%` |
-| `web/fotos/` | Eigene Fotos (von Patrick) für Kopfbild/Stationen; liegen über der Zeichnung, fehlt das Foto, bleibt die Zeichnung. Beim Veröffentlichen in `files` mitgeben (`fotos/<name>.jpg`) |
+| `web/fotos/` | Eigene Fotos (von Patrick): `copacabana.jpg` = Kopfbild, sonst `<szene>.jpg` (guaruja, rio, iguacu, manaus, paraty, ilha; max. 1600 px breit), `build.py` legt sie automatisch über die Zeichnung (Station, Trenner, Heute-Kasten); fehlt das Foto, bleibt die Zeichnung. Beim Veröffentlichen in `files` mitgeben (`fotos/<name>.jpg`) |
 | `tools/gen_audio.py` | Erzeugt `web/audio/*.mp3` (Sprachführer) mit eSpeak NG + MBROLA (erst Deutsch mit de4, dann Portugiesisch mit br3); nur nötig, wenn Sätze in `trip.json` → `phrases` neu/geändert sind (`apt-get install espeak-ng mbrola mbrola-br3 mbrola-de4`, `pip install lameenc`). Beim Veröffentlichen alte MP3-Pfade in `files` auf `null` setzen |
 | `tools/build.py` | Baut `reisebild.svg`, `reisebild.png` und `web/brasilien-reise.html` neu |
 

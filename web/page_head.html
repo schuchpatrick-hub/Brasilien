@@ -56,6 +56,11 @@ header[data-time="night"] .hero-photo{filter:sepia(.6) hue-rotate(185deg) satura
 header[data-time="night"] .hero-scene .stars{opacity:.9}
 header[data-time="night"] .hero-scene .glint{opacity:.25}
 .stop-img,.divider-scene,.today-img{border-radius:16px;overflow:hidden;line-height:0}
+.stop-img,.divider-scene,.today-img{position:relative}
+.scene-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.stop-img:has(.scene-photo){height:170px}
+.today-img:has(.scene-photo){height:150px}
+@media print{.scene-photo{display:none}}
 .stop-img{height:110px;margin:4px 0 8px;max-width:640px}
 .stop-img svg,.divider-scene svg,.today-img svg{width:100%;height:100%;display:block}
 .divider-scene{height:clamp(90px,16vw,150px);box-shadow:0 6px 20px rgba(0,0,0,.08)}

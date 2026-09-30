@@ -36,10 +36,10 @@ function itemsHtml(items) {
 const SCENE_OF = {'Guarujá': 'guaruja', 'Rio de Janeiro': 'rio', 'Foz do Iguaçu': 'iguacu', 'Manaus': 'manaus', 'Juma Lodge': 'manaus', 'Paraty': 'paraty', 'Ilha Grande': 'ilha'};
 let sceneN = 0;
 function sceneHtml(place) {
-  const src = document.querySelector('.stop-img[data-scene="' + SCENE_OF[place] + '"] svg');
+  const src = document.querySelector('.stop-img[data-scene="' + SCENE_OF[place] + '"]');
   if (!src) return '';
   const n = 't' + (++sceneN);
-  let h = src.outerHTML;
+  let h = src.innerHTML;
   (h.match(/id="([^"]+)"/g) || []).forEach(m => { const id = m.slice(4, -1); h = h.split('id="' + id + '"').join('id="' + id + n + '"').split('url(#' + id + ')').join('url(#' + id + n + ')'); });
   return '<div class="today-img" aria-hidden="true">' + h + '</div>';
 }
