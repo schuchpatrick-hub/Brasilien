@@ -37,7 +37,7 @@
           "text": "Rom → São Paulo-Guarulhos (GRU), ca. 12 h"
         },
         {
-          "text": "Uber/Transfer nach Guarujá, ca. 1,5–2 h"
+          "text": "Mit Uber nach Guarujá, ca. 1,5–2 h"
         }
       ]
     },
@@ -335,7 +335,7 @@
           }
         },
         {
-          "text": "Uber/Transfer Rio → Paraty, ca. 4 h"
+          "text": "Mit Uber von Rio nach Paraty, ca. 4 h"
         },
         {
           "text": "Abends: Nachtleben in der autofreien Altstadt, Live-Musik; Gabriela Cravo e Canela probieren"
@@ -368,7 +368,8 @@
       "stay": "Ilha Grande (noch offen)",
       "items": [
         {
-          "text": "Boot/Fähre nach Vila do Abraão (vorher buchen, z. B. Paraty Tours)"
+          "text": "Uber zum Bootsanleger, dann Boot nach Vila do Abraão (voraussichtlich)",
+          "unsicher": true
         },
         {
           "text": "Abends: Footvolley am Strand von Abraão"
@@ -425,6 +426,9 @@
       "stay": "Flug nach Hause",
       "items": [
         {
+          "text": "Boot zurück aufs Festland, mit Uber zum Flughafen"
+        },
+        {
           "text": "Rückreise nach München, Flughafen und Uhrzeit fehlen noch",
           "unsicher": true,
           "ics": {
@@ -453,6 +457,9 @@
       "title": "Weiter nach Rio",
       "stay": "offen",
       "items": [
+        {
+          "text": "Boot aufs Festland, mit Uber nach Rio"
+        },
         {
           "text": "Rio-Verlängerung, danach Rückflug über São Paulo nach München",
           "unsicher": true
@@ -514,8 +521,8 @@
     {
       "id": "umbuchung-3112",
       "prio": 1,
-      "title": "Rio-Unterkunft auf 31.12. umstellen",
-      "detail": "Rio erst ab 31.12.: Prüfen, ob Tabas (nicht stornierbar!) umgebucht ist. Guarujá ist bis 31.12. verlängert."
+      "title": "Rio-Unterkunft auf 31.12. umgebucht",
+      "detail": "Erledigt: Tabas ab 31.12., Guarujá bis 31.12."
     },
     {
       "id": "inlandsfluege",
@@ -539,8 +546,8 @@
     {
       "id": "weiterreise-ilha",
       "prio": 2,
-      "title": "Weiterreise Paraty → Ilha Grande buchen",
-      "detail": "Boot am 16.01. vorher buchen, z. B. bei Paraty Tours."
+      "title": "Weiterreise Paraty → Ilha Grande",
+      "detail": "Voraussichtlich Uber zum Bootsanleger, dann Boot; Bootstickets ggf. vorher reservieren."
     },
     {
       "id": "rueckflug-a",
@@ -576,8 +583,8 @@
     {
       "id": "transfers",
       "prio": 3,
-      "title": "Transfers organisieren",
-      "detail": "GRU → Guarujá (27.12.), Rio → Paraty (14.01.), Paraty → Ilha Grande (16.01.), Ilha Grande → Flughafen."
+      "title": "Transfers: alles per Uber",
+      "detail": "GRU → Guarujá (27.12.), Rio → Paraty (14.01.), zum Flughafen (20./21.01.) mit Uber; kein Vorbuchen nötig."
     },
     {
       "id": "impfungen",
