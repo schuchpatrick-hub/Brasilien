@@ -46,7 +46,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | **So 27.12.** | Gringos plus 1 Cevapi: Abflug München morgens (laut Chat ab ca. 06:25), MUC → Rom (ca. 1,5 h), 1 h 10 min Umstieg, Rom → São Paulo-Guarulhos (GRU, ca. 12 h). Danach mit **Uber** nach Guarujá (ca. 1,5–2 h). |
 | 28.–30.12. | Strand an der Praia da Enseada, Footvolley-Netze direkt vor der Tür |
 | **Do 31.12.** | Inlandsflug São Paulo-**Congonhas (CGH)** → Rio-**Santos Dumont (SDU)**, möglichst vormittags. Achtung: nicht die internationalen Flughäfen. Check-in Tabas – Cena Carioca. Abends **Silvester an der Copacabana, Dresscode ganz in Weiß** |
-| 01.–05.01. | Rio: Christusstatue, Zuckerhut, Copacabana/Ipanema, Santa Teresa & Lapa, Sonnenuntergang am Arpoador |
+| 01.–05.01. | Rio: Copacabana/Ipanema, Christusstatue, Zuckerhut, Rodízio, Maracanã, Vidigal, Santa Teresa & Lapa, lokale Strände (Details unten) |
 | **Mi 06.01.** | Dajo & Greisel landen ca. **06:10 in Rio-Galeão (GIG)**. Treffpunkt GIG, gemeinsamer Flug GIG → Foz do Iguaçu (IGU) ca. **10:40** |
 | 07.–08.01. | Iguaçu-Fälle: brasilianische und argentinische Seite (Reisepass mitnehmen!), optional Helikopter- oder Bootstour |
 | **Sa 09.01.** | Flug IGU → Manaus (MAO), mit Umstieg. 1 Nacht in der Casa 307 |
@@ -136,6 +136,16 @@ Transfers laufen per **Uber** (GRU → Guarujá, Rio → Paraty, zum Flughafen a
 ---
 
 ## Tipps vor Ort
+
+### Rio de Janeiro
+- **Copacabana** und **Ipanema**, **Footvolley** am Strand, Sonnenuntergang am Arpoador
+- **Christusstatue:** vorher buchen; hoch mit der Bahn oder dem Shuttle ab der Mittelstation
+- **Zuckerhut** mit der Seilbahn, **Fastlane** empfohlen
+- **Rodízio** essen: Fleischspieße am Tisch, so viel man will
+- **Maracanã** (Stadion)
+- **Favela Vidigal**
+- Santa Teresa & Lapa; **Centro** nur tagsüber, nachts gefährlich
+- Lokale Strände: **Praia da Joatinga**; **Praia dos Amores** (um hinzukommen, unter einer Brücke durchs Wasser); **Praia da Barca** 🟡 Name prüfen (auch Fußball möglich)
 
 ### Paraty
 - **Bootstouren** mit Taxiboot oder Privatboot zu Inseln und Schnorchelspots, an Bord meist Drinks und Musik
