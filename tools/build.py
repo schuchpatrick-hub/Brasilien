@@ -139,6 +139,7 @@ def main():
 
     script = read('web', 'page_script.html').replace('%%TRIP%%', json.dumps(trip, ensure_ascii=False).replace('</', '<\\/'))
     scenes = gen_scenes.render_all()
+    PHOTO_POS = {'rio': ('30% 38%', '30% 24%')}  # Bildausschnitt je Foto: Station/Heute, breiter Trenner
     counter = [0]
 
     def scene(m):
@@ -149,7 +150,8 @@ def main():
             sv = sv.replace(f'id="{i}"', f'id="{i}-{n}"').replace(f'url(#{i})', f'url(#{i}-{n})')
         # eigenes Foto web/fotos/<szene>.jpg liegt über der Zeichnung (Kopfbild: copacabana.jpg in page_body.html)
         if m.group(1) != 'hero' and os.path.exists(os.path.join(ROOT, 'web', 'fotos', m.group(1) + '.jpg')):
-            sv += f'<img class="scene-photo" src="fotos/{m.group(1)}.jpg" alt="" loading="lazy" onerror="this.remove()">'
+            pos, wide = PHOTO_POS.get(m.group(1), ('50% 50%', '50% 50%'))
+            sv += f'<img class="scene-photo" src="fotos/{m.group(1)}.jpg" alt="" loading="lazy" style="--pos:{pos};--pos-wide:{wide}" onerror="this.remove()">'
         return sv
     body = re.sub(r'%%SCENE:(\w+)%%', scene, read('web', 'page_body.html'))
     page = read('web', 'page_head.html') + body.replace('%%MAP%%', inline) + '\n' + script
