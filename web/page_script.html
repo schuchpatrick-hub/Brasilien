@@ -406,7 +406,12 @@ document.getElementById('wa-copy').addEventListener('click', () => {
 
   /* --- Eingabe --- */
   $('dr-who').innerHTML = CREW.map(p => '<button type="button" role="radio" aria-checked="false" data-id="' + esc(p.id) + '">' + avatar(p) + esc(p.name) + '</button>').join('');
-  $('dr-what').innerHTML = D.presets.map((d, i) => '<button type="button" aria-pressed="false" data-i="' + i + '">' + CAT[d.cat].icon + ' ' + esc(d.name) + ' <small>' + d.ml + ' ml · ' + fmt1(d.abv) + ' %</small></button>').join('');
+  $('dr-what').innerHTML = D.cats.map(c => {
+    const items = D.presets.map((d, i) => [d, i]).filter(([d]) => d.cat === c[0]);
+    if (!items.length) return '';
+    return '<details class="dr-cat" data-fold="cat-' + c[0] + '"' + (c[0] === 'bier' || c[0] === 'cocktail' ? ' open' : '') + '><summary>' + c[2] + ' ' + esc(c[1]) + '<small>' + items.length + '</small></summary><div class="chips">' +
+      items.map(([d, i]) => '<button type="button" aria-pressed="false" data-i="' + i + '">' + esc(d.name) + ' <small>' + d.ml + ' ml · ' + fmt1(d.abv) + ' %</small></button>').join('') + '</div></details>';
+  }).join('');
   $('dr-c-cat').innerHTML = D.cats.map(c => '<option value="' + c[0] + '">' + c[2] + ' ' + esc(c[1]) + '</option>').join('');
   function paintSel() {
     document.querySelectorAll('#dr-who button').forEach(b => b.setAttribute('aria-checked', String(b.dataset.id === sel.who)));
@@ -488,7 +493,7 @@ document.getElementById('wa-copy').addEventListener('click', () => {
     const lab = k => { const f = fmtDay(k); return f.dm; };
     $('dr-days').innerHTML = days.map(k => {
       const n = (per[k] || []).length;
-      return '<div class="col' + (k === t ? ' today' : '') + '" data-day="' + k + '">' + (n ? '<b style="bottom:' + (n / max * 100) + '%">' + n + '</b>' : '') + '<i style="height:' + (n / max * 100) + '%"></i></div>';
+      return '<div class="col' + (k === t ? ' is-today' : '') + '" data-day="' + k + '">' + (n ? '<b style="bottom:' + (n / max * 100) + '%">' + n + '</b>' : '') + '<i style="height:' + (n / max * 100) + '%"></i></div>';
     }).join('') + '';
     let ax = $('dr-days').nextElementSibling;
     if (!ax || !ax.classList.contains('dr-days-ax')) { ax = document.createElement('div'); ax.className = 'dr-days-ax'; $('dr-days').after(ax); }
@@ -563,7 +568,13 @@ document.getElementById('wa-copy').addEventListener('click', () => {
   }
 
   render(); renderBodyForm(); paintSel();
-  if (PRINT) { $('dr-add').hidden = true; return; }
+  /* Auf-/Zuklappen pro Geraet merken */
+  document.querySelectorAll('#drinks details[data-fold]').forEach(d => {
+    const v = store.get('fold.' + d.dataset.fold);
+    if (v === '1') d.open = true; else if (v === '0') d.open = false;
+    d.addEventListener('toggle', () => store.set('fold.' + d.dataset.fold, d.open ? '1' : '0'));
+  });
+  if (PRINT) { $('dr-add').hidden = true; document.querySelectorAll('#drinks details.dr-card').forEach(d => d.open = true); return; }
   setInterval(renderBac, 60000);
   (async () => {
     if (!window.claude || !window.claude.use) { setMode('Offline-Ansicht: Zum Eintragen die Seite auf claude.ai öffnen.', false); return; }

@@ -122,7 +122,8 @@
   <h2>Drinks-Counter</h2>
   <p class="note sub-lead" id="dr-mode">Jeder trägt seine Getränke ein, das Ranking aktualisiert sich live für alle.</p>
 
-  <div class="dr-add" id="dr-add">
+  <details class="dr-add" id="dr-add" data-fold="add" open>
+    <summary class="dr-head"><h3>Getränk eintragen</h3></summary>
     <div class="dr-step"><span class="eyebrow">Wer?</span><div id="dr-who" class="dr-who" role="radiogroup" aria-label="Wer trinkt"></div></div>
     <div class="dr-step"><span class="eyebrow">Was?</span><div id="dr-what" class="dr-what"></div>
       <details class="dr-custom"><summary>Eigenes Getränk</summary>
@@ -140,42 +141,42 @@
       <input type="datetime-local" id="dr-time" aria-label="Uhrzeit (Ortszeit)" hidden>
     </div>
     <div class="dr-go"><button type="button" class="btn" id="dr-submit" disabled>Eintragen 🍻</button><span id="dr-status" class="note" role="status"></span></div>
-  </div>
+  </details>
 
   <div class="dr-grid">
-    <div class="dr-card">
-      <div class="dr-head"><h3>Ranking</h3>
-        <div class="seg small" role="group" aria-label="Ranking nach">
-          <button type="button" data-m="count" aria-pressed="true">Anzahl</button><button type="button" data-m="grams" aria-pressed="false">Reinalkohol</button><button type="button" data-m="liters" aria-pressed="false">Liter</button>
-        </div></div>
+    <details class="dr-card" data-fold="rank" open>
+      <summary class="dr-head"><h3>Ranking</h3></summary>
+      <div class="seg small dr-metric" role="group" aria-label="Ranking nach">
+        <button type="button" data-m="count" aria-pressed="true">Anzahl</button><button type="button" data-m="grams" aria-pressed="false">Reinalkohol</button><button type="button" data-m="liters" aria-pressed="false">Liter</button>
+      </div>
       <div id="dr-rank" class="dr-rank" aria-live="polite"></div>
-    </div>
-    <div class="dr-card">
-      <div class="dr-head"><h3>Pegel jetzt</h3></div>
+    </details>
+    <details class="dr-card" data-fold="bac" open>
+      <summary class="dr-head"><h3>Pegel jetzt</h3></summary>
       <div id="dr-bac" class="dr-bac"></div>
       <p class="note dr-disc">Grobe Spaß-Schätzung nach der Widmark-Formel (Gewicht, Geschlecht, Abbau ca. 0,15 ‰ pro Stunde). Sagt nichts darüber, ob jemand fahren, schwimmen oder Boot fahren darf.</p>
-    </div>
+    </details>
   </div>
 
-  <div class="dr-card">
-    <div class="dr-head"><h3>Getränke pro Tag</h3><span class="note">alle zusammen</span></div>
+  <details class="dr-card" data-fold="days" open>
+    <summary class="dr-head"><h3>Getränke pro Tag</h3><span class="note">alle zusammen</span></summary>
     <div class="dr-days-wrap"><div id="dr-days" class="dr-days"></div></div>
-  </div>
+  </details>
 
-  <div class="dr-card">
-    <div class="dr-head"><h3>Tagesübersicht</h3><span class="note">Anzahl und höchster Pegel pro Person</span></div>
+  <details class="dr-card" data-fold="daytable" open>
+    <summary class="dr-head"><h3>Tagesübersicht</h3><span class="note">Anzahl und höchster Pegel pro Person</span></summary>
     <div class="tbl"><table id="dr-daytable" class="dr-table"></table></div>
-  </div>
+  </details>
 
-  <div class="dr-card">
-    <div class="dr-head"><h3>Gesamtstatistik</h3><span class="note">die Abrechnung nach dem Urlaub</span></div>
+  <details class="dr-card" data-fold="total" open>
+    <summary class="dr-head"><h3>Gesamtstatistik</h3><span class="note">die Abrechnung nach dem Urlaub</span></summary>
     <div class="tbl"><table id="dr-total" class="dr-table"></table></div>
-  </div>
+  </details>
 
-  <div class="dr-card">
-    <div class="dr-head"><h3>Letzte Einträge</h3></div>
+  <details class="dr-card" data-fold="log">
+    <summary class="dr-head"><h3>Letzte Einträge</h3><span class="note">zum Korrigieren</span></summary>
     <ol id="dr-log" class="dr-log"></ol>
-  </div>
+  </details>
 
   <details class="dr-body"><summary>Gewicht für die Promille-Schätzung anpassen</summary>
     <div id="dr-bodyform" class="dr-bodyform"></div>

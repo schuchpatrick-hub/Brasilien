@@ -1116,28 +1116,28 @@
     "cats": [
       [
         "bier",
-        "Bier",
+        "Cerveja (Bier)",
         "🍺"
       ],
       [
         "cocktail",
-        "Cocktail",
+        "Caipis & Cocktails",
         "🍹"
       ],
       [
         "longdrink",
-        "Longdrink",
+        "Longdrinks",
         "🥃"
       ],
       [
-        "wein",
-        "Wein & Sekt",
-        "🍷"
+        "shot",
+        "Cachaça & Shots",
+        "🥂"
       ],
       [
-        "shot",
-        "Shot",
-        "🥂"
+        "wein",
+        "Vinho & Espumante",
+        "🍷"
       ],
       [
         "sonst",
@@ -1148,15 +1148,21 @@
     "presets": [
       {
         "cat": "bier",
-        "name": "Brahma/Skol Dose",
+        "name": "Lata (Brahma, Skol, Antarctica)",
         "ml": 350,
         "abv": 4.7
       },
       {
         "cat": "bier",
-        "name": "Long Neck",
-        "ml": 355,
-        "abv": 5.0
+        "name": "Garrafa 600 ml (Original, Brahma)",
+        "ml": 600,
+        "abv": 4.9
+      },
+      {
+        "cat": "bier",
+        "name": "Litrão 1 Liter",
+        "ml": 1000,
+        "abv": 4.7
       },
       {
         "cat": "bier",
@@ -1166,87 +1172,99 @@
       },
       {
         "cat": "bier",
-        "name": "Garrafa 600 ml",
-        "ml": 600,
-        "abv": 4.7
-      },
-      {
-        "cat": "bier",
-        "name": "Schneider Weisse",
-        "ml": 500,
-        "abv": 5.4
+        "name": "Long Neck (Heineken, Stella)",
+        "ml": 330,
+        "abv": 5.0
       },
       {
         "cat": "cocktail",
-        "name": "Caipirinha",
+        "name": "Caipirinha (Cachaça)",
         "ml": 250,
         "abv": 10
       },
       {
         "cat": "cocktail",
-        "name": "Caipiroska",
+        "name": "Caipiroska (Wodka)",
         "ml": 250,
         "abv": 10
       },
       {
         "cat": "cocktail",
-        "name": "Aperol Spritz",
+        "name": "Caipisaquê (Sake)",
+        "ml": 250,
+        "abv": 6
+      },
+      {
+        "cat": "cocktail",
+        "name": "Batida (Maracujá/Coco)",
         "ml": 200,
-        "abv": 8
+        "abv": 10
       },
       {
         "cat": "cocktail",
-        "name": "Piña Colada",
+        "name": "Drink no Coco (Kokosnuss mit Schuss)",
+        "ml": 300,
+        "abv": 6
+      },
+      {
+        "cat": "longdrink",
+        "name": "Gin Tônica",
+        "ml": 300,
+        "abv": 7
+      },
+      {
+        "cat": "longdrink",
+        "name": "Whisky com Energético",
         "ml": 300,
         "abv": 8
       },
       {
         "cat": "longdrink",
-        "name": "Gin Tonic",
+        "name": "Vodka com Energético",
         "ml": 300,
         "abv": 7
       },
       {
         "cat": "longdrink",
-        "name": "Rum-Cola",
+        "name": "Cuba Libre",
         "ml": 300,
         "abv": 7
-      },
-      {
-        "cat": "longdrink",
-        "name": "Vodka-Energy",
-        "ml": 300,
-        "abv": 7
-      },
-      {
-        "cat": "wein",
-        "name": "Glas Wein",
-        "ml": 150,
-        "abv": 12
-      },
-      {
-        "cat": "wein",
-        "name": "Glas Sekt",
-        "ml": 100,
-        "abv": 11
       },
       {
         "cat": "shot",
-        "name": "Cachaça pur",
-        "ml": 40,
+        "name": "Dose Cachaça (Pinga)",
+        "ml": 50,
         "abv": 40
       },
       {
         "cat": "shot",
-        "name": "Tequila",
-        "ml": 20,
-        "abv": 38
+        "name": "Catuaba (Glas)",
+        "ml": 200,
+        "abv": 14
       },
       {
         "cat": "shot",
-        "name": "Jägermeister",
-        "ml": 20,
-        "abv": 35
+        "name": "Corote (Flasche)",
+        "ml": 500,
+        "abv": 14
+      },
+      {
+        "cat": "shot",
+        "name": "Tequila",
+        "ml": 30,
+        "abv": 38
+      },
+      {
+        "cat": "wein",
+        "name": "Taça de Vinho",
+        "ml": 150,
+        "abv": 12.5
+      },
+      {
+        "cat": "wein",
+        "name": "Espumante",
+        "ml": 100,
+        "abv": 11.5
       }
     ],
     "body": {
