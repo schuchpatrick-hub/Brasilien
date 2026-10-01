@@ -1029,9 +1029,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       '<p>„' + esc(txt) + '“</p><button type="button" class="btn ghost" data-act="reroast">🎲 Anderer Spruch</button></div>';
   }
   const CREW = TRIP.crew, byId = Object.fromEntries(CREW.map(c => [c.id, c]));
-  const MODES = {points: 'Punkte pro Person', winner: 'Nur Sieger', teams: 'Team gegen Team', wizard: 'Wizard-Block'};
+  const MODES = {rank: 'Platzierung (nur Rangliste)', points: 'Punkte pro Person', winner: 'Nur Sieger', teams: 'Team gegen Team', wizard: 'Wizard-Block'};
   let dbG = null, writable = false, custom = [], matches = [], filter = 'all', msg = '', pending = false;
-  let f = {type: null, players: new Set(), scores: {}, win: new Set(), A: new Set(), B: new Set(), loc: false, sa: '', sb: ''};
+  let f = {type: null, players: new Set(), scores: {}, places: {}, win: new Set(), A: new Set(), B: new Set(), loc: false, sa: '', sb: ''};
   let wiz = {};          // Eingaben der laufenden Wizard-Runde: {id: {a, s}}
   const types = () => TRIP.games.types.concat(custom);
   const typeOf = id => types().find(t => t.id === id) || {id, name: id, emoji: '🎲', mode: 'winner'};
@@ -1045,6 +1045,11 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       const A = m.teams.a || [], B = m.teams.b || [], sa = +m.teams.sa, sb = +m.teams.sb;
       const bName = m.teams.loc ? 'Einheimische' : B.map(nm).join(' & ');
       return {players: A.concat(B), winners: sa > sb ? A : sb > sa ? B : [], losers: sa > sb ? B : sb > sa ? A : [], text: A.map(nm).join(' & ') + ' <b>' + sa + ':' + sb + '</b> ' + esc(bName), loc: m.teams.loc ? (sa > sb ? 'w' : sb > sa ? 'l' : 'd') : null};
+    }
+    if (m.mode === 'rank') {
+      const pl = m.places || {}, ps = m.players.slice().sort((x, y) => (pl[x] || 99) - (pl[y] || 99));
+      const best = Math.min(...m.players.map(id => pl[id] || 99)), worst = Math.max(...m.players.map(id => pl[id] || 0));
+      return {players: m.players, winners: m.players.filter(id => pl[id] === best), losers: best === worst ? [] : m.players.filter(id => pl[id] === worst), text: ps.map(id => (pl[id] || '?') + '. ' + esc(nm(id))).join(' · ')};
     }
     if (m.mode === 'winner') return {players: m.players, winners: m.winners || [], losers: m.players.filter(id => !(m.winners || []).includes(id)), text: '🏆 ' + (m.winners || []).map(nm).join(' & ') + ' <span class="t">(' + m.players.length + ' Spieler)</span>'};
     const sc = m.mode === 'wizard' ? wizTotals(m) : m.scores || {};
@@ -1111,6 +1116,8 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
         h += '<div class="eyebrow">2. Wer spielt mit?</div>' + pick(f.players, 'pl');
         const ps = CREW.filter(p => f.players.has(p.id));
         if (t.mode === 'points' && ps.length) h += '<div class="eyebrow">3. ' + esc(t.unit || 'Punkte') + ' am Ende</div><div class="gm-rows">' + ps.map(p => '<div class="gm-row">' + av(p.id) + '<b>' + esc(p.name) + '</b><input type="number" inputmode="numeric" data-pts="' + p.id + '" value="' + esc(f.scores[p.id] ?? '') + '"></div>').join('') + '</div>';
+        if (t.mode === 'rank' && ps.length) h += '<div class="eyebrow">3. Platzierung</div><div class="gm-rows">' + ps.map(p => '<div class="gm-row">' + av(p.id) + '<b>' + esc(p.name) + '</b><select data-place="' + p.id + '"' + (writable ? '' : ' disabled') + '><option value="">Platz …</option>' +
+          ps.map((x, i) => '<option value="' + (i + 1) + '"' + (+f.places[p.id] === i + 1 ? ' selected' : '') + '>' + (i + 1) + '.' + (i === 0 ? ' 🏆' : i === ps.length - 1 ? ' 💀' : '') + '</option>').join('') + '</select></div>').join('') + '</div>';
         if (t.mode === 'winner' && ps.length) h += '<div class="eyebrow">3. Wer hat gewonnen?</div><div class="gm-pick">' + ps.map(p => '<button type="button" role="checkbox" data-wn="' + p.id + '" aria-checked="' + f.win.has(p.id) + '">' + av(p.id) + esc(p.name) + '</button>').join('') + '</div>';
         if (t.mode === 'wizard') h += '<p class="gm-hint">3 bis 6 Spieler. Danach erscheint oben der Rundenblock, Runde für Runde eintragen.</p>';
       }
@@ -1122,7 +1129,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     const list = matches.filter(m => m.done !== false).sort((a, b) => b.ts - a.ts).slice(0, 40);
     return '<details class="gm-card"' + (list.length ? ' open' : '') + '><summary>📜 Verlauf (' + matches.filter(m => m.done !== false).length + ')</summary>' + (list.length ? '<ul class="gm-log">' + list.map(m => { const t = typeOf(m.game), r = result(m);
       return '<li><span class="e">' + t.emoji + '</span><span><b>' + esc(t.name) + '</b> <span class="t">' + new Date(m.ts).toLocaleString('de-DE', {timeZone: TZ, day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'}) + '</span><br>' + r.text +
-        (r.winners.length && m.mode !== 'winner' ? ' · 🏆 ' + r.winners.map(nm).join(' & ') : '') + (roast(m) ? '<br><span class="rs">💀 ' + esc(roast(m)) + '</span>' : '') + '</span>' + (writable ? '<button type="button" class="del" data-del="' + m.id + '" aria-label="Partie löschen" title="Löschen">×</button>' : '<span></span>') + '</li>'; }).join('') + '</ul>' : '<p class="gm-hint">Noch nichts gespielt.</p>') + '</details>';
+        (r.winners.length && m.mode !== 'winner' && m.mode !== 'rank' ? ' · 🏆 ' + r.winners.map(nm).join(' & ') : '') + (roast(m) ? '<br><span class="rs">💀 ' + esc(roast(m)) + '</span>' : '') + '</span>' + (writable ? '<button type="button" class="del" data-del="' + m.id + '" aria-label="Partie löschen" title="Löschen">×</button>' : '<span></span>') + '</li>'; }).join('') + '</ul>' : '<p class="gm-hint">Noch nichts gespielt.</p>') + '</details>';
   }
   function newType() {
     if (!writable) return '';
@@ -1143,7 +1150,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     const b = e.target.closest('button,[data-loc]'); if (!b) return;
     const d = b.dataset;
     if (!writable && !d.f) return;
-    if (d.t) { f = {type: d.t, players: new Set(), scores: {}, win: new Set(), A: new Set(), B: new Set(), loc: false, sa: '', sb: ''}; msg = ''; render(); return; }
+    if (d.t) { f = {type: d.t, players: new Set(), scores: {}, places: {}, win: new Set(), A: new Set(), B: new Set(), loc: false, sa: '', sb: ''}; msg = ''; render(); return; }
     if (d.pl) { toggle(f.players, d.pl); f.win.forEach(id => { if (!f.players.has(id)) f.win.delete(id); }); render(); return; }
     if (d.wn) { toggle(f.win, d.wn); render(); return; }
     if (d.ta) { toggle(f.A, d.ta); render(); return; }
@@ -1164,10 +1171,16 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
         if (t.mode === 'wizard' && ps.length > 6) return fail('Wizard geht mit höchstens 6 Spielern.');
         doc.players = ps;
         if (t.mode === 'points') { if (ps.some(id => f.scores[id] === undefined || f.scores[id] === '')) return fail('Bitte für jeden die Punkte eintragen.'); doc.scores = Object.fromEntries(ps.map(id => [id, +f.scores[id]])); }
+        if (t.mode === 'rank') {
+          if (ps.some(id => !f.places[id])) return fail('Bitte für jeden die Platzierung wählen.');
+          const vals = ps.map(id => +f.places[id]);
+          if (!vals.includes(1)) return fail('Einer muss Platz 1 haben.');
+          doc.places = Object.fromEntries(ps.map(id => [id, +f.places[id]]));
+        }
         if (t.mode === 'winner') { if (!f.win.size) return fail('Bitte den Sieger auswählen.'); doc.winners = [...f.win]; }
         if (t.mode === 'wizard') { if (matches.some(m => m.mode === 'wizard' && m.done === false)) return fail('Es läuft schon ein Wizard-Block, erst den beenden.'); doc.rounds = []; doc.done = false; }
       }
-      try { await dbG.collection('games').doc().set(doc); msg = t.mode === 'wizard' ? '' : '✅ Gespeichert!'; f = {type: f.type, players: new Set(), scores: {}, win: new Set(), A: new Set(), B: new Set(), loc: false, sa: '', sb: ''}; render(); }
+      try { await dbG.collection('games').doc().set(doc); msg = t.mode === 'wizard' ? '' : '✅ Gespeichert!'; f = {type: f.type, players: new Set(), scores: {}, places: {}, win: new Set(), A: new Set(), B: new Set(), loc: false, sa: '', sb: ''}; render(); }
       catch (err) { fail(err && err.code === 'not_granted' ? 'Keine Schreibrechte.' : 'Konnte nicht speichern, bitte nochmal.'); }
       return;
     }
@@ -1198,6 +1211,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   box.addEventListener('input', e => {
     const d = e.target.dataset;
     if (d.pts) f.scores[d.pts] = e.target.value;
+    if (d.place) f.places[d.place] = e.target.value;
     if (d.sc) f[d.sc] = e.target.value;
     if (d.wa) (wiz[d.wa] = wiz[d.wa] || {}).a = e.target.value;
     if (d.ws) (wiz[d.ws] = wiz[d.ws] || {}).s = e.target.value;
