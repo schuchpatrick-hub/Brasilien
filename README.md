@@ -1,6 +1,6 @@
 # Brasilien 2026/27: Reiseübersicht
 
-**27.12.2026 – 20./21.01.2027** · Stand: 30.09.2026
+**27.12.2026 – 20./21.01.2027** · Stand: 01.10.2026
 
 ![Reisebild: Route durch Brasilien](reisebild.png)
 
@@ -35,7 +35,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | – | Manaus → Nachtflug | 13.01. → 14.01. | 0 | alle | keine (Flug 01:45) | ⏳ |
 | 5 | **Paraty** | 14.01. – 16.01. | 2 | alle | Geko Pousada Paraty | ✅ |
 | 6 | **Ilha Grande** (Vila do Abraão) | 16.01. – 20.01. (Gringos plus 1 Cevapi) / 21.01. (Daijo & Greisel) | 4 / 5 | alle | **noch offen** (Vorschlag: Balaio Hostel) | ⏳ |
-| – | Heimreise A / Rio-Verlängerung B | ab 20.01. / 21.01. | | | | ❓ |
+| – | Heimreise A: Rio-GIG 15:35 → Rom → München / Rio-Verlängerung B | 20.01. → 21.01. / ab 21.01. | | | | ✅ / ❓ |
 
 ---
 
@@ -43,8 +43,9 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 
 | Datum | Was passiert |
 |---|---|
-| **So 27.12.** | Gringos plus 1 Cevapi: Abflug München morgens (laut Chat ab ca. 06:25), MUC → Rom (ca. 1,5 h), 1 h 10 min Umstieg, Rom → São Paulo-Guarulhos (GRU, ca. 12 h). Danach mit **Uber** nach Guarujá (ca. 1,5–2 h). |
-| 28.–30.12. | Strand an der Praia da Enseada, Footvolley-Netze direkt vor der Tür |
+| **So 27.12.** | Gringos plus 1 Cevapi: **19:00 Abflug München** → Rom-Fiumicino (ITA Airways AZ433), **21:50 Rom → São Paulo-Guarulhos** (AZ674, Nachtflug, ca. 12,5 h) |
+| **Mo 28.12.** | **06:25 Landung in São Paulo-Guarulhos (GRU)**, danach mit **Uber** nach Guarujá (ca. 1,5–2 h). Strand an der Praia da Enseada |
+| 29.–30.12. | Strand an der Praia da Enseada, Footvolley-Netze direkt vor der Tür |
 | **Do 31.12.** | Inlandsflug São Paulo-**Congonhas (CGH)** → Rio-**Santos Dumont (SDU)**, möglichst vormittags. Achtung: nicht die internationalen Flughäfen. Check-in Tabas – Cena Carioca. Abends **Silvester an der Copacabana, Dresscode ganz in Weiß** |
 | 01.–05.01. | Rio: Copacabana/Ipanema, Christusstatue, Zuckerhut, Rodízio, Maracanã, Vidigal, Santa Teresa & Lapa, lokale Strände (Details unten) |
 | **Mi 06.01.** | Daijo & Greisel landen ca. **06:10 in Rio-Galeão (GIG)**. Treffpunkt GIG, gemeinsamer Flug GIG → Foz do Iguaçu (IGU) ca. **10:40** |
@@ -57,8 +58,8 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | 15.01. | Paraty: Bootstour zu Inseln und Schnorchelspots; alternativ Steinrutsche oder Trindade. Abends Live-Musik in der Altstadt |
 | **Sa 16.01.** | Nach Ilha Grande (Vila do Abraão): voraussichtlich **Uber zum Bootsanleger, dann Boot** 🟡 |
 | 17.–19.01. | Lopes Mendes, Cachoeira da Feiticeira, Palmas, Bootstouren, Footvolley (Details unten) |
-| **Mi 20.01.** | Gringos plus 1 Cevapi: Boot zurück aufs Festland, mit **Uber** zum Flughafen, Rückreise nach Hause (Details siehe unten) |
-| **Do 21.01.** | Daijo & Greisel: weiter nach Rio (evtl. noch São Paulo), später Rückflug über São Paulo nach München |
+| **Mi 20.01.** | Gringos plus 1 Cevapi: früh mit dem Boot aufs Festland, mit **Uber** zum Flughafen **Rio-Galeão (GIG)** (ca. 2,5–3 h), **15:35 Abflug GIG → Rom** (ITA Airways, Nachtflug) |
+| **Do 21.01.** | Gringos plus 1 Cevapi: **08:35 Rom → München** (AZ432), **Landung 10:10 in München**. Daijo & Greisel: weiter nach Rio (evtl. noch São Paulo), später Rückflug über São Paulo nach München |
 
 ---
 
@@ -68,8 +69,8 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 
 | Wer | Strecke | Datum | Details | Preis p. P. | Status |
 |---|---|---|---|---|---|
-| Jonas, Patrick, Simon, Marco | MUC → Rom → São Paulo GRU | 27.12.26 | alle vier auf denselben Flügen; ca. 1,5 h + 1 h 10 min Umstieg + 12 h; keine Sitzplätze reserviert (beim Check-in versuchen) | 1.120 € | ✅ gebucht am 19.08. |
-| Jonas, Patrick, Simon, Marco | Rückflug nach MUC | 20.01.27 | **Flughafen und Uhrzeit stehen nicht im Chat.** Gabelflug wurde verworfen, also vermutlich ab São Paulo | inkl. | 🟡 |
+| Jonas, Patrick, Simon, Marco | MUC → Rom → São Paulo GRU | 27.12.26 | ITA Airways, alle vier auf denselben Flügen: **AZ433 MUC 19:00 → Rom**, **AZ674 Rom 21:50 → GRU 28.12. 06:25**; keine Sitzplätze reserviert (beim Check-in versuchen) | 1.120 € | ✅ gebucht am 19.08. |
+| Jonas, Patrick, Simon, Marco | Rio GIG → Rom → MUC | 20.01.27 | ITA Airways: **GIG 15:35 → Rom** (Flugnummer ❓), **AZ432 Rom 21.01. 08:35 → MUC 10:10** | inkl. | ✅ |
 | Daijo & Greisel | MUC → Frankfurt → Rio GIG | an 06.01.27, 06:10 | | 1.300 € | ✅ |
 | Daijo & Greisel | Rio → São Paulo (Umstieg) → MUC | nach dem 21.01. | Datum im Chat nicht genannt | inkl. | ✅ |
 
@@ -127,7 +128,7 @@ Transfers laufen per **Uber** (GRU → Guarujá, Rio → Paraty, zum Flughafen a
 1. **Inlandsflüge buchen**, sobald Daijos Reisepass da ist (ab ca. 19.10.). Beim Nachtflug Manaus → Rio aufpassen: **Abflug 14.01. um 01:45** heißt, man muss **am Abend des 13.01.** am Flughafen sein.
 2. **Flug CGH → SDU am 31.12. buchen** (Patrick), am Silvestertag möglichst vormittags. Dafür braucht er die Reisepassdaten von allen.
 3. **Unterkunft Ilha Grande** in Vila do Abraão für 16.–20.01. bzw. 21.01. buchen.
-4. **Rückreise Gringos plus 1 Cevapi am 20.01. festhalten**: Flughafen und Uhrzeit. Falls ab São Paulo-GRU: von Ilha Grande sind das Boot plus ca. 5–6 h Straße. Dann eher früh am 20.01. starten oder die letzte Nacht woanders verbringen.
+4. **Rückreise 20.01. planen:** Abflug **15:35 ab Rio-Galeão (GIG)**. Von Vila do Abraão: Boot zum Festland plus ca. 2,5–3 h Uber, internationaler Flug also gegen 12:30 am Flughafen sein. Frühes Boot (ca. 07:00–08:00) heraussuchen. Außerdem ❓ Guarujá: Unterkunft ab 27.12. gebucht, Ankunft aber erst 28.12. um 06:25, also früheren Check-in oder Gepäckablage am Morgen klären.
 5. **Iguaçu-Hotel:** Name und Buchungsbestätigung zentral ablegen.
 6. **Gepäck am 13.01. in Manaus:** Das Hotel lagert nur, wenn eine weitere Nacht gebucht ist. Plan ist, das Gepäck mit in die Lodge zu nehmen (Jonas hat angefragt). Bestätigung festhalten.
 7. **Umstieg am 06.01. (Daijo & Greisel):** Landung 06:10, Weiterflug 10:40 auf getrennten Tickets. Wenn der Flieger aus Frankfurt Verspätung hat, gibt es keinen Anspruch auf Umbuchung, also am besten einen flexiblen Tarif wählen.

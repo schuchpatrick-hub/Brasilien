@@ -18,26 +18,29 @@
     {
       "date": "2026-12-27",
       "g": "a",
-      "place": "Guarujá",
-      "title": "Anreise nach Brasilien",
-      "stay": "Casa Praiana",
+      "place": "Abflug",
+      "title": "Abflug nach Brasilien",
+      "stay": "Nachtflug nach São Paulo",
       "items": [
         {
-          "time": "06:25",
-          "text": "Abflug München → Rom (Uhrzeit laut Chat, bitte prüfen)",
-          "unsicher": true,
+          "time": "19:00",
+          "text": "Abflug München → Rom-Fiumicino (ITA Airways AZ433)",
           "ics": {
-            "summary": "✈ MUC → Rom → São Paulo (GRU)",
-            "start": "20261227T052500Z",
-            "end": "20261227T200500Z",
-            "desc": "Abflug laut Chat ca. 06:25, 1 h 10 min Umstieg in Rom, ca. 12 h nach São Paulo. Ankunftszeit geschätzt."
+            "summary": "✈ AZ433 München → Rom",
+            "start": "20261227T180000Z",
+            "end": "20261227T193500Z",
+            "desc": "ITA Airways AZ433, Abflug 19:00 in München. Ankunftszeit in Rom geschätzt (ca. 1,5 h)."
           }
         },
         {
-          "text": "Rom → São Paulo-Guarulhos (GRU), ca. 12 h"
-        },
-        {
-          "text": "Mit Uber nach Guarujá, ca. 1,5–2 h"
+          "time": "21:50",
+          "text": "Rom → São Paulo-Guarulhos (AZ674), Nachtflug, ca. 12,5 h",
+          "ics": {
+            "summary": "✈ AZ674 Rom → São Paulo (GRU)",
+            "start": "20261227T205000Z",
+            "end": "20261228T092500Z",
+            "desc": "ITA Airways AZ674, Abflug 21:50 in Rom, Ankunft 28.12. um 06:25 in São Paulo-Guarulhos."
+          }
         }
       ]
     },
@@ -45,9 +48,16 @@
       "date": "2026-12-28",
       "g": "a",
       "place": "Guarujá",
-      "title": "Strandtag",
+      "title": "Ankunft & erster Strandtag",
       "stay": "Casa Praiana",
       "items": [
+        {
+          "time": "06:25",
+          "text": "Landung in São Paulo-Guarulhos (GRU)"
+        },
+        {
+          "text": "Mit Uber nach Guarujá, ca. 1,5–2 h"
+        },
         {
           "text": "Praia da Enseada, 75 m vom Haus, Footvolley-Netze"
         }
@@ -432,17 +442,20 @@
       "g": "a",
       "place": "Heimreise",
       "title": "Tchau, Brasil",
-      "stay": "Flug nach Hause",
+      "stay": "Nachtflug nach Rom",
       "items": [
         {
-          "text": "Boot zurück aufs Festland, mit Uber zum Flughafen"
+          "text": "Früh mit dem Boot aufs Festland, dann mit Uber zum Flughafen Rio-Galeão (GIG), ca. 2,5–3 h. Spätestens gegen 12:30 am Flughafen sein",
+          "unsicher": true
         },
         {
-          "text": "Rückreise nach München, Flughafen und Uhrzeit fehlen noch",
-          "unsicher": true,
+          "time": "15:35",
+          "text": "Abflug Rio-Galeão → Rom-Fiumicino (ITA Airways)",
           "ics": {
-            "summary": "✈ Heimreise nach München (Details offen)",
-            "date": "20270120"
+            "summary": "✈ Rio (GIG) → Rom",
+            "start": "20270120T183500Z",
+            "end": "20270121T060000Z",
+            "desc": "ITA Airways, Abflug 15:35 in Rio-Galeão. Flugnummer und Ankunftszeit in Rom stehen nicht im Screenshot, Ankunft geschätzt."
           }
         }
       ]
@@ -456,6 +469,29 @@
       "items": [
         {
           "text": "Die Gringos plus 1 Cevapi reisen ab"
+        }
+      ]
+    },
+    {
+      "date": "2027-01-21",
+      "g": "a",
+      "place": "Heimreise",
+      "title": "Zurück in München",
+      "stay": "zu Hause",
+      "items": [
+        {
+          "time": "08:35",
+          "text": "Rom → München (ITA Airways AZ432)",
+          "ics": {
+            "summary": "✈ AZ432 Rom → München",
+            "start": "20270121T073500Z",
+            "end": "20270121T091000Z",
+            "desc": "ITA Airways AZ432, Abflug 08:35 in Rom, Ankunft 10:10 in München."
+          }
+        },
+        {
+          "time": "10:10",
+          "text": "Landung in München"
         }
       ]
     },
@@ -1729,13 +1765,13 @@
       ],
       "fromCity": "München",
       "toCity": "São Paulo (Guarulhos)",
-      "time": "ab ca. 06:25",
-      "timeUnsure": true,
-      "dur": "1,5 h + 1 h 10 min Umstieg in Rom + ca. 12 h",
+      "time": "19:00 → 06:25 (+1)",
+      "timeUnsure": false,
+      "dur": "AZ433 nach Rom, ab 21:50 AZ674 nach São Paulo (ca. 12,5 h)",
       "price": "1.120 €",
       "status": "booked",
       "statusText": "gebucht am 19.08.",
-      "note": "Keine Sitzplätze reserviert, beim Check-in versuchen.",
+      "note": "ITA Airways. Ankunft am 28.12. morgens. Keine Sitzplätze reserviert, beim Check-in versuchen.",
       "from": "MUC"
     },
     {
@@ -1815,18 +1851,20 @@
     {
       "date": "2027-01-20",
       "g": "a",
+      "from": "GIG",
       "to": "MUC",
-      "fromCity": "vermutlich São Paulo",
+      "via": [
+        "FCO"
+      ],
+      "fromCity": "Rio (Galeão)",
       "toCity": "München",
-      "fromUnsure": true,
-      "time": "Uhrzeit fehlt",
-      "timeUnsure": true,
-      "dur": "",
+      "time": "15:35 → 10:10 (+1)",
+      "dur": "Nachtflug nach Rom, ab 21.01. 08:35 AZ432 nach München",
       "price": "inkl.",
-      "status": "check",
-      "statusText": "gebucht, Details fehlen",
-      "note": "Flughafen und Uhrzeit stehen nicht im Chat. Von Ilha Grande nach GRU: Boot plus ca. 5–6 h Straße.",
-      "from": "GRU"
+      "status": "booked",
+      "statusText": "gebucht",
+      "warn": "Abflug ab Rio-Galeão, nicht São Paulo! Von Ilha Grande: Boot plus ca. 2,5–3 h Uber, also früh am Morgen los.",
+      "note": "ITA Airways. Flugnummer Rio → Rom fehlt noch im Screenshot."
     },
     {
       "date": "2027-01-21",
@@ -2598,7 +2636,7 @@
       "cat": "task",
       "e": "🧳",
       "t": "Packtag",
-      "x": "Morgen früh geht der Flieger. Letzter Check: Pass, Geld, Handy-Ladekabel, Adapter, Medikamente, weißes Outfit. Die Packliste im Reiter „Infos & Packen“ zum Abhaken. Und: Zeitkapsel-Tipps bis heute Nacht an Patrick!",
+      "x": "Morgen Abend um 19 Uhr geht der Flieger ab München. Letzter Check: Pass, Geld, Handy-Ladekabel, Adapter, Medikamente, weißes Outfit. Die Packliste im Reiter „Infos & Packen“ zum Abhaken. Und: Zeitkapsel-Tipps bis heute Nacht an Patrick!",
       "link": "#packen"
     },
     {

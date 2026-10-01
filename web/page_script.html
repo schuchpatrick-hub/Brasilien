@@ -59,7 +59,7 @@ function renderToday() {
     const n = daysBetween(t, first);
     const d0 = list[0];
     html = sceneHtml(list.find(d => SCENE_OF[d.place]).place) + '<div class="kicker">' + esc(gName(G)) + ' · Countdown</div>' +
-      '<div class="big">Noch ' + n + (n === 1 ? ' Tag' : ' Tage') + '<small>bis zum Abflug am ' + fmtDay(first).wd + ' ' + fmtDay(first).dm + ' · erster Stopp: ' + esc(list.find(d => d.place !== 'München')?.place || d0.place) + '</small></div>' +
+      '<div class="big">Noch ' + n + (n === 1 ? ' Tag' : ' Tage') + '<small>bis zum Abflug am ' + fmtDay(first).wd + ' ' + fmtDay(first).dm + ' · erster Stopp: ' + esc(list.find(d => !['München', 'Abflug'].includes(d.place))?.place || d0.place) + '</small></div>' +
       itemsHtml(d0.items) +
       '<div class="next">🎁 <a href="#kalender">Heutiges Türchen öffnen</a> · ⏳ <a href="#kapsel">Zeitkapsel</a></div>';
   } else if (t > last) {
