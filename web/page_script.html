@@ -1522,19 +1522,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     const r = card.getBoundingClientRect();
     if (r.bottom > innerHeight || r.top < 0) card.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest'});
   }
-  const fig = svg.closest('figure'), zb = document.getElementById('map-zoom');
-  function zoom(on) {
-    fig.classList.toggle('zoomed', on); zb.setAttribute('aria-expanded', String(on));
-    zb.textContent = on ? '✕ Schließen' : '⤢ Vergrößern';
-    document.documentElement.style.overflow = on ? 'hidden' : '';
-    if (on) requestAnimationFrame(() => { fig.scrollLeft = (fig.scrollWidth - fig.clientWidth) * 0.55; fig.scrollTop = (fig.scrollHeight - fig.clientHeight) * 0.6; });
-  }
-  if (zb) zb.addEventListener('click', () => zoom(!fig.classList.contains('zoomed')));
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && fig.classList.contains('zoomed')) zoom(false); });
   chips.innerHTML = MI.stops.map(st => '<button type="button" data-stop="' + esc(st.id) + '" aria-pressed="false"><b>' + st.n + '</b>' + esc(st.name) + '</button>').join('');
   chips.addEventListener('click', e => { const b = e.target.closest('button[data-stop]'); if (b) select('stop', b.dataset.stop); });
   const pick = e => { const g = e.target.closest('[data-stop],[data-ap]'); if (!g || !svg.contains(g)) return false;
-    if (fig.classList.contains('zoomed')) zoom(false);
     if (g.dataset.stop) select('stop', g.dataset.stop); else select('ap', g.dataset.ap); return true; };
   svg.addEventListener('click', pick);
   svg.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && pick(e)) e.preventDefault(); });

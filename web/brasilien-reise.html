@@ -101,14 +101,6 @@ figcaption{background:var(--surface);padding:10px 14px;font-size:.88rem;color:va
 .fl.open{stroke:#d9822b}.flB{stroke:#8a4fbf}.ahO{fill:#d9822b}.ahB{fill:#8a4fbf}
 :root[data-theme="dark"] .flB{stroke:#c79bf0}:root[data-theme="dark"] .ahB{fill:#c79bf0}:root[data-theme="dark"] .fl.open{stroke:#f0a050}:root[data-theme="dark"] .ahO{fill:#f0a050}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .flB{stroke:#c79bf0}:root:not([data-theme="light"]) .ahB{fill:#c79bf0}:root:not([data-theme="light"]) .fl.open{stroke:#f0a050}:root:not([data-theme="light"]) .ahO{fill:#f0a050}}
-/* Karte: Vollbild */
-#route figure{position:relative}
-.map-zoom{position:absolute;top:10px;left:10px;z-index:2;font:600 .82rem var(--body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
-#route figure.zoomed{position:fixed;inset:0;z-index:300;border-radius:0;border:0;overflow:auto;background:var(--sea);margin:0;-webkit-overflow-scrolling:touch}
-#route figure.zoomed svg{width:max(1500px,230vw);max-width:none}
-#route figure.zoomed figcaption{display:none}
-#route figure.zoomed .map-zoom{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:auto;right:12px}
-@media print{.map-zoom{display:none}}
 .ht{paint-order:stroke;stroke:var(--sea);stroke-width:5px;stroke-linejoin:round}
 .gr{fill:none;stroke:var(--accent);stroke-width:3.2;stroke-linecap:round}
 .bt{fill:none;stroke:#1d8aa8;stroke-width:3;stroke-dasharray:2 5;stroke-linecap:round}
@@ -918,7 +910,6 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
 <section id="route" data-tab="uebersicht">
   <h2>Die Route</h2>
   <figure>
-    <button type="button" class="map-zoom" id="map-zoom" aria-expanded="false">⤢ Vergrößern</button>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1143 1021" class="tripmap" role="img" data-proj="-76.0,7.0,23.2,0.9659258262890683,-47.0,-42.85,-22.45,-24.2,636,786,129.50883237148406,0.9191353392552344,494,227" aria-label="Karte der Reiseroute durch Brasilien: Guarujá, Rio de Janeiro, Foz do Iguaçu, Manaus, Paraty, Ilha Grande">
 <defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" class="arrowhead"/></marker><marker id="arrO" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="13" markerHeight="13" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" class="ahO"/></marker><marker id="arrB" viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" class="ahB"/></marker><clipPath id="clipMain"><rect width="1143" height="1021"/></clipPath><clipPath id="clipIn"><rect x="636" y="786" width="494" height="227"/></clipPath></defs>
 <rect class="sea" width="1143" height="1021"/>
@@ -2907,19 +2898,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     const r = card.getBoundingClientRect();
     if (r.bottom > innerHeight || r.top < 0) card.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest'});
   }
-  const fig = svg.closest('figure'), zb = document.getElementById('map-zoom');
-  function zoom(on) {
-    fig.classList.toggle('zoomed', on); zb.setAttribute('aria-expanded', String(on));
-    zb.textContent = on ? '✕ Schließen' : '⤢ Vergrößern';
-    document.documentElement.style.overflow = on ? 'hidden' : '';
-    if (on) requestAnimationFrame(() => { fig.scrollLeft = (fig.scrollWidth - fig.clientWidth) * 0.55; fig.scrollTop = (fig.scrollHeight - fig.clientHeight) * 0.6; });
-  }
-  if (zb) zb.addEventListener('click', () => zoom(!fig.classList.contains('zoomed')));
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && fig.classList.contains('zoomed')) zoom(false); });
   chips.innerHTML = MI.stops.map(st => '<button type="button" data-stop="' + esc(st.id) + '" aria-pressed="false"><b>' + st.n + '</b>' + esc(st.name) + '</button>').join('');
   chips.addEventListener('click', e => { const b = e.target.closest('button[data-stop]'); if (b) select('stop', b.dataset.stop); });
   const pick = e => { const g = e.target.closest('[data-stop],[data-ap]'); if (!g || !svg.contains(g)) return false;
-    if (fig.classList.contains('zoomed')) zoom(false);
     if (g.dataset.stop) select('stop', g.dataset.stop); else select('ap', g.dataset.ap); return true; };
   svg.addEventListener('click', pick);
   svg.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && pick(e)) e.preventDefault(); });

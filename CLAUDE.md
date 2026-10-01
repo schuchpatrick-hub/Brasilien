@@ -131,7 +131,7 @@ Stopps (`data-stop`) und Flughäfen GRU/CGH (`data-ap`) in `tools/gen_map.py` si
 Flügen aus `flights`. Daten in `trip.json` → `mapinfo` (`stops`, `airports`; `q` = Suchbegriff). Fahrzeiten-Liste im
 Südost-Ausschnitt, Zeitzone Manaus und Pass-Hinweis Iguaçu direkt in `gen_map.py`. Flugbögen lesen den Status aus
 `trip.json` → `flights` (`open` = orange, nur Daijo & Greisel = lila `flB`), ☾ = Nachtflug, Flugdauer an den Bögen.
-GIG/SDU im Ausschnitt leicht versetzt neben Rio. Knopf „⤢ Vergrößern“ (Vollbild-Overlay zum Verschieben).
+GIG/SDU im Ausschnitt leicht versetzt neben Rio.
 
 ## Regeln
 
