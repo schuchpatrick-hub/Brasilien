@@ -2892,7 +2892,7 @@
       "SCH": "Schnarchen",
       "MEK": "Meckern & Jammern"
     },
-    "_hinweis": "Basiswerte in crew[].card.stats; Gesamtwertung nur aus core. worse = höher ist schlimmer (rot). Live: TRI + Drinks/6 (max +6), KAT − (Drinks der letzten 14 h − 5, max −15), OVR + Siege − letzte Plätze (max ±5).",
+    "_hinweis": "Basiswerte in crew[].card.stats; Gesamtwertung nur aus core. worse = höher ist schlimmer (rot). Live: TRI + Drinks/6 (max +6), KAT − (Drinks der letzten 14 h − 5, max −15), OVR + Siege − letzte Plätze (max ±5). Ereignisse: db-Collection cardlog (who, stat, d, why, ts), werden auf die Basiswerte addiert (1–99), Vorlagen in cardsInfo.presets.",
     "core": [
       "TTP",
       "TRI",
@@ -2905,6 +2905,98 @@
       "GRI",
       "SCH",
       "MEK"
+    ],
+    "presets": [
+      {
+        "e": "⏰",
+        "t": "Zu spät gekommen",
+        "s": "PÜN",
+        "d": -5
+      },
+      {
+        "e": "✅",
+        "t": "Überpünktlich",
+        "s": "PÜN",
+        "d": 3
+      },
+      {
+        "e": "😴",
+        "t": "Geschnarcht wie ein Walross",
+        "s": "SCH",
+        "d": 5
+      },
+      {
+        "e": "😩",
+        "t": "Gejammert",
+        "s": "MEK",
+        "d": 4
+      },
+      {
+        "e": "🦞",
+        "t": "Sonnenbrand / Socken in Sandalen",
+        "s": "GRI",
+        "d": 4
+      },
+      {
+        "e": "🗺️",
+        "t": "Verlaufen",
+        "s": "ORI",
+        "d": -5
+      },
+      {
+        "e": "🧭",
+        "t": "Gruppe gerettet (Weg gefunden)",
+        "s": "ORI",
+        "d": 4
+      },
+      {
+        "e": "💃",
+        "t": "Samba-Einlage",
+        "s": "SMB",
+        "d": 4
+      },
+      {
+        "e": "🎤",
+        "t": "Karaoke-Auftritt",
+        "s": "KAR",
+        "d": 4
+      },
+      {
+        "e": "🍺",
+        "t": "Exen in Rekordzeit",
+        "s": "TTP",
+        "d": 3
+      },
+      {
+        "e": "🤢",
+        "t": "Kater des Todes",
+        "s": "KAT",
+        "d": -6
+      },
+      {
+        "e": "💪",
+        "t": "Topfit nach Partynacht",
+        "s": "KAT",
+        "d": 4
+      },
+      {
+        "e": "😍",
+        "t": "Nummer bekommen",
+        "s": "FLI",
+        "d": 6
+      },
+      {
+        "e": "💔",
+        "t": "Abfuhr kassiert",
+        "s": "FLI",
+        "d": -3
+      },
+      {
+        "e": "🍽️",
+        "t": "Buffet-Rekord",
+        "s": "BUF",
+        "d": 3
+      }
     ]
   }
 }

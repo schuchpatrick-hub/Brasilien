@@ -63,6 +63,11 @@ Laterne. Marktwert vorne unten: Grundwert 0,5 Mio. € · 2^((Schnitt+6−60)/5)
 fest pro Tag und Person, Siege +6 %, letzte Plätze −5 %, Drinks bis +4 % pro Tag, dauerhaft; Rückkehr Richtung Grundwert),
 mit Pfeil zur Vortagsveränderung und Rekordwert auf der Rückseite. Antippen dreht die Karte (Rückseite scrollbar: Scout-Bericht, PlayStyles, Spielerakte `card.file` mit Ablöse-Klausel, Vertrag, Verletzungen, Torjubel, Transfergerücht; unten Drinks, Siege, Form).
 
+**Werte anpassen** (nur Admin, „✏️ Werte anpassen“ unter den Karten): Ereignisse in db-Collection `cardlog`
+(`who`, `stat`, `d` = Änderung, `why`, `ts`), werden dauerhaft auf die Basiswerte addiert (1–99); Vorlagen in
+`trip.json` → `cardsInfo.presets` (zu spät PÜN −5, geschnarcht SCH +5 …). Heutige Änderungen stehen als kleines +/− am Wert,
+Liste „📰 Transfer-News“ mit Löschen (zweimal tippen).
+
 ## Drinks-Counter
 
 Kapitel „Drinks“ (`#drinks`). Daten in der Artifact-Datenbank: Collection `drinks` (ein Dokument pro Getränk:
