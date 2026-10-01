@@ -98,6 +98,21 @@ figcaption{background:var(--surface);padding:10px 14px;font-size:.88rem;color:va
 .sea{fill:var(--sea)}.land{fill:var(--land);stroke:var(--landline);stroke-width:.8}.br{fill:var(--br);stroke:var(--brline);stroke-width:1.4}
 .fl{fill:none;stroke:var(--sky);stroke-width:2.6;stroke-dasharray:7 6;stroke-linecap:round}
 .fl2{stroke-width:2;opacity:.6}
+.fl.open{stroke:#d9822b}.flB{stroke:#8a4fbf}.ahO{fill:#d9822b}.ahB{fill:#8a4fbf}
+:root[data-theme="dark"] .flB{stroke:#c79bf0}:root[data-theme="dark"] .ahB{fill:#c79bf0}:root[data-theme="dark"] .fl.open{stroke:#f0a050}:root[data-theme="dark"] .ahO{fill:#f0a050}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .flB{stroke:#c79bf0}:root:not([data-theme="light"]) .ahB{fill:#c79bf0}:root:not([data-theme="light"]) .fl.open{stroke:#f0a050}:root:not([data-theme="light"]) .ahO{fill:#f0a050}}
+/* Karte: Vollbild und Statistik */
+#route figure{position:relative}
+.map-zoom{position:absolute;top:10px;left:10px;z-index:2;font:600 .82rem var(--body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+#route figure.zoomed{position:fixed;inset:0;z-index:300;border-radius:0;border:0;overflow:auto;background:var(--sea);margin:0;-webkit-overflow-scrolling:touch}
+#route figure.zoomed svg{width:max(1500px,230vw);max-width:none}
+#route figure.zoomed figcaption{display:none}
+#route figure.zoomed .map-zoom{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:auto;right:12px}
+.map-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin-top:12px}
+.map-stats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+.map-stats b{display:block;font:800 1.3rem var(--display)}
+.map-stats span{font-size:.78rem;color:var(--muted)}
+@media print{.map-zoom{display:none}}
 .ht{paint-order:stroke;stroke:var(--sea);stroke-width:5px;stroke-linejoin:round}
 .gr{fill:none;stroke:var(--accent);stroke-width:3.2;stroke-linecap:round}
 .bt{fill:none;stroke:#1d8aa8;stroke-width:3;stroke-dasharray:2 5;stroke-linecap:round}

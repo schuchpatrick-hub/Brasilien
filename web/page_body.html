@@ -42,9 +42,18 @@
 <section id="route" data-tab="uebersicht">
   <h2>Die Route</h2>
   <figure>
+    <button type="button" class="map-zoom" id="map-zoom" aria-expanded="false">⤢ Vergrößern</button>
     %%MAP%%
-    <figcaption>Gestrichelt: Flug · durchgezogen: Straße · gepunktet: Boot. <span class="lg-done">Gelb</span> = schon geschafft, <span class="lg-here">pulsierend</span> = hier sind wir, <span class="lg-pin">rot</span> = letzter Check-in. Guarujá, Rio, Paraty und Ilha Grande sind rechts unten vergrößert. <b>Orte und Flughäfen antippen</b> für Infos.</figcaption>
+    <figcaption>Gestrichelt: Flug (blau gebucht, orange noch offen, lila nur Daijo &amp; Greisel, ☾ Nachtflug) · durchgezogen: Straße · gepunktet: Boot. <span class="lg-done">Gelb</span> = schon geschafft, <span class="lg-here">pulsierend</span> = hier sind wir, <span class="lg-pin">rot</span> = letzter Check-in. Guarujá, Rio, Paraty und Ilha Grande sind rechts unten vergrößert. <b>Orte und Flughäfen antippen</b> für Infos.</figcaption>
   </figure>
+  <div class="map-stats" aria-label="Reise in Zahlen (Gringos plus 1 Cevapi)">
+    <div><b>6</b><span>Flugstrecken (9 Flüge)</span></div>
+    <div><b>ca. 27.000</b><span>km in der Luft</span></div>
+    <div><b>ca. 38 h</b><span>reine Flugzeit</span></div>
+    <div><b>3 ☾</b><span>Nachtflüge</span></div>
+    <div><b>2</b><span>Bootsüberfahrten</span></div>
+    <div><b>22</b><span>Nächte an 7 Orten</span></div>
+  </div>
   <div class="mi" id="map-info">
     <div class="mi-chips" id="mi-chips" role="group" aria-label="Station wählen"></div>
     <div id="mi-card" aria-live="polite"><p class="note">👆 Tippe auf einen Ort oder Flughafen in der Karte (oder oben auf eine Station): Unterkunft, Anreise, Highlights, Flüge, mit Google-Maps- und Uber-Knöpfen.</p></div>
