@@ -2018,7 +2018,7 @@
       "cat": "task",
       "e": "⏳",
       "t": "Die Zeitkapsel ist offen",
-      "x": "Ab heute könnt ihr eure Prognosen für die Reise abgeben: Wer holt sich die erste Zerrung? Wie viele Nummern bekommt Simon? Die Tipps werden versiegelt und erst am letzten Abend auf der Ilha Grande geöffnet. Schickt eure Antworten an Patrick.",
+      "x": "Ab heute könnt ihr eure Prognosen für die Reise abgeben: Wer holt sich die erste Zerrung? Wie viele Frauen küsst Simon? Die Tipps werden versiegelt und erst am letzten Abend auf der Ilha Grande geöffnet. Schickt eure Antworten an Patrick.",
       "link": "#kapsel"
     },
     {
@@ -2724,11 +2724,11 @@
         "unit": "Teller"
       },
       {
-        "id": "nummern",
+        "id": "kuesse",
         "type": "number",
-        "q": "Wie viele Handynummern bekommt Simon auf der ganzen Reise?",
-        "emoji": "📞",
-        "unit": "Nummern"
+        "q": "Wie viele Frauen küsst Simon auf der ganzen Reise?",
+        "emoji": "💋",
+        "unit": "Küsse"
       },
       {
         "id": "caipis",
