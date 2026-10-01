@@ -151,6 +151,13 @@ Erledigtes gelb und lässt den heutigen Stopp pulsieren. Check-ins (Koordinaten 
 Collection `checkins` (`lat`, `lon`, `label`, `ts`) und erscheinen als rote Pins. Echtes GPS-Tracking ist im
 claude.ai-Viewer nicht möglich (Standortzugriff gesperrt), daher manuelles Einchecken durch den Admin.
 
+## Karte: Reise-Animation
+
+Knopf „✈️ Reise abspielen“ (`#map-play`) unter der Karte: Flugzeug, Auto und Boot mit runden Crew-Köpfen fahren die
+gezeichneten Pfade ab (`getPointAtLength` auf den Pfaden mit `data-d`), Bildunterschriften oben, Ablauf in `play()`.
+Video: Zeit über `window.__tripT` steuern, Bilder mit Playwright aufnehmen und mit ffmpeg (`pip install imageio-ffmpeg`)
+zu MP4 machen. Das Video enthält Crew-Fotos, also **nicht** ins Repo legen.
+
 ## Karte: Infokarten
 
 Stopps (`data-stop`) und Flughäfen GRU/CGH (`data-ap`) in `tools/gen_map.py` sind antippbar; darunter Stations-Chips und

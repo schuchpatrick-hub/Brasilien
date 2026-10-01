@@ -467,6 +467,21 @@ header .today::before{opacity:.25}
 .pcard.me{box-shadow:0 0 0 3px var(--amarelo)}
 .fc.me .fc-in{filter:drop-shadow(0 0 10px rgba(255,207,31,.8))}
 @media print{.me-box{display:none}}
+.map-play{margin-top:10px;font:700 .95rem var(--body);background:var(--amarelo);color:#1a1a1a;border:0;border-radius:999px;padding:10px 18px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.15)}
+.trip-anim{pointer-events:none}
+.veh-hull{fill:#fff;stroke:#10231d;stroke-width:2}
+.veh-wing{fill:#d9dee0;stroke:#10231d;stroke-width:1.5}.veh-wing.back{fill:#bfc7ca}
+.veh-fin{fill:#00843d;stroke:#10231d;stroke-width:1.5}
+.veh-car{fill:#1a1a1a;stroke:#ffcf1f;stroke-width:2}.veh-wheel{fill:#444;stroke:#fff;stroke-width:1.5}
+.veh-boat{fill:#8a5a2b;stroke:#10231d;stroke-width:1.5}.veh-wave{fill:none;stroke:#1d8aa8;stroke-width:2}
+.veh-ring{fill:#fff;stroke:#ffcf1f;stroke-width:2.5}.veh-ring.b{stroke:#8a4fbf}
+.veh-face{fill:#00843d}.veh-ini{fill:#fff;font:800 12px var(--body)}
+.trip-cap rect{fill:#10231d;opacity:.88}.trip-cap text{fill:#fff;font:700 17px var(--body)}
+.trip-cap.pop{animation:capPop .35s ease}
+@keyframes capPop{from{opacity:0}}
+.trip-fx{font-size:34px;animation:fxPop 1.2s ease}
+@keyframes fxPop{0%{opacity:0}30%{opacity:1}100%{opacity:1}}
+@media print{.map-play{display:none}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
@@ -1095,6 +1110,7 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
 </svg>
     <figcaption>Gestrichelt: Flug (blau gebucht, orange noch offen, lila nur Daijo &amp; Greisel, ☾ Nachtflug) · durchgezogen: Straße · gepunktet: Boot. <span class="lg-done">Gelb</span> = schon geschafft, <span class="lg-here">pulsierend</span> = hier sind wir, <span class="lg-pin">rot</span> = letzter Check-in. Guarujá, Rio, Paraty und Ilha Grande sind rechts unten vergrößert. <b>Orte und Flughäfen antippen</b> für Infos.</figcaption>
   </figure>
+  <button type="button" class="map-play" id="map-play" aria-pressed="false">✈️ Reise abspielen</button>
   <div class="mi" id="map-info">
     <div class="mi-chips" id="mi-chips" role="group" aria-label="Station wählen"></div>
     <div id="mi-card" aria-live="polite"><p class="note">👆 Tippe auf einen Ort oder Flughafen in der Karte (oder oben auf eine Station): Unterkunft, Anreise, Highlights, Flüge, mit Google-Maps- und Uber-Knöpfen.</p></div>
@@ -3220,6 +3236,129 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     if (g.dataset.stop) select('stop', g.dataset.stop); else select('ap', g.dataset.ap); return true; };
   svg.addEventListener('click', pick);
   svg.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && pick(e)) e.preventDefault(); });
+})();
+
+/* ---------- Karte: Reise als Animation (Köpfe im Flieger, Auto, Boot) ---------- */
+(function () {
+  const svg = document.querySelector('#route svg.tripmap'), btn = document.getElementById('map-play');
+  if (!svg || !btn || PRINT) return;
+  const NS = 'http://www.w3.org/2000/svg';
+  const mk = (tag, a) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const byId = Object.fromEntries(TRIP.crew.map(c => [c.id, c]));
+  const A = GROUP_IDS.a, B = GROUP_IDS.b, ALL = A.concat(B);
+  const P = sel => svg.querySelector(sel);
+  const dot = sel => { const c = P(sel); return c ? {x: +c.getAttribute('cx'), y: +c.getAttribute('cy')} : null; };
+  const tnow = () => window.__tripT !== undefined ? window.__tripT : performance.now();   // Video-Aufnahme setzt die Zeit selbst
+  const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  let layer = null, cap = null, run = 0;
+
+  // Fahrzeug mit Köpfen bauen (Flugzeug, Auto, Boot); Nase zeigt nach rechts
+  function vehicle(kind, ids, s) {
+    const g = mk('g', {class: 'trip-veh'}), n = ids.length, R = 11, gap = 21, len = Math.max(60, n * gap + 34);
+    const inner = mk('g', {transform: 'scale(' + s + ')'}); g.appendChild(inner);
+    const body = mk('g', {class: 'veh-body'}); inner.appendChild(body);
+    if (kind === 'plane') {
+      body.appendChild(mk('path', {d: `M${-len / 2 + 8},-2 L${-len / 2 - 6},-20 L${-len / 2 + 6},-20 L${-len / 2 + 22},-4 Z`, class: 'veh-fin'}));
+      body.appendChild(mk('path', {d: `M-6,4 L-22,26 L-8,26 L14,4 Z`, class: 'veh-wing'}));
+      body.appendChild(mk('rect', {x: -len / 2, y: -9, width: len, height: 18, rx: 9, class: 'veh-hull'}));
+      body.appendChild(mk('path', {d: `M${len / 2 - 4},-8 Q${len / 2 + 12},0 ${len / 2 - 4},8 Z`, class: 'veh-hull'}));
+      body.appendChild(mk('path', {d: `M-6,-4 L-20,-22 L-8,-22 L12,-4 Z`, class: 'veh-wing back'}));
+    } else if (kind === 'car') {
+      body.appendChild(mk('rect', {x: -len / 2, y: -8, width: len, height: 16, rx: 6, class: 'veh-car'}));
+      [-len / 2 + 12, len / 2 - 12].forEach(x => body.appendChild(mk('circle', {cx: x, cy: 9, r: 6, class: 'veh-wheel'})));
+    } else {
+      body.appendChild(mk('path', {d: `M${-len / 2},-4 L${len / 2 + 10},-4 L${len / 2 - 6},12 L${-len / 2 + 6},12 Z`, class: 'veh-boat'}));
+      body.appendChild(mk('path', {d: `M${-len / 2 - 6},16 q8,-6 16,0 t16,0 t16,0 t16,0 t16,0`, class: 'veh-wave'}));
+    }
+    const heads = mk('g', {class: 'veh-heads'}); inner.appendChild(heads);
+    ids.forEach((id, i) => {
+      const p = byId[id], x = -((n - 1) * gap) / 2 + i * gap, y = kind === 'plane' ? -13 : -16;
+      const h = mk('g', {transform: `translate(${x},${y})`, 'data-x': x, 'data-y': y}); h.appendChild(mk('circle', {r: R + 2, class: 'veh-ring' + (B.includes(id) ? ' b' : '')}));
+      if (p && p.photo) { const im = mk('image', {href: p.photo, x: -R, y: -R, width: 2 * R, height: 2 * R, 'clip-path': 'url(#head-clip)', preserveAspectRatio: 'xMidYMid slice'}); h.appendChild(im); }
+      else { h.appendChild(mk('circle', {r: R, class: 'veh-face'})); const t = mk('text', {class: 'veh-ini', 'text-anchor': 'middle', 'dominant-baseline': 'central'}); t.textContent = p ? p.name[0] : '?'; h.appendChild(t); }
+      heads.appendChild(h);
+    });
+    layer.appendChild(g); return g;
+  }
+  function place(g, x, y, ang, flip, kind) {
+    const a = kind === 'plane' ? ang : 0;
+    const deg = a * 180 / Math.PI;
+    g.setAttribute('transform', `translate(${x.toFixed(1)},${y.toFixed(1)}) rotate(${deg.toFixed(1)}) scale(${flip ? -1 : 1},1)`);
+    // Köpfe bleiben aufrecht und spiegelverkehrt-frei
+    g.querySelectorAll('.veh-heads > g').forEach(h => h.setAttribute('transform', `translate(${h.dataset.x},${h.dataset.y}) scale(${flip ? -1 : 1},1) rotate(${(-deg).toFixed(1)})`));
+  }
+  function caption(t) {
+    cap.querySelector('text').textContent = t;
+    const w = Math.min(svg.viewBox.baseVal.width - 40, t.length * 10.5 + 40);
+    const r = cap.querySelector('rect'); r.setAttribute('x', -w / 2); r.setAttribute('width', w);
+    cap.classList.remove('pop'); void cap.getBBox(); cap.classList.add('pop');
+  }
+  const wait = (ms, my) => new Promise(res => { const t0 = tnow(); (function f() { const now = tnow(); if (my !== run) return res(); if (now - t0 >= ms) return res(); requestAnimationFrame(f); })(t0); });
+  // entlang eines Kartenpfads (oder einer Geraden) fahren
+  function move(g, kind, src, ms, my, rev) {
+    return new Promise(res => {
+      let L, at;
+      if (src.getTotalLength) { L = src.getTotalLength(); at = d => { const p = src.getPointAtLength(rev ? L - d : d); return {x: p.x, y: p.y}; }; }
+      else { const [a, b] = src; L = Math.hypot(b.x - a.x, b.y - a.y); at = d => ({x: a.x + (b.x - a.x) * d / L, y: a.y + (b.y - a.y) * d / L}); }
+      const t0 = tnow();
+      (function f() { const now = tnow();
+        if (my !== run) return res();
+        const t = Math.min(1, (now - t0) / ms), d = ease(t) * L, p = at(d), q = at(Math.min(L, d + 2)), o = at(Math.max(0, d - 2));
+        const dx = q.x - o.x, dy = q.y - o.y, flip = dx < 0, ang = flip ? Math.atan2(-dy, -dx) : Math.atan2(dy, dx);
+        place(g, p.x, p.y, ang, flip, kind);
+        g.style.opacity = t < .08 ? t / .08 : 1;
+        if (t < 1) requestAnimationFrame(f); else res();
+      })(t0);
+    });
+  }
+  const fade = (g, ms, my) => new Promise(res => { const t0 = tnow(); (function f() { const now = tnow(); if (my !== run) return res(); const t = Math.min(1, (now - t0) / ms); g.style.opacity = 1 - t; if (t < 1) requestAnimationFrame(f); else { g.remove(); res(); } })(t0); });
+  function park(kind, ids, pt, s) { const g = vehicle(kind, ids, s); place(g, pt.x, pt.y, 0, false, kind); return g; }
+  function burst(pt, txt) { const t = mk('text', {x: pt.x, y: pt.y, class: 'trip-fx', 'text-anchor': 'middle'}); t.textContent = txt; layer.appendChild(t); return t; }
+
+  async function play() {
+    const my = ++run; stopUI(true);
+    layer && layer.remove();
+    layer = mk('g', {class: 'trip-anim'}); svg.appendChild(layer);
+    const defs = mk('defs', {}); defs.innerHTML = '<clipPath id="head-clip" clipPathUnits="objectBoundingBox"><circle cx=".5" cy=".5" r=".5"/></clipPath>'; layer.appendChild(defs);
+    cap = mk('g', {class: 'trip-cap', transform: `translate(${svg.viewBox.baseVal.width / 2},34)`}); cap.appendChild(mk('rect', {x: -100, y: -20, width: 200, height: 36, rx: 18})); const ct = mk('text', {'text-anchor': 'middle', y: 4}); cap.appendChild(ct); layer.appendChild(cap);
+    const S = 1.3, s = .8;   // Größe Hauptkarte / Ausschnitt
+    const legs = {
+      hin: P('path.fl[data-d="2026-12-27"]'), gua: P('path.gr[data-d="2026-12-28"]'), sdu: P('path.fl[data-d="2026-12-31"]'),
+      dg: P('path.flB[data-d="2027-01-06"]'), igu: P('path.fl:not(.flB)[data-d="2027-01-06"]'), mao: P('path.fl[data-d="2027-01-09"]'),
+      rio: P('path.fl[data-d="2027-01-14"]'), par: P('path.gr[data-d="2027-01-14"]'), ilha: P('path.bt[data-d="2027-01-16"]'),
+      boat: P('path.bt[data-d="2027-01-20"]'), road: P('path.gr[data-d="2027-01-20"]'), heim: P('path.fl[data-d="2027-01-20"]')
+    };
+    const pts = {gua: dot('[data-stop="guaruja"] .dot'), cgh: dot('[data-ap="CGH"] .dot2'), rio: dot('[data-stop="rio"] .dot'), igu: dot('[data-stop="iguacu"] .dot'),
+      mao: dot('[data-stop="manaus"] .dot'), par: dot('[data-stop="paraty"] .dot'), ilha: dot('[data-stop="ilha"] .dot')};
+    const step = async (fn) => { if (my === run) await fn(); };
+    let v;
+    await step(async () => { caption('27.12. ✈️ München → Rom → São Paulo'); v = vehicle('plane', A, S); await move(v, 'plane', legs.hin, 4200, my); await fade(v, 300, my); });
+    await step(async () => { caption('28.12. 🚗 Mit Uber nach Guarujá'); v = vehicle('car', A, s); await move(v, 'car', legs.gua, 1800, my); await wait(900, my); });
+    await step(async () => { caption('31.12. ✈️ Ab nach Rio, Silvester!'); await move(v, 'car', [pts.gua, pts.cgh], 1100, my); v.remove(); v = vehicle('plane', A, s); await move(v, 'plane', legs.sdu, 2200, my); v.remove(); });
+    let fx, parkA;
+    await step(async () => { caption('🎆 Feliz Ano Novo an der Copacabana!'); parkA = park('car', A, {x: pts.rio.x - 40, y: pts.rio.y + 34}, s); parkA.querySelector('.veh-body').style.display = 'none'; fx = burst({x: pts.rio.x - 60, y: pts.rio.y - 10}, '🎆🥂🎆'); await wait(1800, my); fx.remove(); });
+    await step(async () => { caption('06.01. ✈️ Daijo & Greisel landen in Rio'); v = vehicle('plane', B, S); await move(v, 'plane', legs.dg, 3600, my); await fade(v, 300, my); await fade(parkA, 300, my); });
+    await step(async () => { caption('06.01. ✈️ Alle sechs nach Foz do Iguaçu'); v = vehicle('plane', ALL, S); await move(v, 'plane', legs.igu, 2600, my); await wait(400, my); });
+    await step(async () => { caption('07.01. 💦 Wasserfälle!'); fx = burst({x: pts.igu.x, y: pts.igu.y + 52}, '💦🌈💦'); await wait(1400, my); fx.remove(); });
+    await step(async () => { caption('09.01. ✈️ Ab in den Dschungel nach Manaus'); await move(v, 'plane', legs.mao, 2800, my); v.remove(); });
+    await step(async () => { caption('10.01. 🛶 Juma Lodge: Kaimane & rosa Delfine'); v = vehicle('boat', ALL, S); await move(v, 'boat', [{x: pts.mao.x, y: pts.mao.y + 22}, {x: pts.mao.x + 70, y: pts.mao.y + 40}], 1600, my); fx = burst({x: pts.mao.x + 70, y: pts.mao.y + 90}, '🐊🐬🐒'); await wait(1300, my); fx.remove(); v.remove(); });
+    await step(async () => { caption('14.01. ✈️ 01:45 Nachtflug nach Rio 🌙'); v = vehicle('plane', ALL, S); await move(v, 'plane', legs.rio, 3000, my); await fade(v, 300, my); });
+    await step(async () => { caption('14.01. 🚗 Mit Uber nach Paraty'); v = vehicle('car', ALL, s); await move(v, 'car', legs.par, 2000, my); await wait(600, my); v.remove(); });
+    await step(async () => { caption('16.01. ⛵ Mit dem Boot zur Ilha Grande'); v = vehicle('boat', ALL, s); await move(v, 'boat', legs.ilha, 1700, my); fx = burst({x: pts.ilha.x + 40, y: pts.ilha.y + 70}, '🏝️🍹⚽'); await wait(1400, my); fx.remove(); v.remove(); });
+    let parkB;
+    await step(async () => { caption('20.01. 👋 Die Gringos fahren zum Flughafen'); parkB = park('boat', B, {x: pts.ilha.x + 30, y: pts.ilha.y + 24}, s); parkB.querySelector('.veh-body').style.display = 'none';
+      v = vehicle('boat', A, s); await move(v, 'boat', legs.boat, 1200, my); v.remove(); v = vehicle('car', A, s); await move(v, 'car', legs.road, 1500, my); v.remove(); });
+    await step(async () => { caption('20.01. ✈️ Heimflug über Rom nach München'); v = vehicle('plane', A, S); await move(v, 'plane', legs.heim, 3800, my); v.remove(); });
+    await step(async () => { caption('Tchau, Brasil! 🇧🇷 Daijo & Greisel bleiben noch ein bisschen'); await wait(2600, my); });
+    if (my === run) { await fade(parkB, 500, my); stopUI(false); layer.remove(); layer = null; }
+  }
+  function stopUI(on) { btn.textContent = on ? '⏹ Stopp' : '✈️ Reise abspielen'; btn.setAttribute('aria-pressed', String(on)); }
+  btn.addEventListener('click', () => {
+    if (btn.getAttribute('aria-pressed') === 'true') { run++; if (layer) layer.remove(); layer = null; stopUI(false); return; }
+    const r = svg.getBoundingClientRect(); if (r.top < 0 || r.bottom > innerHeight) svg.scrollIntoView({behavior: 'smooth', block: 'center'});
+    play();
+  });
+  window.__tripPlay = play;   // für die Video-Aufnahme
 })();
 
 renderMe(); meMark();
