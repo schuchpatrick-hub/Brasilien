@@ -10,7 +10,7 @@ Reiseübersicht, die bei neuen Infos (Buchungen, Chat-Exporte, Screenshots) aktu
 | `README.md` | Hauptübersicht (Route, Tag für Tag, Flüge, Unterkünfte, Kosten, offene Punkte, Gesundheit) |
 | `web/trip.json` | **Datenquelle** für Heute-Ansicht, Tag für Tag und Kalenderdateien (Tage, Termine mit UTC-Zeiten, Unterkünfte, Crew, Drinks, Real-Rechner) |
 | `web/trip.json` → `flights`, `costs` | Flüge als Bordkarten (Status `booked`/`open`/`check`, Warnhinweise, Suchlinks für offene Flüge) und Kosten pro Gruppe; auf der Webseite nicht mehr in `page_body.html` pflegen |
-| `web/page_body.html` | Statischer Inhalt der Webseite; jede `<section>` hat `data-tab` = Kapitel, zu dem der Reiter oben springt; alles bleibt untereinander sichtbar (Reihenfolge: uebersicht, tage-tab, reise, crew-tab, drinks-tab, unterwegs-tab = Sprache + Real-Rechner, infos, vorfreude-tab, spiele-tab, extras; Reiter und Kapitel müssen in derselben Reihenfolge stehen) (Stationen, Flüge, Kosten, Praktisches, Packlisten, Downloads); `%%MAP%%` = Karte |
+| `web/page_body.html` | Statischer Inhalt der Webseite; jede `<section>` hat `data-tab` = Kapitel, zu dem der Reiter oben springt; alles bleibt untereinander sichtbar (Reihenfolge: uebersicht, tage-tab, reise, crew-tab, karten-tab, drinks-tab, unterwegs-tab = Sprache + Real-Rechner, infos, vorfreude-tab, spiele-tab, extras; Reiter und Kapitel müssen in derselben Reihenfolge stehen) (Stationen, Flüge, Kosten, Praktisches, Packlisten, Downloads); `%%MAP%%` = Karte |
 | `web/page_script.html` | JavaScript der Webseite: Heute/Countdown, Gruppen-Umschalter, Drinks und Check-ins (`db`), Real-Rechner, Packlisten (localStorage), PDF-Download, Vorfreude-Kalender, Zeitkapsel; `%%TRIP%%` = trip.json |
 | `web/page_head.html` | Titel + CSS der Webseite (Farb-Tokens, Hell/Dunkel) |
 | `web/poster_template.html` | Rahmen für das Reisebild (Titel, Stationsleiste unten) |
@@ -55,7 +55,7 @@ Alle sechs haben der Verwendung ihres Fotos zugestimmt (laut Patrick, 30.09.).
 
 ## Crew-Karten (FIFA-Stil)
 
-Kapitel `#karten` im Reiter Crew. Basiswerte, Position, Flagge, Verein, Spezialwert, schwacher Fuß/Tricks, PlayStyles
+Kapitel `#karten`, eigener Reiter „Karten“ (`karten-tab`) direkt nach Crew. Basiswerte, Position, Flagge, Verein, Spezialwert, schwacher Fuß/Tricks, PlayStyles
 und Scout-Bericht in `trip.json` → `crew[].card`. Zwölf Werte (TTP, TRI, FLI, ORI, BUF, PÜN, KAT, SMB, KAR, GRI, SCH, MEK; `cardsInfo.worse` = GRI/SCH/MEK rot, höher = schlimmer).
 Live: TRI + 1 je 6 Drinks (max +6), KAT − (Drinks der letzten 14 h − 5, max −15), Gesamtwertung = Schnitt aller zwölf Werte (rote `worse` als 100 − Wert) + 16 (`OVR_PLUS`)
 ± (Siege − letzte Plätze, max ±5) ± Ereignisse. Beste Karte (wenn schon gespielt) = blaue TOTS-Karte, meiste letzte Plätze = rote
