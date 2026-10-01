@@ -905,7 +905,7 @@
           "KAR": 68,
           "GRI": 84,
           "SCH": 92,
-          "MEK": 44
+          "MEK": 22
         },
         "special": [
           "🧢",
@@ -989,7 +989,7 @@
           "KAR": 47,
           "GRI": 90,
           "SCH": 56,
-          "MEK": 55
+          "MEK": 24
         },
         "special": [
           "💔",
@@ -1077,7 +1077,7 @@
           "KAR": 61,
           "GRI": 78,
           "SCH": 68,
-          "MEK": 87
+          "MEK": 36
         },
         "special": [
           "🍽️",
@@ -1165,7 +1165,7 @@
           "KAR": 78,
           "GRI": 54,
           "SCH": 74,
-          "MEK": 69
+          "MEK": 23
         },
         "special": [
           "🏚️",
@@ -1253,7 +1253,7 @@
           "KAR": 83,
           "GRI": 66,
           "SCH": 88,
-          "MEK": 97
+          "MEK": 25
         },
         "special": [
           "🔫",
@@ -1265,7 +1265,7 @@
           "⏰ Uhr heimlich vorgestellt (von Daijo)",
           "💍 Spielt gerade Hochzeitsreise"
         ],
-        "scout": "Hat eine Pistole im Fuß, zielt aber am liebsten auf das eigene Standbein. Seit der Hochzeit überraschend der Pünktlichste im Kader: Daijo hat seine Uhr eine Stunde vorgestellt, er hat es noch nicht gemerkt. Meckert dafür über alles, was länger als zwei Minuten dauert.",
+        "scout": "Hat eine Pistole im Fuß, zielt aber am liebsten auf das eigene Standbein. Seit der Hochzeit überraschend der Pünktlichste im Kader: Daijo hat seine Uhr eine Stunde vorgestellt, er hat es noch nicht gemerkt. Seitdem steht er 20 Minuten zu früh am Treffpunkt und wartet, ohne ein Wort zu sagen.",
         "file": {
           "market": "Flitterwochen für zwei zum Preis von sechs",
           "contract": "Lebenslang, unterschrieben vorm Standesamt",
@@ -1345,7 +1345,7 @@
           "KAR": 98,
           "GRI": 36,
           "SCH": 49,
-          "MEK": 79
+          "MEK": 21
         },
         "special": [
           "📊",
