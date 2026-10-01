@@ -893,7 +893,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     let f = '';
     if (q.type === 'crew') f = '<select data-q="' + q.id + '"' + dis + '><option value="">– wählen –</option>' + CREW.map(p => '<option value="' + p.id + '"' + (v === p.id ? ' selected' : '') + '>' + esc(p.name) + '</option>').join('') + '</select>';
     else if (q.type === 'choice') f = '<select data-q="' + q.id + '"' + dis + '><option value="">– wählen –</option>' + q.options.map(o => '<option' + (v === o ? ' selected' : '') + '>' + esc(o) + '</option>').join('') + '</select>';
-    else if (q.type === 'number') f = '<span class="num"><input type="number" inputmode="numeric" min="0" step="1" data-q="' + q.id + '" value="' + (v ?? '') + '"' + dis + '> ' + esc(q.unit || '') + '</span>';
+    // Zahlen per Plus/Minus statt Tastatur (Zahlenfelder ließen die Seite im claude.ai-Viewer hängen)
+    else if (q.type === 'number') f = '<span class="ka-step" data-q="' + q.id + '">' + [-10, -1].map(d => '<button type="button" data-d="' + d + '"' + dis + '>' + (d === -1 ? '−' : '−10') + '</button>').join('') +
+      '<output>' + (v === undefined || v === '' ? '–' : v) + '</output>' + [1, 10].map(d => '<button type="button" data-d="' + d + '"' + dis + '>' + (d === 1 ? '+' : '+10') + '</button>').join('') + '<span class="u">' + esc(q.unit || '') + '</span></span>';
     else if (q.type === 'yesno') f = '<span class="ka-yn" data-q="' + q.id + '"><button type="button" data-v="1" aria-pressed="' + (v === true) + '"' + dis + '>Ja</button><button type="button" data-v="0" aria-pressed="' + (v === false) + '"' + dis + '>Nein</button></span>';
     else f = '<textarea data-q="' + q.id + '" maxlength="200"' + dis + '>' + esc(v || '') + '</textarea>';
     return '<div class="ka-q"><label>' + q.emoji + ' ' + esc(q.q) + '</label>' + (q.hint ? '<span class="hint">' + esc(q.hint) + '</span>' : '') + f + '</div>';
@@ -1000,6 +1002,8 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   function render() { (isOpen() ? renderOpen : renderSealed)(); }
   box.addEventListener('click', async e => {
     const p = e.target.closest('[data-p]'); if (p && writable) { who = p.dataset.p; draft = {}; msg = ''; render(); return; }
+    const st = e.target.closest('.ka-step button'); if (st && writable) { const sp = st.parentElement, qid = sp.dataset.q;
+      draft[qid] = Math.max(0, (typeof draft[qid] === 'number' ? draft[qid] : 0) + Number(st.dataset.d)); sp.querySelector('output').textContent = draft[qid]; return; }
     const yn = e.target.closest('.ka-yn button'); if (yn && writable) { const qid = yn.parentElement.dataset.q; draft[qid] = yn.dataset.v === '1'; yn.parentElement.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b === yn)); return; }
     if (e.target.id === 'ka-wa') {
       const txt = waText(), out = document.getElementById('ka-wa-msg');
