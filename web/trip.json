@@ -2648,7 +2648,7 @@
     }
   ],
   "kapsel": {
-    "_hinweis": "Tipps in db-Collection kapsel (Dokument-ID = Crew-id, Feld a = {Frage-id: Antwort}, ts); Auflösung in kapselres/solution (Feld s = {Frage-id: Wert}). revealAt = UTC. Punkte: Treffer 3; Zahlen: exakt 5, am nächsten 3, zweitnächster 1. from = Frage zählt erst ab diesem Datum (alle sechs da).",
+    "_hinweis": "Tipps in db-Collection kapsel (Dokument-ID = Crew-id, Feld a = {Frage-id: Antwort}, ts); Auflösung in kapselres/solution (Feld s = {Frage-id: Wert}). revealAt = UTC. Punkte: Treffer 3; Zahlen: exakt 5, am nächsten 3, zweitnächster 1.",
     "revealAt": "2027-01-19T23:00:00Z",
     "revealText": "letzten Abend auf der Ilha Grande (19.01., 20 Uhr)",
     "closeText": "Abgabe für alle sechs bis zum Abflug am 27.12.",
@@ -2658,32 +2658,28 @@
         "type": "crew",
         "q": "Wer holt sich die erste Zerrung?",
         "emoji": "🦵",
-        "title": "Zerrungskönig",
-        "from": "2027-01-06"
+        "title": "Zerrungskönig"
       },
       {
         "id": "sonnenbrand",
         "type": "crew",
         "q": "Wer hat als Erster einen Sonnenbrand?",
         "emoji": "🦞",
-        "title": "Hummer der Reise",
-        "from": "2027-01-06"
+        "title": "Hummer der Reise"
       },
       {
         "id": "handy",
         "type": "crew",
         "q": "Wer verliert als Erster Handy, Geldbeutel oder Pass?",
         "emoji": "📱",
-        "title": "Verlierer vom Dienst",
-        "from": "2027-01-06"
+        "title": "Verlierer vom Dienst"
       },
       {
         "id": "einschlafen",
         "type": "crew",
         "q": "Wer schläft als Erster auf einer Party ein?",
         "emoji": "😴",
-        "title": "Partyschläfer",
-        "from": "2027-01-06"
+        "title": "Partyschläfer"
       },
       {
         "id": "samba",
@@ -2711,8 +2707,7 @@
         "type": "crew",
         "q": "Wer ruft als Erster zuhause an, weil er Heimweh hat?",
         "emoji": "☎️",
-        "title": "Mama-Kind",
-        "from": "2027-01-06"
+        "title": "Mama-Kind"
       },
       {
         "id": "weinen",
@@ -2783,8 +2778,7 @@
       "exact": 5,
       "closest": 3,
       "second": 1
-    },
-    "fromText": "zählt erst ab 06.01., wenn alle sechs zusammen sind"
+    }
   },
   "games": {
     "_hinweis": "Partien in db-Collection games (game, ts, players, mode, scores, teams, rounds, done), eigene Spiele in gametypes. Modi: rank (Platzierung je Person, places = {id: Platz}), points (Punkte je Person, higher = höchste gewinnt), winner (nur Sieger), teams (Team A gegen Team B, auch gegen Einheimische), wizard (Rundenblock).",
