@@ -58,7 +58,7 @@ Alle sechs haben der Verwendung ihres Fotos zugestimmt (laut Patrick, 30.09.).
 Kapitel `#karten` im Reiter Crew. Basiswerte, Position, Flagge, Verein, Spezialwert, schwacher Fuß/Tricks, PlayStyles
 und Scout-Bericht in `trip.json` → `crew[].card`. Live: TRI + 1 je 6 Drinks (max +6), Gesamtwertung = Schnitt + 6
 ± (Siege − letzte Plätze, max ±5). Beste Karte (wenn schon gespielt) = blaue TOTS-Karte, meiste letzte Plätze = rote
-Laterne. Antippen dreht die Karte (Rückseite: Scout-Bericht, Drinks, Siege, Form).
+Laterne. Antippen dreht die Karte (Rückseite scrollbar: Scout-Bericht, PlayStyles, Spielerakte `card.file` mit Marktwert, Vertrag, Verletzungen, Torjubel, Transfergerücht; unten Drinks, Siege, Form).
 
 ## Drinks-Counter
 
