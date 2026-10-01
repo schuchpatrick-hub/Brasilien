@@ -158,7 +158,7 @@ def main():
     write(page, 'web', 'brasilien-reise.html')
 
     write(build_ics(trip, 'a'), 'kalender', 'gringos-plus-1-cevapi.ics')
-    write(build_ics(trip, 'b'), 'kalender', 'dajo-greisel.ics')
+    write(build_ics(trip, 'b'), 'kalender', 'daijo-greisel.ics')
 
     sp = browser()
     if sp:

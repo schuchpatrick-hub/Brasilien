@@ -1,5 +1,5 @@
 {
-  "_hinweis": "Gemeinsame Datenquelle fuer 'Heute'-Ansicht, 'Tag fuer Tag' und die Kalenderdateien. g: a = Gringos plus 1 Cevapi, b = Dajo & Greisel, all = alle. ics-Zeiten in UTC (Rio = UTC-3, Manaus = UTC-4, Deutschland = UTC+1). unsicher: true = noch nicht bestaetigt.",
+  "_hinweis": "Gemeinsame Datenquelle fuer 'Heute'-Ansicht, 'Tag fuer Tag' und die Kalenderdateien. g: a = Gringos plus 1 Cevapi, b = Daijo & Greisel, all = alle. ics-Zeiten in UTC (Rio = UTC-3, Manaus = UTC-4, Deutschland = UTC+1). unsicher: true = noch nicht bestaetigt.",
   "groups": {
     "a": {
       "name": "Gringos plus 1 Cevapi",
@@ -8,8 +8,8 @@
       "end": "2027-01-20"
     },
     "b": {
-      "name": "Dajo & Greisel",
-      "people": "Dajo, Greisel",
+      "name": "Daijo & Greisel",
+      "people": "Daijo, Greisel",
       "start": "2027-01-05",
       "end": "2027-01-21"
     }
@@ -199,9 +199,9 @@
       "items": [
         {
           "time": "06:10",
-          "text": "Dajo & Greisel landen in Rio-Galeão (GIG)",
+          "text": "Daijo & Greisel landen in Rio-Galeão (GIG)",
           "ics": {
-            "summary": "🛬 Dajo & Greisel landen in Rio (GIG)",
+            "summary": "🛬 Daijo & Greisel landen in Rio (GIG)",
             "start": "20270106T091000Z",
             "end": "20270106T093000Z",
             "g": "b"
@@ -1206,7 +1206,7 @@
         ],
         [
           "Flitterwochen",
-          "Romantische Reise mit Dajo. Und vier Kerlen, von denen einer im Foyer schläft und einer das Buffet leer frisst. Mehr Honeymoon geht nicht."
+          "Romantische Reise mit Daijo. Und vier Kerlen, von denen einer im Foyer schläft und einer das Buffet leer frisst. Mehr Honeymoon geht nicht."
         ],
         [
           "Pünktlichkeit",
@@ -1277,7 +1277,7 @@
     },
     {
       "id": "dajo",
-      "name": "Dajo",
+      "name": "Daijo",
       "nick": "„Die Excel-Queen“ · „Bald-Tschechin“",
       "team": "b",
       "photo": "crew/dajo.jpg",
@@ -1698,7 +1698,7 @@
       },
       {
         "brl": 100,
-        "t": "{n} Runden, die Dajo mit Lubos Karte zahlt 💳"
+        "t": "{n} Runden, die Daijo mit Lubos Karte zahlt 💳"
       },
       {
         "brl": 15,
@@ -1779,7 +1779,7 @@
       "price": "ca. 140 €",
       "status": "open",
       "statusText": "noch nicht gebucht",
-      "warn": "Dajo & Greisel landen um 06:10 auf einem getrennten Ticket: flexiblen Tarif wählen, falls Frankfurt Verspätung hat.",
+      "warn": "Daijo & Greisel landen um 06:10 auf einem getrennten Ticket: flexiblen Tarif wählen, falls Frankfurt Verspätung hat.",
       "from": "GIG"
     },
     {
@@ -1849,7 +1849,7 @@
   ],
   "flightsNote": {
     "window": "2026-10-19",
-    "text": "Laut Jonas werden Flüge 8–10 Wochen vorher günstiger, also Ende Oktober bis Anfang November. Dann ist auch Dajos neuer Reisepass da (ab der Woche vom 19.10.). Richtpreise von Skyscanner (24.08.)."
+    "text": "Laut Jonas werden Flüge 8–10 Wochen vorher günstiger, also Ende Oktober bis Anfang November. Dann ist auch Daijos neuer Reisepass da (ab der Woche vom 19.10.). Richtpreise von Skyscanner (24.08.)."
   },
   "costs": [
     {
@@ -2009,7 +2009,7 @@
       "cat": "word",
       "e": "🙏",
       "t": "Obrigado!",
-      "x": "Danke. Männer sagen „obrigado“, Frauen „obrigada“. Also: Dajo sagt obrigada, alle anderen obrigado. Locker unter Freunden: „Valeu!“",
+      "x": "Danke. Männer sagen „obrigado“, Frauen „obrigada“. Also: Daijo sagt obrigada, alle anderen obrigado. Locker unter Freunden: „Valeu!“",
       "pt": "Obrigado! / Valeu!",
       "say": "o-bri-GA-du / wa-LEU"
     },
@@ -2085,7 +2085,7 @@
       "cat": "special",
       "e": "✈️",
       "t": "Pass-Tag: Flüge buchen!",
-      "x": "Diese Woche sollte Dajos neuer Reisepass da sein. Damit können die Inlandsflüge gebucht werden: GIG → IGU, IGU → MAO, MAO → GIG und CGH → SDU. Die Bordkarten mit Suchlinks stehen im Reiter „Flüge & Kosten“.",
+      "x": "Diese Woche sollte Daijos neuer Reisepass da sein. Damit können die Inlandsflüge gebucht werden: GIG → IGU, IGU → MAO, MAO → GIG und CGH → SDU. Die Bordkarten mit Suchlinks stehen im Reiter „Flüge & Kosten“.",
       "link": "#fluege"
     },
     {
@@ -2304,8 +2304,8 @@
       "d": "2026-11-17",
       "cat": "crew",
       "e": "👩‍⚖️",
-      "t": "Crew-Wahrheit: Dajo",
-      "x": "Dajo ist die einzige Erwachsene der Gruppe und trinkfester als Lubo. Während Marco nach dem zwölften Gin Tonic Wohnungen verkauft, bestellt sie die nächste Runde. Mit seiner Karte."
+      "t": "Crew-Wahrheit: Daijo",
+      "x": "Daijo ist die einzige Erwachsene der Gruppe und trinkfester als Lubo. Während Marco nach dem zwölften Gin Tonic Wohnungen verkauft, bestellt sie die nächste Runde. Mit seiner Karte."
     },
     {
       "d": "2026-11-18",
@@ -2516,7 +2516,7 @@
       "cat": "crew",
       "e": "🦵",
       "t": "Crew-Wahrheit: Greisel, Teil 2",
-      "x": "Greisels Standardsatz: „Bei uns wird’s a bissle später.“ Deshalb planen wir ihn am 06.01. einfach zwei Stunden früher ein. Die Flitterwochen mit Dajo teilt er sich mit vier Kerlen. Romantischer geht’s nicht."
+      "x": "Greisels Standardsatz: „Bei uns wird’s a bissle später.“ Deshalb planen wir ihn am 06.01. einfach zwei Stunden früher ein. Die Flitterwochen mit Daijo teilt er sich mit vier Kerlen. Romantischer geht’s nicht."
     },
     {
       "d": "2026-12-16",
@@ -2866,13 +2866,13 @@
           "Greisel hat sich mal wieder selbst ins Bein geschossen. Diesmal im Spiel.",
           "Greisel kam zu spät zum Gewinnen. Bei uns wird's halt a bissle später.",
           "Greisels Standbein hat Anzeige erstattet. Gegen Greisel.",
-          "Flitterwochen, und Greisel verliert. Dajo überlegt, ob man das noch annullieren kann."
+          "Flitterwochen, und Greisel verliert. Daijo überlegt, ob man das noch annullieren kann."
         ],
         "dajo": [
-          "Dajo hat verloren. Zum Glück zahlt Lubos Karte die Runde.",
-          "Dajo hat verloren und prüft, ob die tschechische Staatsbürgerschaft hier Einspruch erlaubt.",
-          "Dajo ist die Erwachsene der Gruppe. Heute hat sie gespielt wie die anderen.",
-          "Dajo hat verloren. Aber immerhin ist sie nicht mit einer Boeing angereist."
+          "Daijo hat verloren. Zum Glück zahlt Lubos Karte die Runde.",
+          "Daijo hat verloren und prüft, ob die tschechische Staatsbürgerschaft hier Einspruch erlaubt.",
+          "Daijo ist die Erwachsene der Gruppe. Heute hat sie gespielt wie die anderen.",
+          "Daijo hat verloren. Aber immerhin ist sie nicht mit einer Boeing angereist."
         ]
       }
     }

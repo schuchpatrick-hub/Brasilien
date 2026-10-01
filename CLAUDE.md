@@ -116,5 +116,6 @@ claude.ai-Viewer nicht möglich (Standortzugriff gesperrt), daher manuelles Einc
 - **Repo ist öffentlich:** keine Roh-Chats, Telefonnummern, IBANs, Nachnamen, Passdaten,
   Buchungsnummern oder Splitwise-Einladungslinks einchecken. Nur Vornamen/Spitznamen.
 - Unsichere Angaben kennzeichnen (🟡 prüfen / ❓ unklar) statt raten.
-- Personen: Gringos plus 1 Cevapi = Jonas, Patrick, Simon, Marco (ab 27.12.); Dajo & Greisel stoßen am 06.01. in Rio dazu.
-  Echte Vornamen verwenden (nicht die Chat-Spitznamen Steini = Simon, Lubo = Marco). Greisel und Dajo bleiben so.
+- Personen: Gringos plus 1 Cevapi = Jonas, Patrick, Simon, Marco (ab 27.12.); Daijo & Greisel stoßen am 06.01. in Rio dazu.
+  Schreibweise **Daijo** (nicht „Dajo“); die interne Crew-`id` bleibt `dajo` (Datenbank, Foto `crew/dajo.jpg`).
+  Echte Vornamen verwenden (nicht die Chat-Spitznamen Steini = Simon, Lubo = Marco). Greisel und Daijo bleiben so.

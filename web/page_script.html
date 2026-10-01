@@ -2,7 +2,7 @@
 /* TRIP wird von tools/build.py aus web/trip.json eingesetzt. */
 const TRIP = %%TRIP%%;
 const TZ = 'America/Sao_Paulo';
-const PEOPLE = ['Jonas', 'Patrick', 'Simon', 'Marco', 'Dajo', 'Greisel', 'Alle'];
+const PEOPLE = ['Jonas', 'Patrick', 'Simon', 'Marco', 'Daijo', 'Greisel', 'Alle'];
 const PRINT = location.hash === '#print';
 
 const store = {
@@ -22,7 +22,7 @@ function fmtDay(iso) {
 }
 function daysBetween(a, b) { return Math.round((dateObj(b) - dateObj(a)) / 864e5); }
 const forGroup = (g) => TRIP.days.filter(d => g === 'all' || d.g === 'all' || d.g === g);
-const gName = g => g === 'a' ? 'Gringos plus 1 Cevapi' : 'Dajo & Greisel';
+const gName = g => g === 'a' ? 'Gringos plus 1 Cevapi' : 'Daijo & Greisel';
 
 let G = PRINT ? 'all' : (store.get('group') === 'b' ? 'b' : 'a');
 
@@ -112,7 +112,7 @@ function renderFlights() {
   document.getElementById('fl-head').innerHTML =
     '<div class="fl-prog"><div class="row"><span><b class="big">' + (nB + nC) + ' von ' + list.length + '</b> Flügen gebucht</span><span class="note">' + (G === 'all' ? 'alle' : esc(gName(G))) + '</span></div>' +
     '<div class="fl-bar" role="img" aria-label="' + (nB + nC) + ' von ' + list.length + ' gebucht"><i style="width:' + (nB / list.length * 100) + '%"></i><i class="chk" style="width:' + (nC / list.length * 100) + '%"></i></div>' +
-    (nO ? '<div class="fl-tip">Noch <b>' + nO + ' offen</b>. ' + (dleft > 0 ? 'Buchen ab ca. <b>19.10.</b> (Dajos Pass), am günstigsten Ende Oktober bis Anfang November: <b>noch ' + dleft + ' Tage</b>.' : 'Das Buchungsfenster ist offen: jetzt buchen!') + '</div>' : '<div class="fl-tip">Alles gebucht 🎉</div>') + '</div>';
+    (nO ? '<div class="fl-tip">Noch <b>' + nO + ' offen</b>. ' + (dleft > 0 ? 'Buchen ab ca. <b>19.10.</b> (Daijos Pass), am günstigsten Ende Oktober bis Anfang November: <b>noch ' + dleft + ' Tage</b>.' : 'Das Buchungsfenster ist offen: jetzt buchen!') + '</div>' : '<div class="fl-tip">Alles gebucht 🎉</div>') + '</div>';
   document.getElementById('fl-list').innerHTML = list.map(f => {
     const d = fmtDay(f.date), ids = f.g === 'all' ? GROUP_IDS.a.concat(GROUP_IDS.b) : GROUP_IDS[f.g];
     const whoTxt = f.g === 'all' ? 'alle 6' : gName(f.g);
@@ -864,7 +864,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   }
   function waText() {
     return '⏳ Zeitkapsel Brasilien 26/27\nBitte deine Tipps an Patrick schicken (' + K.closeText + '). Geöffnet wird am ' + K.revealText + '.\n\n' +
-      Q.map((q, i) => (i + 1) + '. ' + q.q + (q.type === 'crew' ? ' (Jonas, Patrick, Simon, Marco, Dajo, Greisel)' : q.type === 'choice' ? ' (' + q.options.join(', ') + ')' : q.type === 'yesno' ? ' (Ja/Nein)' : q.type === 'number' ? ' (Zahl)' : '')).join('\n');
+      Q.map((q, i) => (i + 1) + '. ' + q.q + (q.type === 'crew' ? ' (Jonas, Patrick, Simon, Marco, Daijo, Greisel)' : q.type === 'choice' ? ' (' + q.options.join(', ') + ')' : q.type === 'yesno' ? ' (Ja/Nein)' : q.type === 'number' ? ' (Zahl)' : '')).join('\n');
   }
   function renderSealed() {
     const n = Object.keys(tips).length;
