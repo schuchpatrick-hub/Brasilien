@@ -1085,6 +1085,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   function pick(set, key, extra) {
     return '<div class="gm-pick" role="group">' + CREW.map(p => '<button type="button" role="checkbox" data-' + key + '="' + p.id + '" aria-checked="' + set.has(p.id) + '"' + (writable && !(extra && extra(p.id)) ? '' : ' disabled') + '>' + av(p.id) + esc(p.name) + '</button>').join('') + '</div>';
   }
+  // Auswahl 0..n statt Tastatur-Eingabe (stabiler auf dem Handy)
+  const wizSel = (k, id, n, v) => '<select data-' + k + '="' + id + '" aria-label="' + (k === 'wa' ? 'Ansage' : 'Stiche') + ' ' + esc(nm(id)) + '"><option value="">–</option>' +
+    Array.from({length: n + 1}, (_, i) => '<option value="' + i + '"' + (v !== undefined && v !== '' && +v === i ? ' selected' : '') + '>' + i + '</option>').join('') + '</select>';
   function liveWizard() {
     const m = matches.find(x => x.mode === 'wizard' && x.done === false); if (!m) return '';
     const tot = wizTotals(m), n = (m.rounds || []).length, max = Math.floor(60 / m.players.length), next = n + 1;
@@ -1094,8 +1097,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       '</tbody><tfoot><tr><td>Σ</td>' + m.players.map(id => '<td>' + tot[id] + '</td>').join('') + '</tr></tfoot></table></div>';
     if (writable && next <= max) {
       h += '<div class="gm-wiz-in"><span></span><span></span><span class="h">Ansage</span><span class="h">Stiche</span>' + m.players.map(id => av(id) + '<b>' + esc(nm(id)) + '</b>' +
-        '<input type="number" min="0" max="' + next + '" inputmode="numeric" data-wa="' + id + '" value="' + (wiz[id] && wiz[id].a !== undefined ? wiz[id].a : '') + '">' +
-        '<input type="number" min="0" max="' + next + '" inputmode="numeric" data-ws="' + id + '" value="' + (wiz[id] && wiz[id].s !== undefined ? wiz[id].s : '') + '">').join('') + '</div>' +
+        wizSel('wa', id, next, wiz[id] && wiz[id].a) + wizSel('ws', id, next, wiz[id] && wiz[id].s)).join('') + '</div>' +
         '<p class="gm-hint">Runde ' + next + ': ' + next + (next === 1 ? ' Karte' : ' Karten') + ' pro Person. Die Stiche müssen zusammen ' + next + ' ergeben.</p>';
     }
     h += writable ? '<div class="gm-go">' + (next <= max ? '<button type="button" class="btn" data-act="wround" data-id="' + m.id + '">Runde ' + next + ' speichern</button>' : '') +
@@ -1148,9 +1150,17 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
         return '<li><span class="e">' + t.emoji + '</span><span><b>' + esc(t.name) + '</b>' + (off ? ' <span class="t">(ausgeblendet)</span>' : '') + '<br><span class="t">' + n + ' ' + (n === 1 ? 'Partie' : 'Partien') + (isStd ? ' · Standardspiel' : ' · selbst angelegt') + '</span></span>' +
           (off ? '<button type="button" class="btn ghost" data-act="unhide" data-id="' + esc(t.id) + '">Einblenden</button>' : '<button type="button" class="btn ghost" data-act="deltype" data-id="' + esc(t.id) + '">🗑 Löschen</button>') + '</li>'; }).join('') + '</ul></details>';
   }
-  function render() { top.innerHTML = board() + lastLoser(); box.innerHTML = liveWizard() + form() + log() + newType() + manage(); pending = false; }
+  let lastSig = '';
+  // Nur neu zeichnen, was sich wirklich geändert hat: der obere Bereich hat keine Eingabefelder,
+  // der untere wird bei unveränderten Daten nicht angefasst (sonst springt beim Tippen der Fokus weg)
+  const sig = () => JSON.stringify([writable, hidden, custom.map(t => t.id), matches.map(m => [m.id, m.ts, (m.rounds || []).length, m.done]).sort()]);
+  function render() { top.innerHTML = board() + lastLoser(); box.innerHTML = liveWizard() + form() + log() + newType() + manage(); pending = false; lastSig = sig(); }
   const busy = () => box.contains(document.activeElement) && /INPUT|SELECT/.test(document.activeElement.tagName);
-  function refresh() { if (busy()) pending = true; else render(); }
+  function refresh() {
+    if (sig() === lastSig) return;
+    top.innerHTML = board() + lastLoser();
+    if (busy()) pending = true; else render();
+  }
   box.addEventListener('focusout', () => setTimeout(() => { if (pending && !busy()) render(); }, 50));
   // Rückfragen ohne confirm()/alert(): im claude.ai-Viewer sind Dialogfenster gesperrt
   let armed = null, armT = null;
