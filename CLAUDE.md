@@ -18,6 +18,7 @@ Reiseübersicht, die bei neuen Infos (Buchungen, Chat-Exporte, Screenshots) aktu
 | `tools/gen_scenes.py` | Selbst gezeichnete SVG-Szenen (Copacabana-Kopfbild mit Tageszeit-Himmel, Bild je Station, Trenner); im HTML als `%%SCENE:name%%` |
 | `web/fotos/` | Eigene Fotos (von Patrick): `copacabana.jpg` = Kopfbild, sonst `<szene>.jpg` (guaruja, rio, iguacu, manaus, juma, paraty, ilha; Ausschnitt in `build.py` → `PHOTO_POS`; max. 1600 px breit), `build.py` legt sie automatisch über die Zeichnung (Station, Trenner, Heute-Kasten); fehlt das Foto, bleibt die Zeichnung. Beim Veröffentlichen in `files` mitgeben (`fotos/<name>.jpg`) |
 | `tools/gen_audio.py` | Erzeugt `web/audio/*.mp3` (Sprachführer) mit eSpeak NG + MBROLA (erst Deutsch mit de4, dann Portugiesisch mit br3); nur nötig, wenn Sätze in `trip.json` → `phrases` neu/geändert sind (`apt-get install espeak-ng mbrola mbrola-br3 mbrola-de4`, `pip install lameenc`). Beim Veröffentlichen alte MP3-Pfade in `files` auf `null` setzen |
+| `IDEEN.md` | Ideen-Speicher: vorgemerkte Wünsche von Patrick (z. B. Strafen-Glücksrad) und Vorschläge; bei „mach X“ hier nachsehen |
 | `tools/build.py` | Baut `reisebild.svg`, `reisebild.png` und `web/brasilien-reise.html` neu |
 
 Generiert (nicht von Hand bearbeiten): `reisebild.svg`, `reisebild.png`, `web/brasilien-reise.html`,
