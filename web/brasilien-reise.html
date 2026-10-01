@@ -401,6 +401,9 @@ header .today::before{opacity:.25}
   header>.hero-today{grid-column:2;grid-row:1 / span 4;align-self:end}
 }
 @media (max-width:420px){.hero-seg button{padding:6px 10px}.hero-seg button small{font-size:.64rem}}
+.guest-bar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);transform:translateX(-50%);z-index:250;background:#1a1a1a;color:#fff;border-radius:999px;padding:8px 8px 8px 14px;font:600 .82rem var(--body);display:flex;gap:10px;align-items:center;box-shadow:0 6px 20px rgba(0,0,0,.3);white-space:nowrap;max-width:calc(100vw - 24px)}
+.guest-bar button{font:700 .78rem var(--body);background:var(--amarelo);color:#1a1a1a;border:0;border-radius:999px;padding:5px 12px;cursor:pointer}
+@media print{.guest-bar{display:none}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
@@ -1355,6 +1358,11 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
       <button type="button" id="pdf-btn" class="btn">PDF speichern</button>
       <p class="note">Falls der Button nicht geht: <a href="https://github.com/schuchpatrick-hub/Brasilien/blob/main/brasilien-reise.pdf" target="_blank" rel="noopener">PDF auf GitHub</a></p>
     </div>
+    <div class="dl" id="guest-box" hidden>
+      <h3>Gast-Ansicht</h3>
+      <p>Nur für dich sichtbar: Zeigt die Seite so, wie die anderen sie sehen (ohne Eintragen, Löschen und Bearbeiten). Gilt nur auf diesem Gerät.</p>
+      <button type="button" id="guest-btn" class="btn">👁 Als Gast ansehen</button>
+    </div>
     <div class="dl">
       <h3>Kalender fürs Handy</h3>
       <p>Alle Flüge, Unterkünfte und Termine als Kalenderdatei. Auf GitHub „Download raw file“ tippen und die Datei öffnen.</p>
@@ -1385,6 +1393,30 @@ const store = {
   get(k) { try { return localStorage.getItem('br26.' + k); } catch (e) { return null; } },
   set(k, v) { try { localStorage.setItem('br26.' + k, v); } catch (e) {} }
 };
+/* Gast-Ansicht: der Admin sieht die Seite wie alle anderen (nur auf diesem Gerät, ändert keine Rechte) */
+const GUEST = store.get('guest') === '1';
+let canWriteP = null;
+function canWrite() {
+  if (!canWriteP) canWriteP = (async () => {
+    const user = await window.claude.use('user');
+    const w = user ? await user.can('data.write') : null;
+    if (w !== false && !PRINT) showGuestSwitch();
+    return GUEST ? false : w;
+  })();
+  return canWriteP;
+}
+function setGuest(on) { store.set('guest', on ? '1' : '0'); location.reload(); }
+function showGuestSwitch() {
+  const box = document.getElementById('guest-box'); if (box) box.hidden = false;
+  const b = document.getElementById('guest-btn');
+  if (b) { b.textContent = GUEST ? '🔑 Zurück zur Admin-Ansicht' : '👁 Als Gast ansehen'; b.onclick = () => setGuest(!GUEST); }
+  if (GUEST && !document.getElementById('guest-bar')) {
+    const bar = document.createElement('div'); bar.id = 'guest-bar'; bar.className = 'guest-bar';
+    bar.innerHTML = '👁 Gast-Ansicht <button type="button">Beenden</button>';
+    bar.querySelector('button').onclick = () => setGuest(false);
+    document.body.appendChild(bar);
+  }
+}
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 
 function isoToday() {
@@ -1938,8 +1970,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     if (!window.claude || !window.claude.use) { setMode('Offline-Ansicht: Eintragen geht nur auf claude.ai durch den Admin (Patrick).', false); return; }
     dbRef = await window.claude.use('db');
     if (!dbRef) { setMode('Nur ansehen: Eintragen macht der Admin (Patrick). Das Live-Ranking sehen angemeldete claude.ai-Nutzer.', false); return; }
-    const user = await window.claude.use('user');
-    const w = user ? await user.can('data.write') : null;
+    const w = await canWrite();
     setMode(w === false ? 'Nur ansehen: Eintragen macht der Admin (Patrick).' : 'Person antippen, Getränk wählen, eintragen. Das Ranking aktualisiert sich live für alle.', w !== false);
     dbRef.collection('drinks').onSnapshot(snap => {
       drinks = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data()))
@@ -2046,8 +2077,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   (async () => {
     if (!window.claude || !window.claude.use) return;
     dbc = await window.claude.use('db'); if (!dbc) return;
-    const user = await window.claude.use('user');
-    const w = user ? await user.can('data.write') : null;
+    const w = await canWrite();
     lock(w === false);
     dbc.collection('checkins').onSnapshot(snap => {
       checkins = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data()))
@@ -2386,8 +2416,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   (async () => {
     if (!window.claude || !window.claude.use) return;
     dbK = await window.claude.use('db'); if (!dbK) return;
-    const user = await window.claude.use('user');
-    const w = user ? await user.can('data.write') : null; writable = w !== false; render();
+    const w = await canWrite(); writable = w !== false; render();
     dbK.collection('kapsel').onSnapshot(snap => {
       tips = {}; snap.docs.forEach(d => { if (d.exists && byId[d.id]) { const x = d.data(); if (x && x.a) tips[d.id] = x; } });
       if (!box.contains(document.activeElement) || isOpen()) render(); else { const w2 = box.querySelector('.ka-seal'); if (w2) { const n = document.createElement('div'); n.innerHTML = whoRow(); w2.querySelector('.ka-who').replaceWith(n.firstChild); } }
@@ -2661,8 +2690,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   (async () => {
     if (!window.claude || !window.claude.use) return;
     dbG = await window.claude.use('db'); if (!dbG) return;
-    const user = await window.claude.use('user');
-    const w = user ? await user.can('data.write') : null; writable = w !== false; render();
+    const w = await canWrite(); writable = w !== false; render();
     dbG.collection('games').onSnapshot(snap => {
       matches = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data())).filter(m => m && m.game && Array.isArray(m.players) && typeof m.ts === 'number');
       refresh();
@@ -2849,7 +2877,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     if (!window.claude || !window.claude.use) return;
     const db = await window.claude.use('db'); if (!db) return;
     dbC = db;
-    const user = await window.claude.use('user'); const w = user ? await user.can('data.write') : null; canEdit = w !== false; renderEdit(); renderNews();
+    const w = await canWrite(); canEdit = w !== false; renderEdit(); renderNews();
     db.collection('cardlog').onSnapshot(snap => { events = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data())).filter(e => e && e.who && e.stat && typeof e.d === 'number' && e.ts).sort((a, b) => a.ts - b.ts); render(); renderNews(); }, () => {});
     db.collection('drinks').onSnapshot(snap => { drinks = snap.docs.filter(d => d.exists).map(d => d.data()).filter(d => d && d.who); render(); }, () => {});
     db.collection('games').onSnapshot(snap => { games = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data())).filter(m => m && Array.isArray(m.players)); render(); }, () => {});

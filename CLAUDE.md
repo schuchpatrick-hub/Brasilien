@@ -76,6 +76,12 @@ Liste „📰 Transfer-News“ mit Löschen (zweimal tippen).
 Ereignisse wirken auf **Gesamtwertung** (Summe „gut“ / 3, max ±8; bei GRI/SCH/MEK zählt + als schlecht; Grundwert aus den
 unveränderten Basiswerten) und **Marktwert** (am Tag des Ereignisses dauerhaft ±0,8 % je Punkt, max ±15 % pro Tag).
 
+## Gast-Ansicht
+
+Alle Schreibrecht-Prüfungen laufen über `canWrite()` in `page_script.html`. Wer Schreibrechte hat, sieht unter
+Downloads den Kasten „Gast-Ansicht“ (`#guest-box`); „👁 Als Gast ansehen“ setzt localStorage `br26.guest` = 1 und lädt neu,
+dann verhält sich die Seite wie für Mitreisende ohne Schreibrecht (Leiste unten „Beenden“). Ändert keine echten Rechte.
+
 ## Drinks-Counter
 
 Kapitel „Drinks“ (`#drinks`). Daten in der Artifact-Datenbank: Collection `drinks` (ein Dokument pro Getränk:
