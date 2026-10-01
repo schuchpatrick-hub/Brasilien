@@ -21,10 +21,10 @@ nach „Umgesetzt“ verschieben.
 - Reise-Türchen während der Reise, Sonnenuntergang-Countdown, Rechnung teilen, Carioca-Namen
 - „O Diário dos Gringos“ (tägliche Boulevard-Titelseite), Probier-Liste, Brasilien-Bingo
 - „Brasilien Wrapped“, Brasilien-Oscars, Foto des Tages, Sprüche-Wand, Regelbuch der Spiele
-- Telenovela der Reise, Wanted-Plakate, Crew-Aktienmarkt, FIFA-Karten der Crew, Erfolge/Badges,
+- Telenovela der Reise, Wanted-Plakate, Crew-Aktienmarkt, Erfolge/Badges,
   Wettbüro mit Cevapi-Coins, Radio Gringo, Ehrenurkunden, Rubbel-Karte, Soundboard, Live-Ticker beim Footvolley
 
 ## ✅ Umgesetzt
 
 Fotos und Zeichnungen, App auf dem Startbildschirm, Real-Rechner, Flüge als Bordkarten, Vorfreude-Kalender,
-Zeitkapsel mit Auswertung, Spiele mit Ranglisten, Verlierer-Sprüchen und Löschen.
+Zeitkapsel mit Auswertung, Spiele mit Ranglisten, Verlierer-Sprüchen und Löschen, FIFA-Karten der Crew.

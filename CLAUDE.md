@@ -53,6 +53,13 @@ Steckbriefe stehen in `web/trip.json` → `crew` (ein Eintrag mit `facts`/`quote
 erhalten; bei Bedarf mit `Artifact` `action: read` + `path: "crew/<id>.jpg"` zurückholen. Im PDF werden keine Fotos gezeigt. Unbeteiligte Personen im Hintergrund werden weichgezeichnet.
 Alle sechs haben der Verwendung ihres Fotos zugestimmt (laut Patrick, 30.09.).
 
+## Crew-Karten (FIFA-Stil)
+
+Kapitel `#karten` im Reiter Crew. Basiswerte, Position, Flagge, Verein, Spezialwert, schwacher Fuß/Tricks, PlayStyles
+und Scout-Bericht in `trip.json` → `crew[].card`. Live: TRI + 1 je 6 Drinks (max +6), Gesamtwertung = Schnitt + 6
+± (Siege − letzte Plätze, max ±5). Beste Karte (wenn schon gespielt) = blaue TOTS-Karte, meiste letzte Plätze = rote
+Laterne. Antippen dreht die Karte (Rückseite: Scout-Bericht, Drinks, Siege, Form).
+
 ## Drinks-Counter
 
 Kapitel „Drinks“ (`#drinks`). Daten in der Artifact-Datenbank: Collection `drinks` (ein Dokument pro Getränk:
