@@ -57,9 +57,9 @@ Alle sechs haben der Verwendung ihres Fotos zugestimmt (laut Patrick, 30.09.).
 
 Kapitel `#karten` im Reiter Crew. Basiswerte, Position, Flagge, Verein, Spezialwert, schwacher Fuß/Tricks, PlayStyles
 und Scout-Bericht in `trip.json` → `crew[].card`. Zwölf Werte (TTP, TRI, FLI, ORI, BUF, PÜN, KAT, SMB, KAR, GRI, SCH, MEK; `cardsInfo.worse` = GRI/SCH/MEK rot, höher = schlimmer).
-Live: TRI + 1 je 6 Drinks (max +6), KAT − (Drinks der letzten 14 h − 5, max −15), Gesamtwertung = Schnitt der `cardsInfo.core`-Werte + 6
+Live: TRI + 1 je 6 Drinks (max +6), KAT − (Drinks der letzten 14 h − 5, max −15), Gesamtwertung = Schnitt aller zwölf Werte (rote `worse` als 100 − Wert) + 16 (`OVR_PLUS`)
 ± (Siege − letzte Plätze, max ±5) ± Ereignisse. Beste Karte (wenn schon gespielt) = blaue TOTS-Karte, meiste letzte Plätze = rote
-Laterne. Marktwert vorne unten: Grundwert 0,5 Mio. € · 2^((Schnitt+6−60)/5), täglich neu ab 01.10. (Tageslaune ±6 %
+Laterne. Marktwert vorne unten: Grundwert 0,5 Mio. € · 2^((Gesamtwertung ohne Siege/Ereignisse − 60)/5), täglich neu ab 01.10. (Tageslaune ±6 %
 fest pro Tag und Person, Siege +6 %, letzte Plätze −5 %, Drinks bis +4 % pro Tag, dauerhaft; Rückkehr Richtung Grundwert),
 mit Pfeil zur Vortagsveränderung und Rekordwert auf der Rückseite. Antippen dreht die Karte (Rückseite scrollbar: Scout-Bericht, PlayStyles, Spielerakte `card.file` mit Ablöse-Klausel, Vertrag, Verletzungen, Torjubel, Transfergerücht; unten Drinks, Siege, Form).
 

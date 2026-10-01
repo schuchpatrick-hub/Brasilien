@@ -1092,7 +1092,7 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
 
 <section id="karten" data-tab="crew-tab">
   <h2>Crew-Karten ⚽</h2>
-  <p class="note sub-lead">Ultimate Gringo Team: Jeder hat seine Spielerkarte. Die Werte leben mit der Reise: Drinks erhöhen die Trinkfestigkeit, Siege die Gesamtwertung, letzte Plätze ziehen sie runter. Unten auf der Karte steht der Marktwert: Er ändert sich jeden Tag, Siege treiben ihn hoch, letzte Plätze drücken ihn, Partynächte geben einen kleinen Bonus. Karte antippen zum Umdrehen: Hinten stehen Scout-Bericht und Spielerakte (nach unten wischen).<br><small>TTP Trinktempo · TRI Trinkfestigkeit · FLI Flirt · ORI Orientierung · BUF Buffet · PÜN Pünktlichkeit · KAT Kater-Resistenz · SMB Samba · KAR Karaoke · <span style="color:var(--open)">GRI Gringo-Faktor · SCH Schnarchen · MEK Meckern &amp; Jammern (rot: je höher, desto schlimmer)</span></small></p>
+  <p class="note sub-lead">Ultimate Gringo Team: Jeder hat seine Spielerkarte. Die Werte leben mit der Reise: Drinks erhöhen die Trinkfestigkeit, Siege die Gesamtwertung, letzte Plätze ziehen sie runter. Unten auf der Karte steht der Marktwert: Er ändert sich jeden Tag, Siege treiben ihn hoch, letzte Plätze drücken ihn, Partynächte geben einen kleinen Bonus. Karte antippen zum Umdrehen: Hinten stehen Scout-Bericht und Spielerakte (nach unten wischen).<br><small>TTP Trinktempo · TRI Trinkfestigkeit · FLI Flirt · ORI Orientierung · BUF Buffet · PÜN Pünktlichkeit · KAT Kater-Resistenz · SMB Samba · KAR Karaoke · <span style="color:var(--open)">GRI Gringo-Faktor · SCH Schnarchen · MEK Meckern &amp; Jammern (rot: je höher, desto schlimmer)</span><br>Gesamtwertung und Marktwert rechnen mit allen zwölf Werten, rote Werte zählen umgekehrt: wenig Schnarchen, Meckern und Gringo-Faktor bringen Punkte.</small></p>
   <div id="fc" class="fc-row" role="list"></div>
   <div id="fc-edit"></div>
   <div id="fc-news"></div>
@@ -2626,6 +2626,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   const rnd = key => { let h = 2166136261; for (const ch of key) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; };
   // Ereignis gut oder schlecht? Bei GRI/SCH/MEK ist mehr schlechter
   const good = e => (TRIP.cardsInfo.worse || []).includes(e.stat) ? -e.d : e.d;
+  const OVR_PLUS = 16;   // Aufschlag, damit der Schnitt aller Werte nach FIFA-Gesamtwertung aussieht
   function marketHistory(id, ovrBase, until) {
     const ev = {};
     drinks.forEach(d => { if (d.who === id && d.ts) { const k = dayOf(d.ts); (ev[k] = ev[k] || {d: 0, w: 0, l: 0}).d++; } });
@@ -2657,13 +2658,13 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       });
       const k = Object.assign({}, k0, {stats: eff}), st = Object.assign({}, eff);
       const triBonus = Math.min(6, Math.floor(x.d / 6)); st.TRI = Math.min(99, st.TRI + triBonus);
-      const core = (TRIP.cardsInfo.core || Object.keys(k0.stats)).filter(key => key in k0.stats);
-      const base = core.reduce((a, key) => a + k0.stats[key], 0) / core.length;      // Grundwert ohne Ereignisse
+      const W = TRIP.cardsInfo.worse || [], keys = Object.keys(k0.stats);       // alle zwölf Werte, rote umgedreht (niedrig = gut)
+      const base = keys.reduce((a, key) => a + (W.includes(key) ? 100 - k0.stats[key] : k0.stats[key]), 0) / keys.length + OVR_PLUS;   // Grundwert ohne Ereignisse
       const evScore = events.filter(e => e.who === c.id).reduce((a, e) => a + good(e), 0);
       const evAdj = Math.max(-8, Math.min(8, Math.round(evScore / 3)));               // alle zwölf Werte zählen
       const katMalus = Math.min(15, Math.max(0, x.recent - 5)); if ('KAT' in st) st.KAT = Math.max(1, st.KAT - katMalus);
-      const ovr = Math.max(40, Math.min(99, Math.round(base + 6 + Math.max(-5, Math.min(5, x.w - x.l)) + evAdj)));
-      const today = isoToday(), hist = marketHistory(c.id, base + 6, today < MW_START ? MW_START : today);
+      const ovr = Math.max(40, Math.min(99, Math.round(base + Math.max(-5, Math.min(5, x.w - x.l)) + evAdj)));
+      const today = isoToday(), hist = marketHistory(c.id, base, today < MW_START ? MW_START : today);
       const mv = hist.length ? hist[hist.length - 1][1] : 0, prev = hist.length > 1 ? hist[hist.length - 2][1] : mv;
       const peak = hist.filter(h => h[0]).reduce((a, b) => b[1] > a[1] ? b : a, ['', 0]);
       return {c, k, st, x, ovr, triBonus, katMalus, todayD, mv, chg: prev ? mv / prev - 1 : 0, peak};
