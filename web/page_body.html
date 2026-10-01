@@ -186,16 +186,17 @@
   <details class="dr-add" id="dr-add" data-fold="add" open>
     <summary class="dr-head"><h3>Getränk eintragen</h3></summary>
     <p class="dr-lock" id="dr-lock" hidden>🔒 <b>Eintragen nur durch den Admin (Patrick).</b> Schick ihm deine Drinks einfach per WhatsApp, zum Beispiel „Jonas 2 Caipi 22:30“.</p>
+    <div class="dr-step dr-again" id="dr-again" hidden></div>
     <div class="dr-step"><div class="dr-whohead"><span class="eyebrow">Wer? <span class="note">(mehrere möglich)</span></span>
-      <span class="dr-quick"><button type="button" id="dr-all">Alle</button><button type="button" id="dr-none">Keiner</button></span></div>
+      <span class="dr-quick"><button type="button" data-grp="a">Gringos</button><button type="button" data-grp="b">Daijo &amp; Greisel</button><button type="button" id="dr-all">Alle</button><button type="button" id="dr-none">Keiner</button></span></div>
       <div id="dr-who" class="dr-who" role="group" aria-label="Wer trinkt"></div></div>
     <div class="dr-step"><span class="eyebrow">Was?</span><div id="dr-what" class="dr-what"></div>
       <details class="dr-custom" open><summary>Eigenes Getränk</summary>
         <div class="dr-cf">
           <label for="dr-c-name">Name</label><input id="dr-c-name" type="text" maxlength="40" placeholder="z. B. Caipi mit Maracuja">
           <label for="dr-c-cat">Art</label><select id="dr-c-cat"></select>
-          <label for="dr-c-ml">Menge (ml)</label><input id="dr-c-ml" type="number" min="10" max="2000" step="10" value="300">
-          <label for="dr-c-abv">Alkohol (%)</label><input id="dr-c-abv" type="number" min="0" max="80" step="0.1" value="5">
+          <span class="lbl">Menge</span><span class="stp" data-min="10" data-max="2000" data-dec="0"><button type="button" data-d="-100">−100</button><button type="button" data-d="-10">−</button><output>300</output><button type="button" data-d="10">+</button><button type="button" data-d="100">+100</button><input type="hidden" id="dr-c-ml" value="300"><span class="u">ml</span></span>
+          <span class="lbl">Alkohol</span><span class="stp" data-min="0" data-max="80" data-dec="1"><button type="button" data-d="-5">−5</button><button type="button" data-d="-0.5">−</button><output>5,0</output><button type="button" data-d="0.5">+</button><button type="button" data-d="5">+5</button><input type="hidden" id="dr-c-abv" value="5"><span class="u">%</span></span>
           <button type="button" class="btn ghost" id="dr-c-use">Auswählen</button>
         </div>
       </details>
@@ -272,12 +273,13 @@
       <button type="button" data-dir="brl" aria-pressed="true">R$ → €</button>
       <button type="button" data-dir="eur" aria-pressed="false">€ → R$</button>
     </div>
-    <label class="fx-in"><span class="fx-cur" id="fx-cur">R$</span><input id="fx-amount" type="number" inputmode="decimal" min="0" step="any" value="50" aria-label="Betrag"></label>
+    <label class="fx-in"><span class="fx-cur" id="fx-cur">R$</span><input id="fx-amount" type="text" inputmode="none" readonly value="50" aria-label="Betrag"></label>
+    <div class="fx-pad" id="fx-pad" aria-label="Tastenfeld"></div><label hidden></label>
     <div class="fx-quick" id="fx-quick"></div>
     <div class="fx-out" aria-live="polite"><div class="fx-res" id="fx-res"></div><div class="fx-joke" id="fx-joke"></div></div>
     <div class="fx-foot">
       <button type="button" class="btn ghost" id="fx-more">🎲 Anderer Vergleich</button>
-      <label class="fx-rate">Kurs: 1 € = <input id="fx-rate" type="number" inputmode="decimal" min="0.1" step="0.01"> R$</label>
+      <span class="fx-rate">Kurs: 1 € = <span class="stp" data-min="1" data-max="20" data-dec="2"><button type="button" data-d="-0.1">−0,1</button><button type="button" data-d="-0.01">−</button><output>–</output><button type="button" data-d="0.01">+</button><button type="button" data-d="0.1">+0,1</button><input type="hidden" id="fx-rate"><span class="u">R$</span></span></span>
     </div>
     <p class="note" id="fx-note"></p>
   </div>

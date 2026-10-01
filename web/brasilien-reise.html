@@ -404,6 +404,25 @@ header .today::before{opacity:.25}
 .guest-bar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);transform:translateX(-50%);z-index:250;background:#1a1a1a;color:#fff;border-radius:999px;padding:8px 8px 8px 14px;font:600 .82rem var(--body);display:flex;gap:10px;align-items:center;box-shadow:0 6px 20px rgba(0,0,0,.3);white-space:nowrap;max-width:calc(100vw - 24px)}
 .guest-bar button{font:700 .78rem var(--body);background:var(--amarelo);color:#1a1a1a;border:0;border-radius:999px;padding:5px 12px;cursor:pointer}
 @media print{.guest-bar{display:none}}
+/* Plus/Minus-Felder, Tastenfeld, Rückgängig-Leiste, Nochmal */
+.stp{display:inline-flex;gap:4px;align-items:center;flex-wrap:wrap}
+.stp button{font:700 .82rem var(--body);min-width:36px;height:38px;padding:0 6px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;touch-action:manipulation}
+.stp button[disabled]{opacity:.45;cursor:not-allowed}
+.stp output{min-width:3rem;text-align:center;font:800 1.1rem var(--display)}
+.stp .u{color:var(--muted);font-size:.85rem}
+.dr-cf .lbl{font-size:.92rem}
+.fx-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:320px}
+.fx-pad button{font:700 1.15rem var(--display);height:46px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;touch-action:manipulation}
+.fx-pad button.c{grid-column:1/-1;font:600 .85rem var(--body);height:36px}
+.undo-bar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 62px);transform:translateX(-50%);z-index:260;background:#1a1a1a;color:#fff;border-radius:999px;padding:8px 8px 8px 16px;font:600 .85rem var(--body);display:flex;gap:12px;align-items:center;box-shadow:0 6px 20px rgba(0,0,0,.3);max-width:calc(100vw - 24px)}
+.undo-bar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.undo-bar button{font:700 .8rem var(--body);background:var(--amarelo);color:#1a1a1a;border:0;border-radius:999px;padding:6px 12px;cursor:pointer;flex:none}
+.undo-bar[hidden]{display:none}
+.dr-again{margin-bottom:6px}
+.dr-again .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.dr-cf .stp output{min-width:2.6rem}
+.dr-again button{font:600 .82rem var(--body);background:var(--sunbg);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer}
+@media print{.undo-bar,.fx-pad{display:none}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
@@ -1186,16 +1205,17 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
   <details class="dr-add" id="dr-add" data-fold="add" open>
     <summary class="dr-head"><h3>Getränk eintragen</h3></summary>
     <p class="dr-lock" id="dr-lock" hidden>🔒 <b>Eintragen nur durch den Admin (Patrick).</b> Schick ihm deine Drinks einfach per WhatsApp, zum Beispiel „Jonas 2 Caipi 22:30“.</p>
+    <div class="dr-step dr-again" id="dr-again" hidden></div>
     <div class="dr-step"><div class="dr-whohead"><span class="eyebrow">Wer? <span class="note">(mehrere möglich)</span></span>
-      <span class="dr-quick"><button type="button" id="dr-all">Alle</button><button type="button" id="dr-none">Keiner</button></span></div>
+      <span class="dr-quick"><button type="button" data-grp="a">Gringos</button><button type="button" data-grp="b">Daijo &amp; Greisel</button><button type="button" id="dr-all">Alle</button><button type="button" id="dr-none">Keiner</button></span></div>
       <div id="dr-who" class="dr-who" role="group" aria-label="Wer trinkt"></div></div>
     <div class="dr-step"><span class="eyebrow">Was?</span><div id="dr-what" class="dr-what"></div>
       <details class="dr-custom" open><summary>Eigenes Getränk</summary>
         <div class="dr-cf">
           <label for="dr-c-name">Name</label><input id="dr-c-name" type="text" maxlength="40" placeholder="z. B. Caipi mit Maracuja">
           <label for="dr-c-cat">Art</label><select id="dr-c-cat"></select>
-          <label for="dr-c-ml">Menge (ml)</label><input id="dr-c-ml" type="number" min="10" max="2000" step="10" value="300">
-          <label for="dr-c-abv">Alkohol (%)</label><input id="dr-c-abv" type="number" min="0" max="80" step="0.1" value="5">
+          <span class="lbl">Menge</span><span class="stp" data-min="10" data-max="2000" data-dec="0"><button type="button" data-d="-100">−100</button><button type="button" data-d="-10">−</button><output>300</output><button type="button" data-d="10">+</button><button type="button" data-d="100">+100</button><input type="hidden" id="dr-c-ml" value="300"><span class="u">ml</span></span>
+          <span class="lbl">Alkohol</span><span class="stp" data-min="0" data-max="80" data-dec="1"><button type="button" data-d="-5">−5</button><button type="button" data-d="-0.5">−</button><output>5,0</output><button type="button" data-d="0.5">+</button><button type="button" data-d="5">+5</button><input type="hidden" id="dr-c-abv" value="5"><span class="u">%</span></span>
           <button type="button" class="btn ghost" id="dr-c-use">Auswählen</button>
         </div>
       </details>
@@ -1272,12 +1292,13 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
       <button type="button" data-dir="brl" aria-pressed="true">R$ → €</button>
       <button type="button" data-dir="eur" aria-pressed="false">€ → R$</button>
     </div>
-    <label class="fx-in"><span class="fx-cur" id="fx-cur">R$</span><input id="fx-amount" type="number" inputmode="decimal" min="0" step="any" value="50" aria-label="Betrag"></label>
+    <label class="fx-in"><span class="fx-cur" id="fx-cur">R$</span><input id="fx-amount" type="text" inputmode="none" readonly value="50" aria-label="Betrag"></label>
+    <div class="fx-pad" id="fx-pad" aria-label="Tastenfeld"></div><label hidden></label>
     <div class="fx-quick" id="fx-quick"></div>
     <div class="fx-out" aria-live="polite"><div class="fx-res" id="fx-res"></div><div class="fx-joke" id="fx-joke"></div></div>
     <div class="fx-foot">
       <button type="button" class="btn ghost" id="fx-more">🎲 Anderer Vergleich</button>
-      <label class="fx-rate">Kurs: 1 € = <input id="fx-rate" type="number" inputmode="decimal" min="0.1" step="0.01"> R$</label>
+      <span class="fx-rate">Kurs: 1 € = <span class="stp" data-min="1" data-max="20" data-dec="2"><button type="button" data-d="-0.1">−0,1</button><button type="button" data-d="-0.01">−</button><output>–</output><button type="button" data-d="0.01">+</button><button type="button" data-d="0.1">+0,1</button><input type="hidden" id="fx-rate"><span class="u">R$</span></span></span>
     </div>
     <p class="note" id="fx-note"></p>
   </div>
@@ -1398,6 +1419,40 @@ const store = {
   get(k) { try { return localStorage.getItem('br26.' + k); } catch (e) { return null; } },
   set(k, v) { try { localStorage.setItem('br26.' + k, v); } catch (e) {} }
 };
+/* Zahlen per Knopf statt Handy-Tastatur (Zahlenfelder ließen die Seite im claude.ai-Viewer hängen).
+   Ein verstecktes <input> trägt den Wert, damit bestehender Code (.value, input/change) weiter funktioniert. */
+function stepper(attrs, v, opt) {
+  const o = Object.assign({min: 0, max: 9999, dec: 0, steps: [1, 10], unit: '', dis: false}, opt || {});
+  const d = o.dis ? ' disabled' : '', st = o.steps.slice().sort((a, b) => b - a);
+  const b = x => '<button type="button" data-d="' + x + '"' + d + ' aria-label="' + (x > 0 ? 'plus ' : 'minus ') + Math.abs(x) + '">' + (x > 0 ? '+' : '−') + (Math.abs(x) === o.steps[0] ? '' : String(Math.abs(x)).replace('.', ',')) + '</button>';
+  return '<span class="stp" data-min="' + o.min + '" data-max="' + o.max + '" data-dec="' + o.dec + '">' + st.map(x => b(-x)).join('') +
+    '<output>' + stpFmt(v, o.dec) + '</output>' + st.slice().reverse().map(b).join('') + '<input type="hidden" ' + attrs + ' value="' + (v ?? '') + '">' + (o.unit ? '<span class="u">' + esc(o.unit) + '</span>' : '') + '</span>';
+}
+function stpFmt(v, dec) { return v === '' || v === undefined || v === null || isNaN(+v) ? '–' : (+v).toLocaleString('de-DE', {minimumFractionDigits: +dec, maximumFractionDigits: +dec}); }
+function stpSync(input) { const sp = input.closest('.stp'); if (sp) sp.querySelector('output').textContent = stpFmt(input.value, sp.dataset.dec); }
+document.addEventListener('click', e => {
+  const b = e.target.closest('.stp button[data-d]'); if (!b || b.disabled) return;
+  const sp = b.parentElement, inp = sp.querySelector('input'), dec = +sp.dataset.dec;
+  const cur = inp.value === '' ? (+b.dataset.d > 0 ? 0 : +sp.dataset.min) : +inp.value;
+  const v = Math.min(+sp.dataset.max, Math.max(+sp.dataset.min, Math.round((cur + +b.dataset.d) * 10 ** dec) / 10 ** dec));
+  inp.value = v; stpSync(inp);
+  inp.dispatchEvent(new Event('input', {bubbles: true})); inp.dispatchEvent(new Event('change', {bubbles: true}));
+});
+/* Kurze Leiste nach dem Speichern: „Gespeichert · Rückgängig“ */
+let undoTimer = null;
+function undoToast(text, undo) {
+  let el = document.getElementById('undo-bar');
+  if (!el) { el = document.createElement('div'); el.id = 'undo-bar'; el.className = 'undo-bar'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+  el.innerHTML = '<span>' + esc(text) + '</span>' + (undo ? '<button type="button">Rückgängig</button>' : '');
+  el.hidden = false; clearTimeout(undoTimer);
+  if (undo) el.querySelector('button').onclick = async () => {
+    el.querySelector('button').disabled = true;
+    try { await undo(); el.innerHTML = '<span>↩︎ Rückgängig gemacht</span>'; } catch (err) { el.innerHTML = '<span>Konnte nicht rückgängig machen.</span>'; }
+    clearTimeout(undoTimer); undoTimer = setTimeout(() => { el.hidden = true; }, 2500);
+  };
+  undoTimer = setTimeout(() => { el.hidden = true; }, 9000);
+}
+
 /* Gast-Ansicht: der Admin sieht die Seite wie alle anderen (nur auf diesem Gerät, ändert keine Rechte) */
 const GUEST = store.get('guest') === '1';
 let canWriteP = null;
@@ -1815,31 +1870,59 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     paintSel(); $('dr-status').textContent = 'Ausgewählt: ' + sel.preset.name;
   });
   $('dr-now').addEventListener('change', () => { $('dr-time').hidden = $('dr-now').checked; });
+  // Getränke schreiben; liefert die angelegten Dokumente (für „Rückgängig“)
+  async function writeDrinks(who, pr, q, ts) {
+    const refs = [];
+    for (const id of who) for (let i = 0; i < q; i++) {
+      // bei mehreren Drinks pro Person je 1 Minute Abstand, damit die Reihenfolge eindeutig bleibt
+      const ref = dbRef.collection('drinks').doc();
+      await ref.set({who: id, cat: pr.cat, name: pr.name, ml: pr.ml, abv: pr.abv, ts: ts - (q - 1 - i) * 60000});
+      refs.push(ref);
+    }
+    return refs;
+  }
+  const nameList = who => { const n = who.map(id => byId[id].name); return n.length > 1 ? n.slice(0, -1).join(', ') + ' & ' + n[n.length - 1] : n[0]; };
+  function done(who, pr, refs, q) {
+    const txt = 'Saúde, ' + nameList(who) + '! ' + (refs.length === 1 ? '1 ' + pr.name : refs.length + '× ' + pr.name) + ' eingetragen.';
+    $('dr-status').textContent = txt;
+    undoToast('🍻 ' + refs.length + '× ' + pr.name, async () => { for (const r of refs) await r.delete(); $('dr-status').textContent = 'Rückgängig gemacht.'; });
+    // für „Nochmal dasselbe“ merken (nur auf diesem Gerät)
+    let rec = []; try { rec = JSON.parse(store.get('drinkRecent') || '[]'); } catch (e) {}
+    const key = who.join(',') + '|' + pr.name + '|' + pr.ml + '|' + pr.abv + '|' + q;
+    rec = [{who, pr: {cat: pr.cat, name: pr.name, ml: pr.ml, abv: pr.abv}, q, key}].concat(rec.filter(r => r.key !== key)).slice(0, 4);
+    store.set('drinkRecent', JSON.stringify(rec)); renderAgain();
+  }
+  function renderAgain() {
+    let rec = []; try { rec = JSON.parse(store.get('drinkRecent') || '[]'); } catch (e) {}
+    rec = rec.filter(r => r.who && r.who.every(id => byId[id]));
+    const el = $('dr-again'); if (!el) return;
+    el.hidden = !(writable && rec.length);
+    el.innerHTML = '<span class="eyebrow">⚡ Nochmal dasselbe (sofort eintragen)</span><div class="chips">' + rec.map((r, i) =>
+      '<button type="button" data-r="' + i + '">🔁 ' + esc(nameList(r.who)) + ' · ' + (r.q > 1 ? r.q + '× ' : '') + esc(r.pr.name) + '</button>').join('') + '</div>';
+    el.onclick = async e => {
+      const b = e.target.closest('button[data-r]'); if (!b || !writable || !dbRef) return;
+      const r = rec[+b.dataset.r]; b.disabled = true;
+      try { const refs = await writeDrinks(r.who, r.pr, r.q, Date.now()); done(r.who, r.pr, refs, r.q); }
+      catch (err) { $('dr-status').textContent = 'Hat nicht geklappt, bitte nochmal.'; }
+      b.disabled = false;
+    };
+  }
   $('dr-submit').addEventListener('click', async () => {
     if (!dbRef || !sel.who.size || !sel.preset) return;
     let ts = Date.now();
     if (!$('dr-now').checked) { const v = $('dr-time').value; if (!v) { $('dr-status').textContent = 'Bitte eine Uhrzeit wählen.'; return; } ts = new Date(v).getTime(); }
     const who = CREW.map(p => p.id).filter(id => sel.who.has(id)), q = +$('dr-qty').value || 1;
-    const btn = $('dr-submit'); btn.disabled = true;
-    let ok = 0;
-    try {
-      for (const id of who) {
-        for (let i = 0; i < q; i++) {
-          // bei mehreren Drinks pro Person je 1 Minute Abstand, damit die Reihenfolge eindeutig bleibt
-          await dbRef.collection('drinks').doc().set({who: id, cat: sel.preset.cat, name: sel.preset.name, ml: sel.preset.ml, abv: sel.preset.abv, ts: ts - (q - 1 - i) * 60000});
-          ok++;
-        }
-      }
-      const names = who.map(id => byId[id].name);
-      const list = names.length > 1 ? names.slice(0, -1).join(', ') + ' & ' + names[names.length - 1] : names[0];
-      $('dr-status').textContent = 'Saúde, ' + list + '! ' + (ok === 1 ? '1 ' + sel.preset.name + ' eingetragen.' : ok + '× ' + sel.preset.name + ' eingetragen.');
-    } catch (e) {
-      if (ok) $('dr-status').textContent = ok + ' von ' + (who.length * q) + ' eingetragen, dann ging etwas schief. Bitte im Verlauf prüfen.';
+    $('dr-submit').disabled = true;
+    try { const refs = await writeDrinks(who, sel.preset, q, ts); done(who, sel.preset, refs, q); }
+    catch (e) {
       if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) { setMode('Nur ansehen: Eintragen macht der Admin (Patrick).', false); return; }
-      $('dr-status').textContent = e && e.code === 'quota_exceeded' ? 'Speicher voll.' : 'Hat nicht geklappt, bitte nochmal.';
+      $('dr-status').textContent = e && e.code === 'quota_exceeded' ? 'Speicher voll.' : 'Hat nicht geklappt, bitte im Verlauf prüfen und nochmal.';
     }
     paintSel();
   });
+  document.querySelectorAll('#dr-add [data-grp]').forEach(b => b.addEventListener('click', () => {
+    sel.who.clear(); (TRIP.groups[b.dataset.grp] ? GROUP_IDS[b.dataset.grp] : []).forEach(id => sel.who.add(id)); saveWho(); paintSel();
+  }));
 
   /* --- Ranking mit wandernden Zeilen --- */
   const ROW = 56, rank = $('dr-rank');
@@ -1943,7 +2026,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   });
   function renderBodyForm() {
     $('dr-bodyform').innerHTML = CREW.map(p => { const b = bodyOf(p.id);
-      return '<div class="p" data-id="' + esc(p.id) + '"><b>' + esc(p.name) + '</b><input type="number" min="40" max="200" step="1" value="' + b.kg + '" aria-label="Gewicht ' + esc(p.name) + ' in kg"' + (writable ? '' : ' disabled') + '> kg <select aria-label="Geschlecht ' + esc(p.name) + '"' + (writable ? '' : ' disabled') + '><option value="m"' + (b.sex === 'm' ? ' selected' : '') + '>m</option><option value="w"' + (b.sex === 'w' ? ' selected' : '') + '>w</option></select></div>'; }).join('');
+      return '<div class="p" data-id="' + esc(p.id) + '"><b>' + esc(p.name) + '</b>' + stepper('aria-label="Gewicht ' + esc(p.name) + ' in kg"', b.kg, {min: 40, max: 200, steps: [1, 5], unit: 'kg', dis: !writable}) + ' <select aria-label="Geschlecht ' + esc(p.name) + '"' + (writable ? '' : ' disabled') + '><option value="m"' + (b.sex === 'm' ? ' selected' : '') + '>m</option><option value="w"' + (b.sex === 'w' ? ' selected' : '') + '>w</option></select></div>'; }).join('');
   }
   $('dr-bodyform').addEventListener('change', async e => {
     const row = e.target.closest('.p'); if (!row || !dbRef) return;
@@ -1962,6 +2045,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     $('dr-mode').textContent = msg;
     $('dr-add').classList.toggle('locked', !canWriteNow);
     $('dr-lock').hidden = canWriteNow;
+    renderAgain();
     $('dr-add').querySelectorAll('button, input, select').forEach(el => { el.disabled = !canWriteNow; });
     paintSel(); renderBodyForm(); render();
   }
@@ -2164,14 +2248,23 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   document.querySelector('.fx-dir').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b || b.dataset.dir === dir) return;
     const v = parseFloat(amt.value) || 0;
-    amt.value = Math.round((dir === 'brl' ? v / rate : v * rate) * 100) / 100;
+    amt.value = String(Math.round((dir === 'brl' ? parseFloat(String(amt.value).replace(',', '.')) / rate || 0 : (parseFloat(String(amt.value).replace(',', '.')) || 0) * rate) * 100) / 100).replace('.', ',');
     dir = b.dataset.dir; store.set('fx.dir', dir); render(true);
+  });
+  // eigenes Tastenfeld statt Handy-Tastatur
+  const pad = $('fx-pad');
+  pad.innerHTML = ['1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '0', '⌫'].map(k => '<button type="button" data-k="' + k + '">' + k + '</button>').join('') + '<button type="button" data-k="C" class="c">Löschen</button>';
+  pad.addEventListener('click', e => {
+    const b = e.target.closest('button[data-k]'); if (!b) return; let v = String(amt.value).replace('.', ','); const k = b.dataset.k;
+    if (k === 'C') v = ''; else if (k === '⌫') v = v.slice(0, -1); else if (k === ',') { if (!v.includes(',')) v = (v || '0') + ','; }
+    else if (v.replace(',', '').length < 7 && !(v.includes(',') && v.split(',')[1].length >= 2)) v = v === '0' ? k : v + k;
+    amt.value = v; amt.dispatchEvent(new Event('input'));
   });
   let t; amt.addEventListener('input', () => { render(false); clearTimeout(t); t = setTimeout(() => render(true), 450); });
   $('fx-more').addEventListener('click', () => render(true));
-  rateIn.value = rate;
+  rateIn.value = rate; stpSync(rateIn);
   rateIn.addEventListener('input', () => { const r = parseFloat(String(rateIn.value).replace(',', '.')); if (r > 0) { rate = r; store.set('fx.rate', r); render(false); } });
-  $('fx-note').textContent = 'Kurs: ' + M.rateNote + '. Eigenen Kurs oben eintragen, er wird auf diesem Handy gespeichert. Vergleiche mit groben Richtpreisen, alle Angaben ohne Gewähr, Promille-Garantie keine.';
+  $('fx-note').textContent = 'Kurs: ' + M.rateNote + '. Eigenen Kurs mit Plus/Minus einstellen, er wird auf diesem Handy gespeichert. Vergleiche mit groben Richtpreisen, alle Angaben ohne Gewähr, Promille-Garantie keine.';
   if (dir === 'eur') amt.value = Math.round(50 / rate);
   render(true);
 })();
@@ -2348,7 +2441,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     if (q.type === 'crew') f = '<select data-s="' + q.id + '"><option value="">–</option>' + CREW.map(p => '<option value="' + p.id + '"' + (s === p.id ? ' selected' : '') + '>' + esc(p.name) + '</option>').join('') + '</select>';
     else if (q.type === 'choice') f = '<select data-s="' + q.id + '"><option value="">–</option>' + q.options.map(o => '<option' + (s === o ? ' selected' : '') + '>' + esc(o) + '</option>').join('') + '</select>';
     else if (q.type === 'yesno') f = '<select data-s="' + q.id + '"><option value="">–</option><option value="1"' + (s === true ? ' selected' : '') + '>Ja</option><option value="0"' + (s === false ? ' selected' : '') + '>Nein</option></select>';
-    else f = '<input type="number" data-s="' + q.id + '" value="' + (s ?? '') + '" style="width:6rem"> ' + esc(q.unit || '');
+    else f = stepper('data-s="' + q.id + '"', s ?? '', {steps: [1, 10], unit: q.unit || ''});
     return '<div class="ka-sol">Auflösung (Admin): ' + f + '</div>';
   }
   function renderOpen() {
@@ -2544,12 +2637,12 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     if (t) {
       if (t.hint) h += '<p class="gm-hint">' + esc(t.hint) + '</p>';
       if (t.mode === 'teams') {
-        h += '<div class="eyebrow">2. Teams und Ergebnis</div><div class="gm-teams"><div class="gm-team"><h4>Team A</h4>' + pick(f.A, 'ta', id => f.B.has(id)) + '<input type="number" min="0" inputmode="numeric" placeholder="Punkte A" data-sc="sa" value="' + esc(f.sa) + '"></div>' +
-          '<div class="gm-team"><h4>Team B</h4><label class="loc"><input type="checkbox" data-loc' + (f.loc ? ' checked' : '') + (writable ? '' : ' disabled') + '> Einheimische 🇧🇷</label>' + (f.loc ? '' : pick(f.B, 'tb', id => f.A.has(id))) + '<input type="number" min="0" inputmode="numeric" placeholder="Punkte B" data-sc="sb" value="' + esc(f.sb) + '"></div></div>';
+        h += '<div class="eyebrow">2. Teams und Ergebnis</div><div class="gm-teams"><div class="gm-team"><h4>Team A</h4>' + pick(f.A, 'ta', id => f.B.has(id)) + stepper('data-sc="sa" aria-label="Punkte Team A"', f.sa, {steps: [1, 5], dis: !writable}) + '</div>' +
+          '<div class="gm-team"><h4>Team B</h4><label class="loc"><input type="checkbox" data-loc' + (f.loc ? ' checked' : '') + (writable ? '' : ' disabled') + '> Einheimische 🇧🇷</label>' + (f.loc ? '' : pick(f.B, 'tb', id => f.A.has(id))) + stepper('data-sc="sb" aria-label="Punkte Team B"', f.sb, {steps: [1, 5], dis: !writable}) + '</div></div>';
       } else {
         h += '<div class="eyebrow">2. Wer spielt mit?</div>' + pick(f.players, 'pl');
         const ps = CREW.filter(p => f.players.has(p.id));
-        if (t.mode === 'points' && ps.length) h += '<div class="eyebrow">3. ' + esc(t.unit || 'Punkte') + ' am Ende</div><div class="gm-rows">' + ps.map(p => '<div class="gm-row">' + av(p.id) + '<b>' + esc(p.name) + '</b><input type="number" inputmode="numeric" data-pts="' + p.id + '" value="' + esc(f.scores[p.id] ?? '') + '"></div>').join('') + '</div>';
+        if (t.mode === 'points' && ps.length) h += '<div class="eyebrow">3. ' + esc(t.unit || 'Punkte') + ' am Ende</div><div class="gm-rows">' + ps.map(p => '<div class="gm-row">' + av(p.id) + '<b>' + esc(p.name) + '</b>' + stepper('data-pts="' + p.id + '"', f.scores[p.id] ?? '', {min: -999, steps: [1, 10], dis: !writable}) + '</div>').join('') + '</div>';
         if (t.mode === 'rank' && ps.length) h += '<div class="eyebrow">3. Platzierung</div><div class="gm-rows">' + ps.map(p => '<div class="gm-row">' + av(p.id) + '<b>' + esc(p.name) + '</b><select data-place="' + p.id + '"' + (writable ? '' : ' disabled') + '><option value="">Platz …</option>' +
           ps.map((x, i) => '<option value="' + (i + 1) + '"' + (+f.places[p.id] === i + 1 ? ' selected' : '') + '>' + (i + 1) + '.' + (i === 0 ? ' 🏆' : i === ps.length - 1 ? ' 💀' : '') + '</option>').join('') + '</select></div>').join('') + '</div>';
         if (t.mode === 'winner' && ps.length) h += '<div class="eyebrow">3. Wer hat gewonnen?</div><div class="gm-pick">' + ps.map(p => '<button type="button" role="checkbox" data-wn="' + p.id + '" aria-checked="' + f.win.has(p.id) + '">' + av(p.id) + esc(p.name) + '</button>').join('') + '</div>';
@@ -2644,7 +2737,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
         if (t.mode === 'winner') { if (!f.win.size) return fail('Bitte den Sieger auswählen.'); doc.winners = [...f.win]; }
         if (t.mode === 'wizard') { if (matches.some(m => m.mode === 'wizard' && m.done === false)) return fail('Es läuft schon ein Wizard-Block, erst den beenden.'); doc.rounds = []; doc.done = false; }
       }
-      try { await dbG.collection('games').doc().set(doc); msg = t.mode === 'wizard' ? '' : '✅ Gespeichert!'; f = {type: f.type, players: new Set(), scores: {}, places: {}, win: new Set(), A: new Set(), B: new Set(), loc: false, sa: '', sb: ''}; render(); }
+      try { const ref = dbG.collection('games').doc(); await ref.set(doc); msg = t.mode === 'wizard' ? '' : '✅ Gespeichert!'; if (t.mode !== 'wizard') undoToast('🏆 Partie gespeichert', () => ref.delete()); f = {type: f.type, players: new Set(), scores: {}, places: {}, win: new Set(), A: new Set(), B: new Set(), loc: false, sa: '', sb: ''}; render(); }
       catch (err) { fail(err && err.code === 'not_granted' ? 'Keine Schreibrechte.' : 'Konnte nicht speichern, bitte nochmal.'); }
       return;
     }
@@ -2864,7 +2957,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       if (b.dataset.ep !== undefined) { const x = PRESETS[+b.dataset.ep]; ed.preset = +b.dataset.ep; ed.stat = x.s; ed.d = x.d; ed.why = x.t; renderEdit(); return; }
       if (b.dataset.eact === 'save' && dbC && ed.who) {
         b.disabled = true;
-        try { await dbC.collection('cardlog').doc().set({who: ed.who, stat: ed.stat, d: ed.d, why: ed.why.trim(), ts: Date.now()}); msgE = '✅ Eingetragen.'; ed.preset = null; ed.why = ''; }
+        try { const ref = dbC.collection('cardlog').doc(); await ref.set({who: ed.who, stat: ed.stat, d: ed.d, why: ed.why.trim(), ts: Date.now()}); msgE = '✅ Eingetragen.'; undoToast('⚽ ' + ed.stat + ' ' + (ed.d > 0 ? '+' : '−') + Math.abs(ed.d) + ' eingetragen', () => ref.delete()); ed.preset = null; ed.why = ''; }
         catch (err) { msgE = 'Konnte nicht speichern.'; }
         renderEdit();
       }

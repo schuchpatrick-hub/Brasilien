@@ -82,6 +82,14 @@ Alle Schreibrecht-Prüfungen laufen über `canWrite()` in `page_script.html`. We
 Downloads den Kasten „Gast-Ansicht“ (`#guest-box`); „👁 Als Gast ansehen“ setzt localStorage `br26.guest` = 1 und lädt neu,
 dann verhält sich die Seite wie für Mitreisende ohne Schreibrecht (Leiste unten „Beenden“). Ändert keine echten Rechte.
 
+## Eingaben ohne Handy-Tastatur, Rückgängig
+
+Zahlenfelder (`type=number`) ließen die Seite im claude.ai-Viewer hängen. Deshalb gibt es keine mehr: `stepper()` in
+`page_script.html` baut Plus/Minus-Knöpfe mit verstecktem `<input>` (feuert `input`/`change`), der Real-Rechner hat ein eigenes
+Tastenfeld (`#fx-pad`). Nach dem Speichern von Drinks, Partien und Karten-Ereignissen erscheint `undoToast()` mit „Rückgängig“
+(löscht die eben angelegten Dokumente). Drinks: „⚡ Nochmal dasselbe“ (`#dr-again`, letzte 4 Kombinationen im localStorage
+`br26.drinkRecent`) und Schnellwahl Gringos / Daijo & Greisel / Alle.
+
 ## Drinks-Counter
 
 Kapitel „Drinks“ (`#drinks`). Daten in der Artifact-Datenbank: Collection `drinks` (ein Dokument pro Getränk:
