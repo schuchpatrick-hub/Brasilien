@@ -1283,6 +1283,78 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   })();
 })();
 
+/* ---------- FIFA-Karten der Crew (Basiswerte in trip.json, live aus Drinks und Spielen) ---------- */
+(function () {
+  const row = document.getElementById('fc'); if (!row || PRINT) return;
+  const CREW = TRIP.crew.filter(c => c.card), L = (TRIP.cardsInfo || {}).labels || {};
+  let drinks = [], games = [], customTypes = {};
+  const flipped = new Set();
+  function outcome(m) {          // {players, winners, losers}
+    const P = m.players || [];
+    if (m.mode === 'rank') { const pl = m.places || {}, v = P.map(id => pl[id] || 99), b = Math.min(...v), w = Math.max(...v);
+      return {players: P, winners: P.filter(id => pl[id] === b), losers: b === w ? [] : P.filter(id => pl[id] === w)}; }
+    if (m.mode === 'teams') { const t = m.teams || {}, A = t.a || [], B = t.b || [];
+      return {players: A.concat(B), winners: t.sa > t.sb ? A : t.sb > t.sa ? B : [], losers: t.sa > t.sb ? B : t.sb > t.sa ? A : []}; }
+    if (m.mode === 'winner') return {players: P, winners: m.winners || [], losers: P.filter(id => !(m.winners || []).includes(id))};
+    let sc = m.scores || {};
+    if (m.mode === 'wizard') sc = Object.fromEntries(P.map(id => [id, (m.rounds || []).reduce((s, r) => s + (r[id] ? (r[id].a === r[id].s ? 20 + 10 * r[id].s : -10 * Math.abs(r[id].a - r[id].s)) : 0), 0)]));
+    const low = (customTypes[m.game] || {}).higher === false, v = P.map(id => +sc[id] || 0);
+    const b = low ? Math.min(...v) : Math.max(...v), w = low ? Math.max(...v) : Math.min(...v);
+    return {players: P, winners: P.filter(id => (+sc[id] || 0) === b), losers: b === w ? [] : P.filter(id => (+sc[id] || 0) === w)};
+  }
+  function live() {
+    const s = Object.fromEntries(CREW.map(c => [c.id, {d: 0, w: 0, l: 0, g: 0, form: []}]));
+    drinks.forEach(d => { if (s[d.who]) s[d.who].d++; });
+    games.filter(m => m.done !== false).sort((a, b) => a.ts - b.ts).forEach(m => { const o = outcome(m);
+      o.players.forEach(id => { if (!s[id]) return; s[id].g++; const r = o.winners.includes(id) ? 'W' : o.losers.includes(id) ? 'L' : 'D'; if (r === 'W') s[id].w++; if (r === 'L') s[id].l++; s[id].form.push(r); }); });
+    return s;
+  }
+  function render() {
+    const s = live();
+    const cards = CREW.map(c => {
+      const k = c.card, st = Object.assign({}, k.stats), x = s[c.id];
+      const triBonus = Math.min(6, Math.floor(x.d / 6)); st.TRI = Math.min(99, st.TRI + triBonus);
+      const base = Object.values(k.stats).reduce((a, b) => a + b, 0) / 6;
+      const ovr = Math.max(40, Math.min(99, Math.round(base + 6 + Math.max(-5, Math.min(5, x.w - x.l)))));
+      return {c, k, st, x, ovr, triBonus};
+    });
+    const anyGames = cards.some(o => o.x.g > 0);
+    const top = anyGames ? cards.reduce((a, b) => b.ovr > a.ovr ? b : a) : null;
+    const maxL = Math.max(0, ...cards.map(o => o.x.l));
+    const lantern = maxL > 0 ? cards.filter(o => o.x.l === maxL).sort((a, b) => a.ovr - b.ovr)[0] : null;
+    cards.sort((a, b) => b.ovr - a.ovr);
+    row.innerHTML = cards.map(o => {
+      const {c, k, st, x, ovr} = o, variant = o === top ? 'tots' : o === lantern ? 'lantern' : '';
+      const badge = variant === 'tots' ? '★ TOTS' : variant === 'lantern' ? '🏮 Laterne' : '';
+      const form = x.form.slice(-5).map(r => r === 'W' ? '🟢' : r === 'L' ? '🔴' : '⚪').join('') || '–';
+      const stars = n => '★'.repeat(n) + '☆'.repeat(5 - n);
+      const legend = Object.entries(L).map(([a, b]) => a + ' = ' + b).join(', ');
+      return '<button type="button" title="' + esc(legend) + '" class="fc ' + variant + (flipped.has(c.id) ? ' flip' : '') + '" data-id="' + c.id + '" role="listitem" aria-label="Spielerkarte ' + esc(c.name) + ', Gesamtwertung ' + ovr + '"><div class="fc-in">' +
+        '<div class="fc-face fc-front"><div class="fc-top"><span class="fc-ovr">' + ovr + '</span><span class="fc-pos">' + esc(k.pos) + '</span><span class="fc-flag">' + k.flag + '</span><span class="fc-club">' + esc(k.club) + '</span></div>' +
+        '<div class="fc-photo">' + (c.photo ? '<img src="' + esc(c.photo) + '" alt="" loading="lazy">' : '<span>' + esc(c.name[0]) + '</span>') + '</div>' +
+        (badge ? '<span class="fc-badge">' + badge + '</span>' : '') +
+        '<div class="fc-name">' + esc(c.name) + '</div><div class="fc-sub">' + esc(k.posName) + '</div>' +
+        '<div class="fc-stats">' + Object.keys(k.stats).map(key => '<div>' + st[key] + ' <small>' + key + '</small>' + (key === 'TRI' && o.triBonus ? '<i>+' + o.triBonus + '</i>' : '') + '</div>').join('') + '</div>' +
+        '<div class="fc-spec">' + k.special[0] + ' ' + esc(k.special[1]) + ': ' + k.special[2] + '</div>' +
+        '<div class="fc-stars">Schwacher Fuß ' + stars(k.wf) + ' · Tricks ' + stars(k.sm) + '</div></div>' +
+        '<div class="fc-face fc-back"><div class="in"><h4>🔎 Scout-Bericht ' + esc(c.name) + '</h4><p>' + esc(k.scout) + '</p><ul>' + k.traits.map(t => '<li>' + esc(t) + '</li>').join('') + '</ul></div><div class="foot">' +
+        '<div class="fc-live"><div><b>' + x.d + '</b><span>Drinks</span></div><div><b>' + x.w + '</b><span>Siege</span></div><div><b>' + x.l + '</b><span>Letzter</span></div><div><b>' + x.g + '</b><span>Spiele</span></div></div>' +
+        '<div class="fc-hint">Form: ' + form + '</div></div></div>' +
+        '</div></button>';
+    }).join('');
+  }
+  row.addEventListener('click', e => { const b = e.target.closest('.fc'); if (!b) return; const id = b.dataset.id;
+    flipped.has(id) ? flipped.delete(id) : flipped.add(id); b.classList.toggle('flip'); });
+  render();
+  (async () => {
+    if (!window.claude || !window.claude.use) return;
+    const db = await window.claude.use('db'); if (!db) return;
+    db.collection('drinks').onSnapshot(snap => { drinks = snap.docs.filter(d => d.exists).map(d => d.data()).filter(d => d && d.who); render(); }, () => {});
+    db.collection('games').onSnapshot(snap => { games = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data())).filter(m => m && Array.isArray(m.players)); render(); }, () => {});
+    db.collection('gametypes').onSnapshot(snap => { customTypes = Object.fromEntries(snap.docs.filter(d => d.exists).map(d => [d.id, d.data()])); render(); }, () => {});
+  })();
+})();
+
 const TAB_IDS = [...document.querySelectorAll('.tabs a')].map(a => a.dataset.tab);
 const SECTIONS = [...document.querySelectorAll('section[data-tab]')];
 const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;

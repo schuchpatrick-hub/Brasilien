@@ -445,6 +445,47 @@ a{color:var(--accent)}
 @keyframes confFall{to{transform:translateY(340px) rotate(540deg);opacity:0}}
 @media (prefers-reduced-motion:reduce){.adv-door .leaf,.adv-card{transition:none;animation:none}.adv-grid button.td{animation:none}.confetti{display:none}}
 @media print{#kalender,#kapsel{display:none}}
+/* FIFA-Karten */
+.fc-row{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px 4px 18px;margin-inline:-4px;-webkit-overflow-scrolling:touch}
+.fc{flex:none;width:236px;aspect-ratio:236/340;perspective:1100px;scroll-snap-align:center;cursor:pointer;background:none;border:0;padding:0;font:inherit;color:inherit;text-align:left}
+.fc:focus-visible{outline:3px solid var(--accent);outline-offset:4px;border-radius:14px}
+.fc-in{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.3,.7,.2,1);transform-style:preserve-3d}
+.fc.flip .fc-in{transform:rotateY(180deg)}
+.fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;clip-path:polygon(50% 0,100% 5%,100% 89%,50% 100%,0 89%,0 5%);
+  --c1:#fbe9a0;--c2:#d9ae35;--c3:#f7dc72;--c4:#a97a12;--ink:#3b2a05;--line:rgba(59,42,5,.25);
+  background:radial-gradient(120% 70% at 30% 10%,rgba(255,255,255,.55),transparent 55%),linear-gradient(135deg,var(--c1),var(--c2) 40%,var(--c3) 62%,var(--c4));color:var(--ink)}
+.fc-face::after{content:"";position:absolute;inset:6px;clip-path:inherit;border:2px solid rgba(255,255,255,.55);pointer-events:none}
+.fc.tots .fc-face{--c1:#1c2f6b;--c2:#0b1636;--c3:#1f3f8f;--c4:#060c1f;--ink:#ffe27a;--line:rgba(255,226,122,.3)}
+.fc.lantern .fc-face{--c1:#d24a3a;--c2:#7a1010;--c3:#b3261e;--c4:#3d0606;--ink:#ffe9e4;--line:rgba(255,233,228,.3)}
+.fc-back{transform:rotateY(180deg)}
+.fc-top{position:absolute;left:20px;top:30px;display:grid;justify-items:center;gap:2px;z-index:2}
+.fc-ovr{font:800 2.6rem/1 var(--display)}
+.fc-pos{font:800 .95rem var(--display);letter-spacing:.04em}
+.fc-flag{font-size:1.3rem;line-height:1.3}
+.fc-club{font:700 .5rem var(--mono);text-transform:uppercase;letter-spacing:.06em;text-align:center;max-width:56px;line-height:1.15;opacity:.8}
+.fc-photo{position:absolute;right:14px;top:24px;width:138px;height:148px;border-radius:12px;overflow:hidden;-webkit-mask:linear-gradient(#000 70%,transparent);mask:linear-gradient(#000 70%,transparent)}
+.fc-photo img{width:100%;height:100%;object-fit:cover}
+.fc-photo span{display:grid;place-items:center;width:100%;height:100%;font:800 4rem var(--display);opacity:.5}
+.fc-name{position:absolute;left:0;right:0;top:172px;text-align:center;font:800 1.35rem/1 var(--display);text-transform:uppercase;letter-spacing:.02em}
+.fc-sub{position:absolute;left:0;right:0;top:196px;text-align:center;font:600 .62rem var(--mono);text-transform:uppercase;letter-spacing:.08em;opacity:.75}
+.fc-stats{position:absolute;left:26px;right:26px;top:214px;display:grid;grid-template-columns:1fr 1fr;gap:3px 14px;border-top:1px solid var(--line);padding-top:8px}
+.fc-stats div{display:flex;gap:7px;align-items:baseline;font:800 1rem var(--display)}
+.fc-stats div small{font:700 .7rem var(--mono);letter-spacing:.04em;opacity:.85}
+.fc-stats div i{font-style:normal;font:700 .6rem var(--mono);color:#1d7a4f;background:rgba(255,255,255,.7);border-radius:4px;padding:0 3px}
+.fc-spec{position:absolute;left:0;right:0;top:288px;text-align:center;font:700 .7rem var(--mono);letter-spacing:.03em}
+.fc-stars{position:absolute;left:0;right:0;top:303px;text-align:center;font:600 .58rem var(--mono);opacity:.8}
+.fc-badge{position:absolute;right:16px;top:174px;font:800 .55rem var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:var(--c2);border-radius:4px;padding:2px 5px}
+.fc-back .foot{position:absolute;left:24px;right:24px;bottom:40px;display:grid;gap:4px}
+.fc-back .in{position:absolute;inset:24px 18px 104px;display:grid;align-content:start;gap:8px;overflow:hidden}
+.fc-back h4{margin:0;font:700 .62rem var(--mono);letter-spacing:.08em;text-transform:uppercase;opacity:.85}
+.fc-back p{margin:0;font-size:.7rem;line-height:1.35}
+.fc-back ul{margin:0;padding:0;list-style:none;display:grid;gap:2px;font-size:.68rem;font-weight:600}
+.fc-live{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;text-align:center;border-top:1px solid var(--line);padding-top:6px}
+.fc-live b{display:block;font:800 1rem var(--display)}
+.fc-live span{font:600 .5rem var(--mono);text-transform:uppercase;opacity:.8}
+.fc-hint{font:600 .55rem var(--mono);text-transform:uppercase;opacity:.6;text-align:center}
+@media (prefers-reduced-motion:reduce){.fc-in{transition:none}}
+@media print{#karten{display:none}}
 /* Spiele */
 .gm-stage{position:relative;isolation:isolate;border-radius:20px;overflow:hidden;max-width:800px;margin-bottom:14px;padding:120px 12px 12px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
 .gm-bg{position:absolute;inset:0;z-index:-1;line-height:0}

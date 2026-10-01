@@ -885,7 +885,34 @@
         ]
       ],
       "quote": "Stille 😂",
-      "photoLarge": "crew/jonas-gross.jpg"
+      "photoLarge": "crew/jonas-gross.jpg",
+      "card": {
+        "pos": "KOP",
+        "posName": "Kopfball-Dirigent",
+        "flag": "🇩🇪",
+        "club": "Gringos FC",
+        "wf": 3,
+        "sm": 2,
+        "stats": {
+          "TMP": 74,
+          "TRI": 70,
+          "FLI": 48,
+          "ORI": 96,
+          "BUF": 66,
+          "PÜN": 93
+        },
+        "special": [
+          "🧢",
+          "Fischerhut",
+          99
+        ],
+        "traits": [
+          "🗺️ Plan B für Plan B",
+          "⚽ 113 Kopfbälle am Stück",
+          "👑 Bucht, bevor ihr Ja sagt"
+        ],
+        "scout": "Spielt immer mit Kopf, vor allem mit der freien Fläche obendrauf. Taktisch der beste Mann im Kader: Er hat die Taktik nämlich allein beschlossen. Schwäche: Diskussionen. Er führt keine."
+      }
     },
     {
       "id": "simon",
@@ -929,7 +956,34 @@
           "Ein Cousin, der sich in Brasilien wirklich eine Brasilianerin geangelt hat. Steini hält das für erblich."
         ]
       ],
-      "quote": "Ist das Blut? Egal, sie hat gelächelt 😍"
+      "quote": "Ist das Blut? Egal, sie hat gelächelt 😍",
+      "card": {
+        "pos": "FLR",
+        "posName": "Latin Lover (selbsternannt)",
+        "flag": "🇩🇪",
+        "club": "Gringos FC",
+        "wf": 2,
+        "sm": 5,
+        "stats": {
+          "TMP": 70,
+          "TRI": 74,
+          "FLI": 99,
+          "ORI": 33,
+          "BUF": 61,
+          "PÜN": 66
+        },
+        "special": [
+          "💔",
+          "Erfolgsquote",
+          3
+        ],
+        "traits": [
+          "😎 Herzchen-Sonnenbrille",
+          "🍌 Stolpert über eigene Füße",
+          "🗣️ Kann genau einen Satz: „Oi, gatinha“"
+        ],
+        "scout": "Flirt-Wert 99 basiert ausschließlich auf seiner eigenen Einschätzung, die Gegenseite bewertet mit 3. Fünf-Sterne-Tricks, die meisten davon unfreiwillig. Fällt auch ohne Gegenspieler hin."
+      }
     },
     {
       "id": "patrick",
@@ -977,7 +1031,34 @@
           "Laut eigener Aussage „musste Jesus am Kreuz weniger leiden als wir damals in El Nido“. Seitdem schläft er nur noch in Hotels mit Buffet."
         ]
       ],
-      "quote": "Ist das Buffet schon eröffnet? Dann bin ich es auch."
+      "quote": "Ist das Buffet schon eröffnet? Dann bin ich es auch.",
+      "card": {
+        "pos": "BUF",
+        "posName": "Buffet-Abräumer",
+        "flag": "🇩🇪",
+        "club": "Gringos FC",
+        "wf": 1,
+        "sm": 1,
+        "stats": {
+          "TMP": 39,
+          "TRI": 79,
+          "FLI": 54,
+          "ORI": 71,
+          "BUF": 99,
+          "PÜN": 81
+        },
+        "special": [
+          "🍽️",
+          "Teller-Tetris",
+          99
+        ],
+        "traits": [
+          "🦵 Zerrung im Sitzen",
+          "🥩 Rodízio-Endgegner",
+          "👴 Ältester im Kader"
+        ],
+        "scout": "Erfahrenster Spieler im Kader, die Gelenke bestätigen das bei jedem Schritt. Echter Linksfuß, der rechte Fuß ist nur zur Deko dabei. Am Buffet nicht zu verteidigen, auf dem Platz nicht zu bewegen."
+      }
     },
     {
       "id": "marco",
@@ -1025,7 +1106,34 @@
           "„Bin seit gestern im Karussell.“ Das Foto beweist: Er ist nie wieder ausgestiegen."
         ]
       ],
-      "quote": "Idemo! 🚀"
+      "quote": "Idemo! 🚀",
+      "card": {
+        "pos": "OBK",
+        "posName": "Obstkorb-Sechser",
+        "flag": "🇩🇪",
+        "club": "Gringos FC",
+        "wf": 3,
+        "sm": 3,
+        "stats": {
+          "TMP": 63,
+          "TRI": 61,
+          "FLI": 71,
+          "ORI": 64,
+          "BUF": 73,
+          "PÜN": 75
+        },
+        "special": [
+          "🏚️",
+          "Wohnungen 4. OG",
+          99
+        ],
+        "traits": [
+          "🧺 Obstkorb in jeder Unterkunft",
+          "👯 Doppelgänger: Dani Olmo",
+          "🍸 Gin-Tonic-Therapie"
+        ],
+        "scout": "Sieht aus wie Dani Olmo, spielt aber ohne Ball, ohne Tempo und ohne Vertrag. Feelgood-Manager in der Kabine. Nebenbei Immobilienmakler: Wer zu lange stehen bleibt, kauft eine Wohnung im 4. Stock ohne Aufzug."
+      }
     },
     {
       "id": "greisel",
@@ -1073,7 +1181,34 @@
           "Lila Fischerhut, lila Trikot. Sieht aus wie eine Aubergine auf Stadionbesuch, und er ist stolz darauf."
         ]
       ],
-      "quote": "Sprengts euch weg. Wir buchen."
+      "quote": "Sprengts euch weg. Wir buchen.",
+      "card": {
+        "pos": "STB",
+        "posName": "Standbein-Schütze",
+        "flag": "🇩🇪",
+        "club": "Flitterwochen United",
+        "wf": 1,
+        "sm": 4,
+        "stats": {
+          "TMP": 77,
+          "TRI": 81,
+          "FLI": 45,
+          "ORI": 58,
+          "BUF": 70,
+          "PÜN": 11
+        },
+        "special": [
+          "🔫",
+          "Schuss",
+          99
+        ],
+        "traits": [
+          "🦶 Trifft am liebsten das eigene Bein",
+          "⏰ „Bei uns wird’s a bissle später“",
+          "💍 Spielt auf Hochzeitsreise"
+        ],
+        "scout": "Hat eine Pistole im Fuß, leider zielt sie meistens auf sein eigenes Standbein. Pünktlichkeit 11, und die 11 kam auch zu spät. Taktisch nur einsetzbar, wenn das Spiel zwei Stunden später anfängt."
+      }
     },
     {
       "id": "dajo",
@@ -1125,7 +1260,34 @@
           "Die Hochzeitsreise teilt sie mit einem Buffet-Mammut, einem Latin Lover und einem Nachtportier. Tschechische Gelassenheit kann sie also schon."
         ]
       ],
-      "quote": "Fast wie auf Malle: 4er-Zimmer für 10 Leute 😂"
+      "quote": "Fast wie auf Malle: 4er-Zimmer für 10 Leute 😂",
+      "card": {
+        "pos": "CHF",
+        "posName": "Chef-Controllerin",
+        "flag": "🇨🇿",
+        "club": "Flitterwochen United",
+        "wf": 5,
+        "sm": 3,
+        "stats": {
+          "TMP": 72,
+          "TRI": 94,
+          "FLI": 40,
+          "ORI": 86,
+          "BUF": 65,
+          "PÜN": 88
+        },
+        "special": [
+          "📊",
+          "Excel",
+          99
+        ],
+        "traits": [
+          "🍻 Trinkfester als Lubo",
+          "✈️ Boeing-Allergie",
+          "🧠 Einzige Erwachsene im Kader"
+        ],
+        "scout": "Einzige Erwachsene im Kader und trotzdem freiwillig dabei. Trinkt die halbe Mannschaft unter den Tisch und rechnet danach die Rechnung in Excel ab. Nationalität: bald tschechisch, Wechsel bereits beantragt."
+      }
     }
   ],
   "drinks": {
@@ -2636,5 +2798,16 @@
         ]
       }
     }
+  },
+  "cardsInfo": {
+    "labels": {
+      "TMP": "Tempo",
+      "TRI": "Trinkfestigkeit",
+      "FLI": "Flirt",
+      "ORI": "Orientierung",
+      "BUF": "Buffet",
+      "PÜN": "Pünktlichkeit"
+    },
+    "_hinweis": "Basiswerte in crew[].card; live: TRI + Drinks/6 (max +6), OVR + Siege − Letzte Plätze (je max ±5). Beste Karte = TOTS, meiste letzte Plätze = Rote Laterne."
   }
 }
