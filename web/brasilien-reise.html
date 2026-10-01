@@ -1207,7 +1207,7 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
     <p class="dr-lock" id="dr-lock" hidden>🔒 <b>Eintragen nur durch den Admin (Patrick).</b> Schick ihm deine Drinks einfach per WhatsApp, zum Beispiel „Jonas 2 Caipi 22:30“.</p>
     <div class="dr-step dr-again" id="dr-again" hidden></div>
     <div class="dr-step"><div class="dr-whohead"><span class="eyebrow">Wer? <span class="note">(mehrere möglich)</span></span>
-      <span class="dr-quick"><button type="button" data-grp="a">Gringos</button><button type="button" data-grp="b">Daijo &amp; Greisel</button><button type="button" id="dr-all">Alle</button><button type="button" id="dr-none">Keiner</button></span></div>
+      <span class="dr-quick"><button type="button" id="dr-all">Alle</button><button type="button" id="dr-none">Keiner</button></span></div>
       <div id="dr-who" class="dr-who" role="group" aria-label="Wer trinkt"></div></div>
     <div class="dr-step"><span class="eyebrow">Was?</span><div id="dr-what" class="dr-what"></div>
       <details class="dr-custom" open><summary>Eigenes Getränk</summary>
@@ -1920,9 +1920,6 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     }
     paintSel();
   });
-  document.querySelectorAll('#dr-add [data-grp]').forEach(b => b.addEventListener('click', () => {
-    sel.who.clear(); (TRIP.groups[b.dataset.grp] ? GROUP_IDS[b.dataset.grp] : []).forEach(id => sel.who.add(id)); saveWho(); paintSel();
-  }));
 
   /* --- Ranking mit wandernden Zeilen --- */
   const ROW = 56, rank = $('dr-rank');
