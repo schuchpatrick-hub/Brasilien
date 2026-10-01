@@ -2715,13 +2715,6 @@
         "unit": "Kaimane"
       },
       {
-        "id": "greisel",
-        "type": "number",
-        "q": "Wie viele Minuten kommt Greisel im Schnitt zu spät?",
-        "emoji": "⏰",
-        "unit": "Minuten"
-      },
-      {
         "id": "lieblingsort",
         "type": "choice",
         "q": "Welcher Ort wird der Lieblingsort der Reise?",
@@ -2740,12 +2733,6 @@
         "type": "yesno",
         "q": "Gewinnt die Crew ein Footvolley-Spiel gegen Einheimische?",
         "emoji": "🏐"
-      },
-      {
-        "id": "peinlich",
-        "type": "text",
-        "q": "Was wird die größte Peinlichkeit der Reise?",
-        "emoji": "🙈"
       }
     ],
     "points": {
