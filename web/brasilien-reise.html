@@ -448,6 +448,25 @@ header .today::before{opacity:.25}
 .net.off{background:var(--surface);color:var(--muted);border:1px solid var(--line)}
 .net.wait{background:var(--warnbg);color:var(--warn)}
 @media print{.net{display:none}}
+.me-box:empty{display:none}
+.me-pick,.me-card{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);border-radius:14px;padding:10px 12px;display:grid;gap:8px;color:#f4f7f2}
+.lite .me-pick,.lite .me-card{background:rgba(6,32,19,.85)}
+.me-q{font-weight:700;font-size:.92rem}.me-q small{display:block;font-weight:500;opacity:.8;font-size:.75rem}
+.me-row{display:flex;flex-wrap:wrap;gap:6px}
+.me-row button{all:unset;cursor:pointer;display:flex;align-items:center;gap:6px;font:600 .82rem var(--body);background:rgba(255,255,255,.12);border-radius:999px;padding:3px 10px 3px 3px}
+.me-row button:hover{background:rgba(255,207,31,.3)}
+.me-av{width:26px;height:26px;border-radius:50%;overflow:hidden;background:var(--accent);display:inline-grid;place-items:center;font:800 .75rem var(--display);flex:none}
+.me-av img{width:100%;height:100%;object-fit:cover}
+.me-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.me-head b{font:700 .95rem var(--display);margin-right:auto}
+.me-link{all:unset;cursor:pointer;font:600 .75rem var(--body);color:var(--amarelo);text-decoration:underline}
+.me-chips{display:flex;flex-wrap:wrap;gap:6px}
+.me-chips span{font-size:.78rem;background:rgba(255,255,255,.1);border-radius:999px;padding:3px 10px}
+.me-chips b{color:var(--amarelo)}
+.me-chips .up{color:#7fe0a8}.me-chips .dn{color:#ff9d8f}
+.pcard.me{box-shadow:0 0 0 3px var(--amarelo)}
+.fc.me .fc-in{filter:drop-shadow(0 0 10px rgba(255,207,31,.8))}
+@media print{.me-box{display:none}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
@@ -949,6 +968,7 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
     <div id="today" class="today" aria-live="polite">
       <p class="note">Die Heute-Ansicht braucht JavaScript. Alle Tage stehen weiter unten.</p>
     </div>
+    <div id="me-box" class="me-box"></div>
     <div class="hero-facts" id="hero-facts">
       <span id="hf-n"><b>25</b> Nächte (3 davon im Flieger)</span><span><b>6</b> Stationen</span><span><b id="hf-open">4</b> Flüge noch offen</span><span><b>6/7</b> Unterkünfte gebucht</span>
     </div>
@@ -1447,6 +1467,50 @@ const store = {
   get(k) { try { return localStorage.getItem('br26.' + k); } catch (e) { return null; } },
   set(k, v) { try { localStorage.setItem('br26.' + k, v); } catch (e) {} }
 };
+/* ---------- „Ich bin …“: persönliche Ansicht (nur auf diesem Gerät) ----------
+   Module melden ihre Werte für alle Personen über meSet(); renderMe() zeigt den Kasten für die gewählte Person. */
+let ME = TRIP.crew.some(c => c.id === store.get('me')) ? store.get('me') : null;
+const MEHUB = {};
+function meSet(k, v) { MEHUB[k] = v; renderMe(); }
+function meMoney(v) { return v >= 1e6 ? (Math.round(v / 1e5) / 10).toLocaleString('de-DE', {minimumFractionDigits: 1}) + ' Mio. €' : Math.round(v / 1e4) * 10 + ' Tsd. €'; }
+function meMark() {
+  document.querySelectorAll('.pcard.me, .fc.me').forEach(e => e.classList.remove('me'));
+  if (!ME) return;
+  const a = document.getElementById('crew-' + ME), b = document.getElementById('fc-' + ME);
+  if (a) a.classList.add('me'); if (b) b.classList.add('me');
+}
+function renderMe() {
+  const box = document.getElementById('me-box'); if (!box || PRINT) return;
+  const crew = TRIP.crew, av = p => '<span class="me-av">' + (p.photo ? '<img src="' + esc(p.photo) + '" alt="" loading="lazy">' : esc(p.name[0])) + '</span>';
+  if (!ME) {
+    box.innerHTML = store.get('meSkip') === '1' ? '<button type="button" class="me-link" data-me-open>👤 Ich bin …</button>' :
+      '<div class="me-pick"><span class="me-q">👋 Wer bist du? <small>Dann zeigt die Seite deine eigenen Werte.</small></span><div class="me-row">' +
+      crew.map(p => '<button type="button" data-me="' + esc(p.id) + '">' + av(p) + esc(p.name) + '</button>').join('') + '</div><button type="button" class="me-link" data-me-skip>Später</button></div>';
+    return;
+  }
+  const p = crew.find(c => c.id === ME), d = (MEHUB.drinks || {})[ME], c = (MEHUB.card || {})[ME], k = (MEHUB.kapsel || {})[ME];
+  const chips = [];
+  if (d) chips.push('🍻 heute <b>' + d.today + '</b> · gesamt <b>' + d.total + '</b>' + (d.total ? ' (Platz ' + d.rank + ')' : ''));
+  if (c) {
+    chips.push('⚽ Gesamt <b>' + c.ovr + '</b> · Platz ' + c.pos + ' von ' + crew.length);
+    chips.push('💰 <b>' + meMoney(c.mv) + '</b> <span class="' + (c.chg >= 0 ? 'up' : 'dn') + '">' + (c.chg >= 0 ? '▲' : '▼') + ' ' + Math.abs(c.chg * 100).toLocaleString('de-DE', {maximumFractionDigits: 1}) + ' %</span>');
+    if (c.w || c.l) chips.push('🏆 <b>' + c.w + '</b> Siege · ' + c.l + '× Letzter');
+  }
+  if (k !== undefined) chips.push(k ? '⏳ Zeitkapsel: getippt ✅' : '⏳ Zeitkapsel: <b>noch offen</b>');
+  box.innerHTML = '<div class="me-card"><div class="me-head">' + av(p) + '<b>Hallo ' + esc(p.name) + '!</b>' +
+    (p.card ? '<a class="me-link" href="#karten" data-card="' + esc(p.id) + '">Meine Karte</a>' : '') + '<button type="button" class="me-link" data-me-open>Ändern</button></div>' +
+    (chips.length ? '<div class="me-chips">' + chips.map(x => '<span>' + x + '</span>').join('') + '</div>' : '') + '</div>';
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-me],[data-me-skip],[data-me-open]'); if (!b || !b.closest('#me-box')) return;
+  if (b.dataset.me) {
+    ME = b.dataset.me; store.set('me', ME);
+    const g = Object.keys(GROUP_IDS).find(k => GROUP_IDS[k].includes(ME)); if (g && typeof setGroup === 'function') setGroup(g);
+  } else if ('meSkip' in b.dataset) store.set('meSkip', '1');
+  else { ME = null; store.set('me', ''); store.set('meSkip', '0'); }
+  meMark(); renderMe();
+});
+
 /* Zahlen per Knopf statt Handy-Tastatur (Zahlenfelder ließen die Seite im claude.ai-Viewer hängen).
    Ein verstecktes <input> trägt den Wert, damit bestehender Code (.value, input/change) weiter funktioniert. */
 function stepper(attrs, v, opt) {
@@ -2156,6 +2220,8 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
 
   function render() {
     const st = stats();
+    const today = dayOf(Date.now()), order = CREW.map(p => p.id).sort((a, b) => st[b].count - st[a].count);
+    meSet('drinks', Object.fromEntries(CREW.map(p => [p.id, {today: drinks.filter(d => d.who === p.id && dayOf(d.ts) === today).length, total: st[p.id].count, rank: order.indexOf(p.id) + 1}])));
     renderRank(st); renderBac(); renderDays(); renderDayTable(); renderTotal(st); renderLog();
   }
   function setMode(msg, canWriteNow) {
@@ -2639,6 +2705,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     const w = await canWrite(); writable = w !== false; render();
     dbK.collection('kapsel').onSnapshot(snap => {
       tips = {}; snap.docs.forEach(d => { if (d.exists && byId[d.id]) { const x = d.data(); if (x && x.a) tips[d.id] = x; } });
+      meSet('kapsel', Object.fromEntries(CREW.map(p => [p.id, !!tips[p.id]])));
       if (!box.contains(document.activeElement) || isOpen()) render(); else { const w2 = box.querySelector('.ka-seal'); if (w2) { const n = document.createElement('div'); n.innerHTML = whoRow(); w2.querySelector('.ka-who').replaceWith(n.firstChild); } }
     }, () => {});
     dbK.collection('kapselres').onSnapshot(snap => { snap.docs.forEach(d => { if (d.exists && d.id === 'solution') sol = Object.assign({}, (d.data() || {}).s); }); if (isOpen()) render(); }, () => {});
@@ -3031,6 +3098,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
         '<div class="fc-hint">Form: ' + form + ' · Marktwert-Rekord: ' + money(o.peak[1]) + (o.peak[0] ? ' (' + fmtDay(o.peak[0]).dm + ')' : '') + '</div></div></div>' +
         '</div></button>';
     }).join('');
+    meSet('card', Object.fromEntries(cards.map((o, i) => [o.c.id, {ovr: o.ovr, mv: o.mv, chg: o.chg, w: o.x.w, l: o.x.l, pos: i + 1}]))); meMark();
   }
   // Sprung von Steckbrief/Übersicht zur passenden Karte
   document.addEventListener('click', e => {
@@ -3153,6 +3221,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   svg.addEventListener('click', pick);
   svg.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && pick(e)) e.preventDefault(); });
 })();
+
+renderMe(); meMark();
+if (ME && !store.get('group')) { const g = Object.keys(GROUP_IDS).find(k => GROUP_IDS[k].includes(ME)); if (g) setGroup(g); }
 
 const TAB_IDS = [...document.querySelectorAll('.tabs a')].map(a => a.dataset.tab);
 const SECTIONS = [...document.querySelectorAll('section[data-tab]')];
