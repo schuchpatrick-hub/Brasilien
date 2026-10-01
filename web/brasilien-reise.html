@@ -484,6 +484,7 @@ header .today::before{opacity:.25}
 .trip-cap rect{fill:#10231d;opacity:.88}.trip-cap text{fill:#fff;font:700 21px var(--body)}
 .trip-cap.pop{animation:capPop .35s ease}
 @keyframes capPop{from{opacity:0}}
+.trip-stamp{fill:#e0262b;stroke:#fff;stroke-width:3px;paint-order:stroke;font:900 96px var(--display);letter-spacing:4px;animation:capPop .2s ease}.trip-stamp.t{fill:#ffcf1f;stroke:#10231d;font-size:64px;letter-spacing:0}
 .trip-fx{font-size:34px;animation:fxPop 1.2s ease}
 @keyframes fxPop{0%{opacity:0}30%{opacity:1}100%{opacity:1}}
 @media print{.map-play{display:none}}
@@ -3539,6 +3540,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       } else if (name === 'car') honk(sfxOut, t, .12);
       else if (name === 'boat') { tone(sfxOut, 'sawtooth', 98, t, 1, .12, {lp: 500, hold: .7, a: .08}); tone(sfxOut, 'sawtooth', 147, t, 1, .07, {lp: 500, hold: .7, a: .08}); }
       else if (name === 'plane') noise(sfxOut, t, 1.2, .14, 'bandpass', 300, 2, {to: 2400, a: .4});
+      else if (name === 'clap') { noise(sfxOut, t, .07, .7, 'highpass', 1800, .7); tone(sfxOut, 'sine', 160, t, .08, .4, {from: 300, glide: .03}); }
+      else if (name === 'scratch') { noise(sfxOut, t, .18, .45, 'bandpass', 3200, 3, {to: 500}); noise(sfxOut, t + .18, .22, .4, 'bandpass', 600, 3, {to: 2800}); }
+      else if (name === 'wah') [62, 61, 60, 59].forEach((m, k) => tone(sfxOut, 'sawtooth', mf(m), t + k * .38, k === 3 ? 1.1 : .36, .13, {lp: 900, a: .04, hold: k === 3 ? .8 : .25, vib: k === 3 ? 5 : 0, depth: .025}));
     };
     E.end = w => { master.gain.cancelScheduledValues(w); master.gain.setTargetAtTime(0, w, .4); E.on = {travel: false, stay: false}; E.till = {travel: w + 2, stay: w + 2}; E.mode = 'none'; };
     return E;
@@ -3635,7 +3639,28 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     await step(async () => { caption('20.01. ✈️ Heimflug über Rom nach München'); await Promise.all([camTo(FULL, 2200, my), night(true, 1600, my)]); v = vehicle('plane', A, S);
       await move(v, 'plane', legs.heim, 3900, my, {km: 9900}); fade(v, 350, my); });
     await step(async () => { day = 26; caption('Tchau, Brasil! 🇧🇷 Daijo & Greisel bleiben noch ein bisschen'); await night(false, 700, my); mus('mode', 'stay'); await camTo(INSET, 2400, my); say(parkB, 'Mehr Caipi für uns! 🍹', 2200, {}); await wait(2300, my); await camTo(FULL, 2200, my); await wait(800, my); });
-    if (my === run) { await fade(parkB, 500, my); stop(); }
+    if (my === run) await fade(parkB, 500, my);
+    // Pannen vom Dreh: Filmklappe, Panne, „CUT!“ mit Plattenkratzer und Posaunen-Wah-wah
+    const stamp = (txt, o) => { const t = mk('text', Object.assign({x: W / 2, y: H / 2, 'text-anchor': 'middle', 'dominant-baseline': 'central', class: 'trip-stamp'}, o || {})); t.textContent = txt; gFront.appendChild(t); return t; };
+    const klappe = async (n, txt) => { caption('🎬 Klappe, die ' + n + '. – ' + txt); mus('sfx', 'clap'); const k = stamp('🎬', {'font-size': 110}); await wait(900, my); k.remove(); };
+    const cut = async () => { mus('sfx', 'scratch'); mus('sfx', 'wah', 250); const c = stamp('CUT!', {transform: `rotate(-10 ${W / 2} ${H / 2})`}); await wait(1900, my); c.remove(); };
+    await step(async () => { mus('mode', 'stay'); caption('🎬 Pannen vom Dreh'); const t = stamp('Pannen vom Dreh', {class: 'trip-stamp t'}); await wait(1800, my); t.remove(); });
+    await step(async () => { await klappe(2, 'Abflug München');
+      const L = legs.hin.getTotalLength(), a = legs.hin.getPointAtLength(L * .62), b = {x: a.x - 330, y: a.y - 170};
+      v = vehicle('plane', A, S); await move(v, 'plane', [a, b], 1700, my, {say: [{at: .45, t: 'Ähm … Brasilien ist da unten!', ms: 1800}]});
+      await move(v, 'plane', [b, a], 1200, my); await cut(); fade(v, 300, my); });
+    await step(async () => { await klappe(7, 'Dschungel-Tour');
+      const m = {x: pts.mao.x - 10, y: pts.mao.y + 26}, lost = park('car', ['marco'], {x: m.x - 70, y: m.y + 6}, S);
+      v = vehicle('boat', ALL.filter(id => id !== 'marco'), S); m.x += 20; const cai = emoji({x: m.x - 190, y: m.y + 44}, '🐊', 34);
+      say(lost, 'Hallooo?! Wartet auf mich!', 2400, {});
+      await move(v, 'boat', [m, {x: m.x + 150, y: m.y + 40}], 2400, my, {onT: (p, t) => cai.setAttribute('x', (m.x - 190 + t * 95).toFixed(1))});
+      await cut(); fade(v, 300, my); fade(lost, 300, my); cai.remove(); });
+    await step(async () => { await klappe(13, 'Bootstour Ilha Grande'); await camTo(INSET, 2200, my);
+      v = vehicle('boat', ALL, s); await move(v, 'boat', legs.ilha, 1400, my); say(v, 'Wer hat dieses Boot gebucht?!', 2200, {}); mus('sfx', 'splash', 700);
+      const inner = v.firstChild; await tween(1100, my, e => inner.setAttribute('transform', `translate(0,${(e * 10).toFixed(1)}) scale(${s}) rotate(${(e * 180).toFixed(1)})`));
+      fx = emoji({x: pts.ilha.x, y: pts.ilha.y + 40}, '💦💦', 30); await wait(900, my); await cut(); fx.remove(); fade(v, 300, my); await camTo(FULL, 2200, my); });
+    await step(async () => { caption('Das war’s! Até logo! 🇧🇷'); await wait(1600, my); });
+    if (my === run) stop();
   }
   function stop() { tlog.push({t: tnow() - tlog0, type: 'end'}); musStop(false); run++; cancelAnimationFrame(ticker); if (layer) layer.remove(); layer = null; setCam(FULL); svg.setAttribute('viewBox', VB0); stopUI(false); }
   function stopUI(on) { btn.textContent = on ? '⏹ Stopp' : '✈️ Reise abspielen'; btn.setAttribute('aria-pressed', String(on)); }
