@@ -92,6 +92,8 @@ def build(standalone=False):
         s.append('''<style>
 .sea{fill:#dfeef0}.land{fill:#eef0ea;stroke:#c9cfc4;stroke-width:.8}.br{fill:#f7f3dc;stroke:#1d6b55;stroke-width:1.4}
 .fl{fill:none;stroke:#0d4f7a;stroke-width:2.6;stroke-dasharray:7 6;stroke-linecap:round}
+.fl2{stroke-width:2;opacity:.6}
+.ht{paint-order:stroke;stroke:#e1eef0;stroke-width:5px;stroke-linejoin:round}
 .gr{fill:none;stroke:#1d6b55;stroke-width:3.2;stroke-linecap:round}
 .bt{fill:none;stroke:#1d8aa8;stroke-width:3;stroke-dasharray:2 5;stroke-linecap:round}
 .dot{fill:#1d6b55;stroke:#fff;stroke-width:2.5}.dot2{fill:#fff;stroke:#0d4f7a;stroke-width:2}
@@ -127,8 +129,16 @@ def build(standalone=False):
     # Hinflug aus Europa
     g = P(*GRU)
     s.append(f'<path class="fl" data-d="2026-12-27" marker-end="url(#arr)" d="{arc((W-20, 40), (g[0]+6, g[1]-8), -0.12)}"/>')
-    s.append(f'<text class="tag" x="{W-24}" y="30" text-anchor="end">27.12. MUC → FCO → GRU</text>')
-    s.append(f'<text class="sub" x="{W-24}" y="50" text-anchor="end">Hinflug über Rom</text>')
+    s.append(f'<text class="tag ht" x="{W-24}" y="30" text-anchor="end">27.12. 19:00 MUC → FCO → GRU</text>')
+    s.append(f'<text class="sub ht" x="{W-24}" y="50" text-anchor="end">Hinflug über Rom · an 28.12. 06:25</text>')
+    # Rueckflug nach Europa (Gringos plus 1 Cevapi) und Ankunft Daijo & Greisel
+    r0 = P(*GIG)
+    s.append(f'<path class="fl" data-d="2027-01-20" marker-end="url(#arr)" d="{arc((r0[0]+8, r0[1]-6), (W-20, 300), 0.10)}"/>')
+    s.append(f'<text class="tag ht" x="{W-24}" y="282" text-anchor="end">20.01. 15:35 GIG → FCO → MUC</text>')
+    s.append(f'<text class="sub ht" x="{W-24}" y="262" text-anchor="end">Heimflug · an 21.01. 10:10</text>')
+    s.append(f'<path class="fl fl2" data-d="2027-01-06" marker-end="url(#arr)" d="{arc((W-20, 600), (r0[0]+12, r0[1]-4), -0.06)}"/>')
+    s.append(f'<text class="tag ht" x="{W-24}" y="588" text-anchor="end">06.01. MUC → FRA → GIG</text>')
+    s.append(f'<text class="sub ht" x="{W-24}" y="570" text-anchor="end">Daijo &amp; Greisel · an 06:10</text>')
 
     # Fluege Hauptkarte
     r = P(*GIG); i = P(*IGU); m = P(*MAO)
@@ -167,19 +177,22 @@ def build(standalone=False):
     s.append(f'<g clip-path="url(#clipIn)"><path class="land" d="{o_in}"/><path class="br" d="{b_in}"/>')
     gi, ci, gu = PI(*GRU), PI(*CGH), PI(*GUA)
     sd, gg, pa, il, an = PI(*SDU), PI(*GIG), PI(*PAR), PI(*ILG), PI(*ANG)
-    s.append(f'<path class="gr" data-d="2026-12-27" marker-end="url(#arr)" d="M{gi[0]:.1f},{gi[1]:.1f} Q{gi[0]+30:.1f},{gi[1]+40:.1f} {gu[0]-4:.1f},{gu[1]-14:.1f}"/>')
+    s.append(f'<path class="gr" data-d="2026-12-28" marker-end="url(#arr)" d="M{gi[0]:.1f},{gi[1]:.1f} Q{gi[0]+30:.1f},{gi[1]+40:.1f} {gu[0]-4:.1f},{gu[1]-14:.1f}"/>')
     s.append(f'<path class="fl" data-d="2026-12-31" marker-end="url(#arr)" d="{arc(ci, sd, -0.16)}"/>')
     s.append(f'<path class="gr" data-d="2027-01-14" marker-end="url(#arr)" d="M{gg[0]:.1f},{gg[1]:.1f} Q{an[0]+60:.1f},{an[1]+10:.1f} {pa[0]+13:.1f},{pa[1]-10:.1f}"/>')
     s.append(f'<path class="bt" data-d="2027-01-16" marker-end="url(#arr)" d="M{pa[0]+12:.1f},{pa[1]+6:.1f} Q{(pa[0]+il[0])/2:.1f},{pa[1]+30:.1f} {il[0]-12:.1f},{il[1]+6:.1f}"/>')
+    s.append(f'<path class="bt" data-d="2027-01-20" d="M{il[0]+4:.1f},{il[1]-12:.1f} Q{il[0]-4:.1f},{an[1]+6:.1f} {an[0]+6:.1f},{an[1]+2:.1f}"/>')
+    s.append(f'<path class="gr" data-d="2027-01-20" marker-end="url(#arr)" d="M{an[0]+6:.1f},{an[1]-2:.1f} Q{(an[0]+gg[0])/2:.1f},{an[1]+4:.1f} {PI(*RIO)[0]-17:.1f},{PI(*RIO)[1]-3:.1f}"/>')
     s.append('</g>')
     s.append(f'<circle class="dot2" cx="{gi[0]:.1f}" cy="{gi[1]:.1f}" r="5"/><text class="tag" x="{gi[0]-8:.1f}" y="{gi[1]-8:.1f}" text-anchor="end">GRU</text>')
     s.append(f'<circle class="dot2" cx="{ci[0]:.1f}" cy="{ci[1]:.1f}" r="5"/><text class="tag" x="{ci[0]-8:.1f}" y="{ci[1]+18:.1f}" text-anchor="end">CGH</text>')
     s.append(f'<text class="tag" x="{(ci[0]+sd[0])/2:.0f}" y="{IY+24}" text-anchor="middle">31.12. CGH → SDU</text>')
 
-    stop(GUA, 1, 'Guarujá', '27.–31.12.', dx=20, dy=6, proj=PI, r_=13, frm='2026-12-27', to='2026-12-30')
+    stop(GUA, 1, 'Guarujá', '28.–31.12.', dx=20, dy=6, proj=PI, r_=13, frm='2026-12-28', to='2026-12-30')
     stop(RIO, 2, 'Rio de Janeiro', '31.12.–06.01.', dx=-30, dy=-40, anchor='end', proj=PI, r_=13, frm='2026-12-31', to='2027-01-05')
     stop(PAR, 5, 'Paraty', '14.–16.01.', dx=18, dy=4, anchor='end', proj=PI, r_=13, frm='2027-01-14', to='2027-01-15')
     stop(ILG, 6, 'Ilha Grande', '16.–20./21.01.', dx=-8, dy=40, proj=PI, r_=13, frm='2027-01-16', to='2027-01-21')
+    s.append(f'<text class="tag" x="{IX+IW-10}" y="{il[1]+86:.1f}" text-anchor="end">20.01. Boot + Uber → GIG</text>')
     s.append(f'<text class="ctry" x="{IX+IW-10}" y="{IY+IH-12}" text-anchor="end">AUSSCHNITT SÜDOST</text>')
 
     s.append('<g id="map-pins"></g>')
