@@ -894,7 +894,7 @@
         "wf": 3,
         "sm": 2,
         "stats": {
-          "TMP": 74,
+          "TTP": 72,
           "TRI": 70,
           "FLI": 48,
           "ORI": 96,
@@ -972,7 +972,7 @@
         "wf": 2,
         "sm": 5,
         "stats": {
-          "TMP": 70,
+          "TTP": 86,
           "TRI": 74,
           "FLI": 99,
           "ORI": 33,
@@ -1054,7 +1054,7 @@
         "wf": 1,
         "sm": 1,
         "stats": {
-          "TMP": 39,
+          "TTP": 58,
           "TRI": 79,
           "FLI": 54,
           "ORI": 71,
@@ -1136,7 +1136,7 @@
         "wf": 3,
         "sm": 3,
         "stats": {
-          "TMP": 63,
+          "TTP": 64,
           "TRI": 61,
           "FLI": 71,
           "ORI": 64,
@@ -1218,7 +1218,7 @@
         "wf": 1,
         "sm": 4,
         "stats": {
-          "TMP": 77,
+          "TTP": 83,
           "TRI": 81,
           "FLI": 45,
           "ORI": 58,
@@ -1304,7 +1304,7 @@
         "wf": 5,
         "sm": 3,
         "stats": {
-          "TMP": 72,
+          "TTP": 95,
           "TRI": 94,
           "FLI": 40,
           "ORI": 86,
@@ -2843,7 +2843,7 @@
   },
   "cardsInfo": {
     "labels": {
-      "TMP": "Tempo",
+      "TTP": "Trinktempo",
       "TRI": "Trinkfestigkeit",
       "FLI": "Flirt",
       "ORI": "Orientierung",
