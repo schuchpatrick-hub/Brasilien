@@ -118,6 +118,13 @@ Erledigtes gelb und lässt den heutigen Stopp pulsieren. Check-ins (Koordinaten 
 Collection `checkins` (`lat`, `lon`, `label`, `ts`) und erscheinen als rote Pins. Echtes GPS-Tracking ist im
 claude.ai-Viewer nicht möglich (Standortzugriff gesperrt), daher manuelles Einchecken durch den Admin.
 
+## Karte: Infokarten
+
+Stopps (`data-stop`) und Flughäfen GRU/CGH (`data-ap`) in `tools/gen_map.py` sind antippbar; darunter Stations-Chips und
+`#mi-card` mit Unterkunft (Maps-/Uber-Knöpfe), Anreise, Highlights (Google-Maps-Links), Warnhinweis und Flughäfen samt
+Flügen aus `flights`. Daten in `trip.json` → `mapinfo` (`stops`, `airports`; `q` = Suchbegriff). Fahrzeiten-Liste im
+Südost-Ausschnitt, Zeitzone Manaus und Pass-Hinweis Iguaçu direkt in `gen_map.py`.
+
 ## Regeln
 
 - **Repo ist öffentlich:** keine Roh-Chats, Telefonnummern, IBANs, Nachnamen, Passdaten,

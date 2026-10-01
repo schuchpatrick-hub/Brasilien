@@ -1467,6 +1467,55 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   })();
 })();
 
+/* ---------- Karte: Infokarten beim Antippen (trip.json → mapinfo) ---------- */
+(function () {
+  const svg = document.querySelector('#route svg.tripmap'), MI = TRIP.mapinfo;
+  const card = document.getElementById('mi-card'), chips = document.getElementById('mi-chips');
+  if (!svg || !MI || !card || PRINT) return;
+  const maps = q => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(q);
+  const uber = q => 'https://m.uber.com/ul/?action=setPickup&pickup=my_location&dropoff%5Bformatted_address%5D=' + encodeURIComponent(q);
+  const btns = q => q ? '<a class="mi-btn" href="' + maps(q) + '" target="_blank" rel="noopener">📍 Maps</a><a class="mi-btn" href="' + uber(q) + '" target="_blank" rel="noopener">🚗 Uber</a>' : '';
+  const who = g => g === 'all' ? 'alle sechs' : (TRIP.groups[g] || {}).name || g;
+  function flightsAt(code) {
+    const fl = (TRIP.flights || []).filter(f => f.from === code || f.to === code || (f.via || []).includes(code));
+    if (!fl.length) return '';
+    return '<ul class="mi-fl">' + fl.map(f => { const d = fmtDay(f.date);
+      return '<li><span class="t">' + d.wd + ' ' + d.dm + '</span><span>' + esc(f.from) + ' → ' + esc(f.to) + ' · ' + esc(f.time || '') +
+        ' <span class="s">(' + esc(who(f.g)) + (f.status === 'open' ? ', noch nicht gebucht' : '') + ')</span></span></li>'; }).join('') + '</ul>';
+  }
+  function apBlock(code, big) {
+    const a = MI.airports[code]; if (!a) return '';
+    return '<div class="mi-sec"><h4>✈ Flughafen ' + esc(code) + '</h4><div class="mi-row"><span>' + esc(a.name) + '</span>' + btns(a.q) + '</div>' + flightsAt(code) + '</div>';
+  }
+  function select(kind, id) {
+    svg.querySelectorAll('.sel').forEach(e => e.classList.remove('sel'));
+    chips.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(kind === 'stop' && b.dataset.stop === id)));
+    const el = svg.querySelector(kind === 'stop' ? '[data-stop="' + id + '"]' : '[data-ap="' + id + '"]'); if (el) el.classList.add('sel');
+    let h;
+    if (kind === 'ap') {
+      const a = MI.airports[id];
+      h = '<div class="mi-head"><span class="no ap">' + esc(id) + '</span><h3>' + esc(a.name) + '</h3></div>' + apBlock(id);
+    } else {
+      const st = MI.stops.find(x => x.id === id); if (!st) return;
+      h = '<div class="mi-head"><span class="no">' + st.n + '</span><h3>' + esc(st.name) + '</h3><span class="d">' + esc(st.dates) + ' · ' + esc(String(st.nights)) + ' Nächte</span><span class="gtag">' + esc(who(st.g)) + '</span></div>' +
+        (st.warn ? '<div class="mi-warn">⚠️ ' + esc(st.warn) + '</div>' : '') +
+        '<div class="mi-sec"><h4>🏠 Unterkunft</h4>' + st.stays.map(x => '<div class="mi-row"><span>' + esc(x.name) + '</span>' + btns(x.q) + '</div>').join('') + '</div>' +
+        (st.arrive ? '<div class="mi-sec"><h4>🧭 Anreise</h4><p>' + esc(st.arrive) + '</p></div>' : '') +
+        (st.hl && st.hl.length ? '<div class="mi-sec"><h4>⭐ Highlights (antippen = Google Maps)</h4><div class="mi-hl">' + st.hl.map(x => '<a href="' + maps(x.q) + '" target="_blank" rel="noopener">' + esc(x.t) + '</a>').join('') + '</div></div>' : '') +
+        (st.ap || []).map(c => apBlock(c)).join('');
+    }
+    card.innerHTML = '<div class="mi-card">' + h + '</div>';
+    const r = card.getBoundingClientRect();
+    if (r.bottom > innerHeight || r.top < 0) card.scrollIntoView({behavior: reduceMotion ? 'auto' : 'smooth', block: 'nearest'});
+  }
+  chips.innerHTML = MI.stops.map(st => '<button type="button" data-stop="' + esc(st.id) + '" aria-pressed="false"><b>' + st.n + '</b>' + esc(st.name) + '</button>').join('');
+  chips.addEventListener('click', e => { const b = e.target.closest('button[data-stop]'); if (b) select('stop', b.dataset.stop); });
+  const pick = e => { const g = e.target.closest('[data-stop],[data-ap]'); if (!g || !svg.contains(g)) return false;
+    if (g.dataset.stop) select('stop', g.dataset.stop); else select('ap', g.dataset.ap); return true; };
+  svg.addEventListener('click', pick);
+  svg.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && pick(e)) e.preventDefault(); });
+})();
+
 const TAB_IDS = [...document.querySelectorAll('.tabs a')].map(a => a.dataset.tab);
 const SECTIONS = [...document.querySelectorAll('section[data-tab]')];
 const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;

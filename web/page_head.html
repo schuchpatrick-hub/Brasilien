@@ -347,6 +347,39 @@ section.folded{padding-bottom:0}
 @media (max-width:480px){.ci-form{grid-template-columns:1fr}.ci-form .btn{grid-column:1}}
 @media (prefers-reduced-motion:reduce){.tripmap .stopg.here .halo{animation:none;opacity:.8}}
 @media print{.checkin,#here-gmaps{display:none!important}}
+/* Karte: Infokarten beim Antippen */
+.tripmap .stopg,.tripmap .apg{cursor:pointer}
+.tripmap .hit{fill:transparent}
+.tripmap .stopg:focus,.tripmap .apg:focus{outline:none}
+.tripmap .stopg.sel .dot{stroke:#ffcf1f;stroke-width:4}
+.tripmap .apg.sel .dot2{stroke:#ffcf1f;stroke-width:3;fill:#ffcf1f}
+.tripmap .stopg:focus-visible .dot,.tripmap .apg:focus-visible .dot2{stroke:var(--accent);stroke-width:4}
+.mi{margin-top:12px;display:grid;gap:10px}
+.mi-chips{display:flex;flex-wrap:wrap;gap:6px}
+.mi-chips button{font:600 .82rem var(--body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:5px 11px;cursor:pointer}
+.mi-chips button b{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#1d6b55;color:#fff;font-size:.68rem;margin-right:4px}
+.mi-chips button[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.mi-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:grid;gap:12px;animation:advIn .35s ease both}
+.mi-head{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.mi-head .no{width:30px;height:30px;border-radius:50%;background:#1d6b55;color:#fff;display:grid;place-items:center;font:700 .9rem var(--body);flex:none}
+.mi-head .no.ap{background:var(--sky);font-size:.62rem;width:38px;border-radius:8px}
+.mi-head h3{margin:0;font-size:1.25rem}
+.mi-head .d{font:600 .85rem var(--mono);color:var(--muted)}
+.mi-sec{display:grid;gap:6px}
+.mi-sec h4{margin:0;font:600 .7rem var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.mi-row{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.mi-row>span{font-weight:600}
+.mi-btn{font:600 .78rem var(--body);text-decoration:none;border:1px solid var(--line);background:var(--bg);color:var(--fg);border-radius:999px;padding:4px 10px;white-space:nowrap}
+.mi-btn:hover{border-color:var(--accent)}
+.mi-hl{display:flex;flex-wrap:wrap;gap:6px}
+.mi-hl a{font:600 .82rem var(--body);text-decoration:none;color:var(--fg);background:var(--sunbg);border-radius:999px;padding:5px 11px}
+.mi-hl a::after{content:" ↗";opacity:.55}
+.mi-warn{background:var(--warnbg);color:var(--warn);border-radius:10px;padding:8px 12px;font-size:.9rem;font-weight:600}
+.mi-fl{list-style:none;margin:0;padding:0;display:grid;gap:4px;font-size:.9rem}
+.mi-fl li{display:grid;grid-template-columns:auto 1fr;gap:10px}
+.mi-fl .t{font:600 .8rem var(--mono);color:var(--sky);white-space:nowrap}
+.mi-fl .s{font-size:.75rem;color:var(--muted)}
+@media print{.mi{display:none}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
