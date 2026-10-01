@@ -49,6 +49,14 @@ function setSkyTime() {
   const h = document.querySelector('header'); if (h) h.dataset.time = t;
 }
 setSkyTime(); setInterval(setSkyTime, 10 * 60000);
+/* Kopfbild: vor der Reise Copacabana, unterwegs das Foto der heutigen Station */
+function setHero(place) {
+  const img = document.querySelector('header .hero-photo'); if (!img) return;
+  if (!img.dataset.home) img.dataset.home = img.getAttribute('src');
+  const ph = place && document.querySelector('.stop-img[data-scene="' + SCENE_OF[place] + '"] .scene-photo');
+  const src = ph ? ph.getAttribute('src') : img.dataset.home;
+  if (img.getAttribute('src') !== src) img.setAttribute('src', src);
+}
 function renderToday() {
   const el = document.getElementById('today');
   const t = isoToday();
@@ -58,7 +66,8 @@ function renderToday() {
   if (t < first) {
     const n = daysBetween(t, first);
     const d0 = list[0];
-    html = sceneHtml(list.find(d => SCENE_OF[d.place]).place) + '<div class="kicker">' + esc(gName(G)) + ' · Countdown</div>' +
+    setHero(null);
+    html = '<div class="kicker">' + esc(gName(G)) + ' · Countdown</div>' +
       '<div class="big">Noch ' + n + (n === 1 ? ' Tag' : ' Tage') + '<small>bis zum Abflug am ' + fmtDay(first).wd + ' ' + fmtDay(first).dm + ' · erster Stopp: ' + esc(list.find(d => !['München', 'Abflug'].includes(d.place))?.place || d0.place) + '</small></div>' +
       itemsHtml(d0.items) +
       '<div class="next">🎁 <a href="#kalender">Heutiges Türchen öffnen</a> · ⏳ <a href="#kapsel">Zeitkapsel</a></div>';
@@ -68,7 +77,8 @@ function renderToday() {
     const today = list.filter(d => d.date === t);
     const tomorrow = list.filter(d => d.date > t).filter((d, i, a) => d.date === a[0].date);
     const f = fmtDay(t);
-    html = (today.length ? sceneHtml(today[0].place) : '') + '<div class="kicker">' + f.wd + ' ' + f.dm + ' · Tag ' + (daysBetween(first, t) + 1) + ' von ' + (daysBetween(first, last) + 1) + ' · ' + esc(gName(G)) + '</div>';
+    setHero(today.length ? today[0].place : null);
+    html = '<div class="kicker">' + f.wd + ' ' + f.dm + ' · Tag ' + (daysBetween(first, t) + 1) + ' von ' + (daysBetween(first, last) + 1) + ' · ' + esc(gName(G)) + '</div>';
     if (today.length) {
       const d = today[0];
       html += '<div class="big">' + esc(d.place) + '<small>' + esc(d.title) + '</small></div>' +
@@ -82,6 +92,10 @@ function renderToday() {
     }
   }
   el.innerHTML = html;
+  const hf = document.getElementById('hf-open');
+  if (hf) hf.textContent = (TRIP.flights || []).filter(f => f.status === 'open').length;
+  const hn = document.getElementById('hf-n');
+  if (hn) hn.innerHTML = G === 'b' ? '<b>16+</b> Nächte (2 im Flieger, Rio-Verlängerung offen)' : '<b>25</b> Nächte (3 davon im Flieger)';
 }
 
 /* ---------- Tag fuer Tag ---------- */

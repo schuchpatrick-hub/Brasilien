@@ -391,6 +391,24 @@ section.folded{padding-bottom:0}
 .mi-fl .t{font:600 .8rem var(--mono);color:var(--sky);white-space:nowrap}
 .mi-fl .s{font-size:.75rem;color:var(--muted)}
 @media print{.mi{display:none}}
+/* Kopf mit Heute-Karte */
+header .hero-seg{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.28);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);justify-self:start;max-width:100%}
+header .hero-seg button{color:#f4f7f2;display:grid;gap:1px;text-align:left;padding:6px 14px;line-height:1.2}
+header .hero-seg button b{font:700 .88rem var(--body)}
+header .hero-seg button small{font:500 .7rem var(--body);opacity:.8}
+header .hero-seg button[aria-pressed="true"]{background:var(--amarelo);color:#1a1a1a}
+.hero-today{display:grid;gap:10px;margin-top:4px;min-width:0}
+header .today{background:rgba(6,32,19,.74);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);text-shadow:none}
+header .today::before{opacity:.25}
+.hero-facts{display:flex;flex-wrap:wrap;gap:6px}
+.hero-facts span{font-size:.78rem;color:#e6efe9;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:3px 10px}
+.hero-facts b{color:var(--amarelo);font-weight:700}
+@media (min-width:900px){
+  header{grid-template-columns:minmax(0,1fr) minmax(0,460px);column-gap:28px;align-items:end}
+  header>:not(.hero-bg):not(.hero-today){grid-column:1}
+  header>.hero-today{grid-column:2;grid-row:1 / span 4;align-self:end}
+}
+@media (max-width:420px){.hero-seg button{padding:6px 10px}.hero-seg button small{font-size:.64rem}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
@@ -860,6 +878,7 @@ ul.pack2{list-style:none;margin:0;padding:0;display:grid;gap:2px}
 @media print{
   body{background:#fff;color:#000}
   .toc,.seg,#heute,#downloads,.btn{display:none!important}
+  header .hero-seg{display:inline-flex!important}
   section{break-inside:auto}.day,.stop,tr,.info{break-inside:avoid}
   figure{break-inside:avoid}
   .wrap{gap:26px;padding-block:0}

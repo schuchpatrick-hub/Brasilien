@@ -391,6 +391,24 @@ section.folded{padding-bottom:0}
 .mi-fl .t{font:600 .8rem var(--mono);color:var(--sky);white-space:nowrap}
 .mi-fl .s{font-size:.75rem;color:var(--muted)}
 @media print{.mi{display:none}}
+/* Kopf mit Heute-Karte */
+header .hero-seg{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.28);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);justify-self:start;max-width:100%}
+header .hero-seg button{color:#f4f7f2;display:grid;gap:1px;text-align:left;padding:6px 14px;line-height:1.2}
+header .hero-seg button b{font:700 .88rem var(--body)}
+header .hero-seg button small{font:500 .7rem var(--body);opacity:.8}
+header .hero-seg button[aria-pressed="true"]{background:var(--amarelo);color:#1a1a1a}
+.hero-today{display:grid;gap:10px;margin-top:4px;min-width:0}
+header .today{background:rgba(6,32,19,.74);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.14);text-shadow:none}
+header .today::before{opacity:.25}
+.hero-facts{display:flex;flex-wrap:wrap;gap:6px}
+.hero-facts span{font-size:.78rem;color:#e6efe9;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:999px;padding:3px 10px}
+.hero-facts b{color:var(--amarelo);font-weight:700}
+@media (min-width:900px){
+  header{grid-template-columns:minmax(0,1fr) minmax(0,460px);column-gap:28px;align-items:end}
+  header>:not(.hero-bg):not(.hero-today){grid-column:1}
+  header>.hero-today{grid-column:2;grid-row:1 / span 4;align-self:end}
+}
+@media (max-width:420px){.hero-seg button{padding:6px 10px}.hero-seg button small{font-size:.64rem}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
@@ -860,6 +878,7 @@ ul.pack2{list-style:none;margin:0;padding:0;display:grid;gap:2px}
 @media print{
   body{background:#fff;color:#000}
   .toc,.seg,#heute,#downloads,.btn{display:none!important}
+  header .hero-seg{display:inline-flex!important}
   section{break-inside:auto}.day,.stop,tr,.info{break-inside:avoid}
   figure{break-inside:avoid}
   .wrap{gap:26px;padding-block:0}
@@ -878,37 +897,23 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
   <div class="meta">
     <span class="dates">27.12.2026 → 20./21.01.2027</span>
   </div>
-  <div class="crew">
-    <span class="chip"><b>Jonas</b></span><span class="chip"><b>Patrick</b></span><span class="chip"><b>Simon</b></span><span class="chip"><b>Marco</b></span>
-    <span class="chip b"><b>Daijo</b> ab 06.01.</span><span class="chip b"><b>Greisel</b> ab 06.01.</span>
+  <div class="seg hero-seg" role="group" aria-label="Ansicht für">
+    <button type="button" id="g-a" data-g="a" aria-pressed="true"><b>Gringos plus 1 Cevapi</b><small>Jonas · Patrick · Simon · Marco</small></button>
+    <button type="button" id="g-b" data-g="b" aria-pressed="false"><b>Daijo &amp; Greisel</b><small>ab 06.01. dabei</small></button>
   </div>
+  <section id="heute" data-tab="uebersicht" class="hero-today" aria-label="Heute">
+    <div id="today" class="today" aria-live="polite">
+      <p class="note">Die Heute-Ansicht braucht JavaScript. Alle Tage stehen weiter unten.</p>
+    </div>
+    <div class="hero-facts" id="hero-facts">
+      <span id="hf-n"><b>25</b> Nächte (3 davon im Flieger)</span><span><b>6</b> Stationen</span><span><b id="hf-open">4</b> Flüge noch offen</span><span><b>6/7</b> Unterkünfte gebucht</span>
+    </div>
+  </section>
 </header>
 
 <nav class="tabs" aria-label="Bereiche"><div class="tabs-in"><a href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht">Übersicht</a><a href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab">Tage</a><a href="#reise" id="tab-reise" data-tab="reise">Flüge & Kosten</a><a href="#crew-tab" id="tab-crew-tab" data-tab="crew-tab">Crew</a><a href="#karten-tab" id="tab-karten-tab" data-tab="karten-tab">Karten</a><a href="#drinks-tab" id="tab-drinks-tab" data-tab="drinks-tab">Drinks</a><a href="#unterwegs-tab" id="tab-unterwegs-tab" data-tab="unterwegs-tab">Unterwegs</a><a href="#infos" id="tab-infos" data-tab="infos">Infos & Packen</a><a href="#vorfreude-tab" id="tab-vorfreude-tab" data-tab="vorfreude-tab">Vorfreude</a><a href="#spiele-tab" id="tab-spiele-tab" data-tab="spiele-tab">Spiele</a><a href="#extras" id="tab-extras" data-tab="extras">Downloads</a></div></nav>
 
 
-
-<section id="heute" data-tab="uebersicht" class="today-wrap">
-  <div class="today-head">
-    <h2>Heute</h2>
-    <div class="seg" role="group" aria-label="Ansicht für">
-      <button type="button" id="g-a" data-g="a" aria-pressed="true">Gringos plus 1 Cevapi</button>
-      <button type="button" id="g-b" data-g="b" aria-pressed="false">Daijo &amp; Greisel</button>
-    </div>
-  </div>
-  <div id="today" class="today" aria-live="polite">
-    <p class="note">Die Heute-Ansicht braucht JavaScript. Alle Tage stehen weiter unten.</p>
-  </div>
-</section>
-
-<section id="eckdaten" data-tab="uebersicht">
-<div class="facts">
-    <div class="fact"><strong>24</strong><span>Nächte für die Gringos plus 1 Cevapi</span></div>
-    <div class="fact"><strong>6</strong><span>Stationen</span></div>
-    <div class="fact"><strong>4</strong><span>Inlandsflüge, alle noch offen</span></div>
-    <div class="fact"><strong>6 / 7</strong><span>Unterkünfte gebucht</span></div>
-  </div>
-</section>
 
 <section id="route" data-tab="uebersicht">
   <h2>Die Route</h2>
@@ -1429,6 +1434,14 @@ function setSkyTime() {
   const h = document.querySelector('header'); if (h) h.dataset.time = t;
 }
 setSkyTime(); setInterval(setSkyTime, 10 * 60000);
+/* Kopfbild: vor der Reise Copacabana, unterwegs das Foto der heutigen Station */
+function setHero(place) {
+  const img = document.querySelector('header .hero-photo'); if (!img) return;
+  if (!img.dataset.home) img.dataset.home = img.getAttribute('src');
+  const ph = place && document.querySelector('.stop-img[data-scene="' + SCENE_OF[place] + '"] .scene-photo');
+  const src = ph ? ph.getAttribute('src') : img.dataset.home;
+  if (img.getAttribute('src') !== src) img.setAttribute('src', src);
+}
 function renderToday() {
   const el = document.getElementById('today');
   const t = isoToday();
@@ -1438,7 +1451,8 @@ function renderToday() {
   if (t < first) {
     const n = daysBetween(t, first);
     const d0 = list[0];
-    html = sceneHtml(list.find(d => SCENE_OF[d.place]).place) + '<div class="kicker">' + esc(gName(G)) + ' · Countdown</div>' +
+    setHero(null);
+    html = '<div class="kicker">' + esc(gName(G)) + ' · Countdown</div>' +
       '<div class="big">Noch ' + n + (n === 1 ? ' Tag' : ' Tage') + '<small>bis zum Abflug am ' + fmtDay(first).wd + ' ' + fmtDay(first).dm + ' · erster Stopp: ' + esc(list.find(d => !['München', 'Abflug'].includes(d.place))?.place || d0.place) + '</small></div>' +
       itemsHtml(d0.items) +
       '<div class="next">🎁 <a href="#kalender">Heutiges Türchen öffnen</a> · ⏳ <a href="#kapsel">Zeitkapsel</a></div>';
@@ -1448,7 +1462,8 @@ function renderToday() {
     const today = list.filter(d => d.date === t);
     const tomorrow = list.filter(d => d.date > t).filter((d, i, a) => d.date === a[0].date);
     const f = fmtDay(t);
-    html = (today.length ? sceneHtml(today[0].place) : '') + '<div class="kicker">' + f.wd + ' ' + f.dm + ' · Tag ' + (daysBetween(first, t) + 1) + ' von ' + (daysBetween(first, last) + 1) + ' · ' + esc(gName(G)) + '</div>';
+    setHero(today.length ? today[0].place : null);
+    html = '<div class="kicker">' + f.wd + ' ' + f.dm + ' · Tag ' + (daysBetween(first, t) + 1) + ' von ' + (daysBetween(first, last) + 1) + ' · ' + esc(gName(G)) + '</div>';
     if (today.length) {
       const d = today[0];
       html += '<div class="big">' + esc(d.place) + '<small>' + esc(d.title) + '</small></div>' +
@@ -1462,6 +1477,10 @@ function renderToday() {
     }
   }
   el.innerHTML = html;
+  const hf = document.getElementById('hf-open');
+  if (hf) hf.textContent = (TRIP.flights || []).filter(f => f.status === 'open').length;
+  const hn = document.getElementById('hf-n');
+  if (hn) hn.innerHTML = G === 'b' ? '<b>16+</b> Nächte (2 im Flieger, Rio-Verlängerung offen)' : '<b>25</b> Nächte (3 davon im Flieger)';
 }
 
 /* ---------- Tag fuer Tag ---------- */
