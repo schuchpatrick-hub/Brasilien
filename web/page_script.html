@@ -898,11 +898,11 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       '<output>' + (v === undefined || v === '' ? '–' : v) + '</output>' + [1, 10].map(d => '<button type="button" data-d="' + d + '"' + dis + '>' + (d === 1 ? '+' : '+10') + '</button>').join('') + '<span class="u">' + esc(q.unit || '') + '</span></span>';
     else if (q.type === 'yesno') f = '<span class="ka-yn" data-q="' + q.id + '"><button type="button" data-v="1" aria-pressed="' + (v === true) + '"' + dis + '>Ja</button><button type="button" data-v="0" aria-pressed="' + (v === false) + '"' + dis + '>Nein</button></span>';
     else f = '<textarea data-q="' + q.id + '" maxlength="200"' + dis + '>' + esc(v || '') + '</textarea>';
-    return '<div class="ka-q"><label>' + q.emoji + ' ' + esc(q.q) + '</label>' + (q.hint ? '<span class="hint">' + esc(q.hint) + '</span>' : '') + f + '</div>';
+    return '<div class="ka-q"><label>' + q.emoji + ' ' + esc(q.q) + '</label>' + (q.from ? '<span class="hint ka-from">⏱ ' + esc(K.fromText || 'zählt ab ' + q.from) + '</span>' : '') + (q.hint ? '<span class="hint">' + esc(q.hint) + '</span>' : '') + f + '</div>';
   }
   function waText() {
     return '⏳ Zeitkapsel Brasilien 26/27\nBitte deine Tipps an Patrick schicken (' + K.closeText + '). Geöffnet wird am ' + K.revealText + '.\n\n' +
-      Q.map((q, i) => (i + 1) + '. ' + q.q + (q.type === 'crew' ? ' (Jonas, Patrick, Simon, Marco, Daijo, Greisel)' : q.type === 'choice' ? ' (' + q.options.join(', ') + ')' : q.type === 'yesno' ? ' (Ja/Nein)' : q.type === 'number' ? ' (Zahl)' : '')).join('\n');
+      Q.map((q, i) => (i + 1) + '. ' + q.q + (q.type === 'crew' ? ' (Jonas, Patrick, Simon, Marco, Daijo, Greisel)' : q.type === 'choice' ? ' (' + q.options.join(', ') + ')' : q.type === 'yesno' ? ' (Ja/Nein)' : q.type === 'number' ? ' (Zahl)' : '') + (q.from ? ' – zählt ab 06.01.' : '')).join('\n');
   }
   function renderSealed() {
     const n = Object.keys(tips).length;
