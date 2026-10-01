@@ -43,7 +43,7 @@ Die Webseite erst nach dem Merge neu veröffentlichen.
    `url: https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE` (vorher `action: read`), damit der Link gleich bleibt,
    und `files`: `brasilien-reise.pdf`, alle `fotos/<name>.jpg` → `web/fotos/<name>.jpg`, plus alle `audio/<name>.mp3` → `web/audio/<name>.mp3` (Sprachführer). `capabilities` weglassen, dann bleiben
    `db`, `user`, `downloads` erhalten.
-5. „Stand“-Datum in README und Webseite anpassen, committen, pushen.
+5. „Stand“-Datum setzt `build.py` automatisch (Tag des Neubaus, README und Webseite `%%STAND%%`); committen, pushen.
 
 ## Kopfbereich (Übersicht)
 
@@ -88,7 +88,8 @@ Zahlenfelder (`type=number`) ließen die Seite im claude.ai-Viewer hängen. Desh
 `page_script.html` baut Plus/Minus-Knöpfe mit verstecktem `<input>` (feuert `input`/`change`), der Real-Rechner hat ein eigenes
 Tastenfeld (`#fx-pad`). Nach dem Speichern von Drinks, Partien und Karten-Ereignissen erscheint `undoToast()` mit „Rückgängig“
 (löscht die eben angelegten Dokumente). Drinks: „⚡ Nochmal dasselbe“ (`#dr-again`, letzte 4 Kombinationen im localStorage
-`br26.drinkRecent`) und Schnellwahl Alle / Keiner.
+`br26.drinkRecent`) und Schnellwahl Alle / Keiner. Admin-Knopf „＋“ unten rechts (`showFab()`, nur mit Schreibrecht, nicht in der Gast-Ansicht): springt zu Drink, Spiel, Check-in, Kartenwert und zeigt die „Nochmal“-Drinks.
+Sprachführer: Handy-Stimme (pt-BR, bevorzugt Premium/Natural) ist Standard, wenn vorhanden; sonst MP3.
 
 ## Drinks-Counter
 
