@@ -1077,7 +1077,7 @@
           "KAR": 54,
           "GRI": 77,
           "SCH": 64,
-          "MEK": 39
+          "MEK": 49
         },
         "special": [
           "🍽️",
@@ -1247,7 +1247,7 @@
           "FLI": 68,
           "ORI": 81,
           "BUF": 94,
-          "PÜN": 92,
+          "PÜN": 65,
           "KAT": 95,
           "SMB": 75,
           "KAR": 84,
@@ -1265,7 +1265,7 @@
           "⏰ Uhr heimlich vorgestellt (von Daijo)",
           "💍 Spielt gerade Hochzeitsreise"
         ],
-        "scout": "Hat eine Pistole im Fuß, zielt aber am liebsten auf das eigene Standbein. Seit der Hochzeit überraschend der Pünktlichste im Kader: Daijo hat seine Uhr eine Stunde vorgestellt, er hat es noch nicht gemerkt. Seitdem steht er 20 Minuten zu früh am Treffpunkt und wartet, ohne ein Wort zu sagen.",
+        "scout": "Hat eine Pistole im Fuß, zielt aber am liebsten auf das eigene Standbein. Pünktlich nur im Mittelfeld, und das auch nur, weil Daijo seine Uhr eine Stunde vorgestellt hat. Er hat es noch nicht gemerkt.",
         "file": {
           "market": "Flitterwochen für zwei zum Preis von sechs",
           "contract": "Lebenslang, unterschrieben vorm Standesamt",
