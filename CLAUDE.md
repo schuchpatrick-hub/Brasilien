@@ -56,7 +56,8 @@ Alle sechs haben der Verwendung ihres Fotos zugestimmt (laut Patrick, 30.09.).
 ## Crew-Karten (FIFA-Stil)
 
 Kapitel `#karten` im Reiter Crew. Basiswerte, Position, Flagge, Verein, Spezialwert, schwacher Fuß/Tricks, PlayStyles
-und Scout-Bericht in `trip.json` → `crew[].card`. Live: TRI + 1 je 6 Drinks (max +6), Gesamtwertung = Schnitt + 6
+und Scout-Bericht in `trip.json` → `crew[].card`. Zwölf Werte (TTP, TRI, FLI, ORI, BUF, PÜN, KAT, SMB, KAR, GRI, SCH, MEK; `cardsInfo.worse` = GRI/SCH/MEK rot, höher = schlimmer).
+Live: TRI + 1 je 6 Drinks (max +6), KAT − (Drinks der letzten 14 h − 5, max −15), Gesamtwertung = Schnitt der `cardsInfo.core`-Werte + 6
 ± (Siege − letzte Plätze, max ±5). Beste Karte (wenn schon gespielt) = blaue TOTS-Karte, meiste letzte Plätze = rote
 Laterne. Antippen dreht die Karte (Rückseite scrollbar: Scout-Bericht, PlayStyles, Spielerakte `card.file` mit Marktwert, Vertrag, Verletzungen, Torjubel, Transfergerücht; unten Drinks, Siege, Form).
 

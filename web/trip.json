@@ -899,7 +899,13 @@
           "FLI": 48,
           "ORI": 96,
           "BUF": 66,
-          "PÜN": 93
+          "PÜN": 93,
+          "KAT": 70,
+          "SMB": 45,
+          "KAR": 61,
+          "GRI": 57,
+          "SCH": 63,
+          "MEK": 58
         },
         "special": [
           "🧢",
@@ -977,7 +983,13 @@
           "FLI": 99,
           "ORI": 33,
           "BUF": 61,
-          "PÜN": 66
+          "PÜN": 66,
+          "KAT": 55,
+          "SMB": 91,
+          "KAR": 88,
+          "GRI": 93,
+          "SCH": 50,
+          "MEK": 44
         },
         "special": [
           "💔",
@@ -1059,7 +1071,13 @@
           "FLI": 54,
           "ORI": 71,
           "BUF": 99,
-          "PÜN": 81
+          "PÜN": 81,
+          "KAT": 60,
+          "SMB": 34,
+          "KAR": 72,
+          "GRI": 81,
+          "SCH": 97,
+          "MEK": 86
         },
         "special": [
           "🍽️",
@@ -1141,7 +1159,13 @@
           "FLI": 71,
           "ORI": 64,
           "BUF": 73,
-          "PÜN": 75
+          "PÜN": 75,
+          "KAT": 52,
+          "SMB": 70,
+          "KAR": 66,
+          "GRI": 60,
+          "SCH": 58,
+          "MEK": 29
         },
         "special": [
           "🏚️",
@@ -1223,7 +1247,13 @@
           "FLI": 45,
           "ORI": 58,
           "BUF": 70,
-          "PÜN": 11
+          "PÜN": 11,
+          "KAT": 82,
+          "SMB": 64,
+          "KAR": 71,
+          "GRI": 48,
+          "SCH": 76,
+          "MEK": 55
         },
         "special": [
           "🔫",
@@ -1309,7 +1339,13 @@
           "FLI": 40,
           "ORI": 86,
           "BUF": 65,
-          "PÜN": 88
+          "PÜN": 88,
+          "KAT": 95,
+          "SMB": 79,
+          "KAR": 74,
+          "GRI": 34,
+          "SCH": 21,
+          "MEK": 63
         },
         "special": [
           "📊",
@@ -2848,8 +2884,27 @@
       "FLI": "Flirt",
       "ORI": "Orientierung",
       "BUF": "Buffet",
-      "PÜN": "Pünktlichkeit"
+      "PÜN": "Pünktlichkeit",
+      "KAT": "Kater-Resistenz",
+      "SMB": "Samba",
+      "KAR": "Karaoke",
+      "GRI": "Gringo-Faktor",
+      "SCH": "Schnarchen",
+      "MEK": "Meckern & Jammern"
     },
-    "_hinweis": "Basiswerte in crew[].card; live: TRI + Drinks/6 (max +6), OVR + Siege − Letzte Plätze (je max ±5). Beste Karte = TOTS, meiste letzte Plätze = Rote Laterne."
+    "_hinweis": "Basiswerte in crew[].card.stats; Gesamtwertung nur aus core. worse = höher ist schlimmer (rot). Live: TRI + Drinks/6 (max +6), KAT − (Drinks der letzten 14 h − 5, max −15), OVR + Siege − letzte Plätze (max ±5).",
+    "core": [
+      "TTP",
+      "TRI",
+      "FLI",
+      "ORI",
+      "BUF",
+      "PÜN"
+    ],
+    "worse": [
+      "GRI",
+      "SCH",
+      "MEK"
+    ]
   }
 }
