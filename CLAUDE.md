@@ -82,6 +82,8 @@ rank/points/winner/teams, `higher`). Partien in db-Collection `games` (`game`, `
 `winners`, `teams` {a, b, sa, sb, loc = gegen Einheimische}, Wizard `rounds` [{id: {a: Ansage, s: Stiche}}] und `done`).
 Wizard-Punkte: richtig 20 + 10 je Stich, sonst −10 je Stich daneben; Runden = 60 / Spielerzahl. Rangliste nach Siegen
 (Gleichstand: Siegquote), Filter pro Spiel, Bilanz Crew gegen Einheimische, Rote Laterne (meiste letzte Plätze). Eintragen nur Admin.
+Löschen (nur Admin): einzelne Partien im Verlauf (🗑), laufenden Wizard-Block, unter „Spiele verwalten“ ganze Spiele samt
+Partien (eigene: Dokument in `gametypes` löschen; Standardspiele werden nur ausgeblendet über db-Dokument `gamecfg/hidden` `ids`).
 Verlierer bekommen derbe Sprüche aus `games.roasts` (`person` je Crew-`id`, `game` je Spiel, `generic`, `locals` bei Niederlage gegen
 Einheimische; `{n}` = Name, `{n}s` = Genitiv), pro Partie fest, „Anderer Spruch“ würfelt neu. Hintergrund: Szene `spiele` in `gen_scenes.py`.
 

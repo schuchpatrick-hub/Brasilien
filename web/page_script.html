@@ -1033,7 +1033,8 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   let dbG = null, writable = false, custom = [], matches = [], filter = 'all', msg = '', pending = false;
   let f = {type: null, players: new Set(), scores: {}, places: {}, win: new Set(), A: new Set(), B: new Set(), loc: false, sa: '', sb: ''};
   let wiz = {};          // Eingaben der laufenden Wizard-Runde: {id: {a, s}}
-  const types = () => TRIP.games.types.concat(custom);
+  let hidden = [];       // ausgeblendete Standardspiele (db: gamecfg/hidden)
+  const types = () => TRIP.games.types.filter(t => !hidden.includes(t.id)).concat(custom);
   const typeOf = id => types().find(t => t.id === id) || {id, name: id, emoji: '🎲', mode: 'winner'};
   const av = (id, cls) => { const p = byId[id]; return '<span class="' + (cls || 'av') + '">' + (p && p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="">' : esc(p ? p.name[0] : '?')) + '</span>'; };
   const nm = id => byId[id] ? byId[id].name : id;
@@ -1099,6 +1100,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     }
     h += writable ? '<div class="gm-go">' + (next <= max ? '<button type="button" class="btn" data-act="wround" data-id="' + m.id + '">Runde ' + next + ' speichern</button>' : '') +
       (n ? '<button type="button" class="btn ghost" data-act="wundo" data-id="' + m.id + '">Letzte Runde löschen</button>' : '') +
+      '<button type="button" class="btn ghost" data-act="wdel" data-id="' + m.id + '">🗑 Block löschen</button>' +
       '<button type="button" class="btn ghost" data-act="wend" data-id="' + m.id + '">' + (next > max ? 'Partie werten 🏆' : 'Partie jetzt beenden') + '</button><span class="gm-msg" id="gm-wmsg"></span></div>' : '<p class="gm-hint">Patrick trägt die Runden ein, der Stand aktualisiert sich live.</p>';
     return h + '</div>';
   }
@@ -1129,7 +1131,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     const list = matches.filter(m => m.done !== false).sort((a, b) => b.ts - a.ts).slice(0, 40);
     return '<details class="gm-card"' + (list.length ? ' open' : '') + '><summary>📜 Verlauf (' + matches.filter(m => m.done !== false).length + ')</summary>' + (list.length ? '<ul class="gm-log">' + list.map(m => { const t = typeOf(m.game), r = result(m);
       return '<li><span class="e">' + t.emoji + '</span><span><b>' + esc(t.name) + '</b> <span class="t">' + new Date(m.ts).toLocaleString('de-DE', {timeZone: TZ, day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'}) + '</span><br>' + r.text +
-        (r.winners.length && m.mode !== 'winner' && m.mode !== 'rank' ? ' · 🏆 ' + r.winners.map(nm).join(' & ') : '') + (roast(m) ? '<br><span class="rs">💀 ' + esc(roast(m)) + '</span>' : '') + '</span>' + (writable ? '<button type="button" class="del" data-del="' + m.id + '" aria-label="Partie löschen" title="Löschen">×</button>' : '<span></span>') + '</li>'; }).join('') + '</ul>' : '<p class="gm-hint">Noch nichts gespielt.</p>') + '</details>';
+        (r.winners.length && m.mode !== 'winner' && m.mode !== 'rank' ? ' · 🏆 ' + r.winners.map(nm).join(' & ') : '') + (roast(m) ? '<br><span class="rs">💀 ' + esc(roast(m)) + '</span>' : '') + '</span>' + (writable ? '<button type="button" class="del" data-del="' + m.id + '" aria-label="Partie löschen" title="Partie löschen">🗑</button>' : '<span></span>') + '</li>'; }).join('') + '</ul>' : '<p class="gm-hint">Noch nichts gespielt.</p>') + '</details>';
   }
   function newType() {
     if (!writable) return '';
@@ -1138,7 +1140,15 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       '<label class="full" style="font-size:.9rem;display:flex;gap:8px;align-items:center"><input type="checkbox" id="gm-nl"> Bei Punkten gewinnt der Niedrigste (z. B. Golf, Strafpunkte)</label>' +
       '<div class="gm-go full"><button type="button" class="btn" data-act="addtype">Spiel anlegen</button></div></div></details>';
   }
-  function render() { top.innerHTML = board() + lastLoser(); box.innerHTML = liveWizard() + form() + log() + newType(); pending = false; }
+  function manage() {
+    if (!writable) return '';
+    const all = TRIP.games.types.concat(custom);
+    return '<details class="gm-card"><summary>🗑 Spiele verwalten</summary><p class="gm-hint">Ein falsch angelegtes Spiel samt seiner Partien löschen. Standardspiele werden nur ausgeblendet und lassen sich wieder einblenden. Einzelne Partien löschst du im Verlauf mit 🗑.</p><ul class="gm-log">' +
+      all.map(t => { const n = matches.filter(m => m.game === t.id).length, isStd = TRIP.games.types.some(x => x.id === t.id), off = hidden.includes(t.id);
+        return '<li><span class="e">' + t.emoji + '</span><span><b>' + esc(t.name) + '</b>' + (off ? ' <span class="t">(ausgeblendet)</span>' : '') + '<br><span class="t">' + n + ' ' + (n === 1 ? 'Partie' : 'Partien') + (isStd ? ' · Standardspiel' : ' · selbst angelegt') + '</span></span>' +
+          (off ? '<button type="button" class="btn ghost" data-act="unhide" data-id="' + esc(t.id) + '">Einblenden</button>' : '<button type="button" class="btn ghost" data-act="deltype" data-id="' + esc(t.id) + '">🗑 Löschen</button>') + '</li>'; }).join('') + '</ul></details>';
+  }
+  function render() { top.innerHTML = board() + lastLoser(); box.innerHTML = liveWizard() + form() + log() + newType() + manage(); pending = false; }
   const busy = () => box.contains(document.activeElement) && /INPUT|SELECT/.test(document.activeElement.tagName);
   function refresh() { if (busy()) pending = true; else render(); }
   box.addEventListener('focusout', () => setTimeout(() => { if (pending && !busy()) render(); }, 50));
@@ -1193,6 +1203,19 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       try { await dbG.doc('games/' + m.id).set(rest); wiz = {}; } catch (err) { document.getElementById('gm-wmsg').textContent = 'Konnte nicht speichern.'; }
       return;
     }
+    if (d.act === 'wdel' && m) { if (confirm('Den laufenden Wizard-Block komplett löschen?')) { try { await dbG.doc('games/' + m.id).delete(); wiz = {}; } catch (err) {} } return; }
+    if (d.act === 'deltype') {
+      const t = typeOf(d.id), list = matches.filter(x => x.game === d.id), isStd = TRIP.games.types.some(x => x.id === d.id);
+      if (!confirm('„' + t.name + '“' + (list.length ? ' und ' + list.length + ' eingetragene ' + (list.length === 1 ? 'Partie' : 'Partien') : '') + ' löschen?' + (isStd ? ' (Standardspiel wird ausgeblendet)' : ''))) return;
+      try {
+        for (const x of list) await dbG.doc('games/' + x.id).delete();
+        if (isStd) await dbG.doc('gamecfg/hidden').set({ids: hidden.concat([d.id])});
+        else await dbG.doc('gametypes/' + d.id).delete();
+        if (f.type === d.id) f.type = null; if (filter === d.id) filter = 'all';
+      } catch (err) { alert('Konnte nicht löschen.'); }
+      render(); return;
+    }
+    if (d.act === 'unhide') { try { await dbG.doc('gamecfg/hidden').set({ids: hidden.filter(x => x !== d.id)}); } catch (err) {} return; }
     if (d.act === 'wundo' && m) { const rest = Object.assign({}, m); delete rest.id; rest.rounds = (m.rounds || []).slice(0, -1); try { await dbG.doc('games/' + m.id).set(rest); } catch (err) {} return; }
     if (d.act === 'wend' && m) {
       if (!(m.rounds || []).length) { if (confirm('Noch keine Runde gespielt. Block verwerfen?')) { try { await dbG.doc('games/' + m.id).delete(); } catch (err) {} } return; }
@@ -1205,7 +1228,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       const name = document.getElementById('gm-nn').value.trim(); if (!name) return;
       const id = 'c-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 24) + '-' + Date.now().toString(36);
       const doc = {name, emoji: document.getElementById('gm-ne').value.trim() || '🎲', mode: document.getElementById('gm-nm').value, higher: !document.getElementById('gm-nl').checked, unit: 'Punkte', ts: Date.now()};
-      try { await dbG.doc('gametypes/' + id).set(doc); f.type = id; msg = ''; } catch (err) { alert('Konnte das Spiel nicht anlegen.'); }
+      try { await dbG.doc('gametypes/' + id).set(doc); f.type = id; msg = ''; render(); } catch (err) { alert('Konnte das Spiel nicht anlegen.'); }
     }
   });
   box.addEventListener('input', e => {
@@ -1227,6 +1250,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       matches = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data())).filter(m => m && m.game && Array.isArray(m.players) && typeof m.ts === 'number');
       refresh();
     }, () => {});
+    dbG.collection('gamecfg').onSnapshot(snap => { snap.docs.forEach(d => { if (d.exists && d.id === 'hidden') hidden = (d.data() || {}).ids || []; }); refresh(); }, () => {});
     dbG.collection('gametypes').onSnapshot(snap => {
       custom = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data())).filter(t => t.name && MODES[t.mode]).sort((a, b) => (a.ts || 0) - (b.ts || 0));
       refresh();
