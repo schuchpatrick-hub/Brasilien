@@ -404,6 +404,25 @@ header .today::before{opacity:.25}
 .guest-bar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);transform:translateX(-50%);z-index:250;background:#1a1a1a;color:#fff;border-radius:999px;padding:8px 8px 8px 14px;font:600 .82rem var(--body);display:flex;gap:10px;align-items:center;box-shadow:0 6px 20px rgba(0,0,0,.3);white-space:nowrap;max-width:calc(100vw - 24px)}
 .guest-bar button{font:700 .78rem var(--body);background:var(--amarelo);color:#1a1a1a;border:0;border-radius:999px;padding:5px 12px;cursor:pointer}
 @media print{.guest-bar{display:none}}
+/* Plus/Minus-Felder, Tastenfeld, Rückgängig-Leiste, Nochmal */
+.stp{display:inline-flex;gap:4px;align-items:center;flex-wrap:wrap}
+.stp button{font:700 .82rem var(--body);min-width:36px;height:38px;padding:0 6px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;touch-action:manipulation}
+.stp button[disabled]{opacity:.45;cursor:not-allowed}
+.stp output{min-width:3rem;text-align:center;font:800 1.1rem var(--display)}
+.stp .u{color:var(--muted);font-size:.85rem}
+.dr-cf .lbl{font-size:.92rem}
+.fx-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;max-width:320px}
+.fx-pad button{font:700 1.15rem var(--display);height:46px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;touch-action:manipulation}
+.fx-pad button.c{grid-column:1/-1;font:600 .85rem var(--body);height:36px}
+.undo-bar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 62px);transform:translateX(-50%);z-index:260;background:#1a1a1a;color:#fff;border-radius:999px;padding:8px 8px 8px 16px;font:600 .85rem var(--body);display:flex;gap:12px;align-items:center;box-shadow:0 6px 20px rgba(0,0,0,.3);max-width:calc(100vw - 24px)}
+.undo-bar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.undo-bar button{font:700 .8rem var(--body);background:var(--amarelo);color:#1a1a1a;border:0;border-radius:999px;padding:6px 12px;cursor:pointer;flex:none}
+.undo-bar[hidden]{display:none}
+.dr-again{margin-bottom:6px}
+.dr-again .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.dr-cf .stp output{min-width:2.6rem}
+.dr-again button{font:600 .82rem var(--body);background:var(--sunbg);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer}
+@media print{.undo-bar,.fx-pad{display:none}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
