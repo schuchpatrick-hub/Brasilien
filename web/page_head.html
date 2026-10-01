@@ -442,6 +442,12 @@ header .today::before{opacity:.25}
 .fab-again button{font-size:.82rem;background:var(--sunbg)}
 .undo-bar{bottom:calc(env(safe-area-inset-bottom,0px) + 84px)!important}
 @media print{.fab-wrap{display:none}}
+.net{position:fixed;left:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:230;font:700 .72rem var(--body);border-radius:999px;padding:5px 10px;box-shadow:0 3px 10px rgba(0,0,0,.18);pointer-events:none}
+.net[hidden]{display:none}
+.net.live{background:var(--okbg);color:var(--ok)}
+.net.off{background:var(--surface);color:var(--muted);border:1px solid var(--line)}
+.net.wait{background:var(--warnbg);color:var(--warn)}
+@media print{.net{display:none}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}

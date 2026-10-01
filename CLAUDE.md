@@ -91,6 +91,13 @@ Tastenfeld (`#fx-pad`). Nach dem Speichern von Drinks, Partien und Karten-Ereign
 `br26.drinkRecent`) und Schnellwahl Alle / Keiner. Admin-Knopf „＋“ unten rechts (`showFab()`, nur mit Schreibrecht, nicht in der Gast-Ansicht): springt zu Drink, Spiel, Check-in, Kartenwert und zeigt die „Nochmal“-Drinks.
 Sprachführer: Handy-Stimme (pt-BR, bevorzugt Premium/Natural) ist Standard, wenn vorhanden; sonst MP3.
 
+## Offline-Warteschlange und Live-Anzeige
+
+Alle Module holen die Datenbank über `getDb()` (nicht direkt `claude.use('db')`). Schreibzugriffe (`set`/`delete`) laufen über
+`guarded()`: ohne Netz oder nach 10 s ohne Antwort landen sie im localStorage `br26.outbox` und werden bei `online`, beim Laden
+und alle 20 s nachgeschickt (`flush()`, gleiche Dokument-ID, daher keine Doppelten). Unten links `#net`: „● live“ (nur Admin),
+„○ offline“, „⏳ n Einträge warten“.
+
 ## Drinks-Counter
 
 Kapitel „Drinks“ (`#drinks`). Daten in der Artifact-Datenbank: Collection `drinks` (ein Dokument pro Getränk:
