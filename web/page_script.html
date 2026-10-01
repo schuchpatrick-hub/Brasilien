@@ -4,6 +4,9 @@ const TRIP = %%TRIP%%;
 const TZ = 'America/Sao_Paulo';
 const PEOPLE = ['Jonas', 'Patrick', 'Simon', 'Marco', 'Daijo', 'Greisel', 'Alle'];
 const PRINT = location.hash === '#print';
+/* Schwächere Geräte: Glas-Effekte (backdrop-filter) und Animationen sparen */
+try { if ((navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) ||
+  (window.matchMedia && matchMedia('(prefers-reduced-transparency: reduce)').matches)) document.documentElement.classList.add('lite'); } catch (e) {}
 
 const store = {
   get(k) { try { return localStorage.getItem('br26.' + k); } catch (e) { return null; } },
@@ -87,7 +90,7 @@ let G = PRINT ? 'all' : (store.get('group') === 'b' ? 'b' : 'a');
 /* ---------- Heute ---------- */
 function itemsHtml(items) {
   return '<ul>' + items.map(it =>
-    '<li><span class="t">' + esc(it.time || '') + '</span><span>' + esc(it.text) +
+    (it.time ? '<li><span class="t">' + esc(it.time) + '</span><span>' : '<li class="nt"><span>') + esc(it.text) +
     (it.unsicher ? ' <span class="unsure">(offen)</span>' : '') + '</span></li>').join('') + '</ul>';
 }
 /* Bild zur Station (Kopie aus den Stationen, IDs eindeutig gemacht) */
@@ -391,7 +394,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   const CAT = Object.fromEntries(D.cats.map(c => [c[0], {name: c[1], icon: c[2]}]));
   const byId = Object.fromEntries(CREW.map(p => [p.id, p]));
   const $ = id => document.getElementById(id);
-  const avatar = (p, cls) => '<span class="' + (cls || 'av') + '">' + (p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="">' : esc(p.name[0])) + '</span>';
+  const avatar = (p, cls) => '<span class="' + (cls || 'av') + '">' + (p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="" loading="lazy" decoding="async">' : esc(p.name[0])) + '</span>';
   const fmt1 = n => n.toLocaleString('de-DE', {minimumFractionDigits: 1, maximumFractionDigits: 1});
   const fmt2 = n => n.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
   const grams = d => d.ml * d.abv / 100 * 0.789;
@@ -945,7 +948,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   const byId = Object.fromEntries(CREW.map(c => [c.id, c]));
   const reveal = Date.parse(K.revealAt);
   let dbK = null, writable = false, tips = {}, sol = {}, who = null, draft = {}, msg = '', justSealed = null;
-  const av = (p, cls) => '<span class="' + (cls || 'av') + '">' + (p.photo ? '<img src="' + esc(p.photo) + '" alt="">' : esc(p.name[0])) + '</span>';
+  const av = (p, cls) => '<span class="' + (cls || 'av') + '">' + (p.photo ? '<img src="' + esc(p.photo) + '" alt="" loading="lazy" decoding="async">' : esc(p.name[0])) + '</span>';
   const isOpen = () => Date.now() >= reveal;
   const fmtAns = (q, v) => v === undefined || v === '' || v === null ? '–' : q.type === 'crew' ? (byId[v] ? byId[v].name : v) : q.type === 'yesno' ? (v ? 'Ja' : 'Nein') : q.type === 'number' ? v + ' ' + (q.unit || '') : String(v);
   function countdown() {
@@ -1146,7 +1149,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   let hidden = [];       // ausgeblendete Standardspiele (db: gamecfg/hidden)
   const types = () => TRIP.games.types.filter(t => !hidden.includes(t.id)).concat(custom);
   const typeOf = id => types().find(t => t.id === id) || {id, name: id, emoji: '🎲', mode: 'winner'};
-  const av = (id, cls) => { const p = byId[id]; return '<span class="' + (cls || 'av') + '">' + (p && p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="">' : esc(p ? p.name[0] : '?')) + '</span>'; };
+  const av = (id, cls) => { const p = byId[id]; return '<span class="' + (cls || 'av') + '">' + (p && p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="" loading="lazy" decoding="async">' : esc(p ? p.name[0] : '?')) + '</span>'; };
   const nm = id => byId[id] ? byId[id].name : id;
   const wizPts = r => r.a === r.s ? 20 + 10 * r.s : -10 * Math.abs(r.a - r.s);
   const wizTotals = m => Object.fromEntries(m.players.map(id => [id, (m.rounds || []).reduce((s, r) => s + (r[id] ? wizPts(r[id]) : 0), 0)]));
