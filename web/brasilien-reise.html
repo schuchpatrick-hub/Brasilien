@@ -442,6 +442,12 @@ header .today::before{opacity:.25}
 .fab-again button{font-size:.82rem;background:var(--sunbg)}
 .undo-bar{bottom:calc(env(safe-area-inset-bottom,0px) + 84px)!important}
 @media print{.fab-wrap{display:none}}
+.net{position:fixed;left:12px;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:230;font:700 .72rem var(--body);border-radius:999px;padding:5px 10px;box-shadow:0 3px 10px rgba(0,0,0,.18);pointer-events:none}
+.net[hidden]{display:none}
+.net.live{background:var(--okbg);color:var(--ok)}
+.net.off{background:var(--surface);color:var(--muted);border:1px solid var(--line)}
+.net.wait{background:var(--warnbg);color:var(--warn)}
+@media print{.net{display:none}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
@@ -1460,6 +1466,73 @@ document.addEventListener('click', e => {
   inp.value = v; stpSync(inp);
   inp.dispatchEvent(new Event('input', {bubbles: true})); inp.dispatchEvent(new Event('change', {bubbles: true}));
 });
+/* ---------- Offline-Warteschlange + Live-Anzeige ----------
+   Alle Schreibzugriffe laufen über getDb(). Ohne Netz (oder wenn das Speichern hängt) landet der Eintrag in einer
+   Warteschlange im localStorage und wird automatisch nachgeschickt, sobald wieder Netz da ist. Die Dokument-ID wird
+   vorher vergeben, deshalb ist Nachschicken doppelt-sicher (set auf denselben Pfad). */
+let DBP = null, rawDb = null, flushing = false;
+const qLoad = () => { try { return JSON.parse(store.get('outbox') || '[]'); } catch (e) { return []; } };
+const qSave = q => { store.set('outbox', JSON.stringify(q)); netPaint(); };
+const NETERR = /unavailable|network|offline|timeout|deadline|fetch|failed to fetch|disconnected/i;
+function withTimeout(p, ms) { return Promise.race([p, new Promise((_, rej) => setTimeout(() => rej({code: 'timeout'}), ms))]); }
+async function guarded(op, path, data, run) {
+  const q = qLoad();
+  if (q.length || navigator.onLine === false) { q.push({op, path, data}); qSave(q); return; }
+  try { await withTimeout(run(), 10000); }
+  catch (err) {
+    const c = String((err && (err.code || err.name || err.message)) || '');
+    if (!NETERR.test(c) && navigator.onLine !== false) throw err;
+    const q2 = qLoad(); q2.push({op, path, data}); qSave(q2); scheduleFlush();
+  }
+}
+// schlanke Hüllen statt Prototyp-Tricks (Plattform-Objekte sind eingefroren)
+function wrapRef(r) {
+  return {id: r.id, path: r.path,
+    set: d => guarded('set', r.path, d, () => r.set(d)),
+    delete: () => guarded('del', r.path, null, () => r.delete()),
+    get: (...a) => r.get(...a), onSnapshot: (...a) => r.onSnapshot(...a)};
+}
+function wrapCol(c) {
+  return {doc: id => wrapRef(id === undefined ? c.doc() : c.doc(id)), onSnapshot: (...a) => c.onSnapshot(...a), get: (...a) => c.get(...a)};
+}
+function getDb() {
+  if (!DBP) DBP = (async () => {
+    if (!window.claude || !window.claude.use) return null;
+    rawDb = await window.claude.use('db'); if (!rawDb) return null;
+    setTimeout(flush, 500); netPaint();
+    return {collection: name => wrapCol(rawDb.collection(name)), doc: path => wrapRef(rawDb.doc(path))};
+  })();
+  return DBP;
+}
+async function flush() {
+  if (flushing || !rawDb || navigator.onLine === false) return;
+  flushing = true;
+  try {
+    let q = qLoad();
+    while (q.length) {
+      const x = q[0];
+      try { await withTimeout(x.op === 'del' ? rawDb.doc(x.path).delete() : rawDb.doc(x.path).set(x.data), 10000); }
+      catch (err) { const c = String((err && (err.code || err.message)) || ''); if (NETERR.test(c)) break; }   // andere Fehler: Eintrag verwerfen
+      q = qLoad(); q.shift(); qSave(q);
+    }
+  } finally { flushing = false; netPaint(); }
+}
+let flushT = null;
+function scheduleFlush() { clearTimeout(flushT); flushT = setTimeout(async () => { await flush(); if (qLoad().length) scheduleFlush(); }, 20000); }
+window.addEventListener('online', () => { netPaint(); flush(); });
+window.addEventListener('offline', netPaint);
+let netWriter = false;
+function netPaint() {
+  if (PRINT) return;
+  let el = document.getElementById('net');
+  if (!el) { el = document.createElement('div'); el.id = 'net'; el.className = 'net'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
+  const n = qLoad().length, off = navigator.onLine === false;
+  if (!rawDb && !n) { el.hidden = true; return; }
+  el.className = 'net ' + (n ? 'wait' : off ? 'off' : 'live');
+  el.textContent = n ? '⏳ ' + n + (n === 1 ? ' Eintrag wartet' : ' Einträge warten') + (off ? ' · offline' : ' · sende …') : off ? '○ offline' : '● live';
+  el.hidden = !(netWriter || n || off);       // „live“ nur für den Admin, offline/wartend für alle
+}
+
 /* Kurze Leiste nach dem Speichern: „Gespeichert · Rückgängig“ */
 let undoTimer = null;
 function undoToast(text, undo) {
@@ -1484,6 +1557,7 @@ function canWrite() {
     const w = user ? await user.can('data.write') : null;
     if (w !== false && !PRINT) showGuestSwitch();
     if (w !== false && !GUEST && !PRINT) showFab();
+    if (w !== false && !GUEST) { netWriter = true; netPaint(); }
     return GUEST ? false : w;
   })();
   return canWriteP;
@@ -1931,7 +2005,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   const nameList = who => { const n = who.map(id => byId[id].name); return n.length > 1 ? n.slice(0, -1).join(', ') + ' & ' + n[n.length - 1] : n[0]; };
   function done(who, pr, refs, q) {
     const txt = 'Saúde, ' + nameList(who) + '! ' + (refs.length === 1 ? '1 ' + pr.name : refs.length + '× ' + pr.name) + ' eingetragen.';
-    $('dr-status').textContent = txt;
+    $('dr-status').textContent = txt + (qLoad().length ? ' ⏳ Kein Netz: wird automatisch gesendet, sobald wieder Verbindung da ist.' : '');
     undoToast('🍻 ' + refs.length + '× ' + pr.name, async () => { for (const r of refs) await r.delete(); $('dr-status').textContent = 'Rückgängig gemacht.'; });
     // für „Nochmal dasselbe“ merken (nur auf diesem Gerät)
     let rec = []; try { rec = JSON.parse(store.get('drinkRecent') || '[]'); } catch (e) {}
@@ -2101,7 +2175,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   setInterval(renderBac, 60000);
   (async () => {
     if (!window.claude || !window.claude.use) { setMode('Offline-Ansicht: Eintragen geht nur auf claude.ai durch den Admin (Patrick).', false); return; }
-    dbRef = await window.claude.use('db');
+    dbRef = await getDb();
     if (!dbRef) { setMode('Nur ansehen: Eintragen macht der Admin (Patrick). Das Live-Ranking sehen angemeldete claude.ai-Nutzer.', false); return; }
     const w = await canWrite();
     setMode(w === false ? 'Nur ansehen: Eintragen macht der Admin (Patrick).' : 'Person antippen, Getränk wählen, eintragen. Das Ranking aktualisiert sich live für alle.', w !== false);
@@ -2209,7 +2283,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   setInterval(progress, 10 * 60000);
   (async () => {
     if (!window.claude || !window.claude.use) return;
-    dbc = await window.claude.use('db'); if (!dbc) return;
+    dbc = await getDb(); if (!dbc) return;
     const w = await canWrite();
     lock(w === false);
     dbc.collection('checkins').onSnapshot(snap => {
@@ -2561,7 +2635,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   setInterval(() => { if (!box.contains(document.activeElement)) render(); }, 60000);
   (async () => {
     if (!window.claude || !window.claude.use) return;
-    dbK = await window.claude.use('db'); if (!dbK) return;
+    dbK = await getDb(); if (!dbK) return;
     const w = await canWrite(); writable = w !== false; render();
     dbK.collection('kapsel').onSnapshot(snap => {
       tips = {}; snap.docs.forEach(d => { if (d.exists && byId[d.id]) { const x = d.data(); if (x && x.a) tips[d.id] = x; } });
@@ -2835,7 +2909,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   if (PRINT) return;
   (async () => {
     if (!window.claude || !window.claude.use) return;
-    dbG = await window.claude.use('db'); if (!dbG) return;
+    dbG = await getDb(); if (!dbG) return;
     const w = await canWrite(); writable = w !== false; render();
     dbG.collection('games').onSnapshot(snap => {
       matches = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data())).filter(m => m && m.game && Array.isArray(m.players) && typeof m.ts === 'number');
@@ -3021,7 +3095,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   render();
   (async () => {
     if (!window.claude || !window.claude.use) return;
-    const db = await window.claude.use('db'); if (!db) return;
+    const db = await getDb(); if (!db) return;
     dbC = db;
     const w = await canWrite(); canEdit = w !== false; renderEdit(); renderNews();
     db.collection('cardlog').onSnapshot(snap => { events = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data())).filter(e => e && e.who && e.stat && typeof e.d === 'number' && e.ts).sort((a, b) => a.ts - b.ts); render(); renderNews(); }, () => {});
