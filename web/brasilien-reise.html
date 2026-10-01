@@ -535,6 +535,8 @@ a{color:var(--accent)}
 .gm-new .full{grid-column:1/-1}
 @media (max-width:520px){.gm-teams{grid-template-columns:1fr}.gm-row{grid-template-columns:34px minmax(0,1fr) 6rem}}
 @media print{.gm-card{display:none}.gm-board .av img{display:none}}
+.gm .armed{background:var(--open)!important;color:#fff!important;border-color:var(--open)!important}
+.gm-toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);z-index:200;background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 /* Zeitkapsel */
 .ka{display:grid;gap:14px;max-width:760px}
 .ka-seal{position:relative;border-radius:18px;overflow:hidden;padding:22px;color:#f4f7f2;background:radial-gradient(circle at 80% 20%,#2b4fb3 0,#1f3f8f 35%,#0c1f4f 100%);display:grid;gap:12px;isolation:isolate}
@@ -2366,6 +2368,20 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   const busy = () => box.contains(document.activeElement) && /INPUT|SELECT/.test(document.activeElement.tagName);
   function refresh() { if (busy()) pending = true; else render(); }
   box.addEventListener('focusout', () => setTimeout(() => { if (pending && !busy()) render(); }, 50));
+  // Rückfragen ohne confirm()/alert(): im claude.ai-Viewer sind Dialogfenster gesperrt
+  let armed = null, armT = null;
+  function ask(b, key, txt) {
+    if (armed === key) { armed = null; clearTimeout(armT); return true; }
+    if (armed) render();
+    armed = key; const el = document.querySelector('[data-armkey="' + key + '"]') || b;
+    el.dataset.orig = el.innerHTML; el.innerHTML = txt || '⚠️ Wirklich? Nochmal tippen'; el.classList.add('armed');
+    clearTimeout(armT); armT = setTimeout(() => { armed = null; if (el.isConnected) { el.innerHTML = el.dataset.orig; el.classList.remove('armed'); } }, 5000);
+    return false;
+  }
+  function toast(t) {
+    const el = document.createElement('div'); el.className = 'gm-toast'; el.textContent = t; document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3500);
+  }
   function toggle(set, id) { set.has(id) ? set.delete(id) : set.add(id); }
   top.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return;
     if (b.dataset.f) { filter = b.dataset.f; render(); }
@@ -2380,7 +2396,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     if (d.ta) { toggle(f.A, d.ta); render(); return; }
     if (d.tb) { toggle(f.B, d.tb); render(); return; }
     if (b.hasAttribute('data-loc')) { f.loc = b.checked; f.B.clear(); render(); return; }
-    if (d.del) { if (!dbG || !confirm('Diese Partie löschen?')) return; try { await dbG.doc('games/' + d.del).delete(); } catch (err) { alert('Konnte nicht löschen.'); } return; }
+    if (d.del) { if (!dbG || !ask(b, 'del:' + d.del, '⚠️ Löschen?')) return; try { await dbG.doc('games/' + d.del).delete(); toast('Partie gelöscht.'); } catch (err) { toast('Konnte nicht löschen.'); } return; }
     if (!dbG) return;
     if (d.act === 'save') {
       const t = typeOf(f.type); let doc = {game: t.id, mode: t.mode, ts: Date.now()};
@@ -2417,23 +2433,24 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       try { await dbG.doc('games/' + m.id).set(rest); wiz = {}; } catch (err) { document.getElementById('gm-wmsg').textContent = 'Konnte nicht speichern.'; }
       return;
     }
-    if (d.act === 'wdel' && m) { if (confirm('Den laufenden Wizard-Block komplett löschen?')) { try { await dbG.doc('games/' + m.id).delete(); wiz = {}; } catch (err) {} } return; }
+    if (d.act === 'wdel' && m) { if (ask(b, 'wdel', '⚠️ Wirklich löschen? Nochmal tippen')) { try { await dbG.doc('games/' + m.id).delete(); wiz = {}; } catch (err) {} } return; }
     if (d.act === 'deltype') {
       const t = typeOf(d.id), list = matches.filter(x => x.game === d.id), isStd = TRIP.games.types.some(x => x.id === d.id);
-      if (!confirm('„' + t.name + '“' + (list.length ? ' und ' + list.length + ' eingetragene ' + (list.length === 1 ? 'Partie' : 'Partien') : '') + ' löschen?' + (isStd ? ' (Standardspiel wird ausgeblendet)' : ''))) return;
+      if (!ask(b, 'deltype:' + d.id, '⚠️ ' + (list.length ? list.length + (list.length === 1 ? ' Partie' : ' Partien') + ' mit' : 'Wirklich') + ' löschen?')) return;
       try {
         for (const x of list) await dbG.doc('games/' + x.id).delete();
         if (isStd) await dbG.doc('gamecfg/hidden').set({ids: hidden.concat([d.id])});
         else await dbG.doc('gametypes/' + d.id).delete();
         if (f.type === d.id) f.type = null; if (filter === d.id) filter = 'all';
-      } catch (err) { alert('Konnte nicht löschen.'); }
+        toast('„' + t.name + '“ ' + (isStd ? 'ausgeblendet' : 'gelöscht') + '.');
+      } catch (err) { toast('Konnte nicht löschen.'); }
       render(); return;
     }
     if (d.act === 'unhide') { try { await dbG.doc('gamecfg/hidden').set({ids: hidden.filter(x => x !== d.id)}); } catch (err) {} return; }
     if (d.act === 'wundo' && m) { const rest = Object.assign({}, m); delete rest.id; rest.rounds = (m.rounds || []).slice(0, -1); try { await dbG.doc('games/' + m.id).set(rest); } catch (err) {} return; }
     if (d.act === 'wend' && m) {
-      if (!(m.rounds || []).length) { if (confirm('Noch keine Runde gespielt. Block verwerfen?')) { try { await dbG.doc('games/' + m.id).delete(); } catch (err) {} } return; }
-      if ((m.rounds || []).length < Math.floor(60 / m.players.length) && !confirm('Partie vorzeitig beenden und mit dem aktuellen Stand werten?')) return;
+      if (!(m.rounds || []).length) { if (ask(b, 'wend', '⚠️ Keine Runde gespielt. Block verwerfen?')) { try { await dbG.doc('games/' + m.id).delete(); } catch (err) {} } return; }
+      if ((m.rounds || []).length < Math.floor(60 / m.players.length) && !ask(b, 'wend', '⚠️ Jetzt werten? Nochmal tippen')) return;
       const rest = Object.assign({}, m); delete rest.id; rest.done = true; rest.ts = Date.now();
       try { await dbG.doc('games/' + m.id).set(rest); } catch (err) {}
       return;
@@ -2442,7 +2459,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       const name = document.getElementById('gm-nn').value.trim(); if (!name) return;
       const id = 'c-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 24) + '-' + Date.now().toString(36);
       const doc = {name, emoji: document.getElementById('gm-ne').value.trim() || '🎲', mode: document.getElementById('gm-nm').value, higher: !document.getElementById('gm-nl').checked, unit: 'Punkte', ts: Date.now()};
-      try { await dbG.doc('gametypes/' + id).set(doc); f.type = id; msg = ''; render(); } catch (err) { alert('Konnte das Spiel nicht anlegen.'); }
+      try { await dbG.doc('gametypes/' + id).set(doc); f.type = id; msg = ''; render(); } catch (err) { toast('Konnte das Spiel nicht anlegen.'); }
     }
   });
   box.addEventListener('input', e => {

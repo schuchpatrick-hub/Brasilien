@@ -535,6 +535,8 @@ a{color:var(--accent)}
 .gm-new .full{grid-column:1/-1}
 @media (max-width:520px){.gm-teams{grid-template-columns:1fr}.gm-row{grid-template-columns:34px minmax(0,1fr) 6rem}}
 @media print{.gm-card{display:none}.gm-board .av img{display:none}}
+.gm .armed{background:var(--open)!important;color:#fff!important;border-color:var(--open)!important}
+.gm-toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);z-index:200;background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:999px;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 /* Zeitkapsel */
 .ka{display:grid;gap:14px;max-width:760px}
 .ka-seal{position:relative;border-radius:18px;overflow:hidden;padding:22px;color:#f4f7f2;background:radial-gradient(circle at 80% 20%,#2b4fb3 0,#1f3f8f 35%,#0c1f4f 100%);display:grid;gap:12px;isolation:isolate}
