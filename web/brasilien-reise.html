@@ -476,6 +476,9 @@ a{color:var(--accent)}
 .fc-stats div i.m{color:#a33a2a}
 .fc-stats div i{font-style:normal;font:700 .6rem var(--mono);color:#1d7a4f;background:rgba(255,255,255,.7);border-radius:4px;padding:0 3px}
 .fc-spec{position:absolute;left:0;right:0;top:310px;text-align:center;font:700 .7rem var(--mono);letter-spacing:.03em}
+.fc-mv{position:absolute;left:0;right:0;top:340px;text-align:center;font:800 .82rem var(--display);white-space:nowrap}
+.fc-mv span{font:700 .62rem var(--mono);padding:1px 5px;border-radius:4px;background:rgba(255,255,255,.65);vertical-align:1px}
+.fc-mv .up{color:#1d7a4f}.fc-mv .dn{color:#a33a2a}
 .fc-stars{position:absolute;left:0;right:0;top:326px;text-align:center;font:600 .58rem var(--mono);opacity:.8}
 .fc-badge{position:absolute;right:16px;top:174px;font:800 .55rem var(--mono);letter-spacing:.08em;text-transform:uppercase;background:var(--ink);color:var(--c2);border-radius:4px;padding:2px 5px}
 .fc-back .foot{position:absolute;left:24px;right:24px;bottom:40px;display:grid;gap:4px}
@@ -1065,7 +1068,7 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
 
 <section id="karten" data-tab="crew-tab">
   <h2>Crew-Karten ⚽</h2>
-  <p class="note sub-lead">Ultimate Gringo Team: Jeder hat seine Spielerkarte. Die Werte leben mit der Reise: Drinks erhöhen die Trinkfestigkeit, Siege die Gesamtwertung, letzte Plätze ziehen sie runter. Karte antippen zum Umdrehen: Hinten stehen Scout-Bericht und Spielerakte (nach unten wischen).<br><small>TTP Trinktempo · TRI Trinkfestigkeit · FLI Flirt · ORI Orientierung · BUF Buffet · PÜN Pünktlichkeit · KAT Kater-Resistenz · SMB Samba · KAR Karaoke · <span style="color:var(--open)">GRI Gringo-Faktor · SCH Schnarchen · MEK Meckern &amp; Jammern (rot: je höher, desto schlimmer)</span></small></p>
+  <p class="note sub-lead">Ultimate Gringo Team: Jeder hat seine Spielerkarte. Die Werte leben mit der Reise: Drinks erhöhen die Trinkfestigkeit, Siege die Gesamtwertung, letzte Plätze ziehen sie runter. Unten auf der Karte steht der Marktwert: Er ändert sich jeden Tag, Siege treiben ihn hoch, letzte Plätze drücken ihn, Partynächte geben einen kleinen Bonus. Karte antippen zum Umdrehen: Hinten stehen Scout-Bericht und Spielerakte (nach unten wischen).<br><small>TTP Trinktempo · TRI Trinkfestigkeit · FLI Flirt · ORI Orientierung · BUF Buffet · PÜN Pünktlichkeit · KAT Kater-Resistenz · SMB Samba · KAR Karaoke · <span style="color:var(--open)">GRI Gringo-Faktor · SCH Schnarchen · MEK Meckern &amp; Jammern (rot: je höher, desto schlimmer)</span></small></p>
   <div id="fc" class="fc-row" role="list"></div>
 </section>
 
@@ -2588,6 +2591,28 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       o.players.forEach(id => { if (!s[id]) return; s[id].g++; const r = o.winners.includes(id) ? 'W' : o.losers.includes(id) ? 'L' : 'D'; if (r === 'W') s[id].w++; if (r === 'L') s[id].l++; s[id].form.push(r); }); });
     return s;
   }
+  // Marktwert: täglicher Zufallskurs (fest pro Tag und Person) plus Siege, letzte Plätze und Drinks des Tages
+  const MW_START = '2026-10-01';
+  const dayOf = ts => new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date(ts));
+  const addDay = (iso, n) => { const d = dateObj(iso); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
+  const rnd = key => { let h = 2166136261; for (const ch of key) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; };
+  function marketHistory(id, ovrBase, until) {
+    const ev = {};
+    drinks.forEach(d => { if (d.who === id && d.ts) { const k = dayOf(d.ts); (ev[k] = ev[k] || {d: 0, w: 0, l: 0}).d++; } });
+    games.filter(m => m.done !== false && m.ts).forEach(m => { const o = outcome(m), k = dayOf(m.ts);
+      if (o.winners.includes(id)) (ev[k] = ev[k] || {d: 0, w: 0, l: 0}).w++;
+      if (o.losers.includes(id)) (ev[k] = ev[k] || {d: 0, w: 0, l: 0}).l++; });
+    const base = 0.5e6 * Math.pow(2, (ovrBase - 60) / 5); let v = base, out = [], perf = 1;
+    for (let day = MW_START; day <= until; day = addDay(day, 1)) {
+      const e = ev[day] || {d: 0, w: 0, l: 0};
+      perf *= 1 + e.w * 0.06 - e.l * 0.05 + Math.min(0.04, e.d * 0.004);   // Leistung bleibt dauerhaft
+      const mood = 1 + (rnd(id + day) - 0.5) * 0.12;                         // Tageslaune des Marktes, ±6 %
+      v = 0.6 * v + 0.4 * base * perf * mood;                                // schwankt, läuft aber nicht davon
+      v = Math.max(50e3, v); out.push([day, v]);
+    }
+    return out;
+  }
+  const money = v => v >= 1e6 ? (Math.round(v / 1e5) / 10).toLocaleString('de-DE', {minimumFractionDigits: 1}) + ' Mio. €' : Math.round(v / 1e4) * 10 + ' Tsd. €';
   function render() {
     const s = live();
     const cards = CREW.map(c => {
@@ -2597,7 +2622,10 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       const base = core.reduce((a, key) => a + k.stats[key], 0) / core.length;
       const katMalus = Math.min(15, Math.max(0, x.recent - 5)); if ('KAT' in st) st.KAT = Math.max(1, st.KAT - katMalus);
       const ovr = Math.max(40, Math.min(99, Math.round(base + 6 + Math.max(-5, Math.min(5, x.w - x.l)))));
-      return {c, k, st, x, ovr, triBonus, katMalus};
+      const today = isoToday(), hist = marketHistory(c.id, base + 6, today < MW_START ? MW_START : today);
+      const mv = hist.length ? hist[hist.length - 1][1] : 0, prev = hist.length > 1 ? hist[hist.length - 2][1] : mv;
+      const peak = hist.reduce((a, b) => b[1] > a[1] ? b : a, ['', 0]);
+      return {c, k, st, x, ovr, triBonus, katMalus, mv, chg: prev ? mv / prev - 1 : 0, peak};
     });
     const anyGames = cards.some(o => o.x.g > 0);
     const top = anyGames ? cards.reduce((a, b) => b.ovr > a.ovr ? b : a) : null;
@@ -2617,13 +2645,14 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
         '<div class="fc-name">' + esc(c.name) + '</div><div class="fc-sub">' + esc(k.posName) + '</div>' +
         '<div class="fc-stats">' + Object.keys(k.stats).map(key => '<div class="' + ((TRIP.cardsInfo.worse || []).includes(key) ? 'w' : '') + '" title="' + esc(L[key] || key) + '">' + st[key] + ' <small>' + key + '</small>' + (key === 'TRI' && o.triBonus ? '<i>+' + o.triBonus + '</i>' : '') + (key === 'KAT' && o.katMalus ? '<i class="m">−' + o.katMalus + '</i>' : '') + '</div>').join('') + '</div>' +
         '<div class="fc-spec">' + k.special[0] + ' ' + esc(k.special[1]) + ': ' + k.special[2] + '</div>' +
+        '<div class="fc-mv">💰 ' + money(o.mv) + ' <span class="' + (o.chg >= 0 ? 'up' : 'dn') + '">' + (o.chg >= 0 ? '▲' : '▼') + ' ' + Math.abs(o.chg * 100).toLocaleString('de-DE', {maximumFractionDigits: 1}) + ' %</span></div>' +
         '<div class="fc-stars">Schwacher Fuß ' + stars(k.wf) + ' · Tricks ' + stars(k.sm) + '</div></div>' +
         '<div class="fc-face fc-back"><div class="in"><h4>🔎 Scout-Bericht ' + esc(c.name) + '</h4><p>' + esc(k.scout) + '</p><ul>' + k.traits.map(t => '<li>' + esc(t) + '</li>').join('') + '</ul>' +
-        (k.file ? '<h4>📁 Spielerakte</h4><dl class="fc-file">' + [['💰', 'Marktwert', 'market'], ['📝', 'Vertrag', 'contract'], ['🩹', 'Verletzungen', 'injury'], ['🎉', 'Torjubel', 'celebration'], ['🗞️', 'Transfergerücht', 'rumor']]
+        (k.file ? '<h4>📁 Spielerakte</h4><dl class="fc-file">' + [['💸', 'Ablöse-Klausel', 'market'], ['📝', 'Vertrag', 'contract'], ['🩹', 'Verletzungen', 'injury'], ['🎉', 'Torjubel', 'celebration'], ['🗞️', 'Transfergerücht', 'rumor']]
           .filter(r => k.file[r[2]]).map(r => '<dt>' + r[0] + ' ' + r[1] + '</dt><dd>' + esc(k.file[r[2]]) + '</dd>').join('') + '</dl>' : '') +
         '</div><div class="foot">' +
         '<div class="fc-live"><div><b>' + x.d + '</b><span>Drinks</span></div><div><b>' + x.w + '</b><span>Siege</span></div><div><b>' + x.l + '</b><span>Letzter</span></div><div><b>' + x.g + '</b><span>Spiele</span></div></div>' +
-        '<div class="fc-hint">Form: ' + form + '</div></div></div>' +
+        '<div class="fc-hint">Form: ' + form + ' · Marktwert-Rekord: ' + money(o.peak[1]) + (o.peak[0] ? ' (' + fmtDay(o.peak[0]).dm + ')' : '') + '</div></div></div>' +
         '</div></button>';
     }).join('');
   }
