@@ -2542,6 +2542,101 @@
         "unit": "Punkte",
         "hint": "Teams wählen, Ergebnis eintragen. Gegen Einheimische einfach „Einheimische“ als Gegner nehmen."
       }
-    ]
+    ],
+    "roasts": {
+      "_hinweis": "{n} = Name des Verlierers. Auswahl: Sprüche zur Person + zum Spiel + allgemeine, pro Partie fest.",
+      "generic": [
+        "{n} hat verloren. Nicht überraschend, nur endgültig.",
+        "{n} spielt nicht, um zu gewinnen. {n} spielt, damit sich die anderen besser fühlen. Ein Ehrenamt.",
+        "Wenn Verlieren olympisch wäre, würde {n} selbst da Letzter.",
+        "{n}s Strategie: hoffen. Ergebnis: siehe oben.",
+        "Die Gene von {n} haben gerade kurz überlegt, ob sie sich überhaupt weitervererben wollen.",
+        "{n} verliert so zuverlässig, dass man die Uhr danach stellen kann.",
+        "Irgendwo in Brasilien weint gerade ein Würfel. Er musste für {n} spielen.",
+        "{n}s Mutter hat angerufen. Sie ist nicht überrascht.",
+        "{n} hat das Spiel nicht verloren. Das Spiel hat {n} aufgegeben.",
+        "Letzter Platz. Für {n} quasi ein Heimspiel.",
+        "{n} hat heute bewiesen, dass man auch ganz ohne Talent dabei sein darf.",
+        "{n}, das war kein Spiel mehr, das war ein Hilferuf.",
+        "Ein Sarg hat mehr Bewegung ins Spiel gebracht als {n}.",
+        "{n} trinkt jetzt einen. Nicht als Strafe, sondern zur Trauerbewältigung.",
+        "Die Crew legt eine Schweigeminute für {n}s Würde ein. Sie wurde nicht alt.",
+        "Der Notarzt fragt, ob er für {n} kommen soll. Er meint das Ego.",
+        "{n} sollte fürs Verlieren Eintritt verlangen. Wäre die erste Einnahmequelle seit Jahren.",
+        "Selbst ein Kaiman im Juma hätte das besser gespielt. Ohne Daumen.",
+        "{n} spielt wie Brasilien 2014 gegen Deutschland. Nur ohne die Ehre, im Halbfinale gewesen zu sein.",
+        "Die Statistik hat {n} angerufen und um eine Pause gebeten.",
+        "Man soll aufhören, wenn es am schönsten ist. {n} hat nie angefangen.",
+        "{n} hat verloren, sah dabei aber wenigstens gut aus. Nein, Moment, auch nicht.",
+        "Die Hoffnung stirbt zuletzt. Bei {n} ist sie heute als Erste gegangen.",
+        "{n} ist der lebende Beweis, dass Mitmachen nicht alles ist.",
+        "Im Testament von {n} steht jetzt: Bitte keine Gesellschaftsspiele auf der Beerdigung, zu peinlich.",
+        "Würde man {n}s Leistung vertonen, wäre es ein Trauermarsch in Moll.",
+        "{n} hat so verloren, dass sogar die Mücken Mitleid haben und heute nicht stechen."
+      ],
+      "game": {
+        "blackyjacky": [
+          "{n} hat bei 20 nochmal gezogen. Mutig. Dumm, aber mutig.",
+          "Die Bank gewinnt immer. Gegen {n} gewinnt sogar der Kartenstapel.",
+          "{n} zählt Karten wie Greisel Minuten: grob geschätzt und immer daneben.",
+          "{n} hat 21 gesucht und 31 gefunden. Mathe war noch nie die Stärke."
+        ],
+        "wizard": [
+          "{n} hat null Stiche angesagt und null Ahnung gehabt. Eins davon hat gestimmt.",
+          "Ein echter Zauberer hätte {n} längst in einen Frosch verwandelt. Wäre ein Upgrade.",
+          "{n}s Ansagen haben den Realitätsbezug eines Horoskops.",
+          "Gandalf hat zugeschaut und gesagt: Du kommst hier nicht weiter, {n}."
+        ],
+        "footvolley": [
+          "{n} hat den Ball öfter mit dem Gesicht gespielt als mit dem Fuß. Ein Kopfball war es trotzdem nicht.",
+          "Die Einheimischen haben {n} gefilmt. Für ein Lehrvideo: So nicht.",
+          "{n} bewegt sich im Sand wie eine Schildkröte, die auf dem Rücken liegt.",
+          "{n} hat den Sand öfter berührt als den Ball. Und der Sand hat gewonnen."
+        ]
+      },
+      "locals": [
+        "Die Crew hat gegen Einheimische verloren. Brasilien bedankt sich für die Entwicklungshilfe.",
+        "Gegen Einheimische verloren. Die Jungs erzählen das heute Abend in der ganzen Favela.",
+        "Die Einheimischen haben gefragt, ob die Gringos nächstes Mal mit Händen spielen wollen. Wäre fairer."
+      ],
+      "person": {
+        "patrick": [
+          "Patrick hat verloren. Er war in Gedanken schon beim Buffet.",
+          "Patrick hat sich beim Verlieren eine Zerrung geholt. Rekord: Zerrung im Sitzen.",
+          "Patrick ist der Älteste. Man lässt ihn manchmal gewinnen, damit das Herz mitmacht. Heute leider nicht.",
+          "Patrick hat verloren und tröstet sich jetzt mit vier Tellern Picanha. Pro Gang."
+        ],
+        "jonas": [
+          "Jonas hat verloren und bucht jetzt aus Frust eine neue Reise, ohne jemanden zu fragen.",
+          "Vor Scham sind Jonas' Geheimratsecken um zwei Zentimeter gewachsen.",
+          "Jonas hat schon einen Plan B für die Niederlage. Der sieht auch nicht besser aus.",
+          "113 Kopfbälle am Stück, aber kein einziger kluger Gedanke im Spiel."
+        ],
+        "simon": [
+          "Simon hat verloren. Die Kellnerin hat auch Nein gesagt. Konsequenter Tag.",
+          "Simon ist über die eigenen Karten gestolpert. Im Sitzen.",
+          "Simon hat 0 Siege und 0 Nummern. Wenigstens ist die Bilanz ausgeglichen.",
+          "Simon wollte die Gewinnerin beeindrucken. Es gab keine. Und er hat trotzdem verloren."
+        ],
+        "marco": [
+          "Marco hat verloren und will die Niederlage jetzt als Wohnung im 4. Stock verkaufen.",
+          "Dani Olmo hätte gewonnen. Marco sieht nur so aus.",
+          "Marco hat verloren. Zum Trost gibt's den Obstkorb. Die Banane hat Patrick schon gegessen.",
+          "Marco war Feelgood-Manager. Jetzt fühlt sich nur noch der Rest gut."
+        ],
+        "greisel": [
+          "Greisel hat sich mal wieder selbst ins Bein geschossen. Diesmal im Spiel.",
+          "Greisel kam zu spät zum Gewinnen. Bei uns wird's halt a bissle später.",
+          "Greisels Standbein hat Anzeige erstattet. Gegen Greisel.",
+          "Flitterwochen, und Greisel verliert. Dajo überlegt, ob man das noch annullieren kann."
+        ],
+        "dajo": [
+          "Dajo hat verloren. Zum Glück zahlt Lubos Karte die Runde.",
+          "Dajo hat verloren und prüft, ob die tschechische Staatsbürgerschaft hier Einspruch erlaubt.",
+          "Dajo ist die Erwachsene der Gruppe. Heute hat sie gespielt wie die anderen.",
+          "Dajo hat verloren. Aber immerhin ist sie nicht mit einer Boeing angereist."
+        ]
+      }
+    }
   }
 }
