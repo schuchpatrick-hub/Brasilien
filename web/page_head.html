@@ -429,6 +429,19 @@ header .today::before{opacity:.25}
 .lite header .hero-seg{background:rgba(6,32,19,.6)}
 .lite .gm-top .gm-champ{background:rgba(6,32,19,.94)}
 .lite .gm-loser{background:rgba(70,12,10,.96)}
+.fab-wrap{position:fixed;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:240;display:grid;justify-items:end;gap:10px}
+.fab{width:56px;height:56px;border-radius:50%;border:0;background:var(--amarelo);color:#1a1a1a;font:800 1.7rem/1 var(--body);box-shadow:0 6px 20px rgba(0,0,0,.3);cursor:pointer;touch-action:manipulation}
+.fab-menu{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px;display:grid;gap:4px;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:calc(100vw - 32px);width:260px}
+.fab-menu[hidden]{display:none}
+.fab-menu button{all:unset;cursor:pointer;display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;font:600 .95rem var(--body);color:var(--fg)}
+.fab-menu button:hover,.fab-menu button:focus-visible{background:var(--bg)}
+.fab-menu button span{font-size:1.2rem}
+.fab-again{display:grid;gap:2px;border-bottom:1px solid var(--line);padding-bottom:4px;margin-bottom:2px}
+.fab-again:empty{display:none}
+.fab-again .eyebrow{padding:4px 12px 0}
+.fab-again button{font-size:.82rem;background:var(--sunbg)}
+.undo-bar{bottom:calc(env(safe-area-inset-bottom,0px) + 84px)!important}
+@media print{.fab-wrap{display:none}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}

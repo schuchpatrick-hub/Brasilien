@@ -429,6 +429,19 @@ header .today::before{opacity:.25}
 .lite header .hero-seg{background:rgba(6,32,19,.6)}
 .lite .gm-top .gm-champ{background:rgba(6,32,19,.94)}
 .lite .gm-loser{background:rgba(70,12,10,.96)}
+.fab-wrap{position:fixed;right:16px;bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:240;display:grid;justify-items:end;gap:10px}
+.fab{width:56px;height:56px;border-radius:50%;border:0;background:var(--amarelo);color:#1a1a1a;font:800 1.7rem/1 var(--body);box-shadow:0 6px 20px rgba(0,0,0,.3);cursor:pointer;touch-action:manipulation}
+.fab-menu{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:8px;display:grid;gap:4px;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:calc(100vw - 32px);width:260px}
+.fab-menu[hidden]{display:none}
+.fab-menu button{all:unset;cursor:pointer;display:flex;gap:10px;align-items:center;padding:10px 12px;border-radius:10px;font:600 .95rem var(--body);color:var(--fg)}
+.fab-menu button:hover,.fab-menu button:focus-visible{background:var(--bg)}
+.fab-menu button span{font-size:1.2rem}
+.fab-again{display:grid;gap:2px;border-bottom:1px solid var(--line);padding-bottom:4px;margin-bottom:2px}
+.fab-again:empty{display:none}
+.fab-again .eyebrow{padding:4px 12px 0}
+.fab-again button{font-size:.82rem;background:var(--sunbg)}
+.undo-bar{bottom:calc(env(safe-area-inset-bottom,0px) + 84px)!important}
+@media print{.fab-wrap{display:none}}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
@@ -1283,7 +1296,7 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
   <p class="note sub-lead">Brasilianisches Portugiesisch. Auf ▶ tippen: Erst kommt der Satz auf Deutsch, nach einer kurzen Pause auf Portugiesisch. Die Aussprache darunter ist eine grobe deutsche Umschrift, die Silbe in Großbuchstaben wird betont.</p>
   <div class="speak-bar">
     <label class="slow"><input type="checkbox" id="speak-slow" checked> Langsam sprechen</label>
-    <label class="slow" id="speak-device-wrap" hidden><input type="checkbox" id="speak-device"> Stimme des Handys verwenden</label>
+    <label class="slow" id="speak-device-wrap" hidden><input type="checkbox" id="speak-device"> Natürliche Handy-Stimme (empfohlen)</label>
     <span id="speak-status" class="note" role="status"></span>
   </div>
   <div id="phrases" class="phrases"></div>
@@ -1470,9 +1483,31 @@ function canWrite() {
     const user = await window.claude.use('user');
     const w = user ? await user.can('data.write') : null;
     if (w !== false && !PRINT) showGuestSwitch();
+    if (w !== false && !GUEST && !PRINT) showFab();
     return GUEST ? false : w;
   })();
   return canWriteP;
+}
+/* „➕ Schnell eintragen“: nur für den Admin, von überall erreichbar */
+function showFab() {
+  if (document.getElementById('fab')) return;
+  const go = (id, open) => { const el = document.getElementById(open || id); if (el && el.tagName === 'DETAILS') el.open = true;
+    const d = document.querySelector('#fc-edit details'); if (open === 'fc-edit' && d) d.open = true; jump(id, true); };
+  const items = [['🍻', 'Drink', () => go('dr-add')], ['🏆', 'Spiel', () => go('spiele')], ['📍', 'Check-in', () => go('checkin')], ['⚽', 'Kartenwert', () => go('fc-edit', 'fc-edit')]];
+  const wrap = document.createElement('div'); wrap.className = 'fab-wrap';
+  wrap.innerHTML = '<div class="fab-menu" id="fab-menu" hidden><div class="fab-again" id="fab-again"></div>' + items.map((x, i) => '<button type="button" data-i="' + i + '"><span>' + x[0] + '</span>' + x[1] + '</button>').join('') + '</div>' +
+    '<button type="button" class="fab" id="fab" aria-expanded="false" aria-label="Schnell eintragen">＋</button>';
+  document.body.appendChild(wrap);
+  const menu = wrap.querySelector('#fab-menu'), fab = wrap.querySelector('#fab');
+  const toggle = on => { menu.hidden = !on; fab.setAttribute('aria-expanded', String(on)); fab.textContent = on ? '✕' : '＋';
+    if (on) { const ub = document.getElementById('undo-bar'); if (ub) ub.hidden = true; const rec = [...document.querySelectorAll('#dr-again button[data-r]')];
+      wrap.querySelector('#fab-again').innerHTML = rec.length ? '<span class="eyebrow">⚡ Nochmal</span>' + rec.map((b, i) => '<button type="button" data-a="' + i + '">' + esc(b.textContent) + '</button>').join('') : ''; } };
+  fab.addEventListener('click', () => toggle(menu.hidden));
+  menu.addEventListener('click', e => {
+    const a = e.target.closest('[data-a]'); if (a) { const src = document.querySelectorAll('#dr-again button[data-r]')[+a.dataset.a]; if (src) src.click(); toggle(false); return; }
+    const b = e.target.closest('[data-i]'); if (b) { toggle(false); items[+b.dataset.i][2](); }
+  });
+  document.addEventListener('click', e => { if (!menu.hidden && !wrap.contains(e.target)) toggle(false); });
 }
 function setGuest(on) { store.set('guest', on ? '1' : '0'); location.reload(); }
 function showGuestSwitch() {
@@ -1717,8 +1752,11 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   let voice = null;
   const pick = () => {
     const vs = synth.getVoices();
-    voice = vs.find(v => /^pt[-_]BR/i.test(v.lang)) || vs.find(v => /^pt/i.test(v.lang)) || null;
+    // natürlich klingende Stimmen zuerst (Premium/Enhanced/Natural/Google), dann jede pt-BR-Stimme
+    const br = vs.filter(v => /^pt[-_]BR/i.test(v.lang)), good = v => /premium|enhanced|natural|neural|google|luciana|francisca|thalita/i.test(v.name);
+    voice = br.find(good) || br.find(v => v.localService) || br[0] || vs.find(v => /^pt/i.test(v.lang)) || null;
     document.getElementById('speak-device-wrap').hidden = !voice;
+    if (voice && store.get('device') === null) dev.checked = true;   // Standard: Handy-Stimme, wenn vorhanden
   };
   if (synth) { pick(); if (synth.addEventListener) synth.addEventListener('voiceschanged', pick); }
   if (store.get('device') === '1') dev.checked = true;

@@ -54,9 +54,31 @@ function canWrite() {
     const user = await window.claude.use('user');
     const w = user ? await user.can('data.write') : null;
     if (w !== false && !PRINT) showGuestSwitch();
+    if (w !== false && !GUEST && !PRINT) showFab();
     return GUEST ? false : w;
   })();
   return canWriteP;
+}
+/* „➕ Schnell eintragen“: nur für den Admin, von überall erreichbar */
+function showFab() {
+  if (document.getElementById('fab')) return;
+  const go = (id, open) => { const el = document.getElementById(open || id); if (el && el.tagName === 'DETAILS') el.open = true;
+    const d = document.querySelector('#fc-edit details'); if (open === 'fc-edit' && d) d.open = true; jump(id, true); };
+  const items = [['🍻', 'Drink', () => go('dr-add')], ['🏆', 'Spiel', () => go('spiele')], ['📍', 'Check-in', () => go('checkin')], ['⚽', 'Kartenwert', () => go('fc-edit', 'fc-edit')]];
+  const wrap = document.createElement('div'); wrap.className = 'fab-wrap';
+  wrap.innerHTML = '<div class="fab-menu" id="fab-menu" hidden><div class="fab-again" id="fab-again"></div>' + items.map((x, i) => '<button type="button" data-i="' + i + '"><span>' + x[0] + '</span>' + x[1] + '</button>').join('') + '</div>' +
+    '<button type="button" class="fab" id="fab" aria-expanded="false" aria-label="Schnell eintragen">＋</button>';
+  document.body.appendChild(wrap);
+  const menu = wrap.querySelector('#fab-menu'), fab = wrap.querySelector('#fab');
+  const toggle = on => { menu.hidden = !on; fab.setAttribute('aria-expanded', String(on)); fab.textContent = on ? '✕' : '＋';
+    if (on) { const ub = document.getElementById('undo-bar'); if (ub) ub.hidden = true; const rec = [...document.querySelectorAll('#dr-again button[data-r]')];
+      wrap.querySelector('#fab-again').innerHTML = rec.length ? '<span class="eyebrow">⚡ Nochmal</span>' + rec.map((b, i) => '<button type="button" data-a="' + i + '">' + esc(b.textContent) + '</button>').join('') : ''; } };
+  fab.addEventListener('click', () => toggle(menu.hidden));
+  menu.addEventListener('click', e => {
+    const a = e.target.closest('[data-a]'); if (a) { const src = document.querySelectorAll('#dr-again button[data-r]')[+a.dataset.a]; if (src) src.click(); toggle(false); return; }
+    const b = e.target.closest('[data-i]'); if (b) { toggle(false); items[+b.dataset.i][2](); }
+  });
+  document.addEventListener('click', e => { if (!menu.hidden && !wrap.contains(e.target)) toggle(false); });
 }
 function setGuest(on) { store.set('guest', on ? '1' : '0'); location.reload(); }
 function showGuestSwitch() {
@@ -301,8 +323,11 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   let voice = null;
   const pick = () => {
     const vs = synth.getVoices();
-    voice = vs.find(v => /^pt[-_]BR/i.test(v.lang)) || vs.find(v => /^pt/i.test(v.lang)) || null;
+    // natürlich klingende Stimmen zuerst (Premium/Enhanced/Natural/Google), dann jede pt-BR-Stimme
+    const br = vs.filter(v => /^pt[-_]BR/i.test(v.lang)), good = v => /premium|enhanced|natural|neural|google|luciana|francisca|thalita/i.test(v.name);
+    voice = br.find(good) || br.find(v => v.localService) || br[0] || vs.find(v => /^pt/i.test(v.lang)) || null;
     document.getElementById('speak-device-wrap').hidden = !voice;
+    if (voice && store.get('device') === null) dev.checked = true;   // Standard: Handy-Stimme, wenn vorhanden
   };
   if (synth) { pick(); if (synth.addEventListener) synth.addEventListener('voiceschanged', pick); }
   if (store.get('device') === '1') dev.checked = true;

@@ -153,7 +153,13 @@ def main():
             pos, wide = PHOTO_POS.get(m.group(1), ('50% 50%', '50% 50%'))
             sv += f'<img class="scene-photo" src="fotos/{m.group(1)}.jpg" alt="" loading="lazy" decoding="async" style="--pos:{pos};--pos-wide:{wide}" onerror="this.remove()">'
         return sv
+    # „Stand“-Datum = Tag des Neubaus (Berliner Zeit), in Webseite und README
+    import datetime, zoneinfo
+    stand = datetime.datetime.now(zoneinfo.ZoneInfo('Europe/Berlin')).strftime('%d.%m.%Y')
+    readme = read('README.md'); new = re.sub(r'· Stand: \d\d\.\d\d\.\d{4}', '· Stand: ' + stand, readme, count=1)
+    if new != readme: write(new, 'README.md')
     body = re.sub(r'%%SCENE:(\w+)%%', scene, read('web', 'page_body.html'))
+    body = body.replace('%%STAND%%', stand)
     page = read('web', 'page_head.html') + body.replace('%%MAP%%', inline) + '\n' + script
     write(page, 'web', 'brasilien-reise.html')
 
