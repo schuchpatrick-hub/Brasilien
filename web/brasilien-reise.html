@@ -101,17 +101,13 @@ figcaption{background:var(--surface);padding:10px 14px;font-size:.88rem;color:va
 .fl.open{stroke:#d9822b}.flB{stroke:#8a4fbf}.ahO{fill:#d9822b}.ahB{fill:#8a4fbf}
 :root[data-theme="dark"] .flB{stroke:#c79bf0}:root[data-theme="dark"] .ahB{fill:#c79bf0}:root[data-theme="dark"] .fl.open{stroke:#f0a050}:root[data-theme="dark"] .ahO{fill:#f0a050}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .flB{stroke:#c79bf0}:root:not([data-theme="light"]) .ahB{fill:#c79bf0}:root:not([data-theme="light"]) .fl.open{stroke:#f0a050}:root:not([data-theme="light"]) .ahO{fill:#f0a050}}
-/* Karte: Vollbild und Statistik */
+/* Karte: Vollbild */
 #route figure{position:relative}
 .map-zoom{position:absolute;top:10px;left:10px;z-index:2;font:600 .82rem var(--body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
 #route figure.zoomed{position:fixed;inset:0;z-index:300;border-radius:0;border:0;overflow:auto;background:var(--sea);margin:0;-webkit-overflow-scrolling:touch}
 #route figure.zoomed svg{width:max(1500px,230vw);max-width:none}
 #route figure.zoomed figcaption{display:none}
 #route figure.zoomed .map-zoom{position:fixed;top:calc(env(safe-area-inset-top,0px) + 12px);left:auto;right:12px}
-.map-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin-top:12px}
-.map-stats div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
-.map-stats b{display:block;font:800 1.3rem var(--display)}
-.map-stats span{font-size:.78rem;color:var(--muted)}
 @media print{.map-zoom{display:none}}
 .ht{paint-order:stroke;stroke:var(--sea);stroke-width:5px;stroke-linejoin:round}
 .gr{fill:none;stroke:var(--accent);stroke-width:3.2;stroke-linecap:round}
@@ -1031,14 +1027,6 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
 </svg>
     <figcaption>Gestrichelt: Flug (blau gebucht, orange noch offen, lila nur Daijo &amp; Greisel, ☾ Nachtflug) · durchgezogen: Straße · gepunktet: Boot. <span class="lg-done">Gelb</span> = schon geschafft, <span class="lg-here">pulsierend</span> = hier sind wir, <span class="lg-pin">rot</span> = letzter Check-in. Guarujá, Rio, Paraty und Ilha Grande sind rechts unten vergrößert. <b>Orte und Flughäfen antippen</b> für Infos.</figcaption>
   </figure>
-  <div class="map-stats" aria-label="Reise in Zahlen (Gringos plus 1 Cevapi)">
-    <div><b>6</b><span>Flugstrecken (9 Flüge)</span></div>
-    <div><b>ca. 27.000</b><span>km in der Luft</span></div>
-    <div><b>ca. 38 h</b><span>reine Flugzeit</span></div>
-    <div><b>3 ☾</b><span>Nachtflüge</span></div>
-    <div><b>2</b><span>Bootsüberfahrten</span></div>
-    <div><b>22</b><span>Nächte an 7 Orten</span></div>
-  </div>
   <div class="mi" id="map-info">
     <div class="mi-chips" id="mi-chips" role="group" aria-label="Station wählen"></div>
     <div id="mi-card" aria-live="polite"><p class="note">👆 Tippe auf einen Ort oder Flughafen in der Karte (oder oben auf eine Station): Unterkunft, Anreise, Highlights, Flüge, mit Google-Maps- und Uber-Knöpfen.</p></div>
