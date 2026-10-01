@@ -123,7 +123,10 @@ claude.ai-Viewer nicht möglich (Standortzugriff gesperrt), daher manuelles Einc
 Stopps (`data-stop`) und Flughäfen GRU/CGH (`data-ap`) in `tools/gen_map.py` sind antippbar; darunter Stations-Chips und
 `#mi-card` mit Unterkunft (Maps-/Uber-Knöpfe), Anreise, Highlights (Google-Maps-Links), Warnhinweis und Flughäfen samt
 Flügen aus `flights`. Daten in `trip.json` → `mapinfo` (`stops`, `airports`; `q` = Suchbegriff). Fahrzeiten-Liste im
-Südost-Ausschnitt, Zeitzone Manaus und Pass-Hinweis Iguaçu direkt in `gen_map.py`.
+Südost-Ausschnitt, Zeitzone Manaus und Pass-Hinweis Iguaçu direkt in `gen_map.py`. Flugbögen lesen den Status aus
+`trip.json` → `flights` (`open` = orange, nur Daijo & Greisel = lila `flB`), ☾ = Nachtflug, Flugdauer an den Bögen.
+GIG/SDU im Ausschnitt leicht versetzt neben Rio. Unter der Karte „Reise in Zahlen“ (statisch in `page_body.html`,
+bei Routenänderungen anpassen) und Knopf „⤢ Vergrößern“ (Vollbild-Overlay zum Verschieben).
 
 ## Regeln
 
