@@ -3023,5 +3023,256 @@
         "d": 3
       }
     ]
+  },
+  "mapinfo": {
+    "_hinweis": "Infokarten beim Antippen der Karte. q = Suchbegriff für Google Maps / Uber-Ziel.",
+    "stops": [
+      {
+        "id": "guaruja",
+        "n": 1,
+        "name": "Guarujá",
+        "dates": "28.–31.12.",
+        "nights": 3,
+        "g": "a",
+        "stays": [
+          {
+            "name": "Casa Praiana",
+            "q": "Casa Praiana, Enseada, Guarujá"
+          }
+        ],
+        "arrive": "Landung GRU 28.12. um 06:25, dann mit Uber ca. 1,5–2 h nach Guarujá.",
+        "hl": [
+          {
+            "t": "Praia da Enseada (75 m vom Haus, Footvolley)",
+            "q": "Praia da Enseada, Guarujá"
+          },
+          {
+            "t": "Praia do Tombo",
+            "q": "Praia do Tombo, Guarujá"
+          }
+        ],
+        "ap": [
+          "GRU",
+          "CGH"
+        ]
+      },
+      {
+        "id": "rio",
+        "n": 2,
+        "name": "Rio de Janeiro",
+        "dates": "31.12.–06.01.",
+        "nights": 6,
+        "g": "a",
+        "stays": [
+          {
+            "name": "Tabas – Cena Carioca",
+            "q": "Tabas Cena Carioca, Rio de Janeiro"
+          }
+        ],
+        "arrive": "31.12. Flug CGH → SDU (Santos Dumont, mitten in der Stadt), dann Uber. Silvester an der Copacabana, ganz in Weiß.",
+        "hl": [
+          {
+            "t": "Christusstatue (vorher buchen)",
+            "q": "Cristo Redentor"
+          },
+          {
+            "t": "Zuckerhut (Fastlane)",
+            "q": "Pão de Açúcar"
+          },
+          {
+            "t": "Copacabana",
+            "q": "Praia de Copacabana"
+          },
+          {
+            "t": "Ipanema & Arpoador",
+            "q": "Pedra do Arpoador"
+          },
+          {
+            "t": "Maracanã",
+            "q": "Estádio do Maracanã"
+          },
+          {
+            "t": "Vidigal",
+            "q": "Vidigal, Rio de Janeiro"
+          },
+          {
+            "t": "Praia da Joatinga",
+            "q": "Praia da Joatinga"
+          }
+        ],
+        "warn": "Centro nur tagsüber, nachts gefährlich.",
+        "ap": [
+          "SDU",
+          "GIG"
+        ]
+      },
+      {
+        "id": "iguacu",
+        "n": 3,
+        "name": "Foz do Iguaçu",
+        "dates": "06.–09.01.",
+        "nights": 3,
+        "g": "all",
+        "stays": [
+          {
+            "name": "Hotel noch prüfen 🟡",
+            "q": ""
+          }
+        ],
+        "arrive": "06.01. Flug GIG → IGU ca. 10:40, alle sechs zusammen.",
+        "hl": [
+          {
+            "t": "Wasserfälle, brasilianische Seite",
+            "q": "Parque Nacional do Iguaçu"
+          },
+          {
+            "t": "Garganta del Diablo (Argentinien)",
+            "q": "Garganta del Diablo, Puerto Iguazú"
+          },
+          {
+            "t": "Bootstour Macuco Safari",
+            "q": "Macuco Safari, Foz do Iguaçu"
+          }
+        ],
+        "warn": "Argentinische Seite: Reisepass mitnehmen!",
+        "ap": [
+          "IGU"
+        ]
+      },
+      {
+        "id": "manaus",
+        "n": 4,
+        "name": "Manaus & Amazonas",
+        "dates": "09.–14.01.",
+        "nights": 4,
+        "g": "all",
+        "stays": [
+          {
+            "name": "Casa 307 (09.–10.01.)",
+            "q": "Casa 307, Manaus"
+          },
+          {
+            "name": "Juma Kabanas, Dschungel-Lodge (10.–13.01.)",
+            "q": "Juma Kabanas, Amazonas"
+          }
+        ],
+        "arrive": "09.01. Flug IGU → MAO mit Umstieg. Abholung zur Lodge am 10.01. am Hotel.",
+        "hl": [
+          {
+            "t": "Teatro Amazonas",
+            "q": "Teatro Amazonas, Manaus"
+          },
+          {
+            "t": "Meeting of the Waters",
+            "q": "Encontro das Águas, Manaus"
+          },
+          {
+            "t": "Mercado Adolpho Lisboa",
+            "q": "Mercado Municipal Adolpho Lisboa, Manaus"
+          }
+        ],
+        "warn": "Zeitzone: Manaus ist 1 Stunde hinter Rio. Nachtflug 14.01. um 01:45, also am Abend des 13.01. zum Flughafen.",
+        "ap": [
+          "MAO"
+        ]
+      },
+      {
+        "id": "paraty",
+        "n": 5,
+        "name": "Paraty",
+        "dates": "14.–16.01.",
+        "nights": 2,
+        "g": "all",
+        "stays": [
+          {
+            "name": "Geko Pousada Paraty",
+            "q": "Geko Pousada Paraty"
+          }
+        ],
+        "arrive": "14.01. Landung GIG 06:40, dann mit Uber ca. 4 h nach Paraty.",
+        "hl": [
+          {
+            "t": "Historische Altstadt",
+            "q": "Centro Histórico, Paraty"
+          },
+          {
+            "t": "Steinrutsche (Tobogã)",
+            "q": "Cachoeira do Tobogã, Paraty"
+          },
+          {
+            "t": "Trindade",
+            "q": "Trindade, Paraty"
+          }
+        ],
+        "ap": []
+      },
+      {
+        "id": "ilha",
+        "n": 6,
+        "name": "Ilha Grande",
+        "dates": "16.–20./21.01.",
+        "nights": "4 / 5",
+        "g": "all",
+        "stays": [
+          {
+            "name": "noch offen (Vila do Abraão)",
+            "q": "Vila do Abraão, Ilha Grande"
+          }
+        ],
+        "arrive": "16.01. Uber zum Bootsanleger, dann Boot nach Vila do Abraão 🟡",
+        "hl": [
+          {
+            "t": "Lopes Mendes",
+            "q": "Praia de Lopes Mendes"
+          },
+          {
+            "t": "Cachoeira da Feiticeira",
+            "q": "Cachoeira da Feiticeira, Ilha Grande"
+          },
+          {
+            "t": "Praia de Palmas",
+            "q": "Praia de Palmas, Ilha Grande"
+          },
+          {
+            "t": "Aquario Hostel Bar & Night Club",
+            "q": "Aquario Hostel, Ilha Grande"
+          },
+          {
+            "t": "Lua e Mar (Moqueca)",
+            "q": "Restaurante Lua e Mar, Ilha Grande"
+          }
+        ],
+        "warn": "Heimflug 20.01. um 15:35 ab Rio-Galeão: frühes Boot (ca. 7–8 Uhr), dann ca. 2,5–3 h Uber.",
+        "ap": [
+          "GIG"
+        ]
+      }
+    ],
+    "airports": {
+      "GRU": {
+        "name": "São Paulo-Guarulhos",
+        "q": "Aeroporto Internacional de Guarulhos"
+      },
+      "CGH": {
+        "name": "São Paulo-Congonhas",
+        "q": "Aeroporto de Congonhas"
+      },
+      "SDU": {
+        "name": "Rio-Santos Dumont",
+        "q": "Aeroporto Santos Dumont"
+      },
+      "GIG": {
+        "name": "Rio-Galeão",
+        "q": "Aeroporto Internacional do Galeão"
+      },
+      "IGU": {
+        "name": "Foz do Iguaçu",
+        "q": "Aeroporto Internacional de Foz do Iguaçu"
+      },
+      "MAO": {
+        "name": "Manaus",
+        "q": "Aeroporto Internacional de Manaus"
+      }
+    }
   }
 }

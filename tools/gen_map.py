@@ -93,6 +93,7 @@ def build(standalone=False):
 .sea{fill:#dfeef0}.land{fill:#eef0ea;stroke:#c9cfc4;stroke-width:.8}.br{fill:#f7f3dc;stroke:#1d6b55;stroke-width:1.4}
 .fl{fill:none;stroke:#0d4f7a;stroke-width:2.6;stroke-dasharray:7 6;stroke-linecap:round}
 .fl2{stroke-width:2;opacity:.6}
+.hit{fill:transparent}
 .ht{paint-order:stroke;stroke:#e1eef0;stroke-width:5px;stroke-linejoin:round}
 .gr{fill:none;stroke:#1d6b55;stroke-width:3.2;stroke-linecap:round}
 .bt{fill:none;stroke:#1d8aa8;stroke-width:3;stroke-dasharray:2 5;stroke-linecap:round}
@@ -154,19 +155,22 @@ def build(standalone=False):
     s.append(f'<text class="tag" x="{tx+70:.0f}" y="{ty-40:.0f}" text-anchor="middle">14.01. 01:45 MAO → GIG</text>')
     s.append(f'<text class="sub" x="{tx+70:.0f}" y="{ty-22:.0f}" text-anchor="middle">Nachtflug</text>')
 
-    def stop(pt, n, name, sub, dx=16, dy=0, anchor='start', proj=P, r_=15, frm='', to=''):
+    def stop(pt, n, name, sub, dx=16, dy=0, anchor='start', proj=P, r_=15, frm='', to='', sid='', extra=''):
         x, y = proj(*pt)
-        s.append(f'<g class="stopg" data-from="{frm}" data-to="{to}">')
+        s.append(f'<g class="stopg" data-from="{frm}" data-to="{to}" data-stop="{sid}" role="button" tabindex="0" aria-label="{name}: Infos">')
+        s.append(f'<circle class="hit" cx="{x:.1f}" cy="{y:.1f}" r="{r_+16}"/>')
         s.append(f'<circle class="halo" cx="{x:.1f}" cy="{y:.1f}" r="{r_+9}"/>')
         s.append(f'<circle class="dot" cx="{x:.1f}" cy="{y:.1f}" r="{r_}"/>')
         s.append(f'<text class="num" x="{x:.1f}" y="{y:.1f}">{n}</text>')
         lx = x + dx if anchor == 'start' else x - dx
         s.append(f'<text class="lbl" x="{lx:.1f}" y="{y+dy-2:.1f}" text-anchor="{anchor}">{name}</text>')
         s.append(f'<text class="sub" x="{lx:.1f}" y="{y+dy+16:.1f}" text-anchor="{anchor}">{sub}</text>')
+        if extra:
+            s.append(f'<text class="tag" x="{lx:.1f}" y="{y+dy+34:.1f}" text-anchor="{anchor}">{extra}</text>')
         s.append('</g>')
 
-    stop(IGU, 3, 'Foz do Iguaçu', '06.–09.01. · Wasserfälle', dx=20, dy=4, anchor='end', frm='2027-01-06', to='2027-01-08')
-    stop(MAO, 4, 'Manaus &amp; Amazonas', '09.–14.01. · Dschungel-Lodge', dx=20, frm='2027-01-09', to='2027-01-13')
+    stop(IGU, 3, 'Foz do Iguaçu', '06.–09.01. · Wasserfälle', dx=20, dy=4, anchor='end', frm='2027-01-06', to='2027-01-08', sid='iguacu', extra='Argentinien-Seite: Pass mit!')
+    stop(MAO, 4, 'Manaus &amp; Amazonas', '09.–14.01. · Dschungel-Lodge', dx=20, frm='2027-01-09', to='2027-01-13', sid='manaus', extra='Uhrzeit: Rio −1 h')
     # Suedost-Cluster in der Hauptkarte als Sammelpunkt
     x, y = P(-50.2, -20.6)
     s.append(f'<text class="lbl" x="{x:.0f}" y="{y:.0f}" text-anchor="middle">Südost-Küste</text>')
@@ -184,16 +188,20 @@ def build(standalone=False):
     s.append(f'<path class="bt" data-d="2027-01-20" d="M{il[0]+4:.1f},{il[1]-12:.1f} Q{il[0]-4:.1f},{an[1]+6:.1f} {an[0]+6:.1f},{an[1]+2:.1f}"/>')
     s.append(f'<path class="gr" data-d="2027-01-20" marker-end="url(#arr)" d="M{an[0]+6:.1f},{an[1]-2:.1f} Q{(an[0]+gg[0])/2:.1f},{an[1]+4:.1f} {PI(*RIO)[0]-17:.1f},{PI(*RIO)[1]-3:.1f}"/>')
     s.append('</g>')
-    s.append(f'<circle class="dot2" cx="{gi[0]:.1f}" cy="{gi[1]:.1f}" r="5"/><text class="tag" x="{gi[0]-8:.1f}" y="{gi[1]-8:.1f}" text-anchor="end">GRU</text>')
-    s.append(f'<circle class="dot2" cx="{ci[0]:.1f}" cy="{ci[1]:.1f}" r="5"/><text class="tag" x="{ci[0]-8:.1f}" y="{ci[1]+18:.1f}" text-anchor="end">CGH</text>')
+    s.append(f'<g class="apg" data-ap="GRU" role="button" tabindex="0" aria-label="Flughafen GRU"><circle class="hit" cx="{gi[0]:.1f}" cy="{gi[1]:.1f}" r="14"/><circle class="dot2" cx="{gi[0]:.1f}" cy="{gi[1]:.1f}" r="5"/><text class="tag" x="{gi[0]-8:.1f}" y="{gi[1]-8:.1f}" text-anchor="end">GRU</text></g>')
+    s.append(f'<g class="apg" data-ap="CGH" role="button" tabindex="0" aria-label="Flughafen CGH"><circle class="hit" cx="{ci[0]:.1f}" cy="{ci[1]:.1f}" r="14"/><circle class="dot2" cx="{ci[0]:.1f}" cy="{ci[1]:.1f}" r="5"/><text class="tag" x="{ci[0]-8:.1f}" y="{ci[1]+18:.1f}" text-anchor="end">CGH</text></g>')
+
     s.append(f'<text class="tag" x="{(ci[0]+sd[0])/2:.0f}" y="{IY+24}" text-anchor="middle">31.12. CGH → SDU</text>')
 
-    stop(GUA, 1, 'Guarujá', '28.–31.12.', dx=20, dy=6, proj=PI, r_=13, frm='2026-12-28', to='2026-12-30')
-    stop(RIO, 2, 'Rio de Janeiro', '31.12.–06.01.', dx=-30, dy=-40, anchor='end', proj=PI, r_=13, frm='2026-12-31', to='2027-01-05')
-    stop(PAR, 5, 'Paraty', '14.–16.01.', dx=18, dy=4, anchor='end', proj=PI, r_=13, frm='2027-01-14', to='2027-01-15')
-    stop(ILG, 6, 'Ilha Grande', '16.–20./21.01.', dx=-8, dy=40, proj=PI, r_=13, frm='2027-01-16', to='2027-01-21')
-    s.append(f'<text class="tag" x="{IX+IW-10}" y="{il[1]+86:.1f}" text-anchor="end">20.01. Boot + Uber → GIG</text>')
-    s.append(f'<text class="ctry" x="{IX+IW-10}" y="{IY+IH-12}" text-anchor="end">AUSSCHNITT SÜDOST</text>')
+    stop(GUA, 1, 'Guarujá', '28.–31.12.', dx=20, dy=6, proj=PI, r_=13, frm='2026-12-28', to='2026-12-30', sid='guaruja')
+    stop(RIO, 2, 'Rio de Janeiro', '31.12.–06.01.', dx=-30, dy=-40, anchor='end', proj=PI, r_=13, frm='2026-12-31', to='2027-01-05', sid='rio')
+    stop(PAR, 5, 'Paraty', '14.–16.01.', dx=18, dy=4, anchor='end', proj=PI, r_=13, frm='2027-01-14', to='2027-01-15', sid='paraty')
+    stop(ILG, 6, 'Ilha Grande', '16.–20./21.01.', dx=-8, dy=40, proj=PI, r_=13, frm='2027-01-16', to='2027-01-21', sid='ilha')
+
+    rows = ['GRU → Guarujá · Uber 1,5–2 h', 'GIG → Paraty · Uber ca. 4 h', 'Paraty → Ilha Grande · Uber + Boot', 'Ilha Grande → GIG · Boot + Uber ca. 3 h']
+    for k, w in enumerate(rows):
+        s.append(f'<text class="sub" x="{IX+IW-10}" y="{IY+IH-54+k*14.5}" text-anchor="end">{w}</text>')
+    s.append(f'<text class="tag" x="{IX+IW-10}" y="{IY+IH-70}" text-anchor="end">FAHRZEITEN</text>')
 
     s.append('<g id="map-pins"></g>')
     # Legende
