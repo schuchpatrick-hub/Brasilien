@@ -91,7 +91,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 
 | Ort | Unterkunft | Zeitraum | Details | Kosten | Gebucht von |
 |---|---|---|---|---|---|
-| Guarujá | [**Casa Praiana**](https://www.booking.com/Share-q0Nagir) (nahe Praia da Enseada) | 27.–31.12. | 75 m zum Strand, kein Pool, **kein Frühstück**, alle vier Gringos plus 1 Cevapi mitgezählt, bis 31.12. verlängert. Alternative war die Pousada Villa Virgínia | – | Jonas (29.09.) |
+| Guarujá | [**Casa Praiana**](https://www.booking.com/Share-q0Nagir) (nahe Praia da Enseada) | 28.–31.12. | 75 m zum Strand, kein Pool, **kein Frühstück**, alle vier Gringos plus 1 Cevapi mitgezählt, bis 31.12. verlängert. Alternative war die Pousada Villa Virgínia | – | Jonas (29.09.) |
 | Rio | [**Tabas – Cena Carioca**](https://www.booking.com/Share-UjjihY) | 31.12.–06.01. | **nicht stornierbar**, Gym vorhanden; Anreise auf 31.12. umgebucht ✅ | – | Jonas (01.09.) |
 | Foz do Iguaçu | Name prüfen. Im Gespräch waren [Hotel Portinari Ponte da Amizade](https://c.24.de/ho/NUEN87) (im Chat angepinnt), [Della Foz](https://c.24.de/ho/5ESDAM), [Hotel Baviera Iguassu](https://c.24.de/ho/WRNADK), Che Hermano Suítes | 06.–09.01. | laut Greisel ca. 600 € p. P. für Amazonas plus Unterkunft Wasserfälle | ca. 80 € p. P. | beim Treffen am 09.09. |
 | Manaus | [**Casa 307**](https://www.booking.com/Share-xSVoEp) | 09.–10.01. | Lage und Bewertung top, 2er-Zimmer für Daijo & Greisel | 14 € p. P. | Jonas (14.09.) |
