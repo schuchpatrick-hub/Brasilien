@@ -157,6 +157,7 @@ Knopf „✈️ Reise abspielen“ (`#map-play`) unter der Karte: Flugzeug, Auto
 gezeichneten Pfade ab (`getPointAtLength` auf den Pfaden mit `data-d`), Bildunterschriften oben, Ablauf in `play()`.
 Dazu: Kamera-Zoom in den Südost-Ausschnitt (viewBox, `camTo`), leuchtende Spur, Nacht mit Sternen bei Nachtflügen,
 Feuerwerk zu Silvester, Tageszähler mit Kilometern, Wackelköpfe und Sprechblasen (`say`), Gags (Kaiman, Footvolley-Ball).
+**Musik** (`Music()` im selben Modul, Web Audio, keine Dateien): `mus('mode', 'travel'|'stay')` (Reise-Melodie bzw. Samba mit Tusch), `mus('night', …)` dämpft, Effekte `boom`/`splash`/`kick`; Knopf `#map-sound` (localStorage `br26.sound`). Fürs Video rendert `window.__tripAudio(ms)` dieselbe Musik offline als WAV (base64), mit ffmpeg unterlegen.
 Video: Zeit über `window.__tripT` steuern, Bilder mit Playwright aufnehmen und mit ffmpeg (`pip install imageio-ffmpeg`)
 zu MP4 machen. Das Video enthält Crew-Fotos, also **nicht** ins Repo legen.
 

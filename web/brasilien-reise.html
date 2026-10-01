@@ -487,6 +487,7 @@ header .today::before{opacity:.25}
 .trip-fx{font-size:34px;animation:fxPop 1.2s ease}
 @keyframes fxPop{0%{opacity:0}30%{opacity:1}100%{opacity:1}}
 @media print{.map-play{display:none}}
+.map-play.snd{background:var(--surface);color:var(--fg);border:1px solid var(--line);box-shadow:none;font-size:.88rem;padding:9px 14px}
 /* Navigation */
 .toc{display:flex;flex-wrap:wrap;gap:6px 14px;font:600 .82rem var(--mono);letter-spacing:.04em}
 .toc a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
@@ -1115,7 +1116,7 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
 </svg>
     <figcaption>Gestrichelt: Flug (blau gebucht, orange noch offen, lila nur Daijo &amp; Greisel, ☾ Nachtflug) · durchgezogen: Straße · gepunktet: Boot. <span class="lg-done">Gelb</span> = schon geschafft, <span class="lg-here">pulsierend</span> = hier sind wir, <span class="lg-pin">rot</span> = letzter Check-in. Guarujá, Rio, Paraty und Ilha Grande sind rechts unten vergrößert. <b>Orte und Flughäfen antippen</b> für Infos.</figcaption>
   </figure>
-  <button type="button" class="map-play" id="map-play" aria-pressed="false">✈️ Reise abspielen</button>
+  <button type="button" class="map-play" id="map-play" aria-pressed="false">✈️ Reise abspielen</button> <button type="button" class="map-play snd" id="map-sound" aria-pressed="true">🔊 Musik an</button>
   <div class="mi" id="map-info">
     <div class="mi-chips" id="mi-chips" role="group" aria-label="Station wählen"></div>
     <div id="mi-card" aria-live="polite"><p class="note">👆 Tippe auf einen Ort oder Flughafen in der Karte (oder oben auf eine Station): Unterkunft, Anreise, Highlights, Flüge, mit Google-Maps- und Uber-Knöpfen.</p></div>
@@ -3344,6 +3345,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   // entlang eines Kartenpfads (oder einer Geraden) fahren, mit leuchtender Spur und Kilometerzähler
   function move(g, kind, src, ms, my, o) {
     o = o || {};
+    mus('mode', 'travel');
     let L, at, d0;
     if (src.getTotalLength) { L = src.getTotalLength(); at = d => { const p = src.getPointAtLength(d); return {x: p.x, y: p.y}; }; d0 = src.getAttribute('d'); }
     else { const [a, b] = src; L = Math.hypot(b.x - a.x, b.y - a.y); at = d => ({x: a.x + (b.x - a.x) * d / L, y: a.y + (b.y - a.y) * d / L}); d0 = `M${a.x},${a.y} L${b.x},${b.y}`; }
@@ -3370,12 +3372,14 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     if (!n) { n = mk('g', {class: 'trip-night', opacity: 0}); n.appendChild(mk('rect', {x: -5, y: -5, width: W + 10, height: H + 10}));
       for (let i = 0; i < 70; i++) n.appendChild(mk('circle', {cx: (i * 397) % W, cy: (i * 233) % (H * .7), r: i % 5 ? 1.2 : 2, class: 'star'}));
       const m = mk('text', {x: W - 120, y: 120, 'font-size': 46}); m.textContent = '🌙'; n.appendChild(m); gBack.appendChild(n); }
+    mus('night', on);
     const a = +n.getAttribute('opacity'); return tween(ms, my, e => n.setAttribute('opacity', (a + ((on ? 1 : 0) - a) * e).toFixed(3)));
   }
   // Feuerwerk: Funkenkreise, die sich ausbreiten und verblassen
   function fireworks(pt, ms) {
     const t0 = tnow(), cols = ['#ffcf1f', '#ff5a5a', '#3ccf7f', '#93b1ff', '#ffffff'], g = mk('g', {class: 'trip-fw'}); gFx.appendChild(g);
     const bursts = Array.from({length: 7}, (_, i) => ({x: pt.x + Math.sin(i * 2.3) * 70, y: pt.y - 60 - Math.cos(i * 1.7) * 40, at: i * ms / 9, c: cols[i % 5], el: mk('g', {})}));
+    bursts.forEach(b => mus('sfx', 'boom', b.at - 450));
     bursts.forEach(b => { for (let k = 0; k < 14; k++) b.el.appendChild(mk('line', {stroke: b.c, 'stroke-width': 2.5, 'stroke-linecap': 'round'})); g.appendChild(b.el); });
     fxs.push(now => {
       const z = zoom();
@@ -3388,8 +3392,182 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     });
   }
 
+  // ---------- Musik zur Animation (selbst erzeugt mit Web Audio, keine Dateien) ----------
+  // Zwei Stimmungen: „travel“ = flotte Cartoon-Reisemelodie, „stay“ = Samba mit Surdo, Agogô, Cuíca und Pfeife.
+  // Bei Nacht gedämpft und langsamer. Ereignisse werden mitgeschrieben (tlog), damit die Video-Aufnahme dieselbe Musik
+  // offline als Tonspur rendern kann (window.__tripAudio).
+  const mf = m => 440 * Math.pow(2, (m - 69) / 12);
+  function Music(ctx) {
+    const E = {ctx, mode: 'none', night: false, step: 0, next: 0};
+    const master = ctx.createGain(); master.gain.value = .55;
+    const comp = ctx.createDynamicsCompressor(); master.connect(comp); comp.connect(ctx.destination);
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 16000; lp.connect(master);
+    const music = ctx.createGain(); music.gain.value = 1; music.connect(lp);
+    const bus = {travel: ctx.createGain(), stay: ctx.createGain()};
+    Object.values(bus).forEach(b => { b.gain.value = 0; b.connect(music); });
+    const sfxOut = ctx.createGain(); sfxOut.gain.value = .9; sfxOut.connect(master);
+    E.master = master;
+    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const nb = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), nd = nb.getChannelData(0);
+    for (let i = 0; i < nd.length; i++) nd[i] = rnd() * 2 - 1;
+
+    function tone(out, type, f, t, dur, vol, o) {
+      o = o || {};
+      const os = ctx.createOscillator(), g = ctx.createGain(), a = o.a || .005;
+      os.type = type; os.frequency.setValueAtTime(o.from || f, t);
+      if (o.from) os.frequency.exponentialRampToValueAtTime(f, t + (o.glide || .04));
+      if (o.to) os.frequency.exponentialRampToValueAtTime(o.to, t + dur);
+      if (o.vib) { const l = ctx.createOscillator(), lg = ctx.createGain(); l.frequency.value = o.vib; lg.gain.value = f * (o.depth || .012); l.connect(lg); lg.connect(os.frequency); l.start(t); l.stop(t + dur + .05); }
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + a);
+      if (o.hold) g.gain.setValueAtTime(vol, t + o.hold);
+      g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      let node = os;
+      if (o.lp) { const fl = ctx.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.value = o.lp; os.connect(fl); node = fl; }
+      node.connect(g); g.connect(out); os.start(t); os.stop(t + dur + .05);
+    }
+    function noise(out, t, dur, vol, type, f, q, o) {
+      o = o || {};
+      const s = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), g = ctx.createGain();
+      s.buffer = nb; fl.type = type; fl.frequency.setValueAtTime(f, t); fl.Q.value = q || 1;
+      if (o.to) fl.frequency.exponentialRampToValueAtTime(o.to, t + dur);
+      g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(vol, t + (o.a || .002)); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      s.connect(fl); fl.connect(g); g.connect(out); s.start(t, rnd() * 1.5); s.stop(t + dur + .05);
+    }
+    const kick = (out, t, v) => tone(out, 'sine', 45, t, .2, v, {from: 140, glide: .09});
+    const bell = (out, t, f, v) => { tone(out, 'sine', f, t, .22, v); tone(out, 'sine', f * 2.76, t, .08, v * .35); };
+
+    // Reise: F – B – C7 – F, Oompah-Bass, Snare auf 2 und 4, Shaker, gepfiffene Melodie
+    const TR = {
+      bpm: 138, roots: [41, 46, 36, 41],
+      mel: [[[0, 72, 2], [2, 77, 2], [4, 81, 2], [6, 84, 2], [8, 81, 1], [9, 84, 1], [10, 81, 2], [12, 77, 4]],
+            [[0, 86, 2], [2, 82, 2], [4, 77, 2], [6, 82, 2], [8, 86, 3], [11, 84, 1], [12, 82, 4]],
+            [[0, 76, 1], [1, 79, 1], [2, 84, 2], [4, 82, 2], [6, 79, 2], [8, 76, 2], [10, 79, 1], [11, 81, 1], [12, 82, 2], [14, 79, 2]],
+            [[0, 81, 2], [2, 77, 2], [4, 72, 1], [5, 77, 1], [6, 81, 2], [8, 77, 5], [13, 84, 1], [14, 72, 2]]]
+    };
+    function travelStep(i, t, sd) {
+      const out = bus.travel, bar = Math.floor(i / 16) % 4, s = i % 16, r = TR.roots[bar];
+      if (s === 0 || s === 8) tone(out, 'triangle', mf(r), t, sd * 1.6, .42);
+      if (s === 4 || s === 12) tone(out, 'triangle', mf(r + 7), t, sd * 1.6, .34);
+      if (s === 14) tone(out, 'triangle', mf(r + (bar === 3 ? 4 : 9)), t, sd * 1.2, .28);
+      if (s === 0 || s === 8 || s === 10) kick(out, t, s === 10 ? .35 : .55);
+      if (s === 4 || s === 12) noise(out, t, .14, .32, 'bandpass', 1900, .8);
+      noise(out, t, .05, s % 2 ? .07 : .035, 'highpass', 7000, .7);
+      TR.mel[bar].forEach(([st, m, len]) => {
+        if (st !== s) return; const f = mf(m), d = sd * len * .92;
+        tone(out, 'sine', f, t, d + .06, .2, {from: f * .96, glide: .03, vib: 6.5, a: .012, hold: d * .6});
+        tone(out, 'square', f / 2, t, d * .7, .028, {lp: 1800});
+      });
+    }
+    // Samba: Fmaj7 – D7 – Gm7 – C7, Surdo, Tamborim, Ganzá, Agogô, Gitarre, Cuíca „uh-uh“, Apito
+    const SA = {
+      bpm: 104, roots: [41, 38, 43, 36],
+      chords: [[57, 60, 64, 65], [54, 57, 60, 62], [55, 58, 62, 65], [52, 55, 58, 60]],
+      comp: [0, 3, 6, 10, 12], tamb: [0, 2, 5, 7, 9, 12, 14], ago: {0: 0, 2: 1, 3: 1, 6: 0, 8: 1, 10: 0, 11: 1, 14: 0}
+    };
+    function stayStep(i, t, sd) {
+      const out = bus.stay, bar = Math.floor(i / 16) % 4, s = i % 16, r = SA.roots[bar];
+      if (s === 4 || s === 12) tone(out, 'sine', 48, t, .42, .7, {from: 95, glide: .12});
+      if (s === 0 || s === 8) tone(out, 'sine', 55, t, .12, .3, {from: 90, glide: .05});
+      if (s === 0 || s === 8) tone(out, 'triangle', mf(r), t, sd * 2.6, .4);
+      if (s === 6 || s === 14) tone(out, 'triangle', mf(r + 7), t, sd * 1.4, .3);
+      if (SA.tamb.includes(s)) noise(out, t, .045, .16, 'bandpass', 3600, 3);
+      noise(out, t, .06, s % 4 === 3 ? .1 : .04, 'highpass', 6500, .7);
+      if (s in SA.ago) bell(out, t, SA.ago[s] ? 1320 : 990, .07);
+      if (SA.comp.includes(s)) SA.chords[bar].forEach((m, k) => tone(out, 'triangle', mf(m), t + k * .012, .3, s === 0 ? .1 : .075, {lp: 2600}));
+      if ((bar === 1 || bar === 3) && (s === 9 || s === 11)) {
+        tone(out, 'sine', 420, t, .2, .2, {from: 360, glide: .08, to: 300, vib: 22, depth: .03});
+        noise(out, t, .15, .05, 'bandpass', 700, 4);
+      }
+      if (bar === 3 && Math.floor(i / 64) % 2 === 1 && (s === 0 || s === 2 || s === 4)) tone(out, 'sine', 2600, t, .13, .07, {vib: 28, depth: .06});
+    }
+    const sdur = () => 60 / (E.mode === 'stay' ? SA.bpm : TR.bpm) / 4 * (E.night ? 1.25 : 1);
+    E.schedule = until => {
+      while (E.next < until) {
+        if (E.mode === 'travel') travelStep(E.step, E.next, sdur());
+        else if (E.mode === 'stay') stayStep(E.step, E.next, sdur());
+        E.next += sdur(); E.step++;
+      }
+    };
+    // Tusch bei Ankunft, „Wusch“ beim Losfahren
+    function tusch(t) {
+      [72, 77, 81].forEach((m, k) => tone(sfxOut, 'sawtooth', mf(m), t + k * .085, .14, .09, {lp: 2400}));
+      [65, 69, 72, 77].forEach(m => tone(sfxOut, 'sawtooth', mf(m), t + .26, .75, .07, {lp: 2200, hold: .35, vib: 5}));
+      noise(sfxOut, t + .26, .9, .14, 'highpass', 5000, .5);
+      kick(sfxOut, t + .26, .5);
+    }
+    const whoosh = t => noise(sfxOut, t, .55, .16, 'bandpass', 400, 1.5, {to: 3500, a: .25});
+    E.setMode = (m, w) => {
+      if (m === E.mode) return;
+      const old = bus[E.mode], nw = bus[m];
+      if (old) { old.gain.cancelScheduledValues(w); old.gain.setTargetAtTime(0, w, .07); }
+      if (nw) { nw.gain.cancelScheduledValues(w); nw.gain.setValueAtTime(1, w); }
+      if (m === 'stay') tusch(w); else if (m === 'travel' && E.mode !== 'none') whoosh(w);
+      E.mode = m; E.step = 0; E.next = w + (m === 'stay' ? .55 : .03);
+    };
+    E.setNight = (on, w) => {
+      E.night = on;
+      lp.frequency.cancelScheduledValues(w); lp.frequency.setTargetAtTime(on ? 850 : 16000, w, .25);
+      music.gain.cancelScheduledValues(w); music.gain.setTargetAtTime(on ? .75 : 1, w, .25);
+    };
+    E.sfx = (name, t) => {
+      if (name === 'boom') {
+        tone(sfxOut, 'sine', 1900, t, .45, .05, {from: 700, glide: .42});
+        noise(sfxOut, t + .45, 1.1, .5, 'lowpass', 1400, .7, {to: 200});
+        for (let k = 0; k < 8; k++) noise(sfxOut, t + .6 + k * .07 + rnd() * .05, .03, .12, 'highpass', 4000, 1);
+      } else if (name === 'splash') {
+        tone(sfxOut, 'sine', 70, t, .3, .35, {from: 320, glide: .2});
+        noise(sfxOut, t + .05, .7, .35, 'bandpass', 2500, 1, {to: 500, a: .03});
+      } else if (name === 'kick') {
+        kick(sfxOut, t, .7); noise(sfxOut, t, .05, .3, 'bandpass', 2500, 1);
+        tone(sfxOut, 'sine', 600, t + .05, .35, .08, {from: 300, glide: .3});
+      }
+    };
+    E.end = w => { master.gain.cancelScheduledValues(w); master.gain.setTargetAtTime(0, w, .3); E.setMode('none', w + 1.2); };
+    return E;
+  }
+  const tlog = []; let tlog0 = 0, live = null, liveTimer = 0;
+  const soundOn = () => store.get('sound') !== '0';
+  function mus(type, arg, delayMs) {   // Ereignis an die Musik geben: live abspielen und für das Video mitschreiben
+    const d = delayMs || 0;
+    tlog.push({t: tnow() - tlog0 + d, type, arg});
+    if (!live) return;
+    const w = live.ctx.currentTime + d / 1000 + .01;
+    if (type === 'mode') live.setMode(arg, w); else if (type === 'night') live.setNight(arg, w); else live.sfx(arg, w);
+  }
+  function musStart() {
+    tlog.length = 0; tlog0 = tnow(); musStop(true);
+    if (window.__tripT !== undefined || !soundOn()) return;
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+      const ctx = new AC(); ctx.resume();
+      live = Music(ctx); live.next = ctx.currentTime + .05;
+      liveTimer = setInterval(() => { if (live) live.schedule(live.ctx.currentTime + .15); }, 30);
+    } catch (e) { live = null; }
+  }
+  function musStop(now) {
+    clearInterval(liveTimer); const m = live; live = null; if (!m) return;
+    if (now) { m.ctx.close().catch(() => {}); return; }
+    m.end(m.ctx.currentTime); setTimeout(() => m.ctx.close().catch(() => {}), 1600);
+  }
+  // Video: dieselbe Musik offline als WAV (mono, 16 bit, base64) rendern
+  window.__tripAudio = async ms => {
+    const sr = 44100, ctx = new OfflineAudioContext(1, Math.ceil(sr * ms / 1000), sr), m = Music(ctx);
+    [...tlog].sort((a, b) => a.t - b.t).forEach(ev => {
+      const w = ev.t / 1000; m.schedule(w);
+      if (ev.type === 'mode') m.setMode(ev.arg, w); else if (ev.type === 'night') m.setNight(ev.arg, w); else if (ev.type === 'end') m.end(w); else m.sfx(ev.arg, w);
+    });
+    m.schedule(ms / 1000);
+    const buf = await ctx.startRendering(), d = buf.getChannelData(0), out = new DataView(new ArrayBuffer(44 + d.length * 2));
+    const str = (o, s) => [...s].forEach((c, i) => out.setUint8(o + i, c.charCodeAt(0)));
+    str(0, 'RIFF'); out.setUint32(4, 36 + d.length * 2, true); str(8, 'WAVEfmt '); out.setUint32(16, 16, true); out.setUint16(20, 1, true); out.setUint16(22, 1, true);
+    out.setUint32(24, sr, true); out.setUint32(28, sr * 2, true); out.setUint16(32, 2, true); out.setUint16(34, 16, true); str(36, 'data'); out.setUint32(40, d.length * 2, true);
+    for (let i = 0; i < d.length; i++) out.setInt16(44 + i * 2, Math.max(-1, Math.min(1, d[i])) * 32767, true);
+    const u = new Uint8Array(out.buffer); let b = ''; for (let i = 0; i < u.length; i += 32768) b += String.fromCharCode.apply(null, u.subarray(i, i + 32768));
+    return btoa(b);
+  };
+
   async function play() {
-    const my = ++run; stopUI(true);
+    const my = ++run; stopUI(true); musStart();
     if (layer) layer.remove(); bubbles.length = 0; fxs.length = 0; day = 1; km = 0; setCam(FULL);
     layer = mk('g', {class: 'trip-anim'}); svg.appendChild(layer);
     const defs = mk('defs', {}); defs.innerHTML = '<clipPath id="head-clip" clipPathUnits="objectBoundingBox"><circle cx=".5" cy=".5" r=".5"/></clipPath>'; layer.appendChild(defs);
@@ -3412,25 +3590,25 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     await step(async () => { day = 1; caption('27.12. ✈️ München → Rom → São Paulo'); await night(true, 600, my); v = vehicle('plane', A, S);
       await move(v, 'plane', legs.hin, 4600, my, {km: 10100, say: [{at: .25, t: 'Alle mal herhören: Caipis gehen auf Simon!', ms: 2200}]}); await fade(v, 300, my); });
     await step(async () => { day = 2; caption('28.12. 🚗 Mit Uber nach Guarujá'); await Promise.all([night(false, 700, my), camTo(INSET, 1200, my)]); v = vehicle('car', A, s);
-      await move(v, 'car', legs.gua, 1900, my, {km: 90, say: [{at: .3, t: 'Hat jemand an den Obstkorb gedacht?', ms: 1800}]}); fx = emoji({x: pts.gua.x + 70, y: pts.gua.y - 20}, '🏖️⚽', 26); await wait(900, my); fx.remove(); });
+      await move(v, 'car', legs.gua, 1900, my, {km: 90, say: [{at: .3, t: 'Hat jemand an den Obstkorb gedacht?', ms: 1800}]}); mus('mode', 'stay'); fx = emoji({x: pts.gua.x + 70, y: pts.gua.y - 20}, '🏖️⚽', 26); await wait(2400, my); fx.remove(); });
     await step(async () => { day = 5; caption('31.12. ✈️ Ab nach Rio, Silvester!'); await move(v, 'car', [pts.gua, pts.cgh], 1100, my, {km: 80}); v.remove(); v = vehicle('plane', A, s); await move(v, 'plane', legs.sdu, 2300, my, {km: 370}); v.remove(); });
-    await step(async () => { caption('🎆 Feliz Ano Novo an der Copacabana!'); await night(true, 500, my); parkA = park('car', A, {x: pts.rio.x - 46, y: pts.rio.y + 30}, s); fireworks({x: pts.rio.x - 120, y: pts.rio.y + 10}, 2600);
+    await step(async () => { caption('🎆 Feliz Ano Novo an der Copacabana!'); mus('mode', 'stay'); await night(true, 500, my); parkA = park('car', A, {x: pts.rio.x - 46, y: pts.rio.y + 30}, s); fireworks({x: pts.rio.x - 120, y: pts.rio.y + 10}, 2600);
       say(parkA, 'Feliz Ano Novo, gatinhas!', 2200, {dx: 20}); await wait(3000, my); await night(false, 500, my); });
     await step(async () => { day = 11; caption('06.01. ✈️ Daijo & Greisel landen in Rio'); await camTo(FULL, 1200, my); fade(parkA, 400, my); v = vehicle('plane', B, S);
       await move(v, 'plane', legs.dg, 3600, my, {say: [{at: .35, t: 'Sind wir zu spät?', ms: 1600}, {at: .7, t: 'Ich hab eine Excel für den Urlaub!', ms: 1600}]}); await fade(v, 300, my); });
     await step(async () => { caption('06.01. ✈️ Alle sechs nach Foz do Iguaçu'); v = vehicle('plane', ALL, S); await move(v, 'plane', legs.igu, 2700, my, {km: 1150, say: [{at: .4, t: 'Gibt’s da ein Buffet?', ms: 1600}]}); });
-    await step(async () => { day = 12; caption('07.01. 💦 Wasserfälle!'); fx = emoji({x: pts.igu.x, y: pts.igu.y + 56}, '💦🌈💦', 30); await wait(1400, my); fx.remove(); });
+    await step(async () => { day = 12; caption('07.01. 💦 Wasserfälle!'); mus('mode', 'stay'); fx = emoji({x: pts.igu.x, y: pts.igu.y + 56}, '💦🌈💦', 30); await wait(2600, my); fx.remove(); });
     await step(async () => { day = 14; caption('09.01. ✈️ Ab in den Dschungel nach Manaus'); say(v, 'Turbulenzen!!', 1200, {at: 0}); await move(v, 'plane', legs.mao, 3000, my, {km: 2700, shake: [.15, .55]}); v.remove(); });
-    await step(async () => { day = 15; caption('10.01. 🛶 Juma Lodge: Kaimane & rosa Delfine'); v = vehicle('boat', ALL, S); const cai = emoji({x: 0, y: 0}, '🐊', 30);
+    await step(async () => { day = 15; caption('10.01. 🛶 Juma Lodge: Kaimane & rosa Delfine'); v = vehicle('boat', ALL, S); const cai = emoji({x: 0, y: 0}, '🐊', 30); mus('sfx', 'splash', 900);
       await move(v, 'boat', [{x: pts.mao.x - 10, y: pts.mao.y + 26}, {x: pts.mao.x + 90, y: pts.mao.y + 48}], 2200, my, {km: 100, say: [{at: .45, t: 'Ist das ein Kaiman?!', ms: 1500}],
         onT: (p, t) => { cai.setAttribute('x', (p.x - 95 + t * 15).toFixed(1)); cai.setAttribute('y', (p.y + 22 - Math.abs(Math.sin(t * 14)) * 16).toFixed(1)); }});
-      fx = emoji({x: pts.mao.x + 90, y: pts.mao.y + 100}, '🐬🐒🦜', 28); await wait(1000, my); fx.remove(); cai.remove(); v.remove(); });
+      mus('mode', 'stay'); fx = emoji({x: pts.mao.x + 90, y: pts.mao.y + 100}, '🐬🐒🦜', 28); await wait(2200, my); fx.remove(); cai.remove(); v.remove(); });
     await step(async () => { day = 19; caption('14.01. ✈️ 01:45 Nachtflug nach Rio 🌙'); await night(true, 600, my); v = vehicle('plane', ALL, S);
       await move(v, 'plane', legs.rio, 3200, my, {km: 2850, say: [{at: .3, t: 'Zzz …', ms: 2000}]}); await fade(v, 300, my); });
     await step(async () => { caption('14.01. 🚗 Mit Uber nach Paraty'); await Promise.all([night(false, 700, my), camTo(INSET, 1200, my)]); v = vehicle('car', ALL, s);
-      await move(v, 'car', legs.par, 2200, my, {km: 250, say: [{at: .4, t: 'Oi, gatinha!', ms: 1500}]}); await wait(400, my); v.remove(); });
+      await move(v, 'car', legs.par, 2200, my, {km: 250, say: [{at: .4, t: 'Oi, gatinha!', ms: 1500}]}); mus('mode', 'stay'); fx = emoji({x: pts.par.x - 10, y: pts.par.y + 52}, '🏘️🍹', 26); await wait(2200, my); fx.remove(); v.remove(); });
     await step(async () => { day = 21; caption('16.01. ⛵ Mit dem Boot zur Ilha Grande'); v = vehicle('boat', ALL, s); await move(v, 'boat', legs.ilha, 1800, my, {km: 30});
-      const ball = emoji(pts.ilha, '⚽', 22); say(v, 'Footvolley, jetzt!', 1700, {});
+      mus('mode', 'stay'); const ball = emoji(pts.ilha, '⚽', 22); say(v, 'Footvolley, jetzt!', 1700, {}); mus('sfx', 'kick', 550); mus('sfx', 'kick', 2150); await wait(500, my);
       await tween(1600, my, (e, t) => { ball.setAttribute('x', (pts.ilha.x - 60 + t * 150).toFixed(1)); ball.setAttribute('y', (pts.ilha.y + 60 - Math.sin(t * Math.PI) * 80).toFixed(1)); });
       ball.remove(); v.remove(); });
     await step(async () => { day = 25; caption('20.01. 👋 Die Gringos fahren zum Flughafen'); parkB = park('boat', B, {x: pts.ilha.x + 34, y: pts.ilha.y + 26}, s);
@@ -3438,16 +3616,24 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       say(parkB, 'Tchau! 👋', 1800, {}); await move(v, 'car', legs.road, 1600, my, {km: 150, say: [{at: .3, t: 'Ich bleib einfach hier …', ms: 1500}]}); v.remove(); });
     await step(async () => { caption('20.01. ✈️ Heimflug über Rom nach München'); await Promise.all([camTo(FULL, 1200, my), night(true, 800, my)]); v = vehicle('plane', A, S);
       await move(v, 'plane', legs.heim, 3900, my, {km: 9900}); v.remove(); });
-    await step(async () => { day = 26; caption('Tchau, Brasil! 🇧🇷 Daijo & Greisel bleiben noch ein bisschen'); await night(false, 700, my); await camTo(INSET, 1300, my); say(parkB, 'Mehr Caipi für uns! 🍹', 2200, {}); await wait(2300, my); await camTo(FULL, 1200, my); await wait(800, my); });
+    await step(async () => { day = 26; caption('Tchau, Brasil! 🇧🇷 Daijo & Greisel bleiben noch ein bisschen'); await night(false, 700, my); mus('mode', 'stay'); await camTo(INSET, 1300, my); say(parkB, 'Mehr Caipi für uns! 🍹', 2200, {}); await wait(2300, my); await camTo(FULL, 1200, my); await wait(800, my); });
     if (my === run) { await fade(parkB, 500, my); stop(); }
   }
-  function stop() { run++; cancelAnimationFrame(ticker); if (layer) layer.remove(); layer = null; setCam(FULL); svg.setAttribute('viewBox', VB0); stopUI(false); }
+  function stop() { tlog.push({t: tnow() - tlog0, type: 'end'}); musStop(false); run++; cancelAnimationFrame(ticker); if (layer) layer.remove(); layer = null; setCam(FULL); svg.setAttribute('viewBox', VB0); stopUI(false); }
   function stopUI(on) { btn.textContent = on ? '⏹ Stopp' : '✈️ Reise abspielen'; btn.setAttribute('aria-pressed', String(on)); }
   btn.addEventListener('click', () => {
     if (btn.getAttribute('aria-pressed') === 'true') { stop(); return; }
     const r = svg.getBoundingClientRect(); if (r.top < 0 || r.bottom > innerHeight) svg.scrollIntoView({behavior: 'smooth', block: 'center'});
     play();
   });
+  const sbtn = document.getElementById('map-sound');
+  const sPaint = () => { sbtn.textContent = soundOn() ? '🔊 Musik an' : '🔇 Musik aus'; sbtn.setAttribute('aria-pressed', String(soundOn())); };
+  if (sbtn) { sPaint(); sbtn.addEventListener('click', () => {
+    store.set('sound', soundOn() ? '0' : '1'); sPaint();
+    if (!soundOn()) musStop(true);
+    else if (btn.getAttribute('aria-pressed') === 'true') { const l = tlog.slice(), t0 = tlog0; musStart(); tlog.push(...l); tlog0 = t0;   // mitten drin wieder einschalten
+      const last = {}; l.forEach(e => { if (e.type !== 'sfx') last[e.type] = e; }); if (live) { if (last.night) live.setNight(last.night.arg, live.ctx.currentTime); if (last.mode) live.setMode(last.mode.arg, live.ctx.currentTime + .02); } }
+  }); }
   window.__tripPlay = play;   // für die Video-Aufnahme
 })();
 
