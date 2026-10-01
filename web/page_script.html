@@ -1864,7 +1864,15 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   }
   const wait = (ms, my) => new Promise(res => { const t0 = tnow(); (function f() { if (my !== run || tnow() - t0 >= ms) return res(); requestAnimationFrame(f); })(); });
   function tween(ms, my, fn) { return new Promise(res => { const t0 = tnow(); (function f() { if (my !== run) return res(); const t = Math.min(1, (tnow() - t0) / ms); fn(ease(t), t); if (t < 1) requestAnimationFrame(f); else res(); })(); }); }
-  const camTo = (c, ms, my) => { const a = Object.assign({}, cam); return tween(ms, my, e => setCam({x: a.x + (c.x - a.x) * e, y: a.y + (c.y - a.y) * e, w: a.w + (c.w - a.w) * e, h: a.h + (c.h - a.h) * e})); };
+  // Kamerafahrt: weiche Kurve (smootherstep), Zoom gleichmäßig (logarithmisch), Mitte wandert mit
+  const camTo = (c, ms, my) => {
+    const a = Object.assign({}, cam), ax = a.x + a.w / 2, ay = a.y + a.h / 2, cx = c.x + c.w / 2, cy = c.y + c.h / 2, r = c.w / a.w;
+    return tween(ms, my, (e, t) => {
+      const k = t * t * t * (t * (t * 6 - 15) + 10), w = a.w * Math.pow(r, k), h = w * a.h / a.w;
+      const m = r === 1 ? k : (w - a.w) / (c.w - a.w);   // Mitte im Gleichschritt mit dem Zoom, sonst schwenkt sie vorneweg
+      setCam({x: ax + (cx - ax) * m - w / 2, y: ay + (cy - ay) * m - h / 2, w, h});
+    });
+  };
   // entlang eines Kartenpfads (oder einer Geraden) fahren, mit leuchtender Spur und Kilometerzähler
   function move(g, kind, src, ms, my, o) {
     o = o || {};
@@ -2122,12 +2130,12 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     let v, parkA, parkB, fx;
     await step(async () => { day = 1; caption('27.12. ✈️ München → Rom → São Paulo'); await night(true, 600, my); v = vehicle('plane', A, S);
       await move(v, 'plane', legs.hin, 4600, my, {km: 10100, say: [{at: .25, t: 'Alle mal herhören: Caipis gehen auf Simon!', ms: 2200}]}); await fade(v, 300, my); });
-    await step(async () => { day = 2; caption('28.12. 🚗 Mit Uber nach Guarujá'); await Promise.all([night(false, 700, my), camTo(INSET, 1200, my)]); v = vehicle('car', A, s);
+    await step(async () => { day = 2; caption('28.12. 🚗 Mit Uber nach Guarujá'); await Promise.all([night(false, 1400, my), camTo(INSET, 2200, my)]); v = vehicle('car', A, s);
       await move(v, 'car', legs.gua, 1900, my, {km: 90, say: [{at: .3, t: 'Hat jemand an den Obstkorb gedacht?', ms: 1800}]}); mus('mode', 'stay'); fx = emoji({x: pts.gua.x + 70, y: pts.gua.y - 20}, '🏖️⚽', 26); await wait(2400, my); fx.remove(); });
     await step(async () => { day = 5; caption('31.12. ✈️ Ab nach Rio, Silvester!'); await move(v, 'car', [pts.gua, pts.cgh], 1100, my, {km: 80}); fade(v, 350, my); v = vehicle('plane', A, s); await move(v, 'plane', legs.sdu, 2300, my, {km: 370}); fade(v, 350, my); });
     await step(async () => { caption('🎆 Feliz Ano Novo an der Copacabana!'); mus('mode', 'stay'); await night(true, 500, my); parkA = park('car', A, {x: pts.rio.x - 46, y: pts.rio.y + 30}, s); fireworks({x: pts.rio.x - 120, y: pts.rio.y + 10}, 2600);
       say(parkA, 'Feliz Ano Novo, gatinhas!', 2200, {dx: 20}); await wait(3000, my); await night(false, 500, my); });
-    await step(async () => { day = 11; caption('06.01. ✈️ Daijo & Greisel landen in Rio'); await camTo(FULL, 1200, my); fade(parkA, 400, my); v = vehicle('plane', B, S);
+    await step(async () => { day = 11; caption('06.01. ✈️ Daijo & Greisel landen in Rio'); await camTo(FULL, 2200, my); fade(parkA, 400, my); v = vehicle('plane', B, S);
       await move(v, 'plane', legs.dg, 3600, my, {say: [{at: .35, t: 'Sind wir zu spät?', ms: 1600}, {at: .7, t: 'Ich hab eine Excel für den Urlaub!', ms: 1600}]}); await fade(v, 300, my); });
     await step(async () => { caption('06.01. ✈️ Alle sechs nach Foz do Iguaçu'); v = vehicle('plane', ALL, S); await move(v, 'plane', legs.igu, 2700, my, {km: 1150, say: [{at: .4, t: 'Gibt’s da ein Buffet?', ms: 1600}]}); });
     await step(async () => { day = 12; caption('07.01. 💦 Wasserfälle!'); mus('mode', 'stay'); fx = emoji({x: pts.igu.x, y: pts.igu.y + 56}, '💦🌈💦', 30); await wait(2600, my); fx.remove(); });
@@ -2138,7 +2146,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       mus('mode', 'stay'); fx = emoji({x: pts.mao.x + 90, y: pts.mao.y + 100}, '🐬🐒🦜', 28); await wait(2200, my); fx.remove(); cai.remove(); fade(v, 350, my); });
     await step(async () => { day = 19; caption('14.01. ✈️ 01:45 Nachtflug nach Rio 🌙'); await night(true, 600, my); v = vehicle('plane', ALL, S);
       await move(v, 'plane', legs.rio, 3200, my, {km: 2850, say: [{at: .3, t: 'Zzz …', ms: 2000}]}); await fade(v, 300, my); });
-    await step(async () => { caption('14.01. 🚗 Mit Uber nach Paraty'); await Promise.all([night(false, 700, my), camTo(INSET, 1200, my)]); v = vehicle('car', ALL, s);
+    await step(async () => { caption('14.01. 🚗 Mit Uber nach Paraty'); await Promise.all([night(false, 1400, my), camTo(INSET, 2200, my)]); v = vehicle('car', ALL, s);
       await move(v, 'car', legs.par, 2200, my, {km: 250, say: [{at: .4, t: 'Oi, gatinha!', ms: 1500}]}); mus('mode', 'stay'); fx = emoji({x: pts.par.x - 10, y: pts.par.y + 52}, '🏘️🍹', 26); await wait(2200, my); fx.remove(); fade(v, 350, my); });
     await step(async () => { day = 21; caption('16.01. ⛵ Mit dem Boot zur Ilha Grande'); v = vehicle('boat', ALL, s); await move(v, 'boat', legs.ilha, 1800, my, {km: 30});
       mus('mode', 'stay'); const ball = emoji(pts.ilha, '⚽', 22); say(v, 'Footvolley, jetzt!', 1700, {}); mus('sfx', 'kick', 550); mus('sfx', 'kick', 2150); await wait(500, my);
@@ -2147,9 +2155,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     await step(async () => { day = 25; caption('20.01. 👋 Die Gringos fahren zum Flughafen'); parkB = park('boat', B, {x: pts.ilha.x + 34, y: pts.ilha.y + 26}, s);
       v = vehicle('boat', A, s); await move(v, 'boat', legs.boat, 1300, my, {km: 25}); fade(v, 350, my); v = vehicle('car', A, s);
       say(parkB, 'Tchau! 👋', 1800, {}); await move(v, 'car', legs.road, 1600, my, {km: 150, say: [{at: .3, t: 'Ich bleib einfach hier …', ms: 1500}]}); fade(v, 350, my); });
-    await step(async () => { caption('20.01. ✈️ Heimflug über Rom nach München'); await Promise.all([camTo(FULL, 1200, my), night(true, 800, my)]); v = vehicle('plane', A, S);
+    await step(async () => { caption('20.01. ✈️ Heimflug über Rom nach München'); await Promise.all([camTo(FULL, 2200, my), night(true, 1600, my)]); v = vehicle('plane', A, S);
       await move(v, 'plane', legs.heim, 3900, my, {km: 9900}); fade(v, 350, my); });
-    await step(async () => { day = 26; caption('Tchau, Brasil! 🇧🇷 Daijo & Greisel bleiben noch ein bisschen'); await night(false, 700, my); mus('mode', 'stay'); await camTo(INSET, 1300, my); say(parkB, 'Mehr Caipi für uns! 🍹', 2200, {}); await wait(2300, my); await camTo(FULL, 1200, my); await wait(800, my); });
+    await step(async () => { day = 26; caption('Tchau, Brasil! 🇧🇷 Daijo & Greisel bleiben noch ein bisschen'); await night(false, 700, my); mus('mode', 'stay'); await camTo(INSET, 2400, my); say(parkB, 'Mehr Caipi für uns! 🍹', 2200, {}); await wait(2300, my); await camTo(FULL, 2200, my); await wait(800, my); });
     if (my === run) { await fade(parkB, 500, my); stop(); }
   }
   function stop() { tlog.push({t: tnow() - tlog0, type: 'end'}); musStop(false); run++; cancelAnimationFrame(ticker); if (layer) layer.remove(); layer = null; setCam(FULL); svg.setAttribute('viewBox', VB0); stopUI(false); }
