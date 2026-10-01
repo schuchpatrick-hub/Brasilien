@@ -3321,7 +3321,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     layer = mk('g', {class: 'trip-anim'}); svg.appendChild(layer);
     const defs = mk('defs', {}); defs.innerHTML = '<clipPath id="head-clip" clipPathUnits="objectBoundingBox"><circle cx=".5" cy=".5" r=".5"/></clipPath>'; layer.appendChild(defs);
     cap = mk('g', {class: 'trip-cap', transform: `translate(${svg.viewBox.baseVal.width / 2},34)`}); cap.appendChild(mk('rect', {x: -100, y: -20, width: 200, height: 36, rx: 18})); const ct = mk('text', {'text-anchor': 'middle', y: 4}); cap.appendChild(ct); layer.appendChild(cap);
-    const S = 1.3, s = .8;   // Größe Hauptkarte / Ausschnitt
+    const S = 1.3, s = 1.0;   // Größe Hauptkarte / Ausschnitt
     const legs = {
       hin: P('path.fl[data-d="2026-12-27"]'), gua: P('path.gr[data-d="2026-12-28"]'), sdu: P('path.fl[data-d="2026-12-31"]'),
       dg: P('path.flB[data-d="2027-01-06"]'), igu: P('path.fl:not(.flB)[data-d="2027-01-06"]'), mao: P('path.fl[data-d="2027-01-09"]'),
