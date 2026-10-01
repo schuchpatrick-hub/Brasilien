@@ -51,6 +51,10 @@ Kopfbild, Titel, Reisedaten, Gruppen-Umschalter (zeigt auch die Namen), Heute-Ka
 Tagesprogramm) und Eckdaten (`#hero-facts`, Nächte je Gruppe, offene Flüge live aus `flights`) stecken zusammen im
 `<header>`. Unterwegs zeigt das Kopfbild automatisch das Foto der heutigen Station (`setHero`).
 
+**„Ich bin …“** (`#me-box` im Kopf): Person wird pro Gerät gemerkt (localStorage `br26.me`), stellt die Gruppe ein, hebt
+eigene Crew- und FIFA-Karte hervor und zeigt eigene Werte (Drinks heute/gesamt/Platz, Gesamtwertung, Marktwert, Siege,
+Zeitkapsel-Status). Module melden Werte für alle Personen über `meSet()`.
+
 ## Crew-Profile
 
 Steckbriefe stehen in `web/trip.json` → `crew` (ein Eintrag mit `facts`/`quote` wird als große Karte gezeigt).
