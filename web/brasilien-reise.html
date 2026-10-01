@@ -484,6 +484,13 @@ header .today::before{opacity:.25}
 .trip-cap rect{fill:#10231d;opacity:.88}.trip-cap text{fill:#fff;font:700 21px var(--body)}
 .trip-cap.pop{animation:capPop .35s ease}
 @keyframes capPop{from{opacity:0}}
+.veh-burn{fill:#ff2a00;mix-blend-mode:multiply;pointer-events:none}.veh-hat{fill:#fff;stroke:#10231d;stroke-width:1.5}
+.news-bg{fill:#0b1f4d}.news-ring{fill:none;stroke:#2a4c9a;stroke-width:2;opacity:.35}
+.news-logo{fill:#fff}.news-logo-t{fill:#0b1f4d;font:900 34px var(--display);letter-spacing:1px}.news-clock{fill:#fff;font:700 30px var(--mono)}
+.news-panel{fill:#132d6b;stroke:#4f74c9;stroke-width:2}.news-panel-t{fill:#ffcf1f;font:800 24px var(--body);letter-spacing:2px}
+.news-head{fill:#fff}.news-name{fill:#fff;font:700 20px var(--body)}
+.news-lower{fill:#fff}.news-l1{fill:#0b1f4d;font:800 27px var(--display)}.news-l2{fill:#33415c;font:600 18px var(--body)}
+.news-ticker{fill:#c8102e}.news-ticker-t{fill:#fff;font:700 20px var(--body)}.news-ticker-l{fill:#0b1f4d}.news-ticker-lt{fill:#fff;font:800 20px var(--body)}
 .trip-stamp{fill:#e0262b;stroke:#fff;stroke-width:3px;paint-order:stroke;font:900 96px var(--display);letter-spacing:4px;animation:capPop .2s ease}.trip-stamp.t{fill:#ffcf1f;stroke:#10231d;font-size:64px;letter-spacing:0}
 .trip-fx{font-size:34px;animation:fxPop 1.2s ease}
 @keyframes fxPop{0%{opacity:0}30%{opacity:1}100%{opacity:1}}
@@ -3265,6 +3272,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   const INSET = (() => { const w = IW + 30, h = w * H / W, cx = IX + IW / 2, cy = IY + IH / 2; return {x: cx - w / 2, y: Math.max(0, Math.min(H - h, cy - h / 2 - 20)), w, h}; })();
   let layer, gBack, gTrail, gVeh, gFx, gFront, cap, ctr, cam = Object.assign({}, FULL), run = 0, day = 1, km = 0, ticker = 0;
   const bubbles = [], fxs = [];
+  let burn = 0;
 
   function setCam(c) { cam = c; svg.setAttribute('viewBox', [c.x, c.y, c.w, c.h].map(v => v.toFixed(1)).join(' ')); }
   const zoom = () => cam.w / W;
@@ -3314,7 +3322,8 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       const p = byId[id], x = -((n - 1) * gap) / 2 + i * gap, y = kind === 'plane' ? -16 : -19;
       const h = mk('g', {transform: `translate(${x},${y})`, 'data-x': x, 'data-y': y, 'data-id': id}), w = mk('g', {class: 'wob'}); h.appendChild(w);
       w.appendChild(mk('circle', {r: R + 2, class: 'veh-ring' + (B.includes(id) ? ' b' : '')}));
-      if (p && p.photo) w.appendChild(mk('image', {href: p.photo, x: -R, y: -R, width: 2 * R, height: 2 * R, 'clip-path': 'url(#head-clip)', preserveAspectRatio: 'xMidYMid slice'}));
+      if (p && p.photo) { w.appendChild(mk('image', {href: p.photo, x: -R, y: -R, width: 2 * R, height: 2 * R, 'clip-path': 'url(#head-clip)', preserveAspectRatio: 'xMidYMid slice'}));
+        const b = B.includes(id) ? Math.max(0, burn - .2) : burn; if (b > 0) w.appendChild(mk('circle', {r: R, class: 'veh-burn', opacity: Math.min(.7, b * 1.6).toFixed(2)})); }   // Sonnenbrand wird von Station zu Station röter
       else { w.appendChild(mk('circle', {r: R, class: 'veh-face'})); const t = mk('text', {class: 'veh-ini', 'text-anchor': 'middle', 'dominant-baseline': 'central'}); t.textContent = p ? p.name[0] : '?'; w.appendChild(t); }
       heads.appendChild(h);
     });
@@ -3540,6 +3549,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       } else if (name === 'car') honk(sfxOut, t, .12);
       else if (name === 'boat') { tone(sfxOut, 'sawtooth', 98, t, 1, .12, {lp: 500, hold: .7, a: .08}); tone(sfxOut, 'sawtooth', 147, t, 1, .07, {lp: 500, hold: .7, a: .08}); }
       else if (name === 'plane') noise(sfxOut, t, 1.2, .14, 'bandpass', 300, 2, {to: 2400, a: .4});
+      else if (name === 'gong') [[1046, 0], [784, .3], [523, .6]].forEach(([f, o]) => { tone(sfxOut, 'sine', f, t + o, 1.8, .2); tone(sfxOut, 'sine', f * 2.01, t + o, .7, .05); tone(sfxOut, 'triangle', f / 2, t + o, 1.3, .07); });
       else if (name === 'clap') { noise(sfxOut, t, .07, .7, 'highpass', 1800, .7); tone(sfxOut, 'sine', 160, t, .08, .4, {from: 300, glide: .03}); }
       else if (name === 'scratch') { noise(sfxOut, t, .18, .45, 'bandpass', 3200, 3, {to: 500}); noise(sfxOut, t + .18, .22, .4, 'bandpass', 600, 3, {to: 2800}); }
       else if (name === 'wah') [62, 61, 60, 59].forEach((m, k) => tone(sfxOut, 'sawtooth', mf(m), t + k * .38, k === 3 ? 1.1 : .36, .13, {lp: 900, a: .04, hold: k === 3 ? .8 : .25, vib: k === 3 ? 5 : 0, depth: .025}));
@@ -3547,7 +3557,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     E.end = w => { master.gain.cancelScheduledValues(w); master.gain.setTargetAtTime(0, w, .4); E.on = {travel: false, stay: false}; E.till = {travel: w + 2, stay: w + 2}; E.mode = 'none'; };
     return E;
   }
-  const tlog = []; let tlog0 = 0, live = null, liveTimer = 0;
+  const tlog = []; let tlog0 = 0, live = null, liveTimer = 0, vo = null;
   const soundOn = () => store.get('sound') !== '0';
   function mus(type, arg, delayMs) {   // Ereignis an die Musik geben: live abspielen und für das Video mitschreiben
     const d = delayMs || 0;
@@ -3567,6 +3577,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     } catch (e) { live = null; }
   }
   function musStop(now) {
+    if (vo) { vo.pause(); vo = null; }
     clearInterval(liveTimer); const m = live; live = null; if (!m) return;
     if (now) { m.ctx.close().catch(() => {}); return; }
     m.end(m.ctx.currentTime); setTimeout(() => m.ctx.close().catch(() => {}), 1600);
@@ -3588,8 +3599,49 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     return btoa(b);
   };
 
+  // Nachrichten-Intro „Gringo-Schau“: Studio, Fahndungsbild der vier Gringos, Lauftext; Sprecher als MP3 (nur mit Ton an)
+  const VOICE_MS = 6550;
+  async function intro(my) {
+    const g = mk('g', {class: 'news'}), y0 = H * .14;
+    g.appendChild(mk('rect', {x: -5, y: -5, width: W + 10, height: H + 10, class: 'news-bg'}));
+    for (let i = 0; i < 9; i++) g.appendChild(mk('circle', {cx: W * (.55 + (i % 3) * .14), cy: H * (.25 + Math.floor(i / 3) * .17), r: 120 - i * 6, class: 'news-ring'}));
+    const logo = mk('g', {transform: `translate(${W * .06},${y0})`}); logo.appendChild(mk('rect', {width: 330, height: 64, rx: 6, class: 'news-logo'}));
+    const lt = mk('text', {x: 18, y: 44, class: 'news-logo-t'}); lt.textContent = 'GRINGO-SCHAU'; logo.appendChild(lt);
+    const ck = mk('text', {x: 350, y: 44, class: 'news-clock'}); ck.textContent = '20:00'; logo.appendChild(ck); g.appendChild(logo);
+    const pw = Math.min(W * .62, 640), ph = 250, px = (W - pw) / 2, py = H * .32;
+    g.appendChild(mk('rect', {x: px, y: py, width: pw, height: ph, rx: 10, class: 'news-panel'}));
+    const pt = mk('text', {x: px + 20, y: py + 38, class: 'news-panel-t'}); pt.textContent = '🚨 EILMELDUNG'; g.appendChild(pt);
+    A.forEach((id, i) => { const p = byId[id], r = 46, cx = px + pw / 2 + (i - (A.length - 1) / 2) * (r * 2 + 26), cy = py + 130;
+      g.appendChild(mk('circle', {cx, cy, r: r + 4, class: 'news-head'}));
+      if (p && p.photo) g.appendChild(mk('image', {href: p.photo, x: cx - r, y: cy - r, width: 2 * r, height: 2 * r, 'clip-path': 'url(#head-clip)', preserveAspectRatio: 'xMidYMid slice'}));
+      const n = mk('text', {x: cx, y: cy + r + 30, class: 'news-name', 'text-anchor': 'middle'}); n.textContent = p ? p.name : id; g.appendChild(n); });
+    const lb = mk('g', {}); lb.appendChild(mk('rect', {x: W * .06, y: H * .72, width: W * .88, height: 74, class: 'news-lower'}));
+    const l1 = mk('text', {x: W * .06 + 22, y: H * .72 + 32, class: 'news-l1'}); l1.textContent = 'Vier Männer verlassen das Land'; lb.appendChild(l1);
+    const l2 = mk('text', {x: W * .06 + 22, y: H * .72 + 60, class: 'news-l2'}); l2.textContent = 'Ziel: Brasilien · Experten rechnen mit dem Schlimmsten'; lb.appendChild(l2); g.appendChild(lb);
+    const tk = mk('g', {}), ty = H * .86; tk.appendChild(mk('rect', {x: -5, y: ty, width: W + 10, height: 40, class: 'news-ticker'}));
+    const tt = mk('text', {y: ty + 27, class: 'news-ticker-t'});
+    tt.textContent = '+++ Caipi-Vorräte in Rio werden knapp +++ Copacabana meldet Sonnencreme-Engpass +++ Buffets in Foz do Iguaçu in Alarmbereitschaft +++ Kaimane in Manaus bitten um Abstand +++ Wetter: 32 °C, Tendenz Sonnenbrand +++';
+    tk.appendChild(tt); tk.appendChild(mk('rect', {x: -5, y: ty, width: 150, height: 40, class: 'news-ticker-l'}));
+    const tl = mk('text', {x: 12, y: ty + 27, class: 'news-ticker-lt'}); tl.textContent = 'LIVE ●'; tk.appendChild(tl); g.appendChild(tk);
+    g.style.opacity = 0; gFront.appendChild(g);
+    try { const lw = lt.getBBox().width + 36; logo.firstChild.setAttribute('width', lw); ck.setAttribute('x', lw + 20); } catch (e) {}
+    const t0 = tnow(), END = 700 + VOICE_MS + 300;
+    fxs.push(now => { if (!g.isConnected) return false; const k = now - t0; tt.setAttribute('x', (W - k * .16).toFixed(1)); ck.textContent = '20:0' + Math.min(9, Math.floor(k / 1000)); });
+    mus('sfx', 'gong'); tlog.push({t: tnow() - tlog0 + 700, type: 'voice'});
+    if (live) { const a = new Audio('audio/intro-nachrichten.mp3'); vo = a; setTimeout(() => { if (vo === a) a.play().catch(() => {}); }, 700); }
+    await tween(400, my, e => { g.style.opacity = e; });
+    await wait(END - 400, my);
+    await tween(600, my, e => { g.style.opacity = 1 - e; }); g.remove();
+  }
+  function dropBag(p, my) {   // Koffer fällt am Fallschirm aus dem Flieger
+    const c = emoji({x: p.x, y: p.y - 6}, '🪂', 26), b = emoji({x: p.x, y: p.y + 14}, '🧳', 20);
+    tween(2600, my, (e, t) => { const x = p.x + Math.sin(t * 9) * 10 - t * 30, y = p.y + t * 170; c.setAttribute('x', x); c.setAttribute('y', y - 6); b.setAttribute('x', x); b.setAttribute('y', y + 14); c.style.opacity = b.style.opacity = t > .8 ? (1 - t) / .2 : 1; })
+      .then(() => { c.remove(); b.remove(); });
+  }
+  // Silvester: weiße Hüte auf, 7 Wellen springen
+  function hats(v) { v.querySelectorAll('.wob').forEach(w => { w.appendChild(mk('path', {d: 'M-10,-12 L-8,-27 Q0,-31 8,-27 L10,-12 Z', class: 'veh-hat'})); w.appendChild(mk('ellipse', {cx: 0, cy: -12, rx: 19, ry: 4.5, class: 'veh-hat'})); }); }
   async function play() {
-    const my = ++run; stopUI(true); musStart();
+    const my = ++run; stopUI(true); musStart(); burn = 0;
     if (layer) layer.remove(); bubbles.length = 0; fxs.length = 0; day = 1; km = 0; setCam(FULL);
     layer = mk('g', {class: 'trip-anim'}); svg.appendChild(layer);
     const defs = mk('defs', {}); defs.innerHTML = '<clipPath id="head-clip" clipPathUnits="objectBoundingBox"><circle cx=".5" cy=".5" r=".5"/></clipPath>'; layer.appendChild(defs);
@@ -3609,33 +3661,43 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       mao: dot('[data-stop="manaus"] .dot'), par: dot('[data-stop="paraty"] .dot'), ilha: dot('[data-stop="ilha"] .dot')};
     const step = async fn => { if (my === run) await fn(); };
     let v, parkA, parkB, fx;
+    await step(async () => { await intro(my); });
     await step(async () => { day = 1; caption('27.12. ✈️ München → Rom → São Paulo'); await night(true, 600, my); v = vehicle('plane', A, S);
-      await move(v, 'plane', legs.hin, 4600, my, {km: 10100, say: [{at: .25, t: 'Alle mal herhören: Caipis gehen auf Simon!', ms: 2200}]}); await fade(v, 300, my); });
-    await step(async () => { day = 2; caption('28.12. 🚗 Mit Uber nach Guarujá'); await Promise.all([night(false, 1400, my), camTo(INSET, 2200, my)]); v = vehicle('car', A, s);
-      await move(v, 'car', legs.gua, 1900, my, {km: 90, say: [{at: .3, t: 'Hat jemand an den Obstkorb gedacht?', ms: 1800}]}); mus('mode', 'stay'); fx = emoji({x: pts.gua.x + 70, y: pts.gua.y - 20}, '🏖️⚽', 26); await wait(2400, my); fx.remove(); });
+      let bag = 0; await move(v, 'plane', legs.hin, 4600, my, {km: 10100, say: [{at: .2, t: 'Alle mal herhören: Caipis gehen auf Simon!', ms: 2000}, {at: .74, t: 'Mein Koffer!!', ms: 1300}],
+        onT: (p, t) => { if (!bag && t > .72) { bag = 1; dropBag(p, my); } }}); await fade(v, 300, my); });
+    await step(async () => { day = 2; caption('28.12. 🚗 Mit Uber nach Guarujá'); burn = .08; await Promise.all([night(false, 1400, my), camTo(INSET, 2200, my)]); v = vehicle('car', A, s);
+      await move(v, 'car', legs.gua, 1900, my, {km: 90, say: [{at: .3, t: 'Hat jemand an den Obstkorb gedacht?', ms: 1800}]}); mus('mode', 'stay'); burn = .14; fx = emoji({x: pts.gua.x + 70, y: pts.gua.y - 20}, '🏖️⚽', 26); await wait(2400, my); fx.remove(); });
     await step(async () => { day = 5; caption('31.12. ✈️ Ab nach Rio, Silvester!'); await move(v, 'car', [pts.gua, pts.cgh], 1100, my, {km: 80}); fade(v, 350, my); v = vehicle('plane', A, s); await move(v, 'plane', legs.sdu, 2300, my, {km: 370}); fade(v, 350, my); });
-    await step(async () => { caption('🎆 Feliz Ano Novo an der Copacabana!'); mus('mode', 'stay'); await night(true, 500, my); parkA = park('car', A, {x: pts.rio.x - 46, y: pts.rio.y + 30}, s); fireworks({x: pts.rio.x - 120, y: pts.rio.y + 10}, 2600);
-      say(parkA, 'Feliz Ano Novo, gatinhas!', 2200, {dx: 20}); await wait(3000, my); await night(false, 500, my); });
+    await step(async () => { caption('🎆 Feliz Ano Novo an der Copacabana!'); mus('mode', 'stay'); burn = .2; await night(true, 500, my);
+      const pb = {x: pts.rio.x - 46, y: pts.rio.y + 30}; parkA = park('car', A, pb, s); hats(parkA);
+      const c = emoji({x: pts.rio.x + 40, y: pts.rio.y - 160}, '🪂', 26), bg = emoji({x: pts.rio.x + 40, y: pts.rio.y - 140}, '🧳', 20);   // der Koffer kommt nach
+      await tween(1300, my, e => { c.setAttribute('y', pts.rio.y - 160 + e * 150); bg.setAttribute('y', pts.rio.y - 140 + e * 150); }); c.remove();
+      say({x: pts.rio.x + 40, y: pts.rio.y + 10}, 'Sorry, war in Rom! 🙈', 1700, {dy: 30});
+      fireworks({x: pts.rio.x - 120, y: pts.rio.y + 10}, 4200); await wait(1200, my);
+      say(parkA, 'Feliz Ano Novo, gatinhas!', 1800, {dx: 20}); await wait(1600, my);
+      const wv = emoji({x: pb.x, y: pb.y + 30}, '🌊🌊🌊', 22); say(parkA, '7 Wellen, 7 Wünsche! 🙏', 3400, {dx: 20});
+      await tween(3500, my, (e, t) => place(parkA, pb.x, pb.y - Math.abs(Math.sin(t * 7 * Math.PI)) * 16, 0, false, 'car'));
+      wv.remove(); bg.remove(); await night(false, 500, my); });
     await step(async () => { day = 11; caption('06.01. ✈️ Daijo & Greisel landen in Rio'); await camTo(FULL, 2200, my); fade(parkA, 400, my); v = vehicle('plane', B, S);
       await move(v, 'plane', legs.dg, 3600, my, {say: [{at: .35, t: 'Sind wir zu spät?', ms: 1600}, {at: .7, t: 'Ich hab eine Excel für den Urlaub!', ms: 1600}]}); await fade(v, 300, my); });
-    await step(async () => { caption('06.01. ✈️ Alle sechs nach Foz do Iguaçu'); v = vehicle('plane', ALL, S); await move(v, 'plane', legs.igu, 2700, my, {km: 1150, say: [{at: .4, t: 'Gibt’s da ein Buffet?', ms: 1600}]}); });
+    await step(async () => { caption('06.01. ✈️ Alle sechs nach Foz do Iguaçu'); burn = .24; v = vehicle('plane', ALL, S); await move(v, 'plane', legs.igu, 2700, my, {km: 1150, say: [{at: .4, t: 'Gibt’s da ein Buffet?', ms: 1600}]}); });
     await step(async () => { day = 12; caption('07.01. 💦 Wasserfälle!'); mus('mode', 'stay'); fx = emoji({x: pts.igu.x, y: pts.igu.y + 56}, '💦🌈💦', 30); await wait(2600, my); fx.remove(); });
     await step(async () => { day = 14; caption('09.01. ✈️ Ab in den Dschungel nach Manaus'); say(v, 'Turbulenzen!!', 1200, {at: 0}); await move(v, 'plane', legs.mao, 3000, my, {km: 2700, shake: [.15, .55]}); fade(v, 350, my); });
-    await step(async () => { day = 15; caption('10.01. 🛶 Juma Lodge: Kaimane & rosa Delfine'); v = vehicle('boat', ALL, S); const cai = emoji({x: 0, y: 0}, '🐊', 30); mus('sfx', 'splash', 900);
+    await step(async () => { day = 15; caption('10.01. 🛶 Juma Lodge: Kaimane & rosa Delfine'); burn = .3; v = vehicle('boat', ALL, S); const cai = emoji({x: 0, y: 0}, '🐊', 30); mus('sfx', 'splash', 900);
       await move(v, 'boat', [{x: pts.mao.x - 10, y: pts.mao.y + 26}, {x: pts.mao.x + 90, y: pts.mao.y + 48}], 2200, my, {km: 100, say: [{at: .45, t: 'Ist das ein Kaiman?!', ms: 1500}],
         onT: (p, t) => { cai.setAttribute('x', (p.x - 95 + t * 15).toFixed(1)); cai.setAttribute('y', (p.y + 22 - Math.abs(Math.sin(t * 14)) * 16).toFixed(1)); }});
       mus('mode', 'stay'); fx = emoji({x: pts.mao.x + 90, y: pts.mao.y + 100}, '🐬🐒🦜', 28); await wait(2200, my); fx.remove(); cai.remove(); fade(v, 350, my); });
     await step(async () => { day = 19; caption('14.01. ✈️ 01:45 Nachtflug nach Rio 🌙'); await night(true, 600, my); v = vehicle('plane', ALL, S);
       await move(v, 'plane', legs.rio, 3200, my, {km: 2850, say: [{at: .3, t: 'Zzz …', ms: 2000}]}); await fade(v, 300, my); });
-    await step(async () => { caption('14.01. 🚗 Mit Uber nach Paraty'); await Promise.all([night(false, 1400, my), camTo(INSET, 2200, my)]); v = vehicle('car', ALL, s);
+    await step(async () => { caption('14.01. 🚗 Mit Uber nach Paraty'); burn = .36; await Promise.all([night(false, 1400, my), camTo(INSET, 2200, my)]); v = vehicle('car', ALL, s);
       await move(v, 'car', legs.par, 2200, my, {km: 250, say: [{at: .4, t: 'Oi, gatinha!', ms: 1500}]}); mus('mode', 'stay'); fx = emoji({x: pts.par.x - 10, y: pts.par.y + 52}, '🏘️🍹', 26); await wait(2200, my); fx.remove(); fade(v, 350, my); });
-    await step(async () => { day = 21; caption('16.01. ⛵ Mit dem Boot zur Ilha Grande'); v = vehicle('boat', ALL, s); await move(v, 'boat', legs.ilha, 1800, my, {km: 30});
+    await step(async () => { day = 21; caption('16.01. ⛵ Mit dem Boot zur Ilha Grande'); burn = .44; v = vehicle('boat', ALL, s); await move(v, 'boat', legs.ilha, 1800, my, {km: 30});
       mus('mode', 'stay'); const ball = emoji(pts.ilha, '⚽', 22); say(v, 'Footvolley, jetzt!', 1700, {}); mus('sfx', 'kick', 550); mus('sfx', 'kick', 2150); await wait(500, my);
       await tween(1600, my, (e, t) => { ball.setAttribute('x', (pts.ilha.x - 60 + t * 150).toFixed(1)); ball.setAttribute('y', (pts.ilha.y + 60 - Math.sin(t * Math.PI) * 80).toFixed(1)); });
       ball.remove(); fade(v, 350, my); });
     await step(async () => { day = 25; caption('20.01. 👋 Die Gringos fahren zum Flughafen'); parkB = park('boat', B, {x: pts.ilha.x + 34, y: pts.ilha.y + 26}, s);
       v = vehicle('boat', A, s); await move(v, 'boat', legs.boat, 1300, my, {km: 25}); fade(v, 350, my); v = vehicle('car', A, s);
-      say(parkB, 'Tchau! 👋', 1800, {}); await move(v, 'car', legs.road, 1600, my, {km: 150, say: [{at: .3, t: 'Ich bleib einfach hier …', ms: 1500}]}); fade(v, 350, my); });
+      say(parkB, 'Tchau, ihr Tomaten! 🍅', 1800, {}); await move(v, 'car', legs.road, 1600, my, {km: 150, say: [{at: .3, t: 'Ich bleib einfach hier …', ms: 1500}]}); fade(v, 350, my); });
     await step(async () => { caption('20.01. ✈️ Heimflug über Rom nach München'); await Promise.all([camTo(FULL, 2200, my), night(true, 1600, my)]); v = vehicle('plane', A, S);
       await move(v, 'plane', legs.heim, 3900, my, {km: 9900}); fade(v, 350, my); });
     await step(async () => { day = 26; caption('Tchau, Brasil! 🇧🇷 Daijo & Greisel bleiben noch ein bisschen'); await night(false, 700, my); mus('mode', 'stay'); await camTo(INSET, 2400, my); say(parkB, 'Mehr Caipi für uns! 🍹', 2200, {}); await wait(2300, my); await camTo(FULL, 2200, my); await wait(800, my); });
@@ -3677,6 +3739,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     else if (btn.getAttribute('aria-pressed') === 'true') { const l = tlog.slice(), t0 = tlog0; musStart(); tlog.push(...l); tlog0 = t0;   // mitten drin wieder einschalten
       const last = {}; l.forEach(e => { if (e.type !== 'sfx') last[e.type] = e; }); if (live) { if (last.night) live.setNight(last.night.arg, live.ctx.currentTime); if (last.mode) live.setMode(last.mode.arg, live.ctx.currentTime + .02); } }
   }); }
+  window.__tripVoice = () => (tlog.find(e => e.type === 'voice') || {}).t;   // Video: Startzeit des Sprechers in ms
   window.__tripPlay = play;   // für die Video-Aufnahme
 })();
 
