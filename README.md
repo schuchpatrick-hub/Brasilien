@@ -5,7 +5,7 @@
 ![Reisebild: Route durch Brasilien](reisebild.png)
 
 **Webseite mit Heute-Ansicht, Karte, Drinks-Counter, Vorfreude-Kalender und Zeitkapsel:** https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE ·
-**Offline:** [PDF](brasilien-reise.pdf) · **Kalender fürs Handy:** [Gringos plus 1 Cevapi](kalender/gringos-plus-1-cevapi.ics) · [Dajo & Greisel](kalender/dajo-greisel.ics)
+**Offline:** [PDF](brasilien-reise.pdf) · **Kalender fürs Handy:** [Gringos plus 1 Cevapi](kalender/gringos-plus-1-cevapi.ics) · [Daijo & Greisel](kalender/daijo-greisel.ics)
 (auf GitHub „Download raw file“, dann öffnen)
 
 Legende für den Status: ✅ gebucht · 🟡 gebucht, Details prüfen · ⏳ geplant, noch nicht gebucht · ❓ unklar
@@ -17,7 +17,7 @@ Legende für den Status: ✅ gebucht · 🟡 gebucht, Details prüfen · ⏳ gep
 | Gruppe | Personen | Zeitraum |
 |---|---|---|
 | **Gringos plus 1 Cevapi** | Jonas, Patrick, Simon, Marco | 27.12.26 – 20.01.27 (alle vier bis zum Schluss) |
-| **Dajo & Greisel** | Dajo, Greisel | 06.01.27 – nach dem 21.01.27 (danach noch Rio) |
+| **Daijo & Greisel** | Daijo, Greisel | 06.01.27 – nach dem 21.01.27 (danach noch Rio) |
 
 Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha Grande wieder trennen.
 
@@ -34,7 +34,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | 4b | **Amazonas: Juma Lodge** | 10.01. – 13.01. | 3 | alle | Juma Kabanas, „Nature Experience“ | ✅ |
 | – | Manaus → Nachtflug | 13.01. → 14.01. | 0 | alle | keine (Flug 01:45) | ⏳ |
 | 5 | **Paraty** | 14.01. – 16.01. | 2 | alle | Geko Pousada Paraty | ✅ |
-| 6 | **Ilha Grande** (Vila do Abraão) | 16.01. – 20.01. (Gringos plus 1 Cevapi) / 21.01. (Dajo & Greisel) | 4 / 5 | alle | **noch offen** (Vorschlag: Balaio Hostel) | ⏳ |
+| 6 | **Ilha Grande** (Vila do Abraão) | 16.01. – 20.01. (Gringos plus 1 Cevapi) / 21.01. (Daijo & Greisel) | 4 / 5 | alle | **noch offen** (Vorschlag: Balaio Hostel) | ⏳ |
 | – | Heimreise A / Rio-Verlängerung B | ab 20.01. / 21.01. | | | | ❓ |
 
 ---
@@ -47,7 +47,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | 28.–30.12. | Strand an der Praia da Enseada, Footvolley-Netze direkt vor der Tür |
 | **Do 31.12.** | Inlandsflug São Paulo-**Congonhas (CGH)** → Rio-**Santos Dumont (SDU)**, möglichst vormittags. Achtung: nicht die internationalen Flughäfen. Check-in Tabas – Cena Carioca. Abends **Silvester an der Copacabana, Dresscode ganz in Weiß** |
 | 01.–05.01. | Rio: Copacabana/Ipanema, Christusstatue, Zuckerhut, Rodízio, Maracanã, Vidigal, Santa Teresa & Lapa, lokale Strände (Details unten) |
-| **Mi 06.01.** | Dajo & Greisel landen ca. **06:10 in Rio-Galeão (GIG)**. Treffpunkt GIG, gemeinsamer Flug GIG → Foz do Iguaçu (IGU) ca. **10:40** |
+| **Mi 06.01.** | Daijo & Greisel landen ca. **06:10 in Rio-Galeão (GIG)**. Treffpunkt GIG, gemeinsamer Flug GIG → Foz do Iguaçu (IGU) ca. **10:40** |
 | 07.–08.01. | Iguaçu-Fälle: brasilianische und argentinische Seite (Reisepass mitnehmen!), optional Helikopter- oder Bootstour |
 | **Sa 09.01.** | Flug IGU → Manaus (MAO), mit Umstieg. 1 Nacht in der Casa 307 |
 | **So 10.01.** | Abholung am Hotel zur **Juma Lodge** (3 Nächte, alles inklusive außer Bar) |
@@ -58,7 +58,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | **Sa 16.01.** | Nach Ilha Grande (Vila do Abraão): voraussichtlich **Uber zum Bootsanleger, dann Boot** 🟡 |
 | 17.–19.01. | Lopes Mendes, Cachoeira da Feiticeira, Palmas, Bootstouren, Footvolley (Details unten) |
 | **Mi 20.01.** | Gringos plus 1 Cevapi: Boot zurück aufs Festland, mit **Uber** zum Flughafen, Rückreise nach Hause (Details siehe unten) |
-| **Do 21.01.** | Dajo & Greisel: weiter nach Rio (evtl. noch São Paulo), später Rückflug über São Paulo nach München |
+| **Do 21.01.** | Daijo & Greisel: weiter nach Rio (evtl. noch São Paulo), später Rückflug über São Paulo nach München |
 
 ---
 
@@ -70,8 +70,8 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 |---|---|---|---|---|---|
 | Jonas, Patrick, Simon, Marco | MUC → Rom → São Paulo GRU | 27.12.26 | alle vier auf denselben Flügen; ca. 1,5 h + 1 h 10 min Umstieg + 12 h; keine Sitzplätze reserviert (beim Check-in versuchen) | 1.120 € | ✅ gebucht am 19.08. |
 | Jonas, Patrick, Simon, Marco | Rückflug nach MUC | 20.01.27 | **Flughafen und Uhrzeit stehen nicht im Chat.** Gabelflug wurde verworfen, also vermutlich ab São Paulo | inkl. | 🟡 |
-| Dajo & Greisel | MUC → Frankfurt → Rio GIG | an 06.01.27, 06:10 | | 1.300 € | ✅ |
-| Dajo & Greisel | Rio → São Paulo (Umstieg) → MUC | nach dem 21.01. | Datum im Chat nicht genannt | inkl. | ✅ |
+| Daijo & Greisel | MUC → Frankfurt → Rio GIG | an 06.01.27, 06:10 | | 1.300 € | ✅ |
+| Daijo & Greisel | Rio → São Paulo (Umstieg) → MUC | nach dem 21.01. | Datum im Chat nicht genannt | inkl. | ✅ |
 
 ### Inlandsflüge (Stand 29.09. alle noch **nicht gebucht**)
 
@@ -82,7 +82,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | 3 | 09.01. | **IGU** → Manaus **MAO** (mit Umstieg) | vormittags | alle 6 | ca. 370 € | ⏳ |
 | 4 | **14.01.** | **MAO** → Rio **GIG** | **01:45** (an 06:40) | alle 6 | ca. 190 € | ⏳ |
 
-\* Skyscanner-Preise vom 24.08. Laut Jonas werden Flüge etwa 8–10 Wochen vorher günstiger, das wäre also **Ende Oktober bis Anfang November**. Das passt dazu, dass Dajos neuer Reisepass voraussichtlich ab der Woche vom 19.10. da ist.
+\* Skyscanner-Preise vom 24.08. Laut Jonas werden Flüge etwa 8–10 Wochen vorher günstiger, das wäre also **Ende Oktober bis Anfang November**. Das passt dazu, dass Daijos neuer Reisepass voraussichtlich ab der Woche vom 19.10. da ist.
 
 ---
 
@@ -93,16 +93,16 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | Guarujá | [**Casa Praiana**](https://www.booking.com/Share-q0Nagir) (nahe Praia da Enseada) | 27.–31.12. | 75 m zum Strand, kein Pool, **kein Frühstück**, alle vier Gringos plus 1 Cevapi mitgezählt, bis 31.12. verlängert. Alternative war die Pousada Villa Virgínia | – | Jonas (29.09.) |
 | Rio | [**Tabas – Cena Carioca**](https://www.booking.com/Share-UjjihY) | 31.12.–06.01. | **nicht stornierbar**, Gym vorhanden; Anreise auf 31.12. umgebucht ✅ | – | Jonas (01.09.) |
 | Foz do Iguaçu | Name prüfen. Im Gespräch waren [Hotel Portinari Ponte da Amizade](https://c.24.de/ho/NUEN87) (im Chat angepinnt), [Della Foz](https://c.24.de/ho/5ESDAM), [Hotel Baviera Iguassu](https://c.24.de/ho/WRNADK), Che Hermano Suítes | 06.–09.01. | laut Greisel ca. 600 € p. P. für Amazonas plus Unterkunft Wasserfälle | ca. 80 € p. P. | beim Treffen am 09.09. |
-| Manaus | [**Casa 307**](https://www.booking.com/Share-xSVoEp) | 09.–10.01. | Lage und Bewertung top, 2er-Zimmer für Dajo & Greisel | 14 € p. P. | Jonas (14.09.) |
+| Manaus | [**Casa 307**](https://www.booking.com/Share-xSVoEp) | 09.–10.01. | Lage und Bewertung top, 2er-Zimmer für Daijo & Greisel | 14 € p. P. | Jonas (14.09.) |
 | Amazonas | [**Juma Kabanas: Nature Experience Package**](https://www.jumakabanas.com/package/nature-experience-package-3-nights/) (3 Nächte) | 10.–13.01. | Übernachtung, Essen, Abholung und Rückfahrt zum Hotel inklusive, Bar extra. Rückfahrt 13.01. um 08:00, in Manaus ca. 11:00 | 520 € p. P. | Buchungsnummer liegt bei Marco oder Greisel |
-| Paraty | [**Geko Pousada Paraty**](https://www.booking.com/Share-zfyVPQM) | 14.–16.01. | 3 Zimmer für 6 Personen, **inkl. Frühstück**, Frühstück am Strand, **kostenlos stornierbar** | 526 € gesamt (88 € p. P., über Check24) | Dajo & Greisel (16.09.) |
-| Ilha Grande | **offen**, muss in **Vila do Abraão** liegen. Vorschlag: [Balaio Hostel](https://www.booking.com/Share-dnNyRa) | 16.–20.01. (Gringos plus 1 Cevapi) / 21.01. (Dajo & Greisel) | | – | – |
+| Paraty | [**Geko Pousada Paraty**](https://www.booking.com/Share-zfyVPQM) | 14.–16.01. | 3 Zimmer für 6 Personen, **inkl. Frühstück**, Frühstück am Strand, **kostenlos stornierbar** | 526 € gesamt (88 € p. P., über Check24) | Daijo & Greisel (16.09.) |
+| Ilha Grande | **offen**, muss in **Vila do Abraão** liegen. Vorschlag: [Balaio Hostel](https://www.booking.com/Share-dnNyRa) | 16.–20.01. (Gringos plus 1 Cevapi) / 21.01. (Daijo & Greisel) | | – | – |
 
 ---
 
 ## Kosten pro Person (was bisher bekannt ist)
 
-| Posten | Gringos plus 1 Cevapi | Dajo & Greisel |
+| Posten | Gringos plus 1 Cevapi | Daijo & Greisel |
 |---|---:|---:|
 | Langstreckenflug | 1.120 € | 1.300 € |
 | Inlandsflüge 2–4 (Richtpreis) | ca. 700 € | ca. 700 € |
@@ -124,13 +124,13 @@ Abgerechnet wird über **Splitwise**, mit zwei Gruppen: eine für die Gringos pl
 
 Transfers laufen per **Uber** (GRU → Guarujá, Rio → Paraty, zum Flughafen am Ende); Paraty → Ilha Grande voraussichtlich Uber + Boot.
 
-1. **Inlandsflüge buchen**, sobald Dajos Reisepass da ist (ab ca. 19.10.). Beim Nachtflug Manaus → Rio aufpassen: **Abflug 14.01. um 01:45** heißt, man muss **am Abend des 13.01.** am Flughafen sein.
+1. **Inlandsflüge buchen**, sobald Daijos Reisepass da ist (ab ca. 19.10.). Beim Nachtflug Manaus → Rio aufpassen: **Abflug 14.01. um 01:45** heißt, man muss **am Abend des 13.01.** am Flughafen sein.
 2. **Flug CGH → SDU am 31.12. buchen** (Patrick), am Silvestertag möglichst vormittags. Dafür braucht er die Reisepassdaten von allen.
 3. **Unterkunft Ilha Grande** in Vila do Abraão für 16.–20.01. bzw. 21.01. buchen.
 4. **Rückreise Gringos plus 1 Cevapi am 20.01. festhalten**: Flughafen und Uhrzeit. Falls ab São Paulo-GRU: von Ilha Grande sind das Boot plus ca. 5–6 h Straße. Dann eher früh am 20.01. starten oder die letzte Nacht woanders verbringen.
 5. **Iguaçu-Hotel:** Name und Buchungsbestätigung zentral ablegen.
 6. **Gepäck am 13.01. in Manaus:** Das Hotel lagert nur, wenn eine weitere Nacht gebucht ist. Plan ist, das Gepäck mit in die Lodge zu nehmen (Jonas hat angefragt). Bestätigung festhalten.
-7. **Umstieg am 06.01. (Dajo & Greisel):** Landung 06:10, Weiterflug 10:40 auf getrennten Tickets. Wenn der Flieger aus Frankfurt Verspätung hat, gibt es keinen Anspruch auf Umbuchung, also am besten einen flexiblen Tarif wählen.
+7. **Umstieg am 06.01. (Daijo & Greisel):** Landung 06:10, Weiterflug 10:40 auf getrennten Tickets. Wenn der Flieger aus Frankfurt Verspätung hat, gibt es keinen Anspruch auf Umbuchung, also am besten einen flexiblen Tarif wählen.
 8. **Silvester-Outfit:** komplett weiß.
 
 ---
@@ -172,7 +172,7 @@ Transfers laufen per **Uber** (GRU → Guarujá, Rio → Paraty, zum Flughafen a
 
 - **Gelbfieber-Impfung:** unbedingt machen, gerade für Manaus/Amazonas und Iguaçu. Sie muss **mindestens 10 Tage vor der Einreise** erfolgt sein.
 - **Hepatitis A (+ B)** als klassische Reiseimpfung, außerdem Standardimpfungen im Impfpass prüfen. Tollwut und Typhus sind optional.
-- **Malaria-Risiko Amazonas** mit einem Tropenarzt besprechen (Dajo hat einen Termin im November). Guter Mückenschutz auch wegen Dengue.
+- **Malaria-Risiko Amazonas** mit einem Tropenarzt besprechen (Daijo hat einen Termin im November). Guter Mückenschutz auch wegen Dengue.
 - **Einreise:** Deutsche brauchen für Brasilien bis 90 Tage kein Visum. Der Reisepass sollte noch mindestens 6 Monate gültig sein. Vor Abflug beim Auswärtigen Amt gegenchecken.
 - **Argentinische Seite der Iguaçu-Fälle:** Grenzübertritt, Reisepass mitnehmen.
 - **CPF (brasilianische Steuernummer):** bewusst **nicht** beantragt, weil man sie persönlich beim Konsulat in Frankfurt abholen müsste.
@@ -190,4 +190,4 @@ Lange Hosen und Shorts · langärmlige Shirts und T-Shirts · kleiner Tagesrucks
 
 ---
 
-*Hinweis: Alle Angaben stammen aus den WhatsApp-Chats. Bilder und Screenshots (z. B. Buchungsbestätigungen, Dajos Excel-Übersicht) waren im Export nicht enthalten. Einträge mit 🟡 oder ❓ bitte gegen die Buchungsbestätigungen prüfen.*
+*Hinweis: Alle Angaben stammen aus den WhatsApp-Chats. Bilder und Screenshots (z. B. Buchungsbestätigungen, Daijos Excel-Übersicht) waren im Export nicht enthalten. Einträge mit 🟡 oder ❓ bitte gegen die Buchungsbestätigungen prüfen.*
