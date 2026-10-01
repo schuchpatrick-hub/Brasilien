@@ -276,6 +276,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     if (p.role) h += '<span class="role">' + esc(p.role) + '</span>';
     if (full) h += '<dl>' + p.facts.map(f => '<dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd>').join('') + '</dl>';
     if (p.quote) h += '<blockquote>„' + esc(p.quote) + '“</blockquote>';
+    if (p.card && !PRINT) h += '<div><a class="fc-link" href="#karten" data-card="' + esc(p.id) + '">⚽ Spielerkarte von ' + esc(p.name) + ' ansehen</a></div>';
     if (!full) h += '<div class="team">' + esc(gName(p.team)) + '</div><div class="soon">Steckbrief folgt</div>';
     return h + '</div></article>';
   }).join('');
@@ -286,7 +287,8 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     TRIP.crew.filter(p => p.team === g).map(p =>
       '<a href="#crew-' + esc(p.id) + '"><span class="av">' +
       (p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="" loading="lazy">' : esc(p.name[0])) +
-      '</span><b>' + esc(p.name) + '</b><small>' + esc(short(p.role)) + '</small></a>').join('') +
+      '</span><b>' + esc(p.name) + '</b><small>' + esc(short(p.role)) + '</small>' +
+      (p.card && !PRINT ? '<span class="fc-chip" role="button" tabindex="0" data-card="' + esc(p.id) + '" aria-label="Spielerkarte von ' + esc(p.name) + '">⚽ Karte</span>' : '') + '</a>').join('') +
     '</div></div>').join('');
 
   const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lightbox-img');
@@ -1329,7 +1331,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       const form = x.form.slice(-5).map(r => r === 'W' ? '🟢' : r === 'L' ? '🔴' : '⚪').join('') || '–';
       const stars = n => '★'.repeat(n) + '☆'.repeat(5 - n);
       const legend = Object.entries(L).map(([a, b]) => a + ' = ' + b).join(', ');
-      return '<button type="button" title="' + esc(legend) + '" class="fc ' + variant + (flipped.has(c.id) ? ' flip' : '') + '" data-id="' + c.id + '" role="listitem" aria-label="Spielerkarte ' + esc(c.name) + ', Gesamtwertung ' + ovr + '"><div class="fc-in">' +
+      return '<button type="button" id="fc-' + c.id + '" title="' + esc(legend) + '" class="fc ' + variant + (flipped.has(c.id) ? ' flip' : '') + '" data-id="' + c.id + '" role="listitem" aria-label="Spielerkarte ' + esc(c.name) + ', Gesamtwertung ' + ovr + '"><div class="fc-in">' +
         '<div class="fc-face fc-front"><div class="fc-top"><span class="fc-ovr">' + ovr + '</span><span class="fc-pos">' + esc(k.pos) + '</span><span class="fc-flag">' + k.flag + '</span><span class="fc-club">' + esc(k.club) + '</span></div>' +
         '<div class="fc-photo">' + (c.photo ? '<img src="' + esc(c.photo) + '" alt="" loading="lazy">' : '<span>' + esc(c.name[0]) + '</span>') + '</div>' +
         (badge ? '<span class="fc-badge">' + badge + '</span>' : '') +
@@ -1346,6 +1348,19 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
         '</div></button>';
     }).join('');
   }
+  // Sprung von Steckbrief/Übersicht zur passenden Karte
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-card]'); if (!a) return;
+    e.preventDefault(); e.stopPropagation();
+    const card = document.getElementById('fc-' + a.dataset.card); if (!card) return;
+    const sec = document.getElementById('karten');
+    const smooth = !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    sec.scrollIntoView({behavior: smooth ? 'smooth' : 'auto', block: 'start'});
+    row.scrollTo({left: card.offsetLeft - (row.clientWidth - card.offsetWidth) / 2, behavior: smooth ? 'smooth' : 'auto'});
+    card.classList.remove('hl'); void card.offsetWidth; card.classList.add('hl');
+    setTimeout(() => card.focus({preventScroll: true}), 700);
+  }, true);
+  document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.fc-chip')) { e.preventDefault(); e.target.click(); } });
   row.addEventListener('click', e => { const b = e.target.closest('.fc'); if (!b) return; const id = b.dataset.id;
     flipped.has(id) ? flipped.delete(id) : flipped.add(id); b.classList.toggle('flip'); });
   render();

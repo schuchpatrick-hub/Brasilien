@@ -487,6 +487,13 @@ a{color:var(--accent)}
 .fc-live b{display:block;font:800 1rem var(--display)}
 .fc-live span{font:600 .5rem var(--mono);text-transform:uppercase;opacity:.8}
 .fc-hint{font:600 .55rem var(--mono);text-transform:uppercase;opacity:.6;text-align:center}
+.fc.hl .fc-in{animation:fcHl 1.6s ease-out 2}
+@keyframes fcHl{0%{transform:scale(1)}30%{transform:scale(1.06);filter:drop-shadow(0 0 14px rgba(255,207,31,.95))}100%{transform:scale(1)}}
+.fc.hl.flip .fc-in{animation:none}
+.fc-link{display:inline-block;margin-top:12px;font:700 .88rem var(--body);text-decoration:none;background:linear-gradient(135deg,#f6d860,#d9ae35);color:#3b2a05;border-radius:999px;padding:7px 14px;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.fc-link:hover{filter:brightness(1.05)}
+.crew-ov .fc-chip{display:inline-block;margin-top:2px;font:700 .68rem var(--body);background:var(--amarelo);color:#1a1a1a;border-radius:999px;padding:3px 9px;cursor:pointer}
+.crew-ov .fc-chip:hover{filter:brightness(1.08)}
 @media (prefers-reduced-motion:reduce){.fc-in{transition:none}}
 @media print{#karten{display:none}}
 /* Spiele */
