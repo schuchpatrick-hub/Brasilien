@@ -1805,7 +1805,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       const b = bubbles[i], k = (now - b.t0) / b.ms;
       if (k >= 1 || (b.target && !b.target.isConnected)) { b.el.remove(); bubbles.splice(i, 1); continue; }
       const pos = b.target ? b.target.__pos : b.pt; if (!pos) continue;
-      b.el.setAttribute('transform', `translate(${(pos.x + b.dx * zoom()).toFixed(1)},${(pos.y - b.dy * zoom()).toFixed(1)}) scale(${zoom().toFixed(3)})`);
+      b.el.setAttribute('transform', `translate(${(pos.x + b.dx * zoom()).toFixed(1)},${(pos.y - b.dy * zoom()).toFixed(1)}) scale(${(zoom() * 1.4).toFixed(3)})`);
       b.el.style.opacity = k < .1 ? k / .1 : k > .88 ? (1 - k) / .12 : 1;
     }
     for (let i = fxs.length - 1; i >= 0; i--) { if (fxs[i](now) === false) fxs.splice(i, 1); }
@@ -1815,7 +1815,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
 
   // Fahrzeug mit Köpfen bauen (Flugzeug, Auto, Boot); Nase zeigt nach rechts
   function vehicle(kind, ids, s) {
-    const g = mk('g', {class: 'trip-veh'}), n = ids.length, R = 11, gap = 21, len = Math.max(60, n * gap + 34);
+    const g = mk('g', {class: 'trip-veh'}), n = ids.length, R = 14, gap = 27, len = Math.max(64, n * gap + 30);
     const inner = mk('g', {transform: 'scale(' + s + ')'}); g.appendChild(inner); g.__s = s;
     const body = mk('g', {class: 'veh-body'}); inner.appendChild(body);
     if (kind === 'plane') {
@@ -1833,7 +1833,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     }
     const heads = mk('g', {class: 'veh-heads'}); inner.appendChild(heads);
     ids.forEach((id, i) => {
-      const p = byId[id], x = -((n - 1) * gap) / 2 + i * gap, y = kind === 'plane' ? -13 : -16;
+      const p = byId[id], x = -((n - 1) * gap) / 2 + i * gap, y = kind === 'plane' ? -16 : -19;
       const h = mk('g', {transform: `translate(${x},${y})`, 'data-x': x, 'data-y': y, 'data-id': id}), w = mk('g', {class: 'wob'}); h.appendChild(w);
       w.appendChild(mk('circle', {r: R + 2, class: 'veh-ring' + (B.includes(id) ? ' b' : '')}));
       if (p && p.photo) w.appendChild(mk('image', {href: p.photo, x: -R, y: -R, width: 2 * R, height: 2 * R, 'clip-path': 'url(#head-clip)', preserveAspectRatio: 'xMidYMid slice'}));
@@ -1850,12 +1850,12 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   }
   function caption(t) {
     cap.querySelector('text').textContent = t;
-    const w = Math.min(W - 40, t.length * 10.5 + 40), r = cap.querySelector('rect'); r.setAttribute('x', -w / 2); r.setAttribute('width', w);
+    const w = Math.min(W - 30, t.length * 12.6 + 48), r = cap.querySelector('rect'); r.setAttribute('x', -w / 2); r.setAttribute('width', w);
     cap.classList.remove('pop'); void cap.getBBox(); cap.classList.add('pop');
   }
   // Sprechblase über einem Fahrzeug (folgt ihm) oder an einem Punkt
   function say(target, text, ms, opt) {
-    const o = Object.assign({dx: 0, dy: 46}, opt || {}), g = mk('g', {class: 'trip-bubble'});
+    const o = Object.assign({dx: 0, dy: 60}, opt || {}), g = mk('g', {class: 'trip-bubble'});
     const w = Math.max(60, text.length * 7.6 + 22);
     g.appendChild(mk('path', {d: `M${-w / 2},-30 h${w} a8,8 0 0 1 8,8 v18 a8,8 0 0 1 -8,8 h${-w / 2 + 12} l-10,10 l-2,-10 h${-w / 2 + 2} a8,8 0 0 1 -8,-8 v-18 a8,8 0 0 1 8,-8 z`}));
     const t = mk('text', {'text-anchor': 'middle', y: -9}); t.textContent = text; g.appendChild(t);
@@ -1918,7 +1918,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     layer = mk('g', {class: 'trip-anim'}); svg.appendChild(layer);
     const defs = mk('defs', {}); defs.innerHTML = '<clipPath id="head-clip" clipPathUnits="objectBoundingBox"><circle cx=".5" cy=".5" r=".5"/></clipPath>'; layer.appendChild(defs);
     [gBack, gTrail, gVeh, gFx, gFront] = ['hud-back', 'trails', 'vehs', 'fx', 'hud'].map(c => { const g = mk('g', {class: 'trip-' + c}); layer.appendChild(g); return g; });
-    cap = mk('g', {class: 'trip-cap', transform: `translate(${W / 2},34)`}); cap.appendChild(mk('rect', {x: -100, y: -20, width: 200, height: 36, rx: 18})); cap.appendChild(mk('text', {'text-anchor': 'middle', y: 4})); gFront.appendChild(cap);
+    cap = mk('g', {class: 'trip-cap', transform: `translate(${W / 2},34)`}); cap.appendChild(mk('rect', {x: -100, y: -24, width: 200, height: 44, rx: 22})); cap.appendChild(mk('text', {'text-anchor': 'middle', y: 6})); gFront.appendChild(cap);
     ctr = mk('g', {class: 'trip-ctr', transform: 'translate(16,74)'}); ctr.appendChild(mk('rect', {width: 150, height: 50, rx: 12}));
     const d1 = mk('text', {x: 12, y: 21, class: 'd'}), d2 = mk('text', {x: 12, y: 40, class: 'k'}); ctr.appendChild(d1); ctr.appendChild(d2); gFront.appendChild(ctr);
     (function loop() { if (my !== run) return; tick(); ticker = requestAnimationFrame(loop); })();
