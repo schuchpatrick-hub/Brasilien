@@ -24,6 +24,12 @@ nach „Umgesetzt“ verschieben.
 - Telenovela der Reise, Wanted-Plakate, Crew-Aktienmarkt, Erfolge/Badges,
   Wettbüro mit Cevapi-Coins, Radio Gringo, Ehrenurkunden, Rubbel-Karte, Soundboard, Live-Ticker beim Footvolley
 
+## 🕒 Später vielleicht
+
+- **Eigene App (PWA) / Offline-Modus** (besprochen 01.10., erstmal nicht): Offline für Dschungel/Boot, Benachrichtigungen,
+  eigene Adresse. Bräuchte Hosting + eigene Datenbank (z. B. Firebase), Crew-Fotos nicht ins öffentliche Repo.
+  Kleinere Variante: Offline-Speicher der Inhalte im jetzigen Artifact (erst testen, ob der Viewer das erlaubt).
+
 ## ✅ Umgesetzt
 
 Fotos und Zeichnungen, App auf dem Startbildschirm, Real-Rechner, Flüge als Bordkarten, Vorfreude-Kalender,
