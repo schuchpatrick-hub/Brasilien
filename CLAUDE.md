@@ -155,6 +155,8 @@ claude.ai-Viewer nicht möglich (Standortzugriff gesperrt), daher manuelles Einc
 
 Knopf „✈️ Reise abspielen“ (`#map-play`) unter der Karte: Flugzeug, Auto und Boot mit runden Crew-Köpfen fahren die
 gezeichneten Pfade ab (`getPointAtLength` auf den Pfaden mit `data-d`), Bildunterschriften oben, Ablauf in `play()`.
+Dazu: Kamera-Zoom in den Südost-Ausschnitt (viewBox, `camTo`), leuchtende Spur, Nacht mit Sternen bei Nachtflügen,
+Feuerwerk zu Silvester, Tageszähler mit Kilometern, Wackelköpfe und Sprechblasen (`say`), Gags (Kaiman, Footvolley-Ball).
 Video: Zeit über `window.__tripT` steuern, Bilder mit Playwright aufnehmen und mit ffmpeg (`pip install imageio-ffmpeg`)
 zu MP4 machen. Das Video enthält Crew-Fotos, also **nicht** ins Repo legen.
 

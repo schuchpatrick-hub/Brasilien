@@ -1767,7 +1767,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   svg.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && pick(e)) e.preventDefault(); });
 })();
 
-/* ---------- Karte: Reise als Animation (Köpfe im Flieger, Auto, Boot) ---------- */
+/* ---------- Karte: Reise als Animation (Köpfe im Flieger, Auto, Boot) ----------
+   Kamera-Zoom in den Südost-Ausschnitt, leuchtende Spur, Nacht bei Nachtflügen, Feuerwerk, Tageszähler mit Kilometern,
+   Wackelköpfe mit Sprechblasen und kleine Gags. Zeit über tnow(), damit die Video-Aufnahme sie selbst setzen kann. */
 (function () {
   const svg = document.querySelector('#route svg.tripmap'), btn = document.getElementById('map-play');
   if (!svg || !btn || PRINT) return;
@@ -1779,12 +1781,42 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   const dot = sel => { const c = P(sel); return c ? {x: +c.getAttribute('cx'), y: +c.getAttribute('cy')} : null; };
   const tnow = () => window.__tripT !== undefined ? window.__tripT : performance.now();   // Video-Aufnahme setzt die Zeit selbst
   const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-  let layer = null, cap = null, run = 0;
+  const proj = svg.dataset.proj.split(',').map(Number), IX = proj[8], IY = proj[9], IW = proj[12], IH = proj[13];
+  const VB0 = svg.getAttribute('viewBox'), [, , W, H] = VB0.split(/[ ,]+/).map(Number);
+  const FULL = {x: 0, y: 0, w: W, h: H};
+  const INSET = (() => { const w = IW + 30, h = w * H / W, cx = IX + IW / 2, cy = IY + IH / 2; return {x: cx - w / 2, y: Math.max(0, Math.min(H - h, cy - h / 2 - 20)), w, h}; })();
+  let layer, gBack, gTrail, gVeh, gFx, gFront, cap, ctr, cam = Object.assign({}, FULL), run = 0, day = 1, km = 0, ticker = 0;
+  const bubbles = [], fxs = [];
+
+  function setCam(c) { cam = c; svg.setAttribute('viewBox', [c.x, c.y, c.w, c.h].map(v => v.toFixed(1)).join(' ')); }
+  const zoom = () => cam.w / W;
+  function hud() {          // HUD bleibt beim Zoomen gleich groß und an derselben Stelle
+    const t = `translate(${cam.x.toFixed(1)},${cam.y.toFixed(1)}) scale(${zoom().toFixed(4)})`;
+    gBack.setAttribute('transform', t); gFront.setAttribute('transform', t);
+  }
+  function tick() {        // läuft die ganze Animation über: Wackelköpfe, Sprechblasen, Effekte, HUD
+    const now = tnow();
+    hud();
+    layer.querySelectorAll('.wob').forEach((w, i) => {
+      const sh = +(w.closest('.trip-veh') || {}).dataset?.shake || 0, a = sh ? 3.5 : 1.3;
+      w.setAttribute('transform', `translate(0,${(Math.sin(now / 170 + i * 1.7) * a).toFixed(2)}) rotate(${(Math.sin(now / 230 + i) * (sh ? 14 : 6)).toFixed(1)})`);
+    });
+    for (let i = bubbles.length - 1; i >= 0; i--) {
+      const b = bubbles[i], k = (now - b.t0) / b.ms;
+      if (k >= 1 || (b.target && !b.target.isConnected)) { b.el.remove(); bubbles.splice(i, 1); continue; }
+      const pos = b.target ? b.target.__pos : b.pt; if (!pos) continue;
+      b.el.setAttribute('transform', `translate(${(pos.x + b.dx * zoom()).toFixed(1)},${(pos.y - b.dy * zoom()).toFixed(1)}) scale(${zoom().toFixed(3)})`);
+      b.el.style.opacity = k < .1 ? k / .1 : k > .88 ? (1 - k) / .12 : 1;
+    }
+    for (let i = fxs.length - 1; i >= 0; i--) { if (fxs[i](now) === false) fxs.splice(i, 1); }
+    ctr.querySelector('.d').textContent = 'Tag ' + day + ' von 26';
+    ctr.querySelector('.k').textContent = '✈︎ ' + Math.round(km).toLocaleString('de-DE') + ' km';
+  }
 
   // Fahrzeug mit Köpfen bauen (Flugzeug, Auto, Boot); Nase zeigt nach rechts
   function vehicle(kind, ids, s) {
     const g = mk('g', {class: 'trip-veh'}), n = ids.length, R = 11, gap = 21, len = Math.max(60, n * gap + 34);
-    const inner = mk('g', {transform: 'scale(' + s + ')'}); g.appendChild(inner);
+    const inner = mk('g', {transform: 'scale(' + s + ')'}); g.appendChild(inner); g.__s = s;
     const body = mk('g', {class: 'veh-body'}); inner.appendChild(body);
     if (kind === 'plane') {
       body.appendChild(mk('path', {d: `M${-len / 2 + 8},-2 L${-len / 2 - 6},-20 L${-len / 2 + 6},-20 L${-len / 2 + 22},-4 Z`, class: 'veh-fin'}));
@@ -1802,55 +1834,95 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     const heads = mk('g', {class: 'veh-heads'}); inner.appendChild(heads);
     ids.forEach((id, i) => {
       const p = byId[id], x = -((n - 1) * gap) / 2 + i * gap, y = kind === 'plane' ? -13 : -16;
-      const h = mk('g', {transform: `translate(${x},${y})`, 'data-x': x, 'data-y': y}); h.appendChild(mk('circle', {r: R + 2, class: 'veh-ring' + (B.includes(id) ? ' b' : '')}));
-      if (p && p.photo) { const im = mk('image', {href: p.photo, x: -R, y: -R, width: 2 * R, height: 2 * R, 'clip-path': 'url(#head-clip)', preserveAspectRatio: 'xMidYMid slice'}); h.appendChild(im); }
-      else { h.appendChild(mk('circle', {r: R, class: 'veh-face'})); const t = mk('text', {class: 'veh-ini', 'text-anchor': 'middle', 'dominant-baseline': 'central'}); t.textContent = p ? p.name[0] : '?'; h.appendChild(t); }
+      const h = mk('g', {transform: `translate(${x},${y})`, 'data-x': x, 'data-y': y, 'data-id': id}), w = mk('g', {class: 'wob'}); h.appendChild(w);
+      w.appendChild(mk('circle', {r: R + 2, class: 'veh-ring' + (B.includes(id) ? ' b' : '')}));
+      if (p && p.photo) w.appendChild(mk('image', {href: p.photo, x: -R, y: -R, width: 2 * R, height: 2 * R, 'clip-path': 'url(#head-clip)', preserveAspectRatio: 'xMidYMid slice'}));
+      else { w.appendChild(mk('circle', {r: R, class: 'veh-face'})); const t = mk('text', {class: 'veh-ini', 'text-anchor': 'middle', 'dominant-baseline': 'central'}); t.textContent = p ? p.name[0] : '?'; w.appendChild(t); }
       heads.appendChild(h);
     });
-    layer.appendChild(g); return g;
+    gVeh.appendChild(g); return g;
   }
   function place(g, x, y, ang, flip, kind) {
-    const a = kind === 'plane' ? ang : 0;
-    const deg = a * 180 / Math.PI;
+    const deg = kind === 'plane' ? ang * 180 / Math.PI : 0;
+    g.__pos = {x, y};
     g.setAttribute('transform', `translate(${x.toFixed(1)},${y.toFixed(1)}) rotate(${deg.toFixed(1)}) scale(${flip ? -1 : 1},1)`);
-    // Köpfe bleiben aufrecht und spiegelverkehrt-frei
     g.querySelectorAll('.veh-heads > g').forEach(h => h.setAttribute('transform', `translate(${h.dataset.x},${h.dataset.y}) scale(${flip ? -1 : 1},1) rotate(${(-deg).toFixed(1)})`));
   }
   function caption(t) {
     cap.querySelector('text').textContent = t;
-    const w = Math.min(svg.viewBox.baseVal.width - 40, t.length * 10.5 + 40);
-    const r = cap.querySelector('rect'); r.setAttribute('x', -w / 2); r.setAttribute('width', w);
+    const w = Math.min(W - 40, t.length * 10.5 + 40), r = cap.querySelector('rect'); r.setAttribute('x', -w / 2); r.setAttribute('width', w);
     cap.classList.remove('pop'); void cap.getBBox(); cap.classList.add('pop');
   }
-  const wait = (ms, my) => new Promise(res => { const t0 = tnow(); (function f() { const now = tnow(); if (my !== run) return res(); if (now - t0 >= ms) return res(); requestAnimationFrame(f); })(t0); });
-  // entlang eines Kartenpfads (oder einer Geraden) fahren
-  function move(g, kind, src, ms, my, rev) {
-    return new Promise(res => {
-      let L, at;
-      if (src.getTotalLength) { L = src.getTotalLength(); at = d => { const p = src.getPointAtLength(rev ? L - d : d); return {x: p.x, y: p.y}; }; }
-      else { const [a, b] = src; L = Math.hypot(b.x - a.x, b.y - a.y); at = d => ({x: a.x + (b.x - a.x) * d / L, y: a.y + (b.y - a.y) * d / L}); }
-      const t0 = tnow();
-      (function f() { const now = tnow();
-        if (my !== run) return res();
-        const t = Math.min(1, (now - t0) / ms), d = ease(t) * L, p = at(d), q = at(Math.min(L, d + 2)), o = at(Math.max(0, d - 2));
-        const dx = q.x - o.x, dy = q.y - o.y, flip = dx < 0, ang = flip ? Math.atan2(-dy, -dx) : Math.atan2(dy, dx);
-        place(g, p.x, p.y, ang, flip, kind);
-        g.style.opacity = t < .08 ? t / .08 : 1;
-        if (t < 1) requestAnimationFrame(f); else res();
-      })(t0);
+  // Sprechblase über einem Fahrzeug (folgt ihm) oder an einem Punkt
+  function say(target, text, ms, opt) {
+    const o = Object.assign({dx: 0, dy: 46}, opt || {}), g = mk('g', {class: 'trip-bubble'});
+    const w = Math.max(60, text.length * 7.6 + 22);
+    g.appendChild(mk('path', {d: `M${-w / 2},-30 h${w} a8,8 0 0 1 8,8 v18 a8,8 0 0 1 -8,8 h${-w / 2 + 12} l-10,10 l-2,-10 h${-w / 2 + 2} a8,8 0 0 1 -8,-8 v-18 a8,8 0 0 1 8,-8 z`}));
+    const t = mk('text', {'text-anchor': 'middle', y: -9}); t.textContent = text; g.appendChild(t);
+    gFx.appendChild(g);
+    bubbles.push({el: g, target: target && target.tagName ? target : null, pt: target && !target.tagName ? target : null, dx: o.dx, dy: o.dy, t0: tnow(), ms});
+  }
+  const wait = (ms, my) => new Promise(res => { const t0 = tnow(); (function f() { if (my !== run || tnow() - t0 >= ms) return res(); requestAnimationFrame(f); })(); });
+  function tween(ms, my, fn) { return new Promise(res => { const t0 = tnow(); (function f() { if (my !== run) return res(); const t = Math.min(1, (tnow() - t0) / ms); fn(ease(t), t); if (t < 1) requestAnimationFrame(f); else res(); })(); }); }
+  const camTo = (c, ms, my) => { const a = Object.assign({}, cam); return tween(ms, my, e => setCam({x: a.x + (c.x - a.x) * e, y: a.y + (c.y - a.y) * e, w: a.w + (c.w - a.w) * e, h: a.h + (c.h - a.h) * e})); };
+  // entlang eines Kartenpfads (oder einer Geraden) fahren, mit leuchtender Spur und Kilometerzähler
+  function move(g, kind, src, ms, my, o) {
+    o = o || {};
+    let L, at, d0;
+    if (src.getTotalLength) { L = src.getTotalLength(); at = d => { const p = src.getPointAtLength(d); return {x: p.x, y: p.y}; }; d0 = src.getAttribute('d'); }
+    else { const [a, b] = src; L = Math.hypot(b.x - a.x, b.y - a.y); at = d => ({x: a.x + (b.x - a.x) * d / L, y: a.y + (b.y - a.y) * d / L}); d0 = `M${a.x},${a.y} L${b.x},${b.y}`; }
+    const trail = mk('path', {d: d0, class: 'trip-trail ' + kind, 'stroke-dasharray': L + ' ' + L, 'stroke-dashoffset': L}); gTrail.appendChild(trail);
+    const km0 = km, says = (o.say || []).map(x => Object.assign({done: false}, x));
+    return tween(ms, my, (e, t) => {
+      const d = e * L, p = at(d), q = at(Math.min(L, d + 2)), r = at(Math.max(0, d - 2));
+      const dx = q.x - r.x, dy = q.y - r.y, flip = dx < 0, ang = flip ? Math.atan2(-dy, -dx) : Math.atan2(dy, dx);
+      place(g, p.x, p.y, ang, flip, kind);
+      g.style.opacity = t < .06 ? t / .06 : 1;
+      trail.setAttribute('stroke-dashoffset', (L - d).toFixed(1));
+      if (o.km) km = km0 + o.km * e;
+      g.dataset.shake = o.shake && t > o.shake[0] && t < o.shake[1] ? '1' : '';
+      says.forEach(x => { if (!x.done && t >= x.at) { x.done = true; say(g, x.t, x.ms || 1800, x); } });
+      if (o.onT) o.onT(p, t);
     });
   }
-  const fade = (g, ms, my) => new Promise(res => { const t0 = tnow(); (function f() { const now = tnow(); if (my !== run) return res(); const t = Math.min(1, (now - t0) / ms); g.style.opacity = 1 - t; if (t < 1) requestAnimationFrame(f); else { g.remove(); res(); } })(t0); });
-  function park(kind, ids, pt, s) { const g = vehicle(kind, ids, s); place(g, pt.x, pt.y, 0, false, kind); return g; }
-  function burst(pt, txt) { const t = mk('text', {x: pt.x, y: pt.y, class: 'trip-fx', 'text-anchor': 'middle'}); t.textContent = txt; layer.appendChild(t); return t; }
+  const fade = (g, ms, my) => tween(ms, my, e => { g.style.opacity = 1 - e; }).then(() => g.remove());
+  function park(kind, ids, pt, s) { const g = vehicle(kind, ids, s); place(g, pt.x, pt.y, 0, false, kind); g.querySelector('.veh-body').style.display = 'none'; return g; }
+  function emoji(pt, txt, size) { const t = mk('text', {x: pt.x, y: pt.y, class: 'trip-fx', 'text-anchor': 'middle', 'font-size': size || 30}); t.textContent = txt; gFx.appendChild(t); return t; }
+  // Nacht: Karte abdunkeln, Sterne und Mond (im HUD, also immer bildschirmfüllend)
+  function night(on, ms, my) {
+    let n = gBack.querySelector('.trip-night');
+    if (!n) { n = mk('g', {class: 'trip-night', opacity: 0}); n.appendChild(mk('rect', {x: -5, y: -5, width: W + 10, height: H + 10}));
+      for (let i = 0; i < 70; i++) n.appendChild(mk('circle', {cx: (i * 397) % W, cy: (i * 233) % (H * .7), r: i % 5 ? 1.2 : 2, class: 'star'}));
+      const m = mk('text', {x: W - 120, y: 120, 'font-size': 46}); m.textContent = '🌙'; n.appendChild(m); gBack.appendChild(n); }
+    const a = +n.getAttribute('opacity'); return tween(ms, my, e => n.setAttribute('opacity', (a + ((on ? 1 : 0) - a) * e).toFixed(3)));
+  }
+  // Feuerwerk: Funkenkreise, die sich ausbreiten und verblassen
+  function fireworks(pt, ms) {
+    const t0 = tnow(), cols = ['#ffcf1f', '#ff5a5a', '#3ccf7f', '#93b1ff', '#ffffff'], g = mk('g', {class: 'trip-fw'}); gFx.appendChild(g);
+    const bursts = Array.from({length: 7}, (_, i) => ({x: pt.x + Math.sin(i * 2.3) * 70, y: pt.y - 60 - Math.cos(i * 1.7) * 40, at: i * ms / 9, c: cols[i % 5], el: mk('g', {})}));
+    bursts.forEach(b => { for (let k = 0; k < 14; k++) b.el.appendChild(mk('line', {stroke: b.c, 'stroke-width': 2.5, 'stroke-linecap': 'round'})); g.appendChild(b.el); });
+    fxs.push(now => {
+      const z = zoom();
+      bursts.forEach(b => {
+        const k = (now - t0 - b.at) / 900; b.el.style.opacity = k < 0 || k > 1 ? 0 : 1 - k;
+        if (k < 0 || k > 1) return; const r = (12 + 48 * Math.sqrt(k)) * z;
+        [...b.el.children].forEach((l, j) => { const a = j / 14 * Math.PI * 2; l.setAttribute('x1', b.x + Math.cos(a) * r * .55); l.setAttribute('y1', b.y + Math.sin(a) * r * .55 + k * 14 * z); l.setAttribute('x2', b.x + Math.cos(a) * r); l.setAttribute('y2', b.y + Math.sin(a) * r + k * 14 * z); });
+      });
+      if (now - t0 > ms + 900) { g.remove(); return false; }
+    });
+  }
 
   async function play() {
     const my = ++run; stopUI(true);
-    layer && layer.remove();
+    if (layer) layer.remove(); bubbles.length = 0; fxs.length = 0; day = 1; km = 0; setCam(FULL);
     layer = mk('g', {class: 'trip-anim'}); svg.appendChild(layer);
     const defs = mk('defs', {}); defs.innerHTML = '<clipPath id="head-clip" clipPathUnits="objectBoundingBox"><circle cx=".5" cy=".5" r=".5"/></clipPath>'; layer.appendChild(defs);
-    cap = mk('g', {class: 'trip-cap', transform: `translate(${svg.viewBox.baseVal.width / 2},34)`}); cap.appendChild(mk('rect', {x: -100, y: -20, width: 200, height: 36, rx: 18})); const ct = mk('text', {'text-anchor': 'middle', y: 4}); cap.appendChild(ct); layer.appendChild(cap);
-    const S = 1.3, s = 1.0;   // Größe Hauptkarte / Ausschnitt
+    [gBack, gTrail, gVeh, gFx, gFront] = ['hud-back', 'trails', 'vehs', 'fx', 'hud'].map(c => { const g = mk('g', {class: 'trip-' + c}); layer.appendChild(g); return g; });
+    cap = mk('g', {class: 'trip-cap', transform: `translate(${W / 2},34)`}); cap.appendChild(mk('rect', {x: -100, y: -20, width: 200, height: 36, rx: 18})); cap.appendChild(mk('text', {'text-anchor': 'middle', y: 4})); gFront.appendChild(cap);
+    ctr = mk('g', {class: 'trip-ctr', transform: 'translate(16,74)'}); ctr.appendChild(mk('rect', {width: 150, height: 50, rx: 12}));
+    const d1 = mk('text', {x: 12, y: 21, class: 'd'}), d2 = mk('text', {x: 12, y: 40, class: 'k'}); ctr.appendChild(d1); ctr.appendChild(d2); gFront.appendChild(ctr);
+    (function loop() { if (my !== run) return; tick(); ticker = requestAnimationFrame(loop); })();
+    const S = 1.3, s = .9;
     const legs = {
       hin: P('path.fl[data-d="2026-12-27"]'), gua: P('path.gr[data-d="2026-12-28"]'), sdu: P('path.fl[data-d="2026-12-31"]'),
       dg: P('path.flB[data-d="2027-01-06"]'), igu: P('path.fl:not(.flB)[data-d="2027-01-06"]'), mao: P('path.fl[data-d="2027-01-09"]'),
@@ -1859,31 +1931,44 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     };
     const pts = {gua: dot('[data-stop="guaruja"] .dot'), cgh: dot('[data-ap="CGH"] .dot2'), rio: dot('[data-stop="rio"] .dot'), igu: dot('[data-stop="iguacu"] .dot'),
       mao: dot('[data-stop="manaus"] .dot'), par: dot('[data-stop="paraty"] .dot'), ilha: dot('[data-stop="ilha"] .dot')};
-    const step = async (fn) => { if (my === run) await fn(); };
-    let v;
-    await step(async () => { caption('27.12. ✈️ München → Rom → São Paulo'); v = vehicle('plane', A, S); await move(v, 'plane', legs.hin, 4200, my); await fade(v, 300, my); });
-    await step(async () => { caption('28.12. 🚗 Mit Uber nach Guarujá'); v = vehicle('car', A, s); await move(v, 'car', legs.gua, 1800, my); await wait(900, my); });
-    await step(async () => { caption('31.12. ✈️ Ab nach Rio, Silvester!'); await move(v, 'car', [pts.gua, pts.cgh], 1100, my); v.remove(); v = vehicle('plane', A, s); await move(v, 'plane', legs.sdu, 2200, my); v.remove(); });
-    let fx, parkA;
-    await step(async () => { caption('🎆 Feliz Ano Novo an der Copacabana!'); parkA = park('car', A, {x: pts.rio.x - 40, y: pts.rio.y + 34}, s); parkA.querySelector('.veh-body').style.display = 'none'; fx = burst({x: pts.rio.x - 60, y: pts.rio.y - 10}, '🎆🥂🎆'); await wait(1800, my); fx.remove(); });
-    await step(async () => { caption('06.01. ✈️ Daijo & Greisel landen in Rio'); v = vehicle('plane', B, S); await move(v, 'plane', legs.dg, 3600, my); await fade(v, 300, my); await fade(parkA, 300, my); });
-    await step(async () => { caption('06.01. ✈️ Alle sechs nach Foz do Iguaçu'); v = vehicle('plane', ALL, S); await move(v, 'plane', legs.igu, 2600, my); await wait(400, my); });
-    await step(async () => { caption('07.01. 💦 Wasserfälle!'); fx = burst({x: pts.igu.x, y: pts.igu.y + 52}, '💦🌈💦'); await wait(1400, my); fx.remove(); });
-    await step(async () => { caption('09.01. ✈️ Ab in den Dschungel nach Manaus'); await move(v, 'plane', legs.mao, 2800, my); v.remove(); });
-    await step(async () => { caption('10.01. 🛶 Juma Lodge: Kaimane & rosa Delfine'); v = vehicle('boat', ALL, S); await move(v, 'boat', [{x: pts.mao.x, y: pts.mao.y + 22}, {x: pts.mao.x + 70, y: pts.mao.y + 40}], 1600, my); fx = burst({x: pts.mao.x + 70, y: pts.mao.y + 90}, '🐊🐬🐒'); await wait(1300, my); fx.remove(); v.remove(); });
-    await step(async () => { caption('14.01. ✈️ 01:45 Nachtflug nach Rio 🌙'); v = vehicle('plane', ALL, S); await move(v, 'plane', legs.rio, 3000, my); await fade(v, 300, my); });
-    await step(async () => { caption('14.01. 🚗 Mit Uber nach Paraty'); v = vehicle('car', ALL, s); await move(v, 'car', legs.par, 2000, my); await wait(600, my); v.remove(); });
-    await step(async () => { caption('16.01. ⛵ Mit dem Boot zur Ilha Grande'); v = vehicle('boat', ALL, s); await move(v, 'boat', legs.ilha, 1700, my); fx = burst({x: pts.ilha.x + 40, y: pts.ilha.y + 70}, '🏝️🍹⚽'); await wait(1400, my); fx.remove(); v.remove(); });
-    let parkB;
-    await step(async () => { caption('20.01. 👋 Die Gringos fahren zum Flughafen'); parkB = park('boat', B, {x: pts.ilha.x + 30, y: pts.ilha.y + 24}, s); parkB.querySelector('.veh-body').style.display = 'none';
-      v = vehicle('boat', A, s); await move(v, 'boat', legs.boat, 1200, my); v.remove(); v = vehicle('car', A, s); await move(v, 'car', legs.road, 1500, my); v.remove(); });
-    await step(async () => { caption('20.01. ✈️ Heimflug über Rom nach München'); v = vehicle('plane', A, S); await move(v, 'plane', legs.heim, 3800, my); v.remove(); });
-    await step(async () => { caption('Tchau, Brasil! 🇧🇷 Daijo & Greisel bleiben noch ein bisschen'); await wait(2600, my); });
-    if (my === run) { await fade(parkB, 500, my); stopUI(false); layer.remove(); layer = null; }
+    const step = async fn => { if (my === run) await fn(); };
+    let v, parkA, parkB, fx;
+    await step(async () => { day = 1; caption('27.12. ✈️ München → Rom → São Paulo'); await night(true, 600, my); v = vehicle('plane', A, S);
+      await move(v, 'plane', legs.hin, 4600, my, {km: 10100, say: [{at: .25, t: 'Alle mal herhören: Caipis gehen auf Simon!', ms: 2200}]}); await fade(v, 300, my); });
+    await step(async () => { day = 2; caption('28.12. 🚗 Mit Uber nach Guarujá'); await Promise.all([night(false, 700, my), camTo(INSET, 1200, my)]); v = vehicle('car', A, s);
+      await move(v, 'car', legs.gua, 1900, my, {km: 90, say: [{at: .3, t: 'Hat jemand an den Obstkorb gedacht?', ms: 1800}]}); fx = emoji({x: pts.gua.x + 70, y: pts.gua.y - 20}, '🏖️⚽', 26); await wait(900, my); fx.remove(); });
+    await step(async () => { day = 5; caption('31.12. ✈️ Ab nach Rio, Silvester!'); await move(v, 'car', [pts.gua, pts.cgh], 1100, my, {km: 80}); v.remove(); v = vehicle('plane', A, s); await move(v, 'plane', legs.sdu, 2300, my, {km: 370}); v.remove(); });
+    await step(async () => { caption('🎆 Feliz Ano Novo an der Copacabana!'); await night(true, 500, my); parkA = park('car', A, {x: pts.rio.x - 46, y: pts.rio.y + 30}, s); fireworks({x: pts.rio.x - 120, y: pts.rio.y + 10}, 2600);
+      say(parkA, 'Feliz Ano Novo, gatinhas!', 2200, {dx: 20}); await wait(3000, my); await night(false, 500, my); });
+    await step(async () => { day = 11; caption('06.01. ✈️ Daijo & Greisel landen in Rio'); await camTo(FULL, 1200, my); fade(parkA, 400, my); v = vehicle('plane', B, S);
+      await move(v, 'plane', legs.dg, 3600, my, {say: [{at: .35, t: 'Sind wir zu spät?', ms: 1600}, {at: .7, t: 'Ich hab eine Excel für den Urlaub!', ms: 1600}]}); await fade(v, 300, my); });
+    await step(async () => { caption('06.01. ✈️ Alle sechs nach Foz do Iguaçu'); v = vehicle('plane', ALL, S); await move(v, 'plane', legs.igu, 2700, my, {km: 1150, say: [{at: .4, t: 'Gibt’s da ein Buffet?', ms: 1600}]}); });
+    await step(async () => { day = 12; caption('07.01. 💦 Wasserfälle!'); fx = emoji({x: pts.igu.x, y: pts.igu.y + 56}, '💦🌈💦', 30); await wait(1400, my); fx.remove(); });
+    await step(async () => { day = 14; caption('09.01. ✈️ Ab in den Dschungel nach Manaus'); say(v, 'Turbulenzen!!', 1200, {at: 0}); await move(v, 'plane', legs.mao, 3000, my, {km: 2700, shake: [.15, .55]}); v.remove(); });
+    await step(async () => { day = 15; caption('10.01. 🛶 Juma Lodge: Kaimane & rosa Delfine'); v = vehicle('boat', ALL, S); const cai = emoji({x: 0, y: 0}, '🐊', 30);
+      await move(v, 'boat', [{x: pts.mao.x - 10, y: pts.mao.y + 26}, {x: pts.mao.x + 90, y: pts.mao.y + 48}], 2200, my, {km: 100, say: [{at: .45, t: 'Ist das ein Kaiman?!', ms: 1500}],
+        onT: (p, t) => { cai.setAttribute('x', (p.x - 95 + t * 15).toFixed(1)); cai.setAttribute('y', (p.y + 22 - Math.abs(Math.sin(t * 14)) * 16).toFixed(1)); }});
+      fx = emoji({x: pts.mao.x + 90, y: pts.mao.y + 100}, '🐬🐒🦜', 28); await wait(1000, my); fx.remove(); cai.remove(); v.remove(); });
+    await step(async () => { day = 19; caption('14.01. ✈️ 01:45 Nachtflug nach Rio 🌙'); await night(true, 600, my); v = vehicle('plane', ALL, S);
+      await move(v, 'plane', legs.rio, 3200, my, {km: 2850, say: [{at: .3, t: 'Zzz …', ms: 2000}]}); await fade(v, 300, my); });
+    await step(async () => { caption('14.01. 🚗 Mit Uber nach Paraty'); await Promise.all([night(false, 700, my), camTo(INSET, 1200, my)]); v = vehicle('car', ALL, s);
+      await move(v, 'car', legs.par, 2200, my, {km: 250, say: [{at: .4, t: 'Oi, gatinha!', ms: 1500}]}); await wait(400, my); v.remove(); });
+    await step(async () => { day = 21; caption('16.01. ⛵ Mit dem Boot zur Ilha Grande'); v = vehicle('boat', ALL, s); await move(v, 'boat', legs.ilha, 1800, my, {km: 30});
+      const ball = emoji(pts.ilha, '⚽', 22); say(v, 'Footvolley, jetzt!', 1700, {});
+      await tween(1600, my, (e, t) => { ball.setAttribute('x', (pts.ilha.x - 60 + t * 150).toFixed(1)); ball.setAttribute('y', (pts.ilha.y + 60 - Math.sin(t * Math.PI) * 80).toFixed(1)); });
+      ball.remove(); v.remove(); });
+    await step(async () => { day = 25; caption('20.01. 👋 Die Gringos fahren zum Flughafen'); parkB = park('boat', B, {x: pts.ilha.x + 34, y: pts.ilha.y + 26}, s);
+      v = vehicle('boat', A, s); await move(v, 'boat', legs.boat, 1300, my, {km: 25}); v.remove(); v = vehicle('car', A, s);
+      say(parkB, 'Tchau! 👋', 1800, {}); await move(v, 'car', legs.road, 1600, my, {km: 150, say: [{at: .3, t: 'Ich bleib einfach hier …', ms: 1500}]}); v.remove(); });
+    await step(async () => { caption('20.01. ✈️ Heimflug über Rom nach München'); await Promise.all([camTo(FULL, 1200, my), night(true, 800, my)]); v = vehicle('plane', A, S);
+      await move(v, 'plane', legs.heim, 3900, my, {km: 9900}); v.remove(); });
+    await step(async () => { day = 26; caption('Tchau, Brasil! 🇧🇷 Daijo & Greisel bleiben noch ein bisschen'); await night(false, 700, my); await camTo(INSET, 1300, my); say(parkB, 'Mehr Caipi für uns! 🍹', 2200, {}); await wait(2300, my); await camTo(FULL, 1200, my); await wait(800, my); });
+    if (my === run) { await fade(parkB, 500, my); stop(); }
   }
+  function stop() { run++; cancelAnimationFrame(ticker); if (layer) layer.remove(); layer = null; setCam(FULL); svg.setAttribute('viewBox', VB0); stopUI(false); }
   function stopUI(on) { btn.textContent = on ? '⏹ Stopp' : '✈️ Reise abspielen'; btn.setAttribute('aria-pressed', String(on)); }
   btn.addEventListener('click', () => {
-    if (btn.getAttribute('aria-pressed') === 'true') { run++; if (layer) layer.remove(); layer = null; stopUI(false); return; }
+    if (btn.getAttribute('aria-pressed') === 'true') { stop(); return; }
     const r = svg.getBoundingClientRect(); if (r.top < 0 || r.bottom > innerHeight) svg.scrollIntoView({behavior: 'smooth', block: 'center'});
     play();
   });
