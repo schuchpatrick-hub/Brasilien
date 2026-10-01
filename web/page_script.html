@@ -510,9 +510,6 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     }
     paintSel();
   });
-  document.querySelectorAll('#dr-add [data-grp]').forEach(b => b.addEventListener('click', () => {
-    sel.who.clear(); (TRIP.groups[b.dataset.grp] ? GROUP_IDS[b.dataset.grp] : []).forEach(id => sel.who.add(id)); saveWho(); paintSel();
-  }));
 
   /* --- Ranking mit wandernden Zeilen --- */
   const ROW = 56, rank = $('dr-rank');

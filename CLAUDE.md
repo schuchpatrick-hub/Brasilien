@@ -88,7 +88,7 @@ Zahlenfelder (`type=number`) ließen die Seite im claude.ai-Viewer hängen. Desh
 `page_script.html` baut Plus/Minus-Knöpfe mit verstecktem `<input>` (feuert `input`/`change`), der Real-Rechner hat ein eigenes
 Tastenfeld (`#fx-pad`). Nach dem Speichern von Drinks, Partien und Karten-Ereignissen erscheint `undoToast()` mit „Rückgängig“
 (löscht die eben angelegten Dokumente). Drinks: „⚡ Nochmal dasselbe“ (`#dr-again`, letzte 4 Kombinationen im localStorage
-`br26.drinkRecent`) und Schnellwahl Gringos / Daijo & Greisel / Alle.
+`br26.drinkRecent`) und Schnellwahl Alle / Keiner.
 
 ## Drinks-Counter
 
