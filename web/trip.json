@@ -888,7 +888,7 @@
       "photoLarge": "crew/jonas-gross.jpg",
       "card": {
         "pos": "KOP",
-        "posName": "Kopfball-Dirigent",
+        "posName": "Diktator im Mittelkreis",
         "flag": "🇩🇪",
         "club": "Gringos FC",
         "wf": 3,
@@ -907,11 +907,18 @@
           99
         ],
         "traits": [
-          "🗺️ Plan B für Plan B",
-          "⚽ 113 Kopfbälle am Stück",
-          "👑 Bucht, bevor ihr Ja sagt"
+          "🗺️ Bucht schneller, als ihr Nein sagen könnt",
+          "⚽ 113 Kopfbälle am Stück, kein Haar im Weg",
+          "📋 Plan B für Plan B für Plan B"
         ],
-        "scout": "Spielt immer mit Kopf, vor allem mit der freien Fläche obendrauf. Taktisch der beste Mann im Kader: Er hat die Taktik nämlich allein beschlossen. Schwäche: Diskussionen. Er führt keine."
+        "scout": "Spielt mit Kopf, vor allem mit der Freifläche obendrauf. Hat den Spielplan allein beschlossen und trotzdem drei Plan Bs in der Tasche. Wer widerspricht, wird umgebucht.",
+        "file": {
+          "market": "1 Fischerhut plus Admin-Rechte",
+          "contract": "Lebenslang, Kündigung nur per Antrag bei Jonas",
+          "injury": "Sonnenbrand auf der Landebahn (chronisch)",
+          "celebration": "Zeigt auf seinen Kopf, die Sonne blendet die Gegner",
+          "rumor": "Real Madrid wollte ihn als Busfahrer. Er hat die Route geändert."
+        }
       }
     },
     {
@@ -959,7 +966,7 @@
       "quote": "Ist das Blut? Egal, sie hat gelächelt 😍",
       "card": {
         "pos": "FLR",
-        "posName": "Latin Lover (selbsternannt)",
+        "posName": "Latin Lover (laut Simon)",
         "flag": "🇩🇪",
         "club": "Gringos FC",
         "wf": 2,
@@ -978,11 +985,18 @@
           3
         ],
         "traits": [
-          "😎 Herzchen-Sonnenbrille",
-          "🍌 Stolpert über eigene Füße",
-          "🗣️ Kann genau einen Satz: „Oi, gatinha“"
+          "😎 Herzchen-Brille (Abwehr +0)",
+          "🍌 Stolpert über Luft",
+          "🗣️ Wortschatz komplett: „Oi, gatinha“"
         ],
-        "scout": "Flirt-Wert 99 basiert ausschließlich auf seiner eigenen Einschätzung, die Gegenseite bewertet mit 3. Fünf-Sterne-Tricks, die meisten davon unfreiwillig. Fällt auch ohne Gegenspieler hin."
+        "scout": "Flirt 99 basiert auf reiner Selbsteinschätzung, die Gegenseite vergibt eine 3. Fünf-Sterne-Tricks, alle unfreiwillig. Stolpert auch ohne Gegenspieler: über Bordsteine, über Sand, über Luft.",
+        "file": {
+          "market": "Unbezahlbar, sagt er. Gratis, sagen alle anderen.",
+          "contract": "Bis zur ersten Telefonnummer (also unbefristet)",
+          "injury": "Samba-Bänderriss, Bordstein-Sturz, Herzschmerz (wöchentlich)",
+          "celebration": "Hüftschwung Richtung Publikum, Zerrung inklusive",
+          "rumor": "Eine Kellnerin in Ipanema hat ihm die Rechnung gebracht. Er hält es für ein Date."
+        }
       }
     },
     {
@@ -1034,7 +1048,7 @@
       "quote": "Ist das Buffet schon eröffnet? Dann bin ich es auch.",
       "card": {
         "pos": "BUF",
-        "posName": "Buffet-Abräumer",
+        "posName": "Buffet-Staubsauger (Libero)",
         "flag": "🇩🇪",
         "club": "Gringos FC",
         "wf": 1,
@@ -1053,11 +1067,18 @@
           99
         ],
         "traits": [
-          "🦵 Zerrung im Sitzen",
-          "🥩 Rodízio-Endgegner",
-          "👴 Ältester im Kader"
+          "🍽️ Teller-Tetris (Rekord: 7 Ebenen)",
+          "🦵 Zerrung schon beim Aufwärmen",
+          "🥩 Rodízio-Endgegner"
         ],
-        "scout": "Erfahrenster Spieler im Kader, die Gelenke bestätigen das bei jedem Schritt. Echter Linksfuß, der rechte Fuß ist nur zur Deko dabei. Am Buffet nicht zu verteidigen, auf dem Platz nicht zu bewegen."
+        "scout": "Erfahrenster Spieler im Kader, das bestätigen seine Knie bei jedem Schritt. Echter Linksfuß, der rechte ist nur zur Deko dran. Am Buffet nicht zu verteidigen, auf dem Platz nicht zu bewegen.",
+        "file": {
+          "market": "Ein All-you-can-eat-Gutschein, danach ist der Laden pleite",
+          "contract": "Bis die Hüfte Nein sagt (demnächst)",
+          "injury": "17 Zerrungen, 3 davon im Schlaf",
+          "celebration": "Setzt sich hin. Steht nicht mehr auf.",
+          "rumor": "Churrascarias in ganz Rio prüfen ein Hausverbot."
+        }
       }
     },
     {
@@ -1129,10 +1150,17 @@
         ],
         "traits": [
           "🧺 Obstkorb in jeder Unterkunft",
-          "👯 Doppelgänger: Dani Olmo",
-          "🍸 Gin-Tonic-Therapie"
+          "🏚️ Verkauft auch dir eine Wohnung",
+          "🍸 Gin-Tonic-Langstrecken-Therapie"
         ],
-        "scout": "Sieht aus wie Dani Olmo, spielt aber ohne Ball, ohne Tempo und ohne Vertrag. Feelgood-Manager in der Kabine. Nebenbei Immobilienmakler: Wer zu lange stehen bleibt, kauft eine Wohnung im 4. Stock ohne Aufzug."
+        "scout": "Sieht aus wie Dani Olmo, spielt aber ohne Ball, ohne Tempo und ohne Vertrag. In der Kabine Feelgood-Manager, nach Abpfiff Makler: Wer zu lange stehen bleibt, besitzt danach eine Wohnung im 4. Stock ohne Aufzug.",
+        "file": {
+          "market": "3 Zimmer, 4. OG, kein Aufzug, 6 % Provision",
+          "contract": "Taschengeld-Vertrag mit Papi Jonas",
+          "injury": "Muskelkater vom Obstkorbtragen",
+          "celebration": "Verteilt Bananen an die Fans",
+          "rumor": "Barcelona wollte Dani Olmo, bekam Marco und hat die Lieferung zurückgeschickt."
+        }
       }
     },
     {
@@ -1184,7 +1212,7 @@
       "quote": "Sprengts euch weg. Wir buchen.",
       "card": {
         "pos": "STB",
-        "posName": "Standbein-Schütze",
+        "posName": "Standbein-Sniper",
         "flag": "🇩🇪",
         "club": "Flitterwochen United",
         "wf": 1,
@@ -1203,11 +1231,18 @@
           99
         ],
         "traits": [
-          "🦶 Trifft am liebsten das eigene Bein",
+          "🔫 Schuss 99, Eigentor-Gefahr 100",
           "⏰ „Bei uns wird’s a bissle später“",
-          "💍 Spielt auf Hochzeitsreise"
+          "💍 Spielt gerade Hochzeitsreise"
         ],
-        "scout": "Hat eine Pistole im Fuß, leider zielt sie meistens auf sein eigenes Standbein. Pünktlichkeit 11, und die 11 kam auch zu spät. Taktisch nur einsetzbar, wenn das Spiel zwei Stunden später anfängt."
+        "scout": "Hat eine Pistole im Fuß, zielt aber am liebsten auf das eigene Standbein. Pünktlichkeit 11, und selbst die kam zu spät. Nur einsetzbar, wenn das Spiel zwei Stunden später anfängt.",
+        "file": {
+          "market": "Flitterwochen für zwei zum Preis von sechs",
+          "contract": "Lebenslang, unterschrieben vorm Standesamt",
+          "injury": "Selbstbeschuss am Schienbein (Dauerzustand)",
+          "celebration": "Kommt zur Jubeltraube, wenn alle schon duschen",
+          "rumor": "Sein Standbein verhandelt heimlich mit einem anderen Verein."
+        }
       }
     },
     {
@@ -1263,7 +1298,7 @@
       "quote": "Fast wie auf Malle: 4er-Zimmer für 10 Leute 😂",
       "card": {
         "pos": "CHF",
-        "posName": "Chef-Controllerin",
+        "posName": "Chef-Controllerin (zentral)",
         "flag": "🇨🇿",
         "club": "Flitterwochen United",
         "wf": 5,
@@ -1283,10 +1318,17 @@
         ],
         "traits": [
           "🍻 Trinkfester als Lubo",
-          "✈️ Boeing-Allergie",
-          "🧠 Einzige Erwachsene im Kader"
+          "📊 Hat für alles eine Excel-Formel",
+          "✈️ Boeing-Allergie"
         ],
-        "scout": "Einzige Erwachsene im Kader und trotzdem freiwillig dabei. Trinkt die halbe Mannschaft unter den Tisch und rechnet danach die Rechnung in Excel ab. Nationalität: bald tschechisch, Wechsel bereits beantragt."
+        "scout": "Einzige Erwachsene im Kader und trotzdem freiwillig dabei. Trinkt die halbe Mannschaft unter den Tisch und rechnet danach alles in Excel ab, mit Pivot-Tabelle. Nationalität: bald tschechisch.",
+        "file": {
+          "market": "Unbezahlbar, aber du kriegst trotzdem eine Rechnung",
+          "contract": "Ehevertrag mit Greisel. Kleingedrucktes: Lubo erziehen",
+          "injury": "Keine. Sie bricht nichts, sie bricht Rekorde.",
+          "celebration": "Öffnet Splitwise und tippt",
+          "rumor": "Tschechien will sie für die Nationalmannschaft. Im Trinken."
+        }
       }
     }
   ],

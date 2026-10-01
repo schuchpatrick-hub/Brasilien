@@ -1337,7 +1337,10 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
         '<div class="fc-stats">' + Object.keys(k.stats).map(key => '<div>' + st[key] + ' <small>' + key + '</small>' + (key === 'TRI' && o.triBonus ? '<i>+' + o.triBonus + '</i>' : '') + '</div>').join('') + '</div>' +
         '<div class="fc-spec">' + k.special[0] + ' ' + esc(k.special[1]) + ': ' + k.special[2] + '</div>' +
         '<div class="fc-stars">Schwacher Fuß ' + stars(k.wf) + ' · Tricks ' + stars(k.sm) + '</div></div>' +
-        '<div class="fc-face fc-back"><div class="in"><h4>🔎 Scout-Bericht ' + esc(c.name) + '</h4><p>' + esc(k.scout) + '</p><ul>' + k.traits.map(t => '<li>' + esc(t) + '</li>').join('') + '</ul></div><div class="foot">' +
+        '<div class="fc-face fc-back"><div class="in"><h4>🔎 Scout-Bericht ' + esc(c.name) + '</h4><p>' + esc(k.scout) + '</p><ul>' + k.traits.map(t => '<li>' + esc(t) + '</li>').join('') + '</ul>' +
+        (k.file ? '<h4>📁 Spielerakte</h4><dl class="fc-file">' + [['💰', 'Marktwert', 'market'], ['📝', 'Vertrag', 'contract'], ['🩹', 'Verletzungen', 'injury'], ['🎉', 'Torjubel', 'celebration'], ['🗞️', 'Transfergerücht', 'rumor']]
+          .filter(r => k.file[r[2]]).map(r => '<dt>' + r[0] + ' ' + r[1] + '</dt><dd>' + esc(k.file[r[2]]) + '</dd>').join('') + '</dl>' : '') +
+        '</div><div class="foot">' +
         '<div class="fc-live"><div><b>' + x.d + '</b><span>Drinks</span></div><div><b>' + x.w + '</b><span>Siege</span></div><div><b>' + x.l + '</b><span>Letzter</span></div><div><b>' + x.g + '</b><span>Spiele</span></div></div>' +
         '<div class="fc-hint">Form: ' + form + '</div></div></div>' +
         '</div></button>';
