@@ -10,6 +10,12 @@ nach „Umgesetzt“ verschieben.
   „Nächste Runde zahlen“, „10 Minuten Jonas’ Fischerhut tragen“). Strafen in `trip.json`, eigene über die Seite
   ergänzbar (db), gezogene Strafe pro Partie speichern und im Verlauf zeigen. Kein `confirm()`/`alert()` verwenden.
 
+- **Foto-Quartett der Crew** (vorgemerkt 01.10., wartet auf Bilder): Patrick schickt pro Person 6 Fotos (mit Name, gern
+  mit kurzer Geschichte). Daraus 36 Karten, gruppiert nach Person (1A–1F Jonas, 2A–2F Patrick …), je Karte Foto, Nummer,
+  lustiger Titel, Spruch und 5–6 Werte (teils aus den FIFA-Karten, teils bildbezogen wie Peinlichkeit, Würde, Pegel im Bild).
+  Zwei Varianten: digital auf der Seite spielbar (zwei Spieler auf einem Handy, offline) und Druck-PDF im Kartenformat
+  59 × 91 mm. Fotos nur im Artifact (nicht im Repo), Unbeteiligte weichzeichnen, erst eine Musterkarte zeigen.
+
 ## 💡 Vorgeschlagen, noch nicht beauftragt
 
 - Silvester-Special „Réveillon“ (Countdown, Bräuche, Ablauf, Treffpunkt, Sicherheit)
