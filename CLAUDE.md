@@ -98,6 +98,7 @@ Reiter „Vorfreude“ (`vorfreude-tab`). **Kalender** (`#kalender`): 88 Türche
 (`d` Datum, `cat` fact/word/song/crew/food/task/place/special, `e` Emoji, `t` Titel, `x` Text, optional `pt`/`say`
 Portugiesisch mit Aussprache, `link` Spotify-Suche oder `#anker`). Datum nach Berliner Zeit, geöffnete Türchen pro Handy im
 localStorage. **Zeitkapsel** (`#kapsel`): Fragen in `trip.json` → `kapsel.questions` (Typen crew, number, choice, yesno, text).
+Abgabe für alle sechs bis 27.12.; Fragen mit `from` (die „Wer als Erster …“-Fragen) zählen erst ab 06.01. (alle zusammen).
 Tipps in db-Collection `kapsel` (Dokument-ID = Crew-`id`, `a` = {Frage-id: Antwort}, `ts`), eintragen nur Admin; bis
 `revealAt` (19.01.2027 20 Uhr Rio) zeigt die Seite nur, wer getippt hat. Danach Antworten, Auflösung durch den Admin in
 `kapselres/solution` (`s`). Auswertung: Punkte nach `kapsel.points` (Treffer 3; Zahlen genau 5, am nächsten 3,
