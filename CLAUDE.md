@@ -45,6 +45,12 @@ Die Webseite erst nach dem Merge neu veröffentlichen.
    `db`, `user`, `downloads` erhalten.
 5. „Stand“-Datum in README und Webseite anpassen, committen, pushen.
 
+## Kopfbereich (Übersicht)
+
+Kopfbild, Titel, Reisedaten, Gruppen-Umschalter (zeigt auch die Namen), Heute-Karte (`#heute`/`#today`, Countdown bzw.
+Tagesprogramm) und Eckdaten (`#hero-facts`, Nächte je Gruppe, offene Flüge live aus `flights`) stecken zusammen im
+`<header>`. Unterwegs zeigt das Kopfbild automatisch das Foto der heutigen Station (`setHero`).
+
 ## Crew-Profile
 
 Steckbriefe stehen in `web/trip.json` → `crew` (ein Eintrag mit `facts`/`quote` wird als große Karte gezeigt).

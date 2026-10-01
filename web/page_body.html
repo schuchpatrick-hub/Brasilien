@@ -7,37 +7,23 @@
   <div class="meta">
     <span class="dates">27.12.2026 → 20./21.01.2027</span>
   </div>
-  <div class="crew">
-    <span class="chip"><b>Jonas</b></span><span class="chip"><b>Patrick</b></span><span class="chip"><b>Simon</b></span><span class="chip"><b>Marco</b></span>
-    <span class="chip b"><b>Daijo</b> ab 06.01.</span><span class="chip b"><b>Greisel</b> ab 06.01.</span>
+  <div class="seg hero-seg" role="group" aria-label="Ansicht für">
+    <button type="button" id="g-a" data-g="a" aria-pressed="true"><b>Gringos plus 1 Cevapi</b><small>Jonas · Patrick · Simon · Marco</small></button>
+    <button type="button" id="g-b" data-g="b" aria-pressed="false"><b>Daijo &amp; Greisel</b><small>ab 06.01. dabei</small></button>
   </div>
+  <section id="heute" data-tab="uebersicht" class="hero-today" aria-label="Heute">
+    <div id="today" class="today" aria-live="polite">
+      <p class="note">Die Heute-Ansicht braucht JavaScript. Alle Tage stehen weiter unten.</p>
+    </div>
+    <div class="hero-facts" id="hero-facts">
+      <span id="hf-n"><b>25</b> Nächte (3 davon im Flieger)</span><span><b>6</b> Stationen</span><span><b id="hf-open">4</b> Flüge noch offen</span><span><b>6/7</b> Unterkünfte gebucht</span>
+    </div>
+  </section>
 </header>
 
 <nav class="tabs" aria-label="Bereiche"><div class="tabs-in"><a href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht">Übersicht</a><a href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab">Tage</a><a href="#reise" id="tab-reise" data-tab="reise">Flüge & Kosten</a><a href="#crew-tab" id="tab-crew-tab" data-tab="crew-tab">Crew</a><a href="#karten-tab" id="tab-karten-tab" data-tab="karten-tab">Karten</a><a href="#drinks-tab" id="tab-drinks-tab" data-tab="drinks-tab">Drinks</a><a href="#unterwegs-tab" id="tab-unterwegs-tab" data-tab="unterwegs-tab">Unterwegs</a><a href="#infos" id="tab-infos" data-tab="infos">Infos & Packen</a><a href="#vorfreude-tab" id="tab-vorfreude-tab" data-tab="vorfreude-tab">Vorfreude</a><a href="#spiele-tab" id="tab-spiele-tab" data-tab="spiele-tab">Spiele</a><a href="#extras" id="tab-extras" data-tab="extras">Downloads</a></div></nav>
 
 
-
-<section id="heute" data-tab="uebersicht" class="today-wrap">
-  <div class="today-head">
-    <h2>Heute</h2>
-    <div class="seg" role="group" aria-label="Ansicht für">
-      <button type="button" id="g-a" data-g="a" aria-pressed="true">Gringos plus 1 Cevapi</button>
-      <button type="button" id="g-b" data-g="b" aria-pressed="false">Daijo &amp; Greisel</button>
-    </div>
-  </div>
-  <div id="today" class="today" aria-live="polite">
-    <p class="note">Die Heute-Ansicht braucht JavaScript. Alle Tage stehen weiter unten.</p>
-  </div>
-</section>
-
-<section id="eckdaten" data-tab="uebersicht">
-<div class="facts">
-    <div class="fact"><strong>24</strong><span>Nächte für die Gringos plus 1 Cevapi</span></div>
-    <div class="fact"><strong>6</strong><span>Stationen</span></div>
-    <div class="fact"><strong>4</strong><span>Inlandsflüge, alle noch offen</span></div>
-    <div class="fact"><strong>6 / 7</strong><span>Unterkünfte gebucht</span></div>
-  </div>
-</section>
 
 <section id="route" data-tab="uebersicht">
   <h2>Die Route</h2>
