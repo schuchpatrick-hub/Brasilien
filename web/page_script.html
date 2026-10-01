@@ -1004,6 +1004,194 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   })();
 })();
 
+/* ---------- Spiele: Partien eintragen, Ranglisten (db-Collections "games" und "gametypes") ---------- */
+(function () {
+  const box = document.getElementById('gm'); if (!box || !TRIP.games) return;
+  const CREW = TRIP.crew, byId = Object.fromEntries(CREW.map(c => [c.id, c]));
+  const MODES = {points: 'Punkte pro Person', winner: 'Nur Sieger', teams: 'Team gegen Team', wizard: 'Wizard-Block'};
+  let dbG = null, writable = false, custom = [], matches = [], filter = 'all', msg = '', pending = false;
+  let f = {type: null, players: new Set(), scores: {}, win: new Set(), A: new Set(), B: new Set(), loc: false, sa: '', sb: ''};
+  let wiz = {};          // Eingaben der laufenden Wizard-Runde: {id: {a, s}}
+  const types = () => TRIP.games.types.concat(custom);
+  const typeOf = id => types().find(t => t.id === id) || {id, name: id, emoji: '🎲', mode: 'winner'};
+  const av = (id, cls) => { const p = byId[id]; return '<span class="' + (cls || 'av') + '">' + (p && p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="">' : esc(p ? p.name[0] : '?')) + '</span>'; };
+  const nm = id => byId[id] ? byId[id].name : id;
+  const wizPts = r => r.a === r.s ? 20 + 10 * r.s : -10 * Math.abs(r.a - r.s);
+  const wizTotals = m => Object.fromEntries(m.players.map(id => [id, (m.rounds || []).reduce((s, r) => s + (r[id] ? wizPts(r[id]) : 0), 0)]));
+  function result(m) {      // {players, winners, text}
+    const t = typeOf(m.game);
+    if (m.mode === 'teams') {
+      const A = m.teams.a || [], B = m.teams.b || [], sa = +m.teams.sa, sb = +m.teams.sb;
+      const bName = m.teams.loc ? 'Einheimische' : B.map(nm).join(' & ');
+      return {players: A.concat(B), winners: sa > sb ? A : sb > sa ? B : [], text: A.map(nm).join(' & ') + ' <b>' + sa + ':' + sb + '</b> ' + esc(bName), loc: m.teams.loc ? (sa > sb ? 'w' : sb > sa ? 'l' : 'd') : null};
+    }
+    if (m.mode === 'winner') return {players: m.players, winners: m.winners || [], text: '🏆 ' + (m.winners || []).map(nm).join(' & ') + ' <span class="t">(' + m.players.length + ' Spieler)</span>'};
+    const sc = m.mode === 'wizard' ? wizTotals(m) : m.scores || {};
+    const vals = m.players.map(id => +sc[id] || 0), best = (t.higher === false) ? Math.min(...vals) : Math.max(...vals);
+    const order = m.players.slice().sort((x, y) => t.higher === false ? (+sc[x] || 0) - (+sc[y] || 0) : (+sc[y] || 0) - (+sc[x] || 0));
+    return {players: m.players, winners: m.done === false ? [] : m.players.filter(id => (+sc[id] || 0) === best), text: order.map(id => esc(nm(id)) + ' ' + (+sc[id] || 0)).join(' · ')};
+  }
+  function board() {
+    const list = matches.filter(m => m.done !== false && (filter === 'all' || m.game === filter));
+    const st = Object.fromEntries(CREW.map(p => [p.id, {g: 0, w: 0}]));
+    let lw = 0, ll = 0, ld = 0;
+    list.forEach(m => { const r = result(m); r.players.forEach(id => { if (st[id]) st[id].g++; }); r.winners.forEach(id => { if (st[id]) st[id].w++; });
+      if (r.loc === 'w') lw++; else if (r.loc === 'l') ll++; else if (r.loc === 'd') ld++; });
+    const rows = CREW.filter(p => st[p.id].g).sort((a, b) => st[b.id].w - st[a.id].w || st[b.id].w / st[b.id].g - st[a.id].w / st[a.id].g);
+    const maxW = Math.max(1, ...rows.map(p => st[p.id].w));
+    const place = p => 1 + rows.filter(x => st[x.id].w > st[p.id].w).length;
+    const t = filter === 'all' ? null : typeOf(filter);
+    return '<div class="gm-champ"><h3>' + (t ? t.emoji + ' Rangliste ' + esc(t.name) : '👑 Spiele-Champion der Reise') + '</h3>' +
+      '<div class="gm-filter" role="group" aria-label="Spiel auswählen"><button type="button" data-f="all" aria-pressed="' + (filter === 'all') + '">Alle</button>' +
+      types().map(x => '<button type="button" data-f="' + esc(x.id) + '" aria-pressed="' + (filter === x.id) + '">' + x.emoji + ' ' + esc(x.name) + '</button>').join('') + '</div>' +
+      (rows.length ? '<ol class="gm-board">' + rows.map(p => '<li><span class="pl">' + place(p) + '.</span>' + av(p.id) + '<span class="nm"><b>' + esc(p.name) + (place(p) === 1 ? ' 👑' : '') + '</b><span class="bar"><i style="width:' + (st[p.id].w / maxW * 100) + '%"></i></span></span>' +
+        '<span class="val">' + st[p.id].w + ' ' + (st[p.id].w === 1 ? 'Sieg' : 'Siege') + '<small>' + st[p.id].g + ' ' + (st[p.id].g === 1 ? 'Spiel' : 'Spiele') + ' · ' + Math.round(st[p.id].w / st[p.id].g * 100) + ' %</small></span></li>').join('') + '</ol>'
+        : '<p class="gm-empty">Noch keine Partie' + (t ? ' ' + esc(t.name) : '') + ' eingetragen. Die erste Runde entscheidet, wer vorlegt.</p>') +
+      (lw + ll + ld ? '<div class="gm-vs">⚽ Crew gegen Einheimische: <b>' + lw + (lw === 1 ? ' Sieg' : ' Siege') + ' · ' + ll + (ll === 1 ? ' Niederlage' : ' Niederlagen') + (ld ? ' · ' + ld + ' Unentschieden' : '') + '</b></div>' : '') +
+      '<div class="sub">' + list.length + ' ' + (list.length === 1 ? 'Partie' : 'Partien') + ' gewertet' + (filter === 'all' ? ' · Platz nach Siegen, bei Gleichstand zählt die Siegquote' : '') + '</div></div>';
+  }
+  function pick(set, key, extra) {
+    return '<div class="gm-pick" role="group">' + CREW.map(p => '<button type="button" role="checkbox" data-' + key + '="' + p.id + '" aria-checked="' + set.has(p.id) + '"' + (writable && !(extra && extra(p.id)) ? '' : ' disabled') + '>' + av(p.id) + esc(p.name) + '</button>').join('') + '</div>';
+  }
+  function liveWizard() {
+    const m = matches.find(x => x.mode === 'wizard' && x.done === false); if (!m) return '';
+    const tot = wizTotals(m), n = (m.rounds || []).length, max = Math.floor(60 / m.players.length), next = n + 1;
+    let h = '<div class="gm-card gm-live"><h3 style="margin:0">🧙 Wizard läuft · Runde ' + Math.min(next, max) + ' von ' + max + '</h3><div class="gm-wiz"><table><thead><tr><th>Runde</th>' + m.players.map(id => '<th>' + esc(nm(id)) + '</th>').join('') + '</tr></thead><tbody>' +
+      (m.rounds || []).map((r, i) => '<tr><td class="r">' + (i + 1) + '</td>' + m.players.map(id => { const x = r[id]; if (!x) return '<td>–</td>'; const p = wizPts(x);
+        return '<td class="' + (p > 0 ? 'pos' : 'neg') + '">' + (p > 0 ? '+' : '') + p + '<small>' + x.a + ' / ' + x.s + '</small></td>'; }).join('') + '</tr>').join('') +
+      '</tbody><tfoot><tr><td>Σ</td>' + m.players.map(id => '<td>' + tot[id] + '</td>').join('') + '</tr></tfoot></table></div>';
+    if (writable && next <= max) {
+      h += '<div class="gm-wiz-in"><span></span><span></span><span class="h">Ansage</span><span class="h">Stiche</span>' + m.players.map(id => av(id) + '<b>' + esc(nm(id)) + '</b>' +
+        '<input type="number" min="0" max="' + next + '" inputmode="numeric" data-wa="' + id + '" value="' + (wiz[id] && wiz[id].a !== undefined ? wiz[id].a : '') + '">' +
+        '<input type="number" min="0" max="' + next + '" inputmode="numeric" data-ws="' + id + '" value="' + (wiz[id] && wiz[id].s !== undefined ? wiz[id].s : '') + '">').join('') + '</div>' +
+        '<p class="gm-hint">Runde ' + next + ': ' + next + (next === 1 ? ' Karte' : ' Karten') + ' pro Person. Die Stiche müssen zusammen ' + next + ' ergeben.</p>';
+    }
+    h += writable ? '<div class="gm-go">' + (next <= max ? '<button type="button" class="btn" data-act="wround" data-id="' + m.id + '">Runde ' + next + ' speichern</button>' : '') +
+      (n ? '<button type="button" class="btn ghost" data-act="wundo" data-id="' + m.id + '">Letzte Runde löschen</button>' : '') +
+      '<button type="button" class="btn ghost" data-act="wend" data-id="' + m.id + '">' + (next > max ? 'Partie werten 🏆' : 'Partie jetzt beenden') + '</button><span class="gm-msg" id="gm-wmsg"></span></div>' : '<p class="gm-hint">Patrick trägt die Runden ein, der Stand aktualisiert sich live.</p>';
+    return h + '</div>';
+  }
+  function form() {
+    const t = f.type ? typeOf(f.type) : null;
+    let h = '<details class="gm-card' + (writable ? '' : ' locked') + '" open><summary>✍️ Neue Partie eintragen</summary>' +
+      (writable ? '' : '<p class="gm-lock">🔒 Eintragen nur durch den Admin (Patrick). Schick ihm einfach das Ergebnis.</p>') + '<div class="gm-body" style="display:grid;gap:12px">' +
+      '<div class="eyebrow">1. Welches Spiel?</div><div class="gm-types">' + types().map(x => '<button type="button" data-t="' + esc(x.id) + '" aria-pressed="' + (f.type === x.id) + '"' + (writable ? '' : ' disabled') + '><span class="e">' + x.emoji + '</span>' + esc(x.name) + '</button>').join('') + '</div>';
+    if (t) {
+      if (t.hint) h += '<p class="gm-hint">' + esc(t.hint) + '</p>';
+      if (t.mode === 'teams') {
+        h += '<div class="eyebrow">2. Teams und Ergebnis</div><div class="gm-teams"><div class="gm-team"><h4>Team A</h4>' + pick(f.A, 'ta', id => f.B.has(id)) + '<input type="number" min="0" inputmode="numeric" placeholder="Punkte A" data-sc="sa" value="' + esc(f.sa) + '"></div>' +
+          '<div class="gm-team"><h4>Team B</h4><label class="loc"><input type="checkbox" data-loc' + (f.loc ? ' checked' : '') + (writable ? '' : ' disabled') + '> Einheimische 🇧🇷</label>' + (f.loc ? '' : pick(f.B, 'tb', id => f.A.has(id))) + '<input type="number" min="0" inputmode="numeric" placeholder="Punkte B" data-sc="sb" value="' + esc(f.sb) + '"></div></div>';
+      } else {
+        h += '<div class="eyebrow">2. Wer spielt mit?</div>' + pick(f.players, 'pl');
+        const ps = CREW.filter(p => f.players.has(p.id));
+        if (t.mode === 'points' && ps.length) h += '<div class="eyebrow">3. ' + esc(t.unit || 'Punkte') + ' am Ende</div><div class="gm-rows">' + ps.map(p => '<div class="gm-row">' + av(p.id) + '<b>' + esc(p.name) + '</b><input type="number" inputmode="numeric" data-pts="' + p.id + '" value="' + esc(f.scores[p.id] ?? '') + '"></div>').join('') + '</div>';
+        if (t.mode === 'winner' && ps.length) h += '<div class="eyebrow">3. Wer hat gewonnen?</div><div class="gm-pick">' + ps.map(p => '<button type="button" role="checkbox" data-wn="' + p.id + '" aria-checked="' + f.win.has(p.id) + '">' + av(p.id) + esc(p.name) + '</button>').join('') + '</div>';
+        if (t.mode === 'wizard') h += '<p class="gm-hint">3 bis 6 Spieler. Danach erscheint oben der Rundenblock, Runde für Runde eintragen.</p>';
+      }
+      h += '<div class="gm-go"><button type="button" class="btn" data-act="save"' + (writable ? '' : ' disabled') + '>' + (t.mode === 'wizard' ? '🧙 Wizard-Block starten' : '💾 Partie speichern') + '</button><span class="gm-msg">' + esc(msg) + '</span></div>';
+    }
+    return h + '</div></details>';
+  }
+  function log() {
+    const list = matches.filter(m => m.done !== false).sort((a, b) => b.ts - a.ts).slice(0, 40);
+    return '<details class="gm-card"' + (list.length ? ' open' : '') + '><summary>📜 Verlauf (' + matches.filter(m => m.done !== false).length + ')</summary>' + (list.length ? '<ul class="gm-log">' + list.map(m => { const t = typeOf(m.game), r = result(m);
+      return '<li><span class="e">' + t.emoji + '</span><span><b>' + esc(t.name) + '</b> <span class="t">' + new Date(m.ts).toLocaleString('de-DE', {timeZone: TZ, day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'}) + '</span><br>' + r.text +
+        (r.winners.length && m.mode !== 'winner' ? ' · 🏆 ' + r.winners.map(nm).join(' & ') : '') + '</span>' + (writable ? '<button type="button" class="del" data-del="' + m.id + '" aria-label="Partie löschen" title="Löschen">×</button>' : '<span></span>') + '</li>'; }).join('') + '</ul>' : '<p class="gm-hint">Noch nichts gespielt.</p>') + '</details>';
+  }
+  function newType() {
+    if (!writable) return '';
+    return '<details class="gm-card"><summary>➕ Neues Spiel hinzufügen</summary><div class="gm-new"><input type="text" id="gm-ne" maxlength="4" placeholder="🎯" aria-label="Emoji"><input type="text" id="gm-nn" maxlength="30" placeholder="Name, z. B. Beer Pong" aria-label="Name">' +
+      '<select id="gm-nm" class="full" aria-label="Wertung">' + Object.entries(MODES).filter(([k]) => k !== 'wizard').map(([k, v]) => '<option value="' + k + '">' + v + '</option>').join('') + '</select>' +
+      '<label class="full" style="font-size:.9rem;display:flex;gap:8px;align-items:center"><input type="checkbox" id="gm-nl"> Bei Punkten gewinnt der Niedrigste (z. B. Golf, Strafpunkte)</label>' +
+      '<div class="gm-go full"><button type="button" class="btn" data-act="addtype">Spiel anlegen</button></div></div></details>';
+  }
+  function render() { box.innerHTML = board() + liveWizard() + form() + log() + newType(); pending = false; }
+  const busy = () => box.contains(document.activeElement) && /INPUT|SELECT/.test(document.activeElement.tagName);
+  function refresh() { if (busy()) pending = true; else render(); }
+  box.addEventListener('focusout', () => setTimeout(() => { if (pending && !busy()) render(); }, 50));
+  function toggle(set, id) { set.has(id) ? set.delete(id) : set.add(id); }
+  box.addEventListener('click', async e => {
+    const b = e.target.closest('button,[data-loc]'); if (!b) return;
+    const d = b.dataset;
+    if (d.f) { filter = d.f; render(); return; }
+    if (!writable && !d.f) return;
+    if (d.t) { f = {type: d.t, players: new Set(), scores: {}, win: new Set(), A: new Set(), B: new Set(), loc: false, sa: '', sb: ''}; msg = ''; render(); return; }
+    if (d.pl) { toggle(f.players, d.pl); f.win.forEach(id => { if (!f.players.has(id)) f.win.delete(id); }); render(); return; }
+    if (d.wn) { toggle(f.win, d.wn); render(); return; }
+    if (d.ta) { toggle(f.A, d.ta); render(); return; }
+    if (d.tb) { toggle(f.B, d.tb); render(); return; }
+    if (b.hasAttribute('data-loc')) { f.loc = b.checked; f.B.clear(); render(); return; }
+    if (d.del) { if (!dbG || !confirm('Diese Partie löschen?')) return; try { await dbG.doc('games/' + d.del).delete(); } catch (err) { alert('Konnte nicht löschen.'); } return; }
+    if (!dbG) return;
+    if (d.act === 'save') {
+      const t = typeOf(f.type); let doc = {game: t.id, mode: t.mode, ts: Date.now()};
+      const fail = m => { msg = m; render(); };
+      if (t.mode === 'teams') {
+        if (!f.A.size || (!f.loc && !f.B.size)) return fail('Bitte beide Teams auswählen.');
+        if (f.sa === '' || f.sb === '') return fail('Bitte das Ergebnis eintragen.');
+        doc.players = [...f.A, ...(f.loc ? [] : f.B)]; doc.teams = {a: [...f.A], b: f.loc ? [] : [...f.B], sa: +f.sa, sb: +f.sb, loc: f.loc};
+      } else {
+        const ps = CREW.filter(p => f.players.has(p.id)).map(p => p.id);
+        if (ps.length < (t.mode === 'wizard' ? 3 : 2)) return fail(t.mode === 'wizard' ? 'Wizard braucht mindestens 3 Spieler.' : 'Bitte mindestens 2 Spieler auswählen.');
+        if (t.mode === 'wizard' && ps.length > 6) return fail('Wizard geht mit höchstens 6 Spielern.');
+        doc.players = ps;
+        if (t.mode === 'points') { if (ps.some(id => f.scores[id] === undefined || f.scores[id] === '')) return fail('Bitte für jeden die Punkte eintragen.'); doc.scores = Object.fromEntries(ps.map(id => [id, +f.scores[id]])); }
+        if (t.mode === 'winner') { if (!f.win.size) return fail('Bitte den Sieger auswählen.'); doc.winners = [...f.win]; }
+        if (t.mode === 'wizard') { if (matches.some(m => m.mode === 'wizard' && m.done === false)) return fail('Es läuft schon ein Wizard-Block, erst den beenden.'); doc.rounds = []; doc.done = false; }
+      }
+      try { await dbG.collection('games').doc().set(doc); msg = t.mode === 'wizard' ? '' : '✅ Gespeichert!'; f = {type: f.type, players: new Set(), scores: {}, win: new Set(), A: new Set(), B: new Set(), loc: false, sa: '', sb: ''}; render(); }
+      catch (err) { fail(err && err.code === 'not_granted' ? 'Keine Schreibrechte.' : 'Konnte nicht speichern, bitte nochmal.'); }
+      return;
+    }
+    const m = matches.find(x => x.id === d.id);
+    if (d.act === 'wround' && m) {
+      const next = (m.rounds || []).length + 1, out = {}; let sum = 0;
+      for (const id of m.players) { const x = wiz[id] || {}; if (x.a === undefined || x.s === undefined || x.a === '' || x.s === '') { document.getElementById('gm-wmsg').textContent = 'Bitte für jeden Ansage und Stiche eintragen.'; return; } out[id] = {a: +x.a, s: +x.s}; sum += +x.s; }
+      if (sum !== next) { document.getElementById('gm-wmsg').textContent = 'Die Stiche ergeben zusammen ' + sum + ', in Runde ' + next + ' müssen es ' + next + ' sein.'; return; }
+      const rest = Object.assign({}, m); delete rest.id; rest.rounds = (m.rounds || []).concat([out]);
+      try { await dbG.doc('games/' + m.id).set(rest); wiz = {}; } catch (err) { document.getElementById('gm-wmsg').textContent = 'Konnte nicht speichern.'; }
+      return;
+    }
+    if (d.act === 'wundo' && m) { const rest = Object.assign({}, m); delete rest.id; rest.rounds = (m.rounds || []).slice(0, -1); try { await dbG.doc('games/' + m.id).set(rest); } catch (err) {} return; }
+    if (d.act === 'wend' && m) {
+      if (!(m.rounds || []).length) { if (confirm('Noch keine Runde gespielt. Block verwerfen?')) { try { await dbG.doc('games/' + m.id).delete(); } catch (err) {} } return; }
+      if ((m.rounds || []).length < Math.floor(60 / m.players.length) && !confirm('Partie vorzeitig beenden und mit dem aktuellen Stand werten?')) return;
+      const rest = Object.assign({}, m); delete rest.id; rest.done = true; rest.ts = Date.now();
+      try { await dbG.doc('games/' + m.id).set(rest); } catch (err) {}
+      return;
+    }
+    if (d.act === 'addtype') {
+      const name = document.getElementById('gm-nn').value.trim(); if (!name) return;
+      const id = 'c-' + name.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 24) + '-' + Date.now().toString(36);
+      const doc = {name, emoji: document.getElementById('gm-ne').value.trim() || '🎲', mode: document.getElementById('gm-nm').value, higher: !document.getElementById('gm-nl').checked, unit: 'Punkte', ts: Date.now()};
+      try { await dbG.doc('gametypes/' + id).set(doc); f.type = id; msg = ''; } catch (err) { alert('Konnte das Spiel nicht anlegen.'); }
+    }
+  });
+  box.addEventListener('input', e => {
+    const d = e.target.dataset;
+    if (d.pts) f.scores[d.pts] = e.target.value;
+    if (d.sc) f[d.sc] = e.target.value;
+    if (d.wa) (wiz[d.wa] = wiz[d.wa] || {}).a = e.target.value;
+    if (d.ws) (wiz[d.ws] = wiz[d.ws] || {}).s = e.target.value;
+  });
+  render();
+  if (PRINT) return;
+  (async () => {
+    if (!window.claude || !window.claude.use) return;
+    dbG = await window.claude.use('db'); if (!dbG) return;
+    const user = await window.claude.use('user');
+    const w = user ? await user.can('data.write') : null; writable = w !== false; render();
+    dbG.collection('games').onSnapshot(snap => {
+      matches = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data())).filter(m => m && m.game && Array.isArray(m.players) && typeof m.ts === 'number');
+      refresh();
+    }, () => {});
+    dbG.collection('gametypes').onSnapshot(snap => {
+      custom = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data())).filter(t => t.name && MODES[t.mode]).sort((a, b) => (a.ts || 0) - (b.ts || 0));
+      refresh();
+    }, () => {});
+  })();
+})();
+
 const TAB_IDS = [...document.querySelectorAll('.tabs a')].map(a => a.dataset.tab);
 const SECTIONS = [...document.querySelectorAll('section[data-tab]')];
 const reduceMotion = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;

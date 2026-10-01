@@ -10,7 +10,7 @@ Reiseübersicht, die bei neuen Infos (Buchungen, Chat-Exporte, Screenshots) aktu
 | `README.md` | Hauptübersicht (Route, Tag für Tag, Flüge, Unterkünfte, Kosten, offene Punkte, Gesundheit) |
 | `web/trip.json` | **Datenquelle** für Heute-Ansicht, Tag für Tag und Kalenderdateien (Tage, Termine mit UTC-Zeiten, Unterkünfte, Crew, Drinks, Real-Rechner) |
 | `web/trip.json` → `flights`, `costs` | Flüge als Bordkarten (Status `booked`/`open`/`check`, Warnhinweise, Suchlinks für offene Flüge) und Kosten pro Gruppe; auf der Webseite nicht mehr in `page_body.html` pflegen |
-| `web/page_body.html` | Statischer Inhalt der Webseite; jede `<section>` hat `data-tab` = Kapitel, zu dem der Reiter oben springt; alles bleibt untereinander sichtbar (Reihenfolge: uebersicht, tage-tab, reise, crew-tab, drinks-tab, unterwegs-tab = Sprache + Real-Rechner, infos, vorfreude-tab, extras; Reiter und Kapitel müssen in derselben Reihenfolge stehen) (Stationen, Flüge, Kosten, Praktisches, Packlisten, Downloads); `%%MAP%%` = Karte |
+| `web/page_body.html` | Statischer Inhalt der Webseite; jede `<section>` hat `data-tab` = Kapitel, zu dem der Reiter oben springt; alles bleibt untereinander sichtbar (Reihenfolge: uebersicht, tage-tab, reise, crew-tab, drinks-tab, unterwegs-tab = Sprache + Real-Rechner, infos, vorfreude-tab, spiele-tab, extras; Reiter und Kapitel müssen in derselben Reihenfolge stehen) (Stationen, Flüge, Kosten, Praktisches, Packlisten, Downloads); `%%MAP%%` = Karte |
 | `web/page_script.html` | JavaScript der Webseite: Heute/Countdown, Gruppen-Umschalter, Drinks und Check-ins (`db`), Real-Rechner, Packlisten (localStorage), PDF-Download, Vorfreude-Kalender, Zeitkapsel; `%%TRIP%%` = trip.json |
 | `web/page_head.html` | Titel + CSS der Webseite (Farb-Tokens, Hell/Dunkel) |
 | `web/poster_template.html` | Rahmen für das Reisebild (Titel, Stationsleiste unten) |
@@ -73,6 +73,15 @@ Tipps in db-Collection `kapsel` (Dokument-ID = Crew-`id`, `a` = {Frage-id: Antwo
 `kapselres/solution` (`s`). Auswertung: Punkte nach `kapsel.points` (Treffer 3; Zahlen genau 5, am nächsten 3,
 Zweitnächster 1), Podest + Tabelle „Hellseher der Reise“ (Letzter = „Blindgänger“), Stimmenverteilung je Frage und
 „Was die Crew über sich denkt“ (Titel aus `title` je Crew-Frage, meistgetippte Person).
+
+## Spiele
+
+Reiter „Spiele“ (`spiele-tab`, `#spiele`). Spiele in `trip.json` → `games.types` (Blacky Jacky = `points`, Wizard = `wizard`,
+Footvolley = `teams`), unterwegs neue Spiele über die Seite (db-Collection `gametypes`: `name`, `emoji`, `mode`
+points/winner/teams, `higher`). Partien in db-Collection `games` (`game`, `mode`, `ts`, `players`, je nach Modus `scores`,
+`winners`, `teams` {a, b, sa, sb, loc = gegen Einheimische}, Wizard `rounds` [{id: {a: Ansage, s: Stiche}}] und `done`).
+Wizard-Punkte: richtig 20 + 10 je Stich, sonst −10 je Stich daneben; Runden = 60 / Spielerzahl. Rangliste nach Siegen
+(Gleichstand: Siegquote), Filter pro Spiel, Bilanz Crew gegen Einheimische. Eintragen nur Admin.
 
 ## Real-Rechner
 

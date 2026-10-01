@@ -2514,5 +2514,34 @@
       "closest": 3,
       "second": 1
     }
+  },
+  "games": {
+    "_hinweis": "Partien in db-Collection games (game, ts, players, mode, scores, teams, rounds, done), eigene Spiele in gametypes. Modi: points (Punkte je Person, higher = höchste gewinnt), winner (nur Sieger), teams (Team A gegen Team B, auch gegen Einheimische), wizard (Rundenblock).",
+    "types": [
+      {
+        "id": "blackyjacky",
+        "name": "Blacky Jacky",
+        "emoji": "🃏",
+        "mode": "points",
+        "higher": true,
+        "unit": "Punkte",
+        "hint": "Am Ende der Partie die Punkte bzw. Chips von jedem eintragen. Wer am meisten hat, gewinnt."
+      },
+      {
+        "id": "wizard",
+        "name": "Wizard",
+        "emoji": "🧙",
+        "mode": "wizard",
+        "hint": "Rundenblock: Vor jeder Runde ansagen, danach Stiche eintragen. Richtig angesagt: 20 + 10 pro Stich, sonst −10 pro Stich daneben."
+      },
+      {
+        "id": "footvolley",
+        "name": "Footvolley",
+        "emoji": "⚽",
+        "mode": "teams",
+        "unit": "Punkte",
+        "hint": "Teams wählen, Ergebnis eintragen. Gegen Einheimische einfach „Einheimische“ als Gegner nehmen."
+      }
+    ]
   }
 }
