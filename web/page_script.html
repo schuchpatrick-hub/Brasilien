@@ -1006,7 +1006,28 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
 
 /* ---------- Spiele: Partien eintragen, Ranglisten (db-Collections "games" und "gametypes") ---------- */
 (function () {
-  const box = document.getElementById('gm'); if (!box || !TRIP.games) return;
+  const box = document.getElementById('gm'), top = document.getElementById('gm-top'); if (!box || !top || !TRIP.games) return;
+  const R = TRIP.games.roasts || {generic: ['{n} hat verloren.']};
+  const hash = s => { let h = 2166136261; for (const c of String(s)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+  let salt = 0;
+  // Derber Spruch für den Verlierer einer Partie (pro Partie fest, mit "Anderer Spruch" neu würfeln)
+  const gen = n => /[sxzß]$/i.test(n) ? n + '’' : n + 's';      // Genitiv: Jonas’ / Simons
+  function roast(m, extra) {
+    const r = result(m), s = (extra || 0);
+    if (m.mode === 'teams' && m.teams.loc && r.loc === 'l' && (R.locals || []).length) return R.locals[hash(m.id + s) % R.locals.length];
+    if (!r.losers || !r.losers.length) return '';
+    const v = r.losers[(hash(m.id) + s) % r.losers.length];      // bei mehreren Verlierern trifft es einen
+    const pp = (R.person || {})[v] || [], gp = (R.game || {})[m.game] || [];
+    const pool = pp.concat(pp, pp, gp, gp, R.generic || []);      // persönliche Sprüche kommen öfter
+    return pool[hash(m.id + v + s) % pool.length].split('{n}s').join(gen(nm(v))).split('{n}').join(nm(v));
+  }
+  function lastLoser() {
+    const m = matches.filter(x => x.done !== false).sort((a, b) => b.ts - a.ts)[0]; if (!m) return '';
+    const txt = roast(m, salt); if (!txt) return '';
+    const t = typeOf(m.game), r = result(m);
+    return '<div class="gm-loser"><div class="k">💀 Verlierer-Ecke · ' + t.emoji + ' ' + esc(t.name) + '</div><div class="who">' + (r.loc === 'l' ? '🇧🇷 Einheimische ' + m.teams.sb + ':' + m.teams.sa + ' Crew' : r.losers.map(id => av(id)).join('')) + '</div>' +
+      '<p>„' + esc(txt) + '“</p><button type="button" class="btn ghost" data-act="reroast">🎲 Anderer Spruch</button></div>';
+  }
   const CREW = TRIP.crew, byId = Object.fromEntries(CREW.map(c => [c.id, c]));
   const MODES = {points: 'Punkte pro Person', winner: 'Nur Sieger', teams: 'Team gegen Team', wizard: 'Wizard-Block'};
   let dbG = null, writable = false, custom = [], matches = [], filter = 'all', msg = '', pending = false;
@@ -1023,19 +1044,19 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     if (m.mode === 'teams') {
       const A = m.teams.a || [], B = m.teams.b || [], sa = +m.teams.sa, sb = +m.teams.sb;
       const bName = m.teams.loc ? 'Einheimische' : B.map(nm).join(' & ');
-      return {players: A.concat(B), winners: sa > sb ? A : sb > sa ? B : [], text: A.map(nm).join(' & ') + ' <b>' + sa + ':' + sb + '</b> ' + esc(bName), loc: m.teams.loc ? (sa > sb ? 'w' : sb > sa ? 'l' : 'd') : null};
+      return {players: A.concat(B), winners: sa > sb ? A : sb > sa ? B : [], losers: sa > sb ? B : sb > sa ? A : [], text: A.map(nm).join(' & ') + ' <b>' + sa + ':' + sb + '</b> ' + esc(bName), loc: m.teams.loc ? (sa > sb ? 'w' : sb > sa ? 'l' : 'd') : null};
     }
-    if (m.mode === 'winner') return {players: m.players, winners: m.winners || [], text: '🏆 ' + (m.winners || []).map(nm).join(' & ') + ' <span class="t">(' + m.players.length + ' Spieler)</span>'};
+    if (m.mode === 'winner') return {players: m.players, winners: m.winners || [], losers: m.players.filter(id => !(m.winners || []).includes(id)), text: '🏆 ' + (m.winners || []).map(nm).join(' & ') + ' <span class="t">(' + m.players.length + ' Spieler)</span>'};
     const sc = m.mode === 'wizard' ? wizTotals(m) : m.scores || {};
-    const vals = m.players.map(id => +sc[id] || 0), best = (t.higher === false) ? Math.min(...vals) : Math.max(...vals);
+    const vals = m.players.map(id => +sc[id] || 0), best = (t.higher === false) ? Math.min(...vals) : Math.max(...vals), worst = (t.higher === false) ? Math.max(...vals) : Math.min(...vals);
     const order = m.players.slice().sort((x, y) => t.higher === false ? (+sc[x] || 0) - (+sc[y] || 0) : (+sc[y] || 0) - (+sc[x] || 0));
-    return {players: m.players, winners: m.done === false ? [] : m.players.filter(id => (+sc[id] || 0) === best), text: order.map(id => esc(nm(id)) + ' ' + (+sc[id] || 0)).join(' · ')};
+    return {players: m.players, winners: m.done === false ? [] : m.players.filter(id => (+sc[id] || 0) === best), losers: m.done === false || best === worst ? [] : m.players.filter(id => (+sc[id] || 0) === worst), text: order.map(id => esc(nm(id)) + ' ' + (+sc[id] || 0)).join(' · ')};
   }
   function board() {
     const list = matches.filter(m => m.done !== false && (filter === 'all' || m.game === filter));
-    const st = Object.fromEntries(CREW.map(p => [p.id, {g: 0, w: 0}]));
+    const st = Object.fromEntries(CREW.map(p => [p.id, {g: 0, w: 0, l: 0}]));
     let lw = 0, ll = 0, ld = 0;
-    list.forEach(m => { const r = result(m); r.players.forEach(id => { if (st[id]) st[id].g++; }); r.winners.forEach(id => { if (st[id]) st[id].w++; });
+    list.forEach(m => { const r = result(m); r.players.forEach(id => { if (st[id]) st[id].g++; }); r.winners.forEach(id => { if (st[id]) st[id].w++; }); (r.losers || []).forEach(id => { if (st[id]) st[id].l++; });
       if (r.loc === 'w') lw++; else if (r.loc === 'l') ll++; else if (r.loc === 'd') ld++; });
     const rows = CREW.filter(p => st[p.id].g).sort((a, b) => st[b.id].w - st[a.id].w || st[b.id].w / st[b.id].g - st[a.id].w / st[a.id].g);
     const maxW = Math.max(1, ...rows.map(p => st[p.id].w));
@@ -1045,10 +1066,15 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       '<div class="gm-filter" role="group" aria-label="Spiel auswählen"><button type="button" data-f="all" aria-pressed="' + (filter === 'all') + '">Alle</button>' +
       types().map(x => '<button type="button" data-f="' + esc(x.id) + '" aria-pressed="' + (filter === x.id) + '">' + x.emoji + ' ' + esc(x.name) + '</button>').join('') + '</div>' +
       (rows.length ? '<ol class="gm-board">' + rows.map(p => '<li><span class="pl">' + place(p) + '.</span>' + av(p.id) + '<span class="nm"><b>' + esc(p.name) + (place(p) === 1 ? ' 👑' : '') + '</b><span class="bar"><i style="width:' + (st[p.id].w / maxW * 100) + '%"></i></span></span>' +
-        '<span class="val">' + st[p.id].w + ' ' + (st[p.id].w === 1 ? 'Sieg' : 'Siege') + '<small>' + st[p.id].g + ' ' + (st[p.id].g === 1 ? 'Spiel' : 'Spiele') + ' · ' + Math.round(st[p.id].w / st[p.id].g * 100) + ' %</small></span></li>').join('') + '</ol>'
+        '<span class="val">' + st[p.id].w + ' ' + (st[p.id].w === 1 ? 'Sieg' : 'Siege') + '<small>' + st[p.id].g + ' ' + (st[p.id].g === 1 ? 'Spiel' : 'Spiele') + ' · ' + Math.round(st[p.id].w / st[p.id].g * 100) + ' % · ' + st[p.id].l + '× Letzter</small></span></li>').join('') + '</ol>' + lantern(rows, st)
         : '<p class="gm-empty">Noch keine Partie' + (t ? ' ' + esc(t.name) : '') + ' eingetragen. Die erste Runde entscheidet, wer vorlegt.</p>') +
       (lw + ll + ld ? '<div class="gm-vs">⚽ Crew gegen Einheimische: <b>' + lw + (lw === 1 ? ' Sieg' : ' Siege') + ' · ' + ll + (ll === 1 ? ' Niederlage' : ' Niederlagen') + (ld ? ' · ' + ld + ' Unentschieden' : '') + '</b></div>' : '') +
       '<div class="sub">' + list.length + ' ' + (list.length === 1 ? 'Partie' : 'Partien') + ' gewertet' + (filter === 'all' ? ' · Platz nach Siegen, bei Gleichstand zählt die Siegquote' : '') + '</div></div>';
+  }
+  function lantern(rows, st) {
+    const l = rows.filter(p => st[p.id].l > 0).sort((a, b) => st[b.id].l - st[a.id].l || st[a.id].w - st[b.id].w)[0]; if (!l) return '';
+    const pool = (R.person || {})[l.id] || R.generic; const txt = pool[hash(l.id + st[l.id].l) % pool.length].split('{n}s').join(gen(l.name)).split('{n}').join(l.name);
+    return '<div class="gm-lantern">🏮 <b>Rote Laterne: ' + esc(l.name) + '</b> (' + st[l.id].l + '× Letzter) · ' + esc(txt) + '</div>';
   }
   function pick(set, key, extra) {
     return '<div class="gm-pick" role="group">' + CREW.map(p => '<button type="button" role="checkbox" data-' + key + '="' + p.id + '" aria-checked="' + set.has(p.id) + '"' + (writable && !(extra && extra(p.id)) ? '' : ' disabled') + '>' + av(p.id) + esc(p.name) + '</button>').join('') + '</div>';
@@ -1096,7 +1122,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     const list = matches.filter(m => m.done !== false).sort((a, b) => b.ts - a.ts).slice(0, 40);
     return '<details class="gm-card"' + (list.length ? ' open' : '') + '><summary>📜 Verlauf (' + matches.filter(m => m.done !== false).length + ')</summary>' + (list.length ? '<ul class="gm-log">' + list.map(m => { const t = typeOf(m.game), r = result(m);
       return '<li><span class="e">' + t.emoji + '</span><span><b>' + esc(t.name) + '</b> <span class="t">' + new Date(m.ts).toLocaleString('de-DE', {timeZone: TZ, day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'}) + '</span><br>' + r.text +
-        (r.winners.length && m.mode !== 'winner' ? ' · 🏆 ' + r.winners.map(nm).join(' & ') : '') + '</span>' + (writable ? '<button type="button" class="del" data-del="' + m.id + '" aria-label="Partie löschen" title="Löschen">×</button>' : '<span></span>') + '</li>'; }).join('') + '</ul>' : '<p class="gm-hint">Noch nichts gespielt.</p>') + '</details>';
+        (r.winners.length && m.mode !== 'winner' ? ' · 🏆 ' + r.winners.map(nm).join(' & ') : '') + (roast(m) ? '<br><span class="rs">💀 ' + esc(roast(m)) + '</span>' : '') + '</span>' + (writable ? '<button type="button" class="del" data-del="' + m.id + '" aria-label="Partie löschen" title="Löschen">×</button>' : '<span></span>') + '</li>'; }).join('') + '</ul>' : '<p class="gm-hint">Noch nichts gespielt.</p>') + '</details>';
   }
   function newType() {
     if (!writable) return '';
@@ -1105,15 +1131,17 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       '<label class="full" style="font-size:.9rem;display:flex;gap:8px;align-items:center"><input type="checkbox" id="gm-nl"> Bei Punkten gewinnt der Niedrigste (z. B. Golf, Strafpunkte)</label>' +
       '<div class="gm-go full"><button type="button" class="btn" data-act="addtype">Spiel anlegen</button></div></div></details>';
   }
-  function render() { box.innerHTML = board() + liveWizard() + form() + log() + newType(); pending = false; }
+  function render() { top.innerHTML = board() + lastLoser(); box.innerHTML = liveWizard() + form() + log() + newType(); pending = false; }
   const busy = () => box.contains(document.activeElement) && /INPUT|SELECT/.test(document.activeElement.tagName);
   function refresh() { if (busy()) pending = true; else render(); }
   box.addEventListener('focusout', () => setTimeout(() => { if (pending && !busy()) render(); }, 50));
   function toggle(set, id) { set.has(id) ? set.delete(id) : set.add(id); }
+  top.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.f) { filter = b.dataset.f; render(); }
+    if (b.dataset.act === 'reroast') { salt++; render(); } });
   box.addEventListener('click', async e => {
     const b = e.target.closest('button,[data-loc]'); if (!b) return;
     const d = b.dataset;
-    if (d.f) { filter = d.f; render(); return; }
     if (!writable && !d.f) return;
     if (d.t) { f = {type: d.t, players: new Set(), scores: {}, win: new Set(), A: new Set(), B: new Set(), loc: false, sa: '', sb: ''}; msg = ''; render(); return; }
     if (d.pl) { toggle(f.players, d.pl); f.win.forEach(id => { if (!f.players.has(id)) f.win.delete(id); }); render(); return; }

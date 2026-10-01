@@ -232,7 +232,71 @@ def ilha():
     return svg(b, label='Traumstrand auf der Ilha Grande')
 
 
-SCENES = {'hero': hero, 'guaruja': guaruja, 'rio': rio, 'iguacu': iguacu, 'manaus': manaus, 'juma': manaus, 'paraty': paraty, 'ilha': ilha}
+
+def spiele():
+    """Spieltisch wie im Brettspiel-Foto: Backgammon-Brett, Ludo-Ecke, Figuren, Würfel, Dominosteine, Spielsteine."""
+    b = '<rect width="1200" height="300" fill="#c8431f"/>'
+    for i in range(14):                                  # Backgammon-Zungen oben und unten
+        x = 360 + i * 62; c = '#f0a14a' if i % 2 else '#7c2a12'
+        b += f'<path d="M{x} 0 L{x+62} 0 L{x+31} 120Z" fill="{c}" opacity=".85"/>'
+        c2 = '#7c2a12' if i % 2 else '#f3dcb4'
+        b += f'<path d="M{x} 300 L{x+62} 300 L{x+31} 180Z" fill="{c2}" opacity=".85"/>'
+    # Ludo-Brett links oben (gelb mit grünem Rand)
+    b += ('<g transform="rotate(-8 180 90)"><rect x="-20" y="-60" width="400" height="260" rx="10" fill="#1f8a3a"/>'
+          '<rect x="-8" y="-48" width="376" height="236" rx="8" fill="#f6e27a"/>'
+          '<path d="M30 150 Q190 60 350 150" fill="none" stroke="#d6311f" stroke-width="10"/>')
+    for i, (cx, cy) in enumerate([(30, 10), (80, 10), (130, 10), (180, 10), (230, 10), (60, 70), (110, 70), (300, 40)]):
+        b += f'<circle cx="{cx}" cy="{cy}" r="19" fill="#fffdf3" stroke="#2a2a2a" stroke-width="3"/>'
+    b += '<circle cx="300" cy="40" r="19" fill="#2c5fb3"/><text x="300" y="47" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="20" fill="#fff">A</text></g>'
+    # Schachbrett-Ecke links unten und Dame-Brett rechts unten
+    for r in range(4):
+        for c in range(5):
+            if (r + c) % 2 == 0:
+                b += f'<rect x="{-20 + c * 40}" y="{190 + r * 40}" width="40" height="40" fill="#3f5f9a" opacity=".9" transform="rotate(6 60 260)"/>'
+    b += '<rect x="900" y="180" width="320" height="160" fill="#efe6d2" transform="rotate(-10 1060 260)"/>'
+    for r in range(4):
+        for c in range(8):
+            if (r + c) % 2 == 0:
+                b += f'<rect x="{900 + c * 40}" y="{180 + r * 40}" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/>'
+
+    def pawn(x, y, col, s=1.0):
+        return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="34" rx="20" ry="7" fill="rgba(0,0,0,.25)"/>'
+                f'<path d="M-17 32 L-6 -2 L6 -2 L17 32Z" fill="{col}"/><circle cx="0" cy="-12" r="13" fill="{col}"/>'
+                f'<circle cx="-4" cy="-16" r="4" fill="#fff" opacity=".45"/></g>')
+
+    def die(x, y, n, rot=0, s=1.0, col='#fffdf3'):
+        pts = {1: [(0, 0)], 2: [(-9, -9), (9, 9)], 3: [(-9, -9), (0, 0), (9, 9)], 4: [(-9, -9), (9, -9), (-9, 9), (9, 9)],
+               5: [(-9, -9), (9, -9), (0, 0), (-9, 9), (9, 9)], 6: [(-9, -10), (9, -10), (-9, 0), (9, 0), (-9, 10), (9, 10)]}[n]
+        dots = ''.join(f'<circle cx="{px}" cy="{py}" r="{6 if n == 1 else 3.6}" fill="{"#d6311f" if n == 1 else "#1b1b1b"}"/>' for px, py in pts)
+        return (f'<g transform="translate({x} {y}) rotate({rot}) scale({s})"><rect x="-22" y="-22" width="44" height="44" rx="8" fill="{col}" stroke="#c9c0a8" stroke-width="2"/>{dots}</g>')
+
+    def domino(x, y, a, c, rot=0):
+        def half(n, oy):
+            P = {1: [(0, 0)], 2: [(-8, -8), (8, 8)], 3: [(-8, -8), (0, 0), (8, 8)], 4: [(-8, -8), (8, -8), (-8, 8), (8, 8)],
+                 5: [(-8, -8), (8, -8), (0, 0), (-8, 8), (8, 8)], 6: [(-8, -9), (8, -9), (-8, 0), (8, 0), (-8, 9), (8, 9)]}[n]
+            return ''.join(f'<circle cx="{px}" cy="{py + oy}" r="3.2" fill="#fff"/>' for px, py in P)
+        return (f'<g transform="translate({x} {y}) rotate({rot})"><rect x="-22" y="-44" width="44" height="88" rx="6" fill="#151515"/>'
+                f'<line x1="-16" y1="0" x2="16" y2="0" stroke="#fff" stroke-width="2"/>{half(a, -22)}{half(c, 22)}</g>')
+
+    def disc(x, y, col, ring):
+        return (f'<g transform="translate({x} {y})"><ellipse cx="0" cy="6" rx="30" ry="12" fill="rgba(0,0,0,.25)"/>'
+                f'<circle r="28" fill="{col}"/><circle r="20" fill="none" stroke="{ring}" stroke-width="3"/></g>')
+
+    def chess(x, y, col, s=1.0):
+        return (f'<g transform="translate({x} {y}) scale({s})"><ellipse cx="0" cy="40" rx="22" ry="6" fill="rgba(0,0,0,.25)"/>'
+                f'<path d="M-20 38 L20 38 L16 28 L9 24 L6 0 L12 -6 L-12 -6 L-6 0 L-9 24 L-16 28Z" fill="{col}"/>'
+                f'<circle cx="0" cy="-16" r="12" fill="{col}"/></g>')
+
+    b += domino(640, 70, 6, 5, -20) + domino(700, 120, 4, 6, 70) + domino(1080, 60, 5, 6, 25) + domino(1140, 140, 3, 6, -15)
+    b += disc(560, 230, '#f7f3ea', '#d8d0bf') + disc(620, 260, '#f7f3ea', '#d8d0bf') + disc(1020, 210, '#1d1d1d', '#3a3a3a') + disc(970, 260, '#f7f3ea', '#d8d0bf')
+    b += die(90, 220, 6, -12, 1.2) + die(430, 250, 1, 10, 1.15) + die(760, 230, 3, -18, 1.1) + die(260, 260, 4, 20, 1.0)
+    b += pawn(120, 120, '#d6311f') + pawn(240, 70, '#2c5fb3') + pawn(330, 150, '#f2c42c') + pawn(470, 100, '#d6311f', 1.1)
+    b += pawn(520, 170, '#f2c42c', 1.15) + pawn(400, 210, '#2f9a49', 1.05) + pawn(860, 120, '#f2c42c', 1.1) + pawn(180, 250, '#f2c42c', .95)
+    b += chess(300, 210, '#1b1b1b', 1.1) + chess(820, 220, '#f4ecd8', 1.0) + chess(930, 90, '#1b1b1b', 1.05)
+    b += '<rect width="1200" height="300" fill="url(#gmshade)"/><defs><linearGradient id="gmshade" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></linearGradient></defs>'
+    return svg(b, label='Spieltisch mit Würfeln, Figuren und Dominosteinen')
+
+SCENES = {'hero': hero, 'guaruja': guaruja, 'rio': rio, 'iguacu': iguacu, 'manaus': manaus, 'juma': manaus, 'paraty': paraty, 'ilha': ilha, 'spiele': spiele}
 
 
 def render_all():

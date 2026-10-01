@@ -81,7 +81,9 @@ Footvolley = `teams`), unterwegs neue Spiele über die Seite (db-Collection `gam
 points/winner/teams, `higher`). Partien in db-Collection `games` (`game`, `mode`, `ts`, `players`, je nach Modus `scores`,
 `winners`, `teams` {a, b, sa, sb, loc = gegen Einheimische}, Wizard `rounds` [{id: {a: Ansage, s: Stiche}}] und `done`).
 Wizard-Punkte: richtig 20 + 10 je Stich, sonst −10 je Stich daneben; Runden = 60 / Spielerzahl. Rangliste nach Siegen
-(Gleichstand: Siegquote), Filter pro Spiel, Bilanz Crew gegen Einheimische. Eintragen nur Admin.
+(Gleichstand: Siegquote), Filter pro Spiel, Bilanz Crew gegen Einheimische, Rote Laterne (meiste letzte Plätze). Eintragen nur Admin.
+Verlierer bekommen derbe Sprüche aus `games.roasts` (`person` je Crew-`id`, `game` je Spiel, `generic`, `locals` bei Niederlage gegen
+Einheimische; `{n}` = Name, `{n}s` = Genitiv), pro Partie fest, „Anderer Spruch“ würfelt neu. Hintergrund: Szene `spiele` in `gen_scenes.py`.
 
 ## Real-Rechner
 
