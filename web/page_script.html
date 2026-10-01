@@ -1289,8 +1289,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
 (function () {
   const row = document.getElementById('fc'); if (!row || PRINT) return;
   const CREW = TRIP.crew.filter(c => c.card), L = (TRIP.cardsInfo || {}).labels || {};
-  let drinks = [], games = [], customTypes = {};
+  let drinks = [], games = [], customTypes = {}, events = [], dbC = null, canEdit = false;
   const flipped = new Set();
+  const PRESETS = (TRIP.cardsInfo || {}).presets || [];
   function outcome(m) {          // {players, winners, losers}
     const P = m.players || [];
     if (m.mode === 'rank') { const pl = m.places || {}, v = P.map(id => pl[id] || 99), b = Math.min(...v), w = Math.max(...v);
@@ -1312,6 +1313,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       o.players.forEach(id => { if (!s[id]) return; s[id].g++; const r = o.winners.includes(id) ? 'W' : o.losers.includes(id) ? 'L' : 'D'; if (r === 'W') s[id].w++; if (r === 'L') s[id].l++; s[id].form.push(r); }); });
     return s;
   }
+  const dayOfTs = ts => new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date(ts));
   // Marktwert: täglicher Zufallskurs (fest pro Tag und Person) plus Siege, letzte Plätze und Drinks des Tages
   const MW_START = '2026-10-01';
   const dayOf = ts => new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date(ts));
@@ -1337,7 +1339,13 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   function render() {
     const s = live();
     const cards = CREW.map(c => {
-      const k = c.card, st = Object.assign({}, k.stats), x = s[c.id];
+      const k0 = c.card, x = s[c.id], tday = isoToday(), todayD = {};
+      const eff = Object.assign({}, k0.stats);            // Basiswerte plus eingetragene Ereignisse
+      events.filter(e => e.who === c.id && e.stat in eff).forEach(e => {
+        eff[e.stat] = Math.max(1, Math.min(99, eff[e.stat] + e.d));
+        if (dayOfTs(e.ts) === tday) todayD[e.stat] = (todayD[e.stat] || 0) + e.d;
+      });
+      const k = Object.assign({}, k0, {stats: eff}), st = Object.assign({}, eff);
       const triBonus = Math.min(6, Math.floor(x.d / 6)); st.TRI = Math.min(99, st.TRI + triBonus);
       const core = (TRIP.cardsInfo.core || Object.keys(k.stats)).filter(key => key in k.stats);
       const base = core.reduce((a, key) => a + k.stats[key], 0) / core.length;
@@ -1346,7 +1354,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       const today = isoToday(), hist = marketHistory(c.id, base + 6, today < MW_START ? MW_START : today);
       const mv = hist.length ? hist[hist.length - 1][1] : 0, prev = hist.length > 1 ? hist[hist.length - 2][1] : mv;
       const peak = hist.reduce((a, b) => b[1] > a[1] ? b : a, ['', 0]);
-      return {c, k, st, x, ovr, triBonus, katMalus, mv, chg: prev ? mv / prev - 1 : 0, peak};
+      return {c, k, st, x, ovr, triBonus, katMalus, todayD, mv, chg: prev ? mv / prev - 1 : 0, peak};
     });
     const anyGames = cards.some(o => o.x.g > 0);
     const top = anyGames ? cards.reduce((a, b) => b.ovr > a.ovr ? b : a) : null;
@@ -1364,7 +1372,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
         '<div class="fc-photo">' + (c.photo ? '<img src="' + esc(c.photo) + '" alt="" loading="lazy">' : '<span>' + esc(c.name[0]) + '</span>') + '</div>' +
         (badge ? '<span class="fc-badge">' + badge + '</span>' : '') +
         '<div class="fc-name">' + esc(c.name) + '</div><div class="fc-sub">' + esc(k.posName) + '</div>' +
-        '<div class="fc-stats">' + Object.keys(k.stats).map(key => '<div class="' + ((TRIP.cardsInfo.worse || []).includes(key) ? 'w' : '') + '" title="' + esc(L[key] || key) + '">' + st[key] + ' <small>' + key + '</small>' + (key === 'TRI' && o.triBonus ? '<i>+' + o.triBonus + '</i>' : '') + (key === 'KAT' && o.katMalus ? '<i class="m">−' + o.katMalus + '</i>' : '') + '</div>').join('') + '</div>' +
+        '<div class="fc-stats">' + Object.keys(k.stats).map(key => '<div class="' + ((TRIP.cardsInfo.worse || []).includes(key) ? 'w' : '') + '" title="' + esc(L[key] || key) + '">' + st[key] + ' <small>' + key + '</small>' + (key === 'TRI' && o.triBonus ? '<i>+' + o.triBonus + '</i>' : '') + (key === 'KAT' && o.katMalus ? '<i class="m">−' + o.katMalus + '</i>' : '') + (o.todayD[key] ? '<i class="' + (o.todayD[key] > 0 === !(TRIP.cardsInfo.worse || []).includes(key) ? '' : 'm') + '">' + (o.todayD[key] > 0 ? '+' : '−') + Math.abs(o.todayD[key]) + '</i>' : '') + '</div>').join('') + '</div>' +
         '<div class="fc-spec">' + k.special[0] + ' ' + esc(k.special[1]) + ': ' + k.special[2] + '</div>' +
         '<div class="fc-mv">💰 ' + money(o.mv) + ' <span class="' + (o.chg >= 0 ? 'up' : 'dn') + '">' + (o.chg >= 0 ? '▲' : '▼') + ' ' + Math.abs(o.chg * 100).toLocaleString('de-DE', {maximumFractionDigits: 1}) + ' %</span></div>' +
         '<div class="fc-stars">Schwacher Fuß ' + stars(k.wf) + ' · Tricks ' + stars(k.sm) + '</div></div>' +
@@ -1373,6 +1381,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
           .filter(r => k.file[r[2]]).map(r => '<dt>' + r[0] + ' ' + r[1] + '</dt><dd>' + esc(k.file[r[2]]) + '</dd>').join('') + '</dl>' : '') +
         '</div><div class="foot">' +
         '<div class="fc-live"><div><b>' + x.d + '</b><span>Drinks</span></div><div><b>' + x.w + '</b><span>Siege</span></div><div><b>' + x.l + '</b><span>Letzter</span></div><div><b>' + x.g + '</b><span>Spiele</span></div></div>' +
+        (events.some(e => e.who === c.id) ? '<div class="fc-hint">Zuletzt: ' + events.filter(e => e.who === c.id).slice(-2).reverse().map(e => esc(e.stat + ' ' + (e.d > 0 ? '+' : '−') + Math.abs(e.d) + ' ' + (e.why || ''))).join(' · ') + '</div>' : '') +
         '<div class="fc-hint">Form: ' + form + ' · Marktwert-Rekord: ' + money(o.peak[1]) + (o.peak[0] ? ' (' + fmtDay(o.peak[0]).dm + ')' : '') + '</div></div></div>' +
         '</div></button>';
     }).join('');
@@ -1390,12 +1399,60 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     setTimeout(() => card.focus({preventScroll: true}), 700);
   }, true);
   document.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.fc-chip')) { e.preventDefault(); e.target.click(); } });
+  // Werte anpassen: Ereignisse wie „zu spät“ oder „geschnarcht“ (nur Admin)
+  const edit = document.getElementById('fc-edit'), news = document.getElementById('fc-news');
+  const STATS = Object.keys(CREW[0].card.stats), LBL = (TRIP.cardsInfo || {}).labels || {};
+  let ed = {who: null, preset: null, stat: STATS[0], d: -5, why: ''}, armed = null, armT = null, msgE = '';
+  function renderEdit() {
+    if (!edit) return;
+    const dis = canEdit ? '' : ' disabled';
+    edit.innerHTML = '<details class="fc-ed' + (canEdit ? '' : ' locked') + '"' + (canEdit ? ' open' : '') + '><summary>✏️ Werte anpassen</summary>' +
+      (canEdit ? '<p class="gm-hint">Wer hat was gemacht? Vorlage antippen oder eigenen Wert setzen. Die Karte ändert sich sofort für alle, der Marktwert zieht mit.</p>' : '<p class="gm-lock">🔒 Anpassen nur durch den Admin (Patrick). Petzen per WhatsApp ist erlaubt.</p>') +
+      '<div class="gm-pick">' + CREW.map(p => '<button type="button" data-ew="' + p.id + '" aria-checked="' + (ed.who === p.id) + '" role="radio"' + dis + '><span class="av">' + (p.photo ? '<img src="' + esc(p.photo) + '" alt="">' : esc(p.name[0])) + '</span>' + esc(p.name) + '</button>').join('') + '</div>' +
+      '<div class="fc-pre">' + PRESETS.map((x, i) => '<button type="button" data-ep="' + i + '" aria-pressed="' + (ed.preset === i) + '"' + dis + '>' + x.e + ' ' + esc(x.t) + ' <small>' + x.s + ' ' + (x.d > 0 ? '+' : '−') + Math.abs(x.d) + '</small></button>').join('') + '</div>' +
+      '<div class="fc-own"><select data-es' + dis + '>' + STATS.map(k => '<option value="' + k + '"' + (ed.stat === k ? ' selected' : '') + '>' + k + ' ' + esc(LBL[k] || '') + '</option>').join('') + '</select>' +
+      '<select data-ed' + dis + '>' + [-10, -8, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 8, 10].map(n => '<option value="' + n + '"' + (ed.d === n ? ' selected' : '') + '>' + (n > 0 ? '+' : '−') + Math.abs(n) + '</option>').join('') + '</select>' +
+      '<input type="text" data-ey maxlength="60" placeholder="Grund, z. B. 40 min zu spät" value="' + esc(ed.why) + '"' + dis + '></div>' +
+      '<div class="gm-go"><button type="button" class="btn" data-eact="save"' + (canEdit && ed.who ? '' : ' disabled') + '>Eintragen</button><span class="gm-msg">' + esc(msgE) + '</span></div></details>';
+  }
+  function renderNews() {
+    if (!news) return;
+    const list = events.slice().sort((a, b) => b.ts - a.ts).slice(0, 15);
+    news.innerHTML = list.length ? '<div class="fc-news"><h3>📰 Transfer-News</h3><ul>' + list.map(e => { const p = CREW.find(c => c.id === e.who) || {name: e.who}, good = e.d > 0 === !(TRIP.cardsInfo.worse || []).includes(e.stat);
+      return '<li><span class="t">' + new Date(e.ts).toLocaleString('de-DE', {timeZone: TZ, day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit'}) + '</span><span><b>' + esc(p.name) + '</b> ' + esc(e.why || LBL[e.stat] || '') + ' <span class="' + (good ? 'up' : 'dn') + '">' + e.stat + ' ' + (e.d > 0 ? '+' : '−') + Math.abs(e.d) + '</span></span>' +
+        (canEdit ? '<button type="button" class="del" data-edel="' + e.id + '" title="Löschen">🗑</button>' : '<span></span>') + '</li>'; }).join('') + '</ul></div>' : '';
+  }
+  if (edit) {
+    edit.addEventListener('click', async e => {
+      const b = e.target.closest('button'); if (!b || !canEdit) return;
+      if (b.dataset.ew) { ed.who = b.dataset.ew; renderEdit(); return; }
+      if (b.dataset.ep !== undefined) { const x = PRESETS[+b.dataset.ep]; ed.preset = +b.dataset.ep; ed.stat = x.s; ed.d = x.d; ed.why = x.t; renderEdit(); return; }
+      if (b.dataset.eact === 'save' && dbC && ed.who) {
+        b.disabled = true;
+        try { await dbC.collection('cardlog').doc().set({who: ed.who, stat: ed.stat, d: ed.d, why: ed.why.trim(), ts: Date.now()}); msgE = '✅ Eingetragen.'; ed.preset = null; ed.why = ''; }
+        catch (err) { msgE = 'Konnte nicht speichern.'; }
+        renderEdit();
+      }
+    });
+    edit.addEventListener('change', e => { const d = e.target.dataset; if ('es' in d) { ed.stat = e.target.value; ed.preset = null; } if ('ed' in d) { ed.d = +e.target.value; ed.preset = null; } });
+    edit.addEventListener('input', e => { if ('ey' in e.target.dataset) ed.why = e.target.value; });
+  }
+  if (news) news.addEventListener('click', async e => {
+    const b = e.target.closest('[data-edel]'); if (!b || !canEdit || !dbC) return;
+    const key = b.dataset.edel;
+    if (armed !== key) { armed = key; b.textContent = '⚠️ Löschen?'; b.classList.add('armed'); clearTimeout(armT); armT = setTimeout(() => { armed = null; renderNews(); }, 5000); return; }
+    armed = null; try { await dbC.doc('cardlog/' + key).delete(); } catch (err) {}
+  });
+  renderEdit();
   row.addEventListener('click', e => { const b = e.target.closest('.fc'); if (!b) return; const id = b.dataset.id;
     flipped.has(id) ? flipped.delete(id) : flipped.add(id); b.classList.toggle('flip'); });
   render();
   (async () => {
     if (!window.claude || !window.claude.use) return;
     const db = await window.claude.use('db'); if (!db) return;
+    dbC = db;
+    const user = await window.claude.use('user'); const w = user ? await user.can('data.write') : null; canEdit = w !== false; renderEdit(); renderNews();
+    db.collection('cardlog').onSnapshot(snap => { events = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data())).filter(e => e && e.who && e.stat && typeof e.d === 'number' && e.ts).sort((a, b) => a.ts - b.ts); render(); renderNews(); }, () => {});
     db.collection('drinks').onSnapshot(snap => { drinks = snap.docs.filter(d => d.exists).map(d => d.data()).filter(d => d && d.who); render(); }, () => {});
     db.collection('games').onSnapshot(snap => { games = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data())).filter(m => m && Array.isArray(m.players)); render(); }, () => {});
     db.collection('gametypes').onSnapshot(snap => { customTypes = Object.fromEntries(snap.docs.filter(d => d.exists).map(d => [d.id, d.data()])); render(); }, () => {});
