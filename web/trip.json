@@ -2516,16 +2516,14 @@
     }
   },
   "games": {
-    "_hinweis": "Partien in db-Collection games (game, ts, players, mode, scores, teams, rounds, done), eigene Spiele in gametypes. Modi: points (Punkte je Person, higher = höchste gewinnt), winner (nur Sieger), teams (Team A gegen Team B, auch gegen Einheimische), wizard (Rundenblock).",
+    "_hinweis": "Partien in db-Collection games (game, ts, players, mode, scores, teams, rounds, done), eigene Spiele in gametypes. Modi: rank (Platzierung je Person, places = {id: Platz}), points (Punkte je Person, higher = höchste gewinnt), winner (nur Sieger), teams (Team A gegen Team B, auch gegen Einheimische), wizard (Rundenblock).",
     "types": [
       {
         "id": "blackyjacky",
         "name": "Blacky Jacky",
         "emoji": "🃏",
-        "mode": "points",
-        "higher": true,
-        "unit": "Punkte",
-        "hint": "Am Ende der Partie die Punkte bzw. Chips von jedem eintragen. Wer am meisten hat, gewinnt."
+        "mode": "rank",
+        "hint": "Nur die Platzierung eintragen: Wer ist Erster, Zweiter, … Letzter? Platz 1 gewinnt, der Letzte bekommt den Spruch."
       },
       {
         "id": "wizard",
