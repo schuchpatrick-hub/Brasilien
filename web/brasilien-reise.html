@@ -994,7 +994,7 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
 .samba.full>h3,.samba.full>.note{display:none}
 .samba.full .samba-stage{margin:0;width:min(100%,calc((100vh - 70px) * 1.6));max-height:calc(100vh - 70px)}
 .samba.full .samba-btns{justify-content:center}.samba.full .samba-btns .map-play{margin-top:0}
-html.sb-noscroll,html.sb-noscroll body{overflow:hidden}
+html.sb-noscroll,html.sb-noscroll body{overflow:hidden}html.sb-noscroll body>:not(.samba){display:none!important}
 .sb-beams{mix-blend-mode:screen}.sb-lite .sb-heavy{display:none}.sb-lite .sb-beams{mix-blend-mode:normal;opacity:.6}
 @media (orientation:portrait){.samba.full::after{content:"📱 Handy quer drehen für mehr Bühne";color:#ffffffaa;font:600 .85rem var(--body);margin-top:6px}}
 .sb-pop{font:800 24px var(--body);fill:#fff;stroke:#2a1a12;stroke-width:4px;paint-order:stroke}
@@ -3869,7 +3869,14 @@ function wavB64(buf) {
   const EVENTS = ['rain', 'monkey', 'police', 'waiter'];
   let EVENT = 'police', VICTIM = 'simon', TAPS = [], BOOST = {clap: -1e9, cheer: -1e9}, PRESS = [], liveM = null;   // PRESS: [{t, k: 'clap'|'cheer'}]
   const evw = () => [T.conga[0] + 200, T.conga[1] - 200];
-  const mk = (tag, a, parent) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (parent) parent.appendChild(e); return e; };
+  // Attribute nur schreiben, wenn sich der Wert ändert: spart pro Bild Hunderte Neuberechnungen (wichtig im Vollbild)
+  const SET = Element.prototype.setAttribute;
+  function fastSet(k, v) { v = String(v); const c = this.__c || (this.__c = {}); if (c[k] === v) return; c[k] = v; SET.call(this, k, v);
+    if (k === 'opacity') { const off = !(parseFloat(v) > .004); if (this.__off !== off) { this.__off = off; this.style.display = off ? 'none' : ''; } } }   // Unsichtbares gar nicht erst zeichnen
+  const TXT = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent'), fastTxt = {configurable: true, get() { return TXT.get.call(this); }, set(v) { v = String(v); if (this.__t === v) return; this.__t = v; TXT.set.call(this, v); }};
+  const speed = e => { if (e.setAttribute !== fastSet) { e.setAttribute = fastSet; Object.defineProperty(e, 'textContent', fastTxt); } };
+  const fast = root => root.querySelectorAll('*').forEach(speed);
+  const mk = (tag, a, parent) => { const e = document.createElementNS(NS, tag); speed(e); for (const k in a) e.setAttribute(k, a[k]); if (parent) parent.appendChild(e); return e; };
   const byId = Object.fromEntries(TRIP.crew.map(c => [c.id, c]));
   const tnow = () => window.__danceT !== undefined ? window.__danceT : performance.now();
   const soundOn = () => store.get('sound') !== '0';
@@ -4392,7 +4399,7 @@ function wavB64(buf) {
     const klap = [[T.b1, 'Klappe, die 12. – Pyramide'], [T.b2, 'Klappe, die 31. – Ansage'], [T.b3, 'Klappe, die 47. – Discokugel']].find(([w]) => t > w[0] && t < w[1]);
     const mvU = t - T.moves[0], mvName = t > T.moves[0] && t < T.moves[1] ? (mvU < 1500 ? '🕺 Tanzschule: Moonwalk' : mvU < 3000 ? '🕺 Tanzschule: Floss' : mvU < 4500 ? '🕺 Tanzschule: Passinho' : '🕺 Tanzschule: Limbo') : '';
     cap.setAttribute('opacity', annOn || klap || mvName ? 1 : 0); capT.textContent = annOn ? ann.text : klap ? '🎬 ' + klap[1] : mvName;
-    capT.style.fontSize = (18 * UI).toFixed(1) + 'px'; capR.setAttribute('height', (40 * UI).toFixed(1)); capR.setAttribute('y', 18); capT.setAttribute('y', (18 + 27 * UI).toFixed(1));
+    if (capT.__fs !== UI) { capT.__fs = UI; capT.style.fontSize = (18 * UI).toFixed(1) + 'px'; } capR.setAttribute('height', (40 * UI).toFixed(1)); capR.setAttribute('y', 18); capT.setAttribute('y', (18 + 27 * UI).toFixed(1));
     const cut = [[T.b1[0] + 2600, T.b1[1]], [T.b2[0] + 2400, T.b2[1]], [T.b3[0] + 2200, T.b3[1]]].some(w => t > w[0] && t < w[1]); stamp.setAttribute('opacity', cut ? 1 : 0);
   }
 
@@ -4458,7 +4465,7 @@ function wavB64(buf) {
     EVENT = window.__danceEvent || (video ? 'police' : EVENTS[Math.floor(Math.random() * EVENTS.length)]);
     VICTIM = video ? 'simon' : ids[Math.floor(Math.random() * N)];
     ids.forEach(id => { P[id].gotDrink = 0; if (P[id].prop) P[id].prop.textContent = PROPS[id]; });
-    buildStage(stageToday());
+    buildStage(stageToday()); fast(svg);
     if (!video && soundOn() && window.__TripMusic) {
       try { const AC = window.AudioContext || window.webkitAudioContext; ctx = new AC(); ctx.resume();
         base = ctx.currentTime + .15; const m = window.__TripMusic(ctx); program(m, base); liveM = m;
@@ -4513,8 +4520,11 @@ function wavB64(buf) {
   // Vollbild: echtes Vollbild, wo erlaubt (sonst füllt die Show per CSS den Bildschirm), im Querformat gesperrt wenn möglich
   const box = document.getElementById('samba'), fbtn = document.getElementById('samba-full');
   const isFull = () => box.classList.contains('full');
+  const ph = document.createComment('samba');
   function setFull(on) {
     if (on === isFull()) return;
+    // Vollbild: Bühne direkt unter <body> hängen und den Rest der (langen) Seite ausblenden, damit nur die Show gezeichnet wird
+    if (on) { box.before(ph); document.body.appendChild(box); } else if (ph.isConnected) { ph.replaceWith(box); }
     box.classList.toggle('full', on); document.documentElement.classList.toggle('sb-noscroll', on); svg.classList.toggle('sb-lite', on);
     if (fbtn) fbtn.textContent = on ? '✕ Vollbild beenden' : '⛶ Vollbild';
     if (on) { const r = box.requestFullscreen || box.webkitRequestFullscreen; if (r) try { const pr = r.call(box); if (pr && pr.then) pr.then(() => { try { screen.orientation.lock('landscape').catch(() => {}); } catch (e) {} }).catch(() => {}); } catch (e) {} }
@@ -4526,7 +4536,7 @@ function wavB64(buf) {
   if (fbtn) fbtn.addEventListener('click', () => setFull(!isFull()));
   document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && isFull()) setFull(false); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && isFull()) setFull(false); });
-  sPaint(); paint(); frame(0);
+  fast(svg); sPaint(); paint(); frame(0);
   // Video-Aufnahme: Zeit setzen, Musik offline rendern, Stimmen-Startzeiten; __danceLive setzt Live-Daten zum Ausprobieren
   window.__dancePlay = start; window.__danceTap = id => tapPerson(id); window.__danceBoost = k => { const t = clock(); BOOST[k] = t; PRESS = PRESS.concat([{t, k}]); }; window.__danceEnd = END; window.__danceLive = o => { LIVE = Object.assign({card: {}}, o); };
   window.__danceAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms / 1000), sr), m = window.__TripMusic(oc); program(m, 0); m.schedule(ms / 1000); return wavB64(await oc.startRendering()); };
