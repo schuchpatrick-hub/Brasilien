@@ -16,6 +16,18 @@ nach „Umgesetzt“ verschieben.
   Zwei Varianten: digital auf der Seite spielbar (zwei Spieler auf einem Handy, offline) und Druck-PDF im Kartenformat
   59 × 91 mm. Fotos nur im Artifact (nicht im Repo), Unbeteiligte weichzeichnen, erst eine Musterkarte zeigen.
 
+- **Cartoon-Animationen** (vorgemerkt 02.10., Patrick will alle nach und nach, gleicher Stil wie die Samba-Show: Foto-Köpfe auf
+  Cartoon-Körpern, Münder wie die South-Park-Kanadier, Stimmen per `tools/gen_dance_audio.py`):
+  1. **„Gringos – Die Serie“, Folge 1** (2–3 min): Sicherheitskontrolle München (Simons Koffer voller Sonnencreme), Flieger
+     (Patrick bestellt zum 4. Mal Essen nach), Copacabana-Silvester (7. Welle haut Marco um), Buffet in Foz (Teller-Tetris in
+     Zeitlupe), Dschungel (Affe klaut Jonas’ Fischerhut), Footvolley gegen Einheimische 0:21, Abspann.
+  2. **Interaktiver Cartoon „Wähle dein Abenteuer“**: Entscheidungen antippen (Caipi oder Wasser, Kaiman streicheln …), 4–5 Enden.
+  3. **Spiel „Gringo Run“** an der Copacabana: Crew-Kopf wählen, über Sandburgen springen, Caipis sammeln, Sonnenbrand-Balken,
+     gemeinsame Bestenliste (db), zählt für die FIFA-Karten.
+  4. **Wöchentliche Mini-Folgen** bis zum Abflug (je ca. 15 s): Koffer packen, Portugiesisch üben, Bikini-Figur-Training …,
+     im Vorfreude-Kalender und als Video für WhatsApp.
+  5. **Lebendige Heute-Szene** unterwegs: kleine Endlos-Animation der aktuellen Station im Heute-Kasten.
+
 ## 💡 Vorgeschlagen, noch nicht beauftragt
 
 - Silvester-Special „Réveillon“ (Countdown, Bräuche, Ablauf, Treffpunkt, Sicherheit)
