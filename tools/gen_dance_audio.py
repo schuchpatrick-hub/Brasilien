@@ -9,7 +9,7 @@ Schreibt web/audio/samba-<key>.mp3 und in web/trip.json → dance.voice je Aufna
 Voraussetzungen: pip install sherpa-onnx soundfile numpy imageio-ffmpeg; Stimmen aus
 https://github.com/k2-fsa/sherpa-onnx/releases/tag/tts-models (vits-piper-de_DE-thorsten-high, vits-piper-de_DE-miro-high,
 vits-piper-de_DE-thorsten_emotional-medium, vits-coqui-de-css10, vits-piper-pt_BR-faber-medium) entpackt in VOICES
-(Standard: tools/data/voices). Aufruf: python3 tools/gen_dance_audio.py [key …] (ohne Keys: alle).
+(Standard: tools/data/voices). Aufruf: python3 tools/gen_dance_audio.py [key …] (ohne Keys: alle); Serien-Folge: python3 tools/gen_dance_audio.py --series ep1 [key …].
 """
 import glob, json, math, os, subprocess, sys, tempfile, wave
 import numpy as np, soundfile as sf, sherpa_onnx
@@ -78,9 +78,16 @@ def env_of(path, step=0.04):
     return ''.join(str(min(9, int(v / top * 12))) for v in vals), round(n / sr * 1000)
 
 def main():
-    trip = json.load(open(TRIP, encoding='utf-8')); dance = trip['dance']; only = set(sys.argv[1:])
-    voices = dance['voices']; voice = dance.get('voice', {})
-    for ln in dance['lines']:
+    trip = json.load(open(TRIP, encoding='utf-8')); dance = trip['dance']; args = sys.argv[1:]
+    # --series ep1: Zeilen einer Serien-Folge (trip.json → series.ep1), Dateien web/audio/ep1-<key>.mp3, ohne Dehnung
+    ep = args[args.index('--series') + 1] if '--series' in args else None
+    only = set(a for a in args if a != '--series' and a != ep)
+    if ep:
+        data = trip['series'][ep]; voices = dict(dance['voices'], **trip['series'].get('voices', {})); prefix, tempo = ep + '-', 1.0
+    else:
+        data = dance; voices = dance['voices']; prefix, tempo = 'samba-', TEMPO
+    voice = data.get('voice', {})
+    for ln in data['lines']:
         if ln.get('src') or ln.get('nogen'): continue   # benutzt Aufnahmen anderer Zeilen
         for alt in [ln] + ln.get('alts', []):
             key = alt['key']
@@ -91,11 +98,11 @@ def main():
                 pcm = os.path.join(tmp, 'pcm.wav'); run_ff(wav, pcm, 'anull')
                 env, dur = env_of(pcm)   # Dauer/Mundkurve in Showzeit
                 # die Seite spielt die Show um SLOW = 1/0,9 langsamer ab: Aufnahme gleich mitdehnen (Tonhöhe bleibt)
-                slow = os.path.join(tmp, 'slow.wav'); run_ff(pcm, slow, f'rubberband=tempo={TEMPO}:pitch=1')
-                subprocess.run([ffmpeg(), '-y', '-loglevel', 'error', '-i', slow, '-b:a', '96k', os.path.join(OUT, f'samba-{key}.mp3')], check=True)
+                slow = os.path.join(tmp, 'slow.wav'); run_ff(pcm, slow, f'rubberband=tempo={tempo}:pitch=1' if tempo != 1 else 'anull')
+                subprocess.run([ffmpeg(), '-y', '-loglevel', 'error', '-i', slow, '-b:a', '96k', os.path.join(OUT, f'{prefix}{key}.mp3')], check=True)
             voice[key] = {'dur': dur, 'env': env}
             print(key, dur, 'ms')
-    dance['voice'] = voice
+    data['voice'] = voice
     open(TRIP, 'w', encoding='utf-8').write(json.dumps(trip, ensure_ascii=False, indent=2) + '\n')
 
 if __name__ == '__main__':
