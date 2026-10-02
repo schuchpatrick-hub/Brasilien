@@ -265,7 +265,8 @@ function renderToday() {
     html = '<div class="kicker">' + esc(gName(G)) + ' · Countdown</div>' +
       '<div class="big">Noch ' + n + (n === 1 ? ' Tag' : ' Tage') + '<small>bis zum Abflug am ' + fmtDay(first).wd + ' ' + fmtDay(first).dm + ' · erster Stopp: ' + esc(list.find(d => !['München', 'Abflug'].includes(d.place))?.place || d0.place) + '</small></div>' +
       itemsHtml(d0.items) +
-      '<div class="next">🎁 <a href="#kalender">Heutiges Türchen öffnen</a> · ⏳ <a href="#kapsel">Zeitkapsel</a></div>';
+      '<div class="next">🎁 <a href="#kalender">Heutiges Türchen öffnen</a> · ⏳ <a href="#kapsel">Zeitkapsel</a>' +
+      (n <= 7 ? '<br>📥 Vor dem Abflug: <a href="#downloads">PDF und Kalender aufs Handy laden</a>, die Seite selbst braucht Internet.' : '') + '</div>';
   } else if (t > last) {
     html = '<div class="kicker">' + esc(gName(G)) + '</div><div class="big">Tchau, Brasil<small>Die Reise ist vorbei. Obrigado und willkommen zurück!</small></div>';
   } else {
@@ -1652,6 +1653,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     const card = document.getElementById('fc-' + a.dataset.card); if (!card) return;
     const sec = document.getElementById('karten');
     const smooth = !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+    document.body.classList.add('cv-all');
     sec.scrollIntoView({behavior: smooth ? 'smooth' : 'auto', block: 'start'});
     row.scrollTo({left: card.offsetLeft - (row.clientWidth - card.offsetWidth) / 2, behavior: smooth ? 'smooth' : 'auto'});
     card.classList.remove('hl'); void card.offsetWidth; card.classList.add('hl');
@@ -2116,6 +2118,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   };
 
   // Nachrichten-Intro „Gringo-Schau“: Studio, Fahndungsbild der vier Gringos, Lauftext; Sprecher als MP3 (nur mit Ton an)
+  let iosShow = false;
   const VOICE_MS = 8560, LATE_MS = 3650;   // Sprecherlänge; ab da „Zwei weitere folgen später“
   async function intro(my) {
     const g = mk('g', {class: 'news'}), y0 = H * .14;
@@ -2147,6 +2150,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     tt.textContent = '+++ Caipi-Vorräte in Rio werden knapp +++ Copacabana meldet Sonnencreme-Engpass +++ Buffets in Foz do Iguaçu in Alarmbereitschaft +++ Kaimane in Manaus bitten um Abstand +++ Wetter: 32 °C, Tendenz Sonnenbrand +++';
     tk.appendChild(tt); tk.appendChild(mk('rect', {x: -5, y: ty, width: 150, height: 40, class: 'news-ticker-l'}));
     const tl = mk('text', {x: 12, y: ty + 27, class: 'news-ticker-lt'}); tl.textContent = 'LIVE ●'; tk.appendChild(tl); g.appendChild(tk);
+    if (iosShow) { const ht = mk('text', {x: W * .94, y: y0 + 40, class: 'news-hint', 'text-anchor': 'end'}); ht.textContent = '🔈 Kein Ton? Lautlos-Schalter aus'; g.appendChild(ht); }
     g.style.opacity = 0; gFront.appendChild(g);
     try { const lw = lt.getBBox().width + 36; logo.firstChild.setAttribute('width', lw); ck.setAttribute('x', lw + 20); } catch (e) {}
     const t0 = tnow(), END = 700 + VOICE_MS + 300;
@@ -2256,10 +2260,15 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   btn.addEventListener('click', () => {
     if (btn.getAttribute('aria-pressed') === 'true') { stop(); return; }
     const r = svg.getBoundingClientRect(); if (r.top < 0 || r.bottom > innerHeight) svg.scrollIntoView({behavior: 'smooth', block: 'center'});
+    iosShow = IOS && soundOn() && !iosHint && store.get('iosHint') !== '1';
     play();
+    if (iosShow && store.get('iosHint') !== '1') { iosHint = true; store.set('iosHint', '1'); }
   });
   const sbtn = document.getElementById('map-sound');
   const sPaint = () => { sbtn.textContent = soundOn() ? '🔊 Musik an' : '🔇 Musik aus'; sbtn.setAttribute('aria-pressed', String(soundOn())); };
+  const IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  if (sbtn && IOS) sbtn.title = 'Kein Ton? Lautlos-Schalter am iPhone ausschalten.';
+  let iosHint = false;   // Hinweis „Lautlos-Schalter“ einmal beim ersten Abspielen mit Ton (im Intro)
   if (sbtn) { sPaint(); sbtn.addEventListener('click', () => {
     store.set('sound', soundOn() ? '0' : '1'); sPaint();
     if (!soundOn()) musStop(true);
@@ -2283,6 +2292,7 @@ function targetFor(id) {
 }
 function jump(id, smooth) {
   const el = targetFor(id); if (!el) return false;
+  document.body.classList.add('cv-all');   // vor dem Springen alle Kapitel einmal zeichnen, damit das Ziel stimmt
   const y = el.getBoundingClientRect().top + scrollY - barHeight() - 10;
   scrollTo({top: Math.max(0, y), behavior: smooth && !reduceMotion ? 'smooth' : 'auto'});
   return true;

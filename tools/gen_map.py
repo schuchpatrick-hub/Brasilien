@@ -44,23 +44,62 @@ def bbox_hit(ring, lo0, lo1, la0, la1, pad=2):
     xs = [p[0] for p in ring]; ys = [p[1] for p in ring]
     return not (max(xs) < lo0 - pad or min(xs) > lo1 + pad or max(ys) < la1 - pad or min(ys) > la0 + pad)
 
-def path(ring, proj, minstep):
-    out, last = [], None
+def rdp(pts, eps):
+    """Douglas-Peucker: Punkte weglassen, die weniger als eps Pixel von der Linie abweichen (unsichtbar, spart Größe)."""
+    if len(pts) < 3:
+        return pts
+    keep = [False] * len(pts); keep[0] = keep[-1] = True
+    stack = [(0, len(pts) - 1)]
+    while stack:
+        a, b = stack.pop()
+        (x1, y1), (x2, y2) = pts[a], pts[b]
+        dx, dy = x2 - x1, y2 - y1; L = (dx * dx + dy * dy) ** .5 or 1e-9
+        best, bi = -1, -1
+        for i in range(a + 1, b):
+            d = abs(dy * (pts[i][0] - x1) - dx * (pts[i][1] - y1)) / L
+            if d > best:
+                best, bi = d, i
+        if best > eps:
+            keep[bi] = True; stack += [(a, bi), (bi, b)]
+    return [p for p, k in zip(pts, keep) if k]
+
+def path(ring, proj, minstep, clip=None):
+    pts, last = [], None
     for lon, lat in ring:
         x, y = proj(lon, lat)
-        if last and abs(x - last[0]) + abs(y - last[1]) < minstep:
+        if clip:   # außerhalb des sichtbaren Ausschnitts an den Rand drücken (wird ohnehin abgeschnitten)
+            x = min(max(x, clip[0] - 8), clip[2] + 8); y = min(max(y, clip[1] - 8), clip[3] + 8)
+        if last and abs(x - last[0]) + abs(y - last[1]) < .05:
             continue
-        out.append(f'{x:.1f},{y:.1f}')
-        last = (x, y)
-    return 'M' + 'L'.join(out) + 'Z' if len(out) > 2 else ''
+        pts.append((x, y)); last = (x, y)
+    if len(pts) > 3 and pts[0] == pts[-1]:
+        pts = pts[:-1]
+    if len(pts) > 3:   # geschlossener Ring: am weitesten entfernten Punkt teilen, beide Hälften vereinfachen
+        x0, y0 = pts[0]; k = max(range(len(pts)), key=lambda i: (pts[i][0] - x0) ** 2 + (pts[i][1] - y0) ** 2)
+        eps = minstep * .45
+        pts = rdp(pts[:k + 1], eps)[:-1] + rdp(pts[k:] + [pts[0]], eps)[:-1]
+    if len(pts) <= 2:
+        return ''
+    def f(v):   # kürzeste Schreibweise mit einer Nachkommastelle
+        t = f'{v:.1f}'.rstrip('0').rstrip('.')
+        return '0' if t in ('', '-0') else t
+    out = [f'M{f(pts[0][0])},{f(pts[0][1])}']
+    px, py = round(pts[0][0], 1), round(pts[0][1], 1)
+    for x, y in pts[1:]:
+        x, y = round(x, 1), round(y, 1)
+        if (x, y) != (px, py):
+            dy = f(y - py)
+            out.append(f'l{f(x - px)}{"," if not dy.startswith("-") else ""}{dy}')
+        px, py = x, y
+    return ''.join(out) + 'Z'
 
-def country_paths(data, proj, box, minstep):
+def country_paths(data, proj, box, minstep, clip=None):
     br, other = [], []
     for f in data['features']:
         for ring in rings(f):
             if not bbox_hit(ring, *box):
                 continue
-            d = path(ring, proj, minstep)
+            d = path(ring, proj, minstep, clip)
             if d:
                 (br if f['properties']['ADM0_A3'] == 'BRA' else other).append(d)
     return ''.join(other), ''.join(br)
@@ -90,8 +129,8 @@ PAR = (-44.71, -23.22); ILG = (-44.17, -23.14); ANG = (-44.32, -23.01)
 def build(standalone=False):
     d50 = load('ne_50m_admin_0_countries.geojson')
     d10 = load('ne_10m_admin_0_countries.geojson')
-    o_main, b_main = country_paths(d50, P, (LON0, LON1, LAT0, LAT1), 1.2)
-    o_in, b_in = country_paths(d10, PI, (ILON0, ILON1, ILAT0, ILAT1), 0.8)
+    o_main, b_main = country_paths(d50, P, (LON0, LON1, LAT0, LAT1), 1.2, (0, 0, W, H))
+    o_in, b_in = country_paths(d10, PI, (ILON0, ILON1, ILAT0, ILAT1), 0.8, (IX, IY, IX + IW, IY + IH))
 
     s = []
     s.append(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" class="tripmap" role="img" '

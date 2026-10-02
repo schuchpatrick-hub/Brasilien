@@ -488,7 +488,7 @@ header .today::before{opacity:.25}
 .news-bg{fill:#0b1f4d}.news-ring{fill:none;stroke:#2a4c9a;stroke-width:2;opacity:.35}
 .news-logo{fill:#fff}.news-logo-t{fill:#0b1f4d;font:900 34px var(--display);letter-spacing:1px}.news-clock{fill:#fff;font:700 30px var(--mono)}
 .news-panel{fill:#132d6b;stroke:#4f74c9;stroke-width:2}.news-panel-t{fill:#ffcf1f;font:800 24px var(--body);letter-spacing:2px}
-.news-head{fill:#fff}.news-head.b{fill:#c79bf0}.news-late-box{fill:rgba(138,79,191,.18);stroke:#c79bf0;stroke-width:2;stroke-dasharray:7 5}.news-late-t{fill:#e3cdf7;font:800 14px var(--body);letter-spacing:2px}.news-name{fill:#fff;font:700 20px var(--body)}
+.news-hint{fill:#ffcf1f;font:700 20px var(--body)}.news-head{fill:#fff}.news-head.b{fill:#c79bf0}.news-late-box{fill:rgba(138,79,191,.18);stroke:#c79bf0;stroke-width:2;stroke-dasharray:7 5}.news-late-t{fill:#e3cdf7;font:800 14px var(--body);letter-spacing:2px}.news-name{fill:#fff;font:700 20px var(--body)}
 .news-lower{fill:#fff}.news-l1{fill:#0b1f4d;font:800 27px var(--display)}.news-l2{fill:#33415c;font:600 18px var(--body)}
 .news-ticker{fill:#c8102e}.news-ticker-t{fill:#fff;font:700 20px var(--body)}.news-ticker-l{fill:#0b1f4d}.news-ticker-lt{fill:#fff;font:800 20px var(--body)}
 .trip-stamp{fill:#e0262b;stroke:#fff;stroke-width:3px;paint-order:stroke;font:900 96px var(--display);letter-spacing:4px;animation:capPop .2s ease}.trip-stamp.t{fill:#ffcf1f;stroke:#10231d;font-size:64px;letter-spacing:0}
@@ -979,4 +979,17 @@ footer{color:var(--muted);font-size:.85rem;padding-top:26px;position:relative}
 footer::before{content:"";position:absolute;left:0;right:0;top:0;height:14px;background:var(--verde);opacity:.55;-webkit-mask:var(--wave) 0 0/60px 20px repeat-x;mask:var(--wave) 0 0/60px 20px repeat-x}
 footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);margin-bottom:6px}
 @media (max-width:560px){.days{grid-template-columns:1fr}.days dt{border-bottom:0;padding-bottom:0}}
+/* Tempo: Kapitel außerhalb des Bildschirms erst zeichnen, wenn man hinscrollt (sieht genauso aus) */
+.wrap>section:not(#heute):not(#route){content-visibility:auto;contain-intrinsic-size:auto 1500px}
+.cv-all .wrap>section,.wrap>section.folded{content-visibility:visible!important}
+@media print{.wrap>section{content-visibility:visible!important}}
+/* Größere Tippflächen ohne optische Änderung: unsichtbarer Rand um kleine Knöpfe und Links */
+.links a,.fold-btn,.fc-pre button,li a,.pass-links a,.me-row button,.mi-chips button,.fc-chip,.fx-quick button,.dr-card>summary,.dr-add>summary,
+.gm-filter button,.gm-card>summary,.fc-link,.seg.small button,li .btn.ghost,.next a,.fold-all .btn,.dr-quick button,.fx-dir button,.ka-yn button,.me-link,
+.checkin>summary,.fc-ed>summary,.dr-custom>summary,.adv-all>summary,.ka-form>summary,p.note a,.chips button{position:relative}
+.links a::before,.fold-btn::before,.fc-pre button::before,li a::before,.pass-links a::before,.me-row button::before,.mi-chips button::before,.fc-chip::before,
+.fx-quick button::before,.dr-card>summary::before,.dr-add>summary::before,.gm-filter button::before,.gm-card>summary::before,.fc-link::before,
+.seg.small button::before,li .btn.ghost::before,.next a::before,.fold-all .btn::before,.dr-quick button::before,.fx-dir button::before,.ka-yn button::before,
+.me-link::before,.checkin>summary::before,.fc-ed>summary::before,.dr-custom>summary::before,.adv-all>summary::before,.ka-form>summary::before,p.note a::before{content:"";position:absolute;inset:-7px -3px}
+.chips button::before{content:"";position:absolute;inset:-3px -3px}
 </style>
