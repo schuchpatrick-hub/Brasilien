@@ -194,8 +194,11 @@ Im Kapitel Kino unter der Samba-Show (`#series`, SVG `#ser-svg` 800×450, Knöpf
 Eigenes Modul in `page_script.html` („Gringos – Die Serie“), gleicher Stil wie die Samba-Show (Foto-Köpfe, Kanadier-Münder; Nebenfiguren
 Kontrolleur, Flugbegleiterin, Einheimische gezeichnet). Drehbuch in `trip.json` → `series.ep1` (`lines` mit `who`, `at`, `say` = gesprochen,
 `text` = Untertitel, optional `vo`), Stimmen der Nebenfiguren in `series.voices`, `voice` wird erzeugt. Szenen und Zeiten in `SC`
-(Intro, Sicherheitskontrolle, Flieger, Silvester, Buffet, Dschungel, Footvolley, Abspann), Gags in `frame(t)` je Szene; Musik wechselt pro Szene
-(`mus`), Effekte in `program()`. Untertitel unten immer an. Stimmen: `python3 tools/gen_dance_audio.py --series ep1 [key …]` → `web/audio/ep1-*.mp3`
+aus `series.ep1.scenes` (Folge 1 = nur die ersten Tage: Intro, Sicherheitskontrolle, Flughafen-Bar, Flieger, Uber, Strand Guarujá, Caipi-Abend, Abspann;
+Beginn/Ende der Szenen aus den Sprechzeiten berechnet), Musik/Ort-Einblendung je Szene in `META`, Gags in `frame(t)` je Szene über `A('key')` = Startzeit
+einer Zeile relativ zur Szene (Zeiten in den Daten verschieben reicht); Effekte in `program()`. Humor: gern schwarz, Alkohol, Flirt-Pleiten (Patricks Wunsch).
+**Geparkt für spätere Folgen:** fertige Szenen Silvester (`ny`), Buffet (`buf`), Dschungel (`jg`), Footvolley (`fv`) im Modul, Zeilen in `series.parked`,
+Aufnahmen in `web/audio/parked/` (nicht veröffentlichen; für eine neue Folge neu timen, auf `A()` umstellen und nach `web/audio/` holen). Untertitel unten immer an. Stimmen: `python3 tools/gen_dance_audio.py --series ep1 [key …]` → `web/audio/ep1-*.mp3`
 (beim Veröffentlichen in `files` mitgeben); Verständlichkeit mit Whisper prüfen, unklare Zeilen mehrfach erzeugen und die beste behalten.
 Startet eine Show, pausiert die andere (Ereignis `br26-kino`). Video: `window.__serT`, `__serFrame(t)`, `__serAudio(ms)`, `__serVoices()`.
 Neue Folge: `series.ep2` anlegen und das Modul um die Szenen erweitern bzw. Folge wählbar machen.
