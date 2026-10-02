@@ -190,7 +190,7 @@ Video: `window.__danceT`, `__danceAudio(ms)`, `__danceVoices()`, `__danceLive({.
 
 ## Serie „Gringos – Die Serie“ (Cartoon-Folgen)
 
-Im Kapitel Kino oben (`#series`, SVG `#ser-svg` 800×450, Knöpfe `#ser-play`/`#ser-stop`/`#ser-sound`/`#ser-full`, großer Start-Knopf `#ser-big`).
+Im Kapitel Kino unter der Samba-Show (`#series`, SVG `#ser-svg` 800×450, Knöpfe `#ser-play`/`#ser-stop`/`#ser-sound`/`#ser-full`, großer Start-Knopf `#ser-big`).
 Eigenes Modul in `page_script.html` („Gringos – Die Serie“), gleicher Stil wie die Samba-Show (Foto-Köpfe, Kanadier-Münder; Nebenfiguren
 Kontrolleur, Flugbegleiterin, Einheimische gezeichnet). Drehbuch in `trip.json` → `series.ep1` (`lines` mit `who`, `at`, `say` = gesprochen,
 `text` = Untertitel, optional `vo`), Stimmen der Nebenfiguren in `series.voices`, `voice` wird erzeugt. Szenen und Zeiten in `SC`
