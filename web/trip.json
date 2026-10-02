@@ -3472,7 +3472,7 @@
         "key": "patrick",
         "who": "patrick",
         "at": 17800,
-        "say": "Wo ist der Takt? Und wo ist das Buffet?",
+        "say": "Wo ist der Takt? Und wo ist das Büfett?",
         "text": "Wo ist eigentlich der Takt? Und wo ist das Buffet? 🍗",
         "alts": [
           {
@@ -3482,10 +3482,14 @@
           },
           {
             "key": "patrick-2",
-            "say": "Kurze Pause, ich muss zum Buffet!",
+            "say": "Kurze Pause, ich muss zum Büfett!",
             "text": "Kurze Pause, ich muss zum Buffet! 🍗"
           }
-        ]
+        ],
+        "vo": {
+          "pitch": 1.0,
+          "speed": 0.85
+        }
       },
       {
         "key": "jonas2",
@@ -3881,7 +3885,12 @@
         "at": 60200,
         "say": "Tschau, Brasil!",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "voice": "announcer",
+        "vo": {
+          "speed": 0.85,
+          "fx": "highpass=f=90,chorus=0.6:0.9:50|70:0.3|0.25:0.25|0.35:2|1.3"
+        }
       },
       {
         "key": "tchau-simon",
@@ -3889,7 +3898,9 @@
         "at": 60200,
         "say": "Tschau, Brasil!",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "src": "tchau-jonas",
+        "mute": true
       },
       {
         "key": "tchau-patrick",
@@ -3897,7 +3908,9 @@
         "at": 60200,
         "say": "Tschau, Brasil!",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "src": "tchau-jonas",
+        "mute": true
       },
       {
         "key": "tchau-marco",
@@ -3905,7 +3918,9 @@
         "at": 60200,
         "say": "Tschau, Brasil!",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "src": "tchau-jonas",
+        "mute": true
       },
       {
         "key": "tchau-greisel",
@@ -3913,7 +3928,9 @@
         "at": 60200,
         "say": "Tschau, Brasil!",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "src": "tchau-jonas",
+        "mute": true
       },
       {
         "key": "tchau-dajo",
@@ -3921,7 +3938,9 @@
         "at": 60200,
         "say": "Tschau, Brasil!",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "src": "tchau-jonas",
+        "mute": true
       }
     ],
     "voice": {
@@ -3990,16 +4009,16 @@
         "env": "045441116159432105400111111110243532110000033110266522201341011038621100000"
       },
       "patrick": {
-        "dur": 2283,
-        "env": "4897410451000175011440000000896100016860172000662100294069"
+        "dur": 2415,
+        "env": "4997115210000495011550000000099631015999259310087110039407600"
       },
       "patrick-1": {
-        "dur": 1750,
-        "env": "65100104531027347100001898311007951477485100"
+        "dur": 1981,
+        "env": "44100107782128567210000089998111005997115788896210"
       },
       "patrick-2": {
-        "dur": 1886,
-        "env": "000980007000007976356730065210237510037314602300"
+        "dur": 2125,
+        "env": "004980015700113789951156520058310268510000552350065000"
       },
       "jonas2": {
         "dur": 2170,
@@ -4050,28 +4069,8 @@
         "env": "9386518730005598613971000739640781000569771392000000000000000000"
       },
       "tchau-jonas": {
-        "dur": 1148,
-        "env": "00001169962000000343134110000"
-      },
-      "tchau-simon": {
-        "dur": 1089,
-        "env": "0326522100000962123321000000"
-      },
-      "tchau-patrick": {
-        "dur": 1052,
-        "env": "111499995000000117511165410"
-      },
-      "tchau-marco": {
-        "dur": 972,
-        "env": "1113899993101252011476200"
-      },
-      "tchau-greisel": {
-        "dur": 1311,
-        "env": "144313457995200004337521136889731"
-      },
-      "tchau-dajo": {
-        "dur": 1379,
-        "env": "03537789720113699712999534000000000"
+        "dur": 1441,
+        "env": "0000021999864210000010595136531000000"
       },
       "brasil-jonas": {
         "dur": 2290,

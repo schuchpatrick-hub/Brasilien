@@ -167,7 +167,7 @@ Im Kapitel Crew unter den Steckbriefen (`#samba`, SVG `#samba-svg`, Knöpfe `#sa
 gezeichneten Körpern; Münder wie die South-Park-Kanadier (Foto auf Mundhöhe geteilt, Oberkopf klappt nach der Lautstärkekurve),
 Schweißtropfen über dem Foto (Augenbrauen auf Wunsch entfernt). Daten in `trip.json` → `dance`: `look` je Person (Stil, Shirt, Hose, `face`
 = Ausschnitt x/y/z, Mundhöhe m, Augenlinie e, Augenabstand ex), `voices` (Stimme je Person), `melodies` (gesungene Chöre: ole, brasil, gringos, caipi; je Durchgang `grp` c1/c2 eine andere, alle singen dieselbe),
-`lines` (Zeitpunkt `at`, `alts` = Varianten, pro Abspielen zufällig; `src` = Aufnahme einer anderen Zeile; `sing` = gesungen),
+`lines` (Zeitpunkt `at`, `alts` = Varianten, pro Abspielen zufällig; `src` = Aufnahme einer anderen Zeile, `mute` = nur Mund bewegen, Ton spielt die Quelle (Schlusschor „Tschau, Brasil!“ = eine klare Stimme mit Chor-Effekt); `vo` = Stimm-Einstellungen nur für diese Zeile (Patrick bei „Büfett“ ohne Tonhöhenverschiebung, sonst unverständlich); Verständlichkeit lässt sich mit Whisper (sherpa-onnx-whisper-small aus den sherpa-onnx-Releases) prüfen; `sing` = gesungen),
 `voice` wird erzeugt. Ablauf in `frame(t)`, Zeitfenster in `T`: Ansage, Solos mit Kamera-Zoom, Patrick aus dem Takt (Freeze,
 Hähnchen), La Ola, Kostümwechsel mit Blitz + „Olê, olê“ gesungen, Polonaise, Daijo-Solo, Tanz-Duell Simon gegen Greisel mit
 Applaus-Meter (Sieger = mehr Siege, bei Gleichstand Tageslaune), Sprung, Ananas auf Jonas, Pyramide, Vorhang, Pannen vom Dreh.

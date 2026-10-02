@@ -2957,7 +2957,7 @@ function wavB64(buf) {
         base = ctx.currentTime + .15; const m = window.__TripMusic(ctx); program(m, base); liveM = m;
         vGain = ctx.createGain(); vGain.gain.value = 1; vGain.connect(ctx.destination);
         timer = setInterval(() => { if (ctx) m.schedule(ctx.currentTime + .15); }, 30);
-        LINES.forEach(l => playVoice(l.file, l.at, my));
+        LINES.forEach(l => { if (!l.mute) playVoice(l.file, l.at, my); });   // mute: Mund bewegt sich, Ton kommt von der Quell-Zeile (src)
       } catch (e) { ctx = null; }
     }
     t0p = tnow();
