@@ -3581,7 +3581,7 @@ function wavB64(buf) {
       if ([0, 3, 6, 10, 12].includes(s)) SH.chords[bar].forEach((m, k) => tone(out, 'triangle', mf(m - 12), t + k * .01, .22, .06, {lp: 2200}));
       SH.horn[bar].forEach(([st, m, len]) => { if (st === s) brass(out, mf(m), t, sd * len * .85, .2); });
     }
-    const sdur = () => 60 / BPM / 4 * (E.night ? 1.2 : 1);
+    const sdur = () => 60 / BPM / 4 * (E.night ? 1.2 : 1) * (E.mode === 'show' ? E.slow || 1 : 1);   // E.slow: Samba-Show etwas gemächlicher
     const audible = (m, t) => E.on[m] || t < E.till[m];
     E.schedule = until => {
       while (E.next < until) {
@@ -3640,6 +3640,10 @@ function wavB64(buf) {
       else if (name === 'crash') { noise(sfxOut, t, 1.2, .6, 'highpass', 2500, .5); for (let k = 0; k < 14; k++) tone(sfxOut, 'sine', 2500 + rnd() * 4000, t + rnd() * .5, .25, .05); kick(sfxOut, t, .8); }
       else if (name === 'thud') { kick(sfxOut, t, .9); noise(sfxOut, t, .3, .35, 'lowpass', 600, .7); }
       else if (name === 'flash') { noise(sfxOut, t, .6, .25, 'bandpass', 5000, .8, {to: 900, a: .02}); tone(sfxOut, 'sine', 1800, t, .5, .06, {from: 400, glide: .4}); }
+      else if (name === 'handclaps') for (let k = 0; k < 10; k++) for (let h = 0; h < 6; h++) noise(sfxOut, t + k * .25 * (E.slow || 1) + rnd() * .03, .06, .2 + .1 * rnd(), 'bandpass', 1000 + rnd() * 1600, 1.2);   // Publikum klatscht im Takt
+      else if (name === 'cheer') { for (let k = 0; k < 16; k++) { const o = k * .1; noise(sfxOut, t + o, .55, .16 * Math.sin(Math.PI * (k + 1) / 17), 'bandpass', 550 + rnd() * 600, 1.4, {a: .12, to: 700 + rnd() * 500}); }   // Jubel: Menge „Jeeaah“, Pfiffe, Juhu
+        [.15, .7].forEach(o => tone(sfxOut, 'sine', 2600 + rnd() * 500, t + o, .5, .07, {from: 1500, glide: .2, a: .02}));
+        [0, .3, .55].forEach(o => tone(sfxOut, 'sine', 1200 + rnd() * 400, t + o + .1, .5, .045, {from: 650, glide: .25, vib: 9, depth: .03, a: .05})); }
       else if (name === 'clap') { noise(sfxOut, t, .07, .7, 'highpass', 1800, .7); tone(sfxOut, 'sine', 160, t, .08, .4, {from: 300, glide: .03}); }
       else if (name === 'scratch') { noise(sfxOut, t, .18, .45, 'bandpass', 3200, 3, {to: 500}); noise(sfxOut, t + .18, .22, .4, 'bandpass', 600, 3, {to: 2800}); }
       else if (name === 'wah') [62, 61, 60, 59].forEach((m, k) => tone(sfxOut, 'sawtooth', mf(m), t + k * .38, k === 3 ? 1.1 : .36, .13, {lp: 900, a: .04, hold: k === 3 ? .8 : .25, vib: k === 3 ? 5 : 0, depth: .025}));
@@ -4414,7 +4418,7 @@ function wavB64(buf) {
     if (EVENT === 'waiter') [800, 1600, 2400, 3200].forEach(o => m.sfx('ding', at(e0 + o)));
   }
   function program(m, t0) {   // alles relativ zu t0 (Sekunden im AudioContext)
-    const at = ms => t0 + ms / 1000;
+    const at = ms => t0 + ms * SLOW / 1000; m.slow = SLOW;
     eventSfx(m, at);
     if (ENC) { m.setMode('show', at(MUSIC_AT)); m.step = 0; m.next = at(MUSIC_AT) + .03; m.drums = [[at(T.chant[0]), at(T.chant[1])]];
       m.sfx('applause', at(600)); m.sfx('whoo', at(900)); m.sfx('whoo', at(T.wave[0] + 300)); m.sfx('whoo', at(T.spin[0] + 300));
@@ -4433,6 +4437,8 @@ function wavB64(buf) {
     const st0 = T.moves[0] + 4900 + 5 * 380 + 700; m.sfx('thud', at(st0)); m.sfx('boing', at(st0 + 150)); m.sfx('whoo', at(T.moves[0] + 300)); m.sfx('boing', at(T.moves[1] - 800));
     m.sfx('applause', at(T.credits[0])); m.end(at(T.credits[1]));
   }
+  const SLOW = 1 / .9;   // ganze Show ca. 10 % langsamer: Showzeit = echte Zeit / SLOW (Stimmen-MP3s sind entsprechend gedehnt)
+  const SPD = () => window.__danceT !== undefined ? 1 : SLOW;
   let run = 0, raf = 0, ctx = null, timer = 0, voices = [], t0p = 0, base = 0, vGain = null, STATE = 'idle', pausedAt = 0, startedAt = 0;   // STATE: idle | run | pause
   const RAW = {}, ABUF = {};
   function prefetch(keys) { keys.forEach(k => { if (!RAW[k]) RAW[k] = fetch('audio/samba-' + k + '.mp3').then(r => r.ok ? r.arrayBuffer() : null).catch(() => null); }); }
@@ -4444,10 +4450,10 @@ function wavB64(buf) {
   function playVoice(key, whenMs, my) {   // whenMs = Showzeit; Start über die Audio-Uhr, notfalls mit Versatz in die Aufnahme hinein
     bufOf(key).then(bf => { if (my !== run || !ctx) return;
       if (!bf) { const el = new Audio('audio/samba-' + key + '.mp3'); el.play().catch(() => {}); voices.push({el}); return; }
-      const src = ctx.createBufferSource(); src.buffer = bf; src.connect(vGain); const w = base + whenMs / 1000, now = ctx.currentTime;
+      const src = ctx.createBufferSource(); src.buffer = bf; src.connect(vGain); const w = base + whenMs * SLOW / 1000, now = ctx.currentTime;
       if (w >= now) src.start(w); else if (now - w < bf.duration - .05) src.start(now, now - w); else return; voices.push({src}); });
   }
-  const clock = () => STATE === 'pause' ? pausedAt : ctx && window.__danceT === undefined ? (ctx.currentTime - (ctx.outputLatency || 0) - base) * 1000 : tnow() - t0p;
+  const clock = () => STATE === 'pause' ? pausedAt : ctx && window.__danceT === undefined ? (ctx.currentTime - (ctx.outputLatency || 0) - base) * 1000 / SLOW : (tnow() - t0p) / SPD();
   if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { prefetch(allKeys()); io.disconnect(); } }, {rootMargin: '400px'}); io.observe(svg); }
   function stop(reset) {
     run++; cancelAnimationFrame(raf); clearInterval(timer); voices.forEach(a => { if (a.el) a.el.pause(); if (a.src) try { a.src.stop(); } catch (e) {} if (a.to) clearTimeout(a.to); }); voices = [];
@@ -4482,7 +4488,7 @@ function wavB64(buf) {
       const now = performance.now(), dt = now - last; last = now;
       if (STATE === 'run' && window.__danceT === undefined) { slow = dt > 34 ? slow + 1 : Math.max(0, slow - 1); if (slow > 20) svg.classList.add('sb-lite'); }   // ruckelt es länger: Sparmodus
       // Ton kommt nicht in Gang (z. B. stummgeschaltet blockiert): ohne Ton weiterlaufen statt stehen zu bleiben
-      if (ctx && STATE === 'run' && ctx.state !== 'running' && now - startedAt > 1500 && window.__danceT === undefined) { const tn = Math.max(0, clock()); ctx.close().catch(() => {}); ctx = null; clearInterval(timer); t0p = tnow() - tn; }
+      if (ctx && STATE === 'run' && ctx.state !== 'running' && now - startedAt > 1500 && window.__danceT === undefined) { const tn = Math.max(0, clock()); ctx.close().catch(() => {}); ctx = null; clearInterval(timer); t0p = tnow() - tn * SPD(); }
       if (STATE === 'run') { const t = clock(); frame(t); if (t > END) { encoreReady = !ENC; stop(true); return; } }
       raf = requestAnimationFrame(loop); })();
   }
@@ -4492,7 +4498,7 @@ function wavB64(buf) {
     btn.setAttribute('aria-pressed', String(STATE !== 'idle')); if (stopB) stopB.hidden = STATE === 'idle';
   }
   function pause() { if (STATE !== 'run') return; pausedAt = clock(); STATE = 'pause'; if (ctx) ctx.suspend().catch(() => {}); voices.forEach(a => { if (a.el && !a.el.paused) { a.el.pause(); a.resumeEl = true; } }); paint(); }
-  function resume() { if (STATE !== 'pause') return; if (ctx) ctx.resume().catch(() => {}); else t0p = tnow() - pausedAt;
+  function resume() { if (STATE !== 'pause') return; if (ctx) ctx.resume().catch(() => {}); else t0p = tnow() - pausedAt * SPD();
     voices.forEach(a => { if (a.resumeEl) { a.el.play().catch(() => {}); a.resumeEl = false; } }); STATE = 'run'; startedAt = performance.now(); paint(); }
   btn.addEventListener('click', () => { if (STATE === 'run') pause(); else if (STATE === 'pause') resume(); else start(encoreReady); });
   if (stopB) stopB.addEventListener('click', () => { encoreReady = false; stop(true); });
@@ -4516,9 +4522,9 @@ function wavB64(buf) {
   const aud = [document.getElementById('samba-clap'), document.getElementById('samba-cheer')].filter(Boolean);
   aud.forEach(b => b.addEventListener('click', () => { if (!playing()) return; const t = clock(), cheerB = b.id === 'samba-cheer';
     if (cheerB) BOOST.cheer = t; else BOOST.clap = t; PRESS.filter(q => t - q.t >= 2500 && q.els).forEach(q => q.els.forEach(e => e.remove())); PRESS = PRESS.filter(q => t - q.t < 2500).concat([{t, k: cheerB ? 'cheer' : 'clap'}]);
-    if (liveM && ctx) { liveM.sfx('applause', ctx.currentTime + .02); if (cheerB) { liveM.sfx('whoo', ctx.currentTime + .05); liveM.sfx('whoo', ctx.currentTime + .5); } } }));
+    if (liveM && ctx) { const n = ctx.currentTime + .02; if (cheerB) { liveM.sfx('cheer', n); liveM.sfx('applause', n + .3); } else liveM.sfx('handclaps', n); } }));
   const sPaint = () => { if (sbtn) { sbtn.textContent = soundOn() ? '🔊 Ton an' : '🔇 Ton aus'; sbtn.setAttribute('aria-pressed', String(soundOn())); } };
-  if (sbtn) sbtn.addEventListener('click', () => { store.set('sound', soundOn() ? '0' : '1'); sPaint(); if (!soundOn() && ctx) { const tn = clock(); t0p = tnow() - tn; if (STATE === 'pause') pausedAt = tn; voices.forEach(a => { if (a.el) a.el.pause(); if (a.src) try { a.src.stop(); } catch (e) {} }); ctx.close().catch(() => {}); ctx = null; clearInterval(timer); } });
+  if (sbtn) sbtn.addEventListener('click', () => { store.set('sound', soundOn() ? '0' : '1'); sPaint(); if (!soundOn() && ctx) { const tn = clock(); t0p = tnow() - tn * SPD(); if (STATE === 'pause') pausedAt = tn; voices.forEach(a => { if (a.el) a.el.pause(); if (a.src) try { a.src.stop(); } catch (e) {} }); ctx.close().catch(() => {}); ctx = null; clearInterval(timer); } });
   // Vollbild: echtes Vollbild, wo erlaubt (sonst füllt die Show per CSS den Bildschirm), im Querformat gesperrt wenn möglich
   const box = document.getElementById('samba'), fbtn = document.getElementById('samba-full');
   const isFull = () => box.classList.contains('full');
@@ -4541,8 +4547,8 @@ function wavB64(buf) {
   fast(svg); sPaint(); paint(); frame(0);
   // Video-Aufnahme: Zeit setzen, Musik offline rendern, Stimmen-Startzeiten; __danceLive setzt Live-Daten zum Ausprobieren
   window.__dancePlay = start; window.__danceTap = id => tapPerson(id); window.__danceBoost = k => { const t = clock(); BOOST[k] = t; PRESS = PRESS.concat([{t, k}]); }; window.__danceEnd = END; window.__danceLive = o => { LIVE = Object.assign({card: {}}, o); };
-  window.__danceAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms / 1000), sr), m = window.__TripMusic(oc); program(m, 0); m.schedule(ms / 1000); return wavB64(await oc.startRendering()); };
-  window.__danceVoices = () => LINES.map(l => ({key: l.file, at: l.at}));
+  window.__danceAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms * SLOW / 1000), sr), m = window.__TripMusic(oc); program(m, 0); m.schedule(ms * SLOW / 1000); return wavB64(await oc.startRendering()); };
+  window.__danceVoices = () => LINES.map(l => ({key: l.file, at: l.at * SLOW}));   // echte ms (Showzeit × SLOW)
 })();
 
 renderMe(); meMark();
