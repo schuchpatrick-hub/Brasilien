@@ -2065,6 +2065,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       else if (name === 'boat') { tone(sfxOut, 'sawtooth', 98, t, 1, .12, {lp: 500, hold: .7, a: .08}); tone(sfxOut, 'sawtooth', 147, t, 1, .07, {lp: 500, hold: .7, a: .08}); }
       else if (name === 'plane') noise(sfxOut, t, 1.2, .14, 'bandpass', 300, 2, {to: 2400, a: .4});
       else if (name === 'gong') [[1046, 0], [784, .3], [523, .6]].forEach(([f, o]) => { tone(sfxOut, 'sine', f, t + o, 1.8, .2); tone(sfxOut, 'sine', f * 2.01, t + o, .7, .05); tone(sfxOut, 'triangle', f / 2, t + o, 1.3, .07); });
+      else if (name === 'boing') boing(sfxOut, t, .12);
       else if (name === 'clap') { noise(sfxOut, t, .07, .7, 'highpass', 1800, .7); tone(sfxOut, 'sine', 160, t, .08, .4, {from: 300, glide: .03}); }
       else if (name === 'scratch') { noise(sfxOut, t, .18, .45, 'bandpass', 3200, 3, {to: 500}); noise(sfxOut, t + .18, .22, .4, 'bandpass', 600, 3, {to: 2800}); }
       else if (name === 'wah') [62, 61, 60, 59].forEach((m, k) => tone(sfxOut, 'sawtooth', mf(m), t + k * .38, k === 3 ? 1.1 : .36, .13, {lp: 900, a: .04, hold: k === 3 ? .8 : .25, vib: k === 3 ? 5 : 0, depth: .025}));
@@ -2115,7 +2116,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   };
 
   // Nachrichten-Intro „Gringo-Schau“: Studio, Fahndungsbild der vier Gringos, Lauftext; Sprecher als MP3 (nur mit Ton an)
-  const VOICE_MS = 6550;
+  const VOICE_MS = 8560, LATE_MS = 3650;   // Sprecherlänge; ab da „Zwei weitere folgen später“
   async function intro(my) {
     const g = mk('g', {class: 'news'}), y0 = H * .14;
     g.appendChild(mk('rect', {x: -5, y: -5, width: W + 10, height: H + 10, class: 'news-bg'}));
@@ -2123,13 +2124,21 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     const logo = mk('g', {transform: `translate(${W * .06},${y0})`}); logo.appendChild(mk('rect', {width: 330, height: 64, rx: 6, class: 'news-logo'}));
     const lt = mk('text', {x: 18, y: 44, class: 'news-logo-t'}); lt.textContent = 'GRINGO-SCHAU'; logo.appendChild(lt);
     const ck = mk('text', {x: 350, y: 44, class: 'news-clock'}); ck.textContent = '20:00'; logo.appendChild(ck); g.appendChild(logo);
-    const pw = Math.min(W * .62, 640), ph = 250, px = (W - pw) / 2, py = H * .32;
+    const pw = Math.min(W * .66, 720), ph = 250, px = (W - pw) / 2, py = H * .32;
     g.appendChild(mk('rect', {x: px, y: py, width: pw, height: ph, rx: 10, class: 'news-panel'}));
     const pt = mk('text', {x: px + 20, y: py + 38, class: 'news-panel-t'}); pt.textContent = '🚨 EILMELDUNG'; g.appendChild(pt);
-    A.forEach((id, i) => { const p = byId[id], r = 46, cx = px + pw / 2 + (i - (A.length - 1) / 2) * (r * 2 + 26), cy = py + 130;
-      g.appendChild(mk('circle', {cx, cy, r: r + 4, class: 'news-head'}));
-      if (p && p.photo) g.appendChild(mk('image', {href: p.photo, x: cx - r, y: cy - r, width: 2 * r, height: 2 * r, 'clip-path': 'url(#head-clip)', preserveAspectRatio: 'xMidYMid slice'}));
-      const n = mk('text', {x: cx, y: cy + r + 30, class: 'news-name', 'text-anchor': 'middle'}); n.textContent = p ? p.name : id; g.appendChild(n); });
+    const r = 38, sp = 96, gapB = 44, tw = 5 * sp + gapB, x0 = px + (pw - tw) / 2, cy = py + 132;
+    const head = (gg, id, cx) => { const p = byId[id];
+      gg.appendChild(mk('circle', {cx, cy, r: r + 4, class: 'news-head' + (B.includes(id) ? ' b' : '')}));
+      if (p && p.photo) gg.appendChild(mk('image', {href: p.photo, x: cx - r, y: cy - r, width: 2 * r, height: 2 * r, 'clip-path': 'url(#head-clip)', preserveAspectRatio: 'xMidYMid slice'}));
+      const n = mk('text', {x: cx, y: cy + r + 28, class: 'news-name', 'text-anchor': 'middle'}); n.textContent = p ? p.name : id; gg.appendChild(n); };
+    A.forEach((id, i) => head(g, id, x0 + i * sp));
+    // Daijo & Greisel: tauchen auf, wenn der Sprecher „Zwei weitere folgen später“ sagt
+    const late = mk('g', {class: 'news-late'}), bx = x0 + 4 * sp + gapB - sp / 2 - 4;
+    late.appendChild(mk('rect', {x: bx - 14, y: py + 62, width: sp * 2 + 28, height: 160, rx: 12, class: 'news-late-box'}));
+    const lt2 = mk('text', {x: x0 + 4.5 * sp + gapB, y: py + 84, class: 'news-late-t', 'text-anchor': 'middle'}); lt2.textContent = 'FOLGEN AM 06.01.'; late.appendChild(lt2);
+    B.forEach((id, i) => head(late, id, x0 + (4 + i) * sp + gapB));
+    late.style.opacity = 0; g.appendChild(late);
     const lb = mk('g', {}); lb.appendChild(mk('rect', {x: W * .06, y: H * .72, width: W * .88, height: 74, class: 'news-lower'}));
     const l1 = mk('text', {x: W * .06 + 22, y: H * .72 + 32, class: 'news-l1'}); l1.textContent = 'Vier Männer verlassen das Land'; lb.appendChild(l1);
     const l2 = mk('text', {x: W * .06 + 22, y: H * .72 + 60, class: 'news-l2'}); l2.textContent = 'Ziel: Brasilien · Experten rechnen mit dem Schlimmsten'; lb.appendChild(l2); g.appendChild(lb);
@@ -2141,7 +2150,10 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     g.style.opacity = 0; gFront.appendChild(g);
     try { const lw = lt.getBBox().width + 36; logo.firstChild.setAttribute('width', lw); ck.setAttribute('x', lw + 20); } catch (e) {}
     const t0 = tnow(), END = 700 + VOICE_MS + 300;
-    fxs.push(now => { if (!g.isConnected) return false; const k = now - t0; tt.setAttribute('x', (W - k * .16).toFixed(1)); ck.textContent = '20:0' + Math.min(9, Math.floor(k / 1000)); });
+    let shown = false;
+    fxs.push(now => { if (!g.isConnected) return false; const k = now - t0; tt.setAttribute('x', (W - k * .16).toFixed(1)); ck.textContent = '20:' + String(Math.floor(k / 1000)).padStart(2, '0');
+      const q = (k - 700 - LATE_MS) / 450; late.style.opacity = Math.max(0, Math.min(1, q));
+      if (q > 0 && !shown) { shown = true; mus('sfx', 'boing'); l1.textContent = 'Vier Männer verlassen das Land – zwei folgen'; } });
     mus('sfx', 'gong'); tlog.push({t: tnow() - tlog0 + 700, type: 'voice'});
     if (live) { const a = new Audio('audio/intro-nachrichten.mp3'); vo = a; setTimeout(() => { if (vo === a) a.play().catch(() => {}); }, 700); }
     await tween(400, my, e => { g.style.opacity = e; });
