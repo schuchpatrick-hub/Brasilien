@@ -979,6 +979,14 @@ footer{color:var(--muted);font-size:.85rem;padding-top:26px;position:relative}
 footer::before{content:"";position:absolute;left:0;right:0;top:0;height:14px;background:var(--verde);opacity:.55;-webkit-mask:var(--wave) 0 0/60px 20px repeat-x;mask:var(--wave) 0 0/60px 20px repeat-x}
 footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);margin-bottom:6px}
 @media (max-width:560px){.days{grid-template-columns:1fr}.days dt{border-bottom:0;padding-bottom:0}}
+/* Samba-Show */
+.samba{margin-top:26px}.samba h3{margin:0 0 4px}
+.samba-stage{margin-top:10px;border-radius:16px;overflow:hidden;line-height:0;box-shadow:0 8px 24px rgba(0,0,0,.18);background:#241a5c}
+.samba-stage svg{width:100%;height:auto;display:block;cursor:pointer}
+.sb-title{fill:#ffcf1f;stroke:#4a0712;stroke-width:6px;paint-order:stroke;font:800 46px var(--display)}
+.sb-sub{fill:#fff;stroke:#4a0712;stroke-width:4px;paint-order:stroke;font:700 22px var(--body)}
+.sb-bub rect,.sb-bub path{fill:#fff;stroke:#2a1a12;stroke-width:2}.sb-bub text{fill:#2a1a12;font:700 16px var(--body)}
+@media print{.samba{display:none}}
 /* Tempo: Kapitel außerhalb des Bildschirms erst zeichnen, wenn man hinscrollt (sieht genauso aus) */
 .wrap>section:not(#heute):not(#route){content-visibility:auto;contain-intrinsic-size:auto 1500px}
 .cv-all .wrap>section,.wrap>section.folded{content-visibility:visible!important}

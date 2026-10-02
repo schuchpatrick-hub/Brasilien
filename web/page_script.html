@@ -1775,6 +1775,17 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   svg.addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && pick(e)) e.preventDefault(); });
 })();
 
+// AudioBuffer (mono) → WAV als base64, für die Video-Aufnahmen
+function wavB64(buf) {
+  const sr = buf.sampleRate, d = buf.getChannelData(0), out = new DataView(new ArrayBuffer(44 + d.length * 2));
+  const str = (o, s) => [...s].forEach((c, i) => out.setUint8(o + i, c.charCodeAt(0)));
+  str(0, 'RIFF'); out.setUint32(4, 36 + d.length * 2, true); str(8, 'WAVEfmt '); out.setUint32(16, 16, true); out.setUint16(20, 1, true); out.setUint16(22, 1, true);
+  out.setUint32(24, sr, true); out.setUint32(28, sr * 2, true); out.setUint16(32, 2, true); out.setUint16(34, 16, true); str(36, 'data'); out.setUint32(40, d.length * 2, true);
+  for (let i = 0; i < d.length; i++) out.setInt16(44 + i * 2, Math.max(-1, Math.min(1, d[i])) * 32767, true);
+  const u = new Uint8Array(out.buffer); let b = ''; for (let i = 0; i < u.length; i += 32768) b += String.fromCharCode.apply(null, u.subarray(i, i + 32768));
+  return btoa(b);
+}
+
 /* ---------- Karte: Reise als Animation (Köpfe im Flieger, Auto, Boot) ----------
    Kamera-Zoom in den Südost-Ausschnitt, leuchtende Spur, Nacht bei Nachtflügen, Feuerwerk, Tageszähler mit Kilometern,
    Wackelköpfe mit Sprechblasen und kleine Gags. Zeit über tnow(), damit die Video-Aufnahme sie selbst setzen kann. */
@@ -2114,14 +2125,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       if (ev.type === 'mode') m.setMode(ev.arg, w); else if (ev.type === 'night') m.setNight(ev.arg, w); else if (ev.type === 'end') m.end(w); else m.sfx(ev.arg, w);
     });
     m.schedule(ms / 1000);
-    const buf = await ctx.startRendering(), d = buf.getChannelData(0), out = new DataView(new ArrayBuffer(44 + d.length * 2));
-    const str = (o, s) => [...s].forEach((c, i) => out.setUint8(o + i, c.charCodeAt(0)));
-    str(0, 'RIFF'); out.setUint32(4, 36 + d.length * 2, true); str(8, 'WAVEfmt '); out.setUint32(16, 16, true); out.setUint16(20, 1, true); out.setUint16(22, 1, true);
-    out.setUint32(24, sr, true); out.setUint32(28, sr * 2, true); out.setUint16(32, 2, true); out.setUint16(34, 16, true); str(36, 'data'); out.setUint32(40, d.length * 2, true);
-    for (let i = 0; i < d.length; i++) out.setInt16(44 + i * 2, Math.max(-1, Math.min(1, d[i])) * 32767, true);
-    const u = new Uint8Array(out.buffer); let b = ''; for (let i = 0; i < u.length; i += 32768) b += String.fromCharCode.apply(null, u.subarray(i, i + 32768));
-    return btoa(b);
+    return wavB64(await ctx.startRendering());
   };
+  window.__TripMusic = Music;   // auch für die Samba-Show
 
   // Nachrichten-Intro „Gringo-Schau“: Studio, Fahndungsbild der vier Gringos, Lauftext; Sprecher als MP3 (nur mit Ton an)
   let iosShow = false;
@@ -2283,6 +2289,221 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   }); }
   window.__tripVoice = () => (tlog.find(e => e.type === 'voice') || {}).t;   // Video: Startzeit des Sprechers in ms
   window.__tripPlay = play;   // für die Video-Aufnahme
+})();
+
+/* ---------- Samba-Show: Crew-Köpfe auf Cartoon-Körpern, Münder klappen wie bei den South-Park-Kanadiern ----------
+   Alles hängt nur an der Zeit t (ms seit Start): pose(t) zeichnet jedes Bild neu, daher kann die Video-Aufnahme die Zeit
+   über window.__danceT selbst setzen. Musik = Samba aus der Karten-Animation (window.__TripMusic), Stimmen = MP3s mit
+   Lautstärkekurve (trip.json → dance.voice), nach der der Oberkopf hochklappt. */
+(function () {
+  const svg = document.getElementById('samba-svg'), btn = document.getElementById('samba-play'), sbtn = document.getElementById('samba-sound');
+  if (!svg || !btn || PRINT || !TRIP.dance) return;
+  const D = TRIP.dance, NS = 'http://www.w3.org/2000/svg', W = 800, H = 500, FLOOR = 452, BEAT = 500, MUSIC_AT = 1500, END = 39500;
+  const mk = (tag, a, parent) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (parent) parent.appendChild(e); return e; };
+  const byId = Object.fromEntries(TRIP.crew.map(c => [c.id, c]));
+  const tnow = () => window.__danceT !== undefined ? window.__danceT : performance.now();
+  const soundOn = () => store.get('sound') !== '0';
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v)), ease = x => { x = clamp(x, 0, 1); return x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; };
+  const span = (t, a, b) => clamp((t - a) / (b - a), 0, 1);
+  const ids = D.order.filter(id => byId[id]), N = ids.length, homeX = i => 90 + i * (620 / (N - 1));
+  const R = 47, SKIN = '#f1c7a5', INK = '#2a1a12';
+  const LINES = D.lines.map(l => Object.assign({}, l, D.voice && D.voice[l.key] || {dur: 1800, env: ''}));
+
+  // ---------- Bühne (einmal aufbauen) ----------
+  svg.innerHTML = '';
+  const defs = mk('defs', {}, svg);
+  defs.innerHTML = '<linearGradient id="sb-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#241a5c"/><stop offset=".55" stop-color="#c2477a"/><stop offset="1" stop-color="#ffb05c"/></linearGradient>' +
+    '<radialGradient id="sb-spot" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6c8" stop-opacity=".75"/><stop offset="1" stop-color="#fff6c8" stop-opacity="0"/></radialGradient>' +
+    '<linearGradient id="sb-cone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c8" stop-opacity=".05"/><stop offset="1" stop-color="#fff6c8" stop-opacity=".28"/></linearGradient>' +
+    '<pattern id="sb-wave" width="60" height="26" patternUnits="userSpaceOnUse"><rect width="60" height="26" fill="#f4efe4"/><path d="M0,13 C15,0 15,26 30,13 S45,0 60,13 L60,26 L0,26Z" fill="#1c1c1c"/></pattern>' +
+    '<linearGradient id="sb-curt" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d0b1f"/><stop offset=".5" stop-color="#c8193a"/><stop offset="1" stop-color="#7d0b1f"/></linearGradient>';
+  mk('rect', {width: W, height: H, fill: 'url(#sb-sky)'}, svg);
+  mk('circle', {cx: 640, cy: 250, r: 70, fill: '#ffd36b', opacity: .85}, svg);
+  mk('path', {d: 'M470,400 C500,330 530,250 585,230 C625,215 640,300 660,330 C690,300 700,250 735,255 C770,262 790,330 800,360 L800,400Z', fill: '#2b1f4a'}, svg);   // Zuckerhut
+  mk('rect', {y: 360, width: W, height: 40, fill: '#3a6fa8', opacity: .8}, svg);
+  [[70, 400, 1], [150, 400, .8]].forEach(([x, y, s]) => {   // Palmen
+    const g = mk('g', {transform: `translate(${x},${y}) scale(${s})`, fill: '#1d2b2a'}, svg);
+    mk('path', {d: 'M-4,0 Q4,-80 10,-150 L16,-150 Q10,-80 6,0Z'}, g);
+    [-150, -110, -60, -20, 30].forEach(a => mk('path', {d: 'M13,-150 Q40,-175 80,-150 Q45,-160 13,-146Z', transform: `rotate(${a + 40},13,-150)`}, g));
+  });
+  const bulbs = [];
+  const lights = mk('g', {}, svg);
+  mk('path', {d: 'M0,40 Q200,95 400,55 Q600,15 800,60', fill: 'none', stroke: '#222', 'stroke-width': 2}, lights);
+  for (let i = 0; i < 17; i++) { const x = i * 50 + 0, y = i < 8 ? 40 + 55 * Math.sin(Math.PI * x / 400) * .9 : 55 + 5 * Math.sin(Math.PI * (x - 400) / 400) - 30 * Math.sin(Math.PI * (x - 400) / 400);
+    bulbs.push(mk('circle', {cx: x, cy: y + 7, r: 6, fill: ['#ffcf1f', '#3ccf7f', '#ff5fa2', '#5fd3ff'][i % 4]}, lights)); }
+  mk('rect', {y: 400, width: W, height: 100, fill: 'url(#sb-wave)'}, svg);
+  mk('rect', {y: 400, width: W, height: 100, fill: '#000', opacity: .12}, svg);
+  const spot = mk('g', {opacity: 0}, svg);
+  const cone = mk('path', {fill: 'url(#sb-cone)'}, spot), pool = mk('ellipse', {ry: 18, rx: 70, fill: 'url(#sb-spot)'}, spot);
+  const gPeople = mk('g', {}, svg), gFx = mk('g', {}, svg), gBub = mk('g', {}, svg);
+
+  // ---------- Figuren ----------
+  const P = {};
+  const arm = (parent, sleeve) => {
+    const a = mk('g', {}, parent); mk('line', {x1: 0, y1: 0, x2: 0, y2: 24, stroke: sleeve, 'stroke-width': 10, 'stroke-linecap': 'round'}, a);
+    const f = mk('g', {transform: 'translate(0,24)'}, a); mk('line', {x1: 0, y1: 0, x2: 0, y2: 21, stroke: SKIN, 'stroke-width': 7, 'stroke-linecap': 'round'}, f);
+    mk('circle', {cx: 0, cy: 24, r: 6, fill: SKIN, stroke: INK, 'stroke-width': 1.5}, f); return {a, f};
+  };
+  const leg = (parent, pants) => {
+    const a = mk('g', {}, parent); mk('line', {x1: 0, y1: 0, x2: 0, y2: 30, stroke: pants, 'stroke-width': 12, 'stroke-linecap': 'round'}, a);
+    const f = mk('g', {transform: 'translate(0,30)'}, a); mk('line', {x1: 0, y1: 0, x2: 0, y2: 28, stroke: SKIN, 'stroke-width': 8, 'stroke-linecap': 'round'}, f);
+    mk('ellipse', {cx: 4, cy: 31, rx: 10, ry: 5, fill: INK}, f); return {a, f};
+  };
+  const PROPS = {jonas: '📣', simon: '🌹', patrick: '🍗', marco: '🍍', greisel: '💍', dajo: '📊'};
+  ids.forEach((id, i) => {
+    const L = D.look[id] || {}, p = byId[id], o = {id, i, L};
+    o.g = mk('g', {}, gPeople); o.body = mk('g', {}, o.g);
+    const fan = mk('g', {opacity: .95}, o.body);   // Federschmuck hinter dem Kopf
+    ['#ffcf1f', '#3ccf7f', '#ff5fa2', '#5fd3ff', '#ff8a3c', '#ffcf1f', '#3ccf7f'].forEach((c, k) => mk('ellipse', {cx: 0, cy: -112, rx: 10, ry: 44, fill: c, stroke: INK, 'stroke-width': 1, transform: `rotate(${(k - 3) * 24},0,-66)`}, fan));
+    o.legL = leg(o.body, L.pants || '#1f3f8f'); o.legR = leg(o.body, L.pants || '#1f3f8f');
+    mk('path', {d: 'M-19,-50 Q0,-56 19,-50 L21,2 Q0,7 -21,2Z', fill: L.shirt || '#ffcf1f', stroke: INK, 'stroke-width': 2.5}, o.body);
+    mk('rect', {x: -21, y: -8, width: 42, height: 12, rx: 3, fill: L.pants || '#1f3f8f', stroke: INK, 'stroke-width': 2}, o.body);
+    o.armL = arm(o.body, L.shirt || '#ffcf1f'); o.armR = arm(o.body, L.shirt || '#ffcf1f');
+    if (PROPS[id]) { const t = mk('text', {x: 0, y: 34, 'font-size': 20, 'text-anchor': 'middle'}, o.armR.f); t.textContent = PROPS[id]; }
+    mk('rect', {x: -6, y: -60, width: 12, height: 12, fill: SKIN}, o.body);
+    // Kopf: Foto in zwei Hälften, Trennlinie auf Mundhöhe; die obere Hälfte klappt beim Sprechen hoch
+    const f = L.face || {x: .5, y: .5, z: 1, m: .75}, Dd = 2 * R * f.z;
+    const mY = clamp((f.m - f.y) * Dd, -R * .2, R * .75), c = Math.sqrt(R * R - mY * mY);
+    const up = `M${-c},${mY} A${R},${R} 0 ${mY > 0 ? 1 : 0} 1 ${c},${mY}Z`, lo = `M${-c},${mY} A${R},${R} 0 ${mY > 0 ? 0 : 1} 0 ${c},${mY}Z`;
+    const cu = mk('clipPath', {id: 'sb-u-' + id}, defs); mk('path', {d: up}, cu);
+    const cl = mk('clipPath', {id: 'sb-l-' + id}, defs); mk('path', {d: lo}, cl);
+    o.head = mk('g', {}, o.body); o.mY = mY; o.c = c;
+    o.mouth = mk('ellipse', {cx: 0, rx: c * .82, fill: '#3a0a0a'}, o.head); o.tongue = mk('ellipse', {cx: 0, rx: c * .42, fill: '#e0566b'}, o.head);
+    const half = (clip, d) => { const g = mk('g', {}, o.head);
+      if (p && p.photo) mk('image', {href: p.photo, x: -f.x * Dd, y: -f.y * Dd, width: Dd, height: Dd, preserveAspectRatio: 'xMidYMid slice', 'clip-path': `url(#${clip})`}, g);
+      else { mk('path', {d, fill: '#00843d'}, g); }
+      mk('path', {d, fill: 'none', stroke: INK, 'stroke-width': 3}, g); return g; };
+    o.lower = half('sb-l-' + id, lo); o.upper = half('sb-u-' + id, up);
+    if (!(p && p.photo)) { const t = mk('text', {y: -6, 'text-anchor': 'middle', 'font-size': 30, fill: '#fff', 'font-weight': 800}, o.upper); t.textContent = p ? p.name[0] : '?'; }
+    P[id] = o;
+  });
+  // Konfetti und Vorhang, Titel
+  const conf = mk('g', {}, gFx), confs = Array.from({length: 90}, (_, k) => ({x: (k * 97) % W, d: 60 + (k * 37) % 90, s: (k * 13) % 7, c: ['#ffcf1f', '#3ccf7f', '#ff5fa2', '#5fd3ff', '#fff'][k % 5], el: null}));
+  confs.forEach(q => { q.el = mk('rect', {width: 8, height: 4, fill: q.c}, conf); });
+  const curtL = mk('rect', {x: 0, width: W / 2 + 30, height: H, fill: 'url(#sb-curt)'}, svg), curtR = mk('rect', {width: W / 2 + 30, height: H, fill: 'url(#sb-curt)'}, svg);
+  const folds = mk('g', {opacity: .35}, svg);
+  const title = mk('g', {}, svg);
+  const tt = mk('text', {x: W / 2, y: 230, 'text-anchor': 'middle', class: 'sb-title'}, title); tt.textContent = '💃 ' + (D.title || 'Samba-Show');
+  const ts = mk('text', {x: W / 2, y: 275, 'text-anchor': 'middle', class: 'sb-sub'}, title);
+
+  // ---------- Bewegung ----------
+  const S = Math.sin, PI = Math.PI;
+  function basePose(style, b, t) {
+    const sw = S(PI * b), up = Math.abs(S(PI * b));
+    const p = {x: 0, y: -6 * up, rot: 5 * sw, hip: 7 * sw, aL: [95 + 35 * sw, 40], aR: [95 - 35 * sw, 40], lL: [10 * Math.max(0, sw), -18 * Math.max(0, sw)], lR: [-10 * Math.max(0, -sw), 18 * Math.max(0, -sw)], tilt: 6 * sw, flip: 1};
+    if (style === 'robot') { const q = Math.floor(b * 2) % 4, A = [[90, 90], [170, 0], [90, -90], [10, 0]][q], B = [[10, 0], [90, -90], [170, 0], [90, 90]][q];
+      Object.assign(p, {y: -3 * up, rot: 0, hip: 0, aL: A, aR: B, tilt: [-10, 0, 10, 0][q]}); }
+    else if (style === 'hips') Object.assign(p, {hip: 16 * sw, rot: 12 * sw, aL: [35, -100], aR: [160, 110], tilt: -8 * sw});
+    else if (style === 'off') { const b2 = b * .83 + .37, s2 = S(PI * b2);
+      Object.assign(p, {y: -9 * Math.abs(s2), rot: 9 * s2, hip: 9 * s2, aL: [90 + 70 * S(2.3 * b2), 60 * S(3.1 * b2)], aR: [90 + 70 * S(2.9 * b2 + 1), 60 * S(2.2 * b2)], tilt: 12 * S(1.7 * b2)}); }
+    else if (style === 'fruit') { const sh = S(4 * PI * b); Object.assign(p, {y: -5 * Math.abs(S(2 * PI * b)), aL: [150 + 18 * sh, 30], aR: [150 - 18 * sh, 30]}); }
+    else if (style === 'propeller') { const r = (b * 180) % 360; Object.assign(p, {aL: [r, 0], aR: [(r + 180) % 360, 0], rot: 4 * sw}); }
+    else if (style === 'star') { const sp = b % 8 > 7 ? Math.cos(PI * 2 * (b % 1)) : 1;
+      Object.assign(p, {y: -9 * up, hip: 12 * sw, rot: 8 * sw, aL: [150 + 20 * sw, 30 + 20 * sw], aR: [150 - 20 * sw, 30 - 20 * sw], flip: sp}); }
+    return p;
+  }
+  const idle = (t, i) => ({x: 0, y: 0, rot: 0, hip: 0, aL: [12, 8], aR: [12, 8], lL: [0, 0], lR: [0, 0], tilt: 3 * S(t / 600 + i), flip: 1});
+  const mix = (a, b, k) => { const r = {}; for (const key in a) r[key] = Array.isArray(a[key]) ? a[key].map((v, j) => v + (b[key][j] - v) * k) : a[key] + (b[key] - a[key]) * k; return r; };
+  function mouthOf(id, t) {
+    for (const l of LINES) { if (l.who !== id || t < l.at || t > l.at + l.dur) continue;
+      const d = +(l.env[Math.floor((t - l.at) / 40)] || 0); return d >= 5 ? 1 : d >= 2 ? .55 : 0; }
+    return 0;
+  }
+  const speaking = t => LINES.find(l => !l.chorus && t >= l.at && t <= l.at + l.dur + 300);
+  const FREEZE = [17300, 23900];
+
+  function frame(t) {
+    const b = (t - MUSIC_AT - 30) / BEAT, dancing = t > 2400 && t < 36500, freeze = t > FREEZE[0] && t < FREEZE[1];
+    const sp = speaking(t), conga = span(t, 24000, 24600) * (1 - span(t, 28600, 29200)), solo = span(t, 29200, 29800) * (1 - span(t, 32600, 33200));
+    const fin = span(t, 33000, 33600);
+    ids.forEach((id, i) => {
+      const o = P[id]; let p = dancing ? basePose(o.L.style, b, t) : idle(t, i);
+      if (freeze && id !== 'patrick') p = mix(p, Object.assign(idle(t, i), {tilt: i < ids.indexOf('patrick') ? 14 : -14}), span(t, FREEZE[0], FREEZE[0] + 300) * (1 - span(t, FREEZE[1] - 300, FREEZE[1])));
+      let x = homeX(i), y = FLOOR - 62, sc = 1, flip = p.flip;
+      // Polonaise: alle in einer Reihe, Hände nach vorn, die Reihe läuft hin und her
+      if (conga > 0) { const o2 = 170 * S(2 * PI * (t - 24000) / 4600), dir = Math.cos(2 * PI * (t - 24000) / 4600) >= 0 ? 1 : -1;
+        const cx = 400 + o2 + (i - (N - 1) / 2) * 78, pc = Object.assign({}, p, {aL: [70, 10], aR: [70, 10], rot: 4 * S(PI * b)});
+        x += (cx - x) * ease(conga); p = mix(p, pc, conga); flip = conga > .5 ? dir : flip; }
+      // Daijo-Solo vorn in der Mitte, die anderen klatschen im Halbkreis
+      if (solo > 0) { if (id === 'dajo') { x += (400 - x) * ease(solo); y += 30 * ease(solo); sc = 1 + .25 * ease(solo); }
+        else { const k = i < ids.indexOf('dajo') ? i : i - 1, ang = PI * (k + .5) / (N - 1); x += (400 - 330 * Math.cos(ang) - x) * ease(solo); y -= 22 * S(ang) * ease(solo);
+          const cl = S(2 * PI * b) > 0; p = mix(p, Object.assign({}, p, {aL: [65, cl ? 95 : 70], aR: [65, cl ? 95 : 70]}), solo); } }
+      if (fin > 0) p = mix(p, Object.assign({}, p, {aL: [170, 10], aR: [170, 10], y: -14 * Math.abs(S(PI * b * 2))}), fin);
+      if (sp && sp.who === id) { const k = span(t, sp.at - 250, sp.at + 150) * (1 - span(t, sp.at + sp.dur + 50, sp.at + sp.dur + 300)); y += 26 * k; sc *= 1 + .16 * k; }
+      // Köpfe fallen am Anfang von oben herein
+      const drop = 2000 + i * 160, hy0 = -96, dropY = t < drop ? -700 : t < drop + 520 ? -700 * Math.pow(1 - (t - drop) / 520, 2) * Math.abs(Math.cos(3 * PI * (t - drop) / 520)) : 0;
+      o.g.setAttribute('transform', `translate(${(x + p.hip).toFixed(1)},${(y + p.y).toFixed(1)}) scale(${(sc * (flip || 1)).toFixed(3)},${sc.toFixed(3)})`);
+      o.body.setAttribute('transform', `rotate(${p.rot.toFixed(1)})`);
+      o.armL.a.setAttribute('transform', `translate(-17,-44) rotate(${p.aL[0].toFixed(1)})`); o.armL.f.setAttribute('transform', `translate(0,24) rotate(${p.aL[1].toFixed(1)})`);
+      o.armR.a.setAttribute('transform', `translate(17,-44) rotate(${(-p.aR[0]).toFixed(1)})`); o.armR.f.setAttribute('transform', `translate(0,24) rotate(${(-p.aR[1]).toFixed(1)})`);
+      o.legL.a.setAttribute('transform', `translate(-9,2) rotate(${p.lL[0].toFixed(1)})`); o.legL.f.setAttribute('transform', `translate(0,30) rotate(${p.lL[1].toFixed(1)})`);
+      o.legR.a.setAttribute('transform', `translate(9,2) rotate(${p.lR[0].toFixed(1)})`); o.legR.f.setAttribute('transform', `translate(0,30) rotate(${p.lR[1].toFixed(1)})`);
+      o.head.setAttribute('transform', `translate(0,${(hy0 + dropY).toFixed(1)}) rotate(${(p.tilt - p.rot * .5).toFixed(1)})`);
+      const m = mouthOf(id, t), h = R * .55 * m;
+      o.upper.setAttribute('transform', `translate(0,${(-h).toFixed(1)}) rotate(${(-6 * m).toFixed(1)},${(-o.c).toFixed(1)},${o.mY.toFixed(1)})`);
+      o.mouth.setAttribute('cy', (o.mY - h / 2).toFixed(1)); o.mouth.setAttribute('ry', Math.max(.1, h / 2 + 1.5).toFixed(1));
+      o.tongue.setAttribute('cy', (o.mY - 3).toFixed(1)); o.tongue.setAttribute('ry', Math.max(.1, h * .28).toFixed(1));
+      o.x = x + p.hip; o.y = y + p.y; o.sc = sc;
+    });
+    // Reihenfolge: Sprecher und Solist vorn
+    const front = sp ? sp.who : solo > .5 ? 'dajo' : null; if (front && gPeople.lastChild !== P[front].g) gPeople.appendChild(P[front].g);
+    // Spotlight
+    const tgt = sp ? P[sp.who] : solo > 0 ? P.dajo : null;
+    spot.setAttribute('opacity', tgt ? (sp ? 1 : solo).toFixed(2) : 0);
+    if (tgt) { cone.setAttribute('d', `M${tgt.x - 30},0 L${tgt.x + 30},0 L${tgt.x + 80},${FLOOR + 8} L${tgt.x - 80},${FLOOR + 8}Z`); pool.setAttribute('cx', tgt.x); pool.setAttribute('cy', FLOOR + 6); }
+    // Sprechblase
+    gBub.innerHTML = '';
+    if (sp && sp.text && t > sp.at) { const o = P[sp.who], words = sp.text.split(' '), rows = ['']; words.forEach(w => { if ((rows[rows.length - 1] + ' ' + w).length > 24) rows.push(w); else rows[rows.length - 1] = (rows[rows.length - 1] + ' ' + w).trim(); });
+      const bw = Math.max(...rows.map(r => r.length)) * 8.6 + 26, bh = rows.length * 20 + 14, bx = clamp(o.x - bw / 2, 8, W - bw - 8), by = clamp(o.y - 150 * o.sc - bh, 8, H);
+      const g = mk('g', {class: 'sb-bub'}, gBub); mk('rect', {x: bx, y: by, width: bw, height: bh, rx: 12}, g);
+      mk('path', {d: `M${clamp(o.x - 8, bx + 12, bx + bw - 24)},${by + bh - 1} l14,0 l-6,14Z`}, g);
+      rows.forEach((r, k) => { const tx = mk('text', {x: bx + bw / 2, y: by + 26 + k * 20, 'text-anchor': 'middle'}, g); tx.textContent = r; }); }
+    // Lichterkette blinkt im Takt, Konfetti im Finale
+    const on = Math.floor(b) % 2; bulbs.forEach((q, k) => q.setAttribute('opacity', t > MUSIC_AT && (k + on) % 2 ? .45 : 1));
+    conf.setAttribute('opacity', t > 33000 ? 1 : 0);
+    if (t > 33000) confs.forEach(q => { const k = (t - 33000) / 1000, yy = ((k * q.d + q.s * 40) % 560) - 40; q.el.setAttribute('transform', `translate(${(q.x + 18 * S(k * 3 + q.s)).toFixed(1)},${yy.toFixed(1)}) rotate(${(k * 200 + q.s * 50) % 360})`); });
+    // Vorhang auf (0,3–1,7 s) und zu (36,8–38,4 s)
+    const open = ease(span(t, 300, 1700)) * (1 - ease(span(t, 36800, 38400))), cw = (W / 2 + 30) * open;
+    curtL.setAttribute('x', (-cw).toFixed(1)); curtR.setAttribute('x', (W / 2 - 30 + cw).toFixed(1));
+    title.setAttribute('opacity', (1 - span(t, 1700, 2600)) + span(t, 37800, 38600));
+    ts.textContent = t > 37000 ? 'Obrigado! 👏' : t < 50 ? '▶ Antippen zum Starten' : '';
+  }
+
+  // ---------- Ton: Samba, Effekte, Stimmen ----------
+  function program(m, t0) {   // alles relativ zu t0 (Sekunden im AudioContext)
+    const at = ms => t0 + ms / 1000;
+    m.setMode('stay', at(MUSIC_AT)); m.step = 0; m.next = at(MUSIC_AT) + .03;   // Takt 1 genau zum Tanzbeginn
+    ids.forEach((id, i) => m.sfx('boing', at(2000 + i * 160 + 400)));
+    m.sfx('scratch', at(FREEZE[0])); const g = m.master.gain; g.setTargetAtTime(.12, at(FREEZE[0] + 200), .05); g.setTargetAtTime(.7, at(FREEZE[1]), .1);
+    m.sfx('boom', at(33000)); m.sfx('boom', at(33800)); m.end(at(37200));
+  }
+  let run = 0, raf = 0, ctx = null, timer = 0, voices = [], t0p = 0;
+  function stop(reset) {
+    run++; cancelAnimationFrame(raf); clearInterval(timer); voices.forEach(a => { a.el.pause(); clearTimeout(a.to); }); voices = [];
+    if (ctx) { ctx.close().catch(() => {}); ctx = null; }
+    btn.textContent = '💃 Samba-Show starten'; btn.setAttribute('aria-pressed', 'false'); if (reset) frame(0);
+  }
+  function start() {
+    stop(false); const my = ++run; btn.textContent = '⏹ Stopp'; btn.setAttribute('aria-pressed', 'true');
+    if (window.__danceT === undefined && soundOn() && window.__TripMusic) {
+      try { const AC = window.AudioContext || window.webkitAudioContext; ctx = new AC(); ctx.resume();
+        const m = window.__TripMusic(ctx), base = ctx.currentTime + .08; program(m, base);
+        timer = setInterval(() => { if (ctx) m.schedule(ctx.currentTime + .15); }, 30);
+        LINES.forEach(l => { const el = new Audio('audio/samba-' + l.key + '.mp3'); el.preload = 'auto'; voices.push({el, to: setTimeout(() => { if (my === run) el.play().catch(() => {}); }, l.at + 80)}); });
+      } catch (e) { ctx = null; }
+    }
+    t0p = tnow();
+    (function loop() { if (my !== run) return; const t = tnow() - t0p; frame(t); if (t > END) { stop(true); return; } raf = requestAnimationFrame(loop); })();
+  }
+  btn.addEventListener('click', () => { if (btn.getAttribute('aria-pressed') === 'true') stop(true); else start(); });
+  svg.addEventListener('click', () => { if (btn.getAttribute('aria-pressed') !== 'true') start(); });
+  const sPaint = () => { if (sbtn) { sbtn.textContent = soundOn() ? '🔊 Ton an' : '🔇 Ton aus'; sbtn.setAttribute('aria-pressed', String(soundOn())); } };
+  if (sbtn) sbtn.addEventListener('click', () => { store.set('sound', soundOn() ? '0' : '1'); sPaint(); if (!soundOn() && ctx) { ctx.close().catch(() => {}); ctx = null; clearInterval(timer); voices.forEach(a => a.el.pause()); } });
+  sPaint(); frame(0);
+  // Video-Aufnahme: Zeit setzen, Musik offline rendern, Stimmen-Startzeiten
+  window.__dancePlay = start; window.__danceEnd = END;
+  window.__danceAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms / 1000), sr), m = window.__TripMusic(oc); program(m, 0); m.schedule(ms / 1000); return wavB64(await oc.startRendering()); };
+  window.__danceVoices = () => LINES.map(l => ({key: l.key, at: l.at}));
 })();
 
 renderMe(); meMark();

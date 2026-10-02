@@ -161,6 +161,16 @@ Feuerwerk zu Silvester, Tageszähler mit Kilometern, Wackelköpfe und Sprechblas
 Video: Zeit über `window.__tripT` steuern, Bilder mit Playwright aufnehmen und mit ffmpeg (`pip install imageio-ffmpeg`)
 zu MP4 machen. Das Video enthält Crew-Fotos, also **nicht** ins Repo legen.
 
+## Samba-Show (Cartoon)
+
+Im Kapitel Crew unter den Steckbriefen (`#samba`, SVG `#samba-svg`, Knöpfe `#samba-play`/`#samba-sound`). Crew-Köpfe (Fotos) auf
+gezeichneten Körpern mit Federschmuck; Münder wie die South-Park-Kanadier: Foto auf Mundhöhe geteilt, Oberkopf klappt nach der
+Lautstärkekurve hoch. Daten in `trip.json` → `dance` (`look` je Person: Stil, Shirt, Hose, `face` = Ausschnitt x/y/z und Mundhöhe m;
+`lines` mit Zeitpunkt `at`; `voice` wird erzeugt). Stile: robot, hips, off (Patrick, niedrigster Samba-Wert, aus dem Takt), fruit,
+propeller, star (Daijo, höchster Samba-Wert, Solo). Ablauf in `frame(t)`, Musik = Samba aus `window.__TripMusic`.
+Stimmen: `tools/gen_dance_audio.py` (Piper, hochgepitcht) → `web/audio/samba-*.mp3`; beim Veröffentlichen in `files` mitgeben.
+Video: `window.__danceT`, `__danceAudio(ms)`, `__danceVoices()`; enthält Gesichter, nicht ins Repo.
+
 ## Karte: Infokarten
 
 Stopps (`data-stop`) und Flughäfen GRU/CGH (`data-ap`) in `tools/gen_map.py` sind antippbar; darunter Stations-Chips und
