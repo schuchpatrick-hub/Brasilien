@@ -188,6 +188,18 @@ Zufalls-Ereignis pro Abspielen während der Polonaise (`EVENT`: rain, monkey, po
 paraty, ilha; sonst default = Copacabana).
 Video: `window.__danceT`, `__danceAudio(ms)`, `__danceVoices()`, `__danceLive({...})`, `__danceEvent`, `__danceStage`, `__danceTap(id)`, `__danceBoost('clap'|'cheer')` zum Ausprobieren; enthält Gesichter, nicht ins Repo.
 
+## Serie „Gringos – Die Serie“ (Cartoon-Folgen)
+
+Im Kapitel Kino oben (`#series`, SVG `#ser-svg` 800×450, Knöpfe `#ser-play`/`#ser-stop`/`#ser-sound`/`#ser-full`, großer Start-Knopf `#ser-big`).
+Eigenes Modul in `page_script.html` („Gringos – Die Serie“), gleicher Stil wie die Samba-Show (Foto-Köpfe, Kanadier-Münder; Nebenfiguren
+Kontrolleur, Flugbegleiterin, Einheimische gezeichnet). Drehbuch in `trip.json` → `series.ep1` (`lines` mit `who`, `at`, `say` = gesprochen,
+`text` = Untertitel, optional `vo`), Stimmen der Nebenfiguren in `series.voices`, `voice` wird erzeugt. Szenen und Zeiten in `SC`
+(Intro, Sicherheitskontrolle, Flieger, Silvester, Buffet, Dschungel, Footvolley, Abspann), Gags in `frame(t)` je Szene; Musik wechselt pro Szene
+(`mus`), Effekte in `program()`. Untertitel unten immer an. Stimmen: `python3 tools/gen_dance_audio.py --series ep1 [key …]` → `web/audio/ep1-*.mp3`
+(beim Veröffentlichen in `files` mitgeben); Verständlichkeit mit Whisper prüfen, unklare Zeilen mehrfach erzeugen und die beste behalten.
+Startet eine Show, pausiert die andere (Ereignis `br26-kino`). Video: `window.__serT`, `__serFrame(t)`, `__serAudio(ms)`, `__serVoices()`.
+Neue Folge: `series.ep2` anlegen und das Modul um die Szenen erweitern bzw. Folge wählbar machen.
+
 ## Karte: Infokarten
 
 Stopps (`data-stop`) und Flughäfen GRU/CGH (`data-ap`) in `tools/gen_map.py` sind antippbar; darunter Stations-Chips und
