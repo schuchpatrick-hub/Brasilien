@@ -182,7 +182,7 @@ Transfers laufen per **Uber** (GRU → Guarujá, Rio → Paraty, zum Flughafen a
 
 Lange Hosen und Shorts · langärmlige Shirts und T-Shirts · kleiner Tagesrucksack · Sonnenbrille · Insektenschutz · Regenjacke · Cap oder Hut · geschlossene Schuhe, Stiefel oder bequeme Sneaker · Taschenlampe · Fernglas · Badesachen · Kamera · Ersatzakkus und Ladegerät
 
-## Ideen, die verworfen wurden oder noch offen sind
+## Verworfene Ideen (Route steht fest)
 
 - **Búzios** statt Paraty (Empfehlung von Patricks Arbeitskollegen)
 - **Florianópolis**: 1,5 h Flug von Rio, Strände und Nachtleben (Jurerê Internacional)
