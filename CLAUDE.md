@@ -205,6 +205,7 @@ Startet eine Show, pausiert die andere (Ereignis `br26-kino`). Video: `window.__
 `setEp()` lädt Zeilen/Szenen, `epTexts()` Titel, Abspann (`epN.credits`) und Vorschau (`epN.next`). Audio-Dateien `web/audio/epN-<key>.mp3`.
 Folge 2 „Silvester in Rio“ (31.12.–03.01.): Rückblick, Landung Santos Dumont (`land`), Silvester mit Handy in der Unterhose, Kuss-Verwechslung, 7 Wünsche (`ny`),
 Kater mit Tattoo „Pastel de Frango“ (`kat`), Christus im Nebel + Taube (`cristo`), Rodízio (`rod`, Bauch über `pose.fat`), Seilbahn-Beichte (`zucker`), Videocall-Cliffhanger (`call`).
+Qualität: Stimmen nachbearbeitet (`POLISH` in `gen_dance_audio.py`: Stille weg, EQ, Kompressor, −16 LUFS, 128 kbit/s), Musik duckt unter Sprache, Atmo je Szene (`META.amb` → `E.amb()` in `Music()`: hall, bar, cabin, traffic, sea, night, crowd, room, wind, restaurant), Kreisblende + `swish` an Szenenübergängen, Kamera zeitbasiert geglättet mit leichtem Handkamera-Atmen, Mund folgt der Lautstärke stufenlos, Sprechgesten.
 Nur-Kopf-Figuren (`headOnly`, Hilfsfunktion `headAt`) für Fenster, Gondel und Handy-Bildschirm. Lange Untertitel brechen in zwei Zeilen um.
 Neue Folge: Zeilen in `series.epN` (mit `scenes`, `credits`, `next`), Stimmen per `--series epN`, Szenen-Code in `frame()` ergänzen, `META` erweitern.
 

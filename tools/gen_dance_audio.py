@@ -70,6 +70,12 @@ def sung(v, melody, tmp):
     out = os.path.join(tmp, 'sung.wav'); sf.write(out, np.concatenate(parts), sr)
     out2 = os.path.join(tmp, 'sung2.wav'); run_ff(out, out2, 'aecho=0.8:0.5:40:0.15,loudnorm=I=-15'); return out2
 
+# Serien-Stimmen: Stille an den Enden weg (Mund passt genauer), Rumpeln raus, Präsenz rauf, gleichmäßig laut
+POLISH = ('silenceremove=start_periods=1:start_threshold=-42dB:start_silence=0.02,areverse,'
+          'silenceremove=start_periods=1:start_threshold=-42dB:start_silence=0.06,areverse,'
+          'highpass=f=85,equalizer=f=220:t=q:w=1:g=-2,equalizer=f=3200:t=q:w=1.2:g=2.5,equalizer=f=7500:t=q:w=1:g=-1.5,'
+          'acompressor=threshold=-21dB:ratio=3:attack=4:release=70:makeup=2,loudnorm=I=-16:TP=-1.5:LRA=7,afade=t=in:d=0.012')
+
 def env_of(path, step=0.04):
     w = wave.open(path); sr = w.getframerate(); n = w.getnframes()
     d = np.frombuffer(w.readframes(n), dtype='<i2').astype(np.float32); hop = int(sr * step)
@@ -98,8 +104,10 @@ def main():
                 pcm = os.path.join(tmp, 'pcm.wav'); run_ff(wav, pcm, 'anull')
                 env, dur = env_of(pcm)   # Dauer/Mundkurve in Showzeit
                 # die Seite spielt die Show um SLOW = 1/0,9 langsamer ab: Aufnahme gleich mitdehnen (Tonhöhe bleibt)
+                if ep:   # Serie: nachbearbeiten, dann Dauer/Mundkurve neu messen
+                    pol = os.path.join(tmp, 'pol.wav'); run_ff(pcm, pol, POLISH); pcm = os.path.join(tmp, 'pcm2.wav'); run_ff(pol, pcm, 'anull'); env, dur = env_of(pcm)
                 slow = os.path.join(tmp, 'slow.wav'); run_ff(pcm, slow, f'rubberband=tempo={tempo}:pitch=1' if tempo != 1 else 'anull')
-                subprocess.run([ffmpeg(), '-y', '-loglevel', 'error', '-i', slow, '-b:a', '96k', os.path.join(OUT, f'{prefix}{key}.mp3')], check=True)
+                subprocess.run([ffmpeg(), '-y', '-loglevel', 'error', '-i', slow, '-b:a', '128k' if ep else '96k', os.path.join(OUT, f'{prefix}{key}.mp3')], check=True)
             voice[key] = {'dur': dur, 'env': env}
             print(key, dur, 'ms')
     data['voice'] = voice
