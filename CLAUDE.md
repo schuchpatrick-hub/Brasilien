@@ -201,7 +201,12 @@ einer Zeile relativ zur Szene (Zeiten in den Daten verschieben reicht); Effekte 
 Aufnahmen in `web/audio/parked/` (nicht veröffentlichen; für eine neue Folge neu timen, auf `A()` umstellen und nach `web/audio/` holen). Untertitel unten immer an. Stimmen: `python3 tools/gen_dance_audio.py --series ep1 [key …]` → `web/audio/ep1-*.mp3`
 (beim Veröffentlichen in `files` mitgeben); Verständlichkeit mit Whisper prüfen, unklare Zeilen mehrfach erzeugen und die beste behalten.
 Startet eine Show, pausiert die andere (Ereignis `br26-kino`). Video: `window.__serT`, `__serFrame(t)`, `__serAudio(ms)`, `__serVoices()`.
-Neue Folge: `series.ep2` anlegen und das Modul um die Szenen erweitern bzw. Folge wählbar machen.
+**Mehrere Folgen:** alle `series.epN` erscheinen als Auswahl über der Bühne (`#ser-eps`, zuletzt gewählte im localStorage `br26.serEp`, Standard = neueste);
+`setEp()` lädt Zeilen/Szenen, `epTexts()` Titel, Abspann (`epN.credits`) und Vorschau (`epN.next`). Audio-Dateien `web/audio/epN-<key>.mp3`.
+Folge 2 „Silvester in Rio“ (31.12.–03.01.): Rückblick, Landung Santos Dumont (`land`), Silvester mit Handy in der Unterhose, Kuss-Verwechslung, 7 Wünsche (`ny`),
+Kater mit Tattoo „Pastel de Frango“ (`kat`), Christus im Nebel + Taube (`cristo`), Rodízio (`rod`, Bauch über `pose.fat`), Seilbahn-Beichte (`zucker`), Videocall-Cliffhanger (`call`).
+Nur-Kopf-Figuren (`headOnly`, Hilfsfunktion `headAt`) für Fenster, Gondel und Handy-Bildschirm. Lange Untertitel brechen in zwei Zeilen um.
+Neue Folge: Zeilen in `series.epN` (mit `scenes`, `credits`, `next`), Stimmen per `--series epN`, Szenen-Code in `frame()` ergänzen, `META` erweitern.
 
 ## Karte: Infokarten
 

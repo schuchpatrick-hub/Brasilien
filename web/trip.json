@@ -5024,6 +5024,33 @@
             213703
           ]
         }
+      ],
+      "next": "📺 Folge 2: Silvester in Rio – jetzt im Kino",
+      "credits": [
+        [
+          "Sonnencreme",
+          "beschlagnahmt (R.I.P.)"
+        ],
+        [
+          "Kotztüte",
+          "Marco (verfehlt)"
+        ],
+        [
+          "Hose",
+          "Patrick (entsorgt)"
+        ],
+        [
+          "Flirt-Bilanz",
+          "Jonas 1 · Marco 0 (fast tot)"
+        ],
+        [
+          "Sonnenbrand",
+          "Simon (Grad 2)"
+        ],
+        [
+          "",
+          "Kein Hummer wurde verletzt. Simon schon."
+        ]
       ]
     },
     "voices": {
@@ -5057,6 +5084,22 @@
         "model": "vits-piper-de_DE-dii-high",
         "pitch": 1.12,
         "speed": 0.88
+      },
+      "pilot": {
+        "model": "vits-piper-de_DE-thorsten-high",
+        "pitch": 0.94,
+        "speed": 0.95,
+        "fx": "highpass=f=250,lowpass=f=3600,acompressor=threshold=-20dB:ratio=4,volume=1.4"
+      },
+      "waiter": {
+        "model": "vits-piper-pt_BR-faber-medium",
+        "pitch": 0.95,
+        "speed": 0.95
+      },
+      "maid": {
+        "model": "vits-coqui-de-css10",
+        "pitch": 1.08,
+        "speed": 0.92
       }
     },
     "parked": {
@@ -5302,6 +5345,637 @@
           "env": "04996100024888982111198003794997655531"
         }
       }
+    },
+    "ep2": {
+      "title": "Silvester in Rio",
+      "n": 2,
+      "lines": [
+        {
+          "key": "intro",
+          "who": "narrator",
+          "at": 1500,
+          "say": "Gringos! Die Serie. Folge zwei: Silvester in Rio!",
+          "text": "📺 Gringos – Die Serie · Folge 2: Silvester in Rio!"
+        },
+        {
+          "key": "recap",
+          "who": "narrator",
+          "at": 5357,
+          "say": "Was bisher geschah: eine Hose verloren, eine Würde verloren, dreißig Flaschen Sonnencreme beerdigt.",
+          "text": "Was bisher geschah: eine Hose verloren, eine Würde verloren, 30 Flaschen Sonnencreme beerdigt."
+        },
+        {
+          "key": "land1",
+          "who": "pilot",
+          "at": 14257,
+          "say": "Hier spricht Ihr Kapitän. Die Landebahn in Rio ist sehr kurz. Wer beten kann, sollte jetzt anfangen.",
+          "text": "📢 Hier spricht Ihr Kapitän. Die Landebahn in Rio ist sehr kurz. Wer beten kann, sollte jetzt anfangen."
+        },
+        {
+          "key": "land2",
+          "who": "marco",
+          "at": 20238,
+          "say": "Ich hab im letzten Flug schon gebetet! Mein Guthaben ist aufgebraucht!",
+          "text": "Ich hab im letzten Flug schon gebetet! Mein Guthaben ist aufgebraucht! 🙏",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "land3",
+          "who": "patrick",
+          "at": 26983,
+          "say": "Schaut mal, ein Fisch! Ist das schon das Mittagessen?",
+          "text": "Schaut mal, ein Fisch! Ist das schon das Mittagessen? 🐟",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "land4",
+          "who": "pilot",
+          "at": 30685,
+          "say": "Willkommen in Rio. Bitte bleiben Sie angeschnallt, bis wir wieder trocken sind.",
+          "text": "📢 Willkommen in Rio. Bitte bleiben Sie angeschnallt, bis wir wieder trocken sind."
+        },
+        {
+          "key": "ny1",
+          "who": "narrator",
+          "at": 37758,
+          "say": "Copacabana. Zwei Millionen Menschen, alle in Weiß. Ein Paradies für Taschendiebe.",
+          "text": "Copacabana. 2 Millionen Menschen, alle in Weiß. Ein Paradies für Taschendiebe."
+        },
+        {
+          "key": "ny2",
+          "who": "jonas",
+          "at": 43378,
+          "say": "Mein Handy ist sicher. Es steckt in meiner Unterhose.",
+          "text": "Mein Handy ist sicher. Es steckt in meiner Unterhose. 📱"
+        },
+        {
+          "key": "ny3",
+          "who": "patrick",
+          "at": 46277,
+          "say": "Da sucht garantiert keiner. Da war seit Jahren niemand.",
+          "text": "Da sucht garantiert keiner. Da war seit Jahren niemand.",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "ny4",
+          "who": "narrator",
+          "at": 50484,
+          "say": "Drei! Zwei! Eins!",
+          "text": "3 … 2 … 1 …"
+        },
+        {
+          "key": "ny5",
+          "who": "narrator",
+          "at": 52705,
+          "say": "Feliz Ano Novo!",
+          "text": "🎆 Feliz Ano Novo! 🎆"
+        },
+        {
+          "key": "ny6",
+          "who": "simon",
+          "at": 55431,
+          "say": "Frohes neues Jahr, meine Schöne.",
+          "text": "Frohes neues Jahr, meine Schöne … 😘",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.88
+          }
+        },
+        {
+          "key": "ny7",
+          "who": "marco",
+          "at": 59151,
+          "say": "Simon. Ich bin es. Marco. Aber danke, war gar nicht schlecht.",
+          "text": "Simon … ich bin’s. Marco. Aber danke, war gar nicht schlecht. 😳",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "ny8",
+          "who": "narrator",
+          "at": 63414,
+          "say": "Brasilianischer Brauch: Über sieben Wellen springen. Sieben Wünsche.",
+          "text": "Brasilianischer Brauch: über 7 Wellen springen – 7 Wünsche. 🌊"
+        },
+        {
+          "key": "ny9",
+          "who": "marco",
+          "at": 80916,
+          "say": "Mein siebter Wunsch war: nicht ertrinken. Knapp geschafft.",
+          "text": "Mein siebter Wunsch war: nicht ertrinken. Knapp geschafft. 🦀",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "kat1",
+          "who": "narrator",
+          "at": 86929,
+          "say": "Erster Januar. Elf Uhr. Die Sonne kennt keine Gnade.",
+          "text": "1. Januar, 11 Uhr. Die Sonne kennt keine Gnade. ☀️"
+        },
+        {
+          "key": "kat2",
+          "who": "jonas",
+          "at": 90815,
+          "say": "Wo ist mein Handy? Und warum fehlt meine Unterhose?",
+          "text": "Wo ist mein Handy? Und warum fehlt meine Unterhose?! 😱"
+        },
+        {
+          "key": "kat3",
+          "who": "marco",
+          "at": 93632,
+          "say": "Die liegen beide am Strand. Getrennt.",
+          "text": "Die liegen beide am Strand. Getrennt.",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "kat4",
+          "who": "patrick",
+          "at": 96341,
+          "say": "Leute. Ich hab mir für immer frei tätowieren lassen.",
+          "text": "Leute. Ich hab mir „Für immer frei“ tätowieren lassen. 💪",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "kat5",
+          "who": "maid",
+          "at": 100552,
+          "say": "Da steht Hähnchenpastete.",
+          "text": "Da steht „Hähnchenpastete“. 🥟"
+        },
+        {
+          "key": "kat6",
+          "who": "simon",
+          "at": 102810,
+          "say": "Passt doch. Für immer Hähnchen.",
+          "text": "Passt doch. Für immer Hähnchen. 🍗",
+          "vo": {
+            "pitch": 1.1,
+            "speed": 0.92
+          }
+        },
+        {
+          "key": "cr1",
+          "who": "jonas",
+          "at": 107617,
+          "say": "Zweihundertzwanzig Stufen. Für eine Wolke.",
+          "text": "220 Stufen. Für eine Wolke. ☁️"
+        },
+        {
+          "key": "cr2",
+          "who": "patrick",
+          "at": 110539,
+          "say": "Ich sehe ein helles Licht. Ist das Jesus oder der Notarzt?",
+          "text": "Ich sehe ein helles Licht … Ist das Jesus oder der Notarzt? 🚑",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "cr3",
+          "who": "narrator",
+          "at": 114215,
+          "say": "Jesus breitet die Arme aus. Vermutlich, um Patrick aufzufangen.",
+          "text": "Jesus breitet die Arme aus. Vermutlich, um Patrick aufzufangen."
+        },
+        {
+          "key": "cr4",
+          "who": "marco",
+          "at": 119096,
+          "say": "Mach ein Foto! Ich bin auch ein Erlöser!",
+          "text": "Mach ein Foto! Ich bin auch ein Erlöser! 📸",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "cr5",
+          "who": "simon",
+          "at": 123441,
+          "say": "Gesegnet. Von ganz oben.",
+          "text": "Gesegnet. Von ganz oben. 🕊️💩",
+          "vo": {
+            "pitch": 1.1,
+            "speed": 0.92
+          }
+        },
+        {
+          "key": "ro1",
+          "who": "narrator",
+          "at": 128316,
+          "say": "Rodízio. Grüne Karte: mehr Fleisch. Rote Karte: aufhören.",
+          "text": "Rodízio: grüne Karte = mehr Fleisch, rote Karte = aufhören."
+        },
+        {
+          "key": "ro2",
+          "who": "patrick",
+          "at": 132888,
+          "say": "Rote Karte? Die Seite existiert für mich nicht.",
+          "text": "Rote Karte? Die Seite existiert für mich nicht. 🟢",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "ro3",
+          "who": "waiter",
+          "at": 136244,
+          "say": "Picanha?",
+          "text": "Picanha? 🥩"
+        },
+        {
+          "key": "ro4",
+          "who": "marco",
+          "at": 143259,
+          "say": "Er hat aufgehört zu kauen. Ist er tot?",
+          "text": "Er hat aufgehört zu kauen. Ist er tot?",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "ro5",
+          "who": "patrick",
+          "at": 145950,
+          "say": "Nur Pause. Gleich kommt der Nachtisch.",
+          "text": "Nur Pause. Gleich kommt der Nachtisch.",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "ro6",
+          "who": "waiter",
+          "at": 148833,
+          "say": "Mais?",
+          "text": "Mais? (Noch mehr?)"
+        },
+        {
+          "key": "zu1",
+          "who": "narrator",
+          "at": 153560,
+          "say": "Zuckerhut. Seilbahn. Dreihundertsechsundneunzig Meter über dem Boden.",
+          "text": "Zuckerhut-Seilbahn. 396 Meter über dem Boden. 🚡"
+        },
+        {
+          "key": "zu2",
+          "who": "marco",
+          "at": 159085,
+          "say": "Wir hängen fest! Bevor wir sterben: Ich hab euer ganzes Bier getrunken!",
+          "text": "Wir hängen fest! Bevor wir sterben: Ich hab euer ganzes Bier getrunken! 🍺",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "zu3",
+          "who": "simon",
+          "at": 163483,
+          "say": "Und ich hab dein Handtuch für meinen Sonnenbrand benutzt. Es ist jetzt orange.",
+          "text": "Und ich hab dein Handtuch für meinen Sonnenbrand benutzt. Es ist jetzt orange.",
+          "vo": {
+            "pitch": 1.1,
+            "speed": 0.92
+          }
+        },
+        {
+          "key": "zu4",
+          "who": "patrick",
+          "at": 167747,
+          "say": "Und ich hab mit der roten Zahnbürste das Klo geputzt.",
+          "text": "Und ich hab mit der roten Zahnbürste das Klo geputzt. 🪥",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "zu5",
+          "who": "marco",
+          "at": 172682,
+          "say": "Wir leben! Moment. Die rote Zahnbürste ist meine.",
+          "text": "Wir leben! … Moment. Die rote Zahnbürste ist meine. 😨",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "zu6",
+          "who": "patrick",
+          "at": 176458,
+          "say": "Ich weiß.",
+          "text": "Ich weiß. 😇",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "call1",
+          "who": "greisel",
+          "at": 180469,
+          "say": "Hey Jungs! In drei Tagen sind wir da! Haben wir was verpasst?",
+          "text": "Hey Jungs! In drei Tagen sind wir da! Haben wir was verpasst? 👋"
+        },
+        {
+          "key": "call2",
+          "who": "jonas",
+          "at": 184563,
+          "say": "Nein. Absolut gar nichts.",
+          "text": "Nein. Absolut gar nichts. 🙂"
+        },
+        {
+          "key": "end",
+          "who": "narrator",
+          "at": 188725,
+          "say": "Nächste Folge: Daijo und Greisel kommen an. Möge Gott ihnen beistehen.",
+          "text": "Nächste Folge: Daijo & Greisel kommen an. Möge Gott ihnen beistehen."
+        }
+      ],
+      "voice": {
+        "intro": {
+          "dur": 3457,
+          "env": "001168898863110006996229975465642000000006555450220753434420119884861077799999974210000"
+        },
+        "recap": {
+          "dur": 5700,
+          "env": "01752102932596583146443018974109989346108989979960000068983598740188889896599864000012666932162100797621997401679994108999980352565523211000000"
+        },
+        "land1": {
+          "dur": 5581,
+          "env": "00898420184101953270831234210000001584587686910665541265418999997551001871313610000002976209930083415566520000497426659100125321043332000000"
+        },
+        "land2": {
+          "dur": 4145,
+          "env": "33000135420002136467100000463000499411146537406751310146442114301254442064200014100026551008101023320000"
+        },
+        "land3": {
+          "dur": 3102,
+          "env": "011378610000488776554210155310199721982210009972123318965851101961671275220420"
+        },
+        "land4": {
+          "dur": 3773,
+          "env": "05961061756522569488632100004928602977839937611689642597765220000932195792972214505741033201000"
+        },
+        "ny1": {
+          "dur": 5120,
+          "env": "01740274025642353654310000000011276799998676679977766345221521000046665567525432100000006672235245206994316621442178478105420000"
+        },
+        "ny2": {
+          "dur": 2599,
+          "env": "03763359974643820014531121000000362311940006999999922637824420210"
+        },
+        "ny3": {
+          "dur": 3007,
+          "env": "4667410098200016531442111998102155545422544246531146500265427554468675432100"
+        },
+        "ny4": {
+          "dur": 1921,
+          "env": "0000198688752000001420998765420009999961221000000"
+        },
+        "ny5": {
+          "dur": 1126,
+          "env": "00999931100799988520463000000"
+        },
+        "ny6": {
+          "dur": 2020,
+          "env": "019994221444762122163221000003454433122144211100000"
+        },
+        "ny7": {
+          "dur": 3363,
+          "env": "1786599963169410019867641003766651039951188854851196671374102889507878981001147200000"
+        },
+        "ny8": {
+          "dur": 3502,
+          "env": "0154432765676568510620104556530005557621783996566887631002544320000001115956844756522210"
+        },
+        "ny9": {
+          "dur": 2713,
+          "env": "46553103001942952000532211007992000057100043212320046610005221440000"
+        },
+        "kat1": {
+          "dur": 3286,
+          "env": "06898101999986499886442000688992000399531000008952676993338732031768369997542432000"
+        },
+        "kat2": {
+          "dur": 2517,
+          "env": "076310058657553310000076113652355203993038779155474237722410000"
+        },
+        "kat3": {
+          "dur": 2009,
+          "env": "476535980396059875962553101168662006701139852000000"
+        },
+        "kat4": {
+          "dur": 3111,
+          "env": "679999211562693110166520048999720052079898600006666311079179858996645576321220"
+        },
+        "kat5": {
+          "dur": 1858,
+          "env": "04836139981115664211432002322101340001221000000"
+        },
+        "kat6": {
+          "dur": 1507,
+          "env": "06932208931000007925989621554111111000"
+        },
+        "cr1": {
+          "dur": 2322,
+          "env": "10398531995840102876104321043100100000049436899255321020000"
+        },
+        "cr2": {
+          "dur": 3176,
+          "env": "53111599993000453111488894003764101621100004621108992387210079888155469612551000"
+        },
+        "cr3": {
+          "dur": 3881,
+          "env": "00799449932011345114514236679752363110000000377899950168762100007812611145034410021620054342100000"
+        },
+        "cr4": {
+          "dur": 2345,
+          "env": "36441003554000293013520331000064100454100352101445778514310"
+        },
+        "cr5": {
+          "dur": 1675,
+          "env": "054288101221011000000664417966211123123210"
+        },
+        "ro1": {
+          "dur": 4172,
+          "env": "018992297114248743000000222998898235655531186307998110986421132100003972590526654025864068611198722310000"
+        },
+        "ro2": {
+          "dur": 2856,
+          "env": "149711940155454010431354210346751136202111131000025995000048682034420000"
+        },
+        "ro3": {
+          "dur": 615,
+          "env": "0460179875200000"
+        },
+        "ro4": {
+          "dur": 2291,
+          "env": "6721450000488320015159910151111899989962096000075001696100"
+        },
+        "ro5": {
+          "dur": 2183,
+          "env": "2347990010458841365145657872000117641099967785100052110"
+        },
+        "ro6": {
+          "dur": 427,
+          "env": "07997632200"
+        },
+        "zu1": {
+          "dur": 3825,
+          "env": "467136753564010001246569715655542100011455779999931281121899778723194189921662359499710874133000"
+        },
+        "zu2": {
+          "dur": 3998,
+          "env": "3697303966982000474000002100018862196211069785133200451005630004799970564410320000454931611144424521"
+        },
+        "zu3": {
+          "dur": 3864,
+          "env": "0484256427930584433881249321165367787726765998254562108664103441100012935873299313224852678632100"
+        },
+        "zu4": {
+          "dur": 3135,
+          "env": "4985000421100455100076058531599500784010456740999810030271101106996067016400000"
+        },
+        "zu5": {
+          "dur": 3276,
+          "env": "3857854584107421047854765311000244861113960130001663275049852000720510000475432221"
+        },
+        "zu6": {
+          "dur": 511,
+          "env": "7622239999911"
+        },
+        "call1": {
+          "dur": 3594,
+          "env": "255678887459422157422238763211666649942673203950386553226877299899513982221175034632221000"
+        },
+        "call2": {
+          "dur": 1562,
+          "env": "0799998631000830116997003776556200000000"
+        },
+        "end": {
+          "dur": 4127,
+          "env": "00893210772007664378310566799987305932214656311725556787314652000059999374466300499997144342104432100000"
+        }
+      },
+      "next": "📺 Folge 3: Daijo & Greisel kommen – bald im Kino",
+      "credits": [
+        [
+          "Gebete",
+          "Marco (Guthaben leer)"
+        ],
+        [
+          "Handy-Versteck",
+          "Jonas (Unterhose, nicht sicher)"
+        ],
+        [
+          "Mitternachtskuss",
+          "Simon × Marco"
+        ],
+        [
+          "Tattoo",
+          "„Pastel de Frango“ (Patrick, für immer)"
+        ],
+        [
+          "Zahnbürste",
+          "Marco (R.I.P.)"
+        ],
+        [
+          "",
+          "Kein Fisch wurde gegessen. Fast."
+        ]
+      ],
+      "scenes": [
+        {
+          "id": "intro",
+          "t": [
+            0,
+            12657
+          ]
+        },
+        {
+          "id": "land",
+          "t": [
+            12657,
+            36258
+          ]
+        },
+        {
+          "id": "ny",
+          "t": [
+            36258,
+            85429
+          ]
+        },
+        {
+          "id": "kat",
+          "t": [
+            85429,
+            106017
+          ]
+        },
+        {
+          "id": "cristo",
+          "t": [
+            106017,
+            126816
+          ]
+        },
+        {
+          "id": "rod",
+          "t": [
+            126816,
+            152060
+          ]
+        },
+        {
+          "id": "zucker",
+          "t": [
+            152060,
+            178969
+          ]
+        },
+        {
+          "id": "call",
+          "t": [
+            178969,
+            187925
+          ]
+        },
+        {
+          "id": "end",
+          "t": [
+            187925,
+            200425
+          ]
+        }
+      ]
     }
   }
 }
