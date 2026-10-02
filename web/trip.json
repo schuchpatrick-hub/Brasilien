@@ -3294,7 +3294,9 @@
           "x": 0.5,
           "y": 0.62,
           "z": 1.15,
-          "m": 0.89
+          "m": 0.89,
+          "e": 0.62,
+          "ex": 0.15
         }
       },
       "simon": {
@@ -3305,7 +3307,9 @@
           "x": 0.4,
           "y": 0.5,
           "z": 1.1,
-          "m": 0.79
+          "m": 0.79,
+          "e": 0.52,
+          "ex": 0.14
         }
       },
       "patrick": {
@@ -3316,7 +3320,9 @@
           "x": 0.48,
           "y": 0.5,
           "z": 1.0,
-          "m": 0.8
+          "m": 0.8,
+          "e": 0.55,
+          "ex": 0.12
         }
       },
       "marco": {
@@ -3327,7 +3333,9 @@
           "x": 0.48,
           "y": 0.52,
           "z": 1.05,
-          "m": 0.79
+          "m": 0.79,
+          "e": 0.5,
+          "ex": 0.13
         }
       },
       "greisel": {
@@ -3338,7 +3346,9 @@
           "x": 0.46,
           "y": 0.5,
           "z": 1.05,
-          "m": 0.7
+          "m": 0.7,
+          "e": 0.45,
+          "ex": 0.13
         }
       },
       "dajo": {
@@ -3349,144 +3359,232 @@
           "x": 0.46,
           "y": 0.5,
           "z": 1.05,
-          "m": 0.72
+          "m": 0.72,
+          "e": 0.45,
+          "ex": 0.12
         }
       }
     },
     "lines": [
       {
+        "key": "ansage",
+        "who": "announcer",
+        "at": 200,
+        "say": "Meine Damen und Herren: Bühne frei für die Gringos!",
+        "text": "🎙️ Meine Damen und Herren: Bühne frei für die Gringos!"
+      },
+      {
         "key": "jonas",
         "who": "jonas",
         "at": 4000,
-        "voice": "de-thorsten-low",
-        "pitch": 1.4,
         "say": "Alle mal herhören: Jetzt wird getanzt!",
-        "text": "Alle mal herhören: Jetzt wird getanzt!"
+        "text": "Alle mal herhören: Jetzt wird getanzt!",
+        "alts": [
+          {
+            "key": "jonas-1",
+            "say": "Achtung! Der Reiseleiter tanzt jetzt!",
+            "text": "Achtung! Der Reiseleiter tanzt jetzt! 📣"
+          },
+          {
+            "key": "jonas-2",
+            "say": "Wer nicht mittanzt, zahlt die Runde!",
+            "text": "Wer nicht mittanzt, zahlt die Runde! 🍻"
+          }
+        ]
       },
       {
         "key": "simon",
         "who": "simon",
-        "at": 6500,
-        "voice": "de-pavoque-low",
-        "pitch": 1.35,
+        "at": 6700,
         "say": "Oi gatinha! Schau mal meine Hüfte!",
-        "text": "Oi gatinha! Schau mal meine Hüfte! 😏"
+        "text": "Oi gatinha! Schau mal meine Hüfte! 😏",
+        "alts": [
+          {
+            "key": "simon-1",
+            "say": "Der Latin Lover ist im Haus!",
+            "text": "Der Latin Lover ist im Haus! 🌹"
+          },
+          {
+            "key": "simon-2",
+            "say": "Die Hüfte lügt nicht, Baby!",
+            "text": "Die Hüfte lügt nicht, Baby! 💃"
+          }
+        ]
       },
       {
         "key": "marco",
         "who": "marco",
-        "at": 9500,
-        "voice": "de-karlsson-low",
-        "pitch": 1.5,
+        "at": 9400,
         "say": "Ich hab den Obstkorb dabei!",
-        "text": "Ich hab den Obstkorb dabei! 🍍"
+        "text": "Ich hab den Obstkorb dabei! 🍍",
+        "alts": [
+          {
+            "key": "marco-1",
+            "say": "Wer will eine Ananas?",
+            "text": "Wer will eine Ananas? 🍍"
+          },
+          {
+            "key": "marco-2",
+            "say": "Stimmung: hundert Prozent!",
+            "text": "Feelgood-Manager meldet: Stimmung 100 %! 💯"
+          }
+        ]
       },
       {
         "key": "greisel",
         "who": "greisel",
-        "at": 12000,
-        "voice": "de-thorsten-low",
-        "pitch": 1.55,
+        "at": 12100,
         "say": "Schatz, guck mal, ich kann Samba!",
-        "text": "Schatz, guck mal, ich kann Samba!"
+        "text": "Schatz, guck mal, ich kann Samba!",
+        "alts": [
+          {
+            "key": "greisel-1",
+            "say": "Flitterwochen mit vier Jungs. Super Idee!",
+            "text": "Flitterwochen mit vier Jungs. Super Idee! 💍"
+          },
+          {
+            "key": "greisel-2",
+            "say": "Ladehemmung? Nicht beim Tanzen!",
+            "text": "Ladehemmung? Nicht beim Tanzen! 🎯"
+          }
+        ]
       },
       {
         "key": "dajo",
         "who": "dajo",
-        "at": 14500,
-        "voice": "de-kerstin-low",
-        "pitch": 1.3,
+        "at": 14800,
         "say": "Laut meiner Excel tanzt ihr alle falsch!",
-        "text": "Laut meiner Excel tanzt ihr alle falsch! 📊"
+        "text": "Laut meiner Excel tanzt ihr alle falsch! 📊",
+        "alts": [
+          {
+            "key": "dajo-1",
+            "say": "Für jeden Schritt hab ich eine Tabelle!",
+            "text": "Für jeden Schritt hab ich eine Tabelle! 📊"
+          },
+          {
+            "key": "dajo-2",
+            "say": "Einzige Erwachsene hier. Ich tanze trotzdem!",
+            "text": "Einzige Erwachsene hier. Ich tanze trotzdem! 😎"
+          }
+        ]
       },
       {
         "key": "patrick",
         "who": "patrick",
-        "at": 17500,
-        "voice": "de-karlsson-low",
-        "pitch": 1.3,
-        "say": "Wo ist eigentlich der Takt? Und wo ist das Buffet?",
-        "text": "Wo ist eigentlich der Takt? Und wo ist das Buffet? 🍗"
+        "at": 17800,
+        "say": "Wo ist der Takt? Und wo ist das Buffet?",
+        "text": "Wo ist eigentlich der Takt? Und wo ist das Buffet? 🍗",
+        "alts": [
+          {
+            "key": "patrick-1",
+            "say": "Ich tanze nicht falsch, nur anders!",
+            "text": "Ich tanze nicht falsch, nur anders! 🤷"
+          },
+          {
+            "key": "patrick-2",
+            "say": "Kurze Pause, ich muss zum Buffet!",
+            "text": "Kurze Pause, ich muss zum Buffet! 🍗"
+          }
+        ]
       },
       {
         "key": "jonas2",
         "who": "jonas",
-        "at": 21600,
-        "voice": "de-thorsten-low",
-        "pitch": 1.4,
+        "at": 22300,
         "say": "Patrick! Im Takt! Eins, zwei!",
-        "text": "Patrick! Im Takt! Eins, zwei!"
+        "text": "Patrick! Im Takt! Eins, zwei!",
+        "alts": [
+          {
+            "key": "jonas2-1",
+            "say": "Das Buffet macht erst um acht auf!",
+            "text": "Patrick! Das Buffet macht erst um acht auf!"
+          },
+          {
+            "key": "jonas2-2",
+            "say": "Mammut! Konzentrier dich!",
+            "text": "Mammut! Konzentrier dich! 🦣"
+          }
+        ]
+      },
+      {
+        "key": "duel-simon",
+        "who": "simon",
+        "at": 41000,
+        "say": "Achtung, jetzt kommt der Hüftschwung!",
+        "text": "Achtung, jetzt kommt der Hüftschwung! 🔥"
+      },
+      {
+        "key": "duel-greisel",
+        "who": "greisel",
+        "at": 43600,
+        "say": "Pah! Das kann ich sogar mit Ladehemmung!",
+        "text": "Pah! Das kann ich sogar mit Ladehemmung! 💪"
+      },
+      {
+        "key": "ups",
+        "who": "patrick",
+        "at": 60200,
+        "say": "Ups!",
+        "text": "Ups! 😬"
       },
       {
         "key": "ole-jonas",
         "who": "jonas",
-        "at": 27000,
-        "voice": "pt-br-edresson-low",
-        "pitch": 1.4,
-        "speed": 1.0,
-        "say": "Olê, olê, olê, olá!",
+        "at": 27500,
+        "sing": true,
+        "say": "",
         "text": "",
         "chorus": true
       },
       {
         "key": "ole-simon",
         "who": "simon",
-        "at": 27000,
-        "voice": "pt-br-edresson-low",
-        "pitch": 1.3,
-        "speed": 1.0,
-        "say": "Olê, olê, olê, olá!",
+        "at": 27500,
+        "sing": true,
+        "say": "",
         "text": "",
         "chorus": true
       },
       {
         "key": "ole-patrick",
         "who": "patrick",
-        "at": 27000,
-        "voice": "pt-br-edresson-low",
-        "pitch": 1.2,
-        "speed": 1.0,
-        "say": "Olê, olê, olê, olá!",
+        "at": 27500,
+        "sing": true,
+        "say": "",
         "text": "",
         "chorus": true
       },
       {
         "key": "ole-marco",
         "who": "marco",
-        "at": 27000,
-        "voice": "pt-br-edresson-low",
-        "pitch": 1.5,
-        "speed": 1.0,
-        "say": "Olê, olê, olê, olá!",
+        "at": 27500,
+        "sing": true,
+        "say": "",
         "text": "",
         "chorus": true
       },
       {
         "key": "ole-greisel",
         "who": "greisel",
-        "at": 27000,
-        "voice": "pt-br-edresson-low",
-        "pitch": 1.55,
-        "speed": 1.0,
-        "say": "Olê, olê, olê, olá!",
+        "at": 27500,
+        "sing": true,
+        "say": "",
         "text": "",
         "chorus": true
       },
       {
         "key": "ole-dajo",
         "who": "dajo",
-        "at": 27000,
-        "voice": "pt-br-edresson-low",
-        "pitch": 1.65,
-        "speed": 1.0,
-        "say": "Olê, olê, olê, olá!",
+        "at": 27500,
+        "sing": true,
+        "say": "",
         "text": "",
         "chorus": true
       },
       {
         "key": "ole2-jonas",
         "who": "jonas",
-        "at": 29200,
+        "at": 29900,
         "src": "ole-jonas",
         "text": "",
         "chorus": true
@@ -3494,7 +3592,7 @@
       {
         "key": "ole2-simon",
         "who": "simon",
-        "at": 29200,
+        "at": 29900,
         "src": "ole-simon",
         "text": "",
         "chorus": true
@@ -3502,7 +3600,7 @@
       {
         "key": "ole2-patrick",
         "who": "patrick",
-        "at": 29200,
+        "at": 29900,
         "src": "ole-patrick",
         "text": "",
         "chorus": true
@@ -3510,7 +3608,7 @@
       {
         "key": "ole2-marco",
         "who": "marco",
-        "at": 29200,
+        "at": 29900,
         "src": "ole-marco",
         "text": "",
         "chorus": true
@@ -3518,7 +3616,7 @@
       {
         "key": "ole2-greisel",
         "who": "greisel",
-        "at": 29200,
+        "at": 29900,
         "src": "ole-greisel",
         "text": "",
         "chorus": true
@@ -3526,7 +3624,7 @@
       {
         "key": "ole2-dajo",
         "who": "dajo",
-        "at": 29200,
+        "at": 29900,
         "src": "ole-dajo",
         "text": "",
         "chorus": true
@@ -3534,9 +3632,7 @@
       {
         "key": "tchau-jonas",
         "who": "jonas",
-        "at": 43800,
-        "voice": "de-thorsten-low",
-        "pitch": 1.4,
+        "at": 52200,
         "say": "Tschau, Brasil!",
         "text": "",
         "chorus": true
@@ -3544,9 +3640,7 @@
       {
         "key": "tchau-simon",
         "who": "simon",
-        "at": 43800,
-        "voice": "de-pavoque-low",
-        "pitch": 1.35,
+        "at": 52200,
         "say": "Tschau, Brasil!",
         "text": "",
         "chorus": true
@@ -3554,9 +3648,7 @@
       {
         "key": "tchau-patrick",
         "who": "patrick",
-        "at": 43800,
-        "voice": "de-karlsson-low",
-        "pitch": 1.3,
+        "at": 52200,
         "say": "Tschau, Brasil!",
         "text": "",
         "chorus": true
@@ -3564,9 +3656,7 @@
       {
         "key": "tchau-marco",
         "who": "marco",
-        "at": 43800,
-        "voice": "de-karlsson-low",
-        "pitch": 1.5,
+        "at": 52200,
         "say": "Tschau, Brasil!",
         "text": "",
         "chorus": true
@@ -3574,9 +3664,7 @@
       {
         "key": "tchau-greisel",
         "who": "greisel",
-        "at": 43800,
-        "voice": "de-thorsten-low",
-        "pitch": 1.55,
+        "at": 52200,
         "say": "Tschau, Brasil!",
         "text": "",
         "chorus": true
@@ -3584,91 +3672,256 @@
       {
         "key": "tchau-dajo",
         "who": "dajo",
-        "at": 43800,
-        "voice": "de-kerstin-low",
-        "pitch": 1.3,
+        "at": 52200,
         "say": "Tschau, Brasil!",
         "text": "",
         "chorus": true
       }
     ],
     "voice": {
+      "ansage": {
+        "dur": 2788,
+        "env": "0497877404878899963077149871663107999401157578108462122666343210000000"
+      },
       "jonas": {
-        "dur": 2048,
-        "env": "0799999864367545513221000005910004940111035532000000"
+        "dur": 1841,
+        "env": "05997999996559963697342109400089104511852100000"
+      },
+      "jonas-1": {
+        "dur": 2252,
+        "env": "000039521059952000000279943988388998465129730003541000000"
+      },
+      "jonas-2": {
+        "dur": 1732,
+        "env": "02899875100461355554000000676208925665210000"
       },
       "simon": {
-        "dur": 2569,
-        "env": "05999983399405743445773100003444974223674246333135000002210000000"
+        "dur": 2138,
+        "env": "049866518511122211111012595223876656654310061101421000"
+      },
+      "simon-1": {
+        "dur": 1637,
+        "env": "09745851023221344195111101232113100111000"
+      },
+      "simon-2": {
+        "dur": 1550,
+        "env": "398328110853541102461211000009942142100"
       },
       "marco": {
-        "dur": 1581,
-        "env": "0019624850298469601103992119926989874100"
+        "dur": 1532,
+        "env": "731113363003620740000001473016992898521"
+      },
+      "marco-1": {
+        "dur": 1254,
+        "env": "39835532999601676510359999642000"
+      },
+      "marco-2": {
+        "dur": 1462,
+        "env": "0004799520000028999730002600024441000"
       },
       "greisel": {
-        "dur": 1876,
-        "env": "19940000000029605964210000043125764566642210000"
+        "dur": 2012,
+        "env": "121242010002961010377676300019311311651148778456421"
+      },
+      "greisel-1": {
+        "dur": 2433,
+        "env": "0269701046224412533222000013334545431000001221042002421332210"
+      },
+      "greisel-2": {
+        "dur": 2009,
+        "env": "776675165224434552003589421000576541221798740124100"
       },
       "dajo": {
-        "dur": 2272,
-        "env": "000006998028855622201003512253200044327861003533234320000"
+        "dur": 2851,
+        "env": "000001599771015554651240121365122775611012775277786100554211444100000000"
+      },
+      "dajo-1": {
+        "dur": 2186,
+        "env": "0000017973698146584390314500644146466034552175322100000"
+      },
+      "dajo-2": {
+        "dur": 2982,
+        "env": "045441116159432105400111111110243532110000033110266522201341011038621100000"
       },
       "patrick": {
-        "dur": 2861,
-        "env": "035899810226886510141004873016400014200000366217973005620016400310143000"
+        "dur": 3274,
+        "env": "2345688776451000489620021114620110000145999983100459846310199720000059720057000000"
+      },
+      "patrick-1": {
+        "dur": 2956,
+        "env": "34111001015762001766795111000005788642111121100579997443467665366200000000"
+      },
+      "patrick-2": {
+        "dur": 2902,
+        "env": "0079994000034000010234655520256633100002211111355101102322211974002200000"
       },
       "jonas2": {
-        "dur": 2507,
-        "env": "005751124101000287621055100100000000028998200000000004322100000"
+        "dur": 2170,
+        "env": "0000822124201000099720850001000000577632000001039421000"
+      },
+      "jonas2-1": {
+        "dur": 1692,
+        "env": "0086100992261077212663000563521112431000000"
+      },
+      "jonas2-2": {
+        "dur": 1567,
+        "env": "0246555332000000896135110069502221000000"
+      },
+      "duel-simon": {
+        "dur": 2002,
+        "env": "098310674311001796112201125421841042100211432110000"
+      },
+      "duel-greisel": {
+        "dur": 2101,
+        "env": "11255314511103118974963228437856368034983495544479740"
+      },
+      "ups": {
+        "dur": 673,
+        "env": "35899510111111000"
       },
       "ole-jonas": {
-        "dur": 1992,
-        "env": "00000000135569950134345430532357620001444321100000"
+        "dur": 2540,
+        "env": "5628425995103755610985100472642699410375762177310000000000000000"
       },
       "ole-simon": {
-        "dur": 2181,
-        "env": "0000000026545799750036534546520004532245643357534211000"
+        "dur": 2540,
+        "env": "7759637961005777612998100849551699200487872298300000000000000000"
       },
       "ole-patrick": {
-        "dur": 1801,
-        "env": "0000000124437954133323343002323553101443110000"
+        "dur": 2540,
+        "env": "5922335997511736451998410582443699741193935289610000000000000000"
       },
       "ole-marco": {
-        "dur": 1843,
-        "env": "00000002432689620122148620032234330023322100000"
+        "dur": 2540,
+        "env": "5829536971004846720997200573652799400485772176200000000000000000"
       },
       "ole-greisel": {
-        "dur": 2058,
-        "env": "0000022369997300222344542003214774000144422100000000"
+        "dur": 2540,
+        "env": "6548526971005667621894000848451798100466661295100000000000000000"
       },
       "ole-dajo": {
-        "dur": 1903,
-        "env": "000002564898525534555201531354660000145432100000"
+        "dur": 2540,
+        "env": "9386518730005598613971000739640781000569771392000000000000000000"
       },
       "tchau-jonas": {
-        "dur": 1242,
-        "env": "00001239988510000299415996321000"
+        "dur": 1148,
+        "env": "00001169962000000343134110000"
       },
       "tchau-simon": {
-        "dur": 1292,
-        "env": "267699853200015996112344222100000"
+        "dur": 1089,
+        "env": "0326522100000962123321000000"
       },
       "tchau-patrick": {
-        "dur": 936,
-        "env": "000148996153696236665200"
+        "dur": 1509,
+        "env": "01112211167899630000001454100023544431"
       },
       "tchau-marco": {
-        "dur": 869,
-        "env": "0139993047799369997100"
+        "dur": 972,
+        "env": "1113899993101252011476200"
       },
       "tchau-greisel": {
-        "dur": 1181,
-        "env": "000117999961000059930499852000"
+        "dur": 1311,
+        "env": "144313457995200004337521136889731"
       },
       "tchau-dajo": {
-        "dur": 1244,
-        "env": "00000344986300004510122332000000"
+        "dur": 1379,
+        "env": "03537789720113699712999534000000000"
       }
-    }
+    },
+    "voices": {
+      "announcer": {
+        "model": "vits-piper-de_DE-thorsten-high",
+        "pitch": 1,
+        "speed": 0.92,
+        "fx": "highpass=f=80,equalizer=f=180:t=q:w=1:g=3,equalizer=f=3500:t=q:w=1:g=2,acompressor=threshold=-18dB:ratio=3,aecho=0.8:0.6:25:0.12"
+      },
+      "jonas": {
+        "model": "vits-piper-de_DE-thorsten-high",
+        "pitch": 1.18,
+        "speed": 1.05,
+        "singer": "vits-piper-pt_BR-faber-medium",
+        "semi": 0
+      },
+      "simon": {
+        "model": "vits-piper-de_DE-miro-high",
+        "pitch": 1.25,
+        "speed": 1.0,
+        "singer": "vits-piper-pt_BR-faber-medium",
+        "semi": 4
+      },
+      "patrick": {
+        "model": "vits-piper-de_DE-thorsten_emotional-medium",
+        "sid": 3,
+        "pitch": 1.12,
+        "speed": 0.95,
+        "singer": "vits-piper-pt_BR-faber-medium",
+        "semi": -3
+      },
+      "marco": {
+        "model": "vits-piper-de_DE-thorsten_emotional-medium",
+        "sid": 0,
+        "pitch": 1.32,
+        "speed": 1.05,
+        "singer": "vits-piper-pt_BR-faber-medium",
+        "semi": 0
+      },
+      "greisel": {
+        "model": "vits-piper-de_DE-thorsten_emotional-medium",
+        "sid": 6,
+        "pitch": 1.22,
+        "speed": 1.0,
+        "singer": "vits-piper-pt_BR-faber-medium",
+        "semi": 4
+      },
+      "dajo": {
+        "model": "vits-coqui-de-css10",
+        "pitch": 1.1,
+        "speed": 1.0,
+        "singer": "vits-piper-pt_BR-faber-medium",
+        "semi": 12
+      }
+    },
+    "melody": [
+      [
+        "ô",
+        "F3",
+        250
+      ],
+      [
+        "lê",
+        "A3",
+        250
+      ],
+      [
+        "ô",
+        "C4",
+        250
+      ],
+      [
+        "lê",
+        "A3",
+        250
+      ],
+      [
+        "ô",
+        "F3",
+        250
+      ],
+      [
+        "lê",
+        "A3",
+        250
+      ],
+      [
+        "ô",
+        "C4",
+        250
+      ],
+      [
+        "lá",
+        "F4",
+        750
+      ]
+    ]
   }
 }

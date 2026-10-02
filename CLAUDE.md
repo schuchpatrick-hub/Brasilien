@@ -164,16 +164,19 @@ zu MP4 machen. Das Video enthält Crew-Fotos, also **nicht** ins Repo legen.
 ## Samba-Show (Cartoon)
 
 Im Kapitel Crew unter den Steckbriefen (`#samba`, SVG `#samba-svg`, Knöpfe `#samba-play`/`#samba-sound`). Crew-Köpfe (Fotos) auf
-gezeichneten Körpern mit Federschmuck; Münder wie die South-Park-Kanadier: Foto auf Mundhöhe geteilt, Oberkopf klappt nach der
-Lautstärkekurve hoch. Daten in `trip.json` → `dance` (`look` je Person: Stil, Shirt, Hose, `face` = Ausschnitt x/y/z und Mundhöhe m;
-`lines` mit Zeitpunkt `at`; `voice` wird erzeugt). Stile: robot, hips, off (Patrick, niedrigster Samba-Wert, aus dem Takt), fruit,
-propeller, star (Daijo, höchster Samba-Wert, Solo); Samba-Grundschritt `sambaLegs`, Schulter-Wippen, Federn schwingen nach.
-Ablauf in `frame(t)`, Zeitfenster in `T` (Freeze mit Hähnchen, La Ola, „Olê, olê“-Chor, Polonaise mit Zwinkern, Daijo-Solo,
-Sprung mit Drehung, Ananas auf Jonas, Pyramide). Bühne: Scheinwerfer, Discokugel, Nebel, Publikum. Musik = eigener Modus `show`
-in `Music()` (Batucada, Bass, Bläser; `m.drums` = Zeitfenster nur Trommeln), Effekte applause/whoo/ding/munch.
-Zeilen mit `src` benutzen die Aufnahme einer anderen Zeile.
-Stimmen: `tools/gen_dance_audio.py` (Piper, hochgepitcht) → `web/audio/samba-*.mp3`; beim Veröffentlichen in `files` mitgeben.
-Video: `window.__danceT`, `__danceAudio(ms)`, `__danceVoices()`; enthält Gesichter, nicht ins Repo.
+gezeichneten Körpern; Münder wie die South-Park-Kanadier (Foto auf Mundhöhe geteilt, Oberkopf klappt nach der Lautstärkekurve),
+Cartoon-Augenbrauen und Schweißtropfen über dem Foto. Daten in `trip.json` → `dance`: `look` je Person (Stil, Shirt, Hose, `face`
+= Ausschnitt x/y/z, Mundhöhe m, Augenlinie e, Augenabstand ex), `voices` (Stimme je Person), `melody` (gesungener Chor),
+`lines` (Zeitpunkt `at`, `alts` = Varianten, pro Abspielen zufällig; `src` = Aufnahme einer anderen Zeile; `sing` = gesungen),
+`voice` wird erzeugt. Ablauf in `frame(t)`, Zeitfenster in `T`: Ansage, Solos mit Kamera-Zoom, Patrick aus dem Takt (Freeze,
+Hähnchen), La Ola, Kostümwechsel mit Blitz + „Olê, olê“ gesungen, Polonaise, Daijo-Solo, Tanz-Duell Simon gegen Greisel mit
+Applaus-Meter (Sieger = mehr Siege, bei Gleichstand Tageslaune), Sprung, Ananas auf Jonas, Pyramide, Vorhang, Pannen vom Dreh.
+Live-Daten (`MEHUB`): 👑 meiste Siege, 🤡 meiste letzte Plätze, schief und rot = meiste Drinks heute (ab 3). Schatten und
+Spiegelung (`<use>` der Figuren) auf nassem Boden. Musik = Modus `show` in `Music()` (`m.drums` = nur Trommeln, `m.music` = Lautstärke
+ohne Effekte), Effekte applause/whoo/ding/munch/feedback/crash/thud/flash.
+Stimmen: `tools/gen_dance_audio.py` (sherpa-onnx, Stimmen aus den sherpa-onnx-Releases, siehe Kopf der Datei) →
+`web/audio/samba-*.mp3`; beim Veröffentlichen alle in `files` mitgeben, nicht mehr benutzte auf `null`.
+Video: `window.__danceT`, `__danceAudio(ms)`, `__danceVoices()`, `__danceLive({...})` zum Ausprobieren; enthält Gesichter, nicht ins Repo.
 
 ## Karte: Infokarten
 

@@ -1,55 +1,99 @@
 #!/usr/bin/env python3
-"""Stimmen für die Samba-Show: Piper-Sprachausgabe, hochgepitcht wie Cartoon-Figuren (South-Park-Kanadier).
+"""Stimmen für die Samba-Show (sherpa-onnx, hochwertige Piper-/Coqui-Stimmen).
 
-Schreibt web/audio/samba-<key>.mp3 und in web/trip.json → dance.voice je Clip Dauer (ms) und eine Lautstärkekurve
+Gesprochene Zeilen: Sprachausgabe, dann mit Rubberband leicht hochgepitcht (Cartoon) und auf gleiche Lautstärke gebracht.
+Gesungene Zeilen (`sing`): jede Silbe einzeln gesprochen, auf die Tonhöhe der Melodie gezogen und im Takt aneinandergesetzt.
+Schreibt web/audio/samba-<key>.mp3 und in web/trip.json → dance.voice je Aufnahme Dauer (ms) und Lautstärkekurve
 (`env`: eine Ziffer 0–9 pro 40 ms), nach der die Seite den Mund auf- und zuklappt.
 
-Voraussetzungen: pip install piper-tts imageio-ffmpeg; Stimmen aus
-https://github.com/rhasspy/piper/releases/tag/v0.0.2 (voice-de-thorsten-low, voice-de-karlsson-low, voice-de-pavoque-low,
-voice-de-kerstin-low) entpackt in VOICES (Standard: tools/data/voices).
+Voraussetzungen: pip install sherpa-onnx soundfile numpy imageio-ffmpeg; Stimmen aus
+https://github.com/k2-fsa/sherpa-onnx/releases/tag/tts-models (vits-piper-de_DE-thorsten-high, vits-piper-de_DE-miro-high,
+vits-piper-de_DE-thorsten_emotional-medium, vits-coqui-de-css10, vits-piper-pt_BR-faber-medium) entpackt in VOICES
+(Standard: tools/data/voices). Aufruf: python3 tools/gen_dance_audio.py [key …] (ohne Keys: alle).
 """
-import json, os, subprocess, sys, wave, struct, math, tempfile
+import glob, json, math, os, subprocess, sys, tempfile, wave
+import numpy as np, soundfile as sf, sherpa_onnx
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VOICES = os.environ.get('VOICES', os.path.join(ROOT, 'tools', 'data', 'voices'))
 TRIP = os.path.join(ROOT, 'web', 'trip.json')
 OUT = os.path.join(ROOT, 'web', 'audio')
+NOTE = {'F3': 174.61, 'G3': 196.0, 'A3': 220.0, 'Bb3': 233.08, 'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'A4': 440.0}
 
 def ffmpeg():
     import imageio_ffmpeg
     return imageio_ffmpeg.get_ffmpeg_exe()
 
+_tts = {}
+def synth(model, text, sid=0, speed=1.0):
+    if model not in _tts:
+        d = os.path.join(VOICES, model); onnx = glob.glob(d + '/*.onnx')[0]
+        vits = sherpa_onnx.OfflineTtsVitsModelConfig(model=onnx, tokens=d + '/tokens.txt',
+                                                     data_dir=d + '/espeak-ng-data' if os.path.isdir(d + '/espeak-ng-data') else '')
+        _tts[model] = sherpa_onnx.OfflineTts(sherpa_onnx.OfflineTtsConfig(model=sherpa_onnx.OfflineTtsModelConfig(vits=vits, num_threads=2)))
+    a = _tts[model].generate(text, sid=sid, speed=speed)
+    return np.array(a.samples, dtype=np.float32), a.sample_rate
+
+def run_ff(src, dst, af):
+    subprocess.run([ffmpeg(), '-y', '-loglevel', 'error', '-i', src, '-af', af, '-ac', '1', '-ar', '44100', dst], check=True)
+
+def f0(x, sr):
+    fr = int(.04 * sr); vals = []
+    for i in range(0, len(x) - fr, fr // 2):
+        s = x[i:i + fr]
+        if np.sqrt((s * s).mean()) < .03: continue
+        c = np.correlate(s, s, 'full')[fr - 1:]; lo, hi = int(sr / 400), int(sr / 70)
+        vals.append(sr / (lo + np.argmax(c[lo:hi])))
+    return float(np.median(vals)) if vals else 150.0
+
+def trim(x, thr=.02):
+    idx = np.where(np.abs(x) > thr)[0]
+    return x[idx[0]:idx[-1] + 1] if len(idx) else x
+
+def spoken(v, text, tmp):
+    x, sr = synth(v['model'], text, v.get('sid', 0), v.get('speed', 1.0))
+    raw = os.path.join(tmp, 'raw.wav'); sf.write(raw, x, sr)
+    out = os.path.join(tmp, 'out.wav'); p = v.get('pitch', 1.0)
+    af = (f'rubberband=pitch={p}:formant=shifted,' if p != 1 else '') + v.get('fx', 'highpass=f=90') + ',loudnorm=I=-15'
+    run_ff(raw, out, af); return out
+
+def sung(v, melody, tmp):
+    """Silben einzeln sprechen, auf Zieltöne ziehen (Rubberband) und im Takt aneinandersetzen."""
+    sr = 44100; parts = []; shift = 2 ** (v.get('semi', 0) / 12)
+    for k, (syl, note, ms) in enumerate(melody):
+        x, s0 = synth(v.get('singer', v['model']), syl, v.get('ssid', 0), 1.0); x = trim(x)
+        src = os.path.join(tmp, f's{k}.wav'); dst = os.path.join(tmp, f'd{k}.wav'); sf.write(src, x, s0)
+        ratio = NOTE[note] * shift / f0(x, s0); dur = len(x) / s0; tempo = dur / (ms / 1000 * .92)
+        run_ff(src, dst, f'rubberband=pitch={ratio:.4f}:tempo={tempo:.4f}:formant=shifted,afade=t=out:st={ms / 1000 * .8:.3f}:d=0.05')
+        y, _ = sf.read(dst); n = int(sr * ms / 1000); y = np.pad(y, (0, max(0, n - len(y))))[:n]; parts.append(y)
+    out = os.path.join(tmp, 'sung.wav'); sf.write(out, np.concatenate(parts), sr)
+    out2 = os.path.join(tmp, 'sung2.wav'); run_ff(out, out2, 'aecho=0.8:0.5:40:0.15,loudnorm=I=-15'); return out2
+
 def env_of(path, step=0.04):
     w = wave.open(path); sr = w.getframerate(); n = w.getnframes()
-    d = struct.unpack('<%dh' % n, w.readframes(n)); hop = int(sr * step)
-    vals = [math.sqrt(sum(x * x for x in d[i:i + hop]) / max(1, len(d[i:i + hop]))) for i in range(0, n, hop)]
+    d = np.frombuffer(w.readframes(n), dtype='<i2').astype(np.float32); hop = int(sr * step)
+    vals = [math.sqrt(float((d[i:i + hop] ** 2).mean())) for i in range(0, n, hop)]
     top = max(vals) or 1
     return ''.join(str(min(9, int(v / top * 12))) for v in vals), round(n / sr * 1000)
 
 def main():
-    trip = json.load(open(TRIP, encoding='utf-8'))
-    lines = trip['dance']['lines']
-    F = ffmpeg(); voice = {}
-    for ln in lines:
-        key = ln['key']
-        if ln.get('src'):   # benutzt die Aufnahme einer anderen Zeile
-            continue
-        with tempfile.TemporaryDirectory() as tmp:
-            raw = os.path.join(tmp, 'raw.wav'); pit = os.path.join(tmp, 'pit.wav')
-            subprocess.run([sys.executable, '-m', 'piper', '-m', os.path.join(VOICES, ln['voice'] + '.onnx'), '-f', raw,
-                            '--length-scale', str(ln.get('speed', 0.95))], input=ln['say'].encode(), check=True, capture_output=True)
-            p = ln.get('pitch', 1.35)   # höher und gleich schnell: asetrate hebt, atempo bremst wieder
-            sr = wave.open(raw).getframerate()
-            subprocess.run([F, '-y', '-loglevel', 'error', '-i', raw, '-af',
-                            f'asetrate={sr}*{p},aresample=44100,atempo={1 / p:.4f},highpass=f=120,loudnorm=I=-15',
-                            '-ac', '1', '-ar', '44100', pit], check=True)
-            env, dur = env_of(pit)
-            subprocess.run([F, '-y', '-loglevel', 'error', '-i', pit, '-b:a', '96k', os.path.join(OUT, f'samba-{key}.mp3')], check=True)
-        voice[key] = {'dur': dur, 'env': env}
-        print(key, dur, 'ms')
-    trip['dance']['voice'] = voice
-    txt = json.dumps(trip, ensure_ascii=False, indent=2)
-    open(TRIP, 'w', encoding='utf-8').write(txt + '\n')
+    trip = json.load(open(TRIP, encoding='utf-8')); dance = trip['dance']; only = set(sys.argv[1:])
+    voices = dance['voices']; voice = dance.get('voice', {})
+    for ln in dance['lines']:
+        if ln.get('src'): continue
+        for alt in [ln] + ln.get('alts', []):
+            key = alt['key']
+            if only and key not in only: continue
+            v = dict(voices[ln.get('voice', ln['who'])]); v.update(ln.get('vo', {}))
+            with tempfile.TemporaryDirectory() as tmp:
+                wav = sung(v, dance['melody'], tmp) if ln.get('sing') else spoken(v, alt['say'], tmp)
+                pcm = os.path.join(tmp, 'pcm.wav'); run_ff(wav, pcm, 'anull')
+                env, dur = env_of(pcm)
+                subprocess.run([ffmpeg(), '-y', '-loglevel', 'error', '-i', pcm, '-b:a', '96k', os.path.join(OUT, f'samba-{key}.mp3')], check=True)
+            voice[key] = {'dur': dur, 'env': env}
+            print(key, dur, 'ms')
+    dance['voice'] = voice
+    open(TRIP, 'w', encoding='utf-8').write(json.dumps(trip, ensure_ascii=False, indent=2) + '\n')
 
 if __name__ == '__main__':
     main()
