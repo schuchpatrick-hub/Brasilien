@@ -170,6 +170,14 @@ Südost-Ausschnitt, Zeitzone Manaus und Pass-Hinweis Iguaçu direkt in `gen_map.
 `trip.json` → `flights` (`open` = orange, nur Daijo & Greisel = lila `flB`), ☾ = Nachtflug, Flugdauer an den Bögen.
 GIG/SDU im Ausschnitt leicht versetzt neben Rio.
 
+## Tempo und Bedienung
+
+- Kapitel außer Kopf und Karte haben `content-visibility:auto` (werden erst beim Hinscrollen gezeichnet). Vor programmatischem
+  Springen `document.body.classList.add('cv-all')` setzen (macht `jump()` schon), sonst stimmt die Zielposition nicht.
+- Küstenlinien in `gen_map.py` per Douglas-Peucker vereinfacht (`rdp`, Toleranz ≈ 0,5 px) und als relative Pfade geschrieben.
+- Kleine Knöpfe/Links haben einen unsichtbaren `::before`-Rand als größere Tippfläche (Liste am Ende von `page_head.html`);
+  neue kleine Bedienelemente dort ergänzen, dafür kein `::before` verwenden.
+
 ## Regeln
 
 - **Repo ist öffentlich:** keine Roh-Chats, Telefonnummern, IBANs, Nachnamen, Passdaten,
