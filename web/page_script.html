@@ -2346,7 +2346,7 @@ function wavB64(buf) {
   let T = TMAIN, END = 72500, ENC = false, encoreReady = false;
   // Zufalls-Ereignis während der Polonaise (pro Abspielen eins)
   const EVENTS = ['rain', 'monkey', 'police', 'waiter'];
-  let EVENT = 'police', VICTIM = 'simon', TAPS = [], BOOST = {clap: -1e9, cheer: -1e9}, liveM = null;
+  let EVENT = 'police', VICTIM = 'simon', TAPS = [], BOOST = {clap: -1e9, cheer: -1e9}, PRESS = [], liveM = null;   // PRESS: [{t, k: 'clap'|'cheer'}]
   const evw = () => [T.conga[0] + 200, T.conga[1] - 200];
   const mk = (tag, a, parent) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (parent) parent.appendChild(e); return e; };
   const byId = Object.fromEntries(TRIP.crew.map(c => [c.id, c]));
@@ -2484,7 +2484,7 @@ function wavB64(buf) {
     const armL = mk('line', {x1: -10, y1: 4, x2: -18, y2: 22, stroke: '#140d29', 'stroke-width': 7, 'stroke-linecap': 'round'}, g), armR = mk('line', {x1: 10, y1: 4, x2: 18, y2: 22, stroke: '#140d29', 'stroke-width': 7, 'stroke-linecap': 'round'}, g);
     mk('ellipse', {cx: 0, cy: 30, rx: 26, ry: 18, fill: '#140d29'}, g); mk('circle', {cx: 0, cy: 0, r: 15, fill: '#140d29'}, g);
     return {g, armL, armR, x: 20 + k * 54 + hash(k, 7) * 14, y: 484 + hash(k, 8) * 10, ph: hash(k, 9) * 6}; });
-  const gBub = mk('g', {}, world);
+  const gBub = mk('g', {}, world), partG = mk('g', {}, world);   // partG: 👏/🎉 vom Publikum
 
   // ---------- Figuren ----------
   const P = {};
@@ -2667,7 +2667,8 @@ function wavB64(buf) {
       // Polizei: alle erstarren kurz; Publikum jubelt: kleiner Sprung
       const [e0, e1] = evw();
       if (EVENT === 'police' && t > e0 + 1200 && t < e0 + 2600) p = Object.assign(idle(t, i), {aL: [20, 10], aR: [20, 10], tilt: 10});
-      const ck = (t - BOOST.cheer) / 700; if (ck > 0 && ck < 1) p.y -= 28 * S(PI * ck);
+      const ck = (t - BOOST.cheer) / 800; if (ck > 0 && ck < 1) { p.y -= 45 * S(PI * ck); p.aL = [170, 0]; p.aR = [170, 0]; }
+      const cl = (t - BOOST.clap) / 1600; if (cl > 0 && cl < 1) { const c = S(t / 75) > 0; p.aL = [60, c ? 100 : 70]; p.aR = [60, c ? 100 : 70]; }
       const drop = ENC ? -1e9 : 2000 + i * 160, dropY = t < drop ? -700 : t < drop + 520 ? -700 * Math.pow(1 - (t - drop) / 520, 2) * Math.abs(C(3 * PI * (t - drop) / 520)) : 0;
       const bob = dancing ? 2 * S(2 * PI * b) : 0, squash = dancing ? 1 - .035 * Math.abs(S(PI * b)) : 1;
       o.g.setAttribute('transform', `translate(${(x + p.hip).toFixed(1)},${(y + p.y).toFixed(1)}) rotate(${fall.toFixed(1)}) scale(${(sc * (flip || .001)).toFixed(3)},${sc.toFixed(3)})`);
@@ -2732,6 +2733,13 @@ function wavB64(buf) {
       waiter.setAttribute('x', wx.toFixed(1)); waiter.setAttribute('y', wy.toFixed(1)); waiter.setAttribute('opacity', 1); tray.setAttribute('x', (wx + 22).toFixed(1)); tray.setAttribute('y', (wy - 62).toFixed(1)); tray.setAttribute('opacity', 1);
     } else { waiter.setAttribute('opacity', 0); tray.setAttribute('opacity', 0); }
     sceneTick(t);
+    // Klatschen/Jubeln: 👏 bzw. 🎉🙌✨ steigen aus dem Publikum auf
+    partG.innerHTML = '';
+    PRESS.forEach((q, n) => { const k = (t - q.t) / 1500; if (k < 0 || k > 1) return;
+      const em = q.k === 'clap' ? ['👏'] : ['🎉', '🙌', '✨', '🥳'];
+      for (let m = 0; m < (q.k === 'clap' ? 12 : 18); m++) { const x0 = 30 + hash(m, 51 + n) * (W - 60), sp2 = .6 + hash(m, 52 + n) * .7;
+        const e = mk('text', {x: (x0 + 25 * S(k * 6 + m)).toFixed(1), y: (H - 20 - k * 330 * sp2).toFixed(1), 'font-size': (q.k === 'clap' ? 30 : 34) * (1 - .3 * k), 'text-anchor': 'middle', opacity: (1 - k).toFixed(2)}, partG);
+        e.textContent = em[m % em.length]; } });
     const front = sp ? sp.who : solo > .5 ? 'dajo' : null;
     if (pyr > 0 || b1) ['jonas', 'patrick', 'marco', 'simon', 'greisel', 'dajo'].forEach(id => P[id] && gPeople.appendChild(P[id].g));
     else if (front && P[front] && gPeople.lastChild !== P[front].g) gPeople.appendChild(P[front].g);
@@ -2787,7 +2795,8 @@ function wavB64(buf) {
       q.armL.setAttribute('x2', up ? -22 + wv : -18); q.armL.setAttribute('y2', up ? -26 : 22); q.armR.setAttribute('x2', up ? 22 + wv : 18); q.armR.setAttribute('y2', up ? -26 : 22); });
     const cOn = t > T.confetti && t < T.close[1]; conf.setAttribute('opacity', cOn ? 1 : 0);
     if (cOn) confs.forEach(q => { const k = (t - T.confetti) / 1000, yy = ((k * q.d + q.s * 40) % 560) - 40; q.el.setAttribute('transform', `translate(${(q.x + 18 * S(k * 3 + q.s)).toFixed(1)},${yy.toFixed(1)}) rotate(${((k * 200 + q.s * 50) % 360).toFixed(0)})`); });
-    flash.setAttribute('opacity', (1 - span(t, T.flash, T.flash + 500)) * (t > T.flash ? 1 : 0));
+    const chf = t > BOOST.cheer && t < BOOST.cheer + 400 ? .3 * (1 - (t - BOOST.cheer) / 400) : 0;
+    flash.setAttribute('opacity', Math.max(chf, (1 - span(t, T.flash, T.flash + 500)) * (t > T.flash ? 1 : 0)).toFixed(2));
     // Kamera
     cam = camAt(t, sp); world.setAttribute('transform', `scale(${(W / cam.w).toFixed(4)}) translate(${(-cam.x).toFixed(1)},${(-cam.y).toFixed(1)})`);
     // Vorhang: auf (0,3–1,7 s), zu, für die Pannen kurz wieder auf
@@ -2846,7 +2855,7 @@ function wavB64(buf) {
   }
   function start(enc) {
     stop(false); const my = ++run; btn.textContent = '⏹ Stopp'; btn.setAttribute('aria-pressed', 'true'); aud.forEach(b => b.classList.remove('off'));
-    ENC = !!enc; T = ENC ? TENC : TMAIN; END = ENC ? 19800 : 72500; encoreReady = false; TAPS = []; BOOST = {clap: -1e9, cheer: -1e9};
+    ENC = !!enc; T = ENC ? TENC : TMAIN; END = ENC ? 19800 : 72500; encoreReady = false; TAPS = []; BOOST = {clap: -1e9, cheer: -1e9}; PRESS = [];
     const video = window.__danceT !== undefined; pickLines(video ? 0 : 1 + Math.floor(Math.random() * 1000)); if (!video) liveData();
     EVENT = window.__danceEvent || (video ? 'police' : EVENTS[Math.floor(Math.random() * EVENTS.length)]);
     VICTIM = video ? 'simon' : ids[Math.floor(Math.random() * N)];
@@ -2881,13 +2890,13 @@ function wavB64(buf) {
   // Publikum: Klatschen und Jubeln
   const aud = [document.getElementById('samba-clap'), document.getElementById('samba-cheer')].filter(Boolean);
   aud.forEach(b => b.addEventListener('click', () => { if (!playing()) return; const t = tnow() - t0p, cheerB = b.id === 'samba-cheer';
-    if (cheerB) BOOST.cheer = t; else BOOST.clap = t;
+    if (cheerB) BOOST.cheer = t; else BOOST.clap = t; PRESS = PRESS.filter(q => t - q.t < 2500).concat([{t, k: cheerB ? 'cheer' : 'clap'}]);
     if (liveM && ctx) { liveM.sfx('applause', ctx.currentTime + .02); if (cheerB) { liveM.sfx('whoo', ctx.currentTime + .05); liveM.sfx('whoo', ctx.currentTime + .5); } } }));
   const sPaint = () => { if (sbtn) { sbtn.textContent = soundOn() ? '🔊 Ton an' : '🔇 Ton aus'; sbtn.setAttribute('aria-pressed', String(soundOn())); } };
   if (sbtn) sbtn.addEventListener('click', () => { store.set('sound', soundOn() ? '0' : '1'); sPaint(); if (!soundOn() && ctx) { ctx.close().catch(() => {}); ctx = null; clearInterval(timer); voices.forEach(a => a.el.pause()); } });
   sPaint(); frame(0);
   // Video-Aufnahme: Zeit setzen, Musik offline rendern, Stimmen-Startzeiten; __danceLive setzt Live-Daten zum Ausprobieren
-  window.__dancePlay = start; window.__danceTap = id => tapPerson(id); window.__danceBoost = k => { BOOST[k] = tnow() - t0p; }; window.__danceEnd = END; window.__danceLive = o => { LIVE = Object.assign({card: {}}, o); };
+  window.__dancePlay = start; window.__danceTap = id => tapPerson(id); window.__danceBoost = k => { const t = tnow() - t0p; BOOST[k] = t; PRESS = PRESS.concat([{t, k}]); }; window.__danceEnd = END; window.__danceLive = o => { LIVE = Object.assign({card: {}}, o); };
   window.__danceAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms / 1000), sr), m = window.__TripMusic(oc); program(m, 0); m.schedule(ms / 1000); return wavB64(await oc.startRendering()); };
   window.__danceVoices = () => LINES.map(l => ({key: l.file, at: l.at}));
 })();
