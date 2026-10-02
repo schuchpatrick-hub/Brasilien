@@ -178,6 +178,11 @@ Stimmen: `tools/gen_dance_audio.py` (sherpa-onnx, Stimmen aus den sherpa-onnx-Re
 `web/audio/samba-*.mp3`; beim Veröffentlichen alle in `files` mitgeben, nicht mehr benutzte auf `null`.
 Interaktiv: Figur antippen (`tapPerson`: Spruch mit Stimme, Sprung, Drehung; Patrick lässt das Hähnchen fallen), Knöpfe
 `#samba-clap`/`#samba-cheer` (Publikum klatscht/jubelt, Licht blitzt), nach dem Ende „🎉 Zugabe!“ (`TENC`, kurze Bonus-Runde).
+Nach der Polonaise „Tanzschule“ (`T.moves`, 8 s): Moonwalk, Floss, Passinho, Limbo (Patrick bleibt unter der Stange hängen);
+am Ende Abspann mit Credits (`T.credits`, `CRED`). Stimmen laufen über dieselbe Audio-Uhr wie die Musik (`playVoice`: vorgeladen per
+`fetch`, dekodiert, mit `start(when)` geplant; die Animation nimmt dann `clock()` = Audiozeit), Vorladen beim Hinscrollen.
+Einblendungen skalieren auf schmalen Bildschirmen mit (`UI`). Knopf `#samba-full`: Vollbild (echt, wo erlaubt, sonst CSS
+`.samba.full`), Querformat-Sperre wenn möglich, Hinweis zum Drehen im Hochformat.
 Zufalls-Ereignis pro Abspielen während der Polonaise (`EVENT`: rain, monkey, police, waiter). Bühne passend zur Reise
 (`buildStage`/`stageToday` aus `trip.json` → `stays`, Zeitzone Rio; guaruja, rio, silvester am 31.12./01.01., iguacu, jungle,
 paraty, ilha; sonst default = Copacabana).
