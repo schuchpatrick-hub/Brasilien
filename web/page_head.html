@@ -988,6 +988,14 @@ footer .boa{display:block;font:800 1.4rem var(--display);color:var(--accent);mar
 .sb-meter{fill:#fff;stroke:#140d29;stroke-width:4px;paint-order:stroke;font:800 17px var(--body)}.sb-cap{fill:#fff;font:700 18px var(--body)}.sb-tint{mix-blend-mode:multiply}
 .sb-loc{fill:#fff;stroke:#140d29;stroke-width:4px;paint-order:stroke;font:700 15px var(--body)}
 .samba-btns{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.samba-btns .map-play{margin-top:10px}.map-play.off{opacity:.45}
+.sb-credit{fill:#fff;font:700 24px var(--body);stroke:#4a0712;stroke-width:4px;paint-order:stroke}.sb-credit.b{fill:#ffcf1f}.sb-credit.h{fill:#ffcf1f;font:800 34px var(--display)}
+.samba.full{position:fixed;inset:0;z-index:500;margin:0;background:#0b0820;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;
+  padding:calc(env(safe-area-inset-top,0px) + 8px) calc(env(safe-area-inset-right,0px) + 8px) calc(env(safe-area-inset-bottom,0px) + 8px) calc(env(safe-area-inset-left,0px) + 8px)}
+.samba.full>h3,.samba.full>.note{display:none}
+.samba.full .samba-stage{margin:0;width:min(100%,calc((100vh - 70px) * 1.6));max-height:calc(100vh - 70px)}
+.samba.full .samba-btns{justify-content:center}.samba.full .samba-btns .map-play{margin-top:0}
+html.sb-noscroll,html.sb-noscroll body{overflow:hidden}
+@media (orientation:portrait){.samba.full::after{content:"📱 Handy quer drehen für mehr Bühne";color:#ffffffaa;font:600 .85rem var(--body);margin-top:6px}}
 .sb-pop{font:800 24px var(--body);fill:#fff;stroke:#2a1a12;stroke-width:4px;paint-order:stroke}
 .sb-bub rect,.sb-bub path{fill:#fff;stroke:#2a1a12;stroke-width:2}.sb-bub text{fill:#2a1a12;font:700 16px var(--body)}
 @media print{.samba{display:none}}

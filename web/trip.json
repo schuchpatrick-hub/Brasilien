@@ -3509,21 +3509,21 @@
       {
         "key": "duel-simon",
         "who": "simon",
-        "at": 41000,
+        "at": 49000,
         "say": "Achtung, jetzt kommt der Hüftschwung!",
         "text": "Achtung, jetzt kommt der Hüftschwung! 🔥"
       },
       {
         "key": "duel-greisel",
         "who": "greisel",
-        "at": 43600,
+        "at": 51600,
         "say": "Pah! Das kann ich sogar mit Ladehemmung!",
         "text": "Pah! Das kann ich sogar mit Ladehemmung! 💪"
       },
       {
         "key": "ups",
         "who": "patrick",
-        "at": 60200,
+        "at": 68200,
         "say": "Ups!",
         "text": "Ups! 😬"
       },
@@ -3878,7 +3878,7 @@
       {
         "key": "tchau-jonas",
         "who": "jonas",
-        "at": 52200,
+        "at": 60200,
         "say": "Tschau, Brasil!",
         "text": "",
         "chorus": true
@@ -3886,7 +3886,7 @@
       {
         "key": "tchau-simon",
         "who": "simon",
-        "at": 52200,
+        "at": 60200,
         "say": "Tschau, Brasil!",
         "text": "",
         "chorus": true
@@ -3894,7 +3894,7 @@
       {
         "key": "tchau-patrick",
         "who": "patrick",
-        "at": 52200,
+        "at": 60200,
         "say": "Tschau, Brasil!",
         "text": "",
         "chorus": true
@@ -3902,7 +3902,7 @@
       {
         "key": "tchau-marco",
         "who": "marco",
-        "at": 52200,
+        "at": 60200,
         "say": "Tschau, Brasil!",
         "text": "",
         "chorus": true
@@ -3910,7 +3910,7 @@
       {
         "key": "tchau-greisel",
         "who": "greisel",
-        "at": 52200,
+        "at": 60200,
         "say": "Tschau, Brasil!",
         "text": "",
         "chorus": true
@@ -3918,7 +3918,7 @@
       {
         "key": "tchau-dajo",
         "who": "dajo",
-        "at": 52200,
+        "at": 60200,
         "say": "Tschau, Brasil!",
         "text": "",
         "chorus": true
