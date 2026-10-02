@@ -1950,12 +1950,12 @@ function wavB64(buf) {
   // offline als Tonspur rendern kann (window.__tripAudio).
   const mf = m => 440 * Math.pow(2, (m - 69) / 12);
   function Music(ctx) {
-    const E = {ctx, mode: 'none', night: false, step: 0, next: 0, on: {travel: false, stay: false}, till: {travel: 0, stay: 0}};
+    const E = {ctx, mode: 'none', night: false, step: 0, next: 0, drums: [], on: {travel: false, stay: false, show: false}, till: {travel: 0, stay: 0, show: 0}};
     const master = ctx.createGain(); master.gain.value = .7;
     const comp = ctx.createDynamicsCompressor(); master.connect(comp); comp.connect(ctx.destination);
     const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 16000; lp.connect(master);
     const music = ctx.createGain(); music.gain.value = 1; music.connect(lp);
-    const bus = {travel: ctx.createGain(), stay: ctx.createGain()};
+    const bus = {travel: ctx.createGain(), stay: ctx.createGain(), show: ctx.createGain()};
     Object.values(bus).forEach(b => { b.gain.value = 0; b.connect(music); });
     const sfxOut = ctx.createGain(); sfxOut.gain.value = .9; sfxOut.connect(master);
     E.master = master;
@@ -2038,12 +2038,34 @@ function wavB64(buf) {
       }
       if (bar === 3 && Math.floor(i / 64) % 2 === 1 && (s === 0 || s === 2 || s === 4)) tone(out, 'sine', 2600, t, .13, .06, {vib: 28, depth: .06});
     }
+    // Show-Samba (Samba-Show der Crew): fette Batucada (Surdo 1+2, Caixa, Repinique-Rolls, Chocalho, Agogô), Bass, Bläser-Riffs.
+    // E.drums = [[von, bis], …] (Sekunden im AudioContext): dort laufen nur die Trommeln (zum Mitsingen).
+    const SH = {chords: [[65, 69, 72], [70, 74, 77], [67, 70, 74, 76], [65, 69, 72, 77]],
+      horn: [[[0, 77, 1], [2, 77, 1], [3, 79, 1], [6, 81, 2], [10, 79, 1], [12, 77, 3]], [[0, 74, 1], [2, 74, 1], [3, 77, 1], [6, 82, 2], [10, 81, 1], [12, 77, 3]],
+             [[0, 76, 1], [2, 76, 1], [3, 79, 1], [6, 82, 2], [8, 81, 1], [10, 79, 1], [12, 76, 2]], [[0, 77, 2], [3, 81, 1], [6, 84, 3], [10, 81, 1], [12, 77, 1], [14, 72, 2]]]};
+    const brass = (out, f, t, d, v) => [1, 1.004, .996].forEach((m, k) => tone(out, 'sawtooth', f * m, t, d + .08, v / 3, {from: f * m * .97, glide: .04, a: .015, hold: d * .75, lp: 2400, vib: k ? 0 : 5, depth: .008}));
+    function showStep(i, t, sd) {
+      const out = bus.show, bar = Math.floor(i / 16) % 4, s = i % 16, r = ROOTS[bar];
+      if (s === 4 || s === 12) tone(out, 'sine', 50, t, .5, .9, {from: 110, glide: .12});            // Surdo de segunda
+      if (s === 0 || s === 8) tone(out, 'sine', 58, t, .35, .55, {from: 120, glide: .08});           // Surdo de primeira
+      if (s === 2 || s === 10) tone(out, 'sine', 62, t, .12, .25, {from: 100, glide: .03});           // gedämpft
+      noise(out, t, .05, [0, 3, 6, 10, 12, 14].includes(s) ? .2 : .08, 'bandpass', 2400, 1.2);     // Caixa
+      noise(out, t, .05, s % 2 ? .1 : .05, 'highpass', 7500, .7);                                 // Chocalho
+      if (s in SA.ago) bell(out, t, SA.ago[s] ? 1320 : 990, .07);
+      if (bar === 3 && s >= 12) noise(out, t + sd / 2, .04, .18, 'bandpass', 3200, 2);                // Repinique-Roll
+      if ((E.drums || []).some(([a, b]) => t >= a && t < b)) return;   // Mitsing-Teil: nur Trommeln
+      if (s === 0 || s === 8) tone(out, 'triangle', mf(r), t, sd * 2.4, .45);
+      if (s === 6 || s === 14) tone(out, 'triangle', mf(r + 7), t, sd * 1.4, .32);
+      if ([0, 3, 6, 10, 12].includes(s)) SH.chords[bar].forEach((m, k) => tone(out, 'triangle', mf(m - 12), t + k * .01, .22, .06, {lp: 2200}));
+      SH.horn[bar].forEach(([st, m, len]) => { if (st === s) brass(out, mf(m), t, sd * len * .85, .2); });
+    }
     const sdur = () => 60 / BPM / 4 * (E.night ? 1.2 : 1);
     const audible = (m, t) => E.on[m] || t < E.till[m];
     E.schedule = until => {
       while (E.next < until) {
         if (audible('travel', E.next)) travelStep(E.step, E.next, sdur());
         if (audible('stay', E.next)) stayStep(E.step, E.next, sdur());
+        if (audible('show', E.next)) showStep(E.step, E.next, sdur());
         E.next += sdur(); E.step++;
       }
     };
@@ -2085,11 +2107,15 @@ function wavB64(buf) {
       else if (name === 'plane') noise(sfxOut, t, 1.2, .14, 'bandpass', 300, 2, {to: 2400, a: .4});
       else if (name === 'gong') [[1046, 0], [784, .3], [523, .6]].forEach(([f, o]) => { tone(sfxOut, 'sine', f, t + o, 1.8, .2); tone(sfxOut, 'sine', f * 2.01, t + o, .7, .05); tone(sfxOut, 'triangle', f / 2, t + o, 1.3, .07); });
       else if (name === 'boing') boing(sfxOut, t, .12);
+      else if (name === 'applause') for (let k = 0; k < 90; k++) { const o = rnd() * 2.6; noise(sfxOut, t + o, .03, .05 + .07 * rnd() * (1 - o / 3), 'bandpass', 1200 + rnd() * 2200, 1.5); }
+      else if (name === 'whoo') [0, .25].forEach(o => tone(sfxOut, 'sine', 1300 + rnd() * 300, t + o, .55, .05, {from: 700, glide: .25, vib: 9, depth: .03, a: .05}));
+      else if (name === 'ding') { tone(sfxOut, 'sine', 2093, t, .6, .12); tone(sfxOut, 'sine', 3136, t + .07, .5, .07); }
+      else if (name === 'munch') [0, .18, .36].forEach(o => noise(sfxOut, t + o, .09, .3, 'bandpass', 900, 2));
       else if (name === 'clap') { noise(sfxOut, t, .07, .7, 'highpass', 1800, .7); tone(sfxOut, 'sine', 160, t, .08, .4, {from: 300, glide: .03}); }
       else if (name === 'scratch') { noise(sfxOut, t, .18, .45, 'bandpass', 3200, 3, {to: 500}); noise(sfxOut, t + .18, .22, .4, 'bandpass', 600, 3, {to: 2800}); }
       else if (name === 'wah') [62, 61, 60, 59].forEach((m, k) => tone(sfxOut, 'sawtooth', mf(m), t + k * .38, k === 3 ? 1.1 : .36, .13, {lp: 900, a: .04, hold: k === 3 ? .8 : .25, vib: k === 3 ? 5 : 0, depth: .025}));
     };
-    E.end = w => { master.gain.cancelScheduledValues(w); master.gain.setTargetAtTime(0, w, .4); E.on = {travel: false, stay: false}; E.till = {travel: w + 2, stay: w + 2}; E.mode = 'none'; };
+    E.end = w => { master.gain.cancelScheduledValues(w); master.gain.setTargetAtTime(0, w, .4); E.on = {travel: false, stay: false, show: false}; E.till = {travel: w + 2, stay: w + 2, show: w + 2}; E.mode = 'none'; };
     return E;
   }
   const tlog = []; let tlog0 = 0, live = null, liveTimer = 0, vo = null;
@@ -2292,32 +2318,41 @@ function wavB64(buf) {
 })();
 
 /* ---------- Samba-Show: Crew-Köpfe auf Cartoon-Körpern, Münder klappen wie bei den South-Park-Kanadiern ----------
-   Alles hängt nur an der Zeit t (ms seit Start): pose(t) zeichnet jedes Bild neu, daher kann die Video-Aufnahme die Zeit
-   über window.__danceT selbst setzen. Musik = Samba aus der Karten-Animation (window.__TripMusic), Stimmen = MP3s mit
-   Lautstärkekurve (trip.json → dance.voice), nach der der Oberkopf hochklappt. */
+   Alles hängt nur an der Zeit t (ms seit Start): frame(t) zeichnet jedes Bild neu, daher kann die Video-Aufnahme die Zeit
+   über window.__danceT selbst setzen. Musik = Show-Samba aus der Karten-Animation (window.__TripMusic, Modus 'show'),
+   Stimmen = MP3s mit Lautstärkekurve (trip.json → dance.voice), nach der der Oberkopf hochklappt.
+   Ablauf: Vorhang · Köpfe fallen · Solos im Spotlight · Patrick aus dem Takt (Freeze, Hähnchen) · La Ola · „Olê, olê“ ·
+   Polonaise (Simon zwinkert) · Daijo-Solo · Sprung mit Drehung · Ananas fliegt auf Jonas · Pyramide · „Tschau, Brasil!“ · Vorhang. */
 (function () {
   const svg = document.getElementById('samba-svg'), btn = document.getElementById('samba-play'), sbtn = document.getElementById('samba-sound');
   if (!svg || !btn || PRINT || !TRIP.dance) return;
-  const D = TRIP.dance, NS = 'http://www.w3.org/2000/svg', W = 800, H = 500, FLOOR = 452, BEAT = 500, MUSIC_AT = 1500, END = 39500;
+  const D = TRIP.dance, NS = 'http://www.w3.org/2000/svg', W = 800, H = 500, FLOOR = 452, BEAT = 500, MUSIC_AT = 1500, END = 50000;
+  const T = {freeze: [17300, 24500], munch: [20400, 21500], wave: [24700, 26700], chant: [26800, 31300], conga: [31400, 35600], wink: [33000, 34400],
+    solo: [35800, 39600], spin: [39800, 41000], fruit: [41000, 42000], pyr: [42300, 47600], close: [47000, 48600]};
   const mk = (tag, a, parent) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (parent) parent.appendChild(e); return e; };
   const byId = Object.fromEntries(TRIP.crew.map(c => [c.id, c]));
   const tnow = () => window.__danceT !== undefined ? window.__danceT : performance.now();
   const soundOn = () => store.get('sound') !== '0';
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v)), ease = x => { x = clamp(x, 0, 1); return x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; };
-  const span = (t, a, b) => clamp((t - a) / (b - a), 0, 1);
+  const span = (t, a, b) => clamp((t - a) / (b - a), 0, 1), win = (t, w, f) => span(t, w[0], w[0] + (f || 300)) * (1 - span(t, w[1] - (f || 300), w[1]));
   const ids = D.order.filter(id => byId[id]), N = ids.length, homeX = i => 90 + i * (620 / (N - 1));
-  const R = 47, SKIN = '#f1c7a5', INK = '#2a1a12';
-  const LINES = D.lines.map(l => Object.assign({}, l, D.voice && D.voice[l.key] || {dur: 1800, env: ''}));
+  const R = 47, SKIN = '#f1c7a5', INK = '#2a1a12', S = Math.sin, C = Math.cos, PI = Math.PI;
+  const LINES = D.lines.map(l => Object.assign({}, l, (D.voice || {})[l.src || l.key] || {dur: 1800, env: ''}));
+  const hash = (a, b) => { const x = S(a * 127.1 + b * 311.7) * 43758.5453; return x - Math.floor(x); };
 
   // ---------- Bühne (einmal aufbauen) ----------
   svg.innerHTML = '';
   const defs = mk('defs', {}, svg);
-  defs.innerHTML = '<linearGradient id="sb-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#241a5c"/><stop offset=".55" stop-color="#c2477a"/><stop offset="1" stop-color="#ffb05c"/></linearGradient>' +
+  defs.innerHTML = '<linearGradient id="sb-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d1450"/><stop offset=".55" stop-color="#b8407a"/><stop offset="1" stop-color="#ffb05c"/></linearGradient>' +
     '<radialGradient id="sb-spot" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6c8" stop-opacity=".75"/><stop offset="1" stop-color="#fff6c8" stop-opacity="0"/></radialGradient>' +
-    '<linearGradient id="sb-cone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c8" stop-opacity=".05"/><stop offset="1" stop-color="#fff6c8" stop-opacity=".28"/></linearGradient>' +
+    '<linearGradient id="sb-cone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c8" stop-opacity=".05"/><stop offset="1" stop-color="#fff6c8" stop-opacity=".3"/></linearGradient>' +
+    '<radialGradient id="sb-fog" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>' +
+    '<radialGradient id="sb-ball" cx=".35" cy=".35" r=".7"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#c9d3e6"/><stop offset="1" stop-color="#5b6478"/></radialGradient>' +
     '<pattern id="sb-wave" width="60" height="26" patternUnits="userSpaceOnUse"><rect width="60" height="26" fill="#f4efe4"/><path d="M0,13 C15,0 15,26 30,13 S45,0 60,13 L60,26 L0,26Z" fill="#1c1c1c"/></pattern>' +
-    '<linearGradient id="sb-curt" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d0b1f"/><stop offset=".5" stop-color="#c8193a"/><stop offset="1" stop-color="#7d0b1f"/></linearGradient>';
+    '<linearGradient id="sb-curt" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7d0b1f"/><stop offset=".5" stop-color="#c8193a"/><stop offset="1" stop-color="#7d0b1f"/></linearGradient>' +
+    ['#ff3d7f', '#3ce0ff', '#ffe14d'].map((c, k) => `<linearGradient id="sb-beam${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".55"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></linearGradient>`).join('');
   mk('rect', {width: W, height: H, fill: 'url(#sb-sky)'}, svg);
+  const stars = mk('g', {fill: '#fff'}, svg); for (let k = 0; k < 30; k++) mk('circle', {cx: hash(k, 1) * W, cy: hash(k, 2) * 160, r: hash(k, 3) * 1.4 + .4, opacity: .7}, stars);
   mk('circle', {cx: 640, cy: 250, r: 70, fill: '#ffd36b', opacity: .85}, svg);
   mk('path', {d: 'M470,400 C500,330 530,250 585,230 C625,215 640,300 660,330 C690,300 700,250 735,255 C770,262 790,330 800,360 L800,400Z', fill: '#2b1f4a'}, svg);   // Zuckerhut
   mk('rect', {y: 360, width: W, height: 40, fill: '#3a6fa8', opacity: .8}, svg);
@@ -2326,156 +2361,220 @@ function wavB64(buf) {
     mk('path', {d: 'M-4,0 Q4,-80 10,-150 L16,-150 Q10,-80 6,0Z'}, g);
     [-150, -110, -60, -20, 30].forEach(a => mk('path', {d: 'M13,-150 Q40,-175 80,-150 Q45,-160 13,-146Z', transform: `rotate(${a + 40},13,-150)`}, g));
   });
-  const bulbs = [];
-  const lights = mk('g', {}, svg);
+  const bulbs = [], lights = mk('g', {}, svg);
   mk('path', {d: 'M0,40 Q200,95 400,55 Q600,15 800,60', fill: 'none', stroke: '#222', 'stroke-width': 2}, lights);
-  for (let i = 0; i < 17; i++) { const x = i * 50 + 0, y = i < 8 ? 40 + 55 * Math.sin(Math.PI * x / 400) * .9 : 55 + 5 * Math.sin(Math.PI * (x - 400) / 400) - 30 * Math.sin(Math.PI * (x - 400) / 400);
+  for (let i = 0; i < 17; i++) { const x = i * 50, y = i < 8 ? 40 + 49.5 * S(PI * x / 400) : 55 - 25 * S(PI * (x - 400) / 400);
     bulbs.push(mk('circle', {cx: x, cy: y + 7, r: 6, fill: ['#ffcf1f', '#3ccf7f', '#ff5fa2', '#5fd3ff'][i % 4]}, lights)); }
   mk('rect', {y: 400, width: W, height: 100, fill: 'url(#sb-wave)'}, svg);
-  mk('rect', {y: 400, width: W, height: 100, fill: '#000', opacity: .12}, svg);
+  mk('rect', {y: 400, width: W, height: 100, fill: '#000', opacity: .14}, svg);
+  // Discokugel mit Lichtpunkten
+  const ball = mk('g', {}, svg), ballLine = mk('line', {x1: 400, y1: 0, x2: 400, stroke: '#ddd', 'stroke-width': 1.5}, ball), ballG = mk('g', {}, ball);
+  mk('circle', {r: 24, fill: 'url(#sb-ball)', stroke: '#3b4152', 'stroke-width': 1}, ballG);
+  for (let k = -2; k <= 2; k++) { mk('line', {x1: -24, y1: k * 9, x2: 24, y2: k * 9, stroke: '#7a8396', 'stroke-width': .8}, ballG); }
+  const ballV = []; for (let k = 0; k < 5; k++) ballV.push(mk('ellipse', {cx: 0, cy: 0, rx: 4, ry: 24, fill: 'none', stroke: '#7a8396', 'stroke-width': .8}, ballG));
+  const dots = mk('g', {}, svg), dotEls = Array.from({length: 26}, (_, k) => mk('circle', {r: 2.5 + hash(k, 5) * 2.5, fill: ['#fff', '#ffe14d', '#3ce0ff', '#ff5fa2'][k % 4]}, dots));
   const spot = mk('g', {opacity: 0}, svg);
   const cone = mk('path', {fill: 'url(#sb-cone)'}, spot), pool = mk('ellipse', {ry: 18, rx: 70, fill: 'url(#sb-spot)'}, spot);
-  const gPeople = mk('g', {}, svg), gFx = mk('g', {}, svg), gBub = mk('g', {}, svg);
+  const gPeople = mk('g', {}, svg);
+  // farbige Scheinwerfer (vor den Figuren, wie Licht im Raum)
+  const beams = mk('g', {style: 'mix-blend-mode:screen'}, svg), beamEls = [150, 400, 650].map((x, k) => ({x, el: mk('path', {fill: `url(#sb-beam${k})`, d: 'M-12,0 L12,0 L70,520 L-70,520Z'}, beams)}));
+  const fog = mk('g', {}, svg), fogEls = Array.from({length: 7}, (_, k) => mk('ellipse', {cy: 440 + (k % 3) * 14, rx: 170, ry: 26, fill: 'url(#sb-fog)'}, fog));
+  const gFx = mk('g', {}, svg);
+  const crowd = mk('g', {}, svg), fans = Array.from({length: 15}, (_, k) => { const g = mk('g', {}, crowd);
+    const armL = mk('line', {x1: -10, y1: 4, x2: -18, y2: 22, stroke: '#140d29', 'stroke-width': 7, 'stroke-linecap': 'round'}, g), armR = mk('line', {x1: 10, y1: 4, x2: 18, y2: 22, stroke: '#140d29', 'stroke-width': 7, 'stroke-linecap': 'round'}, g);
+    mk('ellipse', {cx: 0, cy: 30, rx: 26, ry: 18, fill: '#140d29'}, g); mk('circle', {cx: 0, cy: 0, r: 15, fill: '#140d29'}, g);
+    return {g, armL, armR, x: 20 + k * 54 + hash(k, 7) * 14, y: 484 + hash(k, 8) * 10, ph: hash(k, 9) * 6}; });
+  const gBub = mk('g', {}, svg);
 
   // ---------- Figuren ----------
   const P = {};
-  const arm = (parent, sleeve) => {
-    const a = mk('g', {}, parent); mk('line', {x1: 0, y1: 0, x2: 0, y2: 24, stroke: sleeve, 'stroke-width': 10, 'stroke-linecap': 'round'}, a);
-    const f = mk('g', {transform: 'translate(0,24)'}, a); mk('line', {x1: 0, y1: 0, x2: 0, y2: 21, stroke: SKIN, 'stroke-width': 7, 'stroke-linecap': 'round'}, f);
-    mk('circle', {cx: 0, cy: 24, r: 6, fill: SKIN, stroke: INK, 'stroke-width': 1.5}, f); return {a, f};
-  };
-  const leg = (parent, pants) => {
-    const a = mk('g', {}, parent); mk('line', {x1: 0, y1: 0, x2: 0, y2: 30, stroke: pants, 'stroke-width': 12, 'stroke-linecap': 'round'}, a);
-    const f = mk('g', {transform: 'translate(0,30)'}, a); mk('line', {x1: 0, y1: 0, x2: 0, y2: 28, stroke: SKIN, 'stroke-width': 8, 'stroke-linecap': 'round'}, f);
-    mk('ellipse', {cx: 4, cy: 31, rx: 10, ry: 5, fill: INK}, f); return {a, f};
+  const limb = (parent, top, w1, w2, len1, len2) => {
+    const a = mk('g', {}, parent); mk('line', {x1: 0, y1: 0, x2: 0, y2: len1, stroke: top, 'stroke-width': w1, 'stroke-linecap': 'round'}, a);
+    const f = mk('g', {transform: `translate(0,${len1})`}, a); mk('line', {x1: 0, y1: 0, x2: 0, y2: len2, stroke: SKIN, 'stroke-width': w2, 'stroke-linecap': 'round'}, f); return {a, f};
   };
   const PROPS = {jonas: '📣', simon: '🌹', patrick: '🍗', marco: '🍍', greisel: '💍', dajo: '📊'};
   ids.forEach((id, i) => {
     const L = D.look[id] || {}, p = byId[id], o = {id, i, L};
     o.g = mk('g', {}, gPeople); o.body = mk('g', {}, o.g);
-    const fan = mk('g', {opacity: .95}, o.body);   // Federschmuck hinter dem Kopf
-    ['#ffcf1f', '#3ccf7f', '#ff5fa2', '#5fd3ff', '#ff8a3c', '#ffcf1f', '#3ccf7f'].forEach((c, k) => mk('ellipse', {cx: 0, cy: -112, rx: 10, ry: 44, fill: c, stroke: INK, 'stroke-width': 1, transform: `rotate(${(k - 3) * 24},0,-66)`}, fan));
-    o.legL = leg(o.body, L.pants || '#1f3f8f'); o.legR = leg(o.body, L.pants || '#1f3f8f');
-    mk('path', {d: 'M-19,-50 Q0,-56 19,-50 L21,2 Q0,7 -21,2Z', fill: L.shirt || '#ffcf1f', stroke: INK, 'stroke-width': 2.5}, o.body);
-    mk('rect', {x: -21, y: -8, width: 42, height: 12, rx: 3, fill: L.pants || '#1f3f8f', stroke: INK, 'stroke-width': 2}, o.body);
-    o.armL = arm(o.body, L.shirt || '#ffcf1f'); o.armR = arm(o.body, L.shirt || '#ffcf1f');
-    if (PROPS[id]) { const t = mk('text', {x: 0, y: 34, 'font-size': 20, 'text-anchor': 'middle'}, o.armR.f); t.textContent = PROPS[id]; }
-    mk('rect', {x: -6, y: -60, width: 12, height: 12, fill: SKIN}, o.body);
+    o.fan = mk('g', {opacity: .95}, o.body);   // Federschmuck hinter dem Kopf
+    ['#ffcf1f', '#3ccf7f', '#ff5fa2', '#5fd3ff', '#ff8a3c', '#ffcf1f', '#3ccf7f'].forEach((c, k) => mk('ellipse', {cx: 0, cy: -112, rx: 10, ry: 44, fill: c, stroke: INK, 'stroke-width': 1, transform: `rotate(${(k - 3) * 24},0,-66)`}, o.fan));
+    o.legL = limb(o.body, L.pants || '#1f3f8f', 12, 8, 30, 28); o.legR = limb(o.body, L.pants || '#1f3f8f', 12, 8, 30, 28);
+    [o.legL, o.legR].forEach(l => mk('ellipse', {cx: 4, cy: 31, rx: 10, ry: 5, fill: INK}, l.f));
+    o.torso = mk('g', {}, o.body);
+    mk('path', {d: 'M-19,-50 Q0,-56 19,-50 L21,2 Q0,7 -21,2Z', fill: L.shirt || '#ffcf1f', stroke: INK, 'stroke-width': 2.5}, o.torso);
+    mk('rect', {x: -21, y: -8, width: 42, height: 12, rx: 3, fill: L.pants || '#1f3f8f', stroke: INK, 'stroke-width': 2}, o.torso);
+    o.armL = limb(o.torso, L.shirt || '#ffcf1f', 10, 7, 24, 21); o.armR = limb(o.torso, L.shirt || '#ffcf1f', 10, 7, 24, 21);
+    [o.armL, o.armR].forEach(l => mk('circle', {cx: 0, cy: 24, r: 6, fill: SKIN, stroke: INK, 'stroke-width': 1.5}, l.f));
+    if (PROPS[id]) { o.prop = mk('text', {x: 0, y: 34, 'font-size': 20, 'text-anchor': 'middle'}, o.armR.f); o.prop.textContent = PROPS[id]; }
+    mk('rect', {x: -6, y: -60, width: 12, height: 12, fill: SKIN}, o.torso);
     // Kopf: Foto in zwei Hälften, Trennlinie auf Mundhöhe; die obere Hälfte klappt beim Sprechen hoch
     const f = L.face || {x: .5, y: .5, z: 1, m: .75}, Dd = 2 * R * f.z;
     const mY = clamp((f.m - f.y) * Dd, -R * .2, R * .75), c = Math.sqrt(R * R - mY * mY);
     const up = `M${-c},${mY} A${R},${R} 0 ${mY > 0 ? 1 : 0} 1 ${c},${mY}Z`, lo = `M${-c},${mY} A${R},${R} 0 ${mY > 0 ? 0 : 1} 0 ${c},${mY}Z`;
-    const cu = mk('clipPath', {id: 'sb-u-' + id}, defs); mk('path', {d: up}, cu);
-    const cl = mk('clipPath', {id: 'sb-l-' + id}, defs); mk('path', {d: lo}, cl);
-    o.head = mk('g', {}, o.body); o.mY = mY; o.c = c;
+    mk('path', {d: up}, mk('clipPath', {id: 'sb-u-' + id}, defs)); mk('path', {d: lo}, mk('clipPath', {id: 'sb-l-' + id}, defs));
+    o.head = mk('g', {}, o.torso); o.mY = mY; o.c = c;
     o.mouth = mk('ellipse', {cx: 0, rx: c * .82, fill: '#3a0a0a'}, o.head); o.tongue = mk('ellipse', {cx: 0, rx: c * .42, fill: '#e0566b'}, o.head);
     const half = (clip, d) => { const g = mk('g', {}, o.head);
       if (p && p.photo) mk('image', {href: p.photo, x: -f.x * Dd, y: -f.y * Dd, width: Dd, height: Dd, preserveAspectRatio: 'xMidYMid slice', 'clip-path': `url(#${clip})`}, g);
-      else { mk('path', {d, fill: '#00843d'}, g); }
+      else mk('path', {d, fill: '#00843d'}, g);
       mk('path', {d, fill: 'none', stroke: INK, 'stroke-width': 3}, g); return g; };
     o.lower = half('sb-l-' + id, lo); o.upper = half('sb-u-' + id, up);
     if (!(p && p.photo)) { const t = mk('text', {y: -6, 'text-anchor': 'middle', 'font-size': 30, fill: '#fff', 'font-weight': 800}, o.upper); t.textContent = p ? p.name[0] : '?'; }
     P[id] = o;
   });
-  // Konfetti und Vorhang, Titel
-  const conf = mk('g', {}, gFx), confs = Array.from({length: 90}, (_, k) => ({x: (k * 97) % W, d: 60 + (k * 37) % 90, s: (k * 13) % 7, c: ['#ffcf1f', '#3ccf7f', '#ff5fa2', '#5fd3ff', '#fff'][k % 5], el: null}));
-  confs.forEach(q => { q.el = mk('rect', {width: 8, height: 4, fill: q.c}, conf); });
+  const hat = mk('text', {'font-size': 34, 'text-anchor': 'middle', opacity: 0}, gFx); hat.textContent = '🍍';   // fliegende Ananas
+  const conf = mk('g', {}, gFx), confs = Array.from({length: 110}, (_, k) => ({x: hash(k, 11) * W, d: 60 + hash(k, 12) * 90, s: hash(k, 13) * 7, el: mk('rect', {width: 8, height: 4, fill: ['#ffcf1f', '#3ccf7f', '#ff5fa2', '#5fd3ff', '#fff'][k % 5]}, null)}));
+  confs.forEach(q => conf.appendChild(q.el));
   const curtL = mk('rect', {x: 0, width: W / 2 + 30, height: H, fill: 'url(#sb-curt)'}, svg), curtR = mk('rect', {width: W / 2 + 30, height: H, fill: 'url(#sb-curt)'}, svg);
-  const folds = mk('g', {opacity: .35}, svg);
   const title = mk('g', {}, svg);
   const tt = mk('text', {x: W / 2, y: 230, 'text-anchor': 'middle', class: 'sb-title'}, title); tt.textContent = '💃 ' + (D.title || 'Samba-Show');
   const ts = mk('text', {x: W / 2, y: 275, 'text-anchor': 'middle', class: 'sb-sub'}, title);
 
   // ---------- Bewegung ----------
-  const S = Math.sin, PI = Math.PI;
-  function basePose(style, b, t) {
-    const sw = S(PI * b), up = Math.abs(S(PI * b));
-    const p = {x: 0, y: -6 * up, rot: 5 * sw, hip: 7 * sw, aL: [95 + 35 * sw, 40], aR: [95 - 35 * sw, 40], lL: [10 * Math.max(0, sw), -18 * Math.max(0, sw)], lR: [-10 * Math.max(0, -sw), 18 * Math.max(0, -sw)], tilt: 6 * sw, flip: 1};
+  // Samba-Grundschritt: abwechselnd ein Fuß hoch (Knie gebeugt), dazwischen federn beide Knie
+  function sambaLegs(b) {
+    const f = ((b % 2) + 2) % 2, lift = x => x > 0 && x < .5 ? S(PI * x * 2) : 0, l = lift(f), r = lift(f - 1), dip = 4 * Math.abs(S(PI * b));
+    return {lL: [16 * l, -48 * l], lR: [-16 * r, 48 * r], dip};
+  }
+  function basePose(style, b, t, i) {
+    const sw = S(PI * b), up = Math.abs(sw), legs = sambaLegs(b);
+    const p = {x: 0, y: -4 * up + legs.dip * .5, rot: 5 * sw, hip: 8 * sw, aL: [95 + 35 * sw, 40], aR: [95 - 35 * sw, 40], lL: legs.lL, lR: legs.lR, tilt: 6 * sw, look: 0, flip: 1};
     if (style === 'robot') { const q = Math.floor(b * 2) % 4, A = [[90, 90], [170, 0], [90, -90], [10, 0]][q], B = [[10, 0], [90, -90], [170, 0], [90, 90]][q];
-      Object.assign(p, {y: -3 * up, rot: 0, hip: 0, aL: A, aR: B, tilt: [-10, 0, 10, 0][q]}); }
+      Object.assign(p, {y: -3 * up, rot: 0, hip: 0, aL: A, aR: B, tilt: [-10, 0, 10, 0][q], lL: [q === 1 ? 14 : 0, q === 1 ? -30 : 0], lR: [q === 3 ? -14 : 0, q === 3 ? 30 : 0]}); }
     else if (style === 'hips') Object.assign(p, {hip: 16 * sw, rot: 12 * sw, aL: [35, -100], aR: [160, 110], tilt: -8 * sw});
-    else if (style === 'off') { const b2 = b * .83 + .37, s2 = S(PI * b2);
-      Object.assign(p, {y: -9 * Math.abs(s2), rot: 9 * s2, hip: 9 * s2, aL: [90 + 70 * S(2.3 * b2), 60 * S(3.1 * b2)], aR: [90 + 70 * S(2.9 * b2 + 1), 60 * S(2.2 * b2)], tilt: 12 * S(1.7 * b2)}); }
+    else if (style === 'off') { const b2 = b * .83 + .37, s2 = S(PI * b2), l2 = sambaLegs(b2 * 1.3);
+      Object.assign(p, {y: -9 * Math.abs(s2), rot: 9 * s2, hip: 9 * s2, aL: [90 + 70 * S(2.3 * b2), 60 * S(3.1 * b2)], aR: [90 + 70 * S(2.9 * b2 + 1), 60 * S(2.2 * b2)], tilt: 12 * S(1.7 * b2), lL: l2.lL, lR: l2.lR}); }
     else if (style === 'fruit') { const sh = S(4 * PI * b); Object.assign(p, {y: -5 * Math.abs(S(2 * PI * b)), aL: [150 + 18 * sh, 30], aR: [150 - 18 * sh, 30]}); }
     else if (style === 'propeller') { const r = (b * 180) % 360; Object.assign(p, {aL: [r, 0], aR: [(r + 180) % 360, 0], rot: 4 * sw}); }
-    else if (style === 'star') { const sp = b % 8 > 7 ? Math.cos(PI * 2 * (b % 1)) : 1;
+    else if (style === 'star') { const sp = b % 8 > 7 ? C(PI * 2 * (b % 1)) : 1;
       Object.assign(p, {y: -9 * up, hip: 12 * sw, rot: 8 * sw, aL: [150 + 20 * sw, 30 + 20 * sw], aR: [150 - 20 * sw, 30 - 20 * sw], flip: sp}); }
+    // ab und zu zum Nachbarn schauen
+    const lk = Math.floor(b / 4) % 3; if (lk === (i % 3)) p.look = i % 2 ? -1 : 1;
     return p;
   }
-  const idle = (t, i) => ({x: 0, y: 0, rot: 0, hip: 0, aL: [12, 8], aR: [12, 8], lL: [0, 0], lR: [0, 0], tilt: 3 * S(t / 600 + i), flip: 1});
+  const idle = (t, i) => ({x: 0, y: 0, rot: 0, hip: 0, aL: [12, 8], aR: [12, 8], lL: [0, 0], lR: [0, 0], tilt: 3 * S(t / 600 + i), look: 0, flip: 1});
   const mix = (a, b, k) => { const r = {}; for (const key in a) r[key] = Array.isArray(a[key]) ? a[key].map((v, j) => v + (b[key][j] - v) * k) : a[key] + (b[key] - a[key]) * k; return r; };
-  function mouthOf(id, t) {
+  function mouthOf(id, t, b, i) {
     for (const l of LINES) { if (l.who !== id || t < l.at || t > l.at + l.dur) continue;
       const d = +(l.env[Math.floor((t - l.at) / 40)] || 0); return d >= 5 ? 1 : d >= 2 ? .55 : 0; }
+    if (id === 'patrick' && t > T.munch[0] && t < T.munch[1]) return S(PI * (t - T.munch[0]) / 180) > 0 ? .8 : 0;   // mampf
+    if ((t > T.conga[0] && t < T.conga[1]) || (t > 44800 && t < 47000)) { const f = b % 1; return (Math.floor(b) + i) % 3 === 0 && f < .3 ? .45 : 0; }   // mitsingen
     return 0;
   }
   const speaking = t => LINES.find(l => !l.chorus && t >= l.at && t <= l.at + l.dur + 300);
-  const FREEZE = [17300, 23900];
+  // Pyramide: unten Patrick, Jonas, Marco; Mitte Simon, Greisel; oben Daijo (je auf den Köpfen der Reihe darunter)
+  const PSC = .6, rowY = r => FLOOR - r * 205 * PSC, PYR = {jonas: [320, 0], patrick: [400, 0], marco: [480, 0], simon: [360, 1], greisel: [440, 1], dajo: [400, 2]};
+  const POPS = [{who: 'patrick', w: T.munch, txt: '😋 *mampf*'}, {who: 'simon', w: T.wink, txt: '😉✨'}, {who: 'jonas', w: [42000, 43300], txt: '🍍?!'}];
 
   function frame(t) {
-    const b = (t - MUSIC_AT - 30) / BEAT, dancing = t > 2400 && t < 36500, freeze = t > FREEZE[0] && t < FREEZE[1];
-    const sp = speaking(t), conga = span(t, 24000, 24600) * (1 - span(t, 28600, 29200)), solo = span(t, 29200, 29800) * (1 - span(t, 32600, 33200));
-    const fin = span(t, 33000, 33600);
+    const b = (t - MUSIC_AT - 30) / BEAT, dancing = t > 2400 && t < 47000, sp = speaking(t);
+    const fz = win(t, T.freeze), conga = win(t, T.conga, 600), solo = win(t, T.solo, 600), pyr = span(t, T.pyr[0], T.pyr[0] + 1200);
     ids.forEach((id, i) => {
-      const o = P[id]; let p = dancing ? basePose(o.L.style, b, t) : idle(t, i);
-      if (freeze && id !== 'patrick') p = mix(p, Object.assign(idle(t, i), {tilt: i < ids.indexOf('patrick') ? 14 : -14}), span(t, FREEZE[0], FREEZE[0] + 300) * (1 - span(t, FREEZE[1] - 300, FREEZE[1])));
+      const o = P[id]; let p = dancing ? basePose(o.L.style, b, t, i) : idle(t, i);
+      // Patrick aus dem Takt: alle anderen frieren ein und schauen ihn an, Patrick mampft sein Hähnchen
+      if (fz > 0 && id !== 'patrick') p = mix(p, Object.assign(idle(t, i), {tilt: i < ids.indexOf('patrick') ? 14 : -14, look: i < ids.indexOf('patrick') ? 1 : -1}), fz);
+      if (id === 'patrick' && t > T.munch[0] && t < T.munch[1]) p = mix(p, Object.assign({}, idle(t, i), {aR: [150, 150]}), win(t, T.munch, 150));
       let x = homeX(i), y = FLOOR - 62, sc = 1, flip = p.flip;
+      // La Ola: einer nach dem anderen springt mit hochgerissenen Armen, hin und zurück
+      const w1 = T.wave[0] + i * 160, w2 = T.wave[0] + 1100 + (N - 1 - i) * 160;
+      [w1, w2].forEach(w0 => { const k = span(t, w0, w0 + 420); if (k > 0 && k < 1) { const j = S(PI * k); p = mix(p, Object.assign({}, p, {aL: [175, 0], aR: [175, 0], lL: [10, -40], lR: [-10, 40]}), j); p.y -= 46 * j; } });
+      // „Olê, olê“: im Takt hüpfen, Faust hoch
+      const ch = win(t, T.chant, 300); if (ch > 0) { const pump = Math.floor(b) % 2 === i % 2; p = mix(p, Object.assign({}, p, {aL: pump ? [170, -20] : [60, 100], aR: pump ? [60, 100] : [170, -20], y: -10 * Math.abs(S(PI * b))}), ch); }
       // Polonaise: alle in einer Reihe, Hände nach vorn, die Reihe läuft hin und her
-      if (conga > 0) { const o2 = 170 * S(2 * PI * (t - 24000) / 4600), dir = Math.cos(2 * PI * (t - 24000) / 4600) >= 0 ? 1 : -1;
-        const cx = 400 + o2 + (i - (N - 1) / 2) * 78, pc = Object.assign({}, p, {aL: [70, 10], aR: [70, 10], rot: 4 * S(PI * b)});
-        x += (cx - x) * ease(conga); p = mix(p, pc, conga); flip = conga > .5 ? dir : flip; }
+      if (conga > 0) { const ph = 2 * PI * (t - T.conga[0]) / 4200, o2 = 170 * S(ph), dir = C(ph) >= 0 ? 1 : -1, cx = 400 + o2 + (i - (N - 1) / 2) * 80;
+        x += (cx - x) * ease(conga); p = mix(p, Object.assign({}, p, {aL: [70, 10], aR: [70, 10], rot: 4 * S(PI * b)}), conga); flip = conga > .5 ? dir : flip; }
       // Daijo-Solo vorn in der Mitte, die anderen klatschen im Halbkreis
       if (solo > 0) { if (id === 'dajo') { x += (400 - x) * ease(solo); y += 30 * ease(solo); sc = 1 + .25 * ease(solo); }
-        else { const k = i < ids.indexOf('dajo') ? i : i - 1, ang = PI * (k + .5) / (N - 1); x += (400 - 330 * Math.cos(ang) - x) * ease(solo); y -= 22 * S(ang) * ease(solo);
+        else { const k = i < ids.indexOf('dajo') ? i : i - 1, ang = PI * (k + .5) / (N - 1); x += (400 - 330 * C(ang) - x) * ease(solo); y -= 22 * S(ang) * ease(solo);
           const cl = S(2 * PI * b) > 0; p = mix(p, Object.assign({}, p, {aL: [65, cl ? 95 : 70], aR: [65, cl ? 95 : 70]}), solo); } }
-      if (fin > 0) p = mix(p, Object.assign({}, p, {aL: [170, 10], aR: [170, 10], y: -14 * Math.abs(S(PI * b * 2))}), fin);
+      // alle zusammen: zwei Sprünge mit Drehung
+      [T.spin[0] + 200, T.spin[0] + 700].forEach(j0 => { const k = span(t, j0, j0 + 450); if (k > 0 && k < 1) { p.y -= 60 * S(PI * k); flip = C(2 * PI * k); p.aL = [160, 20]; p.aR = [160, 20]; } });
+      // Pyramide
+      if (pyr > 0 && PYR[id]) { const [px, row] = PYR[id], e = ease(pyr), ty = rowY(row) - 62 * PSC;
+        const arc = row ? -90 * S(PI * pyr) : 0;   // obere Reihen springen hinauf
+        x += (px - x) * e; y += (ty - y) * e + arc; sc += (PSC - sc) * e;
+        p = mix(p, Object.assign({}, p, {aL: row === 2 ? [150, 20] : row ? [100, 10] : [160, 30], aR: row === 2 ? [150, 20] : row ? [100, 10] : [160, 30], lL: [0, 0], lR: [0, 0], hip: row ? 0 : p.hip * .5, rot: row ? 0 : p.rot * .5, y: row ? 0 : p.y}), e); }
       if (sp && sp.who === id) { const k = span(t, sp.at - 250, sp.at + 150) * (1 - span(t, sp.at + sp.dur + 50, sp.at + sp.dur + 300)); y += 26 * k; sc *= 1 + .16 * k; }
       // Köpfe fallen am Anfang von oben herein
-      const drop = 2000 + i * 160, hy0 = -96, dropY = t < drop ? -700 : t < drop + 520 ? -700 * Math.pow(1 - (t - drop) / 520, 2) * Math.abs(Math.cos(3 * PI * (t - drop) / 520)) : 0;
-      o.g.setAttribute('transform', `translate(${(x + p.hip).toFixed(1)},${(y + p.y).toFixed(1)}) scale(${(sc * (flip || 1)).toFixed(3)},${sc.toFixed(3)})`);
+      const drop = 2000 + i * 160, dropY = t < drop ? -700 : t < drop + 520 ? -700 * Math.pow(1 - (t - drop) / 520, 2) * Math.abs(C(3 * PI * (t - drop) / 520)) : 0;
+      const bob = 2 * S(2 * PI * b), squash = dancing ? 1 - .035 * Math.abs(S(PI * b)) : 1;
+      o.g.setAttribute('transform', `translate(${(x + p.hip).toFixed(1)},${(y + p.y).toFixed(1)}) scale(${(sc * (flip || .001)).toFixed(3)},${sc.toFixed(3)})`);
       o.body.setAttribute('transform', `rotate(${p.rot.toFixed(1)})`);
-      o.armL.a.setAttribute('transform', `translate(-17,-44) rotate(${p.aL[0].toFixed(1)})`); o.armL.f.setAttribute('transform', `translate(0,24) rotate(${p.aL[1].toFixed(1)})`);
-      o.armR.a.setAttribute('transform', `translate(17,-44) rotate(${(-p.aR[0]).toFixed(1)})`); o.armR.f.setAttribute('transform', `translate(0,24) rotate(${(-p.aR[1]).toFixed(1)})`);
+      o.torso.setAttribute('transform', `translate(0,${(-50 * (1 - squash)).toFixed(1)}) rotate(${(-p.rot * .45).toFixed(1)},0,-20) scale(1,${squash.toFixed(3)})`);
+      o.fan.setAttribute('transform', `rotate(${(-p.rot * 1.4 + 5 * S(2 * PI * b - .9)).toFixed(1)},0,-66)`);
+      o.armL.a.setAttribute('transform', `translate(-17,${(-44 + bob).toFixed(1)}) rotate(${p.aL[0].toFixed(1)})`); o.armL.f.setAttribute('transform', `translate(0,24) rotate(${p.aL[1].toFixed(1)})`);
+      o.armR.a.setAttribute('transform', `translate(17,${(-44 - bob).toFixed(1)}) rotate(${(-p.aR[0]).toFixed(1)})`); o.armR.f.setAttribute('transform', `translate(0,24) rotate(${(-p.aR[1]).toFixed(1)})`);
       o.legL.a.setAttribute('transform', `translate(-9,2) rotate(${p.lL[0].toFixed(1)})`); o.legL.f.setAttribute('transform', `translate(0,30) rotate(${p.lL[1].toFixed(1)})`);
       o.legR.a.setAttribute('transform', `translate(9,2) rotate(${p.lR[0].toFixed(1)})`); o.legR.f.setAttribute('transform', `translate(0,30) rotate(${p.lR[1].toFixed(1)})`);
-      o.head.setAttribute('transform', `translate(0,${(hy0 + dropY).toFixed(1)}) rotate(${(p.tilt - p.rot * .5).toFixed(1)})`);
-      const m = mouthOf(id, t), h = R * .55 * m;
+      o.head.setAttribute('transform', `translate(${(4 * p.look).toFixed(1)},${(-96 + dropY).toFixed(1)}) rotate(${(p.tilt + 9 * p.look).toFixed(1)})`);
+      const m = mouthOf(id, t, b, i), h = R * .55 * m;
       o.upper.setAttribute('transform', `translate(0,${(-h).toFixed(1)}) rotate(${(-6 * m).toFixed(1)},${(-o.c).toFixed(1)},${o.mY.toFixed(1)})`);
       o.mouth.setAttribute('cy', (o.mY - h / 2).toFixed(1)); o.mouth.setAttribute('ry', Math.max(.1, h / 2 + 1.5).toFixed(1));
       o.tongue.setAttribute('cy', (o.mY - 3).toFixed(1)); o.tongue.setAttribute('ry', Math.max(.1, h * .28).toFixed(1));
+      if (o.prop && id === 'marco') o.prop.setAttribute('opacity', t > T.fruit[0] ? 0 : 1);
       o.x = x + p.hip; o.y = y + p.y; o.sc = sc;
     });
-    // Reihenfolge: Sprecher und Solist vorn
-    const front = sp ? sp.who : solo > .5 ? 'dajo' : null; if (front && gPeople.lastChild !== P[front].g) gPeople.appendChild(P[front].g);
+    // Reihenfolge: Pyramide oben vorn, sonst Sprecher/Solist vorn
+    let front = sp ? sp.who : solo > .5 ? 'dajo' : null;
+    if (pyr > 0) ['jonas', 'patrick', 'marco', 'simon', 'greisel', 'dajo'].forEach(id => P[id] && gPeople.appendChild(P[id].g));
+    else if (front && gPeople.lastChild !== P[front].g) gPeople.appendChild(P[front].g);
     // Spotlight
     const tgt = sp ? P[sp.who] : solo > 0 ? P.dajo : null;
     spot.setAttribute('opacity', tgt ? (sp ? 1 : solo).toFixed(2) : 0);
     if (tgt) { cone.setAttribute('d', `M${tgt.x - 30},0 L${tgt.x + 30},0 L${tgt.x + 80},${FLOOR + 8} L${tgt.x - 80},${FLOOR + 8}Z`); pool.setAttribute('cx', tgt.x); pool.setAttribute('cy', FLOOR + 6); }
-    // Sprechblase
+    // Ananas fliegt von Marco auf Jonas’ Kopf und bleibt dort liegen
+    const mj = P.marco, jo = P.jonas;
+    if (mj && jo && t > T.fruit[0]) { const k = span(t, T.fruit[0], T.fruit[1]), sx = mj.x + 20 * mj.sc, sy = mj.y - 70 * mj.sc, ex = jo.x, ey = jo.y - 150 * jo.sc;
+      const fx = sx + (ex - sx) * k, fy = sy + (ey - sy) * k - 200 * S(PI * k); hat.setAttribute('x', fx.toFixed(1)); hat.setAttribute('y', fy.toFixed(1));
+      hat.setAttribute('font-size', (34 * (k < 1 ? 1 : jo.sc)).toFixed(1)); hat.setAttribute('transform', `rotate(${k < 1 ? (k * 720).toFixed(0) : 0},${fx.toFixed(1)},${fy.toFixed(1)})`); hat.setAttribute('opacity', t < T.close[1] ? 1 : 0);
+    } else hat.setAttribute('opacity', 0);
+    // Sprechblasen und kleine Einblendungen
     gBub.innerHTML = '';
-    if (sp && sp.text && t > sp.at) { const o = P[sp.who], words = sp.text.split(' '), rows = ['']; words.forEach(w => { if ((rows[rows.length - 1] + ' ' + w).length > 24) rows.push(w); else rows[rows.length - 1] = (rows[rows.length - 1] + ' ' + w).trim(); });
+    const bubble = (o, text) => { const words = text.split(' '), rows = ['']; words.forEach(w => { if ((rows[rows.length - 1] + ' ' + w).length > 24) rows.push(w); else rows[rows.length - 1] = (rows[rows.length - 1] + ' ' + w).trim(); });
       const bw = Math.max(...rows.map(r => r.length)) * 8.6 + 26, bh = rows.length * 20 + 14, bx = clamp(o.x - bw / 2, 8, W - bw - 8), by = clamp(o.y - 150 * o.sc - bh, 8, H);
       const g = mk('g', {class: 'sb-bub'}, gBub); mk('rect', {x: bx, y: by, width: bw, height: bh, rx: 12}, g);
       mk('path', {d: `M${clamp(o.x - 8, bx + 12, bx + bw - 24)},${by + bh - 1} l14,0 l-6,14Z`}, g);
-      rows.forEach((r, k) => { const tx = mk('text', {x: bx + bw / 2, y: by + 26 + k * 20, 'text-anchor': 'middle'}, g); tx.textContent = r; }); }
-    // Lichterkette blinkt im Takt, Konfetti im Finale
+      rows.forEach((r, k) => { const tx = mk('text', {x: bx + bw / 2, y: by + 26 + k * 20, 'text-anchor': 'middle'}, g); tx.textContent = r; }); };
+    if (sp && sp.text && t > sp.at) bubble(P[sp.who], sp.text);
+    POPS.forEach(q => { const k = win(t, q.w, 200), o = P[q.who]; if (k > 0 && o) { const tx = mk('text', {x: o.x + 42 * o.sc, y: o.y - 150 * o.sc - 10 * k, class: 'sb-pop', opacity: k.toFixed(2)}, gBub); tx.textContent = q.txt; } });
+    // Licht: Lichterkette im Takt, farbige Scheinwerfer, Discokugel, Nebel, Publikum, Konfetti
     const on = Math.floor(b) % 2; bulbs.forEach((q, k) => q.setAttribute('opacity', t > MUSIC_AT && (k + on) % 2 ? .45 : 1));
-    conf.setAttribute('opacity', t > 33000 ? 1 : 0);
-    if (t > 33000) confs.forEach(q => { const k = (t - 33000) / 1000, yy = ((k * q.d + q.s * 40) % 560) - 40; q.el.setAttribute('transform', `translate(${(q.x + 18 * S(k * 3 + q.s)).toFixed(1)},${yy.toFixed(1)}) rotate(${(k * 200 + q.s * 50) % 360})`); });
-    // Vorhang auf (0,3–1,7 s) und zu (36,8–38,4 s)
-    const open = ease(span(t, 300, 1700)) * (1 - ease(span(t, 36800, 38400))), cw = (W / 2 + 30) * open;
+    const lit = span(t, 2200, 3000) * (1 - span(t, T.close[0], T.close[0] + 800));
+    beams.setAttribute('opacity', (lit * (.55 + .45 * Math.abs(S(PI * b)))).toFixed(2));
+    beamEls.forEach((q, k) => q.el.setAttribute('transform', `translate(${q.x},-10) rotate(${(28 * S(t / 1300 + k * 2.1)).toFixed(1)})`));
+    const bd = ease(span(t, T.wave[0] - 800, T.wave[0] + 400)) * (1 - ease(span(t, T.close[0], T.close[0] + 900))), by = -40 + 80 * bd;
+    ball.setAttribute('opacity', bd > 0 ? 1 : 0); ballLine.setAttribute('y2', by - 24); ballG.setAttribute('transform', `translate(400,${by.toFixed(1)})`);
+    ballV.forEach((e, k) => { const a = ((t / 900 + k / 5) % 1) * PI; e.setAttribute('rx', (24 * Math.abs(C(a))).toFixed(1)); });
+    dots.setAttribute('opacity', (bd * .8).toFixed(2));
+    dotEls.forEach((d, k) => { const a = t / 2400 + hash(k, 3) * 6.3, rr = 160 + hash(k, 4) * 260; d.setAttribute('cx', (400 + rr * C(a) * 1.4).toFixed(1)); d.setAttribute('cy', (90 + Math.abs(rr * S(a)) * .9).toFixed(1)); });
+    fog.setAttribute('opacity', (.35 * lit + .1).toFixed(2));
+    fogEls.forEach((f, k) => f.setAttribute('cx', (((k * 140 + t * (.012 + k * .003)) % 1060) - 130).toFixed(1)));
+    const cheer = [[1700, 4200], [16700, 17300], T.chant, [39500, 40500], [43600, 48600]].some(w => t > w[0] && t < w[1]);
+    fans.forEach((q, k) => { const jump = cheer ? Math.abs(S(PI * b + q.ph)) * 8 : Math.abs(S(PI * b + q.ph)) * 2.5;
+      q.g.setAttribute('transform', `translate(${q.x.toFixed(1)},${(q.y - jump).toFixed(1)})`);
+      const up = cheer ? 1 : 0, wv = S(2 * PI * b + q.ph) * 6;
+      q.armL.setAttribute('x2', up ? -22 + wv : -18); q.armL.setAttribute('y2', up ? -26 : 22); q.armR.setAttribute('x2', up ? 22 + wv : 18); q.armR.setAttribute('y2', up ? -26 : 22); });
+    conf.setAttribute('opacity', t > 43500 ? 1 : 0);
+    if (t > 43500) confs.forEach(q => { const k = (t - 43500) / 1000, yy = ((k * q.d + q.s * 40) % 560) - 40; q.el.setAttribute('transform', `translate(${(q.x + 18 * S(k * 3 + q.s)).toFixed(1)},${yy.toFixed(1)}) rotate(${((k * 200 + q.s * 50) % 360).toFixed(0)})`); });
+    // Vorhang auf (0,3–1,7 s) und zu
+    const open = ease(span(t, 300, 1700)) * (1 - ease(span(t, T.close[0], T.close[1]))), cw = (W / 2 + 30) * open;
     curtL.setAttribute('x', (-cw).toFixed(1)); curtR.setAttribute('x', (W / 2 - 30 + cw).toFixed(1));
-    title.setAttribute('opacity', (1 - span(t, 1700, 2600)) + span(t, 37800, 38600));
-    ts.textContent = t > 37000 ? 'Obrigado! 👏' : t < 50 ? '▶ Antippen zum Starten' : '';
+    title.setAttribute('opacity', (1 - span(t, 1700, 2600)) + span(t, T.close[1] - 600, T.close[1] + 200));
+    ts.textContent = t > T.close[0] ? 'Obrigado! 👏' : t < 50 ? '▶ Antippen zum Starten' : '';
   }
 
-  // ---------- Ton: Samba, Effekte, Stimmen ----------
+  // ---------- Ton: Show-Samba, Effekte, Stimmen ----------
   function program(m, t0) {   // alles relativ zu t0 (Sekunden im AudioContext)
     const at = ms => t0 + ms / 1000;
-    m.setMode('stay', at(MUSIC_AT)); m.step = 0; m.next = at(MUSIC_AT) + .03;   // Takt 1 genau zum Tanzbeginn
+    m.setMode('show', at(MUSIC_AT)); m.step = 0; m.next = at(MUSIC_AT) + .03;   // Takt 1 genau zum Tanzbeginn
+    m.drums = [[at(T.chant[0]), at(T.chant[1])]];
+    m.sfx('applause', at(1700)); m.sfx('whoo', at(2000));
     ids.forEach((id, i) => m.sfx('boing', at(2000 + i * 160 + 400)));
-    m.sfx('scratch', at(FREEZE[0])); const g = m.master.gain; g.setTargetAtTime(.12, at(FREEZE[0] + 200), .05); g.setTargetAtTime(.7, at(FREEZE[1]), .1);
-    m.sfx('boom', at(33000)); m.sfx('boom', at(33800)); m.end(at(37200));
+    m.sfx('scratch', at(T.freeze[0])); const g = m.master.gain; g.setTargetAtTime(.12, at(T.freeze[0] + 200), .05); g.setTargetAtTime(.7, at(T.freeze[1] - 100), .1);
+    m.sfx('munch', at(T.munch[0] + 100)); m.sfx('ding', at(T.wink[0])); m.sfx('whoo', at(T.wave[0] + 300)); m.sfx('whoo', at(T.chant[0]));
+    m.sfx('applause', at(T.solo[1] - 200)); m.sfx('whoo', at(T.spin[0] + 300)); m.sfx('boing', at(T.fruit[1]));
+    m.sfx('boom', at(43500)); m.sfx('boom', at(44300)); m.sfx('applause', at(43800)); m.sfx('whoo', at(44000)); m.sfx('applause', at(46000));
+    m.end(at(T.close[0] + 400));
   }
   let run = 0, raf = 0, ctx = null, timer = 0, voices = [], t0p = 0;
   function stop(reset) {
@@ -2489,7 +2588,7 @@ function wavB64(buf) {
       try { const AC = window.AudioContext || window.webkitAudioContext; ctx = new AC(); ctx.resume();
         const m = window.__TripMusic(ctx), base = ctx.currentTime + .08; program(m, base);
         timer = setInterval(() => { if (ctx) m.schedule(ctx.currentTime + .15); }, 30);
-        LINES.forEach(l => { const el = new Audio('audio/samba-' + l.key + '.mp3'); el.preload = 'auto'; voices.push({el, to: setTimeout(() => { if (my === run) el.play().catch(() => {}); }, l.at + 80)}); });
+        LINES.forEach(l => { const el = new Audio('audio/samba-' + (l.src || l.key) + '.mp3'); el.preload = 'auto'; voices.push({el, to: setTimeout(() => { if (my === run) el.play().catch(() => {}); }, l.at + 80)}); });
       } catch (e) { ctx = null; }
     }
     t0p = tnow();
@@ -2503,7 +2602,7 @@ function wavB64(buf) {
   // Video-Aufnahme: Zeit setzen, Musik offline rendern, Stimmen-Startzeiten
   window.__dancePlay = start; window.__danceEnd = END;
   window.__danceAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms / 1000), sr), m = window.__TripMusic(oc); program(m, 0); m.schedule(ms / 1000); return wavB64(await oc.startRendering()); };
-  window.__danceVoices = () => LINES.map(l => ({key: l.key, at: l.at}));
+  window.__danceVoices = () => LINES.map(l => ({key: l.src || l.key, at: l.at}));
 })();
 
 renderMe(); meMark();
