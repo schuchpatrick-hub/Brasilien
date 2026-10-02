@@ -30,6 +30,15 @@ nach „Umgesetzt“ verschieben.
 - Telenovela der Reise, Wanted-Plakate, Crew-Aktienmarkt, Erfolge/Badges,
   Wettbüro mit Cevapi-Coins, Radio Gringo, Ehrenurkunden, Rubbel-Karte, Soundboard, Live-Ticker beim Footvolley
 
+- **Vorschläge vom 02.10.** (Patrick wählt Nummern): „Jetzt buchen“-Hinweis ab 19.10. mit offenen Buchungen · Doppelungen
+  Route/Stationen/Tage abbauen · Reisemodus ab 27.12. (Heute, Drinks, Karte, Spiele nach oben) · Notfall-Karte (Notrufe 🟡 prüfen,
+  Konsulat Rio, Adressen auf Portugiesisch, Boletim de Ocorrência) · Wochen-Teaser-Bild für WhatsApp · „Gut zu wissen“: Strom
+  (Typ N, 127/220 V 🟡), Bezahlen (Pix, serviço 10 %), Strand-Knigge, Silvester-Bräuche, Caipi-Kunde · Tages-Briefing am Morgen ·
+  Gepäck-Check vor Weiterreise · Rechnung teilen (Ausgleichsliste) · Abstimmungen · Zitate-Wand · Schritte-Ranking ·
+  Rückblick-Seite „So war’s“ ab 21.01. · Rückblick-Film mit echten Daten · Urkunden als Bild
+- **Film-Ideen:** Regisseur-Modus (Crew schlägt Sprüche vor), „Wer ist es?“-Teaser, Wetter-Effekte, Hochkant-Version 9:16,
+  Fotos als Polaroid bei Aufenthalten, Abspann mit Statistik/Credits, Film-Download auf der Seite
+
 ## 🕒 Später vielleicht
 
 - **Eigene App (PWA) / Offline-Modus** (besprochen 01.10., erstmal nicht): Offline für Dschungel/Boot, Benachrichtigungen,
