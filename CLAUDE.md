@@ -196,7 +196,7 @@ Kontrolleur, Flugbegleiterin, Einheimische gezeichnet). Drehbuch in `trip.json` 
 `text` = Untertitel, optional `vo`), Stimmen der Nebenfiguren in `series.voices`, `voice` wird erzeugt. Szenen und Zeiten in `SC`
 aus `series.ep1.scenes` (Folge 1 = nur die ersten Tage: Intro, Sicherheitskontrolle, Flughafen-Bar, Flieger, Uber, Strand Guarujá, Caipi-Abend, Abspann;
 Beginn/Ende der Szenen aus den Sprechzeiten berechnet), Musik/Ort-Einblendung je Szene in `META`, Gags in `frame(t)` je Szene über `A('key')` = Startzeit
-einer Zeile relativ zur Szene (Zeiten in den Daten verschieben reicht); Effekte in `program()`. Humor: gern schwarz, Alkohol, Flirt-Pleiten (Patricks Wunsch).
+einer Zeile relativ zur Szene (Zeiten in den Daten verschieben reicht); Effekte in `program()`. Humor: bewusst derb und schwarz (Kotzen, Furz/Hose, Saufen, Knutschen, Abblitzen; alle Beteiligten einverstanden, laut Patrick), Effekte `pukeAt`, `stinkAt`, Herzen/`kissM`, Geräusche `puke`/`fart`/`kiss` in `Music()`.
 **Geparkt für spätere Folgen:** fertige Szenen Silvester (`ny`), Buffet (`buf`), Dschungel (`jg`), Footvolley (`fv`) im Modul, Zeilen in `series.parked`,
 Aufnahmen in `web/audio/parked/` (nicht veröffentlichen; für eine neue Folge neu timen, auf `A()` umstellen und nach `web/audio/` holen). Untertitel unten immer an. Stimmen: `python3 tools/gen_dance_audio.py --series ep1 [key …]` → `web/audio/ep1-*.mp3`
 (beim Veröffentlichen in `files` mitgeben); Verständlichkeit mit Whisper prüfen, unklare Zeilen mehrfach erzeugen und die beste behalten.
