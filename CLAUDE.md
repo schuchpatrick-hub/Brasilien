@@ -167,7 +167,11 @@ Im Kapitel Crew unter den Steckbriefen (`#samba`, SVG `#samba-svg`, Knöpfe `#sa
 gezeichneten Körpern mit Federschmuck; Münder wie die South-Park-Kanadier: Foto auf Mundhöhe geteilt, Oberkopf klappt nach der
 Lautstärkekurve hoch. Daten in `trip.json` → `dance` (`look` je Person: Stil, Shirt, Hose, `face` = Ausschnitt x/y/z und Mundhöhe m;
 `lines` mit Zeitpunkt `at`; `voice` wird erzeugt). Stile: robot, hips, off (Patrick, niedrigster Samba-Wert, aus dem Takt), fruit,
-propeller, star (Daijo, höchster Samba-Wert, Solo). Ablauf in `frame(t)`, Musik = Samba aus `window.__TripMusic`.
+propeller, star (Daijo, höchster Samba-Wert, Solo); Samba-Grundschritt `sambaLegs`, Schulter-Wippen, Federn schwingen nach.
+Ablauf in `frame(t)`, Zeitfenster in `T` (Freeze mit Hähnchen, La Ola, „Olê, olê“-Chor, Polonaise mit Zwinkern, Daijo-Solo,
+Sprung mit Drehung, Ananas auf Jonas, Pyramide). Bühne: Scheinwerfer, Discokugel, Nebel, Publikum. Musik = eigener Modus `show`
+in `Music()` (Batucada, Bass, Bläser; `m.drums` = Zeitfenster nur Trommeln), Effekte applause/whoo/ding/munch.
+Zeilen mit `src` benutzen die Aufnahme einer anderen Zeile.
 Stimmen: `tools/gen_dance_audio.py` (Piper, hochgepitcht) → `web/audio/samba-*.mp3`; beim Veröffentlichen in `files` mitgeben.
 Video: `window.__danceT`, `__danceAudio(ms)`, `__danceVoices()`; enthält Gesichter, nicht ins Repo.
 

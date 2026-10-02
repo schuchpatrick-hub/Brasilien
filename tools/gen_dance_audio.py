@@ -32,6 +32,8 @@ def main():
     F = ffmpeg(); voice = {}
     for ln in lines:
         key = ln['key']
+        if ln.get('src'):   # benutzt die Aufnahme einer anderen Zeile
+            continue
         with tempfile.TemporaryDirectory() as tmp:
             raw = os.path.join(tmp, 'raw.wav'); pit = os.path.join(tmp, 'pit.wav')
             subprocess.run([sys.executable, '-m', 'piper', '-m', os.path.join(VOICES, ln['voice'] + '.onnx'), '-f', raw,

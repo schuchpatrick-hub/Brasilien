@@ -3411,16 +3411,130 @@
       {
         "key": "jonas2",
         "who": "jonas",
-        "at": 21000,
+        "at": 21600,
         "voice": "de-thorsten-low",
         "pitch": 1.4,
         "say": "Patrick! Im Takt! Eins, zwei!",
         "text": "Patrick! Im Takt! Eins, zwei!"
       },
       {
+        "key": "ole-jonas",
+        "who": "jonas",
+        "at": 27000,
+        "voice": "pt-br-edresson-low",
+        "pitch": 1.4,
+        "speed": 1.0,
+        "say": "Olê, olê, olê, olá!",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "ole-simon",
+        "who": "simon",
+        "at": 27000,
+        "voice": "pt-br-edresson-low",
+        "pitch": 1.3,
+        "speed": 1.0,
+        "say": "Olê, olê, olê, olá!",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "ole-patrick",
+        "who": "patrick",
+        "at": 27000,
+        "voice": "pt-br-edresson-low",
+        "pitch": 1.2,
+        "speed": 1.0,
+        "say": "Olê, olê, olê, olá!",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "ole-marco",
+        "who": "marco",
+        "at": 27000,
+        "voice": "pt-br-edresson-low",
+        "pitch": 1.5,
+        "speed": 1.0,
+        "say": "Olê, olê, olê, olá!",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "ole-greisel",
+        "who": "greisel",
+        "at": 27000,
+        "voice": "pt-br-edresson-low",
+        "pitch": 1.55,
+        "speed": 1.0,
+        "say": "Olê, olê, olê, olá!",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "ole-dajo",
+        "who": "dajo",
+        "at": 27000,
+        "voice": "pt-br-edresson-low",
+        "pitch": 1.65,
+        "speed": 1.0,
+        "say": "Olê, olê, olê, olá!",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "ole2-jonas",
+        "who": "jonas",
+        "at": 29200,
+        "src": "ole-jonas",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "ole2-simon",
+        "who": "simon",
+        "at": 29200,
+        "src": "ole-simon",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "ole2-patrick",
+        "who": "patrick",
+        "at": 29200,
+        "src": "ole-patrick",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "ole2-marco",
+        "who": "marco",
+        "at": 29200,
+        "src": "ole-marco",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "ole2-greisel",
+        "who": "greisel",
+        "at": 29200,
+        "src": "ole-greisel",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "ole2-dajo",
+        "who": "dajo",
+        "at": 29200,
+        "src": "ole-dajo",
+        "text": "",
+        "chorus": true
+      },
+      {
         "key": "tchau-jonas",
         "who": "jonas",
-        "at": 33500,
+        "at": 43800,
         "voice": "de-thorsten-low",
         "pitch": 1.4,
         "say": "Tschau, Brasil!",
@@ -3430,7 +3544,7 @@
       {
         "key": "tchau-simon",
         "who": "simon",
-        "at": 33500,
+        "at": 43800,
         "voice": "de-pavoque-low",
         "pitch": 1.35,
         "say": "Tschau, Brasil!",
@@ -3440,7 +3554,7 @@
       {
         "key": "tchau-patrick",
         "who": "patrick",
-        "at": 33500,
+        "at": 43800,
         "voice": "de-karlsson-low",
         "pitch": 1.3,
         "say": "Tschau, Brasil!",
@@ -3450,7 +3564,7 @@
       {
         "key": "tchau-marco",
         "who": "marco",
-        "at": 33500,
+        "at": 43800,
         "voice": "de-karlsson-low",
         "pitch": 1.5,
         "say": "Tschau, Brasil!",
@@ -3460,7 +3574,7 @@
       {
         "key": "tchau-greisel",
         "who": "greisel",
-        "at": 33500,
+        "at": 43800,
         "voice": "de-thorsten-low",
         "pitch": 1.55,
         "say": "Tschau, Brasil!",
@@ -3470,7 +3584,7 @@
       {
         "key": "tchau-dajo",
         "who": "dajo",
-        "at": 33500,
+        "at": 43800,
         "voice": "de-kerstin-low",
         "pitch": 1.3,
         "say": "Tschau, Brasil!",
@@ -3480,56 +3594,80 @@
     ],
     "voice": {
       "jonas": {
-        "dur": 1991,
-        "env": "06999898734997456423210001950000399015112422000000"
+        "dur": 2048,
+        "env": "0799999864367545513221000005910004940111035532000000"
       },
       "simon": {
-        "dur": 2665,
-        "env": "0599985026950287334588642000002425997432388534764522600000221100000"
+        "dur": 2569,
+        "env": "05999983399405743445773100003444974223674246333135000002210000000"
       },
       "marco": {
-        "dur": 1643,
-        "env": "002866994199735992021008861049625876774100"
+        "dur": 1581,
+        "env": "0019624850298469601103992119926989874100"
       },
       "greisel": {
-        "dur": 2082,
-        "env": "00007950000000029920577543200016200137651455422210000"
+        "dur": 1876,
+        "env": "19940000000029605964210000043125764566642210000"
       },
       "dajo": {
-        "dur": 2317,
-        "env": "0000189940597475134000130204521110043267660002433123320000"
+        "dur": 2272,
+        "env": "000006998028855622201003512253200044327861003533234320000"
       },
       "patrick": {
-        "dur": 2898,
-        "env": "0001158983101246545224610563003200002100003665127988315822007960010012000"
+        "dur": 2861,
+        "env": "035899810226886510141004873016400014200000366217973005620016400310143000"
       },
       "jonas2": {
-        "dur": 2623,
-        "env": "000731052000000000686214521001000000000699995000000001465321100000"
+        "dur": 2507,
+        "env": "005751124101000287621055100100000000028998200000000004322100000"
+      },
+      "ole-jonas": {
+        "dur": 1992,
+        "env": "00000000135569950134345430532357620001444321100000"
+      },
+      "ole-simon": {
+        "dur": 2181,
+        "env": "0000000026545799750036534546520004532245643357534211000"
+      },
+      "ole-patrick": {
+        "dur": 1801,
+        "env": "0000000124437954133323343002323553101443110000"
+      },
+      "ole-marco": {
+        "dur": 1843,
+        "env": "00000002432689620122148620032234330023322100000"
+      },
+      "ole-greisel": {
+        "dur": 2058,
+        "env": "0000022369997300222344542003214774000144422100000000"
+      },
+      "ole-dajo": {
+        "dur": 1903,
+        "env": "000002564898525534555201531354660000145432100000"
       },
       "tchau-jonas": {
-        "dur": 1132,
-        "env": "00012878851002774008984210000"
+        "dur": 1242,
+        "env": "00001239988510000299415996321000"
       },
       "tchau-simon": {
-        "dur": 1300,
-        "env": "298389987743100269931255542100000"
+        "dur": 1292,
+        "env": "267699853200015996112344222100000"
       },
       "tchau-patrick": {
-        "dur": 973,
-        "env": "1399994043997238776411000"
+        "dur": 936,
+        "env": "000148996153696236665200"
       },
       "tchau-marco": {
-        "dur": 899,
-        "env": "00114773149994598752100"
+        "dur": 869,
+        "env": "0139993047799369997100"
       },
       "tchau-greisel": {
-        "dur": 1146,
-        "env": "00012899710000484059982100000"
+        "dur": 1181,
+        "env": "000117999961000059930499852000"
       },
       "tchau-dajo": {
-        "dur": 1327,
-        "env": "0000014599974000047401244431000000"
+        "dur": 1244,
+        "env": "00000344986300004510122332000000"
       }
     }
   }
