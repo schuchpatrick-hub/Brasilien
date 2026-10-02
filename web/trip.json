@@ -205,7 +205,7 @@
       "g": "all",
       "place": "Foz do Iguaçu",
       "title": "Alle zusammen, auf zu den Wasserfällen",
-      "stay": "Hotel in Foz (Name prüfen)",
+      "stay": "TuCasa Flats, Foz do Iguaçu",
       "items": [
         {
           "time": "06:10",
@@ -235,7 +235,7 @@
       "g": "all",
       "place": "Foz do Iguaçu",
       "title": "Iguaçu-Fälle",
-      "stay": "Hotel in Foz (Name prüfen)",
+      "stay": "TuCasa Flats, Foz do Iguaçu",
       "items": [
         {
           "text": "Idee: brasilianische Seite mit Panoramablick, optional Helikopterflug"
@@ -247,7 +247,7 @@
       "g": "all",
       "place": "Foz do Iguaçu",
       "title": "Iguazú, argentinische Seite",
-      "stay": "Hotel in Foz (Name prüfen)",
+      "stay": "TuCasa Flats, Foz do Iguaçu",
       "items": [
         {
           "text": "Reisepass mitnehmen (Grenzübertritt), optional Bootstour unter die Fälle"
@@ -527,7 +527,7 @@
     },
     {
       "g": "all",
-      "name": "Hotel in Foz do Iguaçu (Name prüfen)",
+      "name": "TuCasa Flats, Foz do Iguaçu",
       "from": "20270106",
       "to": "20270109"
     },
@@ -3115,8 +3115,8 @@
         "g": "all",
         "stays": [
           {
-            "name": "Hotel noch prüfen 🟡",
-            "q": ""
+            "name": "TuCasa Flats (gebucht von Greisel)",
+            "q": "TuCasa Flats, Rua Belarmino de Mendonça 1338, Foz do Iguaçu"
           }
         ],
         "arrive": "06.01. Flug GIG → IGU ca. 10:40, alle sechs zusammen.",
