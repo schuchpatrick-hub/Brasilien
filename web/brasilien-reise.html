@@ -1863,7 +1863,13 @@ function setGroup(g) {
   document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.g === g)));
   renderToday(); renderDays(); renderFlights(); renderCosts();
 }
-document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => setGroup(b.dataset.g)));
+// Umschalten ändert Inhalte weiter oben (Tage, Flüge); der angetippte Knopf soll trotzdem an derselben Stelle bleiben
+document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => {
+  const y0 = b.getBoundingClientRect().top;
+  setGroup(b.dataset.g);
+  const fix = () => { const d = b.getBoundingClientRect().top - y0; if (Math.abs(d) > 1) scrollBy(0, d); };
+  fix(); requestAnimationFrame(() => requestAnimationFrame(fix)); setTimeout(fix, 250);
+}));
 
 /* ---------- Packlisten (nur auf diesem Geraet) ---------- */
 document.querySelectorAll('ul.pack2').forEach(ul => {
@@ -3788,7 +3794,24 @@ function jump(id, smooth) {
   document.body.classList.add('cv-all');   // vor dem Springen alle Kapitel einmal zeichnen, damit das Ziel stimmt
   const y = el.getBoundingClientRect().top + scrollY - barHeight() - 10;
   scrollTo({top: Math.max(0, y), behavior: smooth && !reduceMotion ? 'smooth' : 'auto'});
+  settle(el);
   return true;
+}
+// Nach dem Springen nachjustieren, falls sich weiter oben noch etwas in der Höhe geändert hat (Bilder, Diagramme)
+let settleRun = 0;
+function settle(el) {
+  const my = ++settleRun, t0 = performance.now(); let last = -1, still = 0;
+  const stop = () => { settleRun++; };
+  addEventListener('touchstart', stop, {once: true, passive: true}); addEventListener('wheel', stop, {once: true, passive: true});
+  (function f() {
+    if (my !== settleRun || performance.now() - t0 > 2500) return;
+    if (Math.abs(scrollY - last) < 1) still++; else still = 0; last = scrollY;
+    if (still >= 4) {
+      const d = el.getBoundingClientRect().top - barHeight() - 10;
+      if (Math.abs(d) > 4) { scrollTo({top: Math.max(0, scrollY + d), behavior: 'auto'}); still = 0; } else return;
+    }
+    requestAnimationFrame(f);
+  })();
 }
 let activeTab = null;
 function markTab(tab) {
