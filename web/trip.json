@@ -3274,5 +3274,263 @@
         "q": "Aeroporto Internacional de Manaus"
       }
     }
+  },
+  "dance": {
+    "title": "Samba-Show der Gringos",
+    "order": [
+      "jonas",
+      "simon",
+      "patrick",
+      "marco",
+      "greisel",
+      "dajo"
+    ],
+    "look": {
+      "jonas": {
+        "style": "robot",
+        "shirt": "#ffcf1f",
+        "pants": "#1f3f8f",
+        "face": {
+          "x": 0.5,
+          "y": 0.62,
+          "z": 1.15,
+          "m": 0.89
+        }
+      },
+      "simon": {
+        "style": "hips",
+        "shirt": "#00a651",
+        "pants": "#ffffff",
+        "face": {
+          "x": 0.4,
+          "y": 0.5,
+          "z": 1.1,
+          "m": 0.79
+        }
+      },
+      "patrick": {
+        "style": "off",
+        "shirt": "#1f3f8f",
+        "pants": "#ffcf1f",
+        "face": {
+          "x": 0.48,
+          "y": 0.5,
+          "z": 1.0,
+          "m": 0.8
+        }
+      },
+      "marco": {
+        "style": "fruit",
+        "shirt": "#ffffff",
+        "pants": "#00843d",
+        "face": {
+          "x": 0.48,
+          "y": 0.52,
+          "z": 1.05,
+          "m": 0.79
+        }
+      },
+      "greisel": {
+        "style": "propeller",
+        "shirt": "#8a4fbf",
+        "pants": "#10231d",
+        "face": {
+          "x": 0.46,
+          "y": 0.5,
+          "z": 1.05,
+          "m": 0.7
+        }
+      },
+      "dajo": {
+        "style": "star",
+        "shirt": "#ff5fa2",
+        "pants": "#ffcf1f",
+        "face": {
+          "x": 0.46,
+          "y": 0.5,
+          "z": 1.05,
+          "m": 0.72
+        }
+      }
+    },
+    "lines": [
+      {
+        "key": "jonas",
+        "who": "jonas",
+        "at": 4000,
+        "voice": "de-thorsten-low",
+        "pitch": 1.4,
+        "say": "Alle mal herhören: Jetzt wird getanzt!",
+        "text": "Alle mal herhören: Jetzt wird getanzt!"
+      },
+      {
+        "key": "simon",
+        "who": "simon",
+        "at": 6500,
+        "voice": "de-pavoque-low",
+        "pitch": 1.35,
+        "say": "Oi gatinha! Schau mal meine Hüfte!",
+        "text": "Oi gatinha! Schau mal meine Hüfte! 😏"
+      },
+      {
+        "key": "marco",
+        "who": "marco",
+        "at": 9500,
+        "voice": "de-karlsson-low",
+        "pitch": 1.5,
+        "say": "Ich hab den Obstkorb dabei!",
+        "text": "Ich hab den Obstkorb dabei! 🍍"
+      },
+      {
+        "key": "greisel",
+        "who": "greisel",
+        "at": 12000,
+        "voice": "de-thorsten-low",
+        "pitch": 1.55,
+        "say": "Schatz, guck mal, ich kann Samba!",
+        "text": "Schatz, guck mal, ich kann Samba!"
+      },
+      {
+        "key": "dajo",
+        "who": "dajo",
+        "at": 14500,
+        "voice": "de-kerstin-low",
+        "pitch": 1.3,
+        "say": "Laut meiner Excel tanzt ihr alle falsch!",
+        "text": "Laut meiner Excel tanzt ihr alle falsch! 📊"
+      },
+      {
+        "key": "patrick",
+        "who": "patrick",
+        "at": 17500,
+        "voice": "de-karlsson-low",
+        "pitch": 1.3,
+        "say": "Wo ist eigentlich der Takt? Und wo ist das Buffet?",
+        "text": "Wo ist eigentlich der Takt? Und wo ist das Buffet? 🍗"
+      },
+      {
+        "key": "jonas2",
+        "who": "jonas",
+        "at": 21000,
+        "voice": "de-thorsten-low",
+        "pitch": 1.4,
+        "say": "Patrick! Im Takt! Eins, zwei!",
+        "text": "Patrick! Im Takt! Eins, zwei!"
+      },
+      {
+        "key": "tchau-jonas",
+        "who": "jonas",
+        "at": 33500,
+        "voice": "de-thorsten-low",
+        "pitch": 1.4,
+        "say": "Tschau, Brasil!",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "tchau-simon",
+        "who": "simon",
+        "at": 33500,
+        "voice": "de-pavoque-low",
+        "pitch": 1.35,
+        "say": "Tschau, Brasil!",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "tchau-patrick",
+        "who": "patrick",
+        "at": 33500,
+        "voice": "de-karlsson-low",
+        "pitch": 1.3,
+        "say": "Tschau, Brasil!",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "tchau-marco",
+        "who": "marco",
+        "at": 33500,
+        "voice": "de-karlsson-low",
+        "pitch": 1.5,
+        "say": "Tschau, Brasil!",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "tchau-greisel",
+        "who": "greisel",
+        "at": 33500,
+        "voice": "de-thorsten-low",
+        "pitch": 1.55,
+        "say": "Tschau, Brasil!",
+        "text": "",
+        "chorus": true
+      },
+      {
+        "key": "tchau-dajo",
+        "who": "dajo",
+        "at": 33500,
+        "voice": "de-kerstin-low",
+        "pitch": 1.3,
+        "say": "Tschau, Brasil!",
+        "text": "",
+        "chorus": true
+      }
+    ],
+    "voice": {
+      "jonas": {
+        "dur": 1991,
+        "env": "06999898734997456423210001950000399015112422000000"
+      },
+      "simon": {
+        "dur": 2665,
+        "env": "0599985026950287334588642000002425997432388534764522600000221100000"
+      },
+      "marco": {
+        "dur": 1643,
+        "env": "002866994199735992021008861049625876774100"
+      },
+      "greisel": {
+        "dur": 2082,
+        "env": "00007950000000029920577543200016200137651455422210000"
+      },
+      "dajo": {
+        "dur": 2317,
+        "env": "0000189940597475134000130204521110043267660002433123320000"
+      },
+      "patrick": {
+        "dur": 2898,
+        "env": "0001158983101246545224610563003200002100003665127988315822007960010012000"
+      },
+      "jonas2": {
+        "dur": 2623,
+        "env": "000731052000000000686214521001000000000699995000000001465321100000"
+      },
+      "tchau-jonas": {
+        "dur": 1132,
+        "env": "00012878851002774008984210000"
+      },
+      "tchau-simon": {
+        "dur": 1300,
+        "env": "298389987743100269931255542100000"
+      },
+      "tchau-patrick": {
+        "dur": 973,
+        "env": "1399994043997238776411000"
+      },
+      "tchau-marco": {
+        "dur": 899,
+        "env": "00114773149994598752100"
+      },
+      "tchau-greisel": {
+        "dur": 1146,
+        "env": "00012899710000484059982100000"
+      },
+      "tchau-dajo": {
+        "dur": 1327,
+        "env": "0000014599974000047401244431000000"
+      }
+    }
   }
 }
