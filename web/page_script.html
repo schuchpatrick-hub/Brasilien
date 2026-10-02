@@ -2111,6 +2111,9 @@ function wavB64(buf) {
       else if (name === 'whoo') [0, .25].forEach(o => tone(sfxOut, 'sine', 1300 + rnd() * 300, t + o, .55, .05, {from: 700, glide: .25, vib: 9, depth: .03, a: .05}));
       else if (name === 'ding') { tone(sfxOut, 'sine', 2093, t, .6, .12); tone(sfxOut, 'sine', 3136, t + .07, .5, .07); }
       else if (name === 'munch') [0, .18, .36].forEach(o => noise(sfxOut, t + o, .09, .3, 'bandpass', 900, 2));
+      else if (name === 'rain') { noise(sfxOut, t, 4.2, .22, 'lowpass', 2500, .5, {a: .6}); for (let k = 0; k < 40; k++) noise(sfxOut, t + rnd() * 3.8, .02, .1, 'highpass', 3000, 1); }
+      else if (name === 'whistle') [0, .45].forEach(o => tone(sfxOut, 'sine', 2900, t + o, o ? .9 : .3, .16, {vib: 34, depth: .05, a: .01, hold: o ? .7 : .22}));
+      else if (name === 'monkey') [[500, 900], [520, 950], [700, 1300]].forEach(([a, b], k) => tone(sfxOut, 'square', b, t + k * .22, .2, .05, {from: a, glide: .12, lp: 1800}));
       else if (name === 'feedback') { tone(sfxOut, 'sine', 3150, t, 1.1, .1, {a: .25, hold: .9, vib: 7, depth: .01}); tone(sfxOut, 'sine', 6300, t + .1, 1, .03, {a: .3, hold: .8}); }
       else if (name === 'crash') { noise(sfxOut, t, 1.2, .6, 'highpass', 2500, .5); for (let k = 0; k < 14; k++) tone(sfxOut, 'sine', 2500 + rnd() * 4000, t + rnd() * .5, .25, .05); kick(sfxOut, t, .8); }
       else if (name === 'thud') { kick(sfxOut, t, .9); noise(sfxOut, t, .3, .35, 'lowpass', 600, .7); }
@@ -2333,10 +2336,18 @@ function wavB64(buf) {
   const svg = document.getElementById('samba-svg'), btn = document.getElementById('samba-play'), sbtn = document.getElementById('samba-sound');
   if (!svg || !btn || PRINT || !TRIP.dance) return;
   const D = TRIP.dance, NS = 'http://www.w3.org/2000/svg', W = 800, H = 500, FLOOR = 452, BEAT = 500, MUSIC_AT = 1500;
-  const T = {freeze: [17600, 25000], munch: [21100, 22200], wave: [25200, 27200], flash: 27300, chant: [27300, 32300], conga: [32400, 36600], wink: [34000, 35400],
+  const NV = [1e9, 1e9 + 1];   // „nie“
+  const TMAIN = {freeze: [17600, 25000], munch: [21100, 22200], wave: [25200, 27200], flash: 27300, chant: [27300, 32300], conga: [32400, 36600], wink: [34000, 35400],
     solo: [36800, 40600], duel: [40800, 48000], duelS: [41000, 43400], duelG: [43600, 46000], verdict: [46200, 48000], spin: [48200, 49400], fruit: [49400, 50400],
     pyr: [50700, 55400], confetti: 51900, close: [55400, 57000], blo: [57600, 71600], b1: [59000, 62800], b2: [63000, 66400], b3: [66600, 70000], close2: [70200, 71600]};
-  const END = 72500;
+  // Zugabe: kurze Bonus-Runde (Kostüme gleich an, Olê-Chor, La Ola, Polonaise, Sprung, Konfetti, Tschau)
+  const TENC = {freeze: NV, munch: NV, wave: [9000, 11000], flash: -1000, chant: [3800, 8800], conga: [11200, 14800], wink: NV, solo: NV, duel: NV, duelS: NV, duelG: NV,
+    verdict: NV, spin: [14900, 16100], fruit: [-9, -8], pyr: NV, confetti: 15000, close: [17400, 19000], blo: NV, b1: NV, b2: NV, b3: NV, close2: NV};
+  let T = TMAIN, END = 72500, ENC = false, encoreReady = false;
+  // Zufalls-Ereignis während der Polonaise (pro Abspielen eins)
+  const EVENTS = ['rain', 'monkey', 'police', 'waiter'];
+  let EVENT = 'police', VICTIM = 'simon', TAPS = [], BOOST = {clap: -1e9, cheer: -1e9}, liveM = null;
+  const evw = () => [T.conga[0] + 200, T.conga[1] - 200];
   const mk = (tag, a, parent) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (parent) parent.appendChild(e); return e; };
   const byId = Object.fromEntries(TRIP.crew.map(c => [c.id, c]));
   const tnow = () => window.__danceT !== undefined ? window.__danceT : performance.now();
@@ -2349,6 +2360,8 @@ function wavB64(buf) {
   const voiceOf = key => (D.voice || {})[key] || {dur: 1500, env: ''};
   let LINES = [], LIVE = {};
   function pickLines(seed) {   // pro Abspielen eine Variante je Spruch (Video: seed 0 = immer die erste)
+    if (ENC) { const AT = {ole: 4000, ole2: 6400, tchau: 15600};
+      LINES = D.lines.filter(l => l.chorus).map(l => Object.assign({}, l, {at: AT[l.key.split('-')[0]] || l.at, file: l.src || l.key, text: ''}, voiceOf(l.src || l.key))); return; }
     LINES = D.lines.map((l, k) => { const vs = [l].concat(l.alts || []), v = vs[seed ? Math.floor(hash(seed, k) * vs.length) : 0];
       const key = l.src || v.key; return Object.assign({}, l, {file: key, text: v.text}, voiceOf(key)); });
   }
@@ -2357,7 +2370,7 @@ function wavB64(buf) {
   // ---------- Bühne (einmal aufbauen) ----------
   svg.innerHTML = '';
   const defs = mk('defs', {}, svg);
-  defs.innerHTML = '<linearGradient id="sb-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d1450"/><stop offset=".55" stop-color="#b8407a"/><stop offset="1" stop-color="#ffb05c"/></linearGradient>' +
+  defs.innerHTML = '<linearGradient id="sb-sky" x1="0" y1="0" x2="0" y2="1"><stop id="sb-sky0" offset="0" stop-color="#1d1450"/><stop id="sb-sky1" offset=".55" stop-color="#b8407a"/><stop id="sb-sky2" offset="1" stop-color="#ffb05c"/></linearGradient>' +
     '<radialGradient id="sb-spot" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6c8" stop-opacity=".75"/><stop offset="1" stop-color="#fff6c8" stop-opacity="0"/></radialGradient>' +
     '<linearGradient id="sb-cone" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c8" stop-opacity=".05"/><stop offset="1" stop-color="#fff6c8" stop-opacity=".3"/></linearGradient>' +
     '<radialGradient id="sb-fog" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>' +
@@ -2371,14 +2384,82 @@ function wavB64(buf) {
   const world = mk('g', {}, svg);   // alles, was die Kamera bewegt
   mk('rect', {x: -200, y: -200, width: W + 400, height: H + 400, fill: 'url(#sb-sky)'}, world);
   const stars = mk('g', {fill: '#fff'}, world); for (let k = 0; k < 30; k++) mk('circle', {cx: hash(k, 1) * W, cy: hash(k, 2) * 160, r: hash(k, 3) * 1.4 + .4, opacity: .7}, stars);
-  mk('circle', {cx: 640, cy: 250, r: 70, fill: '#ffd36b', opacity: .85}, world);
-  mk('path', {d: 'M470,400 C500,330 530,250 585,230 C625,215 640,300 660,330 C690,300 700,250 735,255 C770,262 790,330 800,360 L800,400Z', fill: '#2b1f4a'}, world);   // Zuckerhut
-  mk('rect', {x: -200, y: 360, width: W + 400, height: 40, fill: '#3a6fa8', opacity: .8}, world);
-  [[70, 400, 1], [150, 400, .8]].forEach(([x, y, s]) => {   // Palmen
-    const g = mk('g', {transform: `translate(${x},${y}) scale(${s})`, fill: '#1d2b2a'}, world);
-    mk('path', {d: 'M-4,0 Q4,-80 10,-150 L16,-150 Q10,-80 6,0Z'}, g);
-    [-150, -110, -60, -20, 30].forEach(a => mk('path', {d: 'M13,-150 Q40,-175 80,-150 Q45,-160 13,-146Z', transform: `rotate(${a + 40},13,-150)`}, g));
-  });
+  const scenery = mk('g', {}, world);
+  // Bühne passend zur Reise: unterwegs der Hintergrund der heutigen Station (vor und nach der Reise: Copacabana im Sonnenuntergang)
+  const STAGES = {
+    default: {sky: ['#1d1450', '#b8407a', '#ffb05c'], night: 1, label: ''},
+    guaruja: {sky: ['#2f86d0', '#7cc4ee', '#ffe6a8'], label: 'Guarujá'},
+    rio: {sky: ['#1d1450', '#b8407a', '#ffb05c'], night: 1, label: 'Rio de Janeiro'},
+    silvester: {sky: ['#04061a', '#141a4a', '#2c2f6b'], night: 1, label: 'Copacabana, Silvester'},
+    iguacu: {sky: ['#4f9ccc', '#a9d6ea', '#e8f4e8'], label: 'Foz do Iguaçu'},
+    jungle: {sky: ['#1f4a2c', '#4f8a45', '#c9d98a'], label: 'Amazonas'},
+    paraty: {sky: ['#3f88c4', '#9cc9e6', '#f6e7c1'], label: 'Paraty'},
+    ilha: {sky: ['#2b80c4', '#8ccbe8', '#fde3a7'], label: 'Ilha Grande'}};
+  let STAGE = 'default', sceneTick = () => {};
+  function stageToday() {
+    if (window.__danceStage) return window.__danceStage;
+    let d = ''; try { d = new Intl.DateTimeFormat('en-CA', {timeZone: 'America/Sao_Paulo'}).format(new Date()).replace(/-/g, ''); } catch (e) { return 'default'; }
+    if (d === '20261231' || d === '20270101') return 'silvester';
+    const st = (TRIP.stays || []).find(s => (s.g === 'all' || s.g === G) && d >= s.from && d < s.to) || (TRIP.stays || []).find(s => d >= s.from && d < s.to);
+    if (!st) return 'default';
+    const n = st.name.toLowerCase();
+    return /guaruj/.test(n) ? 'guaruja' : /rio/.test(n) ? 'rio' : /igua/.test(n) ? 'iguacu' : /manaus|juma|amazon/.test(n) ? 'jungle' : /paraty/.test(n) ? 'paraty' : /ilha/.test(n) ? 'ilha' : 'default';
+  }
+  const sugar = g => mk('path', {d: 'M470,400 C500,330 530,250 585,230 C625,215 640,300 660,330 C690,300 700,250 735,255 C770,262 790,330 800,360 L800,400Z', fill: '#2b1f4a'}, g);
+  const palms = (g, list, fill) => list.forEach(([x, y, s]) => { const p = mk('g', {transform: `translate(${x},${y}) scale(${s})`, fill: fill || '#1d2b2a'}, g);
+    mk('path', {d: 'M-4,0 Q4,-80 10,-150 L16,-150 Q10,-80 6,0Z'}, p);
+    [-150, -110, -60, -20, 30].forEach(a => mk('path', {d: 'M13,-150 Q40,-175 80,-150 Q45,-160 13,-146Z', transform: `rotate(${a + 40},13,-150)`}, p)); });
+  const sea = (g, c) => mk('rect', {x: -200, y: 360, width: W + 400, height: 40, fill: c || '#3a6fa8', opacity: .85}, g);
+  function buildStage(name) {
+    STAGE = STAGES[name] ? name : 'default'; const st = STAGES[STAGE]; scenery.innerHTML = ''; sceneTick = () => {};
+    st.sky.forEach((c, k) => { const e = document.getElementById('sb-sky' + k); if (e) e.setAttribute('stop-color', c); });
+    stars.setAttribute('opacity', st.night ? 1 : 0);
+    const g = scenery;
+    if (STAGE === 'default' || STAGE === 'rio') {
+      mk('circle', {cx: 640, cy: 250, r: 70, fill: '#ffd36b', opacity: .85}, g); sugar(g); sea(g); palms(g, [[70, 400, 1], [150, 400, .8]]);
+      if (STAGE === 'rio') { mk('path', {d: 'M200,400 C240,330 290,290 330,285 C370,290 410,340 440,400Z', fill: '#2b1f4a'}, g);   // Corcovado mit Cristo
+        mk('path', {d: 'M326,286 l0,-34 M310,262 l32,0', stroke: '#2b1f4a', 'stroke-width': 7, 'stroke-linecap': 'round'}, g); mk('circle', {cx: 326, cy: 246, r: 5, fill: '#2b1f4a'}, g); }
+    } else if (STAGE === 'silvester') {
+      sugar(g); sea(g, '#1b2a5c'); palms(g, [[70, 400, 1], [150, 400, .8]], '#05070f');
+      const fw = Array.from({length: 6}, (_, k) => { const b = mk('g', {}, g), c = ['#ffcf1f', '#ff5fa2', '#3ce0ff', '#fff', '#3ccf7f', '#ff8a3c'][k];
+        for (let r = 0; r < 14; r++) mk('line', {stroke: c, 'stroke-width': 2.5, 'stroke-linecap': 'round'}, b); return {b, x: 120 + k * 115 + hash(k, 21) * 40, y: 90 + hash(k, 22) * 90, ph: hash(k, 23)}; });
+      const ban = mk('text', {x: W / 2, y: 140, 'text-anchor': 'middle', class: 'sb-sub', opacity: .9}, g); ban.textContent = '🎆 Feliz Ano Novo! 🎆';
+      sceneTick = t => fw.forEach(f => { const k = ((t / 1600 + f.ph) % 1), r = 10 + 55 * Math.sqrt(k); f.b.setAttribute('opacity', (1 - k).toFixed(2));
+        [...f.b.children].forEach((l, i) => { const a = i / 14 * 2 * PI; l.setAttribute('x1', f.x + C(a) * r * .5); l.setAttribute('y1', f.y + S(a) * r * .5 + k * 12); l.setAttribute('x2', f.x + C(a) * r); l.setAttribute('y2', f.y + S(a) * r + k * 12); }); });
+    } else if (STAGE === 'guaruja') {
+      mk('circle', {cx: 650, cy: 90, r: 45, fill: '#fff3b0'}, g); sea(g, '#2aa3c4'); mk('rect', {x: -200, y: 384, width: W + 400, height: 16, fill: '#f1d9a4'}, g);
+      palms(g, [[60, 400, 1], [720, 400, .9]], '#2d6b3c');
+      const u = mk('g', {transform: 'translate(560,400)'}, g); mk('line', {x1: 0, y1: 0, x2: 0, y2: -70, stroke: '#555', 'stroke-width': 3}, u);
+      ['#ff5f5f', '#fff', '#ff5f5f', '#fff'].forEach((c, k) => mk('path', {d: `M0,-70 L${-50 + k * 25},-48 L${-25 + k * 25},-48Z`, fill: c}, u));
+    } else if (STAGE === 'iguacu') {
+      mk('path', {d: 'M-200,400 L-200,190 C0,170 120,200 260,185 C420,170 560,205 1000,180 L1000,400Z', fill: '#2f6b3a'}, g);
+      const falls = [80, 190, 300, 430, 540, 650].map((x, k) => { const fall = mk('rect', {x, y: 190, width: 60 + (k % 2) * 25, height: 175, fill: '#e8f6ff', opacity: .9}, g);
+        const streak = mk('path', {d: `M${x + 10},190 L${x + 10},365 M${x + 30},190 L${x + 30},365 M${x + 50},190 L${x + 50},365`, stroke: '#9fd2ee', 'stroke-width': 3, 'stroke-dasharray': '14 10'}, g); return streak; });
+      [0, 1, 2].forEach(k => mk('path', {d: 'M120,360 A280,200 0 0 1 680,360', fill: 'none', stroke: ['#ff5f5f', '#ffe14d', '#5fd3ff'][k], 'stroke-width': 7, opacity: .45, transform: `translate(0,${k * 7})`}, g));
+      const mist = mk('ellipse', {cx: 400, cy: 365, rx: 520, ry: 40, fill: 'url(#sb-fog)', opacity: .9}, g); sea(g, '#4f8fb8');
+      sceneTick = t => falls.forEach((f, k) => f.setAttribute('stroke-dashoffset', (-(t / 6 + k * 7) % 24).toFixed(1)));
+    } else if (STAGE === 'jungle') {
+      for (let k = 0; k < 9; k++) mk('ellipse', {cx: -40 + k * 110, cy: 260 + hash(k, 31) * 60, rx: 110, ry: 120, fill: ['#1d4d2a', '#24603a', '#163d22'][k % 3]}, g);
+      sea(g, '#7a5a2e');
+      for (let k = 0; k < 6; k++) mk('path', {d: `M${60 + k * 140},0 Q${80 + k * 140},80 ${50 + k * 140},170`, fill: 'none', stroke: '#2f5d24', 'stroke-width': 4}, g);
+      const bird = mk('text', {'font-size': 30}, g); bird.textContent = '🦜';
+      sceneTick = t => { const k = (t / 9000) % 1; bird.setAttribute('x', (-60 + k * 920).toFixed(1)); bird.setAttribute('y', (120 + 30 * S(t / 400)).toFixed(1)); };
+    } else if (STAGE === 'paraty') {
+      mk('path', {d: 'M-200,330 C100,250 300,290 500,260 C650,240 800,280 1000,260 L1000,400 L-200,400Z', fill: '#3f7a46'}, g);
+      [[40, '#1f5fbf'], [170, '#e0a900'], [300, '#2f9e5a'], [520, '#1f5fbf'], [650, '#c0392b']].forEach(([x, c]) => {
+        mk('rect', {x, y: 300, width: 110, height: 72, fill: '#fbf7ee', stroke: '#c9c2b0'}, g); mk('path', {d: `M${x - 6},300 L${x + 55},276 L${x + 116},300Z`, fill: '#b5522f'}, g);
+        mk('rect', {x: x + 45, y: 336, width: 20, height: 36, fill: c}, g); [x + 12, x + 80].forEach(wx => mk('rect', {x: wx, y: 316, width: 16, height: 16, fill: c}, g)); });
+      mk('rect', {x: 420, y: 250, width: 70, height: 122, fill: '#fbf7ee', stroke: '#c9c2b0'}, g); mk('path', {d: 'M414,250 L455,214 L496,250Z', fill: '#b5522f'}, g);
+      mk('circle', {cx: 455, cy: 280, r: 10, fill: '#1f5fbf'}, g); sea(g, '#3a7fb0');
+    } else if (STAGE === 'ilha') {
+      mk('circle', {cx: 140, cy: 110, r: 40, fill: '#fff3b0'}, g); sea(g, '#2a9ec4');
+      mk('path', {d: 'M300,362 C380,250 470,230 560,262 C640,240 720,290 790,362Z', fill: '#2f7a40'}, g);
+      palms(g, [[40, 400, .9]], '#2d6b3c');
+      const boat = mk('text', {'font-size': 34}, g); boat.textContent = '⛵';
+      sceneTick = t => { const k = (t / 14000) % 1; boat.setAttribute('x', (900 - k * 1000).toFixed(1)); boat.setAttribute('y', (372 + 3 * S(t / 300)).toFixed(1)); };
+    }
+  }
+  buildStage('default');
   const bulbs = [], lights = mk('g', {}, world);
   mk('path', {d: 'M0,40 Q200,95 400,55 Q600,15 800,60', fill: 'none', stroke: '#222', 'stroke-width': 2}, lights);
   for (let i = 0; i < 17; i++) { const x = i * 50, y = i < 8 ? 40 + 49.5 * S(PI * x / 400) : 55 - 25 * S(PI * (x - 400) / 400);
@@ -2458,6 +2539,17 @@ function wavB64(buf) {
   });
   const flash = mk('rect', {x: -200, y: -200, width: W + 400, height: H + 400, fill: '#fff', opacity: 0}, world);
   const hat = mk('text', {'font-size': 34, 'text-anchor': 'middle', opacity: 0}, gFx); hat.textContent = '🍍';   // fliegende Ananas
+  const chick = mk('text', {'font-size': 26, 'text-anchor': 'middle', opacity: 0}, gFx); chick.textContent = '🍗';   // Patricks Hähnchen fällt runter
+  // Ereignisse: Regen, Affe, Polizei, Kellner
+  const ev = mk('g', {}, gFx);
+  const clouds = mk('g', {opacity: 0}, ev); [[120, 40], [330, 25], [560, 45], [740, 30]].forEach(([x, y]) => [[0, 0, 70], [50, -15, 55], [-50, -8, 50]].forEach(([dx, dy, r]) => mk('ellipse', {cx: x + dx, cy: y + dy, rx: r, ry: r * .55, fill: '#7d8597'}, clouds)));
+  const drops = mk('g', {opacity: 0, stroke: '#a9d8ff', 'stroke-width': 2}, ev), dropEls = Array.from({length: 70}, (_, k) => mk('line', {x1: 0, y1: 0, x2: -3, y2: 14}, drops));
+  const umbr = ids.map(() => { const e = mk('text', {'font-size': 46, 'text-anchor': 'middle', opacity: 0}, ev); e.textContent = '☂️'; return e; });
+  const monkey = mk('text', {'font-size': 46, 'text-anchor': 'middle', opacity: 0}, ev); monkey.textContent = '🐒';
+  const feather = mk('text', {'font-size': 30, 'text-anchor': 'middle', opacity: 0}, ev); feather.textContent = '🪶';
+  const cop = mk('text', {'font-size': 70, 'text-anchor': 'middle', opacity: 0}, ev); cop.textContent = '👮';
+  const waiter = mk('text', {'font-size': 66, 'text-anchor': 'middle', opacity: 0}, ev); waiter.textContent = '🤵';
+  const tray = mk('text', {'font-size': 24, 'text-anchor': 'middle', opacity: 0}, ev); tray.textContent = '🍹🍹🍹';
   const conf = mk('g', {}, gFx), confs = Array.from({length: 110}, (_, k) => ({x: hash(k, 11) * W, d: 60 + hash(k, 12) * 90, s: hash(k, 13) * 7, el: mk('rect', {width: 8, height: 4, fill: ['#ffcf1f', '#3ccf7f', '#ff5fa2', '#5fd3ff', '#fff'][k % 5]}, null)}));
   confs.forEach(q => conf.appendChild(q.el));
   // Applaus-Meter fürs Tanz-Duell
@@ -2472,6 +2564,7 @@ function wavB64(buf) {
   const title = mk('g', {}, hud);
   const tt = mk('text', {x: W / 2, y: 230, 'text-anchor': 'middle', class: 'sb-title'}, title); tt.textContent = '💃 ' + (D.title || 'Samba-Show');
   const ts = mk('text', {x: W / 2, y: 275, 'text-anchor': 'middle', class: 'sb-sub'}, title);
+  const loc = mk('text', {x: 14, y: H - 14, class: 'sb-loc', opacity: 0}, hud);
   const cap = mk('g', {opacity: 0}, hud); const capR = mk('rect', {x: 40, y: 18, width: W - 80, height: 40, rx: 20, fill: '#10231d', opacity: .88}, cap);
   const capT = mk('text', {x: W / 2, y: 45, 'text-anchor': 'middle', class: 'sb-cap'}, cap);
   hud.appendChild(meter); meter.setAttribute('transform', 'translate(0,-20)');
@@ -2500,6 +2593,10 @@ function wavB64(buf) {
   const idle = (t, i) => ({x: 0, y: 0, rot: 0, hip: 0, aL: [12, 8], aR: [12, 8], lL: [0, 0], lR: [0, 0], tilt: 3 * S(t / 600 + i), look: 0, flip: 1});
   const mix = (a, b, k) => { const r = {}; for (const key in a) r[key] = Array.isArray(a[key]) ? a[key].map((v, j) => v + (b[key][j] - v) * k) : a[key] + (b[key] - a[key]) * k; return r; };
   function mouthOf(id, t, b, i) {
+    for (const tp of TAPS) { if (tp.who !== id || t < tp.at || t > tp.at + tp.dur) continue;
+      if (tp.kind === 'chicken') return t < tp.at + 900 ? .9 : 0;
+      if (tp.kind === 'line') { const d = +(tp.env[Math.floor((t - tp.at) / 40)] || 0); return d >= 5 ? 1 : d >= 2 ? .55 : 0; } }
+    if (EVENT === 'police' && t > evw()[0] + 1200 && t < evw()[0] + 2600) return 0;
     for (const l of LINES) { if (l.who !== id || t < l.at || t > l.at + l.dur) continue;
       const d = +(l.env[Math.floor((t - l.at) / 40)] || 0); return d >= 5 ? 1 : d >= 2 ? .55 : 0; }
     if (id === 'patrick' && t > T.munch[0] && t < T.munch[1]) return S(PI * (t - T.munch[0]) / 180) > 0 ? .8 : 0;   // mampf
@@ -2508,14 +2605,14 @@ function wavB64(buf) {
     if (t > T.b3[0] + 1300 && t < T.b3[0] + 2100) return 1;                      // Schreck: Discokugel
     return 0;
   }
-  const speaking = t => LINES.find(l => !l.chorus && l.who !== 'announcer' && t >= l.at && t <= l.at + l.dur + 300);
+  const speaking = t => LINES.find(l => !l.chorus && l.who !== 'announcer' && t >= l.at && t <= l.at + l.dur + 300) || TAPS.find(tp => tp.kind === 'line' && t >= tp.at && t <= tp.at + tp.dur + 300);
   const PSC = .6, rowY = r => FLOOR - r * 205 * PSC, PYR = {jonas: [320, 0], patrick: [400, 0], marco: [480, 0], simon: [360, 1], greisel: [440, 1], dajo: [400, 2]};
   const POPS = [{who: 'patrick', w: T.munch, txt: '😋 *mampf*'}, {who: 'simon', w: T.wink, txt: '😉✨'}, {who: 'jonas', w: [50300, 51600], txt: '🍍?!'}];
   const duelWinner = () => { const c = LIVE.card || {}, s = (c.simon || {}).w || 0, g = (c.greisel || {}).w || 0; return s > g ? 'simon' : g > s ? 'greisel' : hash(Math.floor(Date.now() / 864e5), 3) > .5 ? 'simon' : 'greisel'; };   // Gleichstand: Tageslaune
   let cam = {x: 0, y: 0, w: W, h: H};
   function camAt(t, sp) {   // Kamera: zoomt beim Sprechen auf den Kopf, im Finale langsam zurück
     let z = 1, cx = W / 2, cy = H / 2;
-    const tgt = sp && sp.who !== 'announcer' && t < T.blo[0] ? P[sp.who] : null;
+    const tgt = sp && !sp.tap && sp.who !== 'announcer' && t < T.blo[0] ? P[sp.who] : null;
     if (tgt) { const k = ease(span(t, sp.at - 300, sp.at + 300)) * (1 - ease(span(t, sp.at + sp.dur, sp.at + sp.dur + 500))); z = 1 + .32 * k; cx += (tgt.x - cx) * k; cy += (tgt.y - 110 * tgt.sc - cy) * k; }
     const fin = span(t, T.pyr[0] + 1200, T.pyr[0] + 1800) * (1 - span(t, T.pyr[0] + 1800, T.close[0]));
     if (fin > 0) { z = 1 + .3 * fin; cx = 400; cy = H / 2 - 40 * fin; }
@@ -2559,18 +2656,27 @@ function wavB64(buf) {
         else if (t > T.b2[0] + 1200) { p = Object.assign({}, p, {aL: [150, 155], aR: [150, 155], rot: 6 * S(t / 40), hip: 0}); flip = 1; } }
       // Panne 3: Discokugel fällt, alle springen vor Schreck
       if (t > T.b3[0] && t < T.b3[1]) { const k = span(t, T.b3[0] + 1300, T.b3[0] + 1800); if (k > 0) { p.y -= 70 * S(PI * k); p.aL = [175, 0]; p.aR = [175, 0]; } }
-      if (sp && sp.who === id && !duel) { const k = span(t, sp.at - 250, sp.at + 150) * (1 - span(t, sp.at + sp.dur + 50, sp.at + sp.dur + 300)); y += 26 * k; sc *= 1 + .16 * k; }
+      if (sp && sp.who === id && !duel && !sp.tap) { const k = span(t, sp.at - 250, sp.at + 150) * (1 - span(t, sp.at + sp.dur + 50, sp.at + sp.dur + 300)); y += 26 * k; sc *= 1 + .16 * k; }
       // Live-Daten: wer heute am meisten getrunken hat, tanzt schief und mit rotem Kopf
       const tipsy = LIVE.tipsy === id && dancing;
       if (tipsy) { p.rot += 9 * S(t / 700); p.tilt += 14 * S(t / 530); x += 10 * S(t / 900); }
-      const drop = 2000 + i * 160, dropY = t < drop ? -700 : t < drop + 520 ? -700 * Math.pow(1 - (t - drop) / 520, 2) * Math.abs(C(3 * PI * (t - drop) / 520)) : 0;
+      // Antippen: Sprung, Drehung, Spruch oder Hähnchen-Panne
+      TAPS.forEach(tp => { if (tp.who !== id) return; const k = (t - tp.at) / 650;
+        if (tp.kind === 'jump' && k > 0 && k < 1) { p.y -= 60 * S(PI * k); p.aL = [170, 0]; p.aR = [170, 0]; }
+        if (tp.kind === 'spin' && k > 0 && k < 1.2) flip = C(2 * PI * Math.min(1, k / 1.2)); });
+      // Polizei: alle erstarren kurz; Publikum jubelt: kleiner Sprung
+      const [e0, e1] = evw();
+      if (EVENT === 'police' && t > e0 + 1200 && t < e0 + 2600) p = Object.assign(idle(t, i), {aL: [20, 10], aR: [20, 10], tilt: 10});
+      const ck = (t - BOOST.cheer) / 700; if (ck > 0 && ck < 1) p.y -= 28 * S(PI * ck);
+      const drop = ENC ? -1e9 : 2000 + i * 160, dropY = t < drop ? -700 : t < drop + 520 ? -700 * Math.pow(1 - (t - drop) / 520, 2) * Math.abs(C(3 * PI * (t - drop) / 520)) : 0;
       const bob = dancing ? 2 * S(2 * PI * b) : 0, squash = dancing ? 1 - .035 * Math.abs(S(PI * b)) : 1;
       o.g.setAttribute('transform', `translate(${(x + p.hip).toFixed(1)},${(y + p.y).toFixed(1)}) rotate(${fall.toFixed(1)}) scale(${(sc * (flip || .001)).toFixed(3)},${sc.toFixed(3)})`);
       o.body.setAttribute('transform', `rotate(${p.rot.toFixed(1)})`);
       o.torso.setAttribute('transform', `translate(0,${(-50 * (1 - squash)).toFixed(1)}) rotate(${(-p.rot * .45).toFixed(1)},0,-20) scale(1,${squash.toFixed(3)})`);
       const wob = (-p.rot * 1.4 + 5 * S(2 * PI * b - .9)).toFixed(1);
       o.fan.setAttribute('transform', `rotate(${wob},0,-66)`); o.fan2.setAttribute('transform', `rotate(${wob},0,-80)`);
-      o.fan.setAttribute('opacity', costume ? 0 : .95); o.fan2.setAttribute('opacity', costume ? 1 : 0);
+      const stolen = EVENT === 'monkey' && id === VICTIM && t > e0 + 1300 && t < T.close[1];
+      o.fan.setAttribute('opacity', costume || stolen ? 0 : .95); o.fan2.setAttribute('opacity', costume && !stolen ? 1 : 0);
       o.shirt.setAttribute('fill', costume ? `url(#sb-seq-${id})` : (o.L.shirt || '#ffcf1f'));
       o.armL.a.setAttribute('transform', `translate(-17,${(-44 + bob).toFixed(1)}) rotate(${p.aL[0].toFixed(1)})`); o.armL.f.setAttribute('transform', `translate(0,24) rotate(${p.aL[1].toFixed(1)})`);
       o.armR.a.setAttribute('transform', `translate(17,${(-44 - bob).toFixed(1)}) rotate(${(-p.aR[0]).toFixed(1)})`); o.armR.f.setAttribute('transform', `translate(0,24) rotate(${(-p.aR[1]).toFixed(1)})`);
@@ -2591,6 +2697,13 @@ function wavB64(buf) {
         d.setAttribute('transform', `translate(${((k - 1) * 30 + (k === 1 ? 44 : 0)).toFixed(0)},${(-R * .6 + ph * 40).toFixed(1)})`); });
       o.tint.forEach(e => e.setAttribute('opacity', tipsy ? .32 : 0));
       if (o.prop && id === 'marco') o.prop.setAttribute('opacity', t > T.fruit[0] && t < T.close[1] ? 0 : 1);
+      const chk = TAPS.find(tp => tp.kind === 'chicken' && tp.who === id && t > tp.at && t < tp.at + 2600);
+      if (o.prop && id === 'patrick') o.prop.setAttribute('opacity', chk ? 0 : 1);
+      if (chk) { const k = clamp((t - chk.at) / 700, 0, 1), hx = x + p.hip + 26 * sc, hy0 = y + p.y - 10 * sc, fy = hy0 + (FLOOR - 6 - hy0) * k * k - (k >= 1 ? 8 * Math.abs(S((t - chk.at - 700) / 90)) * Math.max(0, 1 - (t - chk.at - 700) / 500) : 0);
+        chick.setAttribute('x', hx.toFixed(1)); chick.setAttribute('y', fy.toFixed(1)); chick.setAttribute('opacity', 1); }
+      // Kellner verteilt Caipis: wer erreicht ist, hält ab jetzt eine 🍹
+      if (EVENT === 'waiter' && o.prop) { const wx = -80 + 960 * span(t, e0, e1); if (t > e0 && wx > x && !o.gotDrink) { o.gotDrink = t; } o.prop.textContent = o.gotDrink && t >= o.gotDrink && t < T.close[1] ? '🍹' : PROPS[id]; }
+      umbr[i].setAttribute('opacity', EVENT === 'rain' ? win(t, [e0 + 500, e1], 300).toFixed(2) : 0); umbr[i].setAttribute('x', (x + p.hip + 30 * sc).toFixed(1)); umbr[i].setAttribute('y', (y + p.y - 165 * sc).toFixed(1));
       // Schatten: kleiner und blasser, je höher die Figur über dem Boden ist
       const feet = y + p.y + 62 * sc, air = clamp((FLOOR - feet) / 160, 0, 1);
       o.shadow.setAttribute('cx', (x + p.hip).toFixed(1)); o.shadow.setAttribute('rx', (34 * sc * (1 - .5 * air)).toFixed(1)); o.shadow.setAttribute('opacity', (1 - air).toFixed(2));
@@ -2600,6 +2713,25 @@ function wavB64(buf) {
     ids.forEach(id => { const o = P[id], k = LIVE.crown === id ? '👑' : LIVE.jester === id ? '🤡' : ''; if (o.hatK !== k) { o.hat.innerHTML = ''; if (k) { const tx = mk('text', {y: -R - 2, 'text-anchor': 'middle', 'font-size': 34}, o.hat); tx.textContent = k; } o.hatK = k; }
       o.hat.setAttribute('opacity', k && t > 2600 ? 1 : 0); });
     // Reihenfolge: Pyramide unten zuerst, sonst Sprecher/Solist vorn
+    if (!TAPS.some(tp => tp.kind === 'chicken' && t > tp.at && t < tp.at + 2600)) chick.setAttribute('opacity', 0);
+    // Ereignisse
+    const [e0, e1] = evw();
+    const rk = EVENT === 'rain' ? win(t, [e0, e1], 500) : 0;
+    clouds.setAttribute('opacity', rk.toFixed(2)); clouds.setAttribute('transform', `translate(${(-60 * (1 - rk)).toFixed(1)},0)`); drops.setAttribute('opacity', (rk * .7).toFixed(2));
+    if (rk > 0) dropEls.forEach((d, k) => { const x = hash(k, 41) * (W + 60), yy = ((t * .9 + hash(k, 42) * 520) % 520) - 20; d.setAttribute('transform', `translate(${x.toFixed(1)},${yy.toFixed(1)})`); });
+    if (EVENT === 'monkey' && t > e0 && t < e1 + 400) { const v = P[VICTIM], k1 = span(t, e0, e0 + 1300), k2 = span(t, e0 + 1500, e0 + 2900);
+      const mx = k2 > 0 ? v.x + (-120 - v.x) * k2 : 880 + (v.x + 30 - 880) * k1, my = FLOOR - 20 - Math.abs(S(t / 120)) * 22 - (k1 >= 1 && k2 === 0 ? 60 : 0);
+      monkey.setAttribute('x', mx.toFixed(1)); monkey.setAttribute('y', my.toFixed(1)); monkey.setAttribute('opacity', 1); monkey.setAttribute('transform', `scale(${k2 > 0 ? -1 : 1},1)`); if (k2 > 0) monkey.setAttribute('x', (-mx).toFixed(1));
+      feather.setAttribute('opacity', k2 > 0 ? 1 : 0); feather.setAttribute('x', (mx + 10).toFixed(1)); feather.setAttribute('y', (my - 40).toFixed(1));
+    } else { monkey.setAttribute('opacity', 0); feather.setAttribute('opacity', 0); }
+    if (EVENT === 'police' && t > e0 && t < e1 + 600) { const kin = span(t, e0, e0 + 1200), kout = span(t, e0 + 3400, e1 + 600), cx = -80 + 480 * ease(kin) + 560 * ease(kout);
+      const dance = t > e0 + 2600 ? Math.abs(S(PI * (t - MUSIC_AT) / BEAT)) * 16 : 0; cop.setAttribute('x', cx.toFixed(1)); cop.setAttribute('y', (FLOOR - 10 - dance).toFixed(1)); cop.setAttribute('opacity', 1);
+      cop.setAttribute('transform', t > e0 + 2600 ? `rotate(${(10 * S(t / 160)).toFixed(1)},${cx.toFixed(1)},${(FLOOR - 40).toFixed(1)})` : '');
+    } else cop.setAttribute('opacity', 0);
+    if (EVENT === 'waiter' && t > e0 && t < e1) { const wx = -80 + 960 * span(t, e0, e1), wy = FLOOR - 4 - Math.abs(S(t / 140)) * 4;
+      waiter.setAttribute('x', wx.toFixed(1)); waiter.setAttribute('y', wy.toFixed(1)); waiter.setAttribute('opacity', 1); tray.setAttribute('x', (wx + 22).toFixed(1)); tray.setAttribute('y', (wy - 62).toFixed(1)); tray.setAttribute('opacity', 1);
+    } else { waiter.setAttribute('opacity', 0); tray.setAttribute('opacity', 0); }
+    sceneTick(t);
     const front = sp ? sp.who : solo > .5 ? 'dajo' : null;
     if (pyr > 0 || b1) ['jonas', 'patrick', 'marco', 'simon', 'greisel', 'dajo'].forEach(id => P[id] && gPeople.appendChild(P[id].g));
     else if (front && P[front] && gPeople.lastChild !== P[front].g) gPeople.appendChild(P[front].g);
@@ -2621,15 +2753,21 @@ function wavB64(buf) {
       mk('path', {d: `M${clamp(o.x - 8, bx + 12, bx + bw - 24)},${by + bh - 1} l14,0 l-6,14Z`}, g);
       rows.forEach((r, k) => { const tx = mk('text', {x: bx + bw / 2, y: by + 26 + k * 20, 'text-anchor': 'middle'}, g); tx.textContent = r; }); };
     if (sp && sp.text && t > sp.at && P[sp.who]) bubble(P[sp.who], sp.text);
-    POPS.forEach(q => { const k = win(t, q.w, 200), o = P[q.who]; if (k > 0 && o) { const tx = mk('text', {x: o.x + 42 * o.sc, y: o.y - 150 * o.sc - 10 * k, class: 'sb-pop', opacity: k.toFixed(2)}, gBub); tx.textContent = q.txt; } });
+    const evPops = EVENT === 'rain' ? [{who: 'jonas', w: [e0 + 600, e0 + 2400], txt: 'Typisch Tropen! ☔'}] : EVENT === 'monkey' ? [{who: VICTIM, w: [e0 + 1500, e0 + 3200], txt: 'Hey! Mein Hut! 😠'}] :
+      EVENT === 'waiter' ? [{who: 'patrick', w: [e0 + 1200, e0 + 2600], txt: 'Obrigado! 🍹'}] : [];
+    const copPop = EVENT === 'police' ? (t > e0 + 1200 && t < e0 + 2500 ? 'Documentos, por favor! 👮' : t > e0 + 2600 && t < e0 + 3600 ? 'Tá bom! 🕺' : '') : '';
+    if (copPop) { const tx = mk('text', {x: cop.getAttribute('x'), y: FLOOR - 95, 'text-anchor': 'middle', class: 'sb-pop'}, gBub); tx.textContent = copPop; }
+    TAPS.forEach(tp => { if (tp.kind === 'chicken' && t > tp.at && t < tp.at + 1800) evPops.push({who: tp.who, w: [tp.at, tp.at + 1800], txt: 'Mein Hähnchen! 😱'}); });
+    POPS.concat(evPops).forEach(q => { const k = win(t, q.w, 200), o = P[q.who]; if (k > 0 && o) { const tx = mk('text', {x: o.x + 42 * o.sc, y: o.y - 150 * o.sc - 10 * k, class: 'sb-pop', opacity: k.toFixed(2)}, gBub); tx.textContent = q.txt; } });
     if (t > T.verdict[0] && t < T.verdict[1] && P[duelWinner()]) bubble(P[duelWinner()], '🏆 ' + byId[duelWinner()].name + ' gewinnt das Duell!');
     meter.setAttribute('opacity', duel.toFixed(2));
     const wnr = duelWinner(); meterBars.forEach((bar, k) => { const id = k ? 'greisel' : 'simon', w = k ? T.duelG : T.duelS, f = span(t, w[0], w[1]) * (id === wnr ? 1 : .78);
       bar.setAttribute('width', (296 * f * (1 + .03 * S(t / 90))).toFixed(1)); });
     // Licht: Lichterkette, Scheinwerfer, Discokugel (fällt in Panne 3), Nebel, Publikum, Konfetti, Blitz beim Kostümwechsel
-    const on = Math.floor(b) % 2; bulbs.forEach((q, k) => q.setAttribute('opacity', t > MUSIC_AT && (k + on) % 2 ? .45 : 1));
+    const on = Math.floor(b) % 2, party = t - BOOST.cheer < 1800 && t > BOOST.cheer; bulbs.forEach((q, k) => q.setAttribute('opacity', party ? (Math.floor(t / 90) + k) % 2 ? .3 : 1 : t > MUSIC_AT && (k + on) % 2 ? .45 : 1));
     const lit = span(t, 2200, 3000) * (1 - span(t, T.close[0], T.close[0] + 800)) + (blo ? span(t, T.b1[0] - 600, T.b1[0]) * (1 - span(t, T.close2[0], T.close2[0] + 600)) : 0);
-    beams.setAttribute('opacity', (lit * (.55 + .45 * Math.abs(S(PI * b)))).toFixed(2));
+    const chk2 = clamp(1 - (t - BOOST.cheer) / 1800, 0, 1) * (t > BOOST.cheer ? 1 : 0);
+    beams.setAttribute('opacity', Math.min(1, lit * (.55 + .45 * Math.abs(S(PI * b))) + chk2).toFixed(2));
     beamEls.forEach((q, k) => q.el.setAttribute('transform', `translate(${q.x},-10) rotate(${(28 * S(t / 1300 + k * 2.1)).toFixed(1)})`));
     let bd = ease(span(t, T.wave[0] - 800, T.wave[0] + 400)) * (1 - ease(span(t, T.close[0], T.close[0] + 900)));
     let by = -40 + 80 * bd, broken = false;
@@ -2641,9 +2779,10 @@ function wavB64(buf) {
     dotEls.forEach((d, k) => { const a = t / 2400 + hash(k, 3) * 6.3, rr = 160 + hash(k, 4) * 260; d.setAttribute('cx', (400 + rr * C(a) * 1.4).toFixed(1)); d.setAttribute('cy', (90 + Math.abs(rr * S(a)) * .9).toFixed(1)); });
     fog.setAttribute('opacity', (.35 * lit + .1).toFixed(2));
     fogEls.forEach((f, k) => f.setAttribute('cx', (((k * 140 + t * (.012 + k * .003)) % 1060) - 130).toFixed(1)));
-    const cheer = [[1700, 4200], [16700, 17300], T.chant, [40400, 40800], [T.verdict[0], T.verdict[1]], [T.pyr[0] + 1200, T.close[1]]].some(w => t > w[0] && t < w[1]) || (t > T.duel[0] && S(t / 300) > .3 && t < T.duel[1]);
+    const clapNow = t > BOOST.clap && t < BOOST.clap + 1800, cheer = t - BOOST.cheer < 1800 && t > BOOST.cheer || [[1700, 4200], [16700, 17300], T.chant, [40400, 40800], [T.verdict[0], T.verdict[1]], [T.pyr[0] + 1200, T.close[1]], [T.confetti, T.close[1]]].some(w => t > w[0] && t < w[1]) || (t > T.duel[0] && S(t / 300) > .3 && t < T.duel[1]);
     fans.forEach(q => { const jump = cheer ? Math.abs(S(PI * b + q.ph)) * 8 : Math.abs(S(PI * b + q.ph)) * 2.5;
       q.g.setAttribute('transform', `translate(${q.x.toFixed(1)},${(q.y - jump).toFixed(1)})`);
+      if (clapNow) { const c = S(t / 70 + q.ph) > 0 ? 4 : 14; q.armL.setAttribute('x2', -c); q.armL.setAttribute('y2', -14); q.armR.setAttribute('x2', c); q.armR.setAttribute('y2', -14); return; }
       const up = cheer ? 1 : 0, wv = S(2 * PI * b + q.ph) * 6;
       q.armL.setAttribute('x2', up ? -22 + wv : -18); q.armL.setAttribute('y2', up ? -26 : 22); q.armR.setAttribute('x2', up ? 22 + wv : 18); q.armR.setAttribute('y2', up ? -26 : 22); });
     const cOn = t > T.confetti && t < T.close[1]; conf.setAttribute('opacity', cOn ? 1 : 0);
@@ -2656,9 +2795,10 @@ function wavB64(buf) {
     curtL.setAttribute('x', (-cw).toFixed(1)); curtR.setAttribute('x', (W / 2 - 30 + cw).toFixed(1));
     const tShow = (1 - span(t, 1700, 2600)) + span(t, T.close[1] - 600, T.close[1]) * (1 - span(t, T.b1[0] - 900, T.b1[0] - 500)) + span(t, T.close2[1] - 400, T.close2[1]);
     title.setAttribute('opacity', clamp(tShow, 0, 1).toFixed(2));
-    tt.textContent = t > T.close[1] - 700 && t < T.b1[0] ? '🎬 Pannen vom Dreh' : '💃 ' + (D.title || 'Samba-Show');
-    ts.textContent = t > T.close2[1] - 500 ? 'Obrigado! 👏' : t > T.close[0] && t < T.close[1] ? 'Obrigado! 👏' : t > T.close[1] ? 'gleich geht’s weiter …' : t < 50 ? '▶ Antippen zum Starten' : '';
+    tt.textContent = ENC ? '🎉 Zugabe!' : t > T.close[1] - 700 && t < T.b1[0] ? '🎬 Pannen vom Dreh' : '💃 ' + (D.title || 'Samba-Show');
+    ts.textContent = t > T.close2[1] - 500 ? 'Obrigado! 👏' : t > T.close[0] && t < T.close[1] ? 'Obrigado! 👏' : t > T.close[1] && !ENC ? 'gleich geht’s weiter …' : t < 50 ? (encoreReady ? '🎉 Zugabe? Antippen!' : '▶ Antippen zum Starten') : '';
     // Ansage (Untertitel) und Filmklappen der Pannen
+    loc.textContent = STAGES[STAGE].label ? '📍 Live aus ' + STAGES[STAGE].label : ''; loc.setAttribute('opacity', STAGES[STAGE].label && t > 1700 ? 1 : 0);
     const ann = LINES.find(l => l.who === 'announcer'), annOn = ann && t > ann.at && t < ann.at + ann.dur + 400;
     const klap = [[T.b1, 'Klappe, die 12. – Pyramide'], [T.b2, 'Klappe, die 31. – Ansage'], [T.b3, 'Klappe, die 47. – Discokugel']].find(([w]) => t > w[0] && t < w[1]);
     cap.setAttribute('opacity', annOn || klap ? 1 : 0); capT.textContent = annOn ? ann.text : klap ? '🎬 ' + klap[1] : '';
@@ -2666,8 +2806,19 @@ function wavB64(buf) {
   }
 
   // ---------- Ton: Show-Samba, Effekte, Stimmen ----------
+  function eventSfx(m, at) {
+    const [e0] = evw();
+    if (EVENT === 'rain') m.sfx('rain', at(e0));
+    if (EVENT === 'monkey') { m.sfx('monkey', at(e0 + 1300)); m.sfx('monkey', at(e0 + 2000)); }
+    if (EVENT === 'police') { m.sfx('whistle', at(e0 + 1100)); m.music.gain.setTargetAtTime(.1, at(e0 + 1250), .05); m.music.gain.setTargetAtTime(1, at(e0 + 2600), .1); m.sfx('whoo', at(e0 + 2700)); }
+    if (EVENT === 'waiter') [800, 1600, 2400, 3200].forEach(o => m.sfx('ding', at(e0 + o)));
+  }
   function program(m, t0) {   // alles relativ zu t0 (Sekunden im AudioContext)
     const at = ms => t0 + ms / 1000;
+    eventSfx(m, at);
+    if (ENC) { m.setMode('show', at(MUSIC_AT)); m.step = 0; m.next = at(MUSIC_AT) + .03; m.drums = [[at(T.chant[0]), at(T.chant[1])]];
+      m.sfx('applause', at(600)); m.sfx('whoo', at(900)); m.sfx('whoo', at(T.wave[0] + 300)); m.sfx('whoo', at(T.spin[0] + 300));
+      m.sfx('boom', at(T.confetti - 400)); m.sfx('boom', at(T.confetti + 400)); m.sfx('applause', at(T.confetti)); m.end(at(T.close[1])); return; }
     m.setMode('show', at(MUSIC_AT)); m.step = 0; m.next = at(MUSIC_AT) + .03;   // Takt 1 genau zum Tanzbeginn
     m.drums = [[at(T.chant[0]), at(T.chant[1])], [at(T.close[0] + 400), at(T.b2[0])], [at(T.b3[1]), at(T.close2[1] + 2000)]];
     m.sfx('applause', at(1700)); m.sfx('whoo', at(2000)); ids.forEach((id, i) => m.sfx('boing', at(2000 + i * 160 + 400)));
@@ -2685,33 +2836,58 @@ function wavB64(buf) {
   function stop(reset) {
     run++; cancelAnimationFrame(raf); clearInterval(timer); voices.forEach(a => { a.el.pause(); clearTimeout(a.to); }); voices = [];
     if (ctx) { ctx.close().catch(() => {}); ctx = null; }
-    btn.textContent = '💃 Samba-Show starten'; btn.setAttribute('aria-pressed', 'false'); if (reset) frame(0);
+    btn.textContent = encoreReady ? '🎉 Zugabe!' : '💃 Samba-Show starten'; btn.setAttribute('aria-pressed', 'false'); liveM = null; aud.forEach(b => b.classList.add('off'));
+    if (reset) { ENC = false; T = TMAIN; END = 72500; TAPS = []; frame(0); }
   }
   function liveData() {   // aus den anderen Modulen (Drinks, Karten): Krone, Narrenkappe, wer heute am meisten getrunken hat
     const c = MEHUB.card || {}, d = MEHUB.drinks || {}, best = (o, f, min) => { let id = null, v = min; for (const k in o) if (f(o[k]) > v) { v = f(o[k]); id = k; } return id; };
     LIVE = {card: c, crown: best(c, x => x.w || 0, 0), jester: best(c, x => x.l || 0, 0), tipsy: best(d, x => x.today || 0, 2)};
     if (LIVE.jester === LIVE.crown) LIVE.jester = null;
   }
-  function start() {
-    stop(false); const my = ++run; btn.textContent = '⏹ Stopp'; btn.setAttribute('aria-pressed', 'true');
+  function start(enc) {
+    stop(false); const my = ++run; btn.textContent = '⏹ Stopp'; btn.setAttribute('aria-pressed', 'true'); aud.forEach(b => b.classList.remove('off'));
+    ENC = !!enc; T = ENC ? TENC : TMAIN; END = ENC ? 19800 : 72500; encoreReady = false; TAPS = []; BOOST = {clap: -1e9, cheer: -1e9};
     const video = window.__danceT !== undefined; pickLines(video ? 0 : 1 + Math.floor(Math.random() * 1000)); if (!video) liveData();
+    EVENT = window.__danceEvent || (video ? 'police' : EVENTS[Math.floor(Math.random() * EVENTS.length)]);
+    VICTIM = video ? 'simon' : ids[Math.floor(Math.random() * N)];
+    ids.forEach(id => { P[id].gotDrink = 0; if (P[id].prop) P[id].prop.textContent = PROPS[id]; });
+    buildStage(stageToday());
     if (!video && soundOn() && window.__TripMusic) {
       try { const AC = window.AudioContext || window.webkitAudioContext; ctx = new AC(); ctx.resume();
-        const m = window.__TripMusic(ctx), base = ctx.currentTime + .08; program(m, base);
+        const m = window.__TripMusic(ctx), base = ctx.currentTime + .08; program(m, base); liveM = m;
         timer = setInterval(() => { if (ctx) m.schedule(ctx.currentTime + .15); }, 30);
         LINES.forEach(l => { const el = new Audio('audio/samba-' + l.file + '.mp3'); el.preload = 'auto'; voices.push({el, to: setTimeout(() => { if (my === run) el.play().catch(() => {}); }, l.at + 80)}); });
       } catch (e) { ctx = null; }
     }
     t0p = tnow();
-    (function loop() { if (my !== run) return; const t = tnow() - t0p; frame(t); if (t > END) { stop(true); return; } raf = requestAnimationFrame(loop); })();
+    (function loop() { if (my !== run) return; const t = tnow() - t0p; frame(t); if (t > END) { encoreReady = !ENC; stop(true); return; } raf = requestAnimationFrame(loop); })();
   }
-  btn.addEventListener('click', () => { if (btn.getAttribute('aria-pressed') === 'true') stop(true); else start(); });
-  svg.addEventListener('click', () => { if (btn.getAttribute('aria-pressed') !== 'true') start(); });
+  btn.addEventListener('click', () => { if (btn.getAttribute('aria-pressed') === 'true') { encoreReady = false; stop(true); } else start(encoreReady); });
+  // Antippen einer Figur während der Show: Spruch, Sprung, Drehung (Patrick: Hähnchen fällt runter)
+  const playing = () => btn.getAttribute('aria-pressed') === 'true';
+  function tapPerson(id) {
+    const t = tnow() - t0p, own = D.lines.filter(l => l.who === id && !l.chorus && !l.sing && !l.src).flatMap(l => [l].concat(l.alts || [])).map(v => ({key: v.key, text: v.text}));
+    const r = Math.random(), kind = id === 'patrick' && r < .35 && !TAPS.some(tp => tp.kind === 'chicken' && t - tp.at < 3000) ? 'chicken' : r < .7 && own.length ? 'line' : r < .85 ? 'jump' : 'spin';
+    const tp = {who: id, at: t, kind, tap: true, dur: kind === 'chicken' ? 1800 : 700, env: ''};
+    if (kind === 'line') { const v = own[Math.floor(Math.random() * own.length)]; Object.assign(tp, {text: v.text, file: v.key}, voiceOf(v.key));
+      if (ctx) { const el = new Audio('audio/samba-' + v.key + '.mp3'); el.play().catch(() => {}); voices.push({el, to: 0}); } }
+    if (liveM && ctx) liveM.sfx(kind === 'chicken' ? 'thud' : kind === 'jump' ? 'boing' : kind === 'spin' ? 'whoo' : 'ding', ctx.currentTime + .02);
+    TAPS = TAPS.filter(x => t - x.at < 4000).concat([tp]);
+  }
+  svg.addEventListener('click', e => {
+    if (!playing()) { start(encoreReady); return; }
+    const g = e.target.closest && e.target.closest('[id^="sb-p-"]'); if (g) tapPerson(g.id.slice(5));
+  });
+  // Publikum: Klatschen und Jubeln
+  const aud = [document.getElementById('samba-clap'), document.getElementById('samba-cheer')].filter(Boolean);
+  aud.forEach(b => b.addEventListener('click', () => { if (!playing()) return; const t = tnow() - t0p, cheerB = b.id === 'samba-cheer';
+    if (cheerB) BOOST.cheer = t; else BOOST.clap = t;
+    if (liveM && ctx) { liveM.sfx('applause', ctx.currentTime + .02); if (cheerB) { liveM.sfx('whoo', ctx.currentTime + .05); liveM.sfx('whoo', ctx.currentTime + .5); } } }));
   const sPaint = () => { if (sbtn) { sbtn.textContent = soundOn() ? '🔊 Ton an' : '🔇 Ton aus'; sbtn.setAttribute('aria-pressed', String(soundOn())); } };
   if (sbtn) sbtn.addEventListener('click', () => { store.set('sound', soundOn() ? '0' : '1'); sPaint(); if (!soundOn() && ctx) { ctx.close().catch(() => {}); ctx = null; clearInterval(timer); voices.forEach(a => a.el.pause()); } });
   sPaint(); frame(0);
   // Video-Aufnahme: Zeit setzen, Musik offline rendern, Stimmen-Startzeiten; __danceLive setzt Live-Daten zum Ausprobieren
-  window.__dancePlay = start; window.__danceEnd = END; window.__danceLive = o => { LIVE = Object.assign({card: {}}, o); };
+  window.__dancePlay = start; window.__danceTap = id => tapPerson(id); window.__danceBoost = k => { BOOST[k] = tnow() - t0p; }; window.__danceEnd = END; window.__danceLive = o => { LIVE = Object.assign({card: {}}, o); };
   window.__danceAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms / 1000), sr), m = window.__TripMusic(oc); program(m, 0); m.schedule(ms / 1000); return wavB64(await oc.startRendering()); };
   window.__danceVoices = () => LINES.map(l => ({key: l.file, at: l.at}));
 })();

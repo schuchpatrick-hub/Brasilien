@@ -176,7 +176,12 @@ Spiegelung (`<use>` der Figuren) auf nassem Boden. Musik = Modus `show` in `Musi
 ohne Effekte), Effekte applause/whoo/ding/munch/feedback/crash/thud/flash.
 Stimmen: `tools/gen_dance_audio.py` (sherpa-onnx, Stimmen aus den sherpa-onnx-Releases, siehe Kopf der Datei) →
 `web/audio/samba-*.mp3`; beim Veröffentlichen alle in `files` mitgeben, nicht mehr benutzte auf `null`.
-Video: `window.__danceT`, `__danceAudio(ms)`, `__danceVoices()`, `__danceLive({...})` zum Ausprobieren; enthält Gesichter, nicht ins Repo.
+Interaktiv: Figur antippen (`tapPerson`: Spruch mit Stimme, Sprung, Drehung; Patrick lässt das Hähnchen fallen), Knöpfe
+`#samba-clap`/`#samba-cheer` (Publikum klatscht/jubelt, Licht blitzt), nach dem Ende „🎉 Zugabe!“ (`TENC`, kurze Bonus-Runde).
+Zufalls-Ereignis pro Abspielen während der Polonaise (`EVENT`: rain, monkey, police, waiter). Bühne passend zur Reise
+(`buildStage`/`stageToday` aus `trip.json` → `stays`, Zeitzone Rio; guaruja, rio, silvester am 31.12./01.01., iguacu, jungle,
+paraty, ilha; sonst default = Copacabana).
+Video: `window.__danceT`, `__danceAudio(ms)`, `__danceVoices()`, `__danceLive({...})`, `__danceEvent`, `__danceStage`, `__danceTap(id)`, `__danceBoost('clap'|'cheer')` zum Ausprobieren; enthält Gesichter, nicht ins Repo.
 
 ## Karte: Infokarten
 
