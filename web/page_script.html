@@ -2360,10 +2360,14 @@ function wavB64(buf) {
   const voiceOf = key => (D.voice || {})[key] || {dur: 1500, env: ''};
   let LINES = [], LIVE = {};
   function pickLines(seed) {   // pro Abspielen eine Variante je Spruch (Video: seed 0 = immer die erste)
-    if (ENC) { const AT = {ole: 4000, ole2: 6400, tchau: 15600};
-      LINES = D.lines.filter(l => l.chorus).map(l => Object.assign({}, l, {at: AT[l.key.split('-')[0]] || l.at, file: l.src || l.key, text: ''}, voiceOf(l.src || l.key))); return; }
-    LINES = D.lines.map((l, k) => { const vs = [l].concat(l.alts || []), v = vs[seed ? Math.floor(hash(seed, k) * vs.length) : 0];
-      const key = l.src || v.key; return Object.assign({}, l, {file: key, text: v.text}, voiceOf(key)); });
+    // Chöre (grp c1/c2): alle singen dieselbe Variante, und der zweite Durchgang ist immer ein anderer Chor als der erste
+    const pick = (l, k) => { const vs = [l].concat(l.alts || []), n = vs.length;
+      if (!l.grp) return vs[seed ? Math.floor(hash(seed, k) * n) : 0];
+      const i1 = seed ? Math.floor(hash(seed, 7) * n) : 0;
+      return vs[l.grp === 'c1' ? i1 : (i1 + 1 + (seed ? Math.floor(hash(seed, 8) * (n - 1)) : 0)) % n]; };
+    const AT = {ole: 4000, ole2: 6400, tchau: 15600};
+    LINES = D.lines.filter(l => !ENC || l.chorus).map((l, k) => { const v = pick(l, k), key = l.src || (v === l && l.src0) || v.key;
+      return Object.assign({}, l, {file: key, text: v.text || ''}, ENC ? {at: AT[l.key.split('-')[0]] || l.at} : {}, voiceOf(key)); });
   }
   pickLines(0);
 
@@ -2530,7 +2534,7 @@ function wavB64(buf) {
     if (!(p && p.photo)) { const t = mk('text', {y: -6, 'text-anchor': 'middle', 'font-size': 30, fill: '#fff', 'font-weight': 800}, o.upper); t.textContent = p ? p.name[0] : '?'; }
     // Cartoon-Augenbrauen über den Augen des Fotos (wandern beim Sprechen und Staunen nach oben)
     const ey = ((f.e || .5) - f.y) * Dd - 12, ex = (f.ex || .13) * Dd;
-    o.brows = [-1, 1].map(sx => { const b = mk('g', {}, o.upper); mk('path', {d: `M${sx * ex - 11},${ey + 2} Q${sx * ex},${ey - 5} ${sx * ex + 11},${ey + 2}`, fill: 'none', stroke: INK, 'stroke-width': 4.5, 'stroke-linecap': 'round'}, b); return {g: b, sx, x: sx * ex, y: ey}; });
+    o.brows = [];   // Augenbrauen bewusst weggelassen
     o.sweat = [0, 1, 2].map(k => mk('path', {d: 'M0,-7 Q5,0 0,5 Q-5,0 0,-7Z', fill: '#7fd3ff', stroke: '#2a6f99', 'stroke-width': 1, opacity: 0}, o.head));
     o.hat = mk('g', {opacity: 0}, o.head);   // Krone oder Narrenkappe (Live-Daten)
     mk('use', {href: '#sb-p-' + id, transform: `translate(0,${2 * FLOOR}) scale(1,-1)`}, refl);

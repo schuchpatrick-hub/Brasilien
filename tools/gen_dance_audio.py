@@ -80,13 +80,13 @@ def main():
     trip = json.load(open(TRIP, encoding='utf-8')); dance = trip['dance']; only = set(sys.argv[1:])
     voices = dance['voices']; voice = dance.get('voice', {})
     for ln in dance['lines']:
-        if ln.get('src'): continue
+        if ln.get('src') or ln.get('nogen'): continue   # benutzt Aufnahmen anderer Zeilen
         for alt in [ln] + ln.get('alts', []):
             key = alt['key']
             if only and key not in only: continue
             v = dict(voices[ln.get('voice', ln['who'])]); v.update(ln.get('vo', {}))
             with tempfile.TemporaryDirectory() as tmp:
-                wav = sung(v, dance['melody'], tmp) if ln.get('sing') else spoken(v, alt['say'], tmp)
+                wav = sung(v, dance['melodies'][alt.get('mel', ln.get('mel', 'ole'))], tmp) if ln.get('sing') else spoken(v, alt['say'], tmp)
                 pcm = os.path.join(tmp, 'pcm.wav'); run_ff(wav, pcm, 'anull')
                 env, dur = env_of(pcm)
                 subprocess.run([ffmpeg(), '-y', '-loglevel', 'error', '-i', pcm, '-b:a', '96k', os.path.join(OUT, f'samba-{key}.mp3')], check=True)

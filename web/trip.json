@@ -3532,102 +3532,348 @@
         "who": "jonas",
         "at": 27500,
         "sing": true,
+        "mel": "ole",
+        "grp": "c1",
         "say": "",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "alts": [
+          {
+            "key": "brasil-jonas",
+            "mel": "brasil",
+            "text": ""
+          },
+          {
+            "key": "gringos-jonas",
+            "mel": "gringos",
+            "text": ""
+          },
+          {
+            "key": "caipi-jonas",
+            "mel": "caipi",
+            "text": ""
+          }
+        ]
       },
       {
         "key": "ole-simon",
         "who": "simon",
         "at": 27500,
         "sing": true,
+        "mel": "ole",
+        "grp": "c1",
         "say": "",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "alts": [
+          {
+            "key": "brasil-simon",
+            "mel": "brasil",
+            "text": ""
+          },
+          {
+            "key": "gringos-simon",
+            "mel": "gringos",
+            "text": ""
+          },
+          {
+            "key": "caipi-simon",
+            "mel": "caipi",
+            "text": ""
+          }
+        ]
       },
       {
         "key": "ole-patrick",
         "who": "patrick",
         "at": 27500,
         "sing": true,
+        "mel": "ole",
+        "grp": "c1",
         "say": "",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "alts": [
+          {
+            "key": "brasil-patrick",
+            "mel": "brasil",
+            "text": ""
+          },
+          {
+            "key": "gringos-patrick",
+            "mel": "gringos",
+            "text": ""
+          },
+          {
+            "key": "caipi-patrick",
+            "mel": "caipi",
+            "text": ""
+          }
+        ]
       },
       {
         "key": "ole-marco",
         "who": "marco",
         "at": 27500,
         "sing": true,
+        "mel": "ole",
+        "grp": "c1",
         "say": "",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "alts": [
+          {
+            "key": "brasil-marco",
+            "mel": "brasil",
+            "text": ""
+          },
+          {
+            "key": "gringos-marco",
+            "mel": "gringos",
+            "text": ""
+          },
+          {
+            "key": "caipi-marco",
+            "mel": "caipi",
+            "text": ""
+          }
+        ]
       },
       {
         "key": "ole-greisel",
         "who": "greisel",
         "at": 27500,
         "sing": true,
+        "mel": "ole",
+        "grp": "c1",
         "say": "",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "alts": [
+          {
+            "key": "brasil-greisel",
+            "mel": "brasil",
+            "text": ""
+          },
+          {
+            "key": "gringos-greisel",
+            "mel": "gringos",
+            "text": ""
+          },
+          {
+            "key": "caipi-greisel",
+            "mel": "caipi",
+            "text": ""
+          }
+        ]
       },
       {
         "key": "ole-dajo",
         "who": "dajo",
         "at": 27500,
         "sing": true,
+        "mel": "ole",
+        "grp": "c1",
         "say": "",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "alts": [
+          {
+            "key": "brasil-dajo",
+            "mel": "brasil",
+            "text": ""
+          },
+          {
+            "key": "gringos-dajo",
+            "mel": "gringos",
+            "text": ""
+          },
+          {
+            "key": "caipi-dajo",
+            "mel": "caipi",
+            "text": ""
+          }
+        ]
       },
       {
         "key": "ole2-jonas",
         "who": "jonas",
         "at": 29900,
-        "src": "ole-jonas",
+        "sing": true,
+        "mel": "ole",
+        "grp": "c2",
+        "nogen": true,
+        "src0": "ole-jonas",
+        "say": "",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "alts": [
+          {
+            "key": "brasil-jonas",
+            "mel": "brasil",
+            "text": ""
+          },
+          {
+            "key": "gringos-jonas",
+            "mel": "gringos",
+            "text": ""
+          },
+          {
+            "key": "caipi-jonas",
+            "mel": "caipi",
+            "text": ""
+          }
+        ]
       },
       {
         "key": "ole2-simon",
         "who": "simon",
         "at": 29900,
-        "src": "ole-simon",
+        "sing": true,
+        "mel": "ole",
+        "grp": "c2",
+        "nogen": true,
+        "src0": "ole-simon",
+        "say": "",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "alts": [
+          {
+            "key": "brasil-simon",
+            "mel": "brasil",
+            "text": ""
+          },
+          {
+            "key": "gringos-simon",
+            "mel": "gringos",
+            "text": ""
+          },
+          {
+            "key": "caipi-simon",
+            "mel": "caipi",
+            "text": ""
+          }
+        ]
       },
       {
         "key": "ole2-patrick",
         "who": "patrick",
         "at": 29900,
-        "src": "ole-patrick",
+        "sing": true,
+        "mel": "ole",
+        "grp": "c2",
+        "nogen": true,
+        "src0": "ole-patrick",
+        "say": "",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "alts": [
+          {
+            "key": "brasil-patrick",
+            "mel": "brasil",
+            "text": ""
+          },
+          {
+            "key": "gringos-patrick",
+            "mel": "gringos",
+            "text": ""
+          },
+          {
+            "key": "caipi-patrick",
+            "mel": "caipi",
+            "text": ""
+          }
+        ]
       },
       {
         "key": "ole2-marco",
         "who": "marco",
         "at": 29900,
-        "src": "ole-marco",
+        "sing": true,
+        "mel": "ole",
+        "grp": "c2",
+        "nogen": true,
+        "src0": "ole-marco",
+        "say": "",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "alts": [
+          {
+            "key": "brasil-marco",
+            "mel": "brasil",
+            "text": ""
+          },
+          {
+            "key": "gringos-marco",
+            "mel": "gringos",
+            "text": ""
+          },
+          {
+            "key": "caipi-marco",
+            "mel": "caipi",
+            "text": ""
+          }
+        ]
       },
       {
         "key": "ole2-greisel",
         "who": "greisel",
         "at": 29900,
-        "src": "ole-greisel",
+        "sing": true,
+        "mel": "ole",
+        "grp": "c2",
+        "nogen": true,
+        "src0": "ole-greisel",
+        "say": "",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "alts": [
+          {
+            "key": "brasil-greisel",
+            "mel": "brasil",
+            "text": ""
+          },
+          {
+            "key": "gringos-greisel",
+            "mel": "gringos",
+            "text": ""
+          },
+          {
+            "key": "caipi-greisel",
+            "mel": "caipi",
+            "text": ""
+          }
+        ]
       },
       {
         "key": "ole2-dajo",
         "who": "dajo",
         "at": 29900,
-        "src": "ole-dajo",
+        "sing": true,
+        "mel": "ole",
+        "grp": "c2",
+        "nogen": true,
+        "src0": "ole-dajo",
+        "say": "",
         "text": "",
-        "chorus": true
+        "chorus": true,
+        "alts": [
+          {
+            "key": "brasil-dajo",
+            "mel": "brasil",
+            "text": ""
+          },
+          {
+            "key": "gringos-dajo",
+            "mel": "gringos",
+            "text": ""
+          },
+          {
+            "key": "caipi-dajo",
+            "mel": "caipi",
+            "text": ""
+          }
+        ]
       },
       {
         "key": "tchau-jonas",
@@ -3826,6 +4072,78 @@
       "tchau-dajo": {
         "dur": 1379,
         "env": "03537789720113699712999534000000000"
+      },
+      "brasil-jonas": {
+        "dur": 2290,
+        "env": "9940004569976510002993100459987300000687100025830000000000"
+      },
+      "gringos-jonas": {
+        "dur": 2290,
+        "env": "9853117973003976410996100045200572000255000000000000000000"
+      },
+      "caipi-jonas": {
+        "dur": 2290,
+        "env": "7531003994102993001541000000000574100296410099610045642000"
+      },
+      "brasil-simon": {
+        "dur": 2290,
+        "env": "9730002989840000003983000699995200000999200008300000000000"
+      },
+      "gringos-simon": {
+        "dur": 2290,
+        "env": "9954209950006875201971000074100773000364000000000000000000"
+      },
+      "caipi-simon": {
+        "dur": 2290,
+        "env": "7410007830006960001530000000000641000385100199100044410000"
+      },
+      "brasil-patrick": {
+        "dur": 2290,
+        "env": "9785103389746412001986200427965652000498610125862000000000"
+      },
+      "gringos-patrick": {
+        "dur": 2290,
+        "env": "9986305983104975210984100086330695100255100000000000000000"
+      },
+      "caipi-patrick": {
+        "dur": 2290,
+        "env": "6541006873004995101441000000000663100397100099300046531000"
+      },
+      "brasil-marco": {
+        "dur": 2290,
+        "env": "9893103468966300002976100446884430000667100027510000000000"
+      },
+      "gringos-marco": {
+        "dur": 2290,
+        "env": "8964217971003976410972000273100772000364100000000000000000"
+      },
+      "caipi-marco": {
+        "dur": 2290,
+        "env": "7410006962004951001531000000000642000398510099710035642000"
+      },
+      "brasil-greisel": {
+        "dur": 2290,
+        "env": "9930002999842000002994000788720000000765100017400000000000"
+      },
+      "gringos-greisel": {
+        "dur": 2290,
+        "env": "9641006940005974102961000075100652000262000000000000000000"
+      },
+      "caipi-greisel": {
+        "dur": 2290,
+        "env": "7410005740006971001530000000000563000496100198100067421000"
+      },
+      "brasil-dajo": {
+        "dur": 2290,
+        "env": "9400001972000000004971000497100000000993000076100000000000"
+      },
+      "gringos-dajo": {
+        "dur": 2290,
+        "env": "9620009920007782002940000661000740000551000000000000000000"
+      },
+      "caipi-dajo": {
+        "dur": 2290,
+        "env": "7510008910007961002510000000000752000761000393000065200000"
       }
     },
     "voices": {
@@ -3881,47 +4199,160 @@
         "semi": 12
       }
     },
-    "melody": [
-      [
-        "ô",
-        "F3",
-        250
+    "melodies": {
+      "ole": [
+        [
+          "ô",
+          "F3",
+          250
+        ],
+        [
+          "lê",
+          "A3",
+          250
+        ],
+        [
+          "ô",
+          "C4",
+          250
+        ],
+        [
+          "lê",
+          "A3",
+          250
+        ],
+        [
+          "ô",
+          "F3",
+          250
+        ],
+        [
+          "lê",
+          "A3",
+          250
+        ],
+        [
+          "ô",
+          "C4",
+          250
+        ],
+        [
+          "lá",
+          "F4",
+          750
+        ]
       ],
-      [
-        "lê",
-        "A3",
-        250
+      "brasil": [
+        [
+          "bra",
+          "C4",
+          250
+        ],
+        [
+          "siu",
+          "A3",
+          500
+        ],
+        [
+          "bra",
+          "C4",
+          250
+        ],
+        [
+          "siu",
+          "A3",
+          500
+        ],
+        [
+          "bra",
+          "D4",
+          250
+        ],
+        [
+          "siu",
+          "F4",
+          500
+        ]
       ],
-      [
-        "ô",
-        "C4",
-        250
+      "gringos": [
+        [
+          "grin",
+          "A3",
+          250
+        ],
+        [
+          "gos",
+          "C4",
+          250
+        ],
+        [
+          "grin",
+          "A3",
+          250
+        ],
+        [
+          "gos",
+          "C4",
+          250
+        ],
+        [
+          "sam",
+          "D4",
+          250
+        ],
+        [
+          "ba",
+          "C4",
+          250
+        ],
+        [
+          "já",
+          "F4",
+          750
+        ]
       ],
-      [
-        "lê",
-        "A3",
-        250
-      ],
-      [
-        "ô",
-        "F3",
-        250
-      ],
-      [
-        "lê",
-        "A3",
-        250
-      ],
-      [
-        "ô",
-        "C4",
-        250
-      ],
-      [
-        "lá",
-        "F4",
-        750
+      "caipi": [
+        [
+          "cai",
+          "C4",
+          250
+        ],
+        [
+          "pi",
+          "A3",
+          250
+        ],
+        [
+          "ri",
+          "C4",
+          250
+        ],
+        [
+          "nha",
+          "F4",
+          500
+        ],
+        [
+          "cai",
+          "C4",
+          250
+        ],
+        [
+          "pi",
+          "A3",
+          250
+        ],
+        [
+          "ri",
+          "C4",
+          250
+        ],
+        [
+          "nha",
+          "F3",
+          250
+        ]
       ]
-    ]
+    }
   }
 }

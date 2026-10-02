@@ -165,8 +165,8 @@ zu MP4 machen. Das Video enthält Crew-Fotos, also **nicht** ins Repo legen.
 
 Im Kapitel Crew unter den Steckbriefen (`#samba`, SVG `#samba-svg`, Knöpfe `#samba-play`/`#samba-sound`). Crew-Köpfe (Fotos) auf
 gezeichneten Körpern; Münder wie die South-Park-Kanadier (Foto auf Mundhöhe geteilt, Oberkopf klappt nach der Lautstärkekurve),
-Cartoon-Augenbrauen und Schweißtropfen über dem Foto. Daten in `trip.json` → `dance`: `look` je Person (Stil, Shirt, Hose, `face`
-= Ausschnitt x/y/z, Mundhöhe m, Augenlinie e, Augenabstand ex), `voices` (Stimme je Person), `melody` (gesungener Chor),
+Schweißtropfen über dem Foto (Augenbrauen auf Wunsch entfernt). Daten in `trip.json` → `dance`: `look` je Person (Stil, Shirt, Hose, `face`
+= Ausschnitt x/y/z, Mundhöhe m, Augenlinie e, Augenabstand ex), `voices` (Stimme je Person), `melodies` (gesungene Chöre: ole, brasil, gringos, caipi; je Durchgang `grp` c1/c2 eine andere, alle singen dieselbe),
 `lines` (Zeitpunkt `at`, `alts` = Varianten, pro Abspielen zufällig; `src` = Aufnahme einer anderen Zeile; `sing` = gesungen),
 `voice` wird erzeugt. Ablauf in `frame(t)`, Zeitfenster in `T`: Ansage, Solos mit Kamera-Zoom, Patrick aus dem Takt (Freeze,
 Hähnchen), La Ola, Kostümwechsel mit Blitz + „Olê, olê“ gesungen, Polonaise, Daijo-Solo, Tanz-Duell Simon gegen Greisel mit
