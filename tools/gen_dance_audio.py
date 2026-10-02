@@ -18,6 +18,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 VOICES = os.environ.get('VOICES', os.path.join(ROOT, 'tools', 'data', 'voices'))
 TRIP = os.path.join(ROOT, 'web', 'trip.json')
 OUT = os.path.join(ROOT, 'web', 'audio')
+TEMPO = 0.9   # muss zu SLOW in page_script.html passen
 NOTE = {'F3': 174.61, 'G3': 196.0, 'A3': 220.0, 'Bb3': 233.08, 'C4': 261.63, 'D4': 293.66, 'E4': 329.63, 'F4': 349.23, 'A4': 440.0}
 
 def ffmpeg():
@@ -88,8 +89,10 @@ def main():
             with tempfile.TemporaryDirectory() as tmp:
                 wav = sung(v, dance['melodies'][alt.get('mel', ln.get('mel', 'ole'))], tmp) if ln.get('sing') else spoken(v, alt['say'], tmp)
                 pcm = os.path.join(tmp, 'pcm.wav'); run_ff(wav, pcm, 'anull')
-                env, dur = env_of(pcm)
-                subprocess.run([ffmpeg(), '-y', '-loglevel', 'error', '-i', pcm, '-b:a', '96k', os.path.join(OUT, f'samba-{key}.mp3')], check=True)
+                env, dur = env_of(pcm)   # Dauer/Mundkurve in Showzeit
+                # die Seite spielt die Show um SLOW = 1/0,9 langsamer ab: Aufnahme gleich mitdehnen (Tonhöhe bleibt)
+                slow = os.path.join(tmp, 'slow.wav'); run_ff(pcm, slow, f'rubberband=tempo={TEMPO}:pitch=1')
+                subprocess.run([ffmpeg(), '-y', '-loglevel', 'error', '-i', slow, '-b:a', '96k', os.path.join(OUT, f'samba-{key}.mp3')], check=True)
             voice[key] = {'dur': dur, 'env': env}
             print(key, dur, 'ms')
     dance['voice'] = voice
