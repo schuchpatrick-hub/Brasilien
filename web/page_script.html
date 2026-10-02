@@ -2471,7 +2471,7 @@ function wavB64(buf) {
     bulbs.push(mk('circle', {cx: x, cy: y + 7, r: 6, fill: ['#ffcf1f', '#3ccf7f', '#ff5fa2', '#5fd3ff'][i % 4]}, lights)); }
   mk('rect', {x: -200, y: 400, width: W + 400, height: 200, fill: 'url(#sb-wave)'}, world);
   mk('rect', {x: -200, y: 400, width: W + 400, height: 200, fill: '#0b1a33', opacity: .28}, world);   // nasser, dunkler Boden
-  const refl = mk('g', {mask: 'url(#sb-reflmask)', opacity: .9}, world);   // Spiegelung auf dem nassen Boden
+  const refl = mk('g', {mask: 'url(#sb-reflmask)', opacity: .9, class: 'sb-heavy'}, world);   // Spiegelung auf dem nassen Boden
   const shadows = mk('g', {}, world);
   // Discokugel mit Lichtpunkten
   const ball = mk('g', {}, world), ballLine = mk('line', {x1: 400, y1: -200, x2: 400, stroke: '#ddd', 'stroke-width': 1.5}, ball), ballG = mk('g', {}, ball);
@@ -2482,8 +2482,8 @@ function wavB64(buf) {
   const spot = mk('g', {opacity: 0}, world);
   const cone = mk('path', {fill: 'url(#sb-cone)'}, spot), pool = mk('ellipse', {ry: 18, rx: 70, fill: 'url(#sb-spot)'}, spot);
   const gPeople = mk('g', {}, world);
-  const beams = mk('g', {style: 'mix-blend-mode:screen'}, world), beamEls = [150, 400, 650].map((x, k) => ({x, el: mk('path', {fill: `url(#sb-beam${k})`, d: 'M-12,0 L12,0 L70,520 L-70,520Z'}, beams)}));
-  const fog = mk('g', {}, world), fogEls = Array.from({length: 7}, (_, k) => mk('ellipse', {cy: 440 + (k % 3) * 14, rx: 170, ry: 26, fill: 'url(#sb-fog)'}, fog));
+  const beams = mk('g', {class: 'sb-beams'}, world), beamEls = [150, 400, 650].map((x, k) => ({x, el: mk('path', {fill: `url(#sb-beam${k})`, d: 'M-12,0 L12,0 L70,520 L-70,520Z'}, beams)}));
+  const fog = mk('g', {class: 'sb-heavy'}, world), fogEls = Array.from({length: 7}, (_, k) => mk('ellipse', {cy: 440 + (k % 3) * 14, rx: 170, ry: 26, fill: 'url(#sb-fog)'}, fog));
   const gFx = mk('g', {}, world);
   const crowd = mk('g', {}, world), fans = Array.from({length: 15}, (_, k) => { const g = mk('g', {}, crowd);
     const armL = mk('line', {x1: -10, y1: 4, x2: -18, y2: 22, stroke: '#140d29', 'stroke-width': 7, 'stroke-linecap': 'round'}, g), armR = mk('line', {x1: 10, y1: 4, x2: 18, y2: 22, stroke: '#140d29', 'stroke-width': 7, 'stroke-linecap': 'round'}, g);
@@ -2641,9 +2641,11 @@ function wavB64(buf) {
     const w = W / z, h = H / z; return {x: clamp(cx - w / 2, 0, W - w), y: clamp(cy - h / 2, 0, H - h), w, h};
   }
 
-  let UI = 1;   // Schriftgröße der Einblendungen: auf schmalen Bildschirmen größer
+  let BUBK = '', POPEL = [];
+  let UI = 1;   // Schriftgröße der Einblendungen: auf schmalen Bildschirmen größer (Breite nur bei Größenänderung messen)
+  const measure = () => { UI = clamp(560 / (svg.clientWidth || 800), 1, 1.9); BUBK = ''; };
+  if ('ResizeObserver' in window) new ResizeObserver(measure).observe(svg); else addEventListener('resize', measure);
   function frame(t) {
-    UI = clamp(560 / (svg.clientWidth || 800), 1, 1.9);
     FOC = focus(t);
     const b = (t - MUSIC_AT - 30) / BEAT, blo = t > T.blo[0], dancing = (t > 2400 && t < T.close[0]) || (t > T.b2[0] && t < T.b3[1]), sp = speaking(t);
     const fz = win(t, T.freeze), conga = win(t, T.conga, 600), solo = win(t, T.solo, 600), pyr = span(t, T.pyr[0], T.pyr[0] + 1200) * (t < T.close[1] ? 1 : 0);
@@ -2779,12 +2781,12 @@ function wavB64(buf) {
     } else { waiter.setAttribute('opacity', 0); tray.setAttribute('opacity', 0); }
     sceneTick(t);
     // Klatschen/Jubeln: 👏 bzw. 🎉🙌✨ steigen aus dem Publikum auf
-    partG.innerHTML = '';
-    PRESS.forEach((q, n) => { const k = (t - q.t) / 1500; if (k < 0 || k > 1) return;
+    PRESS.forEach((q, n) => { const k = (t - q.t) / 1500;
+      if (k < 0 || k > 1) { if (q.els) { q.els.forEach(e => e.remove()); q.els = null; } return; }
       const em = q.k === 'clap' ? ['👏'] : ['🎉', '🙌', '✨', '🥳'];
-      for (let m = 0; m < (q.k === 'clap' ? 12 : 18); m++) { const x0 = 30 + hash(m, 51 + n) * (W - 60), sp2 = .6 + hash(m, 52 + n) * .7;
-        const e = mk('text', {x: (x0 + 25 * S(k * 6 + m)).toFixed(1), y: (H - 20 - k * 330 * sp2).toFixed(1), 'font-size': (q.k === 'clap' ? 30 : 34) * (1 - .3 * k), 'text-anchor': 'middle', opacity: (1 - k).toFixed(2)}, partG);
-        e.textContent = em[m % em.length]; } });
+      if (!q.els) q.els = Array.from({length: q.k === 'clap' ? 12 : 18}, (_, m) => { const e = mk('text', {'text-anchor': 'middle'}, partG); e.textContent = em[m % em.length]; return e; });
+      q.els.forEach((e, m) => { const x0 = 30 + hash(m, 51 + n) * (W - 60), sp2 = .6 + hash(m, 52 + n) * .7;
+        e.setAttribute('x', (x0 + 25 * S(k * 6 + m)).toFixed(1)); e.setAttribute('y', (H - 20 - k * 330 * sp2).toFixed(1)); e.setAttribute('font-size', ((q.k === 'clap' ? 30 : 34) * (1 - .3 * k)).toFixed(1)); e.setAttribute('opacity', (1 - k).toFixed(2)); }); });
     const front = sp ? sp.who : solo > .5 ? 'dajo' : null;
     if (pyr > 0 || b1) ['jonas', 'patrick', 'marco', 'simon', 'greisel', 'dajo'].forEach(id => P[id] && gPeople.appendChild(P[id].g));
     else if (front && P[front] && gPeople.lastChild !== P[front].g) gPeople.appendChild(P[front].g);
@@ -2799,23 +2801,31 @@ function wavB64(buf) {
       hat.setAttribute('font-size', (34 * (k < 1 ? 1 : jo.sc)).toFixed(1)); hat.setAttribute('transform', `rotate(${k < 1 ? (k * 720).toFixed(0) : 0},${fx.toFixed(1)},${fy.toFixed(1)})`); hat.setAttribute('opacity', 1);
     } else hat.setAttribute('opacity', 0);
     // Sprechblasen, Einblendungen, Applaus-Meter
-    gBub.innerHTML = '';
-    const bubble = (o, text) => { const words = text.split(' '), rows = [''], mx = Math.min(24, Math.floor((W - 60) / (8.6 * UI))); words.forEach(w => { if ((rows[rows.length - 1] + ' ' + w).length > mx) rows.push(w); else rows[rows.length - 1] = (rows[rows.length - 1] + ' ' + w).trim(); });
+    const bubs = [];   // erst sammeln, dann mit dem Bestand vergleichen
+    const bubble = (o, text) => { bubs.push({o, text}); };
+    const bubbleBuild = (o, text) => { const words = text.split(' '), rows = [''], mx = Math.min(24, Math.floor((W - 60) / (8.6 * UI))); words.forEach(w => { if ((rows[rows.length - 1] + ' ' + w).length > mx) rows.push(w); else rows[rows.length - 1] = (rows[rows.length - 1] + ' ' + w).trim(); });
       const bw = Math.max(...rows.map(r => r.length)) * 8.6 * UI + 26, bh = rows.length * 20 * UI + 14, bx = clamp(o.x - bw / 2, 8, W - bw - 8), by = clamp(o.y - 150 * o.sc - bh, 8, H);
-      const g = mk('g', {class: 'sb-bub'}, gBub); mk('rect', {x: bx, y: by, width: bw, height: bh, rx: 12}, g);
+      const g = mk('g', {class: 'sb-bub'}, gBub); g.__o = {bx, by, x: o.x, y: o.y}; mk('rect', {x: bx, y: by, width: bw, height: bh, rx: 12}, g);
       mk('path', {d: `M${clamp(o.x - 8, bx + 12, bx + bw - 24)},${by + bh - 1} l14,0 l-6,14Z`}, g);
-      rows.forEach((r, k) => { const tx = mk('text', {x: bx + bw / 2, y: by + 7 + 19 * UI + k * 20 * UI, 'text-anchor': 'middle', style: `font-size:${(16 * UI).toFixed(1)}px`}, g); tx.textContent = r; }); };
+      rows.forEach((r, k) => { const tx = mk('text', {x: bx + bw / 2, y: by + 7 + 19 * UI + k * 20 * UI, 'text-anchor': 'middle', style: `font-size:${(16 * UI).toFixed(1)}px`}, g); tx.textContent = r; }); return g; };
     if (sp && sp.text && t > sp.at && P[sp.who]) bubble(P[sp.who], sp.text);
     const evPops = EVENT === 'rain' ? [{who: 'jonas', w: [e0 + 600, e0 + 2400], txt: 'Typisch Tropen! ☔'}] : EVENT === 'monkey' ? [{who: VICTIM, w: [e0 + 1500, e0 + 3200], txt: 'Hey! Mein Hut! 😠'}] :
       EVENT === 'waiter' ? [{who: 'patrick', w: [e0 + 1200, e0 + 2600], txt: 'Obrigado! 🍹'}] : [];
     const copPop = EVENT === 'police' ? (t > e0 + 1200 && t < e0 + 2500 ? 'Documentos, por favor! 👮' : t > e0 + 2600 && t < e0 + 3600 ? 'Tá bom! 🕺' : '') : '';
-    if (copPop) { const tx = mk('text', {x: cop.getAttribute('x'), y: FLOOR - 95, 'text-anchor': 'middle', class: 'sb-pop', style: `font-size:${(24 * UI).toFixed(1)}px`}, gBub); tx.textContent = copPop; }
+    const pops = []; if (copPop) pops.push({x: +cop.getAttribute('x'), y: FLOOR - 95, txt: copPop, op: 1, mid: true});
     const st0 = T.moves[0] + 4900 + 5 * 380 + 700;
     if (P.patrick) evPops.push({who: 'patrick', w: [st0, T.moves[1] - 900], txt: 'Ich stecke fest! 😩'});
     if (P.jonas) evPops.push({who: 'jonas', w: [st0 + 500, T.moves[1] - 900], txt: '😂'});
     TAPS.forEach(tp => { if (tp.kind === 'chicken' && t > tp.at && t < tp.at + 1800) evPops.push({who: tp.who, w: [tp.at, tp.at + 1800], txt: 'Mein Hähnchen! 😱'}); });
-    POPS.concat(evPops).forEach(q => { const k = win(t, q.w, 200), o = P[q.who]; if (k > 0 && o) { const tx = mk('text', {x: o.x + 42 * o.sc, y: o.y - 150 * o.sc - 10 * k, class: 'sb-pop', opacity: k.toFixed(2), style: `font-size:${(24 * UI).toFixed(1)}px`}, gBub); tx.textContent = q.txt; } });
+    POPS.concat(evPops).forEach(q => { const k = win(t, q.w, 200), o = P[q.who]; if (k > 0 && o) pops.push({x: o.x + 42 * o.sc, y: o.y - 150 * o.sc - 10 * k, txt: q.txt, op: k}); });
     if (t > T.verdict[0] && t < T.verdict[1] && P[duelWinner()]) bubble(P[duelWinner()], '🏆 ' + byId[duelWinner()].name + ' gewinnt das Duell!');
+    // Sprechblasen/Einblendungen: Bestand nur bei neuem Text neu aufbauen, sonst per transform mitführen
+    const key = bubs.map(q => q.text).join('|') + '#' + pops.map(q => q.txt).join('|') + '#' + UI;
+    if (key !== BUBK) { gBub.innerHTML = ''; BUBK = key; bubs.forEach(q => { q.g = bubbleBuild(q.o, q.text); });
+      POPEL = pops.map(q => { const tx = mk('text', {class: 'sb-pop', 'text-anchor': q.mid ? 'middle' : 'start', style: `font-size:${(24 * UI).toFixed(1)}px`}, gBub); tx.textContent = q.txt; return tx; }); }
+    [...gBub.querySelectorAll('.sb-bub')].forEach((g, n) => { const q = bubs[n]; if (!q || !g.__o) return; const dx = clamp(q.o.x, 0, W) - g.__o.x, dy = q.o.y - g.__o.y;
+      const nbx = clamp(g.__o.bx + dx, 8, W - 8 - (+g.firstChild.getAttribute('width'))); g.setAttribute('transform', `translate(${(nbx - g.__o.bx).toFixed(1)},${dy.toFixed(1)})`); });
+    POPEL.forEach((e, n) => { const q = pops[n]; if (!q) return; e.setAttribute('x', q.x.toFixed(1)); e.setAttribute('y', q.y.toFixed(1)); e.setAttribute('opacity', q.op.toFixed(2)); });
     meter.setAttribute('opacity', duel.toFixed(2));
     const wnr = duelWinner(); meterBars.forEach((bar, k) => { const id = k ? 'greisel' : 'simon', w = k ? T.duelG : T.duelS, f = span(t, w[0], w[1]) * (id === wnr ? 1 : .78);
       bar.setAttribute('width', (296 * f * (1 + .03 * S(t / 90))).toFixed(1)); });
@@ -2894,7 +2904,7 @@ function wavB64(buf) {
     const st0 = T.moves[0] + 4900 + 5 * 380 + 700; m.sfx('thud', at(st0)); m.sfx('boing', at(st0 + 150)); m.sfx('whoo', at(T.moves[0] + 300)); m.sfx('boing', at(T.moves[1] - 800));
     m.sfx('applause', at(T.credits[0])); m.end(at(T.credits[1]));
   }
-  let run = 0, raf = 0, ctx = null, timer = 0, voices = [], t0p = 0, base = 0, vGain = null;
+  let run = 0, raf = 0, ctx = null, timer = 0, voices = [], t0p = 0, base = 0, vGain = null, STATE = 'idle', pausedAt = 0, startedAt = 0;   // STATE: idle | run | pause
   const RAW = {}, ABUF = {};
   function prefetch(keys) { keys.forEach(k => { if (!RAW[k]) RAW[k] = fetch('audio/samba-' + k + '.mp3').then(r => r.ok ? r.arrayBuffer() : null).catch(() => null); }); }
   const allKeys = () => [...new Set(D.lines.flatMap(l => [l.src || (l.nogen ? l.src0 : l.key)].concat((l.alts || []).map(v => v.key))).filter(Boolean))];
@@ -2908,12 +2918,12 @@ function wavB64(buf) {
       const src = ctx.createBufferSource(); src.buffer = bf; src.connect(vGain); const w = base + whenMs / 1000, now = ctx.currentTime;
       if (w >= now) src.start(w); else if (now - w < bf.duration - .05) src.start(now, now - w); else return; voices.push({src}); });
   }
-  const clock = () => ctx && ctx.state === 'running' && window.__danceT === undefined ? (ctx.currentTime - (ctx.outputLatency || 0) - base) * 1000 : tnow() - t0p;
+  const clock = () => STATE === 'pause' ? pausedAt : ctx && window.__danceT === undefined ? (ctx.currentTime - (ctx.outputLatency || 0) - base) * 1000 : tnow() - t0p;
   if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { prefetch(allKeys()); io.disconnect(); } }, {rootMargin: '400px'}); io.observe(svg); }
   function stop(reset) {
     run++; cancelAnimationFrame(raf); clearInterval(timer); voices.forEach(a => { if (a.el) a.el.pause(); if (a.src) try { a.src.stop(); } catch (e) {} if (a.to) clearTimeout(a.to); }); voices = [];
     if (ctx) { ctx.close().catch(() => {}); ctx = null; }
-    btn.textContent = encoreReady ? '🎉 Zugabe!' : '💃 Samba-Show starten'; btn.setAttribute('aria-pressed', 'false'); liveM = null; aud.forEach(b => b.classList.add('off'));
+    STATE = 'idle'; paint(); liveM = null; aud.forEach(b => b.classList.add('off'));
     if (reset) { ENC = false; T = TMAIN; END = END_MAIN; TAPS = []; frame(0); }
   }
   function liveData() {   // aus den anderen Modulen (Drinks, Karten): Krone, Narrenkappe, wer heute am meisten getrunken hat
@@ -2922,7 +2932,7 @@ function wavB64(buf) {
     if (LIVE.jester === LIVE.crown) LIVE.jester = null;
   }
   function start(enc) {
-    stop(false); const my = ++run; btn.textContent = '⏹ Stopp'; btn.setAttribute('aria-pressed', 'true'); aud.forEach(b => b.classList.remove('off'));
+    stop(false); const my = ++run; STATE = 'run'; startedAt = performance.now(); paint(); aud.forEach(b => b.classList.remove('off'));
     ENC = !!enc; T = ENC ? TENC : TMAIN; END = ENC ? 19800 : END_MAIN; encoreReady = false; TAPS = []; BOOST = {clap: -1e9, cheer: -1e9}; PRESS = [];
     const video = window.__danceT !== undefined; pickLines(video ? 0 : 1 + Math.floor(Math.random() * 1000)); if (!video) liveData();
     EVENT = window.__danceEvent || (video ? 'police' : EVENTS[Math.floor(Math.random() * EVENTS.length)]);
@@ -2938,11 +2948,27 @@ function wavB64(buf) {
       } catch (e) { ctx = null; }
     }
     t0p = tnow();
-    (function loop() { if (my !== run) return; const t = clock(); frame(t); if (t > END) { encoreReady = !ENC; stop(true); return; } raf = requestAnimationFrame(loop); })();
+    let last = performance.now(), slow = 0;
+    (function loop() { if (my !== run) return;
+      const now = performance.now(), dt = now - last; last = now;
+      if (STATE === 'run' && window.__danceT === undefined) { slow = dt > 34 ? slow + 1 : Math.max(0, slow - 1); if (slow > 20) svg.classList.add('sb-lite'); }   // ruckelt es länger: Sparmodus
+      // Ton kommt nicht in Gang (z. B. stummgeschaltet blockiert): ohne Ton weiterlaufen statt stehen zu bleiben
+      if (ctx && STATE === 'run' && ctx.state !== 'running' && now - startedAt > 1500 && window.__danceT === undefined) { const tn = Math.max(0, clock()); ctx.close().catch(() => {}); ctx = null; clearInterval(timer); t0p = tnow() - tn; }
+      if (STATE === 'run') { const t = clock(); frame(t); if (t > END) { encoreReady = !ENC; stop(true); return; } }
+      raf = requestAnimationFrame(loop); })();
   }
-  btn.addEventListener('click', () => { if (btn.getAttribute('aria-pressed') === 'true') { encoreReady = false; stop(true); } else start(encoreReady); });
+  const stopB = document.getElementById('samba-stop');
+  function paint() {
+    btn.textContent = STATE === 'run' ? '⏸ Pause' : STATE === 'pause' ? '▶ Weiter' : encoreReady ? '🎉 Zugabe!' : '💃 Samba-Show starten';
+    btn.setAttribute('aria-pressed', String(STATE !== 'idle')); if (stopB) stopB.hidden = STATE === 'idle';
+  }
+  function pause() { if (STATE !== 'run') return; pausedAt = clock(); STATE = 'pause'; if (ctx) ctx.suspend().catch(() => {}); voices.forEach(a => { if (a.el && !a.el.paused) { a.el.pause(); a.resumeEl = true; } }); paint(); }
+  function resume() { if (STATE !== 'pause') return; if (ctx) ctx.resume().catch(() => {}); else t0p = tnow() - pausedAt;
+    voices.forEach(a => { if (a.resumeEl) { a.el.play().catch(() => {}); a.resumeEl = false; } }); STATE = 'run'; startedAt = performance.now(); paint(); }
+  btn.addEventListener('click', () => { if (STATE === 'run') pause(); else if (STATE === 'pause') resume(); else start(encoreReady); });
+  if (stopB) stopB.addEventListener('click', () => { encoreReady = false; stop(true); });
   // Antippen einer Figur während der Show: Spruch, Sprung, Drehung (Patrick: Hähnchen fällt runter)
-  const playing = () => btn.getAttribute('aria-pressed') === 'true';
+  const playing = () => STATE === 'run';
   function tapPerson(id) {
     const t = clock(), own = D.lines.filter(l => l.who === id && !l.chorus && !l.sing && !l.src).flatMap(l => [l].concat(l.alts || [])).map(v => ({key: v.key, text: v.text}));
     const r = Math.random(), kind = id === 'patrick' && r < .35 && !TAPS.some(tp => tp.kind === 'chicken' && t - tp.at < 3000) ? 'chicken' : r < .7 && own.length ? 'line' : r < .85 ? 'jump' : 'spin';
@@ -2953,29 +2979,34 @@ function wavB64(buf) {
     TAPS = TAPS.filter(x => t - x.at < 4000).concat([tp]);
   }
   svg.addEventListener('click', e => {
-    if (!playing()) { start(encoreReady); return; }
+    if (STATE === 'pause') { resume(); return; }
+    if (STATE === 'idle') { start(encoreReady); return; }
     const g = e.target.closest && e.target.closest('[id^="sb-p-"]'); if (g) tapPerson(g.id.slice(5));
   });
   // Publikum: Klatschen und Jubeln
   const aud = [document.getElementById('samba-clap'), document.getElementById('samba-cheer')].filter(Boolean);
   aud.forEach(b => b.addEventListener('click', () => { if (!playing()) return; const t = clock(), cheerB = b.id === 'samba-cheer';
-    if (cheerB) BOOST.cheer = t; else BOOST.clap = t; PRESS = PRESS.filter(q => t - q.t < 2500).concat([{t, k: cheerB ? 'cheer' : 'clap'}]);
+    if (cheerB) BOOST.cheer = t; else BOOST.clap = t; PRESS.filter(q => t - q.t >= 2500 && q.els).forEach(q => q.els.forEach(e => e.remove())); PRESS = PRESS.filter(q => t - q.t < 2500).concat([{t, k: cheerB ? 'cheer' : 'clap'}]);
     if (liveM && ctx) { liveM.sfx('applause', ctx.currentTime + .02); if (cheerB) { liveM.sfx('whoo', ctx.currentTime + .05); liveM.sfx('whoo', ctx.currentTime + .5); } } }));
   const sPaint = () => { if (sbtn) { sbtn.textContent = soundOn() ? '🔊 Ton an' : '🔇 Ton aus'; sbtn.setAttribute('aria-pressed', String(soundOn())); } };
-  if (sbtn) sbtn.addEventListener('click', () => { store.set('sound', soundOn() ? '0' : '1'); sPaint(); if (!soundOn() && ctx) { const tn = clock(); t0p = tnow() - tn; voices.forEach(a => { if (a.el) a.el.pause(); if (a.src) try { a.src.stop(); } catch (e) {} }); ctx.close().catch(() => {}); ctx = null; clearInterval(timer); } });
+  if (sbtn) sbtn.addEventListener('click', () => { store.set('sound', soundOn() ? '0' : '1'); sPaint(); if (!soundOn() && ctx) { const tn = clock(); t0p = tnow() - tn; if (STATE === 'pause') pausedAt = tn; voices.forEach(a => { if (a.el) a.el.pause(); if (a.src) try { a.src.stop(); } catch (e) {} }); ctx.close().catch(() => {}); ctx = null; clearInterval(timer); } });
   // Vollbild: echtes Vollbild, wo erlaubt (sonst füllt die Show per CSS den Bildschirm), im Querformat gesperrt wenn möglich
   const box = document.getElementById('samba'), fbtn = document.getElementById('samba-full');
   const isFull = () => box.classList.contains('full');
   function setFull(on) {
-    box.classList.toggle('full', on); document.documentElement.classList.toggle('sb-noscroll', on);
+    if (on === isFull()) return;
+    box.classList.toggle('full', on); document.documentElement.classList.toggle('sb-noscroll', on); svg.classList.toggle('sb-lite', on);
     if (fbtn) fbtn.textContent = on ? '✕ Vollbild beenden' : '⛶ Vollbild';
     if (on) { const r = box.requestFullscreen || box.webkitRequestFullscreen; if (r) try { const pr = r.call(box); if (pr && pr.then) pr.then(() => { try { screen.orientation.lock('landscape').catch(() => {}); } catch (e) {} }).catch(() => {}); } catch (e) {} }
-    else if (document.fullscreenElement || document.webkitFullscreenElement) { try { (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (e) {} }
+    else { if (document.fullscreenElement || document.webkitFullscreenElement) { try { (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (e) {} }
+      try { screen.orientation.unlock(); } catch (e) {}
+      // nach dem Vollbild: Seite wieder dorthin, wo sie war, und die Bühne neu ausmessen
+      requestAnimationFrame(() => requestAnimationFrame(() => { document.body.classList.add('cv-all'); measure(); frame(clock()); const r = box.getBoundingClientRect(); scrollTo({top: Math.max(0, scrollY + r.top - Math.max(70, (innerHeight - r.height) / 2)), behavior: 'auto'}); })); }
   }
   if (fbtn) fbtn.addEventListener('click', () => setFull(!isFull()));
   document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && isFull()) setFull(false); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && isFull()) setFull(false); });
-  sPaint(); frame(0);
+  sPaint(); paint(); frame(0);
   // Video-Aufnahme: Zeit setzen, Musik offline rendern, Stimmen-Startzeiten; __danceLive setzt Live-Daten zum Ausprobieren
   window.__dancePlay = start; window.__danceTap = id => tapPerson(id); window.__danceBoost = k => { const t = clock(); BOOST[k] = t; PRESS = PRESS.concat([{t, k}]); }; window.__danceEnd = END; window.__danceLive = o => { LIVE = Object.assign({card: {}}, o); };
   window.__danceAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms / 1000), sr), m = window.__TripMusic(oc); program(m, 0); m.schedule(ms / 1000); return wavB64(await oc.startRendering()); };

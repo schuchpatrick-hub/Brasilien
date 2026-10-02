@@ -181,7 +181,7 @@ Interaktiv: Figur antippen (`tapPerson`: Spruch mit Stimme, Sprung, Drehung; Pat
 Nach der Polonaise „Tanzschule“ (`T.moves`, 8 s): Moonwalk, Floss, Passinho, Limbo (Patrick bleibt unter der Stange hängen);
 am Ende Abspann mit Credits (`T.credits`, `CRED`). Stimmen laufen über dieselbe Audio-Uhr wie die Musik (`playVoice`: vorgeladen per
 `fetch`, dekodiert, mit `start(when)` geplant; die Animation nimmt dann `clock()` = Audiozeit), Vorladen beim Hinscrollen.
-Einblendungen skalieren auf schmalen Bildschirmen mit (`UI`). Knopf `#samba-full`: Vollbild (echt, wo erlaubt, sonst CSS
+Einblendungen skalieren auf schmalen Bildschirmen mit (`UI`). Knopf `#samba-play` startet, pausiert (`ctx.suspend()`, Musik und Stimmen hängen an derselben Audio-Uhr) und setzt fort; `#samba-stop` (nur sichtbar, solange die Show läuft oder pausiert) stoppt ganz und setzt zurück. Tempo: Breite (`UI`) nur per ResizeObserver messen, Sprechblasen nur bei neuem Text neu bauen, im Vollbild und bei längerem Ruckeln Sparmodus `.sb-lite` (ohne Spiegelung/Nebel `.sb-heavy`, Lichtkegel ohne Mischmodus); nach dem Vollbild wird die Bühne neu vermessen und wieder ins Bild gescrollt. Knopf `#samba-full`: Vollbild (echt, wo erlaubt, sonst CSS
 `.samba.full`), Querformat-Sperre wenn möglich, Hinweis zum Drehen im Hochformat.
 Zufalls-Ereignis pro Abspielen während der Polonaise (`EVENT`: rain, monkey, police, waiter). Bühne passend zur Reise
 (`buildStage`/`stageToday` aus `trip.json` → `stays`, Zeitzone Rio; guaruja, rio, silvester am 31.12./01.01., iguacu, jungle,
