@@ -2876,7 +2876,7 @@ function wavB64(buf) {
     credits.setAttribute('opacity', cw2.toFixed(2));
     if (cw2 > 0) credEls.forEach((g, k) => g.setAttribute('transform', `translate(0,${(H + 30 + k * 46 - (t - T.credits[0]) * .075).toFixed(1)})`));
     tt.textContent = ENC ? '🎉 Zugabe!' : t > T.close[1] - 700 && t < T.b1[0] ? '🎬 Pannen vom Dreh' : '💃 ' + (D.title || 'Samba-Show');
-    ts.textContent = t > T.close2[1] - 500 ? 'Obrigado! 👏' : t > T.close[0] && t < T.close[1] ? 'Obrigado! 👏' : t > T.close[1] && !ENC ? 'gleich geht’s weiter …' : t < 50 ? (encoreReady ? '🎉 Zugabe? Antippen!' : '▶ Antippen zum Starten') : '';
+    ts.textContent = t > T.close2[1] - 500 ? 'Obrigado! 👏' : t > T.close[0] && t < T.close[1] ? 'Obrigado! 👏' : t > T.close[1] && !ENC ? 'gleich geht’s weiter …' : t < 50 && !document.getElementById('samba-big') ? (encoreReady ? '🎉 Zugabe? Antippen!' : '▶ Antippen zum Starten') : '';   // mit großem Start-Knopf keine Doppelung
     // Ansage (Untertitel) und Filmklappen der Pannen
     loc.textContent = STAGES[STAGE].label ? '📍 Live aus ' + STAGES[STAGE].label : ''; loc.setAttribute('opacity', STAGES[STAGE].label && t > 1700 ? 1 : 0);
     const ann = LINES.find(l => l.who === 'announcer'), annOn = ann && t > ann.at && t < ann.at + ann.dur + 400;
@@ -2974,7 +2974,10 @@ function wavB64(buf) {
   function paint() {
     btn.textContent = STATE === 'run' ? '⏸ Pause' : STATE === 'pause' ? '▶ Weiter' : encoreReady ? '🎉 Zugabe!' : '💃 Samba-Show starten';
     btn.setAttribute('aria-pressed', String(STATE !== 'idle')); if (stopB) stopB.hidden = STATE === 'idle';
+    box.classList.toggle('idle', STATE === 'idle'); if (bigB) { bigB.querySelector('small').textContent = encoreReady ? '🎉 Zugabe abspielen' : 'ca. 1:40 min · mit Ton am schönsten'; bigB.setAttribute('aria-label', encoreReady ? 'Zugabe abspielen' : 'Samba-Show abspielen'); }
   }
+  const bigB = document.getElementById('samba-big');   // großer Start-Knopf über der Bühne (nur im Ruhezustand sichtbar)
+  if (bigB) bigB.addEventListener('click', () => { if (STATE === 'idle') start(encoreReady); });
   function pause() { if (STATE !== 'run') return; pausedAt = clock(); STATE = 'pause'; if (ctx) ctx.suspend().catch(() => {}); voices.forEach(a => { if (a.el && !a.el.paused) { a.el.pause(); a.resumeEl = true; } }); paint(); }
   function resume() { if (STATE !== 'pause') return; if (ctx) ctx.resume().catch(() => {}); else t0p = tnow() - pausedAt * SPD();
     voices.forEach(a => { if (a.resumeEl) { a.el.play().catch(() => {}); a.resumeEl = false; } }); STATE = 'run'; startedAt = performance.now(); paint(); }
@@ -3099,4 +3102,21 @@ if (!PRINT) {
 
 /* ---------- Start ---------- */
 setGroup(G);
+
+/* ---------- Themen-Kacheln: kurze Live-Hinweise; Kino-Knopf für den Reise-Film ---------- */
+(function () {
+  const hint = (id, txt) => { const e = document.querySelector('[data-hint="' + id + '"]'); if (e && txt) { e.textContent = txt; e.classList.add('live'); } };
+  const day = d => Date.UTC(+d.slice(0, 4), +d.slice(5, 7) - 1, +d.slice(8, 10));
+  let today = ''; try { today = new Intl.DateTimeFormat('en-CA', {timeZone: 'Europe/Berlin'}).format(new Date()); } catch (e) {}
+  if (today) {
+    const n = Math.round((day('2026-12-27') - day(today)) / 864e5), k = Math.round((day(today) - day('2026-12-27')) / 864e5) + 1;
+    hint('tage-tab', n > 1 ? 'Noch ' + n + ' Tage bis Abflug' : n === 1 ? 'Morgen geht’s los! ✈️' : k <= 25 ? 'Heute: Tag ' + k + ' von 25' : '');
+    const door = (TRIP.advent || []).find(a => a.d === today); if (door) hint('kalender', 'Heute: ' + door.e + ' ' + door.t);
+  }
+  const hf = document.getElementById('hf-open'), open = hf ? parseInt(hf.textContent, 10) : NaN;
+  if (!isNaN(open)) hint('reise', open > 0 ? open + (open === 1 ? ' Flug' : ' Flüge') + ' noch offen' : 'Alle Flüge gebucht ✓');
+  hint('kino-tab', 'Neu: Samba-Show 💃');
+  const kf = document.getElementById('kino-film');
+  if (kf) kf.addEventListener('click', () => { jump('route', true); setTimeout(() => { const mp = document.getElementById('map-play'); if (mp && mp.getAttribute('aria-pressed') !== 'true') mp.click(); }, 900); });
+})();
 </script>

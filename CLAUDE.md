@@ -10,7 +10,7 @@ Reiseübersicht, die bei neuen Infos (Buchungen, Chat-Exporte, Screenshots) aktu
 | `README.md` | Hauptübersicht (Route, Tag für Tag, Flüge, Unterkünfte, Kosten, offene Punkte, Gesundheit) |
 | `web/trip.json` | **Datenquelle** für Heute-Ansicht, Tag für Tag und Kalenderdateien (Tage, Termine mit UTC-Zeiten, Unterkünfte, Crew, Drinks, Real-Rechner) |
 | `web/trip.json` → `flights`, `costs` | Flüge als Bordkarten (Status `booked`/`open`/`check`, Warnhinweise, Suchlinks für offene Flüge) und Kosten pro Gruppe; auf der Webseite nicht mehr in `page_body.html` pflegen |
-| `web/page_body.html` | Statischer Inhalt der Webseite; jede `<section>` hat `data-tab` = Kapitel, zu dem der Reiter oben springt; alles bleibt untereinander sichtbar (Reihenfolge: uebersicht, tage-tab, reise, crew-tab, karten-tab, drinks-tab, unterwegs-tab = Sprache + Real-Rechner, infos, vorfreude-tab, spiele-tab, extras; Reiter und Kapitel müssen in derselben Reihenfolge stehen) (Stationen, Flüge, Kosten, Praktisches, Packlisten, Downloads); `%%MAP%%` = Karte |
+| `web/page_body.html` | Statischer Inhalt der Webseite; jede `<section>` hat `data-tab` = Kapitel, zu dem der Reiter oben springt; alles bleibt untereinander sichtbar (Reihenfolge: uebersicht, kino-tab, tage-tab, reise, crew-tab = Crew + Karten, spiele-tab, vorfreude-tab, drinks-tab, unterwegs-tab = Sprache + Real-Rechner, infos = Praktisches, Gesundheit, Packlisten, Downloads; Reiter und Kapitel müssen in derselben Reihenfolge stehen; Reiter mit Emoji). Jede `<section>` hat `data-kind` (start/kino/plan/fun/go/info = Farbe `--k` für Symbol-Kachel `.ico` in der `h2`, Wellenlinie und Trennlinie). Unter den Reitern Themen-Kacheln `#themen` (`.tile`, Live-Hinweise per `data-hint`: Countdown, offene Flüge, heutiges Türchen). Teil-Banner `.divider-scene.part` (Planung, Crew & Spaß, Unterwegs, Infos & Packen) trennen die Bereiche (Stationen, Flüge, Kosten, Praktisches, Packlisten, Downloads); `%%MAP%%` = Karte |
 | `web/page_script.html` | JavaScript der Webseite: Heute/Countdown, Gruppen-Umschalter, Drinks und Check-ins (`db`), Real-Rechner, Packlisten (localStorage), PDF-Download, Vorfreude-Kalender, Zeitkapsel; `%%TRIP%%` = trip.json |
 | `web/page_head.html` | Titel + CSS der Webseite (Farb-Tokens, Hell/Dunkel) |
 | `web/poster_template.html` | Rahmen für das Reisebild (Titel, Stationsleiste unten) |
@@ -65,7 +65,7 @@ Alle sechs haben der Verwendung ihres Fotos zugestimmt (laut Patrick, 30.09.).
 
 ## Crew-Karten (FIFA-Stil)
 
-Kapitel `#karten`, eigener Reiter „Karten“ (`karten-tab`) direkt nach Crew. Basiswerte, Position, Flagge, Verein, Spezialwert, schwacher Fuß/Tricks, PlayStyles
+Kapitel `#karten`, direkt nach Crew, gemeinsamer Reiter „Crew & Karten“ (`crew-tab`). Basiswerte, Position, Flagge, Verein, Spezialwert, schwacher Fuß/Tricks, PlayStyles
 und Scout-Bericht in `trip.json` → `crew[].card`. Zwölf Werte (TTP, TRI, FLI, ORI, BUF, PÜN, KAT, SMB, KAR, GRI, SCH, MEK; `cardsInfo.worse` = GRI/SCH/MEK rot, höher = schlimmer).
 Live: TRI + 1 je 6 Drinks (max +6), KAT − (Drinks der letzten 14 h − 5, max −15), Gesamtwertung = Schnitt aller zwölf Werte (rote `worse` als 100 − Wert) + 16 (`OVR_PLUS`)
 ± (Siege − letzte Plätze, max ±5) ± Ereignisse. Beste Karte (wenn schon gespielt) = blaue TOTS-Karte, meiste letzte Plätze = rote
@@ -127,7 +127,7 @@ Zweitnächster 1), Podest + Tabelle „Hellseher der Reise“ (Letzter = „Blin
 
 ## Spiele
 
-Reiter „Spiele“ (`spiele-tab`, `#spiele`). Spiele in `trip.json` → `games.types` (Blacky Jacky = `rank`, nur Platzierung, `places` = {id: Platz}; Wizard = `wizard`,
+Reiter „Spiele“ (`spiele-tab`, `#spiele`, nach Crew & Karten). Spiele in `trip.json` → `games.types` (Blacky Jacky = `rank`, nur Platzierung, `places` = {id: Platz}; Wizard = `wizard`,
 Footvolley = `teams`), unterwegs neue Spiele über die Seite (db-Collection `gametypes`: `name`, `emoji`, `mode`
 rank/points/winner/teams, `higher`). Partien in db-Collection `games` (`game`, `mode`, `ts`, `players`, je nach Modus `scores`,
 `winners`, `teams` {a, b, sa, sb, loc = gegen Einheimische}, Wizard `rounds` [{id: {a: Ansage, s: Stiche}}] und `done`).
@@ -163,7 +163,7 @@ zu MP4 machen. Das Video enthält Crew-Fotos, also **nicht** ins Repo legen.
 
 ## Samba-Show (Cartoon)
 
-Im Kapitel Crew unter den Steckbriefen (`#samba`, SVG `#samba-svg`, Knöpfe `#samba-play`/`#samba-sound`). Crew-Köpfe (Fotos) auf
+Im eigenen Kapitel „🎬 Kino“ (`#kino`, Reiter `kino-tab`, direkt nach der Übersicht; dunkler Bühnen-Kasten) mit großem Start-Knopf `#samba-big` über der Bühne (nur im Ruhezustand, Klasse `.idle`) und Kasten „Reise-Film“ (`#kino-film` springt zur Karte und startet `#map-play`) (`#samba`, SVG `#samba-svg`, Knöpfe `#samba-play`/`#samba-sound`). Crew-Köpfe (Fotos) auf
 gezeichneten Körpern; Münder wie die South-Park-Kanadier (Foto auf Mundhöhe geteilt, Oberkopf klappt nach der Lautstärkekurve),
 Schweißtropfen über dem Foto (Augenbrauen auf Wunsch entfernt). Daten in `trip.json` → `dance`: `look` je Person (Stil, Shirt, Hose, `face`
 = Ausschnitt x/y/z, Mundhöhe m, Augenlinie e, Augenabstand ex), `voices` (Stimme je Person), `melodies` (gesungene Chöre: ole, brasil, gringos, caipi; je Durchgang `grp` c1/c2 eine andere, alle singen dieselbe),
