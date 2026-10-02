@@ -4376,49 +4376,89 @@
         {
           "key": "sec2",
           "who": "officer",
-          "at": 15000,
+          "at": 15009,
           "say": "Was ist denn das? Dreißig Flaschen Sonnencreme?",
           "text": "Was ist denn das? 30 Flaschen Sonnencreme?! 🧴"
         },
         {
           "key": "sec3",
           "who": "simon",
-          "at": 19000,
+          "at": 18268,
           "say": "Lichtschutzfaktor fünfzig! Ich bin halt ein sensibler Typ.",
           "text": "Lichtschutzfaktor 50! Ich bin halt ein sensibler Typ. 😇"
         },
         {
           "key": "sec4",
           "who": "jonas",
-          "at": 23400,
-          "say": "Simon, das ist mehr Creme als Gepäck!",
-          "text": "Simon, das ist mehr Creme als Gepäck!"
+          "at": 22035,
+          "say": "Simon, du wirst trotzdem rot wie ein Hummer. Nur teurer.",
+          "text": "Simon, du wirst trotzdem rot wie ein Hummer. Nur teurer. 🦞"
         },
         {
           "key": "sec5",
           "who": "officer",
-          "at": 26600,
+          "at": 26465,
           "say": "Alles über hundert Milliliter bleibt hier.",
           "text": "Alles über 100 Milliliter bleibt hier. 👮"
         },
         {
           "key": "sec6",
           "who": "simon",
-          "at": 29200,
+          "at": 29032,
           "say": "Neiiin! Meine Babys!",
           "text": "Neiiin! Meine Babys! 😭"
         },
         {
+          "key": "bar1",
+          "who": "patrick",
+          "at": 33662,
+          "say": "Vier Bier, bitte! Im Urlaub zählt die Uhrzeit nicht.",
+          "text": "Vier Bier, bitte! Im Urlaub zählt die Uhrzeit nicht. 🍺"
+        },
+        {
+          "key": "bar2",
+          "who": "marco",
+          "at": 37092,
+          "say": "In Brasilien ist es schon Mittag. Wir sind eigentlich spät dran.",
+          "text": "In Brasilien ist es schon Mittag. Wir sind eigentlich spät dran.",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "bar3",
+          "who": "simon",
+          "at": 41365,
+          "say": "Ich trinke auf meine Sonnencreme. Sie wurde nur dreißig Flaschen alt.",
+          "text": "Ich trinke auf meine Sonnencreme. Sie wurde nur 30 Flaschen alt. 🕯️",
+          "vo": {
+            "pitch": 1.1,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "bar4",
+          "who": "jonas",
+          "at": 45485,
+          "say": "Prost! Ruhe in Frieden, Lichtschutzfaktor fünfzig.",
+          "text": "Prost! Ruhe in Frieden, Lichtschutzfaktor 50. ⚰️",
+          "vo": {
+            "pitch": 1.05,
+            "speed": 0.9
+          }
+        },
+        {
           "key": "fly1",
           "who": "steward",
-          "at": 33600,
+          "at": 52694,
           "say": "Chicken oder Pasta?",
           "text": "Chicken oder Pasta?"
         },
         {
           "key": "fly2",
           "who": "patrick",
-          "at": 35800,
+          "at": 54467,
           "say": "Beides, bitte!",
           "text": "Beides, bitte! 🍗🍝",
           "vo": {
@@ -4428,25 +4468,435 @@
         },
         {
           "key": "fly3",
-          "who": "jonas",
-          "at": 43200,
-          "say": "Patrick, das ist schon dein viertes Essen!",
-          "text": "Patrick, das ist schon dein viertes Essen!"
+          "who": "marco",
+          "at": 60891,
+          "say": "Turbulenzen! Ich hab mein Testament nicht unterschrieben!",
+          "text": "Turbulenzen!! Ich hab mein Testament nicht unterschrieben! 😱",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
         },
         {
           "key": "fly4",
-          "who": "patrick",
-          "at": 46600,
-          "say": "Es ist ein Langstreckenflug!",
-          "text": "Es ist ein Langstreckenflug! ✈️"
+          "who": "jonas",
+          "at": 64424,
+          "say": "Keine Panik. Wenn wir abstürzen, essen wir zuerst Patrick.",
+          "text": "Keine Panik. Wenn wir abstürzen, essen wir zuerst Patrick."
         },
         {
           "key": "fly5",
-          "who": "steward",
-          "at": 49600,
-          "say": "Ich hole mal Nachschub aus der ersten Klasse.",
-          "text": "Ich hole mal Nachschub aus der ersten Klasse … 😅"
+          "who": "patrick",
+          "at": 68137,
+          "say": "Gute Wahl. Ich bin schon mariniert.",
+          "text": "Gute Wahl. Ich bin schon mariniert. 🍷",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
         },
+        {
+          "key": "fly6",
+          "who": "simon",
+          "at": 71022,
+          "say": "Entschuldigung, haben Sie auch was für mich? Ihre Nummer vielleicht?",
+          "text": "Entschuldigung, haben Sie auch was für mich? Ihre Nummer vielleicht? 😏"
+        },
+        {
+          "key": "fly7",
+          "who": "steward",
+          "at": 75164,
+          "say": "Klar. Die vom Notausgang. Ganz hinten links.",
+          "text": "Klar. Die vom Notausgang. Ganz hinten links. 🚪"
+        },
+        {
+          "key": "uber1",
+          "who": "local",
+          "at": 82213,
+          "say": "Bem-vindos ao Brasil!",
+          "text": "Bem-vindos ao Brasil! 🇧🇷"
+        },
+        {
+          "key": "uber2",
+          "who": "marco",
+          "at": 83890,
+          "say": "Der fährt hundertvierzig. Ich glaube, ich habe gerade Gott gesehen.",
+          "text": "Der fährt 140. Ich glaube, ich habe gerade Gott gesehen. 🙏",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "uber3",
+          "who": "jonas",
+          "at": 88703,
+          "say": "Schau mal, Simon. Die Sonne. Dein natürlicher Feind.",
+          "text": "Schau mal, Simon. Die Sonne. Dein natürlicher Feind. ☀️"
+        },
+        {
+          "key": "uber4",
+          "who": "simon",
+          "at": 92033,
+          "say": "Kein Problem. Ich hab am Flughafen neue gekauft. Faktor zehn.",
+          "text": "Kein Problem. Ich hab am Flughafen neue gekauft. Faktor 10.",
+          "vo": {
+            "pitch": 1.1,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "uber5",
+          "who": "narrator",
+          "at": 96518,
+          "say": "Er war nicht bereit.",
+          "text": "Er war nicht bereit.",
+          "vo": {
+            "pitch": 0.85,
+            "speed": 0.75
+          }
+        },
+        {
+          "key": "beach1",
+          "who": "patrick",
+          "at": 100499,
+          "say": "Caipirinha um zehn Uhr morgens. Ich liebe dieses Land.",
+          "text": "Caipirinha um 10 Uhr morgens. Ich liebe dieses Land. 🍹",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "beach2",
+          "who": "marco",
+          "at": 104686,
+          "say": "Olá! Ich kann kein Portugiesisch. Aber ich kann sehr gut zuhören.",
+          "text": "Olá! Ich kann kein Portugiesisch. Aber ich kann sehr gut zuhören. 😎",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "beach3",
+          "who": "girl",
+          "at": 109059,
+          "say": "Wie süß. Mein Freund ist da hinten. Er macht Capoeira.",
+          "text": "Wie süß. Mein Freund ist da hinten. Er macht Capoeira. 💪"
+        },
+        {
+          "key": "beach4",
+          "who": "jonas",
+          "at": 116054,
+          "say": "Zehn von zehn, Marco. Für den Sprint.",
+          "text": "10 von 10, Marco. Für den Sprint. 🏃"
+        },
+        {
+          "key": "beach5",
+          "who": "simon",
+          "at": 126576,
+          "say": "Ich glaube, ich bin leicht gebräunt.",
+          "text": "Ich glaube, ich bin leicht gebräunt. 🙂"
+        },
+        {
+          "key": "beach6",
+          "who": "patrick",
+          "at": 129222,
+          "say": "Du siehst aus wie ein Hummer, der schlechte Nachrichten bekommen hat.",
+          "text": "Du siehst aus wie ein Hummer, der schlechte Nachrichten bekommen hat. 🦞",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "beach7",
+          "who": "narrator",
+          "at": 133886,
+          "say": "Tag eins. Von fünfundzwanzig.",
+          "text": "Tag 1 von 25."
+        },
+        {
+          "key": "night1",
+          "who": "marco",
+          "at": 138735,
+          "say": "Noch eine Runde Caipirinha! Ich zahle!",
+          "text": "Noch eine Runde Caipirinha! Ich zahle! 🍹",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "night2",
+          "who": "jonas",
+          "at": 141515,
+          "say": "Das hast du vor zwei Stunden auch gesagt. Wir warten immer noch.",
+          "text": "Das hast du vor zwei Stunden auch gesagt. Wir warten immer noch."
+        },
+        {
+          "key": "night3",
+          "who": "patrick",
+          "at": 145020,
+          "say": "Ich liebe euch, Jungs. Wirklich. Wer seid ihr nochmal?",
+          "text": "Ich liebe euch, Jungs. Wirklich. Wer seid ihr nochmal? 🥴",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.78
+          }
+        },
+        {
+          "key": "night4",
+          "who": "simon",
+          "at": 149186,
+          "say": "Nicht so laut! Mein Sonnenbrand hört mit.",
+          "text": "Nicht so laut! Mein Sonnenbrand hört mit. 🔥",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.88
+          }
+        },
+        {
+          "key": "end",
+          "who": "narrator",
+          "at": 154080,
+          "say": "Fortsetzung folgt!",
+          "text": "Fortsetzung folgt …"
+        }
+      ],
+      "voice": {
+        "intro": {
+          "dur": 3395,
+          "env": "0002298997631100000008987318976335553100017578468412578998212000530019999932983141000"
+        },
+        "sec1": {
+          "dur": 1409,
+          "env": "018980111495022710532000361134210000"
+        },
+        "sec2": {
+          "dur": 2659,
+          "env": "0088410330049993886200000001237752165101993159649799721166656420000"
+        },
+        "sec3": {
+          "dur": 3367,
+          "env": "1899933146922226311175118964101268432210039541965458623257763464434651994122631110000"
+        },
+        "sec5": {
+          "dur": 2067,
+          "env": "0049977202629964997394006997767216950387300010032110"
+        },
+        "sec6": {
+          "dur": 1830,
+          "env": "0247665422432100000067986563056421311121000000"
+        },
+        "fly1": {
+          "dur": 1273,
+          "env": "05559015961793960012620106641000"
+        },
+        "fly2": {
+          "dur": 824,
+          "env": "698999019310000582352"
+        },
+        "end": {
+          "dur": 1174,
+          "env": "000099601992131994005630100000"
+        },
+        "sec4": {
+          "dur": 3030,
+          "env": "0014988888786310063386410014300047773354101524344663321001999110565411210000"
+        },
+        "bar1": {
+          "dur": 3030,
+          "env": "0003466003559963100850663852006899555400001037655101200069600104554003451000"
+        },
+        "bar2": {
+          "dur": 3873,
+          "env": "9995010531001378799632000021003411101978790125420001599301992016773097137711100993003525777643211"
+        },
+        "bar3": {
+          "dur": 3720,
+          "env": "085502397312723621146665522444773212964332100000055991699264653131784223210353233431341001100"
+        },
+        "bar4": {
+          "dur": 3209,
+          "env": "136543100000004599773159810100999299930295101208501024001583002742000121000000000"
+        },
+        "fly3": {
+          "dur": 3133,
+          "env": "0394128996985330033137310148300499971179311754963000698200002992997221249365320"
+        },
+        "fly4": {
+          "dur": 3313,
+          "env": "00001168683017556530000000699968714102008960011410076106986811215830000320103200000"
+        },
+        "fly5": {
+          "dur": 1985,
+          "env": "58765119445443209510000964312159544466227654699500"
+        },
+        "fly6": {
+          "dur": 3642,
+          "env": "07645479977723554311000017737633851762000452121144334121110035696486477762017656542210100001"
+        },
+        "fly7": {
+          "dur": 2849,
+          "env": "018964200069710699999715994331875420000000999992228610697565411122210000"
+        },
+        "uber1": {
+          "dur": 1277,
+          "env": "08997288457398356753355521100000"
+        },
+        "uber2": {
+          "dur": 3913,
+          "env": "69661000376420007973750058500003203210124544673494000000741014441630841344540430076200131076544220"
+        },
+        "uber3": {
+          "dur": 2930,
+          "env": "01199989776753100015664432100008993697563100006877971189991697006643110000"
+        },
+        "uber4": {
+          "dur": 3785,
+          "env": "16332211151188421000010834994055641112882156521343335861621135211101100012621023741134731110000"
+        },
+        "uber5": {
+          "dur": 981,
+          "env": "0199649889710089137532000"
+        },
+        "beach1": {
+          "dur": 3587,
+          "env": "113640259784545555100542001102884100029999557652121000594111054777513000567667321355421000"
+        },
+        "beach2": {
+          "dur": 3873,
+          "env": "6979899663110049210024763336975127428930357646341103664064127411278610596740033995002612979436310"
+        },
+        "beach3": {
+          "dur": 4195,
+          "env": "010056311365312222000000000000009998522599997449521986549943000011000000385483100126500187864320344232000"
+        },
+        "beach4": {
+          "dur": 2322,
+          "env": "00000497400453014354210121100121000000292773110003210000000"
+        },
+        "beach5": {
+          "dur": 2146,
+          "env": "073310799931831100006320075434551100052121322111110000"
+        },
+        "beach6": {
+          "dur": 3764,
+          "env": "79983211779931000004871002796315743148788643101985431599512019777631199210059738041757641254000"
+        },
+        "beach7": {
+          "dur": 2049,
+          "env": "0189841157875121000003976119999931006443010120000000"
+        },
+        "night1": {
+          "dur": 2380,
+          "env": "476100265682059727401178400036719975553211500000135677666420"
+        },
+        "night2": {
+          "dur": 3005,
+          "env": "0475165016300540102763208875003346411631454100000794544410550099765332100000"
+        },
+        "night3": {
+          "dur": 3566,
+          "env": "782203547987275007999611003599643102369820012789311025999874117667840005975676210066766521"
+        },
+        "night4": {
+          "dur": 2694,
+          "env": "01798320129858852101110000106986653227688735555410295103541021000000"
+        }
+      },
+      "scenes": [
+        {
+          "id": "intro",
+          "t": [
+            0,
+            9000
+          ]
+        },
+        {
+          "id": "sec",
+          "t": [
+            9000,
+            32262
+          ]
+        },
+        {
+          "id": "bar",
+          "t": [
+            32262,
+            51094
+          ]
+        },
+        {
+          "id": "fly",
+          "t": [
+            51094,
+            80813
+          ]
+        },
+        {
+          "id": "uber",
+          "t": [
+            80813,
+            99099
+          ]
+        },
+        {
+          "id": "beach",
+          "t": [
+            99099,
+            137535
+          ]
+        },
+        {
+          "id": "night",
+          "t": [
+            137535,
+            153480
+          ]
+        },
+        {
+          "id": "end",
+          "t": [
+            153480,
+            164480
+          ]
+        }
+      ]
+    },
+    "voices": {
+      "narrator": {
+        "model": "vits-piper-de_DE-thorsten-high",
+        "pitch": 1.0,
+        "speed": 0.9,
+        "fx": "highpass=f=80,equalizer=f=180:t=q:w=1:g=2,acompressor=threshold=-18dB:ratio=3"
+      },
+      "officer": {
+        "model": "vits-piper-de_DE-thorsten-high",
+        "pitch": 1.0,
+        "speed": 0.9
+      },
+      "steward": {
+        "model": "vits-piper-de_DE-dii-high",
+        "pitch": 1.05,
+        "speed": 0.92
+      },
+      "local": {
+        "model": "vits-piper-pt_BR-faber-medium",
+        "pitch": 1.0,
+        "speed": 0.95
+      },
+      "girl": {
+        "model": "vits-coqui-de-css10",
+        "pitch": 1.08,
+        "speed": 0.95
+      }
+    },
+    "parked": {
+      "note": "Fertige Szenen aus der ersten Fassung von Folge 1 für spätere Folgen (Zeiten noch auf die alte Folge 1 bezogen, Szenen-Code ny/buf/jg/fv im Serien-Modul)",
+      "lines": [
         {
           "key": "ny1",
           "who": "narrator",
@@ -4607,64 +5057,9 @@
             "pitch": 1.0,
             "speed": 0.88
           }
-        },
-        {
-          "key": "end",
-          "who": "narrator",
-          "at": 147200,
-          "say": "Fortsetzung folgt!",
-          "text": "Fortsetzung folgt …"
         }
       ],
       "voice": {
-        "intro": {
-          "dur": 3395,
-          "env": "0002298997631100000008987318976335553100017578468412578998212000530019999932983141000"
-        },
-        "sec1": {
-          "dur": 1409,
-          "env": "018980111495022710532000361134210000"
-        },
-        "sec2": {
-          "dur": 2659,
-          "env": "0088410330049993886200000001237752165101993159649799721166656420000"
-        },
-        "sec3": {
-          "dur": 3367,
-          "env": "1899933146922226311175118964101268432210039541965458623257763464434651994122631110000"
-        },
-        "sec4": {
-          "dur": 2055,
-          "env": "0001199899999520004200330056301099732420114004200000"
-        },
-        "sec5": {
-          "dur": 2067,
-          "env": "0049977202629964997394006997767216950387300010032110"
-        },
-        "sec6": {
-          "dur": 1830,
-          "env": "0247665422432100000067986563056421311121000000"
-        },
-        "fly1": {
-          "dur": 1273,
-          "env": "05559015961793960012620106641000"
-        },
-        "fly2": {
-          "dur": 824,
-          "env": "698999019310000582352"
-        },
-        "fly3": {
-          "dur": 1881,
-          "env": "002911292000000631402165986107929410441111000000"
-        },
-        "fly4": {
-          "dur": 1695,
-          "env": "3510098320000799999964330017609952010599110"
-        },
-        "fly5": {
-          "dur": 2201,
-          "env": "07434998976765546630133361048622085076211252115400072000"
-        },
         "ny1": {
           "dur": 1801,
           "env": "0298768764100000001330987655210059995611000000"
@@ -4740,34 +5135,7 @@
         "fv5": {
           "dur": 1498,
           "env": "04996100024888982111198003794997655531"
-        },
-        "end": {
-          "dur": 1174,
-          "env": "000099601992131994005630100000"
         }
-      }
-    },
-    "voices": {
-      "narrator": {
-        "model": "vits-piper-de_DE-thorsten-high",
-        "pitch": 1.0,
-        "speed": 0.9,
-        "fx": "highpass=f=80,equalizer=f=180:t=q:w=1:g=2,acompressor=threshold=-18dB:ratio=3"
-      },
-      "officer": {
-        "model": "vits-piper-de_DE-thorsten-high",
-        "pitch": 1.0,
-        "speed": 0.9
-      },
-      "steward": {
-        "model": "vits-piper-de_DE-dii-high",
-        "pitch": 1.05,
-        "speed": 0.92
-      },
-      "local": {
-        "model": "vits-piper-pt_BR-faber-medium",
-        "pitch": 1.0,
-        "speed": 0.95
       }
     }
   }

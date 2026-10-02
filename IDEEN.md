@@ -18,7 +18,9 @@ nach „Umgesetzt“ verschieben.
 
 - **Cartoon-Animationen** (vorgemerkt 02.10., Patrick will alle nach und nach, gleicher Stil wie die Samba-Show: Foto-Köpfe auf
   Cartoon-Körpern, Münder wie die South-Park-Kanadier, Stimmen per `tools/gen_dance_audio.py`):
-  1. ✅ **„Gringos – Die Serie“, Folge 1** umgesetzt (02.10., Kino). Ideen für Folge 2: Paraty-Kopfsteinpflaster, Ilha-Grande-Boot, Heimflug. (Ursprünglich: Sicherheitskontrolle München (Simons Koffer voller Sonnencreme), Flieger
+  1. ✅ **„Gringos – Die Serie“, Folge 1** umgesetzt (02.10., Kino; neu geschnitten: nur 27.–28.12. mit schwarzem Humor, Bar, Turbulenzen, Uber, Strand-Flirt, Sonnenbrand, Caipi-Abend).
+     **Geparkt für spätere Folgen** (fertig gebaut, `series.parked`): Silvester mit 7 Wellen (Marco), Buffet-Tetris in Foz, Affe klaut Jonas’ Fischerhut, Footvolley 0:21.
+     Plan: Folge 2 Silvester in Rio · Folge 3 Daijo & Greisel kommen / Iguaçu · Folge 4 Amazonas · Folge 5 Paraty & Ilha Grande (Footvolley) · Finale Heimflug. (Ursprünglich: Sicherheitskontrolle München (Simons Koffer voller Sonnencreme), Flieger
      (Patrick bestellt zum 4. Mal Essen nach), Copacabana-Silvester (7. Welle haut Marco um), Buffet in Foz (Teller-Tetris in
      Zeitlupe), Dschungel (Affe klaut Jonas’ Fischerhut), Footvolley gegen Einheimische 0:21, Abspann.)
   2. **Interaktiver Cartoon „Wähle dein Abenteuer“**: Entscheidungen antippen (Caipi oder Wasser, Kaiman streicheln …), 4–5 Enden.
