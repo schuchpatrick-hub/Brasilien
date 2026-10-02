@@ -22,12 +22,14 @@
   </section>
 </header>
 
-<nav class="tabs" aria-label="Bereiche"><div class="tabs-in"><a href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht">Übersicht</a><a href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab">Tage</a><a href="#reise" id="tab-reise" data-tab="reise">Flüge & Kosten</a><a href="#crew-tab" id="tab-crew-tab" data-tab="crew-tab">Crew</a><a href="#karten-tab" id="tab-karten-tab" data-tab="karten-tab">Karten</a><a href="#drinks-tab" id="tab-drinks-tab" data-tab="drinks-tab">Drinks</a><a href="#unterwegs-tab" id="tab-unterwegs-tab" data-tab="unterwegs-tab">Unterwegs</a><a href="#infos" id="tab-infos" data-tab="infos">Infos & Packen</a><a href="#vorfreude-tab" id="tab-vorfreude-tab" data-tab="vorfreude-tab">Vorfreude</a><a href="#spiele-tab" id="tab-spiele-tab" data-tab="spiele-tab">Spiele</a><a href="#extras" id="tab-extras" data-tab="extras">Downloads</a></div></nav>
+<nav class="tabs" aria-label="Bereiche"><div class="tabs-in"><a href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht"><span aria-hidden="true">🏠</span> Übersicht</a><a href="#kino-tab" id="tab-kino-tab" data-tab="kino-tab"><span aria-hidden="true">🎬</span> Kino</a><a href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab"><span aria-hidden="true">📅</span> Tage</a><a href="#reise" id="tab-reise" data-tab="reise"><span aria-hidden="true">✈️</span> Flüge &amp; Kosten</a><a href="#crew-tab" id="tab-crew-tab" data-tab="crew-tab"><span aria-hidden="true">👥</span> Crew &amp; Karten</a><a href="#spiele-tab" id="tab-spiele-tab" data-tab="spiele-tab"><span aria-hidden="true">🎲</span> Spiele</a><a href="#vorfreude-tab" id="tab-vorfreude-tab" data-tab="vorfreude-tab"><span aria-hidden="true">🎁</span> Vorfreude</a><a href="#drinks-tab" id="tab-drinks-tab" data-tab="drinks-tab"><span aria-hidden="true">🍹</span> Drinks</a><a href="#unterwegs-tab" id="tab-unterwegs-tab" data-tab="unterwegs-tab"><span aria-hidden="true">🧭</span> Unterwegs</a><a href="#infos" id="tab-infos" data-tab="infos"><span aria-hidden="true">🎒</span> Infos</a></div></nav>
 
 
 
-<section id="route" data-tab="uebersicht">
-  <h2>Die Route</h2>
+<nav class="tiles" id="themen" aria-label="Themen"><a href="#kino-tab" class="tile k-kino"><span class="tile-i" aria-hidden="true">🎬</span><b>Kino</b><small data-hint="kino-tab">Samba-Show &amp; Reise-Film</small></a><a href="#tage-tab" class="tile k-plan"><span class="tile-i" aria-hidden="true">📅</span><b>Tag für Tag</b><small data-hint="tage-tab">Alle Tage &amp; Termine</small></a><a href="#reise" class="tile k-plan"><span class="tile-i" aria-hidden="true">✈️</span><b>Flüge &amp; Kosten</b><small data-hint="reise">Bordkarten &amp; Preise</small></a><a href="#crew-tab" class="tile k-fun"><span class="tile-i" aria-hidden="true">👥</span><b>Crew &amp; Karten</b><small data-hint="crew-tab">Steckbriefe &amp; FIFA-Karten</small></a><a href="#spiele-tab" class="tile k-fun"><span class="tile-i" aria-hidden="true">🎲</span><b>Spiele</b><small data-hint="spiele-tab">Ranglisten &amp; Sprüche</small></a><a href="#kalender" class="tile k-fun"><span class="tile-i" aria-hidden="true">🎁</span><b>Vorfreude</b><small data-hint="kalender">Türchen &amp; Zeitkapsel</small></a><a href="#drinks-tab" class="tile k-go"><span class="tile-i" aria-hidden="true">🍹</span><b>Drinks</b><small data-hint="drinks-tab">Counter &amp; Ranking</small></a><a href="#sprache" class="tile k-go"><span class="tile-i" aria-hidden="true">🗣️</span><b>Sprache</b><small data-hint="sprache">Sätze zum Anhören</small></a><a href="#rechner" class="tile k-go"><span class="tile-i" aria-hidden="true">💸</span><b>Real-Rechner</b><small data-hint="rechner">Euro ↔ Real</small></a><a href="#infos" class="tile k-info"><span class="tile-i" aria-hidden="true">🎒</span><b>Infos &amp; Packen</b><small data-hint="infos">Praktisches &amp; Listen</small></a></nav>
+
+<section id="route" data-kind="start" data-tab="uebersicht">
+  <h2><span class="ico">🗺️</span>Die Route</h2>
   <figure>
     %%MAP%%
     <figcaption>Gestrichelt: Flug (blau gebucht, orange noch offen, lila nur Daijo &amp; Greisel, ☾ Nachtflug) · durchgezogen: Straße · gepunktet: Boot. <span class="lg-done">Gelb</span> = schon geschafft, <span class="lg-here">pulsierend</span> = hier sind wir, <span class="lg-pin">rot</span> = letzter Check-in. Guarujá, Rio, Paraty und Ilha Grande sind rechts unten vergrößert. <b>Orte und Flughäfen antippen</b> für Infos.</figcaption>
@@ -54,8 +56,8 @@
   </details>
 </section>
 
-<section id="stationen" data-tab="uebersicht">
-  <h2>Stationen</h2>
+<section id="stationen" data-kind="start" data-tab="uebersicht">
+  <h2><span class="ico">📍</span>Stationen</h2>
   <div class="stops">
     <div class="stop"><span class="no">1</span>
       <div class="top"><h3>Guarujá</h3><span class="d">28.–31.12. · 3 Nächte</span><span class="pill ok">gebucht</span></div>
@@ -130,11 +132,25 @@
   </div>
 </section>
 
-<div class="divider-scene" aria-hidden="true">%%SCENE:paraty%%</div>
+<section id="kino" data-tab="kino-tab" data-kind="kino">
+  <h2><span class="ico">🎬</span>Kino</h2>
+  <p class="note sub-lead">Zwei Filme über uns: die Samba-Show der Crew und unsere Route als Reise-Film.</p>
+  <div class="samba" id="samba">
+    <div class="samba-stage"><button type="button" class="sb-big" id="samba-big" aria-label="Samba-Show abspielen"><span class="sb-big-p" aria-hidden="true">▶</span><small>ca. 1:40 min · mit Ton am schönsten</small></button><svg id="samba-svg" viewBox="0 0 800 500" role="img" aria-label="Animierte Samba-Show der Crew"></svg></div>
+    <div class="samba-btns"><button type="button" class="map-play" id="samba-play" aria-pressed="false">💃 Samba-Show starten</button> <button type="button" class="map-play snd" id="samba-stop" hidden>⏹ Stopp</button> <button type="button" class="map-play snd" id="samba-sound" aria-pressed="true">🔊 Ton an</button> <button type="button" class="map-play snd" id="samba-full">⛶ Vollbild</button> <button type="button" class="map-play snd off" id="samba-clap">👏 Klatschen</button> <button type="button" class="map-play snd off" id="samba-cheer">🎉 Jubeln</button></div>
+    <p class="note">Während der Show: Köpfe antippen, klatschen und jubeln. Bei jedem Abspielen passiert etwas anderes.</p>
+  </div>
+  <div class="kino-film">
+    <div class="kino-film-t"><b>✈️ Reise-Film</b><span>Unsere Route als Animation: Nachrichten-Intro „Gringo-Schau“, Flieger, Boot, Silvester-Wellen und Pannen vom Dreh.</span></div>
+    <button type="button" class="map-play" id="kino-film">▶ Reise-Film ansehen</button>
+  </div>
+</section>
 
-<section id="tage" data-tab="tage-tab">
+<div class="divider-scene part">%%SCENE:paraty%%<div class="part-t"><span class="part-i" aria-hidden="true">📋</span><span><b>Planung</b><small>Tag für Tag, Flüge und Kosten</small></span></div></div>
+
+<section id="tage" data-kind="plan" data-tab="tage-tab">
   <div class="today-head">
-    <h2>Tag für Tag</h2>
+    <h2><span class="ico">📅</span>Tag für Tag</h2>
     <div class="seg" role="group" aria-label="Tage anzeigen für">
       <button type="button" id="g-a2" data-g="a" aria-pressed="true">Gringos plus 1 Cevapi</button>
       <button type="button" id="g-b2" data-g="b" aria-pressed="false">Daijo &amp; Greisel</button>
@@ -144,8 +160,8 @@
   <div id="days" class="days2"></div>
 </section>
 
-<section id="fluege" data-tab="reise">
-  <h2>Flüge</h2>
+<section id="fluege" data-kind="plan" data-tab="reise">
+  <h2><span class="ico">✈️</span>Flüge</h2>
   <div class="seg fl-seg" role="group" aria-label="Flüge anzeigen für">
     <button type="button" data-g="a" aria-pressed="true">Gringos plus 1 Cevapi</button>
     <button type="button" data-g="b" aria-pressed="false">Daijo &amp; Greisel</button>
@@ -155,40 +171,62 @@
   <p class="note" id="fl-note"></p>
 </section>
 
-<section id="kosten" data-tab="reise">
-  <h2>Kosten pro Person</h2>
+<section id="kosten" data-kind="plan" data-tab="reise">
+  <h2><span class="ico">💶</span>Kosten pro Person</h2>
   <div id="co-box"></div>
   <p class="note" style="margin-top:10px">Abgerechnet wird über zwei Splitwise-Gruppen: eine für die Gringos plus 1 Cevapi (Guarujá, Rio), eine für alle sechs.</p>
 </section>
 
-<section id="crew" data-tab="crew-tab">
-  <h2>Die Crew</h2>
+<div class="divider-scene part">%%SCENE:ilha%%<div class="part-t"><span class="part-i" aria-hidden="true">🎉</span><span><b>Crew &amp; Spaß</b><small>Steckbriefe, FIFA-Karten, Spiele und Vorfreude</small></span></div></div>
+
+<section id="crew" data-kind="fun" data-tab="crew-tab">
+  <h2><span class="ico">👥</span>Die Crew</h2>
   <div id="crew-overview" class="crew-ov"></div>
   <div id="crew-list" class="crew-grid"></div>
-  <div class="samba" id="samba">
-    <h3>💃 Samba-Show der Gringos</h3>
-    <div class="samba-stage"><svg id="samba-svg" viewBox="0 0 800 500" role="img" aria-label="Animierte Samba-Show der Crew"></svg></div>
-    <div class="samba-btns"><button type="button" class="map-play" id="samba-play" aria-pressed="false">💃 Samba-Show starten</button> <button type="button" class="map-play snd" id="samba-stop" hidden>⏹ Stopp</button> <button type="button" class="map-play snd" id="samba-sound" aria-pressed="true">🔊 Ton an</button> <button type="button" class="map-play snd" id="samba-full">⛶ Vollbild</button> <button type="button" class="map-play snd off" id="samba-clap">👏 Klatschen</button> <button type="button" class="map-play snd off" id="samba-cheer">🎉 Jubeln</button></div>
-    <p class="note">Während der Show: Köpfe antippen, klatschen und jubeln. Bei jedem Abspielen passiert etwas anderes.</p>
-  </div>
   <div id="lightbox" class="lightbox" role="dialog" aria-modal="true" aria-label="Foto vergrößert" hidden>
     <button type="button" class="x" id="lightbox-close" aria-label="Schließen">×</button>
     <figure><img id="lightbox-img" alt=""><figcaption id="lightbox-cap"></figcaption></figure>
   </div>
 </section>
 
-<section id="karten" data-tab="karten-tab">
-  <h2>Crew-Karten ⚽</h2>
+<section id="karten" data-kind="fun" data-tab="crew-tab">
+  <h2><span class="ico">⚽</span>Crew-Karten</h2>
   <p class="note sub-lead">Ultimate Gringo Team: Jeder hat seine Spielerkarte. Die Werte leben mit der Reise: Drinks erhöhen die Trinkfestigkeit, Siege die Gesamtwertung, letzte Plätze ziehen sie runter. Unten auf der Karte steht der Marktwert: Er ändert sich jeden Tag, Siege treiben ihn hoch, letzte Plätze drücken ihn, Partynächte geben einen kleinen Bonus. Karte antippen zum Umdrehen: Hinten stehen Scout-Bericht und Spielerakte (nach unten wischen).<br><small>TTP Trinktempo · TRI Trinkfestigkeit · FLI Flirt · ORI Orientierung · BUF Buffet · PÜN Pünktlichkeit · KAT Kater-Resistenz · SMB Samba · KAR Karaoke · <span style="color:var(--open)">GRI Gringo-Faktor · SCH Schnarchen · MEK Meckern &amp; Jammern (rot: je höher, desto schlimmer)</span><br>Gesamtwertung und Marktwert rechnen mit allen zwölf Werten, rote Werte zählen umgekehrt: wenig Schnarchen, Meckern und Gringo-Faktor bringen Punkte.</small></p>
   <div id="fc" class="fc-row" role="list"></div>
   <div id="fc-edit"></div>
   <div id="fc-news"></div>
 </section>
 
-<div class="divider-scene" aria-hidden="true">%%SCENE:ilha%%</div>
+<section id="spiele" data-kind="fun" data-tab="spiele-tab">
+  <h2><span class="ico">🎲</span>Spiele</h2>
+  <p class="note sub-lead">Blacky Jacky, Wizard, Footvolley und alles, was unterwegs noch dazukommt. Jede Partie wird eingetragen, daraus entstehen Ranglisten pro Spiel und der Spiele-Champion der Reise.</p>
+  <div class="gm-stage"><div class="gm-bg" aria-hidden="true">%%SCENE:spiele%%</div><div id="gm-top" class="gm-top"></div></div>
+  <div id="gm" class="gm"></div>
+</section>
 
-<section id="drinks" data-tab="drinks-tab">
-  <h2>Drinks-Counter</h2>
+<section id="kalender" data-kind="fun" data-tab="vorfreude-tab">
+  <h2><span class="ico">🎁</span>Vorfreude-Kalender</h2>
+  <p class="note sub-lead">Jeden Tag ein Türchen bis zum Abflug am 27.12.: Fun Facts, Portugiesisch, Songs, Crew-Wahrheiten und kleine Aufgaben für die Gruppe. Verpasste Türchen kann man nachholen.</p>
+  <div class="adv">
+    <div id="adv-feature" class="adv-feature" aria-live="polite"></div>
+    <div id="adv-stats" class="adv-stats"></div>
+    <details class="adv-all">
+      <summary>Alle 88 Türchen anzeigen</summary>
+      <div id="adv-grid" class="adv-grid"></div>
+    </details>
+  </div>
+</section>
+
+<section id="kapsel" data-kind="fun" data-tab="vorfreude-tab">
+  <h2><span class="ico">⏳</span>Zeitkapsel</h2>
+  <p class="note sub-lead">Alle sechs geben ihre Prognosen bis zum Abflug am 27.12. ab, also auch Daijo &amp; Greisel, damit keiner Vorwissen hat. Alle Fragen zählen über die ganze Reise, auch schon in der ersten Woche. Die Tipps werden versiegelt, niemand sieht sie, und am letzten Abend auf der Ilha Grande wird die Kapsel gemeinsam geöffnet. Wer am meisten richtig hat, ist der Hellseher der Reise.</p>
+  <div id="ka-box" class="ka"></div>
+</section>
+
+<div class="divider-scene part">%%SCENE:rio%%<div class="part-t"><span class="part-i" aria-hidden="true">🧭</span><span><b>Unterwegs</b><small>Drinks, Sprachführer und Real-Rechner</small></span></div></div>
+
+<section id="drinks" data-kind="go" data-tab="drinks-tab">
+  <h2><span class="ico">🍹</span>Drinks-Counter</h2>
   <p class="note sub-lead" id="dr-mode">Jeder trägt seine Getränke ein, das Ranking aktualisiert sich live für alle.</p>
 
   <details class="dr-add" id="dr-add" data-fold="add" open>
@@ -259,10 +297,8 @@
   <div id="dr-tip" class="dr-tip" role="tooltip" hidden></div>
 </section>
 
-<div class="divider-scene" aria-hidden="true">%%SCENE:rio%%</div>
-
-<section id="sprache" data-tab="unterwegs-tab">
-  <h2>Mini-Sprachführer</h2>
+<section id="sprache" data-kind="go" data-tab="unterwegs-tab">
+  <h2><span class="ico">🗣️</span>Mini-Sprachführer</h2>
   <p class="note sub-lead">Brasilianisches Portugiesisch. Auf ▶ tippen: Erst kommt der Satz auf Deutsch, nach einer kurzen Pause auf Portugiesisch. Die Aussprache darunter ist eine grobe deutsche Umschrift, die Silbe in Großbuchstaben wird betont.</p>
   <div class="speak-bar">
     <label class="slow"><input type="checkbox" id="speak-slow" checked> Langsam sprechen</label>
@@ -274,8 +310,8 @@
   <p class="note">Aufnahmen: Computerstimmen „de4“ und „br3“ (eSpeak NG mit MBROLA), bewusst langsam gesprochen. Die Handy-Stimme ist oft natürlicher, falls verfügbar.</p>
 </section>
 
-<section id="rechner" data-tab="unterwegs-tab">
-  <h2>Real-Rechner 💸</h2>
+<section id="rechner" data-kind="go" data-tab="unterwegs-tab">
+  <h2><span class="ico">💸</span>Real-Rechner</h2>
   <div class="fx">
     <div class="fx-dir" role="group" aria-label="Richtung">
       <button type="button" data-dir="brl" aria-pressed="true">R$ → €</button>
@@ -293,10 +329,10 @@
   </div>
 </section>
 
-<div class="divider-scene" aria-hidden="true">%%SCENE:iguacu%%</div>
+<div class="divider-scene part">%%SCENE:iguacu%%<div class="part-t"><span class="part-i" aria-hidden="true">🎒</span><span><b>Infos &amp; Packen</b><small>Praktisches, Gesundheit, Packlisten und Downloads</small></span></div></div>
 
-<section id="praktisch" data-tab="infos">
-  <h2>Praktisches</h2>
+<section id="praktisch" data-kind="info" data-tab="infos">
+  <h2><span class="ico">ℹ️</span>Praktisches</h2>
   <p class="note sub-lead">Allgemeine Reiseinfos, nicht aus dem Chat. Vor Abflug kurz gegenchecken.</p>
   <div class="grid-info">
     <div class="info"><h3>Zeit</h3><p>Rio, São Paulo, Foz do Iguaçu: <b>4 h hinter Deutschland</b> (UTC−3, keine Sommerzeit). Manaus: <b>5 h</b> (UTC−4). Flugzeiten auf dieser Seite sind Ortszeit.</p></div>
@@ -309,9 +345,9 @@
   </div>
 </section>
 
-<section class="cols" id="gesundheit" data-tab="infos">
+<section class="cols" id="gesundheit" data-kind="info" data-tab="infos">
   <div>
-    <h2>Gesundheit & Einreise</h2>
+    <h2><span class="ico">🩺</span>Gesundheit &amp; Einreise</h2>
     <ul class="plain">
       <li><b>Gelbfieber-Impfung</b> ist dringend empfohlen (Manaus, Iguaçu) und muss mindestens 10 Tage vor der Einreise erfolgt sein.</li>
       <li>Hepatitis A (+ B), Standardimpfungen prüfen. Tollwut und Typhus sind optional.</li>
@@ -322,9 +358,8 @@
   </div>
 </section>
 
-
-<section id="packen" data-tab="infos">
-  <h2>Packlisten</h2>
+<section id="packen" data-kind="info" data-tab="infos">
+  <h2><span class="ico">🎒</span>Packlisten</h2>
   <p class="note sub-lead">Häkchen werden nur auf deinem Gerät gespeichert, jeder hat seine eigene Liste.</p>
   <div class="cols">
     <div><h3>Allgemein</h3><ul class="pack2" data-list="allg">
@@ -336,36 +371,8 @@
   </div>
 </section>
 
-<div class="divider-scene" aria-hidden="true">%%SCENE:manaus%%</div>
-
-<section id="kalender" data-tab="vorfreude-tab">
-  <h2>Vorfreude-Kalender 🎁</h2>
-  <p class="note sub-lead">Jeden Tag ein Türchen bis zum Abflug am 27.12.: Fun Facts, Portugiesisch, Songs, Crew-Wahrheiten und kleine Aufgaben für die Gruppe. Verpasste Türchen kann man nachholen.</p>
-  <div class="adv">
-    <div id="adv-feature" class="adv-feature" aria-live="polite"></div>
-    <div id="adv-stats" class="adv-stats"></div>
-    <details class="adv-all">
-      <summary>Alle 88 Türchen anzeigen</summary>
-      <div id="adv-grid" class="adv-grid"></div>
-    </details>
-  </div>
-</section>
-
-<section id="kapsel" data-tab="vorfreude-tab">
-  <h2>Zeitkapsel ⏳</h2>
-  <p class="note sub-lead">Alle sechs geben ihre Prognosen bis zum Abflug am 27.12. ab, also auch Daijo &amp; Greisel, damit keiner Vorwissen hat. Alle Fragen zählen über die ganze Reise, auch schon in der ersten Woche. Die Tipps werden versiegelt, niemand sieht sie, und am letzten Abend auf der Ilha Grande wird die Kapsel gemeinsam geöffnet. Wer am meisten richtig hat, ist der Hellseher der Reise.</p>
-  <div id="ka-box" class="ka"></div>
-</section>
-
-<section id="spiele" data-tab="spiele-tab">
-  <h2>Spiele 🎲</h2>
-  <p class="note sub-lead">Blacky Jacky, Wizard, Footvolley und alles, was unterwegs noch dazukommt. Jede Partie wird eingetragen, daraus entstehen Ranglisten pro Spiel und der Spiele-Champion der Reise.</p>
-  <div class="gm-stage"><div class="gm-bg" aria-hidden="true">%%SCENE:spiele%%</div><div id="gm-top" class="gm-top"></div></div>
-  <div id="gm" class="gm"></div>
-</section>
-
-<section id="downloads" data-tab="extras">
-  <h2>Downloads &amp; Kalender</h2>
+<section id="downloads" data-kind="info" data-tab="infos">
+  <h2><span class="ico">⬇️</span>Downloads &amp; Kalender</h2>
   <div class="cols">
     <div class="dl">
       <h3>Offline-Version</h3>
