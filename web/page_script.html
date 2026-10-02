@@ -1958,6 +1958,7 @@ function wavB64(buf) {
     const bus = {travel: ctx.createGain(), stay: ctx.createGain(), show: ctx.createGain()};
     Object.values(bus).forEach(b => { b.gain.value = 0; b.connect(music); });
     const sfxOut = ctx.createGain(); sfxOut.gain.value = .9; sfxOut.connect(master);
+    const ambOut = ctx.createGain(); ambOut.gain.value = 1; ambOut.connect(master);
     E.master = master; E.music = music;
     let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
     const nb = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), nd = nb.getChannelData(0);
@@ -2087,6 +2088,24 @@ function wavB64(buf) {
       [77, 81].forEach(m => kazoo(sfxOut, mf(m), t + .26, .5, .07));
       noise(sfxOut, t + .26, .6, .07, 'highpass', 5000, .5);
     }
+    // Atmo je Szene (Serie): gefiltertes Rauschen mit Bewegung, ein paar typische Einzelgeräusche
+    E.amb = (kind, t0, t1) => {
+      const C2 = {hall: ['bandpass', 650, .7, .05], cabin: ['lowpass', 240, .7, .13], sea: ['lowpass', 900, .5, .08], crowd: ['bandpass', 850, .6, .07], traffic: ['lowpass', 380, .7, .09],
+        restaurant: ['bandpass', 1300, .9, .035], wind: ['bandpass', 650, 1.4, .07], room: ['lowpass', 320, .5, .025], night: ['bandpass', 500, .5, .02], bar: ['bandpass', 900, .8, .045]}[kind];
+      if (!C2 || t1 - t0 < 1) return;
+      const src = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain(), lv = C2[3];
+      src.buffer = nb; src.loop = true; f.type = C2[0]; f.frequency.value = C2[1]; f.Q.value = C2[2]; g.gain.value = 0;
+      src.connect(f); f.connect(g); g.connect(ambOut);
+      g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(lv, t0 + .9); g.gain.setValueAtTime(lv, Math.max(t0 + .9, t1 - .9)); g.gain.linearRampToValueAtTime(0, t1);
+      if (/sea|crowd|wind|restaurant|bar/.test(kind)) { const l = ctx.createOscillator(), lg = ctx.createGain(); l.frequency.value = kind === 'sea' ? .11 : kind === 'wind' ? .23 : .45; lg.gain.value = lv * .55; l.connect(lg); lg.connect(g.gain); l.start(t0); l.stop(t1); }
+      if (kind === 'wind') { f.frequency.setValueAtTime(500, t0); for (let x = t0; x < t1; x += 2.5) f.frequency.linearRampToValueAtTime(500 + rnd() * 700, x + 2.5); }
+      src.start(t0, rnd() * 1.5); src.stop(t1 + .05);
+      if (kind === 'cabin') tone(ambOut, 'sine', 98, t0, t1 - t0, .03, {a: .9, hold: Math.max(.9, t1 - t0 - 1)});
+      if (kind === 'night') for (let x = t0 + .5; x < t1 - .5; x += .9 + rnd() * .8) [0, .07, .14].forEach(o => tone(ambOut, 'sine', 4300 + rnd() * 300, x + o, .05, .012));
+      if (kind === 'restaurant' || kind === 'bar') for (let x = t0 + 1; x < t1 - .5; x += 1.6 + rnd() * 2.5) tone(ambOut, 'sine', 2600 + rnd() * 900, x, .25, .012);
+      if (kind === 'hall') for (let x = t0 + 2; x < t1 - 1; x += 6 + rnd() * 4) [0, .35].forEach((o, k) => tone(ambOut, 'sine', [784, 659][k], x + o, .5, .02));
+      if (kind === 'crowd') for (let x = t0 + 1; x < t1 - .5; x += 1.2 + rnd() * 1.5) noise(ambOut, x, .4, .03, 'bandpass', 1500 + rnd() * 1200, 3, {a: .1});
+    };
     E.setNight = (on, w) => {
       E.night = on;
       lp.frequency.cancelScheduledValues(w); lp.frequency.setTargetAtTime(on ? 850 : 16000, w, .4);
@@ -2118,6 +2137,7 @@ function wavB64(buf) {
       else if (name === 'crash') { noise(sfxOut, t, 1.2, .6, 'highpass', 2500, .5); for (let k = 0; k < 14; k++) tone(sfxOut, 'sine', 2500 + rnd() * 4000, t + rnd() * .5, .25, .05); kick(sfxOut, t, .8); }
       else if (name === 'thud') { kick(sfxOut, t, .9); noise(sfxOut, t, .3, .35, 'lowpass', 600, .7); }
       else if (name === 'flash') { noise(sfxOut, t, .6, .25, 'bandpass', 5000, .8, {to: 900, a: .02}); tone(sfxOut, 'sine', 1800, t, .5, .06, {from: 400, glide: .4}); }
+      else if (name === 'swish') { noise(sfxOut, t, .38, .16, 'bandpass', 400, 1.6, {to: 3800, a: .12}); noise(sfxOut, t + .05, .3, .06, 'highpass', 5000, .7, {a: .1}); }
       else if (name === 'fart') { tone(sfxOut, 'sawtooth', 70, t, 1.1, .22, {from: 110, glide: .9, vib: 23, depth: .25, lp: 700, a: .02}); noise(sfxOut, t, 1.1, .12, 'lowpass', 400, 1, {a: .05}); }
       else if (name === 'puke') { noise(sfxOut, t, .9, .35, 'bandpass', 900, 2, {to: 250, a: .05}); [0, .25, .5].forEach(o => tone(sfxOut, 'sawtooth', 120 - o * 60, t + o, .3, .12, {from: 220, glide: .2, lp: 900})); noise(sfxOut, t + .9, .5, .2, 'lowpass', 1500, 1); }
       else if (name === 'kiss') { noise(sfxOut, t, .08, .5, 'bandpass', 2500, 3); tone(sfxOut, 'sine', 1400, t + .02, .12, .1, {from: 600, glide: .08}); [0, .15, .3].forEach((o, k) => tone(sfxOut, 'sine', [1046, 1318, 1568][k], t + .2 + o, .4, .06)); }
@@ -3068,12 +3088,12 @@ function wavB64(buf) {
   // ---------- Szenen-Zeitplan (ms) ----------
   // Szenen-Zeiten kommen aus trip.json (series.ep1.scenes), Musik/Ort-Einblendung je Szene hier
   const META = {intro: {mus: 'show'},
-    land: {mus: 'travel', cap: '✈️ Landung in Rio-Santos Dumont · 31.12.'}, kat: {mus: 'stay', cap: '🏨 Hotel in Rio · 1. Januar'}, cristo: {mus: 'travel', cap: '⛰️ Corcovado · Christusstatue'},
-    rod: {mus: 'stay', night: 1, cap: '🥩 Rodízio · so viel Fleisch, wie man will'}, zucker: {mus: 'travel', cap: '🚡 Zuckerhut-Seilbahn'}, call: {mus: 'stay', night: 1, cap: '📱 Videocall nach München'}, sec: {mus: 'travel', cap: '📍 München, Flughafen · 27.12.'}, bar: {mus: 'stay', night: 1, cap: '🍺 Flughafen-Bar · 16:30 Uhr'},
-    fly: {mus: 'travel', night: 1, cap: '✈️ Über dem Atlantik · Nachtflug'}, uber: {mus: 'travel', cap: '🚕 São Paulo → Guarujá · 28.12., 6:40 Uhr'},
-    beach: {mus: 'show', cap: '🏖️ Guarujá · Praia da Enseada'}, night: {mus: 'stay', night: 1, cap: '🍹 Guarujá · abends'}, end: {mus: 'show'},
+    land: {amb: 'cabin', mus: 'travel', cap: '✈️ Landung in Rio-Santos Dumont · 31.12.'}, kat: {amb: 'room', mus: 'stay', cap: '🏨 Hotel in Rio · 1. Januar'}, cristo: {amb: 'wind', mus: 'travel', cap: '⛰️ Corcovado · Christusstatue'},
+    rod: {amb: 'restaurant', mus: 'stay', night: 1, cap: '🥩 Rodízio · so viel Fleisch, wie man will'}, zucker: {amb: 'wind', mus: 'travel', cap: '🚡 Zuckerhut-Seilbahn'}, call: {amb: 'night', mus: 'stay', night: 1, cap: '📱 Videocall nach München'}, sec: {amb: 'hall', mus: 'travel', cap: '📍 München, Flughafen · 27.12.'}, bar: {amb: 'bar', mus: 'stay', night: 1, cap: '🍺 Flughafen-Bar · 16:30 Uhr'},
+    fly: {amb: 'cabin', mus: 'travel', night: 1, cap: '✈️ Über dem Atlantik · Nachtflug'}, uber: {amb: 'traffic', mus: 'travel', cap: '🚕 São Paulo → Guarujá · 28.12., 6:40 Uhr'},
+    beach: {amb: 'sea', mus: 'show', cap: '🏖️ Guarujá · Praia da Enseada'}, night: {amb: 'night', mus: 'stay', night: 1, cap: '🍹 Guarujá · abends'}, end: {mus: 'show'},
     // fertig gebaute Szenen für spätere Folgen (trip.json → series.parked)
-    ny: {mus: 'show', cap: '🎆 Copacabana · Silvester 2026/27'}, buf: {mus: 'stay', cap: '🦜 Foz do Iguaçu · 06.01.'}, jg: {mus: 'stay', cap: '🌴 Amazonas · Juma Lodge'}, fv: {mus: 'show', cap: '⚽ Footvolley gegen Einheimische'}};
+    ny: {amb: 'crowd', mus: 'show', cap: '🎆 Copacabana · Silvester 2026/27'}, buf: {mus: 'stay', cap: '🦜 Foz do Iguaçu · 06.01.'}, jg: {mus: 'stay', cap: '🌴 Amazonas · Juma Lodge'}, fv: {mus: 'show', cap: '⚽ Footvolley gegen Einheimische'}};
   const ALLSC = Object.keys(META).map(id => ({id}));
   const EPS = Object.keys(TRIP.series).filter(k => /^ep\d+$/.test(k)).sort((x, y) => +x.slice(2) - +y.slice(2));
   function setEp(id) {   // Folge laden: Zeilen, Zeiten, Szenen (Texte im Bild setzt epTexts weiter unten)
@@ -3180,7 +3200,9 @@ function wavB64(buf) {
   const jumpK = (t, a, d) => { const k = (t - a) / (d || 600); return k > 0 && k < 1 ? S(PI * k) : 0; };
   function mouthOf(id, t) {
     for (const l of LINES) { if (l.who !== id || t < l.at || t > l.at + l.dur) continue;
-      const d = +((l.env || '')[Math.floor((t - l.at) / 40)] || 0); return d >= 5 ? 1 : d >= 2 ? .55 : 0; }
+      const x = (t - l.at) / 40, i0 = Math.floor(x), e = l.env || '', v = k => +(e[k] || 0);
+      const d = v(i0) + (v(i0 + 1) - v(i0)) * (x - i0), d2 = Math.max(d, v(i0 - 1) * .6);   // weich, kurzes Nachklingen
+      return clamp((d2 - 1.2) / 6, 0, 1); }
     return 0;
   }
   function apply(o, p, t) {
@@ -3195,6 +3217,8 @@ function wavB64(buf) {
     o.legR.a.setAttribute('transform', `translate(9,2) rotate(${p.lR[0].toFixed(1)})`); o.legR.f.setAttribute('transform', `translate(0,30) rotate(${p.lR[1].toFixed(1)})`);
     o.head.setAttribute('transform', `translate(${(4 * p.look).toFixed(1)},-96) rotate(${(p.tilt + 9 * p.look).toFixed(1)})`);
     const m = Math.max(p.mouth, mouthOf(o.id, t));
+    if (m > .15 && !p.still && !p.headOnly) { const gg = 10 * S(t / 210 + (o.x || 0) * .01); o.armR.f.setAttribute('transform', `translate(0,24) rotate(${(-p.aR[1] - gg).toFixed(1)})`); o.head.setAttribute('transform', `translate(${(4 * p.look).toFixed(1)},${(-96 - 1.5 * m).toFixed(1)}) rotate(${(p.tilt + 9 * p.look + 3 * S(t / 160)).toFixed(1)})`); }
+    o.torso.setAttribute('transform', `translate(0,${(.9 * S(t / 700 + (o.x || 0) * .02)).toFixed(2)})`);
     if (o.npc) { o.mouth.setAttribute('ry', (2 + 9 * m).toFixed(1)); o.upper.setAttribute('transform', `translate(0,${(-4 * m).toFixed(1)})`); }
     else { const h = R * .55 * m;
       o.upper.setAttribute('transform', `translate(0,${(-h).toFixed(1)}) rotate(${(-6 * m).toFixed(1)},${(-o.c).toFixed(1)},${o.mY.toFixed(1)})`);
@@ -3541,7 +3565,7 @@ function wavB64(buf) {
   const capT = mk('text', {x: 38, y: 42, class: 'se-cap'}, capG);
   const subG = mk('g', {opacity: 0}, hud); const subR = mk('rect', {y: H - 52, height: 38, rx: 10, fill: '#000', opacity: .62}, subG);
   const subT = mk('text', {x: W / 2, y: H - 27, 'text-anchor': 'middle', class: 'se-sub'}, subG), subT2 = mk('text', {x: W / 2, y: H - 27, 'text-anchor': 'middle', class: 'se-sub'}, subG);
-  const fade = mk('rect', {x: 0, y: 0, width: W, height: H, fill: '#000', opacity: 1}, hud);
+  const fade = mk('rect', {x: 0, y: 0, width: W, height: H, fill: '#000', opacity: 1}, hud), iris = mk('path', {fill: '#000', 'fill-rule': 'evenodd', opacity: 0}, hud);
 
   // ---------- Bild für Zeit t ----------
   let lastScene = null, UI = 1;
@@ -3549,9 +3573,14 @@ function wavB64(buf) {
   if ('ResizeObserver' in window) new ResizeObserver(measure).observe(svg);
   function frame(t) {
     const sc = sceneAt(t), L = t - sc.t[0], len = sc.t[1] - sc.t[0];
-    if (sc !== lastScene) { ALLSC.forEach(s => { const on = s.id === sc.id ? 1 : 0; sceneG[s.id].setAttribute('opacity', on); front[s.id].setAttribute('opacity', on); }); lastScene = sc; sceneChanged(sc); }
+    if (sc !== lastScene) { snapCam = true; ALLSC.forEach(s => { const on = s.id === sc.id ? 1 : 0; sceneG[s.id].setAttribute('opacity', on); front[s.id].setAttribute('opacity', on); }); lastScene = sc; sceneChanged(sc); }
     // Abblende zwischen den Szenen
-    fade.setAttribute('opacity', Math.max(1 - span(L, 0, 450), sc.id === 'end' ? 0 : span(L, len - 450, len), t < 120 ? 1 : 0).toFixed(2));
+    // Übergang: Kreisblende wie im Zeichentrick (zu am Szenenende, auf am Anfang), nur ganz am Anfang Schwarz
+    const ik = Math.min(sc === SC[0] ? 1 : span(L, 0, 650), sc.id === 'end' ? 1 : 1 - span(L, len - 650, len - 40)), ir = 520 * ease(ik);
+    if (sc === SC[SC.length - 1] || ik >= 1) iris.setAttribute('opacity', 0);
+    else { iris.setAttribute('opacity', 1); const icx = W / 2 + 60 * S(sc.t[0]), icy = H * .45;
+      iris.setAttribute('d', `M-20,-20H${W + 20}V${H + 20}H-20Z M${(icx - ir).toFixed(1)},${icy} a${ir.toFixed(1)},${ir.toFixed(1)} 0 1,0 ${(2 * ir).toFixed(1)},0 a${ir.toFixed(1)},${ir.toFixed(1)} 0 1,0 ${(-2 * ir).toFixed(1)},0Z`); }
+    fade.setAttribute('opacity', Math.max(sc === SC[0] ? 1 - span(L, 0, 700) : 0, sc === SC[SC.length - 1] ? span(L, len - 900, len) : 0, t < 120 ? 1 : 0).toFixed(2));
     // alle Figuren erst einmal aus
     const pose = {}; Object.keys(P).forEach(id => { pose[id] = Object.assign(base(), {on: 0}); });
     [bottles, meals, blocks].forEach(a => a.forEach(e => e.setAttribute('opacity', 0)));
@@ -3946,14 +3975,17 @@ function wavB64(buf) {
     // Kamera: Szenen-Einstellung, leicht zum Sprecher hin
     const sp = LINES.find(l => t >= l.at - 300 && t <= l.at + l.dur + 400 && P[l.who] && pose[l.who].on);
     if (sp && cam.z > 1.04) { const o = P[sp.who]; cam.x += (o.x - cam.x) * .35; }
-    CAM.x += (cam.x - CAM.x) * CAMK; CAM.y += (cam.y - CAM.y) * CAMK; CAM.z += (cam.z - CAM.z) * CAMK;
+    const dtc = clamp(t - (CAM.t === undefined ? t : CAM.t), 0, 200); CAM.t = t;
+    const kc = snapCam || CAMK >= 1 ? 1 : 1 - Math.exp(-dtc / 420); snapCam = false;
+    CAM.x += (cam.x - CAM.x) * kc; CAM.y += (cam.y - CAM.y) * kc; CAM.z += (cam.z - CAM.z) * kc;
+    const drift = .8 * (CAM.z - .98);   // leichtes Handkamera-Atmen beim Ranzoomen
     const z = CAM.z, cx = clamp(CAM.x, W / 2 / z, W - W / 2 / z), cy = clamp(CAM.y, H / 2 / z, H - H / 2 / z);
-    world.setAttribute('transform', `translate(${(W / 2 - cx * z).toFixed(1)},${(H / 2 - cy * z).toFixed(1)}) scale(${z.toFixed(3)})`);
+    world.setAttribute('transform', `translate(${(W / 2 - cx * z + drift * 3 * S(t / 1300)).toFixed(1)},${(H / 2 - cy * z + drift * 2 * S(t / 1700)).toFixed(1)}) scale(${z.toFixed(3)})`);
     // Ort-Einblendung und Untertitel
-    const ck = sc.cap ? win(L, 500, 4200, 400) : 0; capG.setAttribute('opacity', ck.toFixed(2));
+    const ck = sc.cap ? win(L, 600, 4300, 450) : 0; capG.setAttribute('opacity', ck.toFixed(2)); capG.setAttribute('transform', `translate(${(-24 * (1 - ease(ck))).toFixed(1)},0)`);
     if (sc.cap) { capT.textContent = sc.cap; capT.setAttribute('style', `font-size:${(17 * UI).toFixed(1)}px`); capR.setAttribute('height', (36 * UI).toFixed(1)); capT.setAttribute('y', (18 + 24 * UI).toFixed(1)); capR.setAttribute('width', (capT.textContent.length * 9.2 * UI + 40).toFixed(0)); }
     const cur = LINES.find(l => t >= l.at && t <= l.at + l.dur + 500);
-    subG.setAttribute('opacity', cur && subsOn ? 1 : 0);
+    subG.setAttribute('opacity', cur && subsOn ? win(t, cur.at - 120, cur.at + cur.dur + 500, 160).toFixed(2) : 0);
     if (cur) { const txt = (cur.who === 'narrator' ? '' : nameOf(cur.who) + ': ') + cur.text, fs = 17 * UI, cw = fs * .53;
       // zu lang für eine Zeile: an der Lücke nahe der Mitte umbrechen
       let l1 = txt, l2 = ''; if (txt.length * cw + 30 > W - 30) { const mid = txt.length / 2; let best = -1; for (let i = 0; i < txt.length; i++) if (txt[i] === ' ' && (best < 0 || Math.abs(i - mid) < Math.abs(best - mid))) best = i; if (best > 0) { l1 = txt.slice(0, best); l2 = txt.slice(best + 1); } }
@@ -3962,7 +3994,7 @@ function wavB64(buf) {
       subR.setAttribute('x', ((W - w) / 2).toFixed(0)); subR.setAttribute('width', w.toFixed(0)); subR.setAttribute('height', hh.toFixed(0)); subR.setAttribute('y', (H - 14 - hh).toFixed(0));
       subT.setAttribute('y', (H - 14 - hh + fs * 1.28).toFixed(0)); subT2.setAttribute('y', (H - 14 - hh + fs * 2.48).toFixed(0)); subT2.setAttribute('opacity', l2 ? 1 : 0); }
   }
-  const CAM = {x: W / 2, y: H / 2, z: 1}; let CAMK = 1;
+  const CAM = {x: W / 2, y: H / 2, z: 1}; let CAMK = 1, snapCam = true;
   let subsOn = true;
 
   // ---------- Ton ----------
@@ -3980,7 +4012,10 @@ function wavB64(buf) {
   if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { prefetch(LINES.map(l => EPID + '-' + l.key)); io.disconnect(); } }, {rootMargin: '400px'}); io.observe(svg); }
   function program(m, t0) {
     const at = ms => t0 + ms / 1000, A = (k, d) => at((LAT[k] || 0) + (d || 0)), sAt = id => (SC.find(s => s.id === id) || {t: [0]}).t[0];
-    m.music.gain.value = .55;   // Musik etwas leiser, damit man die Stimmen versteht
+    m.music.gain.value = .5;   // Musik etwas leiser, damit man die Stimmen versteht
+    // Ducking: während jemand spricht, geht die Musik weich runter
+    LINES.slice().sort((x, y) => x.at - y.at).forEach(l => { m.music.gain.setTargetAtTime(.24, at(l.at - 120), .07); m.music.gain.setTargetAtTime(.5, at(l.at + l.dur + 120), .35); });
+    SC.forEach((sc, k) => { if (sc.amb && m.amb) m.amb(sc.amb, at(sc.t[0]), at(sc.t[1])); if (k) m.sfx('swish', at(sc.t[0] - 380)); });
     const fx = [['sec2', -300, 'whistle'], ['sec2', 400, 'ding'], ['sec4', 1500, 'wah'], ['sec6', 0, 'wah'],
       ['bar1', 1500, 'ding'], ['bar3', 600, 'gong'], ['bar4', 2600, 'ding'], ['bar4', 2700, 'cheer'], ['bar5', 400, 'boing'],
       ['fly3', -700, 'thud'], ['fly3', -400, 'boing'], ['fly3', 300, 'thud'], ['fly3', 1300, 'thud'], ['fly8', 1700, 'puke'], ['fly9', -200, 'splash'], ['fly10', 1400, 'wah'],
@@ -4074,7 +4109,7 @@ function wavB64(buf) {
   }
   epTexts(); sPaint(); paint(); measure(); subsOn = false; frame(4200); subsOn = true; fade.setAttribute('opacity', 0);
   // Video-Aufnahme: Zeit von außen, Musik offline, Stimmen-Zeitplan
-  window.__serFrame = t => { CAMK = .06; frame(t); };
+  window.__serFrame = t => { CAMK = .06; snapCam = true; frame(t); };
   window.__serAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms / 1000), sr), m = window.__TripMusic(oc); program(m, 0); m.setMode('show', 0); m.schedule(ms / 1000); return wavB64(await oc.startRendering()); };
   window.__serVoices = () => LINES.map(l => ({key: EPID + '-' + l.key, at: l.at}));
   window.__serEp = id => { stop(false); setEp(id); epTexts(); paintEps(); stop(true); };
