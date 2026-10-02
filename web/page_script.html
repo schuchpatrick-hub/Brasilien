@@ -2610,16 +2610,26 @@ function wavB64(buf) {
   const POPS = [{who: 'patrick', w: T.munch, txt: '😋 *mampf*'}, {who: 'simon', w: T.wink, txt: '😉✨'}, {who: 'jonas', w: [50300, 51600], txt: '🍍?!'}];
   const duelWinner = () => { const c = LIVE.card || {}, s = (c.simon || {}).w || 0, g = (c.greisel || {}).w || 0; return s > g ? 'simon' : g > s ? 'greisel' : hash(Math.floor(Date.now() / 864e5), 3) > .5 ? 'simon' : 'greisel'; };   // Gleichstand: Tageslaune
   let cam = {x: 0, y: 0, w: W, h: H};
-  function camAt(t, sp) {   // Kamera: zoomt beim Sprechen auf den Kopf, im Finale langsam zurück
+  // Fokus auf Sprecher: weich ein- (0,9 s vor dem Spruch) und ausblenden (1,2 s danach); überlappen sich zwei, wird zwischen ihnen geschwenkt
+  const smooth = x => { x = clamp(x, 0, 1); return x * x * x * (x * (x * 6 - 15) + 10); };
+  function focusK(l, t) { return smooth(span(t, l.at - 900, l.at + 150)) * (1 - smooth(span(t, l.at + l.dur + 100, l.at + l.dur + 1300))); }
+  function focus(t) {   // {k: Stärke 0–1, x, y: Kopfposition (gewichtet), per: {id: k}}
+    let sk = 0, mk2 = 0, x = 0, y = 0; const per = {};
+    if (t < T.blo[0]) LINES.forEach(l => { if (l.chorus || l.who === 'announcer' || !P[l.who]) return; const k = focusK(l, t); if (k <= 0) return;
+      const o = P[l.who]; per[l.who] = Math.max(per[l.who] || 0, k); sk += k; mk2 = Math.max(mk2, k); x += k * o.x; y += k * (o.y - 110 * o.sc); });
+    return sk ? {k: mk2, x: x / sk, y: y / sk, per} : {k: 0, per};
+  }
+  let FOC = {k: 0, per: {}};
+  function camAt(t, sp) {   // Kamera: zoomt weich auf den Sprecher, im Finale langsam zurück
     let z = 1, cx = W / 2, cy = H / 2;
-    const tgt = sp && !sp.tap && sp.who !== 'announcer' && t < T.blo[0] ? P[sp.who] : null;
-    if (tgt) { const k = ease(span(t, sp.at - 300, sp.at + 300)) * (1 - ease(span(t, sp.at + sp.dur, sp.at + sp.dur + 500))); z = 1 + .32 * k; cx += (tgt.x - cx) * k; cy += (tgt.y - 110 * tgt.sc - cy) * k; }
-    const fin = span(t, T.pyr[0] + 1200, T.pyr[0] + 1800) * (1 - span(t, T.pyr[0] + 1800, T.close[0]));
+    const f = focus(t); if (f.k > 0) { z = 1 + .3 * f.k; cx += (f.x - cx) * f.k; cy += (f.y - cy) * f.k; }
+    const fin = smooth(span(t, T.pyr[0] + 1000, T.pyr[0] + 2200)) * (1 - smooth(span(t, T.pyr[0] + 2200, T.close[0])));
     if (fin > 0) { z = 1 + .3 * fin; cx = 400; cy = H / 2 - 40 * fin; }
     const w = W / z, h = H / z; return {x: clamp(cx - w / 2, 0, W - w), y: clamp(cy - h / 2, 0, H - h), w, h};
   }
 
   function frame(t) {
+    FOC = focus(t);
     const b = (t - MUSIC_AT - 30) / BEAT, blo = t > T.blo[0], dancing = (t > 2400 && t < T.close[0]) || (t > T.b2[0] && t < T.b3[1]), sp = speaking(t);
     const fz = win(t, T.freeze), conga = win(t, T.conga, 600), solo = win(t, T.solo, 600), pyr = span(t, T.pyr[0], T.pyr[0] + 1200) * (t < T.close[1] ? 1 : 0);
     const duel = win(t, T.duel, 500), costume = t > T.flash, b1 = t > T.b1[0] && t < T.b1[1];
@@ -2656,7 +2666,7 @@ function wavB64(buf) {
         else if (t > T.b2[0] + 1200) { p = Object.assign({}, p, {aL: [150, 155], aR: [150, 155], rot: 6 * S(t / 40), hip: 0}); flip = 1; } }
       // Panne 3: Discokugel fällt, alle springen vor Schreck
       if (t > T.b3[0] && t < T.b3[1]) { const k = span(t, T.b3[0] + 1300, T.b3[0] + 1800); if (k > 0) { p.y -= 70 * S(PI * k); p.aL = [175, 0]; p.aR = [175, 0]; } }
-      if (sp && sp.who === id && !duel && !sp.tap) { const k = span(t, sp.at - 250, sp.at + 150) * (1 - span(t, sp.at + sp.dur + 50, sp.at + sp.dur + 300)); y += 26 * k; sc *= 1 + .16 * k; }
+      const fk = duel ? 0 : FOC.per[id] || 0; if (fk > 0) { y += 26 * fk; sc *= 1 + .16 * fk; }
       // Live-Daten: wer heute am meisten getrunken hat, tanzt schief und mit rotem Kopf
       const tipsy = LIVE.tipsy === id && dancing;
       if (tipsy) { p.rot += 9 * S(t / 700); p.tilt += 14 * S(t / 530); x += 10 * S(t / 900); }
@@ -2744,8 +2754,8 @@ function wavB64(buf) {
     if (pyr > 0 || b1) ['jonas', 'patrick', 'marco', 'simon', 'greisel', 'dajo'].forEach(id => P[id] && gPeople.appendChild(P[id].g));
     else if (front && P[front] && gPeople.lastChild !== P[front].g) gPeople.appendChild(P[front].g);
     // Spotlight
-    const tgt = sp && P[sp.who] ? P[sp.who] : solo > 0 ? P.dajo : null;
-    spot.setAttribute('opacity', tgt ? (sp ? 1 : solo).toFixed(2) : 0);
+    const ff = focus(t), tgt = ff.k > 0 ? {x: ff.x} : solo > 0 ? P.dajo : null;   // Spotlight blendet mit dem Fokus weich ein und aus
+    spot.setAttribute('opacity', tgt ? (ff.k > 0 ? ff.k : solo).toFixed(2) : 0);
     if (tgt) { cone.setAttribute('d', `M${tgt.x - 30},0 L${tgt.x + 30},0 L${tgt.x + 80},${FLOOR + 8} L${tgt.x - 80},${FLOOR + 8}Z`); pool.setAttribute('cx', tgt.x); pool.setAttribute('cy', FLOOR + 6); }
     // Ananas fliegt von Marco auf Jonas’ Kopf und bleibt bis zum Vorhang dort
     const mj = P.marco, jo = P.jonas;
