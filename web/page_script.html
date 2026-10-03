@@ -2161,6 +2161,13 @@ function wavB64(buf) {
       else if (name === 'clank') { [523, 1187, 1813, 2633].forEach((f, k) => tone(sfxOut, 'square', f, t, .9 - k * .15, .04, {lp: 4000})); noise(sfxOut, t, .15, .4, 'bandpass', 1500, 1); kick(sfxOut, t, .5); }
       else if (name === 'clink') { tone(sfxOut, 'sine', 3520, t, .35, .06); tone(sfxOut, 'sine', 5280, t + .01, .25, .03); }
       else if (name === 'chalk') [0, .22, .44, .7].forEach(o => noise(sfxOut, t + o, .16, .12, 'bandpass', 4200, 6, {to: 3600}));
+      else if (name === 'burp') { tone(sfxOut, 'sawtooth', 70, t, .7, .3, {from: 105, glide: .5, vib: 31, depth: .22, lp: 650, a: .02, hold: .45}); noise(sfxOut, t, .6, .12, 'lowpass', 500, 1, {a: .03}); }   // Rülpser
+      else if (name === 'burpbig') { tone(sfxOut, 'sawtooth', 52, t, 2, .45, {from: 96, glide: 1.6, vib: 23, depth: .3, lp: 560, a: .04, hold: 1.4}); tone(sfxOut, 'square', 38, t + .1, 1.8, .14, {from: 60, glide: 1.4, vib: 17, depth: .25, lp: 300, hold: 1.2});
+        noise(sfxOut, t, 1.9, .2, 'lowpass', 420, 1, {a: .05}); kick(sfxOut, t, .7); }
+      else if (name === 'rumble') { noise(sfxOut, t, 3.4, .55, 'lowpass', 160, .8, {a: .3}); tone(sfxOut, 'sine', 34, t, 3.4, .5, {vib: 7, depth: .3, a: .3, hold: 2.6}); for (let k = 0; k < 7; k++) kick(sfxOut, t + .2 + k * .42 + rnd() * .1, .5); }   // Erdbeben
+      else if (name === 'chomp') { kick(sfxOut, t, .8); [0, .09].forEach(o => noise(sfxOut, t + o, .07, .5, 'bandpass', 1800, 2)); tone(sfxOut, 'square', 180, t, .12, .1, {from: 400, glide: .08, lp: 1500}); }
+      else if (name === 'click') { noise(sfxOut, t, .03, .5, 'highpass', 4000, 1); tone(sfxOut, 'sine', 1800, t, .05, .08); }
+      else if (name === 'bubble') for (let k = 0; k < 7; k++) tone(sfxOut, 'sine', 500 + rnd() * 500, t + k * .11 + rnd() * .05, .09, .07, {from: 220, glide: .07});
       else if (name === 'wah') [62, 61, 60, 59].forEach((m, k) => tone(sfxOut, 'sawtooth', mf(m), t + k * .38, k === 3 ? 1.1 : .36, .13, {lp: 900, a: .04, hold: k === 3 ? .8 : .25, vib: k === 3 ? 5 : 0, depth: .025}));
     };
     // Schwere Geräusche (Lacher vom Band: ~500 Klangbausteine, Applaus: ~270) einmal vorab offline rendern, danach nur noch
@@ -3111,7 +3118,7 @@ function wavB64(buf) {
   const hash = (a, b) => { const x = S(a * 127.1 + b * 311.7) * 43758.5453; return x - Math.floor(x); };
   const tnow = () => window.__serT !== undefined ? window.__serT : performance.now();
   const soundOn = () => store.get('sound') !== '0';
-  const NAMES = {narrator: 'Sprecher', officer: 'Kontrolleur', steward: 'Flugbegleiterin', local: 'Einheimischer', girl: 'Strandschönheit', girl2: 'Brasilianerin', capo: 'Ihr Freund', driver: 'Fahrer', pilot: 'Kapitän', waiter: 'Kellner', maid: 'Zimmermädchen'};
+  const NAMES = {narrator: 'Sprecher', officer: 'Kontrolleur', steward: 'Flugbegleiterin', local: 'Einheimischer', girl: 'Strandschönheit', girl2: 'Brasilianerin', capo: 'Ihr Freund', driver: 'Fahrer', pilot: 'Kapitän', waiter: 'Kellner', maid: 'Zimmermädchen', guide: 'Guide'};
   const nameOf = w => NAMES[w] || (byId[w] ? byId[w].name : w);
   let LINES = [], LAT = {}, SC = [], END = 1, TOTAL = 1, COLD = 0, COLDA = 0, COLDB = 0, PLAY = [], CHAPS = [];
   const FRZ = 2000;   // Standbild + Zurückspulen nach dem Cold Open
@@ -3126,10 +3133,14 @@ function wavB64(buf) {
     gig: {amb: 'hall', mus: 'travel', cap: '🛬 Rio-Galeão · 06.01., 6:10 Uhr'}, boe: {amb: 'cabin', mus: 'travel', cap: '✈️ Rio → Foz do Iguaçu'}, falls: {amb: 'falls', mus: 'show', cap: '🌊 Iguaçu · Garganta do Diabo'},
     quati: {amb: 'forest', mus: 'stay', cap: '🦝 Iguaçu · Nasenbären-Revier'}, grenze: {amb: 'wind', mus: 'travel', cap: '🇦🇷 Grenze nach Argentinien'}, boot: {amb: 'falls', mus: 'travel', cap: '🚤 Bootstour unter die Fälle'},
     duel: {amb: 'bar', mus: 'stay', night: 1, cap: '🍹 Foz do Iguaçu · abends · Trinkduell'},
+    hos: {amb: 'room', mus: 'stay', night: 1, cap: '🏨 Manaus · Casa 307 · 09.01., 2 Uhr nachts'}, rio: {amb: 'forest', mus: 'travel', cap: '🚤 Encontro das Águas · 10.01.'},
+    cab: {amb: 'forest', mus: 'stay', cap: '🛖 Juma Lodge · Kabine 3'}, pir: {amb: 'forest', mus: 'travel', cap: '🎣 Piranha-Angeln · Rio Juma'},
+    jbar: {amb: 'bar', mus: 'stay', night: 1, cap: '🍹 Lodge-Bar · abends'}, kai: {amb: 'night', mus: 'stay', night: 1, cap: '🐊 Kaiman-Safari · nachts'}, ham: {amb: 'forest', mus: 'travel', cap: '🌅 Juma Lodge · letzter Morgen'},
     // fertig gebaute Szenen für spätere Folgen (trip.json → series.parked)
     ny: {amb: 'crowd', mus: 'show', cap: '🎆 Copacabana · Silvester 2026/27'}, buf: {mus: 'stay', cap: '🦜 Foz do Iguaçu · 06.01.'}, jg: {mus: 'stay', cap: '🌴 Amazonas · Juma Lodge'}, fv: {mus: 'show', cap: '⚽ Footvolley gegen Einheimische'}};
   const ALLSC = Object.keys(META).map(id => ({id}));
-  const EPS = Object.keys(TRIP.series).filter(k => /^ep\d+$/.test(k)).sort((x, y) => +x.slice(2) - +y.slice(2));
+  // Folgen mit admin: true sind noch nicht freigegeben: erst sichtbar, wenn canWrite() Schreibrechte bestätigt (nicht in der Gast-Ansicht)
+  const EPALL = Object.keys(TRIP.series).filter(k => /^ep\d+$/.test(k)).sort((x, y) => +x.slice(2) - +y.slice(2)), EPS = EPALL.filter(k => !TRIP.series[k].admin);
   function setEp(id) {   // Folge laden: Zeilen, Zeiten, Szenen (Texte im Bild setzt epTexts weiter unten)
     EPID = EPS.includes(id) ? id : EPS[EPS.length - 1]; EP = TRIP.series[EPID];
     LINES = EP.lines.map(l => Object.assign({}, l, (EP.voice || {})[l.key] || {dur: 1500, env: ''}));
@@ -3235,6 +3246,7 @@ function wavB64(buf) {
   rig('waiter', {shirt: '#ffffff', pants: '#1b1b1b', tie: '#c0392b', skin: '#b07a4f', hair: 'M-36,-16 Q-30,-42 0,-44 Q30,-42 36,-16 Q20,-30 0,-30 Q-20,-30 -36,-16Z', hairC: '#120a05'});
   rig('girl2', {shirt: '#3ccf7f', pants: '#ffffff', skin: '#b07a4f', hair: 'M-44,30 Q-54,-50 0,-50 Q54,-50 44,30 Q40,-18 0,-28 Q-40,-18 -44,30Z', hairC: '#6b3a1a'});
   rig('capo', {shirt: '#9a6238', pants: '#ffffff', skin: '#9a6238', hair: 'M-34,-20 Q-30,-40 0,-42 Q30,-40 34,-20 Q20,-34 0,-34 Q-20,-34 -34,-20Z', hairC: '#120a05'});
+  rig('guide', {shirt: '#8a7a4a', pants: '#4a5a3a', skin: '#a8714a', hair: 'M-36,-16 Q-30,-40 0,-42 Q30,-40 36,-16 Q20,-30 0,-30 Q-20,-30 -36,-16Z', hairC: '#120a05', cap: 'M-50,-24 Q0,-34 50,-24 L44,-18 Q0,-28 -44,-18Z M-30,-26 Q-28,-58 0,-60 Q28,-58 30,-26Z', capC: '#c8b48a'});
   rig('driver', {shirt: '#00a651', pants: '#1f3f8f', skin: '#a8714a', shades: 1, cap: 'M-36,-22 Q0,-56 36,-22 L54,-18 L-36,-18Z', capC: '#ffcf1f'});
   // Jonas’ Fischerhut (Dschungel)
   const hatPath = 'M-44,-28 Q0,-36 44,-28 L40,-22 Q0,-30 -40,-22Z M-28,-30 Q-26,-62 0,-64 Q26,-62 28,-30Z';
@@ -3768,6 +3780,188 @@ function wavB64(buf) {
   const note = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 200, y: 22, width: 400, height: 58, rx: 14, fill: '#fff', stroke: '#1cc29f', 'stroke-width': 3}, note);
   const noteT = mk('text', {x: 220, y: 46, class: 'se-kiosk', style: 'fill:#1cc29f'}, note); noteT.textContent = '🦝 Quati-Splitwise · jetzt';
   const noteT2 = mk('text', {x: 220, y: 69, class: 'se-kiosk2'}, note); noteT2.textContent = 'Du schuldest „Nasenbär“ 40 € (Eintritt) 🧾';
+
+
+  // ======== Folge 4: Ab in den Dschungel (Manaus & Juma Lodge) ========
+  function piranha(parent, s) {   // Piranha: silbern, roter Bauch, Zahnreihe
+    const g = e3(mk('g', {opacity: 0}, parent)), b = mk('g', {transform: `scale(${s || 1})`}, g);
+    mk('path', {d: 'M-30,0 L-44,-14 L-42,0 L-44,14Z', fill: '#8a939c', stroke: INK, 'stroke-width': 2}, b);
+    mk('path', {d: 'M-32,0 C-26,-22 18,-24 30,-6 L34,2 C20,20 -24,20 -32,0Z', fill: '#b9c4d0', stroke: INK, 'stroke-width': 2}, b);
+    mk('path', {d: 'M-24,6 C-10,16 18,14 32,4 L34,2 C20,20 -24,20 -24,6Z', fill: '#e0453a'}, b);
+    mk('path', {d: 'M18,4 L21,0 L24,4 L27,0 L30,4 L33,1', fill: 'none', stroke: '#fff', 'stroke-width': 2}, b);
+    mk('circle', {cx: 16, cy: -6, r: 4, fill: '#ffcf1f', stroke: INK, 'stroke-width': 1.5}, b); mk('circle', {cx: 17, cy: -6, r: 1.6, fill: INK}, b);
+    mk('path', {d: 'M8,-10 L13,-4', stroke: INK, 'stroke-width': 2.5, 'stroke-linecap': 'round'}, b);   // böse Augenbraue
+    g.prop = emo('', {x: 34, y: 2, 'font-size': 16}, b); return g;
+  }
+  const at4 = (g, x, y, r, sc) => g.setAttribute('transform', `translate(${x.toFixed(1)},${y.toFixed(1)}) rotate(${(r || 0).toFixed(1)}) scale(${(sc || 1).toFixed(3)})`);
+  function dolphin(parent) {   // rosa Amazonas-Flussdelfin
+    const g = e3(mk('g', {opacity: 0}, parent));
+    g.body = mk('path', {d: 'M-46,6 C-30,-16 10,-20 34,-6 C40,-4 52,-2 58,2 C50,6 42,6 34,6 C14,16 -20,16 -46,6Z', fill: '#ff9ec7', stroke: INK, 'stroke-width': 2.5}, g);
+    mk('path', {d: 'M-6,-14 L4,-26 L10,-12Z', fill: '#f07fb0', stroke: INK, 'stroke-width': 2}, g); mk('path', {d: 'M-46,6 L-62,-6 L-58,8 L-64,18Z', fill: '#f07fb0', stroke: INK, 'stroke-width': 2}, g);
+    mk('circle', {cx: 30, cy: -4, r: 2.6, fill: INK}, g); mk('path', {d: 'M38,4 Q46,8 54,4', fill: 'none', stroke: INK, 'stroke-width': 1.5}, g); return g;
+  }
+  function caiman(parent) {   // Kaiman: Kopf mit Zahnreihe, Kiefer klappt (g.jaw)
+    const g = e3(mk('g', {opacity: 0}, parent));
+    mk('path', {d: 'M-90,10 C-60,-6 -20,-10 0,-6 L10,10Z', fill: '#3f6b3a', stroke: INK, 'stroke-width': 2.5}, g);
+    for (let k = 0; k < 6; k++) mk('path', {d: `M${-80 + k * 14},${-2 - k * .8} l6,-8 l6,8`, fill: '#2f5229', stroke: INK, 'stroke-width': 1.5}, g);
+    const up = mk('g', {}, g); mk('path', {d: 'M-6,-6 C20,-14 70,-12 96,-4 L96,4 L-4,6Z', fill: '#4f8a46', stroke: INK, 'stroke-width': 2.5}, up);
+    mk('path', {d: Array.from({length: 9}, (_, k) => `M${6 + k * 10},5 l4,7 l4,-7`).join(' '), fill: '#fff', stroke: INK, 'stroke-width': 1}, up);
+    mk('ellipse', {cx: 10, cy: -14, rx: 9, ry: 7, fill: '#4f8a46', stroke: INK, 'stroke-width': 2}, up); mk('circle', {cx: 12, cy: -15, r: 3.5, fill: '#ffcf1f'}, up); mk('rect', {x: 11, y: -18, width: 2, height: 6, fill: INK}, up);
+    g.hat = mk('path', {d: hatPath, fill: '#c8b48a', stroke: INK, 'stroke-width': 2.5, opacity: 0, transform: 'translate(14,-4) scale(.62)'}, up);
+    g.jaw = mk('g', {}, g); mk('path', {d: 'M-4,8 L94,8 C80,22 30,24 -4,18Z', fill: '#cfe3a8', stroke: INK, 'stroke-width': 2.5}, g.jaw);
+    mk('path', {d: Array.from({length: 8}, (_, k) => `M${10 + k * 10},8 l4,-7 l4,7`).join(' '), fill: '#fff', stroke: INK, 'stroke-width': 1}, g.jaw);
+    g.up = up; return g;
+  }
+  function rings(list, x, y, k, big) {   // Rülps-Schockwellen
+    list.forEach((c, i) => { const kk = clamp(k * 1.3 - i * .18, 0, 1); c.setAttribute('opacity', kk > 0 && kk < 1 ? (1 - kk).toFixed(2) : 0);
+      c.setAttribute('cx', x); c.setAttribute('cy', y); c.setAttribute('r', (10 + (big ? 420 : 120) * kk).toFixed(1)); c.setAttribute('stroke-width', (big ? 14 : 6) * (1 - kk) + 1); });
+  }
+  const stains4 = Array.from({length: 5}, () => e3(mk('ellipse', {rx: 14, ry: 6, fill: '#3d2410', stroke: '#8a6a1b', 'stroke-width': 2, opacity: 0}, shadowsG)));
+  const bubbles4 = Array.from({length: 9}, () => e3(mk('circle', {r: 6, fill: 'none', stroke: '#e8f6ff', 'stroke-width': 2, opacity: 0}, fxG)));
+  const ring4 = Array.from({length: 4}, () => e3(mk('circle', {fill: 'none', stroke: '#c79bf0', opacity: 0}, fxG)));
+  const burpT = e3(mk('text', {'text-anchor': 'middle', class: 'se-logo', style: 'font-size:46px;fill:#9acd32;stroke:#1d3b0a;stroke-width:3px;paint-order:stroke', opacity: 0}, fxG));
+  const lips4 = [0, 1, 2].map(() => e3(emo('💋', {'font-size': 13, opacity: 0}, fxG)));
+  const thong = e3(mk('g', {opacity: 0}, fxG)); mk('path', {d: 'M-20,-6 Q0,-14 20,-6 M-20,-6 L0,10 L20,-6', fill: 'none', stroke: '#ff5fa2', 'stroke-width': 4, 'stroke-linecap': 'round'}, thong);
+  mk('path', {d: 'M-6,-12 L0,-8 L6,-12 L6,-5 L0,-8 L-6,-5Z', fill: '#ff2a7f', stroke: INK, 'stroke-width': 1}, thong);
+  const chain = e3(mk('path', {d: 'M-16,-50 Q0,-30 16,-50', fill: 'none', stroke: '#ffcf1f', 'stroke-width': 5, 'stroke-dasharray': '4 2', opacity: 0}, fxG));
+  const fire4 = e3(emo('🔥', {'font-size': 30, opacity: 0}, fxG)), leaf4 = e3(emo('🍃', {'font-size': 40, opacity: 0}, fxG)), teeth4 = e3(emo('🦷', {'font-size': 18, opacity: 0}, fxG));
+  const flee4 = ['🐒', '🦜', '🐒', '🦜', '🐸'].map(e => e3(emo(e, {'font-size': 30, opacity: 0}, fxG)));
+  const hand4 = Array.from({length: 6}, () => e3(emo('✋', {'font-size': 22, opacity: 0}, fxG)));
+  const dark4 = e3(mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: '#020208', opacity: 0}, hud));
+  const smack4 = e3(mk('g', {opacity: 0}, hud)); smack4.items = [['*schmatz*', 260, 170], ['*schlürf*', 520, 250], ['❤️', 380, 220], ['*mmmh*', 430, 140]].map(([s2, x, y]) => { const tx = mk('text', {x, y, 'text-anchor': 'middle', class: 'se-kiosk', style: 'fill:#ff9ec7;font-size:20px'}, smack4); tx.textContent = s2; return tx; });
+  function card4(x, y, w, h, title, rows, col) {   // Info-Karte im HUD (Titel + Zeilen)
+    const g = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x, y, width: w, height: h, rx: 12, fill: '#fff', stroke: col || INK, 'stroke-width': 3}, g);
+    mk('rect', {x, y, width: w, height: 34, rx: 12, fill: col || INK}, g); const tt = mk('text', {x: x + 14, y: y + 24, class: 'se-small'}, g); tt.textContent = title;
+    g.rows = rows.map((r, k) => { const tx = mk('text', {x: x + 14, y: y + 60 + k * 27, class: 'se-kiosk'}, g); tx.textContent = r; return tx; }); return g;
+  }
+
+  // Manaus, Casa 307, nachts
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: '#24304f'}, B.hos);
+  mk('rect', {x: -100, y: FL - 6, width: W + 200, height: 100, fill: '#5a4632'}, B.hos); mk('path', {d: Array.from({length: 22}, (_, k) => `M${k * 40 - 40},${FL - 6} l0,90`).join(' '), stroke: '#4a3826', 'stroke-width': 2}, B.hos);
+  const winM = mk('g', {transform: 'translate(40,80)'}, B.hos); mk('rect', {width: 170, height: 120, rx: 6, fill: '#0b1230', stroke: '#c9b48a', 'stroke-width': 6}, winM);
+  for (let k = 0; k < 14; k++) mk('rect', {x: 10 + hash(k, 61) * 140, y: 50 + hash(k, 62) * 60, width: 6, height: 8, fill: '#ffd86b', opacity: .8}, winM);
+  mk('path', {d: 'M10,120 L10,70 L40,70 L40,50 L70,50 L70,80 L110,80 L110,40 L140,40 L140,120Z', fill: '#060a1c', opacity: .7}, winM); emo('🌙', {x: 140, y: 26, 'font-size': 22}, winM);
+  mk('line', {x1: 85, y1: 0, x2: 85, y2: 120, stroke: '#c9b48a', 'stroke-width': 4}, winM);
+  mk('line', {x1: 400, y1: -10, x2: 400, y2: 34, stroke: '#888', 'stroke-width': 4}, B.hos);
+  const fanM = mk('g', {transform: 'translate(400,38) scale(1,.22)'}, B.hos), fanR = mk('g', {}, fanM);
+  [0, 120, 240].forEach(a2 => mk('ellipse', {cx: 60, cy: 0, rx: 60, ry: 14, fill: '#d6cbb4', stroke: INK, 'stroke-width': 3, transform: `rotate(${a2})`}, fanR)); mk('circle', {r: 12, fill: '#888'}, fanM);
+  const bunk = mk('g', {}, B.hos); [[120, 4], [300, 4]].forEach(([x]) => mk('rect', {x: x - 4, y: FL - 230, width: 8, height: 230, fill: '#7a5230', stroke: INK, 'stroke-width': 2}, bunk));
+  [FL - 50, FL - 170].forEach(y => { mk('rect', {x: 116, y, width: 188, height: 14, fill: '#7a5230', stroke: INK, 'stroke-width': 2}, bunk); mk('rect', {x: 120, y: y - 12, width: 180, height: 12, rx: 5, fill: '#e8e0d0'}, bunk); });
+  mk('rect', {x: 130, y: FL - 196, width: 60, height: 14, rx: 7, fill: '#fff', stroke: '#ccc'}, bunk);
+  const couch = mk('g', {}, B.hos); mk('rect', {x: 380, y: FL - 74, width: 190, height: 50, rx: 14, fill: '#8a3a4a', stroke: INK, 'stroke-width': 2.5}, couch);
+  mk('rect', {x: 366, y: FL - 96, width: 26, height: 72, rx: 10, fill: '#7a2f3d', stroke: INK, 'stroke-width': 2.5}, couch); mk('rect', {x: 558, y: FL - 96, width: 26, height: 72, rx: 10, fill: '#7a2f3d', stroke: INK, 'stroke-width': 2.5}, couch);
+  mk('rect', {x: 392, y: FL - 24, width: 166, height: 20, fill: '#5a2430'}, couch);
+  const tbl = mk('g', {}, B.hos); mk('rect', {x: 600, y: FL - 54, width: 60, height: 8, fill: '#7a5230', stroke: INK, 'stroke-width': 2}, tbl); mk('rect', {x: 626, y: FL - 46, width: 8, height: 46, fill: '#7a5230'}, tbl);
+  emo('🍌', {x: 620, y: FL - 64, 'font-size': 20}, tbl); emo('🍍', {x: 642, y: FL - 70, 'font-size': 22}, tbl);
+  mk('rect', {x: 676, y: 120, width: 100, height: FL - 120, fill: '#3a2a1e', stroke: INK, 'stroke-width': 3}, B.hos);
+  const doorM = mk('rect', {x: 680, y: 124, width: 92, height: FL - 124, fill: '#a0703c', stroke: INK, 'stroke-width': 2}, B.hos); const door307 = mk('text', {x: 726, y: 160, 'text-anchor': 'middle', class: 'se-small', style: 'fill:#ffcf1f'}, B.hos); door307.textContent = '307';
+  const inv4 = card4(30, 70, 280, 150, '📋 SIMONS INVENTAR', ['📱 Handy ❌', '💶 Geldbeutel ❌', '👟 Schuhe ❌'], '#c0392b');
+  const chat4 = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 540, y: 60, width: 236, height: 250, rx: 22, fill: '#111', stroke: '#444', 'stroke-width': 4}, chat4);
+  mk('rect', {x: 552, y: 74, width: 212, height: 222, rx: 12, fill: '#ece5dd'}, chat4); mk('rect', {x: 552, y: 74, width: 212, height: 36, rx: 12, fill: '#075e54'}, chat4);
+  const chT = mk('text', {x: 566, y: 98, class: 'se-small'}, chat4); chT.textContent = '💬 Gatinha ❤️';
+  const chM = [['Vermisse dich 😘', 1], ['Ich dich auch 😘', 0], ['Wann sehen wir uns?', 1], ['Nie 😘', 0]].map(([s2, me], k) => { const g = mk('g', {opacity: 0}, chat4), y = 124 + k * 38;
+    mk('rect', {x: me ? 600 : 560, y, width: 156, height: 28, rx: 8, fill: me ? '#dcf8c6' : '#fff'}, g); const tx = mk('text', {x: me ? 608 : 568, y: y + 19, class: 'se-kiosk2'}, g); tx.textContent = s2; return g; });
+  const chF = mk('text', {x: 566, y: 288, class: 'se-grave', style: 'font-size:10px'}, chat4); chF.textContent = 'gesendet von: Simons iPhone 📱';
+
+  // Rio Negro trifft Solimões (Encontro das Águas), Boot zur Lodge
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-day)'}, B.rio);
+  mk('path', {d: 'M-100,190 C0,150 60,175 140,160 C220,145 300,172 380,158 C470,142 560,170 640,154 C720,140 800,165 900,150 L900,212 L-100,212Z', fill: '#2f6b3a'}, B.rio);
+  for (let k = 0; k < 12; k++) mk('circle', {cx: -60 + k * 84, cy: 182 + 10 * hash(k, 71), r: 22 + 12 * hash(k, 72), fill: ['#24603a', '#1d4d2a', '#2f7a46'][k % 3]}, B.rio);
+  mk('rect', {x: -100, y: 205, width: W + 200, height: H, fill: '#c99a5b'}, B.rio);
+  const riverDark = mk('path', {d: 'M-100,205 L420,205 C380,260 440,300 390,350 C350,390 420,420 380,470 L-100,470Z', fill: '#2b1a10'}, B.rio);
+  const swirl = mk('path', {d: 'M410,230 q-20,14 0,28 q20,14 0,28 M392,300 q-18,12 0,24 q18,12 0,24 M404,370 q-16,12 0,24', fill: 'none', stroke: '#8a6a3a', 'stroke-width': 3, opacity: .7}, B.rio);
+  const rWaves = mk('path', {d: Array.from({length: 30}, (_, k) => `M${(k % 10) * 90 - 80},${230 + Math.floor(k / 10) * 60 + (k % 3) * 9} q12,-5 24,0`).join(' '), stroke: '#fff', 'stroke-width': 2.5, fill: 'none', opacity: .35}, B.rio);
+  const sign4 = mk('g', {transform: 'translate(640,90)'}, B.rio); mk('rect', {x: -110, y: -26, width: 220, height: 50, rx: 10, fill: '#10231d', opacity: .85}, sign4);
+  const s4t = mk('text', {x: 0, y: -4, 'text-anchor': 'middle', class: 'se-small'}, sign4); s4t.textContent = 'ENCONTRO DAS ÁGUAS';
+  const s4t2 = mk('text', {x: 0, y: 16, 'text-anchor': 'middle', class: 'se-small2'}, sign4); s4t2.textContent = '🟫 Rio Negro · Solimões 🟨';
+  const boat4 = mk('g', {}, F.rio); mk('path', {d: 'M-300,-40 L270,-40 Q330,-36 340,-6 L320,6 Q300,14 250,14 L-280,14 Q-306,10 -306,-12 Z', fill: '#8a5a2b', stroke: INK, 'stroke-width': 3}, boat4);
+  mk('path', {d: 'M-300,-26 L332,-26', stroke: '#c0392b', 'stroke-width': 6}, boat4); const b4t = mk('text', {x: 0, y: 6, 'text-anchor': 'middle', class: 'se-small'}, boat4); b4t.textContent = 'JUMA LODGE 🌴';
+  mk('rect', {x: -340, y: -70, width: 36, height: 58, rx: 6, fill: '#333', stroke: INK, 'stroke-width': 2}, boat4);
+  const dol1 = dolphin(fxG), dol2 = dolphin(B.rio), dol3 = dolphin(B.rio), dol0 = dolphin(B.rio);
+  const therapy = card4(500, 70, 270, 96, '🛋️ Dr. Delfino · Psychotherapie', ['Patient: grün, verstört 🐬'], '#5f7fbf');
+
+  // Juma Lodge, Kabine 3: Klo ohne Tür, mit Aussicht
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-jungle)'}, B.cab);
+  for (let k = 0; k < 9; k++) mk('ellipse', {cx: -60 + k * 110, cy: 30 + 30 * hash(k, 81), rx: 90, ry: 60, fill: ['#1d4d2a', '#24603a', '#163d22'][k % 3]}, B.cab);
+  mk('rect', {x: -100, y: 60, width: W + 200, height: FL - 60, fill: '#a0703c'}, B.cab); mk('path', {d: Array.from({length: 26}, (_, k) => `M${k * 36 - 100},60 l0,${FL - 60}`).join(' '), stroke: '#7a5230', 'stroke-width': 3}, B.cab);
+  mk('path', {d: 'M-100,64 L900,64 L900,40 L-100,40Z', fill: '#c9a46a', stroke: '#8a6a3a', 'stroke-width': 3}, B.cab);
+  const view = mk('g', {transform: 'translate(600,110)'}, B.cab); mk('rect', {width: 170, height: 130, fill: '#bfe6fa', stroke: '#5a3e22', 'stroke-width': 8}, view);
+  mk('rect', {x: 4, y: 84, width: 162, height: 42, fill: '#2b1a10'}, view); for (let k = 0; k < 5; k++) mk('circle', {cx: 10 + k * 38, cy: 84, r: 26, fill: ['#2f7a46', '#24603a'][k % 2]}, view);
+  const viewT = mk('text', {x: 85, y: 150, 'text-anchor': 'middle', class: 'se-small', style: 'fill:#fff'}, view); viewT.textContent = '🌅 Aussicht inklusive';
+  mk('rect', {x: 520, y: 160, width: 14, height: FL - 160, fill: '#7a5230', stroke: INK, 'stroke-width': 2}, B.cab);
+  const wcSign = mk('g', {transform: 'translate(560,90)'}, B.cab); mk('rect', {x: -36, y: -16, width: 72, height: 30, rx: 5, fill: '#fff', stroke: INK, 'stroke-width': 2}, wcSign);
+  const wcSt = mk('text', {x: 0, y: 5, 'text-anchor': 'middle', class: 'se-kiosk2'}, wcSign); wcSt.textContent = 'WC 🚪❌';
+  const loo = mk('g', {transform: `translate(690,${FL})`}, B.cab); mk('path', {d: 'M-34,-42 L30,-42 Q34,-20 16,-8 L10,0 L-18,0 L-22,-8 Q-34,-20 -34,-42Z', fill: '#f4f4f4', stroke: INK, 'stroke-width': 2.5}, loo);
+  mk('rect', {x: -40, y: -50, width: 76, height: 9, rx: 4, fill: '#ddd', stroke: INK, 'stroke-width': 2}, loo); mk('rect', {x: -42, y: -112, width: 22, height: 62, rx: 4, fill: '#eee', stroke: INK, 'stroke-width': 2}, loo);
+  mk('rect', {x: -100, y: FL - 4, width: W + 200, height: 100, fill: '#6b4a2b'}, B.cab);
+  const hamC = mk('path', {d: 'M30,150 Q130,250 250,150', fill: 'none', stroke: '#e8c27a', 'stroke-width': 10}, B.cab);
+  const seis = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 20, y: 64, width: 300, height: 120, rx: 10, fill: '#fffdf5', stroke: INK, 'stroke-width': 3}, seis);
+  const seisT = mk('text', {x: 34, y: 88, class: 'se-small', style: 'fill:#c0392b'}, seis); seisT.textContent = '📈 SEISMOGRAF MANAUS';
+  const seisL = mk('path', {fill: 'none', stroke: '#c0392b', 'stroke-width': 2.5}, seis);
+  const seisV = mk('text', {x: 34, y: 172, class: 'se-kiosk', style: 'fill:#10231d'}, seis);
+
+  // Piranha-Angeln
+  defs.insertAdjacentHTML('beforeend', '<linearGradient id="se-aft" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7b267"/><stop offset="1" stop-color="#ffe3b0"/></linearGradient>');
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-aft)'}, B.pir);
+  for (let k = 0; k < 11; k++) { const x = -60 + k * 90 + 20 * hash(k, 91); mk('rect', {x, y: 120, width: 14, height: 140, fill: '#4a3424'}, B.pir); mk('circle', {cx: x + 7, cy: 120, r: 46, fill: ['#2f7a46', '#24603a'][k % 2]}, B.pir); }
+  mk('rect', {x: -100, y: 250, width: W + 200, height: H, fill: '#3b2a1a'}, B.pir);
+  const pWaves = mk('path', {d: Array.from({length: 24}, (_, k) => `M${(k % 8) * 110 - 90},${280 + Math.floor(k / 8) * 50 + (k % 3) * 8} q14,-5 28,0`).join(' '), stroke: '#f7b267', 'stroke-width': 2, fill: 'none', opacity: .5}, B.pir);
+  const canoe = mk('g', {}, F.pir); mk('path', {d: 'M-330,-30 L330,-30 Q360,-26 372,-40 Q360,10 300,14 L-300,14 Q-360,10 -372,-40 Q-360,-26 -330,-30Z', fill: '#6b4422', stroke: INK, 'stroke-width': 3}, canoe);
+  mk('path', {d: 'M-340,-20 L340,-20', stroke: '#8a5a2b', 'stroke-width': 4}, canoe);
+  const rods = Array.from({length: 5}, () => e3(mk('path', {fill: 'none', stroke: '#5a3e22', 'stroke-width': 3, 'stroke-linecap': 'round', opacity: 0}, fxG)));
+  const lines4 = Array.from({length: 5}, () => e3(mk('path', {fill: 'none', stroke: '#eee', 'stroke-width': 1.2, opacity: 0}, fxG)));
+  const bucket = mk('g', {}, F.pir); const fishB = Array.from({length: 5}, () => emo('🐟', {'font-size': 16, opacity: 0}, bucket));
+  mk('path', {d: 'M-18,-26 L18,-26 L14,4 L-14,4Z', fill: '#8a939c', stroke: INK, 'stroke-width': 2}, bucket);
+  const foot4 = e3(emo('🦶', {'font-size': 28, opacity: 0}, fxG));
+  const pirs = [0, 1, 2, 3].map(k => piranha(fxG, .55)), pirP = piranha(fxG, .9);
+  const score4 = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 250, y: 64, width: 300, height: 44, rx: 22, fill: '#10231d'}, score4); const score4T = mk('text', {x: 400, y: 93, 'text-anchor': 'middle', class: 'se-score', style: 'font-size:20px'}, score4);
+
+  // Lodge-Bar am Abend: Rülps-Duell, Stromausfall
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-dusk)'}, B.jbar);
+  for (let k = 0; k < 10; k++) mk('ellipse', {cx: -60 + k * 100, cy: 230 + 20 * hash(k, 101), rx: 80, ry: 70, fill: '#0f2416'}, B.jbar);
+  const flies = Array.from({length: 10}, (_, k) => mk('circle', {r: 2.5, fill: '#e8ff7a', opacity: .8}, B.jbar));
+  const jagE = mk('g', {}, B.jbar); [-10, 10].forEach(x => mk('ellipse', {cx: 720 + x, cy: 236, rx: 6, ry: 3.5, fill: '#ffd23f'}, jagE));
+  const flag4 = e3(emo('🏳️', {'font-size': 30, opacity: 0}, fxG));
+  mk('rect', {x: -100, y: FL - 4, width: W + 200, height: 100, fill: '#4a3424'}, B.jbar);
+  const shelfJ = mk('g', {}, B.jbar); mk('rect', {x: 40, y: 110, width: 220, height: 10, fill: '#7a5230'}, shelfJ); mk('rect', {x: 40, y: 170, width: 220, height: 10, fill: '#7a5230'}, shelfJ);
+  for (let k = 0; k < 9; k++) { const x = 52 + k * 24, y = k < 5 ? 110 : 170; mk('rect', {x, y: y - 34, width: 14, height: 34, rx: 4, fill: ['#3ccf7f', '#c0392b', '#ffcf1f', '#5fa8ff'][k % 4], opacity: .85}, shelfJ); mk('rect', {x: x + 4, y: y - 44, width: 6, height: 12, fill: '#333'}, shelfJ); }
+  const barSign = mk('text', {x: 150, y: 90, 'text-anchor': 'middle', class: 'se-neon', style: 'font-size:24px'}, B.jbar); barSign.textContent = 'BAR 🍹 (extra)';
+  const counterJ = mk('g', {}, F.jbar); mk('rect', {x: -10, y: FL - 70, width: 240, height: 74, fill: '#6b4422', stroke: INK, 'stroke-width': 3}, counterJ); mk('rect', {x: -16, y: FL - 78, width: 252, height: 12, rx: 4, fill: '#8a5a2b', stroke: INK, 'stroke-width': 2}, counterJ);
+  const candles = [300, 400, 520, 640].map(x => { const g = mk('g', {transform: `translate(${x},${FL - 18})`}, F.jbar); mk('rect', {x: -5, y: -22, width: 10, height: 22, fill: '#fff4d6', stroke: INK, 'stroke-width': 1.5}, g);
+    g.fl = mk('path', {d: 'M0,-36 Q6,-28 0,-22 Q-6,-28 0,-36Z', fill: '#ffb21f'}, g); g.sm = mk('path', {d: 'M0,-24 q6,-10 0,-20 q-6,-10 0,-20', fill: 'none', stroke: '#999', 'stroke-width': 2, opacity: 0}, g); return g; });
+  const meter4 = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 250, y: 60, width: 300, height: 58, rx: 14, fill: '#10231d'}, meter4);
+  const m4t = mk('text', {x: 266, y: 82, class: 'se-small'}, meter4); m4t.textContent = '🫃 RÜLPS-O-METER';
+  mk('rect', {x: 266, y: 92, width: 268, height: 16, rx: 8, fill: '#333'}, meter4); const m4f = mk('rect', {x: 266, y: 92, width: 0, height: 16, rx: 8, fill: '#9acd32'}, meter4);
+  const m4v = mk('text', {x: 534, y: 82, 'text-anchor': 'end', class: 'se-small'}, meter4);
+
+  // Kaiman-Safari, nachts
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-night)'}, B.kai);
+  for (let k = 0; k < 40; k++) mk('circle', {cx: hash(k, 111) * W, cy: hash(k, 112) * 150, r: hash(k, 113) * 1.4 + .4, fill: '#fff', opacity: .7}, B.kai);
+  mk('circle', {cx: 120, cy: 70, r: 26, fill: '#fff6c8'}, B.kai); mk('circle', {cx: 112, cy: 62, r: 5, fill: '#e8dfa8'}, B.kai); mk('circle', {cx: 130, cy: 80, r: 4, fill: '#e8dfa8'}, B.kai);
+  mk('path', {d: 'M-100,236 C40,190 120,214 220,196 C330,176 420,210 520,192 C640,170 740,206 900,188 L900,262 L-100,262Z', fill: '#081a10'}, B.kai);
+  mk('rect', {x: -100, y: 256, width: W + 200, height: H, fill: '#0b1426'}, B.kai);
+  const kWaves = mk('path', {d: Array.from({length: 24}, (_, k) => `M${(k % 8) * 110 - 90},${290 + Math.floor(k / 8) * 50 + (k % 3) * 8} q14,-5 28,0`).join(' '), stroke: '#3a5a8a', 'stroke-width': 2, fill: 'none', opacity: .7}, B.kai);
+  const beam = e3(mk('path', {fill: '#fff6b0', opacity: 0}, fxG));
+  const eyes4 = Array.from({length: 6}, () => { const g = e3(mk('g', {opacity: 0}, fxG)); [-7, 7].forEach(x => mk('ellipse', {cx: x, cy: 0, rx: 4.5, ry: 3, fill: '#ff8a1f'}, g)); return g; });
+  const glow4 = e3(mk('circle', {r: 60, fill: 'url(#se-glow4)', opacity: 0}, fxG));
+  defs.insertAdjacentHTML('beforeend', '<radialGradient id="se-glow4" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fffbe0" stop-opacity=".9"/><stop offset="1" stop-color="#fffbe0" stop-opacity="0"/></radialGradient>');
+  const light4 = e3(mk('g', {opacity: 0}, fxG)); [0, 180].forEach(a2 => mk('path', {d: 'M0,0 L240,-30 L240,30Z', fill: '#fff6b0', opacity: .45, transform: `rotate(${a2})`}, light4));
+  const boatK = mk('g', {}, F.kai); mk('path', {d: 'M-280,-36 L250,-36 Q300,-32 310,-6 L290,8 L-260,8 Q-290,6 -292,-14Z', fill: '#4a5a3a', stroke: INK, 'stroke-width': 3}, boatK);
+  const cai = caiman(fxG), cai2 = caiman(fxG);
+  const vote4 = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 20, y: 64, width: 250, height: 44, rx: 22, fill: '#10231d'}, vote4); const vote4T = mk('text', {x: 145, y: 93, 'text-anchor': 'middle', class: 'se-badge'}, vote4);
+  const splash4 = e3(emo('💦', {'font-size': 54, opacity: 0}, fxG));
+
+  // Hängematten am letzten Morgen
+  defs.insertAdjacentHTML('beforeend', '<linearGradient id="se-morning" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe8a8"/><stop offset=".6" stop-color="#a8d88a"/><stop offset="1" stop-color="#3f7a3a"/></linearGradient>');
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-morning)'}, B.ham);
+  const sunR = mk('g', {opacity: .25}, B.ham); for (let k = 0; k < 7; k++) mk('path', {d: `M${80 + k * 110},-20 L${40 + k * 110},${FL} L${110 + k * 110},${FL}Z`, fill: '#fff8c0'}, sunR);
+  [[40, 30], [400, 26], [760, 32]].forEach(([x, w]) => { mk('rect', {x: x - w / 2, y: -20, width: w, height: FL + 20, fill: '#5a3e22', stroke: INK, 'stroke-width': 2}, B.ham); mk('circle', {cx: x, cy: 10, r: 90, fill: '#2f7a46', opacity: .9}, B.ham); });
+  mk('rect', {x: -100, y: FL - 4, width: W + 200, height: 100, fill: '#5a7a2a'}, B.ham);
+  const HAM = [[40, 400, 150, 290], [400, 760, 150, 290]];   // Hängematten: von x, bis x, Aufhängung y, tiefster Punkt y
+  const hams = HAM.map(([a2, b2, y, lo]) => mk('path', {d: `M${a2 + 14},${y} Q${(a2 + b2) / 2},${2 * lo - y} ${b2 - 14},${y}`, fill: 'none', stroke: '#e8c27a', 'stroke-width': 14, 'stroke-linecap': 'round'}, F.ham));
+  const branch = mk('path', {d: 'M400,120 Q560,96 700,112', fill: 'none', stroke: '#5a3e22', 'stroke-width': 12, 'stroke-linecap': 'round'}, B.ham);
+  const monk4 = e3(emo('🐒', {'font-size': 50, opacity: 0}, fxG)), brush4 = e3(emo('🪥', {'font-size': 26, opacity: 0}, fxG));
+  const bil4 = card4(470, 64, 310, 178, '📒 BILANZ AMAZONAS', ['📱 Handy: weg', '👒 Fischerhut: Kaiman', '💋 Kuss: Patrick 😬', '🍑 Hintern: 🔥🔥🔥'], '#8a5a2b');
 
   // Derbe Effekte: Kotz-Bogen, Stinkwolke, Herzen, Fleck
   const puke = mk('path', {fill: 'none', stroke: '#9acd32', 'stroke-width': 11, 'stroke-linecap': 'round', pathLength: 1, 'stroke-dasharray': '1 1', opacity: 0}, fxG);
@@ -4369,6 +4563,227 @@ function wavB64(buf) {
       note.setAttribute('opacity', win(L, A('d7') + 1200, len - 200, 250).toFixed(2)); note.setAttribute('transform', `translate(0,${(-30 * (1 - ease(span(L, A('d7') + 1200, A('d7') + 1600)))).toFixed(1)})`);
       cam = L < A('d1') + 1200 ? {x: 400, y: 225, z: 1} : L < A('d2') - 300 ? {x: 390, y: 250, z: 1.15} : L < A('d3') - 200 ? {x: 560, y: 250, z: 1.4} : L < A('d4') + d('d4') + 200 ? {x: 300, y: 250, z: 1.3} : L < A('d6') - 1700 ? {x: 690, y: 280, z: 1.4} : L < A('d7') - 200 ? {x: 160, y: 240, z: 1.3} : {x: 220, y: 235, z: 1.15};
     }
+    else if (sc.id === 'hos') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      fanR.setAttribute('transform', `rotate(${((t / 3) % 360).toFixed(1)})`);
+      // Marco schläft auf der Couch („Mir reicht a Matratze“)
+      if (P.marco) { on('marco', 520, FL - 56, {sc: .66, tumble: -90, noShadow: 1}); Object.assign(pose.marco, {aL: [170, 0], aR: [120, 20], lL: [10, 0], lR: [-6, 0]}); snore(450, hyOf(FL - 56, .66) + 70, t); }
+      ['jonas', 'patrick'].forEach((id, i) => { if (!P[id]) return; on(id, [170, 250][i], FL - 42, {sc: .72, noShadow: 1}); sitP(pose[id]); idle(t, i, pose[id]); pose[id].lL = [80, -80]; pose[id].lR = [76, -78]; });
+      // Tür auf, Simon kommt barfuß und voller Lippenstift herein
+      const dOpen = span(L, A('h2') - 2700, A('h2') - 2300); doorM.setAttribute('width', (92 - 80 * dOpen).toFixed(1)); door307.setAttribute('opacity', dOpen > .5 ? 0 : 1);
+      if (P.simon && L > A('h2') - 2400) { const k = span(L, A('h2') - 2400, A('h2') - 400); on('simon', 740 - 140 * ease(k), FL, {sc: .78, burn: .5}); idle(t, 2, pose.simon); if (k < 1) walkP(t, pose.simon, 120);
+        const S2 = pose.simon;
+        if (L > A('h2') && L < A('h3')) cheerP(t, S2, 2);
+        if (L > A('h4') - 200 && L < A('h5')) Object.assign(S2, {aL: [25, -60], aR: [25, -60], tilt: 6 * S(t / 70), cry: 1});
+        if (L > A('h6') - 300 && L < A('h7') - 400) { Object.assign(S2, {rot: 18, hip: 8 * S(t / 160), aL: [40, 20], aR: [150, 30]});
+          const sc2 = .78; thong.setAttribute('opacity', 1); at4(thong, S2.x + S2.hip + 4, FL - 66 * sc2, S2.rot * .6, sc2); }
+        if (L > A('h7') - 400) { const k3 = span(L, A('h7') - 400, A('h7') + 600); S2.x = 600 - 140 * ease(k3); if (k3 < 1) walkP(t, S2, 120); S2.aR = [110, 70]; P.simon.prop.textContent = '📱'; S2.tilt = 8; }
+        const hy = hyOf(FL, .78); [[-44, -18, -25], [42, -26, 20], [40, 30, -15]].forEach(([dx, dy, r], k2) => { const e = lips4[k2]; e.setAttribute('opacity', 1); e.setAttribute('x', (S2.x + dx * .78).toFixed(1)); e.setAttribute('y', (hy + dy * .78).toFixed(1)); e.setAttribute('transform', `rotate(${r},${(S2.x + dx * .78).toFixed(1)},${(hy + dy * .78).toFixed(1)})`); }); }
+      if (P.jonas && L > A('h3') - 200 && L < A('h3') + d('h3') + 300) { pose.jonas.aR = [100, 0]; pose.jonas.look = 1; }
+      if (P.patrick && L > A('h5') - 200 && L < A('h5') + d('h5') + 300) { pose.patrick.aR = [100, 0]; pose.patrick.look = 1; }
+      // Inventar und Chat
+      const ik = win(L, A('h4') - 200, A('h5') + 300, 250); inv4.setAttribute('opacity', ik.toFixed(2)); inv4.rows.forEach((r, k) => r.setAttribute('opacity', L > A('h4') + k * 700 ? 1 : 0));
+      const ck = win(L, A('h7') - 300, len - 200, 300); chat4.setAttribute('opacity', ck.toFixed(2)); chM.forEach((g, k) => g.setAttribute('opacity', L > A('h7') + 500 + k * 1100 ? 1 : 0));
+      cam = L < A('h2') - 400 ? {x: 400, y: 225, z: 1} : L < A('h3') ? {x: 600, y: 250, z: 1.3} : L < A('h4') ? {x: 380, y: 250, z: 1.12} : L < A('h6') - 300 ? {x: 430, y: 245, z: 1.12} : L < A('h7') - 400 ? {x: 590, y: 280, z: 1.45} : {x: 420, y: 225, z: 1.02};
+    }
+    else if (sc.id === 'rio') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      rWaves.setAttribute('transform', `translate(${(-(t / 30) % 90).toFixed(1)},0)`); swirl.setAttribute('transform', `translate(${(6 * S(t / 700)).toFixed(1)},0)`);
+      const bx = 330 + 70 * ease(span(L, 0, A('r3'))), by = 338 + 3 * S(t / 420), br = 1.2 * S(t / 620);
+      boat4.setAttribute('transform', `translate(${bx.toFixed(1)},${by.toFixed(1)}) rotate(${br.toFixed(2)})`);
+      const REL = {greisel: -210, dajo: -125, patrick: -40, marco: 45, jonas: 130, simon: 225};
+      Object.entries(REL).forEach(([id, rx], i) => { if (!P[id]) return; on(id, bx + rx, by + 12 + rx * S(br * PI / 180), {sc: .66, noShadow: 1}); sitP(pose[id]); pose[id].tilt = 3 * S(t / 600 + i); });
+      on('guide', bx - 290, by - 34, {sc: .7, noShadow: 1}); idle(t, 6, pose.guide); pose.guide.aL = [60, 30];
+      if (P.jonas) jhat.setAttribute('opacity', 1); if (P.simon) pose.simon.burn = .55;
+      // rosa Delfine springen
+      const dk = L > A('r3') - 300 && L < A('r6') - 600;
+      [dol0, dol2, dol3].forEach((g, i) => { if (!dk) return; const k = ((L - A('r3') + i * 760) % 2300) / 2300; if (k < 0 || k > .8) return; const kk = k / .8;
+        g.setAttribute('opacity', 1); at4(g, 470 + i * 110 + 90 * kk, 258 - 46 * S(PI * kk), -35 + 70 * kk, .55); });
+      if (P.guide && L > A('r3') - 200 && L < A('r3') + d('r3') + 600) { pose.guide.aR = [110, 0]; pose.guide.look = 1; }
+      // Marcos Blasen hinter dem Boot
+      const bk = span(L, A('r5') - 1400, A('r5') + d('r5'));
+      if (bk > 0 && bk < 1) bubbles4.forEach((c, i) => { const ph = (t / 600 + i / 9) % 1; c.setAttribute('opacity', (1 - ph).toFixed(2)); c.setAttribute('cx', (bx + 45 + 30 * S(i * 2.3) + 6 * S(t / 200 + i)).toFixed(1)); c.setAttribute('cy', (by + 40 - 16 * ph).toFixed(1)); c.setAttribute('r', (3 + 8 * ph).toFixed(1)); });
+      if (L > A('r5') - 400 && L < A('r5') + d('r5') + 300) Object.keys(REL).forEach(id => { if (P[id] && id !== 'marco') { pose[id].look = id === 'simon' || id === 'jonas' ? -1 : 1; } });
+      if (P.marco && L > A('r5') - 1400 && L < A('r5') + d('r5')) { pose.marco.tilt = -8; pose.marco.aL = [60, 60]; }
+      // Simon will den Delfin am Bug küssen – Greisel kotzt quer übers Boot
+      const kissX = bx + 360, kissY = by - 26, pk0 = A('r8') + d('r8') + 100, pk = (L - pk0) / 900;
+      if (L > A('r6') - 800 && L < pk0 + 2800) { const fl = pk > 1 ? span(L, pk0 + 1200, pk0 + 2800) : 0;
+        dol1.setAttribute('opacity', 1); dol1.setAttribute('transform', `translate(${(kissX + 40 * fl).toFixed(1)},${(kissY + 20 * fl + 70 * fl * fl - 6 * S(t / 300)).toFixed(1)}) rotate(${(10 - 50 * fl).toFixed(1)}) scale(-.82,.82)`);
+        dol1.body.setAttribute('fill', pk > .9 ? '#8fbf3a' : '#ff9ec7'); }
+      if (P.simon && L > A('r6') - 300) { Object.assign(pose.simon, {rot: 22, look: 1, aL: [120, 30], aR: [120, 30]}); if (L > A('r6') + d('r6')) pose.simon.mouth = .3; if (pk > .9) { pose.simon.face = 'dizzy'; pose.simon.rot = -10; pose.simon.cry = 1; } }
+      if (P.greisel && L > A('r7') - 300) { Object.assign(pose.greisel, {aL: [30, 60], aR: [30, 60], tilt: 10 * S(t / 120)}); if (L > pk0 - 200) Object.assign(pose.greisel, {rot: 20, look: 1, mouth: pk > 0 && pk < 1.4 ? 1 : 0}); }
+      if (P.dajo && L > A('r8') - 200 && L < pk0 + 900) Object.assign(pose.dajo, {aL: [150, 20 * S(t / 70)], aR: [150, 20 * C(t / 70)]});
+      if (pk > 0) { const gx = bx + REL.greisel + 20, gy = hyOf(by + 12, .66) + 8; pukeAt(gx, gy, kissX - 18, kissY - 10, pk, 160); }
+      therapy.setAttribute('opacity', win(L, A('r9') + 300, len - 200, 300).toFixed(2));
+      cam = L < A('r2') - 300 ? {x: 400, y: 225, z: 1} : L < A('r3') - 200 ? {x: bx + 180, y: 270, z: 1.3} : L < A('r4') - 200 ? {x: 640, y: 250, z: 1.15} : L < A('r5') - 1400 ? {x: bx, y: 275, z: 1.3} : L < A('r6') - 800 ? {x: bx + 60, y: 280, z: 1.35} : L < A('r7') - 300 ? {x: bx + 290, y: 270, z: 1.4} : L < pk0 - 200 ? {x: bx - 150, y: 275, z: 1.3} : L < pk0 + 2600 ? {x: bx + 70, y: 250, z: 1.06} : {x: 420, y: 225, z: 1.02};
+    }
+    else if (sc.id === 'cab') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      const run0 = A('l3') + d('l3') + 150, run1 = run0 + 1500, q0 = A('l4') + d('l4') + 300, q1 = A('l6') + d('l6') + 300;
+      const q = win(L, q0, q1, 300), shx = q * 7 * S(t / 23), shy = q * 4 * C(t / 31);
+      [B.cab, F.cab].forEach(g => g.setAttribute('transform', `translate(${shx.toFixed(1)},${shy.toFixed(1)})`));
+      const X = {jonas: 150, marco: 250, patrick: 370};
+      ['jonas', 'marco', 'simon', 'dajo', 'greisel'].forEach((id, i) => { if (!P[id] || !X[id]) return; on(id, X[id] + shx, FL + shy, {sc: .78}); idle(t, i, pose[id]); });
+      if (P.jonas) jhat.setAttribute('opacity', 1);
+      if (P.jonas && L > A('l2') - 200 && L < A('l2') + d('l2')) { pose.jonas.aR = [120, 30]; P.jonas.prop.textContent = '🧊'; }
+      // Patrick: sechs Caipis, Sprint zum Klo (fast geschafft), dann das Beben
+      if (P.patrick) { const k = span(L, run0, run1); let px = 370 + 320 * ease(k);
+        on('patrick', px + shx, FL + shy, {sc: .78}); idle(t, 1, pose.patrick);
+        if (L > A('l3') - 200 && L < run0) Object.assign(pose.patrick, {lL: [14, -10], lR: [-14, -10], aL: [20, -40], aR: [20, -40], tilt: 6 * S(t / 60)});
+        if (k > 0 && k < 1) { walkP(t, pose.patrick, 55); pose.patrick.aL = [20, -40]; pose.patrick.aR = [20, -40]; }
+        if (L >= run1) { Object.assign(pose.patrick, {x: 686 + shx, y: FL + 2 + shy, noShadow: 1}); sitP(pose.patrick); pose.patrick.aL = [40, 40]; pose.patrick.aR = [40, 40]; pose.patrick.tilt = q ? 10 * S(t / 50) : 0; if (q) pose.patrick.mouth = .8; }
+        stains4.forEach((s2, i) => { const sx = 420 + i * 58; if (L > run0 && px > sx) { s2.setAttribute('opacity', 1); s2.setAttribute('cx', sx + shx); s2.setAttribute('cy', FL + 3 + shy); s2.setAttribute('rx', 12 + 5 * (i % 2)); s2.setAttribute('ry', 6 + (i % 3)); } });
+        if (L > A('l7') - 200 && L < A('l8')) { pose.patrick.look = S(t / 300) > 0 ? 1 : -1; pose.patrick.aR = [60, 40]; }
+        if (L > A('l8') - 300 && L < A('l10')) { pose.patrick.aR = [150, 10]; P.patrick.prop.textContent = '🍃'; }
+        // Feuerblatt: aufspringen, Hintern brennt, raus zum Fluss
+        const fk = span(L, A('l9') + d('l9') + 100, A('l10') + 1600);
+        if (fk > 0) { Object.assign(pose.patrick, {x: 690 - 900 * ease(fk), y: FL - 40 * jumpK(L, A('l9') + d('l9') + 100, 500), noShadow: 0, flip: -1, cry: 1, aL: [160, 20], aR: [160, 20], mouth: 1}); walkP(t, pose.patrick, 45); pose.patrick.aL = [160, 20]; pose.patrick.aR = [160, 20];
+          fire4.setAttribute('opacity', 1); fire4.setAttribute('x', (pose.patrick.x + 18).toFixed(1)); fire4.setAttribute('y', (FL - 54 + 4 * S(t / 50)).toFixed(1)); fire4.setAttribute('style', `font-size:${(26 + 6 * S(t / 70)).toFixed(0)}px`); } }
+      // Stinkwolke, flüchtende Tiere, Seismograf
+      if (L > q0) stinkAt(690 + shx, FL - 120, span(L, q0, q0 + 1500) * (L < A('l10') + 800 ? 1 : 0), t);
+      flee4.forEach((e, i) => { const k = span(L, q0 + 400 + i * 220, q0 + 2600 + i * 220); if (k <= 0 || k >= 1) return; e.setAttribute('opacity', 1); e.setAttribute('x', (640 + i * 30 - 760 * k).toFixed(1)); e.setAttribute('y', (130 + i * 18 - 90 * S(PI * k) * (i % 2 ? 1 : .4)).toFixed(1)); });
+      const sk = win(L, q0 + 200, A('l6') + d('l6'), 300); seis.setAttribute('opacity', sk.toFixed(2));
+      if (sk > 0) { const amp = 4 + 40 * span(L, q0, q0 + 1500); seisL.setAttribute('d', 'M34,135 ' + Array.from({length: 46}, (_, i) => `L${34 + i * 6},${(135 + amp * S(i * 1.9 + t / 35) * hash(i, Math.floor(t / 80))).toFixed(1)}`).join(' ')); seisV.textContent = L > A('l5') + 1500 ? 'Stärke 4,2 · Epizentrum: Kabine 3' : 'Stärke … ' + (amp / 10).toFixed(1); }
+      ['jonas', 'marco'].forEach(id => { if (P[id] && L > q0 + 600 && L < A('l10')) { pose[id].aR = [165, 150]; pose[id].tilt = -8; pose[id].look = 1; } });
+      if (P.marco && L > A('l6') - 200 && L < A('l6') + d('l6')) { pose.marco.aL = [150, 20 * S(t / 70)]; }
+      // Guide im Fenster: „Nau! Feuerblatt!“
+      if (L > A('l9') - 400 && L < A('l9') + d('l9') + 900) { const k = span(L, A('l9') - 400, A('l9')); headAt('guide', 690 + shx, 210 - 40 * ease(k) + shy, .55); }
+      cam = L < A('l2') - 300 ? {x: 400, y: 225, z: 1} : L < A('l3') - 200 ? {x: 200, y: 250, z: 1.3} : L < run0 ? {x: 370, y: 260, z: 1.3} : L < run1 + 300 ? {x: 540, y: 240, z: 1.1} : L < q0 ? {x: 660, y: 270, z: 1.45} : L < A('l6') - 200 ? {x: 560, y: 225, z: 1.06} : L < A('l7') - 200 ? {x: 250, y: 250, z: 1.3} : L < A('l9') - 400 ? {x: 650, y: 260, z: 1.35} : L < A('l9') + d('l9') ? {x: 680, y: 220, z: 1.3} : {x: 400, y: 225, z: 1};
+      if (q) { cam.x += 10 * S(t / 29); cam.y += 6 * C(t / 33); }
+    }
+    else if (sc.id === 'pir') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      pWaves.setAttribute('transform', `translate(${(-(t / 40) % 110).toFixed(1)},0)`);
+      const bx = 450, by = 352 + 3 * S(t / 500), br = .8 * S(t / 700);
+      canoe.setAttribute('transform', `translate(${bx},${by.toFixed(1)}) rotate(${br.toFixed(2)})`); bucket.setAttribute('transform', `translate(${bx - 160},${(by - 30).toFixed(1)})`);
+      const REL = {dajo: -215, marco: -110, simon: -5, jonas: 100, patrick: 205};
+      Object.entries(REL).forEach(([id, rx], i) => { if (!P[id]) return; on(id, bx + rx, by + 30 + rx * S(br * PI / 180), {sc: .66, noShadow: 1}); sitP(pose[id]); pose[id].aR = [70, 50]; pose[id].tilt = 3 * S(t / 700 + i); });
+      if (P.jonas) jhat.setAttribute('opacity', 1); if (P.simon) pose.simon.burn = .55;
+      // Greisel schläft ganz links, ein Fuß hängt im Wasser
+      if (P.greisel) { on('greisel', bx - 310, by - 4, {sc: .62, tumble: -78, noShadow: 1}); Object.assign(pose.greisel, {aL: [170, 0], aR: [130, 20], lL: [-40, 0], lR: [-10, 0]}); snore(bx - 390, by - 120, t); }
+      const fx = bx - 392, fy = by + 22; foot4.setAttribute('opacity', 1); foot4.setAttribute('x', fx); foot4.setAttribute('y', (fy + 2 * S(t / 300)).toFixed(1));
+      const frenzy = L > A('p4') - 400; pirs.slice(1).forEach((g, i) => { const a2 = t / (frenzy ? 160 : 420) + i * 2.1, r = frenzy ? 30 : 46; g.setAttribute('opacity', 1); at4(g, fx + r * C(a2), fy + 22 + 10 * S(a2), (C(a2) > 0 ? 180 : 0) + 15 * S(t / 90 + i), .55); });
+      if (frenzy) bubbles4.forEach((c, i) => { const ph = (t / 400 + i / 9) % 1; c.setAttribute('opacity', (1 - ph).toFixed(2)); c.setAttribute('cx', (fx + 30 * S(i * 2.7)).toFixed(1)); c.setAttribute('cy', (fy + 12 - 22 * ph).toFixed(1)); c.setAttribute('r', (2 + 5 * ph).toFixed(1)); });
+      // Angeln: Rute und Schnur je Person; Daijo fängt, Patricks Rute biegt sich
+      const anglers = ['dajo', 'marco', 'simon', 'jonas', 'patrick'];
+      anglers.forEach((id, i) => { if (!P[id]) return; const p = pose[id], hx = p.x + 16, hy = p.y - 112 * .66, bend = id === 'patrick' && L > A('p6') - 400 && L < A('p7') ? 1 : 0;
+        const tx = hx + 70, ty = hy - 70 + 60 * bend, wx = hx + 110 + 6 * S(t / 400 + i), wy = by + 44;
+        rods[i].setAttribute('opacity', 1); rods[i].setAttribute('d', `M${hx.toFixed(1)},${hy.toFixed(1)} Q${(hx + 40).toFixed(1)},${(hy - 50 + 30 * bend).toFixed(1)} ${tx.toFixed(1)},${ty.toFixed(1)}`);
+        if (!(id === 'patrick' && L > A('p7') - 900)) { lines4[i].setAttribute('opacity', 1); lines4[i].setAttribute('d', `M${tx.toFixed(1)},${ty.toFixed(1)} L${wx.toFixed(1)},${wy.toFixed(1)}`); } });
+      // Daijo: Fang fliegt in den Eimer, Zähler
+      const nF = clamp(Math.floor(5 * span(L, 600, A('p2') - 300)) + 1, 1, 5); fishB.forEach((e, k) => { e.setAttribute('opacity', k < nF ? 1 : 0); e.setAttribute('x', -10 + (k % 3) * 10); e.setAttribute('y', -30 - Math.floor(k / 3) * 9); });
+      const ck0 = A('p2') - 1600, ck = span(L, ck0, ck0 + 900); if (ck > 0 && ck < 1) { const x0 = pose.dajo ? pose.dajo.x + 120 : 300, y0 = by + 40, x1 = bx - 160, y1 = by - 60; pirs[0].setAttribute('opacity', 1); at4(pirs[0], x0 + (x1 - x0) * ck, y0 + (y1 - y0) * ck - 90 * S(PI * ck), ck * 540, .55); }
+      if (P.dajo && L > ck0 - 300 && L < A('p3')) { pose.dajo.aR = [150, 30]; }
+      if (P.dajo && L > A('p4') - 100 && L < A('p4') + d('p4')) { pose.dajo.aL = [90, 0]; pose.dajo.look = -1; }
+      score4.setAttribute('opacity', win(L, A('p2') - 300, A('p6') - 400, 250).toFixed(2)); score4T.textContent = `🎣 Daijo ${nF} : 0 Jungs`;
+      // Patricks großer Fang: der Piranha mit seinem Gebiss – Kuss – Biss
+      if (P.patrick) { const P2 = pose.patrick, hx = P2.x + 16, hy = hyOf(P2.y, .66);
+        if (L > A('p6') - 400 && L < A('p7') - 900) { P2.aR = [100, 20 + 15 * S(t / 60)]; P2.aL = [90, 30]; P2.tilt = -10 + 6 * S(t / 80); }
+        const lk = span(L, A('p7') - 900, A('p7') - 200);
+        if (L > A('p7') - 900) { const fx2 = hx + 110 - 80 * ease(lk), fy2 = by + 40 - (by + 40 - (hy + 10)) * ease(lk); let fr = -60 * (1 - lk) + 8 * S(t / 120);
+          let px = fx2, py = fy2; const kk = span(L, A('p8') - 200, A('p8') + 600), bite = L > A('p8') + 600;
+          if (kk > 0) { px = fx2 - 60 * ease(kk); py = fy2 - 6; } if (bite) { px = hx + 30 + 6 * S(t / 70); py = hy + 14 + 4 * C(t / 60); fr = 70 + 25 * S(t / 90); }
+          pirP.setAttribute('opacity', 1); pirP.prop.textContent = bite ? '' : '🦷'; at4(pirP, px, py, fr, .9);
+          lines4[4].setAttribute('opacity', 1); lines4[4].setAttribute('d', `M${(hx + 70).toFixed(1)},${(hy - 70).toFixed(1)} L${(px + 20).toFixed(1)},${(py - 8).toFixed(1)}`);
+          P2.aR = [130, 40]; P2.aL = [120, 40]; if (kk > 0 && !bite) P2.tilt = 12; if (bite) Object.assign(P2, {aL: [160, 30 * S(t / 50)], aR: [160, 30 * C(t / 50)], cry: 1, tilt: 10 * S(t / 60), mouth: 1}); }
+        if (L > A('p7') + 200 && L < A('p8') + 600) hearts3(hx, hy - 50, t); }
+      cam = L < A('p2') - 1700 ? {x: 400, y: 225, z: 1} : L < A('p3') ? {x: 280, y: 280, z: 1.3} : L < A('p4') + 600 ? {x: 250, y: 280, z: 1.2} : L < A('p6') - 400 ? {x: 120, y: 320, z: 1.5} : L < A('p7') - 900 ? {x: 560, y: 270, z: 1.3} : {x: 590, y: 270, z: 1.35};
+    }
+    else if (sc.id === 'jbar') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      flies.forEach((f, i) => { f.setAttribute('cx', (60 + i * 80 + 30 * S(t / 900 + i)).toFixed(1)); f.setAttribute('cy', (200 + 40 * S(t / 700 + i * 1.7)).toFixed(1)); f.setAttribute('opacity', (.4 + .5 * Math.abs(S(t / 400 + i))).toFixed(2)); });
+      const mB = A('j3') - 2200, dB = A('j4') - 3300, out = L > dB + 400;
+      candles.forEach((c, i) => { c.fl.setAttribute('opacity', out ? 0 : 1); c.fl.setAttribute('transform', `scale(${(1 + .15 * S(t / 90 + i)).toFixed(2)},1)`); c.sm.setAttribute('opacity', out && L < dB + 3000 ? (1 - span(L, dB + 400, dB + 3000)).toFixed(2) : 0); });
+      const X = {jonas: 270, marco: 370, dajo: 490, patrick: 610, simon: 715};
+      Object.entries(X).forEach(([id, x], i) => { if (!P[id]) return; on(id, x, FL, {sc: .78}); idle(t, i, pose[id]); });
+      if (P.jonas) jhat.setAttribute('opacity', 1); if (P.simon) pose.simon.burn = .55;
+      if (P.greisel) { on('greisel', 90, FL + 2, {sc: .72}); sitP(pose.greisel); Object.assign(pose.greisel, {tilt: 62, rot: 20, aL: [100, 60], aR: [100, 60]}); snore(140, FL - 150, t); }
+      // Rülps-Duell
+      const mk2 = span(L, mB, mB + 900), dk = span(L, dB, dB + 1700);
+      if (P.marco) { if (L > mB - 300 && L < mB + 900) Object.assign(pose.marco, {rot: -8, mouth: L > mB ? 1 : 0, aL: [40, 60], aR: [40, 60]}); if (L > A('j3') && L < A('j3') + d('j3')) pose.marco.aR = [100, 0];
+        if (dk > 0) { const bl = ease(span(L, dB + 100, dB + 700)); Object.assign(pose.marco, {x: 370 - 60 * bl, tumble: -70 * bl, y: FL + 10 * bl, cry: L > dB + 900 ? 1 : 0}); } }
+      if (P.dajo) { pose.dajo.flip = -1; if (L > dB - 400 && L < dB + 1500) Object.assign(pose.dajo, {rot: 10, mouth: L > dB ? 1 : 0, aL: [30, 40], aR: [30, 40], tilt: L > dB ? 6 * S(t / 30) : 0}); if (L > dB + 1600 && L < A('j5')) { pose.dajo.aR = [160, 20]; P.dajo.prop.textContent = '🏆'; } }
+      if (mk2 > 0 && mk2 < 1) { const ox = pose.marco.x + 20, oy = hyOf(FL, .78) + 14; rings(ring4, ox, oy, mk2, 0); burpT.setAttribute('opacity', (1 - mk2).toFixed(2)); burpT.textContent = 'BUÄÄRP!'; burpT.setAttribute('x', ox + 40); burpT.setAttribute('y', oy - 70 - 20 * mk2); burpT.setAttribute('style', 'font-size:40px;fill:#9acd32;stroke:#1d3b0a;stroke-width:3px;paint-order:stroke'); }
+      if (dk > 0 && dk < 1) { const ox = 490 - 20, oy = hyOf(FL, .78) + 14; rings(ring4, ox, oy, dk, 1); burpT.setAttribute('opacity', (1 - dk * dk).toFixed(2)); burpT.textContent = 'BRRROOOAAARP!!'; burpT.setAttribute('x', 400); burpT.setAttribute('y', 150 - 20 * dk); burpT.setAttribute('style', `font-size:${(54 + 30 * dk).toFixed(0)}px;fill:#9acd32;stroke:#1d3b0a;stroke-width:4px;paint-order:stroke`);
+        flashW.setAttribute('opacity', (dk < .15 ? .6 * (1 - dk / .15) : 0).toFixed(2)); }
+      const mv = L < mB ? 0 : L < dB ? .58 * ease(span(L, mB, mB + 700)) : .58 + 1.1 * ease(span(L, dB, dB + 1200));
+      meter4.setAttribute('opacity', win(L, A('j2') - 200, A('j5') - 300, 250).toFixed(2)); m4f.setAttribute('width', (268 * Math.min(1, mv)).toFixed(1)); m4f.setAttribute('fill', mv > 1 ? (Math.floor(t / 120) % 2 ? '#ff3b30' : '#ffcf1f') : '#9acd32');
+      m4v.textContent = mv > 1 ? '💥 REKORD 🇨🇿' : L > mB ? (mv * 105).toFixed(0) + ' dB' : '';
+      // Jaguar gibt auf
+      jagE.setAttribute('opacity', L > dB + 300 ? 0 : (Math.floor(t / 1800) % 7 ? 1 : 0)); if (L > A('j4') - 400 && L < A('j5')) { flag4.setAttribute('opacity', 1); flag4.setAttribute('x', 720); flag4.setAttribute('y', (250 - 30 * ease(span(L, A('j4') - 400, A('j4') + 400))).toFixed(1)); flag4.setAttribute('transform', `rotate(${(10 * S(t / 150)).toFixed(1)},720,240)`); }
+      // Jonas betrunken: Demokratie
+      if (P.jonas && L > A('j4') + d('j4')) { Object.assign(pose.jonas, {rot: 9 * S(t / 380), tilt: 12 * S(t / 300), aR: [120, 50]}); P.jonas.prop.textContent = '🥃'; if (L > A('j5') - 200 && L < A('j5') + d('j5')) pose.jonas.aL = [150, 30 * S(t / 120)]; }
+      if (L > A('j5') + d('j5') * .6 && L < A('j6')) ['marco', 'dajo', 'patrick', 'simon'].forEach(id => { if (pose[id] && pose[id].on) pose[id].face = 'shock'; });
+      if (L > A('j6') && L < A('j7')) ['marco', 'dajo', 'patrick', 'simon'].forEach((id, i) => { if (pose[id] && pose[id].on) cheerP(t, pose[id], i); });
+      // Stromausfall: Schmatzen im Dunkeln, Licht an – Simon knutscht Patrick
+      const dark = win(L, A('j7') + d('j7') * .6, A('j9') - 150, 120); dark4.setAttribute('opacity', (dark * .94).toFixed(2));
+      smack4.setAttribute('opacity', dark > .5 ? 1 : 0); smack4.items.forEach((e, k) => e.setAttribute('opacity', L > A('j7') + d('j7') + k * 500 ? .9 : 0));
+      if (L > A('j9') - 150) { if (P.dajo) Object.assign(pose.dajo, {x: 640, flip: 1}); if (P.simon) Object.assign(pose.simon, {x: 452, rot: 16, aL: [70, 40], aR: [70, 40]}); if (P.patrick) Object.assign(pose.patrick, {x: 512, rot: -14, flip: -1, aL: [60, 40], aR: [60, 40]});
+        if (P.patrick) { chain.setAttribute('opacity', 1); at4(chain, pose.patrick.x, FL - 60 * .78, pose.patrick.rot, .78); }
+        if (L > A('j10') && P.simon) { Object.assign(pose.simon, {x: 430, rot: 0, aR: [160, 140], cry: 1}); } }
+      cam = L < A('j2') - 200 ? {x: 400, y: 225, z: 1} : L < dB - 400 ? {x: 380, y: 245, z: 1.25} : L < A('j5') - 200 ? {x: 400, y: 225, z: 1.02} : L < A('j6') - 100 ? {x: 290, y: 245, z: 1.35} : L < A('j9') - 150 ? {x: 400, y: 225, z: 1} : {x: 480, y: 250, z: 1.4};
+      if (dk > 0 && dk < .6) { cam.x += 12 * S(t / 21); cam.y += 8 * C(t / 25); }
+    }
+    else if (sc.id === 'kai') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      kWaves.setAttribute('transform', `translate(${(-(t / 50) % 110).toFixed(1)},0)`);
+      const bx = 360, by = 352 + 3 * S(t / 480), br = 1 * S(t / 650);
+      boatK.setAttribute('transform', `translate(${bx},${by.toFixed(1)}) rotate(${br.toFixed(2)})`);
+      const REL = {simon: -250, patrick: -165, greisel: -80, dajo: 5, marco: 90, jonas: 175}, fall = A('k5') - 1300;
+      Object.entries(REL).forEach(([id, rx], i) => { if (!P[id]) return; on(id, bx + rx, by + 10 + rx * S(br * PI / 180), {sc: .66, noShadow: 1}); sitP(pose[id]); pose[id].tilt = 3 * S(t / 600 + i); });
+      if (P.greisel) { Object.assign(pose.greisel, {tilt: 28, rot: 8}); snore(bx - 60, by - 124, t); } if (P.simon) pose.simon.burn = .5;
+      const J = pose.jonas, jx = J ? J.x : 535, jy = hyOf(by + 10, .66);
+      // Guide vorne mit Taschenlampe, fällt später rein
+      const gx = bx + 270, gy = by - 30;
+      if (L < fall) { on('guide', gx, gy, {sc: .7, noShadow: 1}); idle(t, 6, pose.guide); pose.guide.aR = [100, 10]; P.guide.prop.textContent = '🔦'; }
+      else if (L < fall + 500) { const k = span(L, fall, fall + 500); on('guide', gx + 40 * k, gy + 60 * k * k, {sc: .7, tumble: 100 * k, noShadow: 1}); }
+      else if (L < A('k8') + 800) { headAt('guide', gx + 70, 336 + 4 * S(t / 160), .5); hand4.slice(0, 2).forEach((h, i) => { h.setAttribute('opacity', 1); h.setAttribute('x', (gx + 40 + i * 60).toFixed(1)); h.setAttribute('y', (300 + 10 * S(t / 90 + i * 2)).toFixed(1)); }); }
+      else { const k = span(L, A('k8') + 800, A('k8') + 1600); on('guide', gx, gy + 40 * (1 - k), {sc: .7, noShadow: 1}); idle(t, 6, pose.guide); pose.guide.cry = 1; }
+      // Lichtkegel: sucht Augen, dann bleibt alles an Jonas hängen
+      const onJ = L > A('k3') - 400, sx = onJ ? jx : 600 + 140 * S(t / 1100), sy = onJ ? jy : 300;
+      if (L < fall) { beam.setAttribute('opacity', .35); beam.setAttribute('d', `M${gx + 24},${gy - 78} L${sx - 60},${sy - 30} A60,30 0 0,0 ${sx + 60},${sy + 30}Z`); }
+      eyes4.forEach((g, i) => { if (L < A('k2') - 300) return; const k = span(L, A('k3') - 600, A('k3') + 400), hx = 470 + i * 60 + 10 * S(t / 900 + i), hy = 300 + 14 * (i % 3);
+        const ex = hx + (jx + 60 + (i - 2.5) * 22 - hx) * ease(k) * .8, ey = hy + (330 - hy) * ease(k) * .5; g.setAttribute('opacity', Math.floor(t / 2100 + i) % 5 ? 1 : .2); g.setAttribute('transform', `translate(${ex.toFixed(1)},${ey.toFixed(1)})`); });
+      if (L > A('k3') - 400 && L < fall + 400) { glow4.setAttribute('opacity', (.8 + .2 * S(t / 120)).toFixed(2)); glow4.setAttribute('cx', jx); glow4.setAttribute('cy', jy - 18); }
+      if (L > A('k4') && L < fall) { light4.setAttribute('opacity', 1); light4.setAttribute('transform', `translate(${jx},${jy - 22}) rotate(${((t / 6) % 360).toFixed(1)})`); }
+      if (P.jonas && L > A('k3') - 400 && L < fall + 600) { Object.assign(J, {cry: 1, aL: [150, 20], aR: [150, 20]}); }
+      // Kaiman schnappt den Fischerhut
+      const ck = span(L, fall - 900, fall - 100), hatGone = L > fall - 350;
+      if (P.jonas) jhat.setAttribute('opacity', hatGone ? 0 : 1);
+      if (ck > 0 && L < fall + 1500) { const back = span(L, fall, fall + 1500), cx = jx + 140 - 120 * ease(ck) + 160 * back, cy = 372 - (372 - jy) * S(PI * Math.min(1, ck * .9)) + 60 * back;
+        cai.setAttribute('opacity', 1); at4(cai, cx, cy, -35 * (1 - back), .8); cai.jaw.setAttribute('transform', `rotate(${(ck < .8 ? 25 * ck : 0).toFixed(1)})`); cai.hat.setAttribute('opacity', hatGone ? 1 : 0); }
+      // am Ende schwimmt der Kaiman mit Hut vorbei
+      if (L > A('k8') - 300) { const k = span(L, A('k8') - 300, len - 200); cai2.setAttribute('opacity', 1); at4(cai2, 820 - 600 * k, 380 + 4 * S(t / 300), 0, .7); cai2.hat.setAttribute('opacity', 1); cai2.jaw.setAttribute('transform', `rotate(${(4 + 4 * S(t / 400)).toFixed(1)})`); }
+      const sp = span(L, fall + 300, fall + 1300); if (sp > 0 && sp < 1) { splash4.setAttribute('opacity', (1 - sp).toFixed(2)); splash4.setAttribute('x', gx + 60); splash4.setAttribute('y', (330 - 30 * sp).toFixed(1)); }
+      // Abstimmung: erst keiner, dann alle (Bootsschlüssel)
+      const yes = L > A('k7') + d('k7') + 300;
+      vote4.setAttribute('opacity', win(L, A('k6') + 400, A('k8') + 600, 250).toFixed(2)); vote4T.textContent = yes ? '🗳️ Dafür: 5 · einstimmig ✅' : '🗳️ Dafür: 0';
+      if (L > A('k6') + 300 && !yes) ['simon', 'patrick', 'dajo', 'marco'].forEach(id => { if (pose[id] && pose[id].on) { pose[id].look = -1; pose[id].tilt = -10; } });
+      if (P.dajo && L > A('k7') - 200 && L < A('k7') + d('k7')) { pose.dajo.aR = [90, 0]; P.dajo.prop.textContent = '🔑'; }
+      if (yes && L < A('k8') + 600) ['simon', 'patrick', 'dajo', 'marco', 'jonas'].forEach((id, i) => { if (pose[id] && pose[id].on) { pose[id].aR = [170, 10 * S(t / 100 + i)]; pose[id].aL = [30, 30]; } });
+      cam = L < A('k2') - 300 ? {x: 400, y: 225, z: 1} : L < A('k3') - 400 ? {x: 600, y: 270, z: 1.15} : L < A('k4') ? {x: jx, y: 270, z: 1.4} : L < fall - 900 ? {x: jx, y: 260, z: 1.3} : L < A('k6') - 200 ? {x: 560, y: 270, z: 1.15} : L < A('k7') + d('k7') + 300 ? {x: 400, y: 265, z: 1.15} : {x: 420, y: 240, z: 1.05};
+    }
+    else if (sc.id === 'ham') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      const onHam = (h, u) => { const [a2, b2, y, lo] = HAM[h], xc = (a2 + b2) / 2, yc = 2 * lo - y; return [(1 - u) * (1 - u) * (a2 + 14) + 2 * (1 - u) * u * xc + u * u * (b2 - 14), (1 - u) * (1 - u) * y + 2 * (1 - u) * u * yc + u * u * y]; };
+      const SP = {jonas: [0, .3], simon: [0, .52], patrick: [0, .74], marco: [1, .28], dajo: [1, .5], greisel: [1, .72]};
+      const gf0 = A('e3') - 2300, gfk = span(L, gf0, gf0 + 700);
+      Object.entries(SP).forEach(([id, [h, u]], i) => { if (!P[id]) return; const [x, y] = onHam(h, u); on(id, x, y + 16, {sc: .58, tumble: -84, noShadow: 1}); Object.assign(pose[id], {aL: [170, 0], aR: [150, 20], lL: [6, 0], lR: [-8, 0], tilt: 4 * S(t / 900 + i)});
+        if (id !== 'greisel' && (L < A('e1') - 300 || id === 'jonas' || id === 'simon')) pose[id].face = i % 2 ? 'dizzy' : ''; });
+      if (P.simon) pose.simon.burn = .6;
+      if (P.marco && L > A('e1') - 400) Object.assign(pose.marco, {tumble: -30, aR: [140, 20], y: pose.marco.y - 10});
+      if (P.patrick && L > A('e2') - 300 && L < A('e2') + d('e2') + 600) Object.assign(pose.patrick, {tumble: -50, aR: [120, 40]});
+      // Greisel fällt aus der Hängematte und schläft am Boden weiter
+      if (P.greisel) { const [x0, y0] = onHam(1, .72); if (gfk > 0) { Object.assign(pose.greisel, {x: x0 + 30 * gfk, y: y0 + 16 + (FL + 30 - y0 - 16) * gfk * gfk, tumble: -84 - 360 * gfk}); }
+        if (gfk >= 1) { Object.assign(pose.greisel, {x: x0 + 30, y: FL + 30, tumble: -84}); if (L < A('e3') - 300) snore(x0 - 40, FL - 50, t); }
+        if (L > A('e3') - 300) { Object.assign(pose.greisel, {tumble: 0, y: FL + 34}); sitP(pose.greisel); pose.greisel.tilt = 10; } }
+      if (P.dajo && L > A('e4') - 300 && L < A('e5') + d('e5')) Object.assign(pose.dajo, {tumble: -40, aR: [100, 10]});
+      // Affe auf dem Ast mit Marcos Zahnbürste
+      monk4.setAttribute('opacity', 1); monk4.setAttribute('x', 610); monk4.setAttribute('y', (92 + 2 * S(t / 300)).toFixed(1));
+      const scrub = L > A('e1') - 1600; brush4.setAttribute('opacity', 1); brush4.setAttribute('x', (scrub ? 630 + 9 * S(t / 45) : 640).toFixed(1)); brush4.setAttribute('y', scrub ? 112 : 106); brush4.setAttribute('transform', scrub ? `rotate(${(30 + 20 * S(t / 45)).toFixed(0)},630,112)` : '');
+      bil4.setAttribute('opacity', win(L, A('e6') + 200, len - 200, 300).toFixed(2)); bil4.rows.forEach((r, k) => r.setAttribute('opacity', L > A('e6') + 600 + k * 1300 ? 1 : 0));
+      cam = L < A('e1') - 1600 ? {x: 400, y: 225, z: 1} : L < A('e2') - 300 ? {x: 560, y: 200, z: 1.3} : L < gf0 - 200 ? {x: 300, y: 230, z: 1.25} : L < A('e5') + d('e5') + 300 ? {x: 620, y: 290, z: 1.3} : {x: 400, y: 225, z: 1};
+    }
     else if (sc.id === 'buf') {
       fallsF.forEach((f, k) => f.setAttribute('stroke-dashoffset', (-(t / 8 + k * 7) % 20).toFixed(1)));
       ban.setAttribute('opacity', win(L, 300, 4200, 400).toFixed(2));
@@ -4537,6 +4952,11 @@ function wavB64(buf) {
       ['a2', 1400, 'ding'], ['a4', -300, 'scratch'], ['a6', 300, 'wah'],
       ['m1', 0, 'boat'], ['m3', 400, 'boat'], ['m4', -600, 'boing'], ['m7', 1200, 'wah'],
       ['d1', 0, 'cheer'], ['d3', 900, 'ding'], ['d6', -1700, 'splash'], ['d7', 1200, 'ding'],
+      ['h2', -2700, 'squeak'], ['h2', 0, 'kiss'], ['h2', 400, 'whoo'], ['h4', 0, 'scratch'], ['h6', -200, 'boing'], ['h6', 900, 'wah'],
+      ['r3', -300, 'splash'], ['r3', 800, 'splash'], ['r3', 1700, 'splash'], ['r5', -1400, 'fart'], ['r5', -1000, 'bubble'], ['r6', 700, 'kiss'],
+      ['l3', 1000, 'scratch'], ['l9', -400, 'boing'], ['p1', 500, 'splash'], ['p4', 700, 'chomp'], ['p4', 1300, 'chomp'], ['p5', 500, 'chomp'], ['p6', -300, 'squeak'], ['p7', -900, 'splash'],
+      ['j2', 0, 'cheer'], ['j6', 500, 'cheer'], ['j7', 0, 'click'], ['j9', -150, 'click'], ['j9', 0, 'scratch'],
+      ['k2', -300, 'click'], ['k3', 0, 'scratch'], ['k6', 300, 'ding'], ['k7', 0, 'wah'], ['e1', -1600, 'monkey'], ['e1', 600, 'monkey'], ['e2', 1300, 'wah'], ['e6', 0, 'gong'],
       ['night1', 0, 'cheer'], ['night3', 3500, 'puke'], ['night5', -400, 'whistle'], ['night4', 2400, 'applause'], ['end', -400, 'applause']];
     fx.forEach(([k, d, n]) => { if (LAT[k] !== undefined) m.sfx(n, A(k, d)); });
     if (LAT.fly2 !== undefined) for (let n = 0; n < 4; n++) m.sfx('munch', A('fly2', 1000 + n * 1300));
@@ -4550,6 +4970,15 @@ function wavB64(buf) {
     if (has('q3')) { const G = LAT.q3 - 800; [1100, 1350, 1600, 1900, 2150, 2400].forEach((o, k) => m.sfx(k % 2 ? 'thud' : 'crash', at(G + o))); m.sfx('kiss', A('q5', dl('q5'))); }
     if (has('a3')) { m.sfx('thud', A('a3', dl('a3'))); m.sfx('clank', A('a6', dl('a6') - 100)); m.sfx('clank', A('a6', dl('a6') + 500)); m.sfx('squeak', A('a6', dl('a6') + 900)); }
     if (has('m4')) { const H0 = LAT.m4 - 2700; m.sfx('splash', at(H0)); m.sfx('crash', at(H0 + 200)); m.sfx('splash', at(H0 + 700)); m.sfx('splash', at(H0 + 1400)); m.sfx('splash', A('m5', -1700)); m.sfx('ding', A('m5', -900)); }
+    // Folge 4
+    if (has('r8')) { const pk0 = LAT.r8 + dl('r8') + 100; m.sfx('puke', at(pk0)); m.sfx('splash', at(pk0 + 900)); m.sfx('wah', at(pk0 + 1400)); }
+    if (has('l4')) { const r0 = LAT.l3 + dl('l3') + 150, q0 = LAT.l4 + dl('l4') + 300; m.sfx('fart', at(r0 + 500)); m.sfx('fart', at(q0)); m.sfx('rumble', at(q0 + 150)); m.sfx('monkey', at(q0 + 700)); m.sfx('crash', at(q0 + 1300)); m.sfx('fart', at(q0 + 2200));
+      const f0 = LAT.l9 + dl('l9') + 100; m.sfx('whoo', at(f0)); m.sfx('scratch', at(f0 + 200)); m.sfx('splash', at(f0 + 1600)); }
+    if (has('p2')) { const c0 = LAT.p2 - 1600; m.sfx('splash', at(c0)); m.sfx('ding', at(c0 + 900)); m.sfx('chomp', A('p8', 600)); m.sfx('chomp', A('p8', 900)); }
+    if (has('j3')) { const mB = LAT.j3 - 2200, dB = LAT.j4 - 3300; m.sfx('burp', at(mB)); m.sfx('burpbig', at(dB)); m.sfx('crash', at(dB + 300)); m.sfx('thud', at(dB + 650)); m.sfx('applause', at(dB + 1900));
+      for (let k = 0; k < 4; k++) m.sfx('kiss', A('j7', dl('j7') + 200 + k * 650)); }
+    if (has('k5')) { const fall = LAT.k5 - 1300; m.sfx('chomp', at(fall - 350)); m.sfx('scratch', at(fall - 300)); m.sfx('splash', at(fall + 300)); m.sfx('whoo', at(fall + 100)); }
+    if (has('e3')) { const g0 = LAT.e3 - 2300; m.sfx('whoo', at(g0)); m.sfx('thud', at(g0 + 700)); }
     if (has('d1')) { for (let k = 0; k < 12; k++) m.sfx('clink', at(LAT.d1 + 1500 + k * (LAT.d2 - 200 - LAT.d1 - 1500) / 13)); m.sfx('crash', A('d4', dl('d4') + 650)); m.sfx('thud', A('d4', dl('d4') + 750)); m.sfx('chalk', A('d5', -100)); m.sfx('chalk', A('d5', 900)); }
   }
   function sceneChanged(sc) {
@@ -4675,7 +5104,7 @@ function wavB64(buf) {
       EPS.forEach((id, k) => { const e = TRIP.series[id], b2 = document.createElement('button'), rp = posOf(id), seen = seenOf(id), pc = seen ? 100 : Math.round(100 * rp / LEN[id]);
         b2.type = 'button'; b2.dataset.ep = id; b2.className = 'ser-tile'; b2.style.setProperty('--c', e.color || '#8a4fbf'); b2.setAttribute('aria-pressed', String(id === EPID));
         b2.innerHTML = `<span class="ser-th" aria-hidden="true">${e.thumb || '📺'}<i>${e.n || k + 1}</i></span><b>Folge ${e.n || k + 1}</b><small>${e.title}</small>` +
-          `<span class="ser-meta">${mmss(LEN[id])}${seen ? ' · ✓ gesehen' : rp ? ' · weiter bei ' + mmss(rp) : ''}</span><span class="ser-prog"><i style="width:${pc}%"></i></span>${k === EPS.length - 1 && !seen ? '<em>Neu</em>' : ''}`;
+          `<span class="ser-meta">${mmss(LEN[id])}${seen ? ' · ✓ gesehen' : rp ? ' · weiter bei ' + mmss(rp) : ''}</span><span class="ser-prog"><i style="width:${pc}%"></i></span>${e.admin ? '<em>🔒 nur Admin</em>' : k === EPS.length - 1 && !seen ? '<em>Neu</em>' : ''}`;
         b2.addEventListener('click', () => { if (id === EPID) return; stop(false); store.set('serEp', id); setEp(id); epTexts(); paintChaps(); stop(true); prefetchEp(); }); epBox.appendChild(b2); });
       const a2 = epBox.querySelector('[aria-pressed="true"]'); if (a2 && a2.scrollIntoView && STATE === 'idle') try { epBox.scrollLeft = a2.offsetLeft - 12; } catch (e) {} }
     const min = Math.round(TOTAL / 60000 * 2) / 2, rp = posOf(EPID);
@@ -4683,6 +5112,10 @@ function wavB64(buf) {
     const sub = box.querySelector('.kino-sub'); if (sub) sub.textContent = `Folge ${EP.n || 1}: ${EP.title} · ca. ${min} min · nur für Erwachsene mit schwarzem Humor 😈`;
   }
   epTexts(); paintChaps(); sPaint(); paint(); measure(); subsOn = false; frame(poster()); subsOn = true; fade.setAttribute('opacity', 0);
+  if (EPALL.length > EPS.length) canWrite().then(w => { if (w === false) return;
+    EPALL.forEach(id => { if (!EPS.includes(id)) { EPS.push(id); const cur = EPID; setEp(id); LEN[id] = TOTAL; setEp(cur); } });
+    EPS.sort((x, y) => +x.slice(2) - +y.slice(2)); const want = store.get('serEp');
+    if (want && want !== EPID && EPS.includes(want) && STATE === 'idle') { setEp(want); epTexts(); paintChaps(); stop(true); } paintEps(true); }).catch(() => {});
   // Video-Aufnahme: Zeit von außen, Musik offline, Stimmen-Zeitplan
   window.__serFrame = t => { CAMK = .06; snapCam = true; frame(t); paintBar(t); };
   window.__serAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms / 1000), sr), m = window.__TripMusic(oc); program(m, 0, 0); m.pump(ms / 1000); m.setMode('show', 0); m.schedule(ms / 1000); return wavB64(await oc.startRendering()); };

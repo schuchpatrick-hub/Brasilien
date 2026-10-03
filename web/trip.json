@@ -7466,28 +7466,28 @@
           "laugh": 1
         },
         {
-          "key": "b1",
+          "key": "j1",
           "who": "narrator",
           "at": 176548,
           "say": "Abends. Die Bar ist nicht inklusive. Das hat keinen aufgehalten.",
           "text": "Abends. Die Bar ist nicht inklusive. Das hat keinen aufgehalten. 🍹"
         },
         {
-          "key": "b2",
+          "key": "j2",
           "who": "marco",
           "at": 181616,
           "say": "Rülps-Duell! Ich gegen Daijo! Wer verliert, zahlt!",
           "text": "Rülps-Duell! Ich gegen Daijo! Wer verliert, zahlt!"
         },
         {
-          "key": "b3",
+          "key": "j3",
           "who": "marco",
           "at": 187716,
           "say": "Na? Schlag das, Tschechin!",
           "text": "Na? Schlag das, Tschechin! 😏"
         },
         {
-          "key": "b4",
+          "key": "j4",
           "who": "narrator",
           "at": 193528,
           "say": "Ein Jaguar im Wald hat sich ergeben.",
@@ -7495,7 +7495,7 @@
           "laugh": 1
         },
         {
-          "key": "b5",
+          "key": "j5",
           "who": "jonas",
           "at": 197360,
           "say": "Leute! Ich liebe euch! Ab heute gibt es Demokratie! Wir stimmen ab!",
@@ -7503,7 +7503,7 @@
           "face": "dizzy"
         },
         {
-          "key": "b6",
+          "key": "j6",
           "who": "patrick",
           "at": 202314,
           "say": "Schnell! Abstimmen, bevor er nüchtern wird!",
@@ -7511,21 +7511,21 @@
           "laugh": 1
         },
         {
-          "key": "b7",
+          "key": "j7",
           "who": "narrator",
           "at": 206880,
           "say": "Stromausfall.",
           "text": "Stromausfall. 🔌"
         },
         {
-          "key": "b8",
+          "key": "j8",
           "who": "simon",
           "at": 210286,
           "say": "Wer auch immer du bist: Du küsst wie ein Engel. Ein bisschen kratzig.",
           "text": "Wer auch immer du bist: Du küsst wie ein Engel. Ein bisschen kratzig. 😍"
         },
         {
-          "key": "b9",
+          "key": "j9",
           "who": "patrick",
           "at": 216464,
           "say": "Gefällt dir meine Goldkette?",
@@ -7537,7 +7537,7 @@
           }
         },
         {
-          "key": "b10",
+          "key": "j10",
           "who": "narrator",
           "at": 220200,
           "say": "Zwei Küsse in Brasilien. Einer hat ihn ausgeraubt. Der andere war Patrick.",
@@ -7745,9 +7745,9 @@
           "key": "l7",
           "d": -1200,
           "dur": 2600,
-          "x": 600,
+          "x": 560,
           "x2": 900,
-          "y": 0,
+          "y": 398,
           "prop": "🧻",
           "s": 0.8
         }
