@@ -1015,6 +1015,7 @@ html.sb-noscroll,html.sb-noscroll body{overflow:hidden}html.sb-noscroll body>:no
 .seg.small button::before,li .btn.ghost::before,.next a::before,.fold-all .btn::before,.dr-quick button::before,.fx-dir button::before,.ka-yn button::before,
 .me-link::before,.checkin>summary::before,.fc-ed>summary::before,.dr-custom>summary::before,.adv-all>summary::before,.ka-form>summary::before,p.note a::before{content:"";position:absolute;inset:-7px -3px}
 .chips button::before{content:"";position:absolute;inset:-3px -3px}
+.ser-chips button{position:relative}.ser-chips button::before{content:"";position:absolute;inset:-6px -2px}.ser-track::before{content:"";position:absolute;inset:-12px 0}
 
 /* ---------- Struktur: Themen-Kacheln, Kapitel-Farben, Teil-Banner, Kino ---------- */
 :root{--k-plan:#00843d;--k-fun:#8a4fbf;--k-go:#1f5fbf;--k-info:#a86b00;--k-kino:#c2185b}
@@ -1069,11 +1070,28 @@ section[data-kind="plan"],section[data-kind="fun"],section[data-kind="go"],secti
 .kino-new{font:800 .7rem var(--body);letter-spacing:.06em;text-transform:uppercase;background:#ff5fa2;color:#fff;border-radius:999px;padding:3px 9px}
 .kino-sub{margin:0 0 8px}
 .ser-eps{display:flex;gap:8px;overflow-x:auto;margin:0 0 10px;scrollbar-width:none}.ser-eps::-webkit-scrollbar{display:none}
-.ser-eps button{flex:none;display:grid;gap:1px;text-align:left;font:inherit;color:#f4f0ff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:7px 12px;cursor:pointer;position:relative}
-.ser-eps button b{font:800 .85rem var(--display)}.ser-eps button small{font-size:.74rem;opacity:.8}
-.ser-eps button[aria-pressed="true"]{background:#ffcf1f;color:#1a1a1a;border-color:#ffcf1f}
-.ser-eps button i{position:absolute;top:-7px;right:-6px;font:800 .62rem var(--body);font-style:normal;background:#ff5fa2;color:#fff;border-radius:999px;padding:2px 6px}
 .samba.full>.ser-eps{display:none}
+.ser-eps{gap:10px;padding:8px 2px 4px}
+.ser-tile{flex:none;width:150px;display:grid;gap:2px;text-align:left;font:inherit;color:#f4f0ff;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:0 0 9px;cursor:pointer;position:relative;overflow:hidden}
+.ser-tile .ser-th{display:grid;place-items:center;height:64px;font-size:26px;letter-spacing:2px;background:linear-gradient(135deg,var(--c),#0b0820);position:relative}
+.ser-tile .ser-th i{position:absolute;left:8px;bottom:2px;font:900 1.6rem var(--display);font-style:normal;color:rgba(255,255,255,.35)}
+.ser-tile b,.ser-tile small,.ser-tile .ser-meta{padding:0 10px}.ser-tile b{font:800 .85rem var(--display);margin-top:5px}.ser-tile small{font-size:.76rem;opacity:.9;line-height:1.25}
+.ser-tile .ser-meta{font-size:.7rem;opacity:.7}
+.ser-tile .ser-prog{display:block;height:3px;margin:3px 10px 0;background:rgba(255,255,255,.15);border-radius:2px;overflow:hidden}.ser-tile .ser-prog i{display:block;height:100%;background:#ffcf1f}
+.ser-tile em{position:absolute;top:6px;right:6px;font:800 .62rem var(--body);font-style:normal;background:#ff5fa2;color:#fff;border-radius:999px;padding:2px 7px}
+.ser-tile[aria-pressed="true"]{border-color:#ffcf1f;box-shadow:0 0 0 2px #ffcf1f inset}
+.ser-bar{display:flex;align-items:center;gap:10px;margin:8px 2px 0}
+.ser-track{position:relative;flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.18);cursor:pointer;touch-action:none}
+.ser-track:focus-visible{outline:2px solid #ffcf1f;outline-offset:3px}
+.ser-fill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:4px;background:#ffcf1f}
+.ser-marks i{position:absolute;top:-2px;width:2px;height:12px;background:#0b0820;opacity:.8}
+.ser-knob{position:absolute;top:50%;left:0;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.ser-time{font:600 .78rem var(--mono);color:#d9ccf5;min-width:84px;text-align:right}
+.ser-chips{display:flex;gap:6px;overflow-x:auto;margin:8px 0 2px;scrollbar-width:none}.ser-chips::-webkit-scrollbar{display:none}
+.ser-chips button{flex:none;font:600 .74rem var(--body);color:#f4f0ff;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:4px 10px;cursor:pointer}
+.ser-chips button[aria-current="true"]{background:#ffcf1f;color:#1a1a1a;border-color:#ffcf1f}
+.ser-skip{position:absolute;right:12px;bottom:58px;z-index:3;font:700 .8rem var(--body);color:#fff;background:rgba(10,5,30,.72);border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:7px 12px;cursor:pointer}
+.samba.full>.ser-chips{display:none}.samba.full .ser-bar{width:min(100%,177.8vh);margin:4px auto 0}
 #kino .samba+.samba{margin-top:26px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14)}
 .samba.full>.kino-h,.samba.full>.kino-sub{display:none}
 .samba.ser .samba-stage{background:#0b0820}
