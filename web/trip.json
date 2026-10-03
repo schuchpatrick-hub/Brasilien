@@ -3453,13 +3453,13 @@
         "key": "dajo",
         "who": "dajo",
         "at": 14800,
-        "say": "Laut meiner Excel tanzt ihr alle falsch!",
-        "text": "Laut meiner Excel tanzt ihr alle falsch! 📊",
+        "say": "Ich tanze für zwei. Mein Mann schläft.",
+        "text": "Ich tanze für zwei. Mein Mann schläft. 😴",
         "alts": [
           {
             "key": "dajo-1",
-            "say": "Für jeden Schritt hab ich eine Tabelle!",
-            "text": "Für jeden Schritt hab ich eine Tabelle! 📊"
+            "say": "Frisch verheiratet. Und schon wieder wild!",
+            "text": "Frisch verheiratet. Und schon wieder wild! 💃"
           },
           {
             "key": "dajo-2",
@@ -3997,12 +3997,12 @@
         "env": "776675165224434552003589421000576541221798740124100"
       },
       "dajo": {
-        "dur": 2851,
-        "env": "000001599771015554651240121365122775611012775277786100554211444100000000"
+        "dur": 2581,
+        "env": "04202998325500494001034432000000477666885545436963000000000000000"
       },
       "dajo-1": {
-        "dur": 2186,
-        "env": "0000017973698146584390314500644146466034552175322100000"
+        "dur": 2744,
+        "env": "000000495404422355521332101210010000001642313533314328961377641000000"
       },
       "dajo-2": {
         "dur": 2982,
