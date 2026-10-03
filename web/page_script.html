@@ -2149,6 +2149,9 @@ function wavB64(buf) {
         [0, .3, .55].forEach(o => tone(sfxOut, 'sine', 1200 + rnd() * 400, t + o + .1, .5, .045, {from: 650, glide: .25, vib: 9, depth: .03, a: .05})); }
       else if (name === 'clap') { noise(sfxOut, t, .07, .7, 'highpass', 1800, .7); tone(sfxOut, 'sine', 160, t, .08, .4, {from: 300, glide: .03}); }
       else if (name === 'scratch') { noise(sfxOut, t, .18, .45, 'bandpass', 3200, 3, {to: 500}); noise(sfxOut, t + .18, .22, .4, 'bandpass', 600, 3, {to: 2800}); }
+      else if (name === 'laugh') for (let v = 0; v < 10; v++) { const f = (v % 3 ? 140 : 230) * (1 + .3 * rnd()), st = t + rnd() * .3, n = 4 + Math.floor(rnd() * 5), rate = .16 + rnd() * .06;   // Lacher vom Band
+        for (let k = 0; k < n; k++) { const w = st + k * rate, vol = .024 * (1 - k / (n + 3)); tone(sfxOut, 'sawtooth', f * (1 - k * .025), w, .11, vol, {from: f * 1.18, glide: .05, lp: 1250, a: .012}); noise(sfxOut, w, .09, vol * .7, 'bandpass', 1150, 1.6); } }
+      else if (name === 'rewind') { for (let k = 0; k < 10; k++) noise(sfxOut, t + k * .14, .12, .12, 'bandpass', 3800 - k * 250, 4, {to: 900}); tone(sfxOut, 'square', 900, t, 1.4, .025, {from: 300, glide: 1.3, lp: 2500}); }
       else if (name === 'pill') { [0, .06, .12, .2].forEach(o => noise(sfxOut, t + o, .03, .12, 'highpass', 5000, 2)); tone(sfxOut, 'sine', 900, t + .45, .12, .12, {from: 300, glide: .08}); }
       else if (name === 'shutter') { noise(sfxOut, t, .03, .5, 'highpass', 3000, 1); noise(sfxOut, t + .08, .04, .35, 'bandpass', 2000, 2); tone(sfxOut, 'sine', 3200, t + .1, .3, .04, {from: 1200, glide: .25}); }
       else if (name === 'tape') noise(sfxOut, t, .45, .3, 'bandpass', 1800, 3, {to: 5000, a: .02});
@@ -3093,7 +3096,8 @@ function wavB64(buf) {
   const soundOn = () => store.get('sound') !== '0';
   const NAMES = {narrator: 'Sprecher', officer: 'Kontrolleur', steward: 'Flugbegleiterin', local: 'Einheimischer', girl: 'Strandschönheit', girl2: 'Brasilianerin', capo: 'Ihr Freund', driver: 'Fahrer', pilot: 'Kapitän', waiter: 'Kellner', maid: 'Zimmermädchen'};
   const nameOf = w => NAMES[w] || (byId[w] ? byId[w].name : w);
-  let LINES = [], LAT = {}, SC = [], END = 1;
+  let LINES = [], LAT = {}, SC = [], END = 1, TOTAL = 1, COLD = 0, COLDA = 0, COLDB = 0, PLAY = [], CHAPS = [], JING = [];
+  const FRZ = 2000;   // Standbild + Zurückspulen nach dem Cold Open
 
   // ---------- Szenen-Zeitplan (ms) ----------
   // Szenen-Zeiten kommen aus trip.json (series.ep1.scenes), Musik/Ort-Einblendung je Szene hier
@@ -3115,9 +3119,23 @@ function wavB64(buf) {
     LAT = Object.fromEntries(LINES.map(l => [l.key, l.at]));
     SC = (EP.scenes || []).map(s => Object.assign({id: s.id, t: s.t}, META[s.id] || {}));
     END = SC.length ? SC[SC.length - 1].t[1] : 160000;
+    // Cold Open: ein Gag aus der Folge vorab (EP.cold.from/to = [Zeile, Versatz]), danach Standbild und „⏪ … früher“
+    const c = EP.cold, lb = c && LINES.find(l => l.key === c.to[0]); COLD = 0;
+    if (c && LAT[c.from[0]] !== undefined && lb) { COLDA = LAT[c.from[0]] + (c.from[1] || 0); COLDB = lb.at + lb.dur + (c.to[1] || 0); COLD = COLDB - COLDA + FRZ; }
+    TOTAL = END + COLD;
+    // Titelsong: alle singen „Grin-gos, grin-gos, sam-ba já!“ und „Olê, olê“ (Aufnahmen der Samba-Show)
+    const six = ['jonas', 'patrick', 'simon', 'marco', 'greisel', 'dajo'].filter(id => byId[id]), cast = (EP.n || 1) >= 3 ? six : six.slice(0, 4), J0 = COLD + 500;
+    JING = EP.song === false ? [] : [['gringos', J0], ['ole', J0 + 2700]];
+    PLAY = [];   // alles, was an Stimmen abgespielt wird: {key, at (Gesamtzeit), dur, file?}
+    JING.forEach(([mel, a]) => cast.forEach(id => PLAY.push({file: `samba-${mel}-${id}`, at: a, dur: 3200})));
+    LINES.forEach(l => { PLAY.push({key: l.key, at: l.at + COLD, dur: l.dur});
+      if (COLD && l.at >= COLDA - 50 && l.at < COLDB - 200) PLAY.push({key: l.key, at: l.at - COLDA, dur: Math.min(l.dur, COLDB - l.at)}); });
+    const first = sc => (sc.cap || sc.id).split(' · ')[0], dup = sc => SC.filter(x => x.cap && first(x) === first(sc)).length > 1;
+    CHAPS = (COLD ? [{n: '🥶 Vorab', t: 0}] : []).concat(SC.map(sc => ({n: sc.id === 'intro' ? '🎬 Intro' : sc.id === 'end' ? '🎞️ Abspann' : dup(sc) ? first(sc).split(' ')[0] + ' ' + sc.cap.split(' · ')[1] : first(sc), t: sc.t[0] + COLD})));
   }
   setEp(store.get('serEp') || EPS[EPS.length - 1]);
   const sceneAt = t => SC.find(s => t >= s.t[0] && t < s.t[1]) || SC[SC.length - 1];
+  const storyT = g => g < COLD ? (g < COLD - FRZ ? COLDA + g : COLDB) : g - COLD;   // Gesamtzeit → Zeit in der Folge
 
   // ---------- Grundgerüst ----------
   svg.innerHTML = '';
@@ -3171,6 +3189,12 @@ function wavB64(buf) {
       o.lower = half('se-l-' + id, lo); o.upper = half('se-u-' + id, up);
       if (!p.photo) { const t = mk('text', {y: -6, 'text-anchor': 'middle', 'font-size': 30, fill: '#fff', 'font-weight': 800}, o.upper); t.textContent = p.name[0]; }
       o.burn = [mk('path', {d: lo, fill: '#ff2a00', opacity: 0, style: 'mix-blend-mode:multiply'}, o.lower), mk('path', {d: up, fill: '#ff2a00', opacity: 0, style: 'mix-blend-mode:multiply'}, o.upper)];
+      // Gesichtsausdrücke über dem Foto (nur kurz bei Pointen): Schock-Augen, Herzaugen, Sternchen, Wut, Dollar
+      const eyY = ((f.e || .5) - f.y) * Dd, eyX = (f.ex || .13) * Dd, cF = (.5 - f.x) * Dd, fg = mk('g', {}, o.upper); o.fx = {};
+      o.fx.shock = mk('g', {opacity: 0}, fg); [-1, 1].forEach(k => { mk('ellipse', {cx: cF + k * eyX, cy: eyY, rx: 11, ry: 14, fill: '#fff', stroke: INK, 'stroke-width': 2.5}, o.fx.shock); mk('circle', {cx: cF + k * eyX, cy: eyY + 3, r: 3.5, fill: INK}, o.fx.shock); });
+      [['heart', '❤️', 20], ['dizzy', '💫', 20], ['cash', '💲', 20]].forEach(([k2, e2, fs]) => { o.fx[k2] = mk('g', {opacity: 0}, fg); [-1, 1].forEach(k => emo(e2, {x: cF + k * eyX, y: eyY, 'font-size': fs}, o.fx[k2])); });
+      o.fx.angry = mk('g', {opacity: 0}, fg); [-1, 1].forEach(k => mk('path', {d: `M${cF + k * (eyX + 14)},${eyY - 22} L${cF + k * (eyX - 10)},${eyY - 11}`, stroke: INK, 'stroke-width': 6, 'stroke-linecap': 'round'}, o.fx.angry));
+      emo('💢', {x: R * .62, y: -R * .62, 'font-size': 18}, o.fx.angry);
     } else {   // gezeichnete Nebenfigur
       o.npc = true; o.mY = 14; o.c = 30;
       o.upper = mk('g', {}, o.head); o.lower = mk('g', {}, o.head);
@@ -3205,7 +3229,7 @@ function wavB64(buf) {
   const party = CREW.map(id => { const h = mk('path', {d: 'M-22,-36 L22,-36 L0,-86Z', fill: '#fff', stroke: INK, 'stroke-width': 2, opacity: 0}, P[id].acc); mk('circle', {cx: 0, cy: -88, r: 5, fill: '#ffcf1f'}, h); return h; });
 
   // Pose: x/y = Fußpunkt, sc = Größe
-  const base = () => ({burn: 0, shirt: '', x: 0, y: FL, sc: .8, flip: 1, rot: 0, hip: 0, aL: [12, 8], aR: [12, 8], lL: [0, 0], lR: [0, 0], tilt: 0, look: 0, mouth: 0, on: 1, bob: 0, cry: 0, tumble: 0});
+  const base = () => ({face: '', burn: 0, shirt: '', x: 0, y: FL, sc: .8, flip: 1, rot: 0, hip: 0, aL: [12, 8], aR: [12, 8], lL: [0, 0], lR: [0, 0], tilt: 0, look: 0, mouth: 0, on: 1, bob: 0, cry: 0, tumble: 0});
   const idle = (t, i, p) => Object.assign(p, {tilt: 3 * S(t / 600 + i), aL: [10 + 3 * S(t / 700 + i), 8], aR: [10 + 3 * S(t / 800 + i), 8]});
   const walkP = (t, p, sp) => { const w = S(t / (sp || 160)); return Object.assign(p, {lL: [24 * w, -10 * Math.max(0, -w)], lR: [-24 * w, -10 * Math.max(0, w)], aL: [22 * -w, 10], aR: [22 * w, 10], bob: -3 * Math.abs(w), tilt: 3 * w}); };
   const sitP = p => Object.assign(p, {lL: [80, -80], lR: [76, -78], aL: [30, 40], aR: [30, 40]});
@@ -3242,6 +3266,7 @@ function wavB64(buf) {
     if (o.burn) o.burn.forEach(e => e.setAttribute('opacity', (p.burn || 0).toFixed(2)));
     if (o.L0 === undefined) o.L0 = o.shirt.getAttribute('fill');
     o.shirt.setAttribute('fill', p.shirt || o.L0);
+    if (o.fx) { const fc = p.face || ''; for (const k in o.fx) o.fx[k].setAttribute('opacity', fc === k ? 1 : 0); }
     o.tears.forEach((d, k) => { const ph = (t / 450 + k * .5) % 1; d.setAttribute('opacity', p.cry ? (1 - ph).toFixed(2) : 0);
       d.setAttribute('transform', `translate(${k ? 26 : -26},${(-4 + ph * 34).toFixed(1)})`); });
     const air = clamp((FL - p.y) / 140, 0, 1);
@@ -3697,7 +3722,7 @@ function wavB64(buf) {
   function cell(parent) { const g = e3(mk('g', {opacity: 0}, parent)); mk('rect', {x: -62, y: -214, width: 124, height: 214, fill: 'none', stroke: '#333', 'stroke-width': 8}, g);
     for (let k = 1; k < 6; k++) mk('line', {x1: -62 + k * 20.6, y1: -214, x2: -62 + k * 20.6, y2: 0, stroke: '#444', 'stroke-width': 5}, g);
     const tg = mk('text', {x: 0, y: -224, 'text-anchor': 'middle', class: 'se-kiosk', style: 'fill:#fff;stroke:#111;stroke-width:3px;paint-order:stroke'}, g); g.t = tg; return g; }
-  const C4 = coati(fxG, .8), cellJ = cell(fxG), cellQ = cell(fxG); cellJ.t.textContent = 'ZELLE 3'; cellQ.t.textContent = 'ZELLE 4';
+  const C5 = coati(fxG, .7), C4 = coati(fxG, .8), cellJ = cell(fxG), cellQ = cell(fxG); cellJ.t.textContent = 'ZELLE 3'; cellQ.t.textContent = 'ZELLE 4';
 
   // Bootstour unter die Fälle
   const FB = fallsBG(B.boot, 1);
@@ -3770,13 +3795,30 @@ function wavB64(buf) {
   const capT = mk('text', {x: 38, y: 42, class: 'se-cap'}, capG);
   const subG = mk('g', {opacity: 0}, hud); const subR = mk('rect', {y: H - 52, height: 38, rx: 10, fill: '#000', opacity: .62}, subG);
   const subT = mk('text', {x: W / 2, y: H - 27, 'text-anchor': 'middle', class: 'se-sub'}, subG), subT2 = mk('text', {x: W / 2, y: H - 27, 'text-anchor': 'middle', class: 'se-sub'}, subG);
+  const rew = mk('g', {opacity: 0}, hud); mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: '#1a1030', opacity: .45}, rew);
+  mk('path', {d: Array.from({length: 45}, (_, k) => `M0,${k * 10} H${W}`).join(' '), stroke: '#fff', 'stroke-width': 1, opacity: .08}, rew);
+  const rewBar = mk('rect', {x: 0, width: W, height: 26, fill: '#fff', opacity: .14}, rew);
+  const rewT = mk('text', {x: W / 2, y: H / 2 + 10, 'text-anchor': 'middle', class: 'se-count', style: 'font-size:52px'}, rew);
+  const rewI = mk('text', {x: 40, y: 60, class: 'se-badge', style: 'font-size:28px'}, rew); rewI.textContent = '◀◀ REW';
   const fade = mk('rect', {x: 0, y: 0, width: W, height: H, fill: '#000', opacity: 1}, hud), iris = mk('path', {fill: '#000', 'fill-rule': 'evenodd', opacity: 0}, hud);
 
   // ---------- Bild für Zeit t ----------
   let lastScene = null, UI = 1;
   const measure = () => { UI = clamp(560 / (svg.clientWidth || 800), 1, 1.8); };
   if ('ResizeObserver' in window) new ResizeObserver(measure).observe(svg);
-  function frame(t) {
+  let lastShot = '';
+  function frame(g) {
+    const t = storyT(g), frz = COLD && g >= COLD - FRZ && g < COLD;
+    frame0(t, g);
+    // Cold Open: Standbild mit Bildstörung, dann „⏪ … früher“
+    rew.setAttribute('opacity', frz ? 1 : 0);
+    if (frz) { const k = (g - (COLD - FRZ)) / FRZ; rewT.textContent = (EP.cold && EP.cold.label) || '⏪ Etwas früher …'; rewT.setAttribute('opacity', k > .25 ? 1 : 0);
+      rewBar.setAttribute('y', ((g / 3) % (H + 40) - 30).toFixed(0)); world.setAttribute('transform', world.getAttribute('transform') + ` translate(${(6 * S(g / 23)).toFixed(1)},0)`);
+      subG.setAttribute('opacity', 0); capG.setAttribute('opacity', 0); }
+    if (COLD && g < COLD - FRZ) fade.setAttribute('opacity', Math.max(1 - span(g, 0, 500), 0).toFixed(2));
+    if (COLD && frz) fade.setAttribute('opacity', span(g, COLD - 300, COLD).toFixed(2));
+  }
+  function frame0(t, g) {
     const sc = sceneAt(t), L = t - sc.t[0], len = sc.t[1] - sc.t[0];
     if (sc !== lastScene) { snapCam = true; ALLSC.forEach(s => { const on = s.id === sc.id ? 1 : 0; sceneG[s.id].setAttribute('opacity', on); front[s.id].setAttribute('opacity', on); }); lastScene = sc; sceneChanged(sc); }
     // Abblende zwischen den Szenen
@@ -3806,7 +3848,8 @@ function wavB64(buf) {
       later.setAttribute('opacity', (span(L, 5200, 5700) * (1 - rc)).toFixed(2));
       const cast = (EP.n || 1) >= 3 ? CREW : crew4, XS = cast.length > 4 ? [46, 122, 198, 602, 678, 754] : [90, 200, 600, 710];
       cast.forEach((id, i) => { const d = 3000 + i * 250, k = span(L, d, d + 500); on(id, XS[i], FL + 50 + 140 * (1 - ease(k)), {sc: .62});
-        if (L > d + 500) cheerP(t, pose[id], i); pose[id].mouth = L > 6000 && (Math.floor(t / 200) + i) % 3 === 0 ? .5 : 0; });
+        if (L > d + 500) cheerP(t, pose[id], i); pose[id].mouth = L > 6000 && (Math.floor(t / 200) + i) % 3 === 0 ? .5 : 0;
+        JING.forEach(([mel, a]) => { const x = (g - a) / (250 / .9); if (x > 0 && x < (mel === 'ole' ? 11 : 9)) pose[id].mouth = (x % 1) < .65 ? .85 : .15; }); });
     }
     else if (sc.id === 'sec') {
       const A = k => (LAT[k] || 0) - sc.t[0];
@@ -4382,10 +4425,24 @@ function wavB64(buf) {
       const cast = (EP.n || 1) >= 3 ? CREW : crew4, gap = cast.length > 4 ? 100 : 130, x0 = 400 - gap * (cast.length - 1) / 2;
       cast.forEach((id, i) => { on(id, x0 + i * gap, FL + 52, {sc: .4}); idle(t, i, pose[id]); const bow = win(L, 3000 + i * 150, 6000, 400); pose[id].rot = 25 * bow; });
     }
+    // Running Gag: der Nasenbär taucht in jeder Folge irgendwo auf (EP.cameo: Szene, Zeile, Versatz, Weg, Beute)
+    (EP.cameo || []).forEach(c => { if (c.sc !== sc.id) return; const a2 = (LAT[c.key] || 0) - sc.t[0] + (c.d || 0), k = span(L, a2, a2 + (c.dur || 4000));
+      if (k <= 0 || k >= 1) return; const x = c.x + (c.x2 - c.x) * k; C5.prop.textContent = c.prop || ''; C5.shades.setAttribute('opacity', 1);
+      coatiAt(C5, x, c.y, c.x2 >= c.x ? 1 : -1, t, Math.abs(c.x2 - c.x) > 5 && (k < .35 || k > .65), {sc: c.s || 1}); });
+    // Gesichtsausdrücke aus den Daten: face = Sprecher, react = {id: Ausdruck} für die Zuhörer
+    for (const l of LINES) { if (t < l.at - 100 || t > l.at + l.dur + 700) continue;
+      if (l.face && pose[l.who] && pose[l.who].on) pose[l.who].face = l.face;
+      if (l.react) for (const id in l.react) if (pose[id] && pose[id].on) pose[id].face = l.react[id]; }
     Object.keys(P).forEach(id => apply(P[id], pose[id], t));
+    // Schnitte: close = Großaufnahme des Sprechers, rshot = danach kurz das Gesicht von jemand anderem (harter Schnitt)
+    let shot = null;
+    for (const l of LINES) { if (l.close && t >= l.at - 60 && t <= l.at + l.dur + 150 && pose[l.who] && pose[l.who].on) shot = [l.who, l.key];
+      if (l.rshot && t > l.at + l.dur + 150 && t < l.at + l.dur + 1350 && pose[l.rshot] && pose[l.rshot].on) shot = [l.rshot, l.key + 'r']; }
+    if (shot) { const p = pose[shot[0]]; cam = {x: p.x + (p.hip || 0), y: p.y - 128 * p.sc, z: clamp(1.45 * .8 / p.sc, 1.45, 2.3)}; }
+    const shk = shot ? shot[1] : ''; if (shk !== lastShot) { lastShot = shk; snapCam = true; }
     // Kamera: Szenen-Einstellung, leicht zum Sprecher hin
     const sp = LINES.find(l => t >= l.at - 300 && t <= l.at + l.dur + 400 && P[l.who] && pose[l.who].on);
-    if (sp && cam.z > 1.04) { const o = P[sp.who]; cam.x += (o.x - cam.x) * .35; }
+    if (sp && cam.z > 1.04 && !shot) { const o = P[sp.who]; cam.x += (o.x - cam.x) * .35; }
     const dtc = clamp(t - (CAM.t === undefined ? t : CAM.t), 0, 200); CAM.t = t;
     const kc = snapCam || CAMK >= 1 ? 1 : 1 - Math.exp(-dtc / 420); snapCam = false;
     CAM.x += (cam.x - CAM.x) * kc; CAM.y += (cam.y - CAM.y) * kc; CAM.z += (cam.z - CAM.z) * kc;
@@ -4409,23 +4466,39 @@ function wavB64(buf) {
   let subsOn = true;
 
   // ---------- Ton ----------
-  let run = 0, raf = 0, ctx = null, timer = 0, voices = [], t0p = 0, tbase = 0, vGain = null, liveM = null, STATE = 'idle', pausedAt = 0, startedAt = 0;
+  let run = 0, raf = 0, ctx = null, timer = 0, voices = [], t0p = 0, tbase = 0, vGain = null, jGain = null, liveM = null, STATE = 'idle', pausedAt = 0, startedAt = 0;
   const RAW = {}, ABUF = {};
   const prefetch = keys => keys.forEach(k => { if (!RAW[k]) RAW[k] = fetch('audio/' + k + '.mp3').then(r => r.ok ? r.arrayBuffer() : null).catch(() => null); });
+  // alle Stimmen einer Folge stecken in audio/epN.mp3 (Versatz o je Zeile in voice[key].o), Titelsong aus den Samba-Dateien
+  const srcOf = ev => { const v = ev.key && (EP.voice || {})[ev.key]; return ev.file ? [ev.file, 0] : v && v.o !== undefined ? [EPID, v.o / 1000] : [EPID + '-' + ev.key, 0]; };
+  const prefetchEp = () => prefetch([...new Set(PLAY.map(ev => srcOf(ev)[0]))]);
   async function bufOf(key) { if (ABUF[key]) return ABUF[key]; prefetch([key]); const raw = await RAW[key]; if (!raw || !ctx) return null;
     try { ABUF[key] = await ctx.decodeAudioData(raw.slice(0)); } catch (e) { return null; } return ABUF[key]; }
-  function playVoice(key, whenMs, my) {
-    bufOf(key).then(bf => { if (my !== run || !ctx) return;
-      if (!bf) { return; }
-      const src = ctx.createBufferSource(); src.buffer = bf; src.connect(vGain); const w = tbase + whenMs / 1000, now = ctx.currentTime;
-      if (w >= now) src.start(w); else if (now - w < bf.duration - .05) src.start(now, now - w); else return; voices.push({src}); });
+  function playVoice(ev, my) {
+    const [file, off] = srcOf(ev);
+    bufOf(file).then(bf => { if (my !== run || !ctx || !bf) return;
+      const len = Math.min(ev.dur / 1000 + .12, bf.duration - off), src = ctx.createBufferSource(); src.buffer = bf; src.connect(ev.file ? jGain : vGain);
+      const w = tbase + ev.at / 1000, now = ctx.currentTime;
+      if (w >= now) src.start(w, off, len); else if (now - w < len - .05) src.start(now, off + now - w, len - (now - w)); else return; voices.push({src}); });
   }
-  if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { prefetch(LINES.map(l => EPID + '-' + l.key)); io.disconnect(); } }, {rootMargin: '400px'}); io.observe(svg); }
-  function program(m, t0) {
-    const at = ms => t0 + ms / 1000, A = (k, d) => at((LAT[k] || 0) + (d || 0)), sAt = id => (SC.find(s => s.id === id) || {t: [0]}).t[0];
+  if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { prefetchEp(); io.disconnect(); } }, {rootMargin: '400px'}); io.observe(svg); }
+  // Musik und Geräusche: t0 = Startzeit der Gesamtzeit 0 im AudioContext, lo = nichts vor dieser Zeit planen (Springen)
+  function program(m, t0, lo) {
+    const sfx0 = m.sfx, amb0 = m.amb; let wlo = lo || 0, whi = 1e9;
+    m.sfx = (n, w) => { if (w >= wlo && w <= whi) sfx0(n, w); };
+    m.duck = (v, w, tc) => { if (w >= wlo - .5 && w <= whi) m.music.gain.setTargetAtTime(v, Math.max(0, w), tc); };
+    m.amb = (k, a, b) => { a = Math.max(a, wlo); b = Math.min(b, whi); if (b - a > 1) amb0(k, a, b); };
     m.music.gain.value = .5;   // Musik etwas leiser, damit man die Stimmen versteht
+    if (COLD) { wlo = Math.max(lo || 0, t0); whi = t0 + (COLDB - COLDA) / 1000; story(m, t0 - COLDA / 1000); m.sfx('scratch', whi + .05); m.sfx('rewind', whi + .35); }
+    wlo = Math.max(lo || 0, t0 + COLD / 1000); whi = 1e9; story(m, t0 + COLD / 1000);
+    if (JING.length) { m.drums = [[t0 + JING[0][1] / 1000, t0 + JING[JING.length - 1][1] / 1000 + 3.2]]; m.sfx('cheer', t0 + JING[JING.length - 1][1] / 1000 + 3.1); }
+    m.end(t0 + (TOTAL - 600) / 1000);
+  }
+  function story(m, t0) {   // alles, was zur Folge gehört (t0 = Folgenzeit 0)
+    const at = ms => t0 + ms / 1000, A = (k, d) => at((LAT[k] || 0) + (d || 0)), sAt = id => (SC.find(s => s.id === id) || {t: [0]}).t[0];
     // Ducking: während jemand spricht, geht die Musik weich runter
-    LINES.slice().sort((x, y) => x.at - y.at).forEach(l => { m.music.gain.setTargetAtTime(.24, at(l.at - 120), .07); m.music.gain.setTargetAtTime(.5, at(l.at + l.dur + 120), .35); });
+    LINES.slice().sort((x, y) => x.at - y.at).forEach(l => { m.duck(.24, at(l.at - 120), .07); m.duck(.5, at(l.at + l.dur + 120), .35);
+      if (l.laugh) m.sfx('laugh', at(l.at + l.dur + 120)); });
     SC.forEach((sc, k) => { if (sc.amb && m.amb) m.amb(sc.amb, at(sc.t[0]), at(sc.t[1])); if (k) m.sfx('swish', at(sc.t[0] - 380)); });
     const fx = [['sec2', -300, 'whistle'], ['sec2', 400, 'ding'], ['sec4', 1500, 'wah'], ['sec6', 0, 'wah'],
       ['bar1', 1500, 'ding'], ['bar3', 600, 'gong'], ['bar4', 2600, 'ding'], ['bar4', 2700, 'cheer'], ['bar5', 400, 'boing'],
@@ -4461,7 +4534,6 @@ function wavB64(buf) {
     if (has('a3')) { m.sfx('thud', A('a3', dl('a3'))); m.sfx('clank', A('a6', dl('a6') - 100)); m.sfx('clank', A('a6', dl('a6') + 500)); m.sfx('squeak', A('a6', dl('a6') + 900)); }
     if (has('m4')) { const H0 = LAT.m4 - 2700; m.sfx('splash', at(H0)); m.sfx('crash', at(H0 + 200)); m.sfx('splash', at(H0 + 700)); m.sfx('splash', at(H0 + 1400)); m.sfx('splash', A('m5', -1700)); m.sfx('ding', A('m5', -900)); }
     if (has('d1')) { for (let k = 0; k < 12; k++) m.sfx('clink', at(LAT.d1 + 1500 + k * (LAT.d2 - 200 - LAT.d1 - 1500) / 13)); m.sfx('crash', A('d4', dl('d4') + 650)); m.sfx('thud', A('d4', dl('d4') + 750)); m.sfx('chalk', A('d5', -100)); m.sfx('chalk', A('d5', 900)); }
-    m.end(at(END - 600));
   }
   function sceneChanged(sc) {
     if (!liveM || !ctx) return;
@@ -4469,45 +4541,85 @@ function wavB64(buf) {
   }
   const clock = () => STATE === 'pause' ? pausedAt : ctx && window.__serT === undefined ? (ctx.currentTime - (ctx.outputLatency || 0) - tbase) * 1000 : tnow() - t0p;
   const stopB = document.getElementById('ser-stop'), bigB = document.getElementById('ser-big'), sbtn = document.getElementById('ser-sound'), fbtn = document.getElementById('ser-full');
+  const mmss = ms => { const s2 = Math.max(0, Math.round(ms / 1000)); return Math.floor(s2 / 60) + ':' + String(s2 % 60).padStart(2, '0'); };
+  const posOf = id => +(store.get('serPos.' + id) || 0), seenOf = id => store.get('serSeen.' + id) === '1';
   function paint() {
-    btn.textContent = STATE === 'run' ? '⏸ Pause' : STATE === 'pause' ? '▶ Weiter' : `📺 Folge ${EP.n || 1} abspielen`; paintEps();
+    const rp = posOf(EPID);
+    btn.textContent = STATE === 'run' ? '⏸ Pause' : STATE === 'pause' ? '▶ Weiter' : rp ? `▶ Weiterschauen ab ${mmss(rp)}` : `📺 Folge ${EP.n || 1} abspielen`; paintEps();
     btn.setAttribute('aria-pressed', String(STATE !== 'idle')); if (stopB) stopB.hidden = STATE === 'idle'; box.classList.toggle('idle', STATE === 'idle');
+    if (restartB) restartB.hidden = !(STATE === 'idle' && rp);
+    paintBar(STATE === 'idle' ? rp : clock());
   }
+  // Fortschrittsleiste mit Kapiteln
+  const barT = document.getElementById('ser-track'), barF = document.getElementById('ser-fill'), barK = document.getElementById('ser-knob'), barTm = document.getElementById('ser-time'),
+    chipsB = document.getElementById('ser-chips'), skipB = document.getElementById('ser-skip'), restartB = document.getElementById('ser-restart'), marks = document.getElementById('ser-marks');
+  let chapNow = -1;
+  function paintChaps() {
+    if (marks) marks.innerHTML = CHAPS.slice(1).map(c => `<i style="left:${(100 * c.t / TOTAL).toFixed(2)}%"></i>`).join('');
+    if (chipsB) { chipsB.innerHTML = ''; CHAPS.forEach((c, k) => { const b2 = document.createElement('button'); b2.type = 'button'; b2.textContent = c.n; b2.title = mmss(c.t);
+      b2.addEventListener('click', () => seek(c.t + (k ? 250 : 0))); chipsB.appendChild(b2); }); }
+    chapNow = -1;
+  }
+  function paintBar(g) {
+    g = clamp(g || 0, 0, TOTAL); const pc = (100 * g / TOTAL).toFixed(2) + '%';
+    if (barF) barF.style.width = pc; if (barK) barK.style.left = pc; if (barTm) barTm.textContent = `${mmss(g)} / ${mmss(TOTAL)}`;
+    if (barT) barT.setAttribute('aria-valuenow', String(Math.round(g / 1000)));
+    let ci = 0; CHAPS.forEach((c, k) => { if (g >= c.t - 1) ci = k; });
+    if (ci !== chapNow && chipsB) { chapNow = ci; [...chipsB.children].forEach((b2, k) => b2.setAttribute('aria-current', String(k === ci))); const a2 = chipsB.children[ci]; if (a2 && STATE !== 'idle') a2.scrollIntoView({block: 'nearest', inline: 'center'}); }
+    const introEnd = COLD + (SC[0] ? SC[0].t[1] : 0); if (skipB) skipB.hidden = !(STATE !== 'idle' && g > 600 && g < introEnd - 1500);
+  }
+  function seek(g) {
+    g = clamp(g, 0, TOTAL - 800);
+    if (STATE === 'run') start(g);
+    else if (STATE === 'pause') { pausedAt = g; seekPending = true; lastScene = null; CAMK = 1; snapCam = true; frame(g); paintBar(g); savePos(g); }
+    else start(g);
+  }
+  let seekPending = false, lastSave = 0;
+  function savePos(g) { if (g > 4000 && g < TOTAL - 14000) store.set('serPos.' + EPID, String(Math.round(g))); else store.set('serPos.' + EPID, ''); }
+  if (barT) { const posAt = e => { const r = barT.getBoundingClientRect(); return clamp(((e.touches ? e.touches[0].clientX : e.clientX) - r.left) / r.width, 0, 1) * TOTAL; };
+    barT.addEventListener('click', e => seek(posAt(e)));
+    barT.addEventListener('keydown', e => { const c = STATE === 'idle' ? posOf(EPID) : clock(); if (e.key === 'ArrowRight') { seek(c + 10000); e.preventDefault(); } if (e.key === 'ArrowLeft') { seek(c - 10000); e.preventDefault(); } }); }
+  if (skipB) skipB.addEventListener('click', e => { e.stopPropagation(); seek(COLD + SC[0].t[1] - 200); });
+  if (restartB) restartB.addEventListener('click', () => { store.set('serPos.' + EPID, ''); start(0); });
   const sPaint = () => { if (sbtn) { sbtn.textContent = soundOn() ? '🔊 Ton an' : '🔇 Ton aus'; sbtn.setAttribute('aria-pressed', String(soundOn())); } };
+  const poster = () => COLD + 6500;   // Standbild im Ruhezustand: Titel (nach dem Titelsong)
   function stop(reset) {
     run++; cancelAnimationFrame(raf); clearInterval(timer); voices.forEach(a => { try { a.src.stop(); } catch (e) {} }); voices = [];
-    if (ctx) { ctx.close().catch(() => {}); ctx = null; } liveM = null; STATE = 'idle'; paint();
-    if (reset) { lastScene = null; CAMK = 1; frame(0); }
+    if (ctx) { ctx.close().catch(() => {}); ctx = null; } liveM = null; STATE = 'idle'; seekPending = false; paint();
+    if (reset) { lastScene = null; CAMK = 1; subsOn = false; frame(poster()); subsOn = true; fade.setAttribute('opacity', 0); }
   }
-  function start() {
+  function start(from) {
+    from = clamp(from || 0, 0, TOTAL - 800);
     stop(false); const my = ++run; STATE = 'run'; startedAt = performance.now(); paint(); lastScene = null;
     window.dispatchEvent(new CustomEvent('br26-kino', {detail: 'series'}));
     const video = window.__serT !== undefined;
     if (!video && soundOn() && window.__TripMusic) {
       try { const AC = window.AudioContext || window.webkitAudioContext; ctx = new AC(); ctx.resume();
-        tbase = ctx.currentTime + .15; const m = window.__TripMusic(ctx); liveM = m; program(m, tbase);
-        vGain = ctx.createGain(); vGain.gain.value = 1; vGain.connect(ctx.destination);
+        tbase = ctx.currentTime + .15 - from / 1000; const m = window.__TripMusic(ctx); liveM = m; program(m, tbase, ctx.currentTime + .1);
+        vGain = ctx.createGain(); vGain.gain.value = 1; vGain.connect(ctx.destination); jGain = ctx.createGain(); jGain.gain.value = .55; jGain.connect(ctx.destination);
         timer = setInterval(() => { if (ctx) m.schedule(ctx.currentTime + .15); }, 30);
-        LINES.forEach(l => playVoice(EPID + '-' + l.key, l.at, my));
+        PLAY.forEach(ev => { if (ev.at + ev.dur > from) playVoice(ev, my); });
       } catch (e) { ctx = null; }
     }
-    t0p = tnow(); CAMK = 1;
+    t0p = tnow() - from; CAMK = 1; snapCam = true;
     (function loop() { if (my !== run) return;
       const now = performance.now();
       if (ctx && STATE === 'run' && ctx.state !== 'running' && now - startedAt > 1500 && !video) { const tn = Math.max(0, clock()); ctx.close().catch(() => {}); ctx = null; liveM = null; clearInterval(timer); t0p = tnow() - tn; }
-      if (STATE === 'run') { const t = clock(); frame(t); CAMK = .06; if (t > END) { stop(true); return; } }
+      if (STATE === 'run') { const t = clock(); frame(t); paintBar(t); CAMK = .06;
+        if (now - lastSave > 1500) { lastSave = now; savePos(t); if (t > TOTAL - 14000 && !seenOf(EPID)) { store.set('serSeen.' + EPID, '1'); paintEps(true); } }
+        if (t > TOTAL) { store.set('serPos.' + EPID, ''); stop(true); return; } }
       raf = requestAnimationFrame(loop); })();
   }
-  function pause() { if (STATE !== 'run') return; pausedAt = clock(); STATE = 'pause'; if (ctx) ctx.suspend().catch(() => {}); paint(); }
-  function resume() { if (STATE !== 'pause') return; if (ctx) ctx.resume().catch(() => {}); else t0p = tnow() - pausedAt; STATE = 'run'; startedAt = performance.now(); paint(); }
-  btn.addEventListener('click', () => { if (STATE === 'run') pause(); else if (STATE === 'pause') resume(); else start(); });
-  if (bigB) bigB.addEventListener('click', () => { if (STATE === 'idle') start(); });
+  function pause() { if (STATE !== 'run') return; pausedAt = clock(); STATE = 'pause'; if (ctx) ctx.suspend().catch(() => {}); savePos(pausedAt); paint(); }
+  function resume() { if (STATE !== 'pause') return; if (seekPending) { start(pausedAt); return; } if (ctx) ctx.resume().catch(() => {}); else t0p = tnow() - pausedAt; STATE = 'run'; startedAt = performance.now(); paint(); }
+  btn.addEventListener('click', () => { if (STATE === 'run') pause(); else if (STATE === 'pause') resume(); else start(posOf(EPID)); });
+  if (bigB) bigB.addEventListener('click', () => { if (STATE === 'idle') start(posOf(EPID)); });
   if (stopB) stopB.addEventListener('click', () => stop(true));
-  svg.addEventListener('click', () => { if (STATE === 'pause') resume(); else if (STATE === 'idle') start(); else pause(); });
+  svg.addEventListener('click', () => { if (STATE === 'pause') resume(); else if (STATE === 'idle') start(posOf(EPID)); else pause(); });
   window.addEventListener('br26-kino', e => { if (e.detail !== 'series' && STATE === 'run') pause(); });   // nie zwei Filme gleichzeitig
   if (sbtn) sbtn.addEventListener('click', () => { store.set('sound', soundOn() ? '0' : '1'); sPaint();
     if (STATE !== 'idle') { const tn = clock(); if (!soundOn() && ctx) { voices.forEach(a => { try { a.src.stop(); } catch (e) {} }); voices = []; ctx.close().catch(() => {}); ctx = null; liveM = null; clearInterval(timer); t0p = tnow() - tn; if (STATE === 'pause') pausedAt = tn; }
-      else if (soundOn() && !ctx && STATE === 'run') { start(); } } });
+      else if (soundOn() && !ctx && STATE === 'run') { start(clock()); } } });
   // Vollbild wie bei der Samba-Show (Bühne direkt unter <body>, Rest der Seite unsichtbar)
   const ph = document.createComment('series'), isFull = () => box.classList.contains('full');
   function setFull(on) {
@@ -4518,27 +4630,35 @@ function wavB64(buf) {
     if (on) { const r = box.requestFullscreen || box.webkitRequestFullscreen; if (r) try { const pr = r.call(box); if (pr && pr.then) pr.then(() => { try { screen.orientation.lock('landscape').catch(() => {}); } catch (e) {} }).catch(() => {}); } catch (e) {} }
     else { if (document.fullscreenElement || document.webkitFullscreenElement) { try { (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (e) {} }
       try { screen.orientation.unlock(); } catch (e) {}
-      requestAnimationFrame(() => requestAnimationFrame(() => { document.body.classList.add('cv-all'); measure(); frame(clock()); const r = box.getBoundingClientRect(); scrollTo({top: Math.max(0, scrollY + r.top - Math.max(70, (innerHeight - r.height) / 2)), behavior: 'auto'}); })); }
+      requestAnimationFrame(() => requestAnimationFrame(() => { document.body.classList.add('cv-all'); measure(); frame(STATE === 'idle' ? poster() : clock()); const r = box.getBoundingClientRect(); scrollTo({top: Math.max(0, scrollY + r.top - Math.max(70, (innerHeight - r.height) / 2)), behavior: 'auto'}); })); }
   }
   if (fbtn) fbtn.addEventListener('click', () => setFull(!isFull()));
   document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && isFull()) setFull(false); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && isFull()) setFull(false); });
   // Standbild: Titel
   const epBox = document.getElementById('ser-eps');
-  function paintEps() { if (!epBox) return;
-    if (!epBox.children.length) EPS.forEach((id, k) => { const e = TRIP.series[id], b2 = document.createElement('button'); b2.type = 'button'; b2.dataset.ep = id;
-      b2.innerHTML = `<b>Folge ${e.n || k + 1}</b><small>${e.title}</small>${k === EPS.length - 1 ? '<i>Neu</i>' : ''}`;
-      b2.addEventListener('click', () => { if (id === EPID) return; stop(false); store.set('serEp', id); setEp(id); epTexts(); stop(true); prefetch(LINES.map(l => EPID + '-' + l.key)); }); epBox.appendChild(b2); });
-    [...epBox.children].forEach(b2 => b2.setAttribute('aria-pressed', String(b2.dataset.ep === EPID)));
-    const big = document.getElementById('ser-big'); if (big) { const sm = big.querySelector('small'); if (sm) sm.textContent = `Folge ${EP.n || 1}: ${EP.title} · ca. ${Math.round(END / 60000 * 2) / 2} min`; }
-    const sub = box.querySelector('.kino-sub'); if (sub) sub.textContent = `Folge ${EP.n || 1}: ${EP.title} · ca. ${Math.round(END / 60000 * 2) / 2} min · nur für Erwachsene mit schwarzem Humor 😈`;
+  const LEN = {}; EPS.forEach(id => { const cur = EPID; setEp(id); LEN[id] = TOTAL; setEp(cur); });   // Gesamtlänge je Folge
+  let epSig = '';
+  function paintEps(force) { if (!epBox) return;
+    const sig = EPID + STATE + EPS.map(id => posOf(id) + (seenOf(id) ? 's' : '')).join(',');
+    if (sig !== epSig || force) { epSig = sig; epBox.innerHTML = '';
+      EPS.forEach((id, k) => { const e = TRIP.series[id], b2 = document.createElement('button'), rp = posOf(id), seen = seenOf(id), pc = seen ? 100 : Math.round(100 * rp / LEN[id]);
+        b2.type = 'button'; b2.dataset.ep = id; b2.className = 'ser-tile'; b2.style.setProperty('--c', e.color || '#8a4fbf'); b2.setAttribute('aria-pressed', String(id === EPID));
+        b2.innerHTML = `<span class="ser-th" aria-hidden="true">${e.thumb || '📺'}<i>${e.n || k + 1}</i></span><b>Folge ${e.n || k + 1}</b><small>${e.title}</small>` +
+          `<span class="ser-meta">${mmss(LEN[id])}${seen ? ' · ✓ gesehen' : rp ? ' · weiter bei ' + mmss(rp) : ''}</span><span class="ser-prog"><i style="width:${pc}%"></i></span>${k === EPS.length - 1 && !seen ? '<em>Neu</em>' : ''}`;
+        b2.addEventListener('click', () => { if (id === EPID) return; stop(false); store.set('serEp', id); setEp(id); epTexts(); paintChaps(); stop(true); prefetchEp(); }); epBox.appendChild(b2); });
+      const a2 = epBox.querySelector('[aria-pressed="true"]'); if (a2 && a2.scrollIntoView && STATE === 'idle') try { epBox.scrollLeft = a2.offsetLeft - 12; } catch (e) {} }
+    const min = Math.round(TOTAL / 60000 * 2) / 2, rp = posOf(EPID);
+    const big = document.getElementById('ser-big'); if (big) { const sm = big.querySelector('small'); if (sm) sm.textContent = rp ? `Weiterschauen ab ${mmss(rp)} · Folge ${EP.n || 1}: ${EP.title}` : `Folge ${EP.n || 1}: ${EP.title} · ca. ${min} min`; }
+    const sub = box.querySelector('.kino-sub'); if (sub) sub.textContent = `Folge ${EP.n || 1}: ${EP.title} · ca. ${min} min · nur für Erwachsene mit schwarzem Humor 😈`;
   }
-  epTexts(); sPaint(); paint(); measure(); subsOn = false; frame(4200); subsOn = true; fade.setAttribute('opacity', 0);
+  epTexts(); paintChaps(); sPaint(); paint(); measure(); subsOn = false; frame(poster()); subsOn = true; fade.setAttribute('opacity', 0);
   // Video-Aufnahme: Zeit von außen, Musik offline, Stimmen-Zeitplan
-  window.__serFrame = t => { CAMK = .06; snapCam = true; frame(t); };
-  window.__serAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms / 1000), sr), m = window.__TripMusic(oc); program(m, 0); m.setMode('show', 0); m.schedule(ms / 1000); return wavB64(await oc.startRendering()); };
-  window.__serVoices = () => LINES.map(l => ({key: EPID + '-' + l.key, at: l.at}));
-  window.__serEp = id => { stop(false); setEp(id); epTexts(); paintEps(); stop(true); };
+  window.__serFrame = t => { CAMK = .06; snapCam = true; frame(t); paintBar(t); };
+  window.__serAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms / 1000), sr), m = window.__TripMusic(oc); program(m, 0, 0); m.setMode('show', 0); m.schedule(ms / 1000); return wavB64(await oc.startRendering()); };
+  window.__serVoices = () => PLAY.map(ev => { const [f, o] = srcOf(ev); return {file: f, off: o, at: ev.at, dur: ev.dur, gain: ev.file ? .55 : 1}; });
+  window.__serEp = id => { stop(false); setEp(id); epTexts(); paintChaps(); paintEps(true); stop(true); };
+  window.__serLen = () => TOTAL;
 })();
 
 renderMe(); meMark();

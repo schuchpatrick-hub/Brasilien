@@ -21,6 +21,8 @@ nach „Umgesetzt“ verschieben.
   1. ✅ **„Gringos – Die Serie“, Folge 1** umgesetzt (02.10., Kino; neu geschnitten: nur 27.–28.12. mit schwarzem Humor, Bar, Turbulenzen, Uber, Strand-Flirt, Sonnenbrand, Caipi-Abend).
      **Geparkt für spätere Folgen** (fertig gebaut, `series.parked`): Silvester mit 7 Wellen (Marco), Buffet-Tetris in Foz, Affe klaut Jonas’ Fischerhut, Footvolley 0:21.
      ✅ Folge 2 „Silvester in Rio“ umgesetzt (02.10.). ✅ Folge 3 „Daijo & Greisel kommen“ umgesetzt (03.10.): Galeão, Boeing mit Klebeband-Tür, Wasserfall-Selfie, Nasenbären, argentinische Grenze, Macuco-Boot, Trinkduell. Wunsch Patrick: nicht mehr als Vielfraß zeigen, lieber andere Gags (Alter, Splitwise-Minus). Offen für Rio-Reste: Maracanã, Lapa-Treppe, Favela-Tour, Praia dos Amores.
+     ⏳ **Nach der letzten Folge:** Staffelfinale „Heimflug“ + Jahresrückblick-Special mit den besten Szenen aller Folgen (Wunsch Patrick, 03.10.: erst ganz am Ende).
+     Umgesetzt (03.10.): Cold Open, Titelsong, eigene Stimmen je Person, Gesichtsausdrücke, harte Schnitte, Lacher vom Band, Fortschrittsleiste mit Kapiteln, Weiterschauen, Folgen-Kacheln, ein Audio-Paket pro Folge, Nasenbär als Running Gag.
      Plan: Folge 2 Silvester in Rio · Folge 3 Daijo & Greisel kommen / Iguaçu · Folge 4 Amazonas · Folge 5 Paraty & Ilha Grande (Footvolley) · Finale Heimflug. (Ursprünglich: Sicherheitskontrolle München (Simons Koffer voller Sonnencreme), Flieger
      (Patrick bestellt zum 4. Mal Essen nach), Copacabana-Silvester (7. Welle haut Marco um), Buffet in Foz (Teller-Tetris in
      Zeitlupe), Dschungel (Affe klaut Jonas’ Fischerhut), Footvolley gegen Einheimische 0:21, Abspann.)
