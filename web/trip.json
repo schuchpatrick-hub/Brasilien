@@ -4796,8 +4796,8 @@
           "o": 250
         },
         "sec1": {
-          "dur": 1265,
-          "env": "69961423893548526753000760476410",
+          "dur": 1206,
+          "env": "6999898795099847873697078765300",
           "o": 3737
         },
         "sec2": {
@@ -6979,6 +6979,68 @@
       },
       "thumb": "🛬🦝🌊",
       "color": "#2f9e5a"
+    },
+    "xtts": {
+      "narrator": [
+        "Abrahan Mack",
+        "de"
+      ],
+      "jonas": [
+        "Torcull Diarmuid",
+        "de"
+      ],
+      "patrick": [
+        "Damien Black",
+        "de"
+      ],
+      "marco": [
+        "Viktor Eka",
+        "de"
+      ],
+      "simon": [
+        "Ludvig Milivoj",
+        "de"
+      ],
+      "greisel": [
+        "Dionisio Schuyler",
+        "de"
+      ],
+      "dajo": [
+        "Annmarie Nele",
+        "de"
+      ],
+      "officer": [
+        "Baldur Sanjin",
+        "de"
+      ],
+      "pilot": [
+        "Wulf Carlevaro",
+        "de"
+      ],
+      "steward": [
+        "Gitta Nikolina",
+        "de"
+      ],
+      "girl": [
+        "Tanja Adelina",
+        "de"
+      ],
+      "girl2": [
+        "Henriette Usha",
+        "de"
+      ],
+      "maid": [
+        "Brenda Stern",
+        "de"
+      ],
+      "local": [
+        "Marcos Rudaski",
+        "pt"
+      ],
+      "waiter": [
+        "Gilberto Mathias",
+        "pt"
+      ]
     }
   }
 }
