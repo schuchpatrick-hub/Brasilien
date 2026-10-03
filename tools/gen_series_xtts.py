@@ -46,6 +46,7 @@ def main():
     trip = json.load(open(G.TRIP, encoding='utf-8')); se = trip['series']; X = se['xtts']; VO = se.get('voices', {})
     os.makedirs(os.path.join(G.ROOT, 'tools', 'data'), exist_ok=True)   # Zwischenstand (gitignored)
     side = os.path.join(G.ROOT, 'tools', 'data', f'{ep}-xtts.json'); done = json.load(open(side)) if os.path.exists(side) else {}
+    new = {}
     for ln in se[ep]['lines']:
         k = ln['key']
         if (only and k not in only) or (not only and k in done): continue
@@ -78,10 +79,10 @@ def main():
             G.run_ff(raw, pcm, G.POLISH + (',' + fx if fx else '') + ',aresample=44100')
             env, dur = G.env_of(pcm)
             subprocess.run([G.ffmpeg(), '-y', '-loglevel', 'error', '-i', pcm, '-b:a', '128k', os.path.join(G.OUT, f'{ep}-{k}.mp3')], check=True)
-        done[k] = {'dur': dur, 'env': env}; json.dump(done, open(side, 'w'))
+        done[k] = new[k] = {'dur': dur, 'env': env}; json.dump(done, open(side, 'w'))
         print(ep, k, spk, round(best[0], 2), dur, 'ms |', best[3], flush=True)
     trip = json.load(open(G.TRIP, encoding='utf-8'))   # frisch laden, dann nur die Stimmen eintragen
-    trip['series'][ep]['voice'].update({k: dict(trip['series'][ep]['voice'].get(k, {}), **v) for k, v in done.items()})
+    trip['series'][ep]['voice'].update({k: dict(trip['series'][ep]['voice'].get(k, {}), **v) for k, v in new.items()})   # nur diese Runde, nachträglich gekürzte Aufnahmen nicht überschreiben
     open(G.TRIP, 'w', encoding='utf-8').write(json.dumps(trip, ensure_ascii=False, indent=2) + '\n')
 
 if __name__ == '__main__':
