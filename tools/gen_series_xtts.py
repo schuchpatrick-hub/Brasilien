@@ -33,7 +33,31 @@ def squeeze(x, sr, thr=.01, keep=.16):
         out.append(seg); j = e
     return np.concatenate(out + [x[len(q) * fr:]]) if out else x
 
+CLEAN = os.path.join(G.ROOT, 'tools', 'data', 'xtts')   # unbearbeitete XTTS-Fassungen (gitignored), Grundlage für --comedy
+
+def comedy(src, dst, c):
+    """Comedy-Klang je Figur (trip.json → series.comedy {who: {tempo, pitch}}): schneller und höher wie im Cartoon."""
+    c = c or {}; t, p = c.get('tempo', 1), c.get('pitch', 1)
+    with tempfile.TemporaryDirectory() as tmp:
+        pcm = os.path.join(tmp, 'c.wav')
+        G.run_ff(src, pcm, f'rubberband=tempo={t}:pitch={p}:pitchq=quality' if (t, p) != (1, 1) else 'anull')
+        env, dur = G.env_of(pcm)
+        subprocess.run([G.ffmpeg(), '-y', '-loglevel', 'error', '-i', pcm, '-b:a', '128k', dst], check=True)
+    return dur, env
+
+def recomedy(eps):
+    """--comedy ep1 ep2 …: Comedy-Klang aus den sauberen Fassungen neu anwenden (schnell, ohne XTTS) und Dauer/Mundkurve eintragen."""
+    trip = json.load(open(G.TRIP, encoding='utf-8')); se = trip['series']
+    for ep in eps:
+        for ln in se[ep]['lines']:
+            k = ln['key']; dur, env = comedy(os.path.join(CLEAN, f'{ep}-{k}.mp3'), os.path.join(G.OUT, f'{ep}-{k}.mp3'), se.get('comedy', {}).get(ln['who']))
+            se[ep]['voice'][k].update(dur=dur, env=env)
+        print(ep, 'ok', flush=True)
+    open(G.TRIP, 'w', encoding='utf-8').write(json.dumps(trip, ensure_ascii=False, indent=2) + '\n')
+
 def main():
+    if sys.argv[1] == '--comedy': return recomedy(sys.argv[2:])
+    os.makedirs(CLEAN, exist_ok=True)
     from TTS.api import TTS
     import sherpa_onnx, scipy.signal as ss
     rec = sherpa_onnx.OfflineRecognizer.from_whisper(encoder=WH + '/small-encoder.int8.onnx', decoder=WH + '/small-decoder.int8.onnx',
@@ -79,8 +103,9 @@ def main():
             raw = os.path.join(tmp, 'raw.wav'); sf.write(raw, best[2], 24000)
             fx = VO.get(ln['who'], {}).get('fx'); pcm = os.path.join(tmp, 'pcm.wav')
             G.run_ff(raw, pcm, G.POLISH + (',' + fx if fx else '') + ',aresample=44100')
-            env, dur = G.env_of(pcm)
-            subprocess.run([G.ffmpeg(), '-y', '-loglevel', 'error', '-i', pcm, '-b:a', '128k', os.path.join(G.OUT, f'{ep}-{k}.mp3')], check=True)
+            clean = os.path.join(CLEAN, f'{ep}-{k}.mp3')
+            subprocess.run([G.ffmpeg(), '-y', '-loglevel', 'error', '-i', pcm, '-b:a', '128k', clean], check=True)
+            dur, env = comedy(clean, os.path.join(G.OUT, f'{ep}-{k}.mp3'), se.get('comedy', {}).get(ln['who']))
         done[k] = new[k] = {'dur': dur, 'env': env}; json.dump(done, open(side, 'w'))
         print(ep, k, spk, round(best[0], 2), dur, 'ms |', best[3], flush=True)
     trip = json.load(open(G.TRIP, encoding='utf-8'))   # frisch laden, dann nur die Stimmen eintragen
