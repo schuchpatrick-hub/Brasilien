@@ -53,12 +53,17 @@ def comedy(src, dst, c):
         subprocess.run([G.ffmpeg(), '-y', '-loglevel', 'error', '-i', pcm, '-b:a', '128k', dst], check=True)
     return dur, env
 
+def cfg(se, ep, ln):
+    """Comedy-Werte je Figur: series.comedy, überschreibbar je Folge (series.epN.comedy {who: {…}}) und je Zeile (ln.comedy)."""
+    who = ln['who']
+    return dict(se.get('comedy', {}).get(who) or {}, **(se[ep].get('comedy', {}).get(who) or {}), **(ln.get('comedy') or {}))
+
 def recomedy(eps):
     """--comedy ep1 ep2 …: Comedy-Klang aus den sauberen Fassungen neu anwenden (schnell, ohne XTTS) und Dauer/Mundkurve eintragen."""
     trip = json.load(open(G.TRIP, encoding='utf-8')); se = trip['series']
     for ep in eps:
         for ln in se[ep]['lines']:
-            k = ln['key']; dur, env = comedy(os.path.join(CLEAN, f'{ep}-{k}.mp3'), os.path.join(G.OUT, f'{ep}-{k}.mp3'), se.get('comedy', {}).get(ln['who']))
+            k = ln['key']; dur, env = comedy(os.path.join(CLEAN, f'{ep}-{k}.mp3'), os.path.join(G.OUT, f'{ep}-{k}.mp3'), cfg(se, ep, ln))
             se[ep]['voice'][k].update(dur=dur, env=env)
         print(ep, 'ok', flush=True)
     open(G.TRIP, 'w', encoding='utf-8').write(json.dumps(trip, ensure_ascii=False, indent=2) + '\n')
@@ -113,7 +118,7 @@ def main():
             G.run_ff(raw, pcm, G.POLISH + (',' + fx if fx else '') + ',aresample=44100')
             clean = os.path.join(CLEAN, f'{ep}-{k}.mp3')
             subprocess.run([G.ffmpeg(), '-y', '-loglevel', 'error', '-i', pcm, '-b:a', '128k', clean], check=True)
-            dur, env = comedy(clean, os.path.join(G.OUT, f'{ep}-{k}.mp3'), se.get('comedy', {}).get(ln['who']))
+            dur, env = comedy(clean, os.path.join(G.OUT, f'{ep}-{k}.mp3'), cfg(se, ep, ln))
         done[k] = new[k] = {'dur': dur, 'env': env}; json.dump(done, open(side, 'w'))
         print(ep, k, spk, round(best[0], 2), dur, 'ms |', best[3], flush=True)
     trip = json.load(open(G.TRIP, encoding='utf-8'))   # frisch laden, dann nur die Stimmen eintragen
