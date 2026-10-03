@@ -3096,7 +3096,7 @@ function wavB64(buf) {
   const soundOn = () => store.get('sound') !== '0';
   const NAMES = {narrator: 'Sprecher', officer: 'Kontrolleur', steward: 'Flugbegleiterin', local: 'Einheimischer', girl: 'Strandschönheit', girl2: 'Brasilianerin', capo: 'Ihr Freund', driver: 'Fahrer', pilot: 'Kapitän', waiter: 'Kellner', maid: 'Zimmermädchen'};
   const nameOf = w => NAMES[w] || (byId[w] ? byId[w].name : w);
-  let LINES = [], LAT = {}, SC = [], END = 1, TOTAL = 1, COLD = 0, COLDA = 0, COLDB = 0, PLAY = [], CHAPS = [], JING = [];
+  let LINES = [], LAT = {}, SC = [], END = 1, TOTAL = 1, COLD = 0, COLDA = 0, COLDB = 0, PLAY = [], CHAPS = [];
   const FRZ = 2000;   // Standbild + Zurückspulen nach dem Cold Open
 
   // ---------- Szenen-Zeitplan (ms) ----------
@@ -3123,15 +3123,11 @@ function wavB64(buf) {
     const c = EP.cold, lb = c && LINES.find(l => l.key === c.to[0]); COLD = 0;
     if (c && LAT[c.from[0]] !== undefined && lb) { COLDA = LAT[c.from[0]] + (c.from[1] || 0); COLDB = lb.at + lb.dur + (c.to[1] || 0); COLD = COLDB - COLDA + FRZ; }
     TOTAL = END + COLD;
-    // Titelsong: alle singen „Grin-gos, grin-gos, sam-ba já!“ und „Olê, olê“ (Aufnahmen der Samba-Show)
-    const six = ['jonas', 'patrick', 'simon', 'marco', 'greisel', 'dajo'].filter(id => byId[id]), cast = (EP.n || 1) >= 3 ? six : six.slice(0, 4), J0 = COLD + 500;
-    JING = EP.song === false ? [] : [['gringos', J0], ['ole', J0 + 2700]];
-    PLAY = [];   // alles, was an Stimmen abgespielt wird: {key, at (Gesamtzeit), dur, file?}
-    JING.forEach(([mel, a]) => cast.forEach(id => PLAY.push({file: `samba-${mel}-${id}`, at: a, dur: 3200})));
+    PLAY = [];   // alles, was an Stimmen abgespielt wird: {key, at (Gesamtzeit), dur}
     LINES.forEach(l => { PLAY.push({key: l.key, at: l.at + COLD, dur: l.dur});
       if (COLD && l.at >= COLDA - 50 && l.at < COLDB - 200) PLAY.push({key: l.key, at: l.at - COLDA, dur: Math.min(l.dur, COLDB - l.at)}); });
     const first = sc => (sc.cap || sc.id).split(' · ')[0], dup = sc => SC.filter(x => x.cap && first(x) === first(sc)).length > 1;
-    CHAPS = (COLD ? [{n: '🥶 Vorab', t: 0}] : []).concat(SC.map(sc => ({n: sc.id === 'intro' ? '🎬 Intro' : sc.id === 'end' ? '🎞️ Abspann' : dup(sc) ? first(sc).split(' ')[0] + ' ' + sc.cap.split(' · ')[1] : first(sc), t: sc.t[0] + COLD})));
+    CHAPS = (COLD ? [{n: 'Vorab', t: 0}] : []).concat(SC.map(sc => ({n: sc.id === 'intro' ? '🎬 Intro' : sc.id === 'end' ? '🎞️ Abspann' : dup(sc) ? first(sc).split(' ')[0] + ' ' + sc.cap.split(' · ')[1] : first(sc), t: sc.t[0] + COLD})));
   }
   setEp(store.get('serEp') || EPS[EPS.length - 1]);
   const sceneAt = t => SC.find(s => t >= s.t[0] && t < s.t[1]) || SC[SC.length - 1];
@@ -3848,8 +3844,7 @@ function wavB64(buf) {
       later.setAttribute('opacity', (span(L, 5200, 5700) * (1 - rc)).toFixed(2));
       const cast = (EP.n || 1) >= 3 ? CREW : crew4, XS = cast.length > 4 ? [46, 122, 198, 602, 678, 754] : [90, 200, 600, 710];
       cast.forEach((id, i) => { const d = 3000 + i * 250, k = span(L, d, d + 500); on(id, XS[i], FL + 50 + 140 * (1 - ease(k)), {sc: .62});
-        if (L > d + 500) cheerP(t, pose[id], i); pose[id].mouth = L > 6000 && (Math.floor(t / 200) + i) % 3 === 0 ? .5 : 0;
-        JING.forEach(([mel, a]) => { const x = (g - a) / (250 / .9); if (x > 0 && x < (mel === 'ole' ? 11 : 9)) pose[id].mouth = (x % 1) < .65 ? .85 : .15; }); });
+        if (L > d + 500) cheerP(t, pose[id], i); pose[id].mouth = L > 6000 && (Math.floor(t / 200) + i) % 3 === 0 ? .5 : 0; });
     }
     else if (sc.id === 'sec') {
       const A = k => (LAT[k] || 0) - sc.t[0];
@@ -4494,7 +4489,6 @@ function wavB64(buf) {
     m.music.gain.value = .5;   // Musik etwas leiser, damit man die Stimmen versteht
     if (COLD) { wlo = Math.max(lo || 0, t0); whi = t0 + (COLDB - COLDA) / 1000; story(m, t0 - COLDA / 1000); m.sfx('scratch', whi + .05); m.sfx('rewind', whi + .35); }
     wlo = Math.max(lo || 0, t0 + COLD / 1000); whi = 1e9; story(m, t0 + COLD / 1000);
-    if (JING.length) { m.drums = [[t0 + JING[0][1] / 1000, t0 + JING[JING.length - 1][1] / 1000 + 3.2]]; m.sfx('cheer', t0 + JING[JING.length - 1][1] / 1000 + 3.1); }
     m.end(t0 + (TOTAL - 600) / 1000);
     Q.sort((x, y) => x[0] - y[0]);
   }
@@ -4556,12 +4550,10 @@ function wavB64(buf) {
   }
   // Fortschrittsleiste mit Kapiteln
   const barT = document.getElementById('ser-track'), barF = document.getElementById('ser-fill'), barK = document.getElementById('ser-knob'), barTm = document.getElementById('ser-time'),
-    chipsB = document.getElementById('ser-chips'), skipB = document.getElementById('ser-skip'), restartB = document.getElementById('ser-restart'), marks = document.getElementById('ser-marks');
-  let chapNow = -1;
+    barCh = document.getElementById('ser-chap'), skipB = document.getElementById('ser-skip'), restartB = document.getElementById('ser-restart'), marks = document.getElementById('ser-marks');
+  let chapNow = -1, barDrag = () => false;
   function paintChaps() {
     if (marks) marks.innerHTML = CHAPS.slice(1).map(c => `<i style="left:${(100 * c.t / TOTAL).toFixed(2)}%"></i>`).join('');
-    if (chipsB) { chipsB.innerHTML = ''; CHAPS.forEach((c, k) => { const b2 = document.createElement('button'); b2.type = 'button'; b2.textContent = c.n; b2.title = mmss(c.t);
-      b2.addEventListener('click', () => seek(c.t + (k ? 250 : 0))); chipsB.appendChild(b2); }); }
     chapNow = -1;
   }
   function paintBar(g) {
@@ -4569,7 +4561,7 @@ function wavB64(buf) {
     if (barF) barF.style.width = pc; if (barK) barK.style.left = pc; if (barTm) barTm.textContent = `${mmss(g)} / ${mmss(TOTAL)}`;
     if (barT) barT.setAttribute('aria-valuenow', String(Math.round(g / 1000)));
     let ci = 0; CHAPS.forEach((c, k) => { if (g >= c.t - 1) ci = k; });
-    if (ci !== chapNow && chipsB) { chapNow = ci; [...chipsB.children].forEach((b2, k) => b2.setAttribute('aria-current', String(k === ci))); const a2 = chipsB.children[ci]; if (a2 && STATE !== 'idle') a2.scrollIntoView({block: 'nearest', inline: 'center'}); }
+    if (barCh && ci !== chapNow) { chapNow = ci; barCh.textContent = CHAPS[ci] ? CHAPS[ci].n : ''; }
     const introEnd = COLD + (SC[0] ? SC[0].t[1] : 0); if (skipB) skipB.hidden = !(STATE !== 'idle' && g > 600 && g < introEnd - 1500);
   }
   function seek(g) {
@@ -4580,13 +4572,19 @@ function wavB64(buf) {
   }
   let seekPending = false, lastSave = 0;
   function savePos(g) { if (g > 4000 && g < TOTAL - 14000) store.set('serPos.' + EPID, String(Math.round(g))); else store.set('serPos.' + EPID, ''); }
-  if (barT) { const posAt = e => { const r = barT.getBoundingClientRect(); return clamp(((e.touches ? e.touches[0].clientX : e.clientX) - r.left) / r.width, 0, 1) * TOTAL; };
-    barT.addEventListener('click', e => seek(posAt(e)));
+  if (barT) { const posAt = e => { const r = barT.getBoundingClientRect(); return clamp((e.clientX - r.left) / r.width, 0, 1) * TOTAL; };
+    // Leiste ziehen: während des Ziehens nur Knopf und Zeit bewegen (Bild bleibt), beim Loslassen springen
+    let drag = false;
+    barT.addEventListener('pointerdown', e => { drag = true; try { barT.setPointerCapture(e.pointerId); } catch (e2) {} paintBar(posAt(e)); e.preventDefault(); });
+    barT.addEventListener('pointermove', e => { if (drag) paintBar(posAt(e)); });
+    const end = e => { if (!drag) return; drag = false; seek(posAt(e)); };
+    barT.addEventListener('pointerup', end); barT.addEventListener('pointercancel', () => { drag = false; });
+    barDrag = () => drag;
     barT.addEventListener('keydown', e => { const c = STATE === 'idle' ? posOf(EPID) : clock(); if (e.key === 'ArrowRight') { seek(c + 10000); e.preventDefault(); } if (e.key === 'ArrowLeft') { seek(c - 10000); e.preventDefault(); } }); }
   if (skipB) skipB.addEventListener('click', e => { e.stopPropagation(); seek(COLD + SC[0].t[1] - 200); });
   if (restartB) restartB.addEventListener('click', () => { store.set('serPos.' + EPID, ''); start(0); });
   const sPaint = () => { if (sbtn) { sbtn.textContent = soundOn() ? '🔊 Ton an' : '🔇 Ton aus'; sbtn.setAttribute('aria-pressed', String(soundOn())); } };
-  const poster = () => COLD + 6500;   // Standbild im Ruhezustand: Titel (nach dem Titelsong)
+  const poster = () => COLD + 4200;   // Standbild im Ruhezustand: Titel
   function stop(reset) {
     run++; cancelAnimationFrame(raf); clearInterval(timer); voices.forEach(a => { try { a.src.stop(); } catch (e) {} }); voices = [];
     if (ctx) { ctx.close().catch(() => {}); ctx = null; } liveM = null; STATE = 'idle'; seekPending = false; loading = false; paint();
@@ -4617,7 +4615,7 @@ function wavB64(buf) {
     function loop() { if (my !== run) return;
       const now = performance.now();
       if (ctx && STATE === 'run' && ctx.state !== 'running' && now - startedAt > 1500 && !video) { const tn = Math.max(0, clock()); ctx.close().catch(() => {}); ctx = null; liveM = null; clearInterval(timer); t0p = tnow() - tn; }
-      if (STATE === 'run') { const t = clock(); frame(t); paintBar(t); CAMK = .06;
+      if (STATE === 'run') { const t = clock(); frame(t); if (!barDrag()) paintBar(t); CAMK = .06;
         if (now - lastSave > 1500) { lastSave = now; savePos(t); if (t > TOTAL - 14000 && !seenOf(EPID)) { store.set('serSeen.' + EPID, '1'); paintEps(true); } }
         if (t > TOTAL) { store.set('serPos.' + EPID, ''); stop(true); return; } }
       raf = requestAnimationFrame(loop); }
