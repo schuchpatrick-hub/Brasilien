@@ -6119,8 +6119,11 @@ function wavB64(buf) {
   if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => { if (es.some(e => e.isIntersecting)) { prefetchEp(); io.disconnect(); } }, {rootMargin: '400px'}); io.observe(svg); }
   // Musik und Geräusche: t0 = Startzeit der Gesamtzeit 0 im AudioContext, lo = nichts vor dieser Zeit planen (Springen)
   function program(m, t0, lo) {
-    const sfx0 = m.sfx, amb0 = m.amb; let wlo = lo || 0, whi = 1e9;
-    m.sfx = (n, w) => { if (w >= wlo && w <= whi) sfx0(n, w); };
+    // Geräusche nicht alle auf einmal anlegen (Tausende Klangbausteine überlasten sonst die Audio-Engine):
+    // erst sammeln, dann kurz vor ihrer Zeit erzeugen (m.pump im Takt-Timer); offline (Video) sofort
+    const sfx0 = m.sfx, amb0 = m.amb, Q = []; let wlo = lo || 0, whi = 1e9, qi = 0;
+    m.sfx = (n, w) => { if (w >= wlo && w <= whi) Q.push([w, n]); };
+    m.pump = until => { while (qi < Q.length && Q[qi][0] < until) { const [w, n] = Q[qi++]; if (w > (m.ctx ? m.ctx.currentTime : 0) - .05 || !lo) sfx0(n, w); } };
     m.duck = (v, w, tc) => { if (w >= wlo - .5 && w <= whi) m.music.gain.setTargetAtTime(v, Math.max(0, w), tc); };
     m.amb = (k, a, b) => { a = Math.max(a, wlo); b = Math.min(b, whi); if (b - a > 1) amb0(k, a, b); };
     m.music.gain.value = .5;   // Musik etwas leiser, damit man die Stimmen versteht
@@ -6128,6 +6131,7 @@ function wavB64(buf) {
     wlo = Math.max(lo || 0, t0 + COLD / 1000); whi = 1e9; story(m, t0 + COLD / 1000);
     if (JING.length) { m.drums = [[t0 + JING[0][1] / 1000, t0 + JING[JING.length - 1][1] / 1000 + 3.2]]; m.sfx('cheer', t0 + JING[JING.length - 1][1] / 1000 + 3.1); }
     m.end(t0 + (TOTAL - 600) / 1000);
+    Q.sort((x, y) => x[0] - y[0]);
   }
   function story(m, t0) {   // alles, was zur Folge gehört (t0 = Folgenzeit 0)
     const at = ms => t0 + ms / 1000, A = (k, d) => at((LAT[k] || 0) + (d || 0)), sAt = id => (SC.find(s => s.id === id) || {t: [0]}).t[0];
@@ -6180,10 +6184,10 @@ function wavB64(buf) {
   const posOf = id => +(store.get('serPos.' + id) || 0), seenOf = id => store.get('serSeen.' + id) === '1';
   function paint() {
     const rp = posOf(EPID);
-    btn.textContent = STATE === 'run' ? '⏸ Pause' : STATE === 'pause' ? '▶ Weiter' : rp ? `▶ Weiterschauen ab ${mmss(rp)}` : `📺 Folge ${EP.n || 1} abspielen`; paintEps();
+    btn.textContent = loading ? '⏳ Lädt …' : STATE === 'run' ? '⏸ Pause' : STATE === 'pause' ? '▶ Weiter' : rp ? `▶ Weiterschauen ab ${mmss(rp)}` : `📺 Folge ${EP.n || 1} abspielen`; paintEps();
     btn.setAttribute('aria-pressed', String(STATE !== 'idle')); if (stopB) stopB.hidden = STATE === 'idle'; box.classList.toggle('idle', STATE === 'idle');
     if (restartB) restartB.hidden = !(STATE === 'idle' && rp);
-    paintBar(STATE === 'idle' ? rp : clock());
+    if (!loading) paintBar(STATE === 'idle' ? rp : clock());
   }
   // Fortschrittsleiste mit Kapiteln
   const barT = document.getElementById('ser-track'), barF = document.getElementById('ser-fill'), barK = document.getElementById('ser-knob'), barTm = document.getElementById('ser-time'),
@@ -6220,32 +6224,41 @@ function wavB64(buf) {
   const poster = () => COLD + 6500;   // Standbild im Ruhezustand: Titel (nach dem Titelsong)
   function stop(reset) {
     run++; cancelAnimationFrame(raf); clearInterval(timer); voices.forEach(a => { try { a.src.stop(); } catch (e) {} }); voices = [];
-    if (ctx) { ctx.close().catch(() => {}); ctx = null; } liveM = null; STATE = 'idle'; seekPending = false; paint();
+    if (ctx) { ctx.close().catch(() => {}); ctx = null; } liveM = null; STATE = 'idle'; seekPending = false; loading = false; paint();
     if (reset) { lastScene = null; CAMK = 1; subsOn = false; frame(poster()); subsOn = true; fade.setAttribute('opacity', 0); }
   }
   function start(from) {
     from = clamp(from || 0, 0, TOTAL - 800);
     stop(false); const my = ++run; STATE = 'run'; startedAt = performance.now(); paint(); lastScene = null;
     window.dispatchEvent(new CustomEvent('br26-kino', {detail: 'series'}));
-    const video = window.__serT !== undefined;
+    const video = window.__serT !== undefined; let m = null;
     if (!video && soundOn() && window.__TripMusic) {
-      try { const AC = window.AudioContext || window.webkitAudioContext; ctx = new AC(); ctx.resume();
-        tbase = ctx.currentTime + .15 - from / 1000; const m = window.__TripMusic(ctx); liveM = m; program(m, tbase, ctx.currentTime + .1);
+      try { const AC = window.AudioContext || window.webkitAudioContext; ctx = new AC(); ctx.resume();   // noch im Klick, sonst bleibt das Handy stumm
+        m = window.__TripMusic(ctx);
         vGain = ctx.createGain(); vGain.gain.value = 1; vGain.connect(ctx.destination); jGain = ctx.createGain(); jGain.gain.value = .55; jGain.connect(ctx.destination);
-        timer = setInterval(() => { if (ctx) m.schedule(ctx.currentTime + .15); }, 30);
-        PLAY.forEach(ev => { if (ev.at + ev.dur > from) playVoice(ev, my); });
-      } catch (e) { ctx = null; }
+      } catch (e) { ctx = null; m = null; }
     }
-    t0p = tnow() - from; CAMK = 1; snapCam = true;
-    (function loop() { if (my !== run) return;
+    // erst loslegen, wenn die Stimmen der nächsten Sekunden dekodiert sind (höchstens 6 s warten)
+    const go = () => { if (my !== run) return; loading = false;
+      if (ctx && m) { try { liveM = m; tbase = ctx.currentTime + .15 - from / 1000; program(m, tbase, ctx.currentTime + .1);
+          m.pump(ctx.currentTime + 1.5); timer = setInterval(() => { if (ctx) { m.schedule(ctx.currentTime + .15); m.pump(ctx.currentTime + 1.5); } }, 30);
+          PLAY.forEach(ev => { if (ev.at + ev.dur > from) playVoice(ev, my); });
+        } catch (e) { try { ctx.close(); } catch (e2) {} ctx = null; liveM = null; } }
+      t0p = tnow() - from; CAMK = 1; snapCam = true; lastScene = null; startedAt = performance.now(); paint(); loop(); };
+    if (ctx) { loading = true; paint(); subsOn = false; frame(from); subsOn = true;
+      const need = [...new Set(PLAY.filter(ev => ev.at + ev.dur > from && ev.at < from + 30000).map(ev => srcOf(ev)[0]))];
+      Promise.race([Promise.all(need.map(bufOf)), new Promise(r => setTimeout(r, 6000))]).then(go, go); }
+    else go();
+    function loop() { if (my !== run) return;
       const now = performance.now();
       if (ctx && STATE === 'run' && ctx.state !== 'running' && now - startedAt > 1500 && !video) { const tn = Math.max(0, clock()); ctx.close().catch(() => {}); ctx = null; liveM = null; clearInterval(timer); t0p = tnow() - tn; }
       if (STATE === 'run') { const t = clock(); frame(t); paintBar(t); CAMK = .06;
         if (now - lastSave > 1500) { lastSave = now; savePos(t); if (t > TOTAL - 14000 && !seenOf(EPID)) { store.set('serSeen.' + EPID, '1'); paintEps(true); } }
         if (t > TOTAL) { store.set('serPos.' + EPID, ''); stop(true); return; } }
-      raf = requestAnimationFrame(loop); })();
+      raf = requestAnimationFrame(loop); }
   }
-  function pause() { if (STATE !== 'run') return; pausedAt = clock(); STATE = 'pause'; if (ctx) ctx.suspend().catch(() => {}); savePos(pausedAt); paint(); }
+  let loading = false;
+  function pause() { if (STATE !== 'run' || loading) return; pausedAt = clock(); STATE = 'pause'; if (ctx) ctx.suspend().catch(() => {}); savePos(pausedAt); paint(); }
   function resume() { if (STATE !== 'pause') return; if (seekPending) { start(pausedAt); return; } if (ctx) ctx.resume().catch(() => {}); else t0p = tnow() - pausedAt; STATE = 'run'; startedAt = performance.now(); paint(); }
   btn.addEventListener('click', () => { if (STATE === 'run') pause(); else if (STATE === 'pause') resume(); else start(posOf(EPID)); });
   if (bigB) bigB.addEventListener('click', () => { if (STATE === 'idle') start(posOf(EPID)); });
@@ -6290,7 +6303,7 @@ function wavB64(buf) {
   epTexts(); paintChaps(); sPaint(); paint(); measure(); subsOn = false; frame(poster()); subsOn = true; fade.setAttribute('opacity', 0);
   // Video-Aufnahme: Zeit von außen, Musik offline, Stimmen-Zeitplan
   window.__serFrame = t => { CAMK = .06; snapCam = true; frame(t); paintBar(t); };
-  window.__serAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms / 1000), sr), m = window.__TripMusic(oc); program(m, 0, 0); m.setMode('show', 0); m.schedule(ms / 1000); return wavB64(await oc.startRendering()); };
+  window.__serAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms / 1000), sr), m = window.__TripMusic(oc); program(m, 0, 0); m.pump(ms / 1000); m.setMode('show', 0); m.schedule(ms / 1000); return wavB64(await oc.startRendering()); };
   window.__serVoices = () => PLAY.map(ev => { const [f, o] = srcOf(ev); return {file: f, off: o, at: ev.at, dur: ev.dur, gain: ev.file ? .55 : 1}; });
   window.__serEp = id => { stop(false); setEp(id); epTexts(); paintChaps(); paintEps(true); stop(true); };
   window.__serLen = () => TOTAL;
