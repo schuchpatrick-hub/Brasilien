@@ -5111,17 +5111,6 @@
           "Kein Hummer wurde verletzt. Simon schon."
         ]
       ],
-      "cold": {
-        "from": [
-          "fly8",
-          -300
-        ],
-        "to": [
-          "fly10",
-          400
-        ],
-        "label": "⏪ 9 Stunden früher …"
-      },
       "thumb": "✈️🧴🤮",
       "color": "#1f6fbf",
       "cameo": [
