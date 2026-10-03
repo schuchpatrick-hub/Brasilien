@@ -1949,7 +1949,8 @@ function wavB64(buf) {
   // Bei Nacht gedämpft und langsamer. Ereignisse werden mitgeschrieben (tlog), damit die Video-Aufnahme dieselbe Musik
   // offline als Tonspur rendern kann (window.__tripAudio).
   const mf = m => 440 * Math.pow(2, (m - 69) / 12);
-  function Music(ctx) {
+  function Music(ctx, opt) {
+    opt = opt || {};
     const E = {ctx, mode: 'none', night: false, step: 0, next: 0, drums: [], on: {travel: false, stay: false, show: false}, till: {travel: 0, stay: 0, show: 0}};
     const master = ctx.createGain(); master.gain.value = .7;
     const comp = ctx.createDynamicsCompressor(); master.connect(comp); comp.connect(ctx.destination);
@@ -1957,10 +1958,10 @@ function wavB64(buf) {
     const music = ctx.createGain(); music.gain.value = 1; music.connect(lp);
     const bus = {travel: ctx.createGain(), stay: ctx.createGain(), show: ctx.createGain()};
     Object.values(bus).forEach(b => { b.gain.value = 0; b.connect(music); });
-    const sfxOut = ctx.createGain(); sfxOut.gain.value = .9; sfxOut.connect(master);
+    const sfxOut = ctx.createGain(); sfxOut.gain.value = .9; sfxOut.connect(opt.bake ? ctx.destination : master);
     const ambOut = ctx.createGain(); ambOut.gain.value = 1; ambOut.connect(master);
     E.master = master; E.music = music;
-    let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    let seed = opt.seed || 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
     const nb = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate), nd = nb.getChannelData(0);
     for (let i = 0; i < nd.length; i++) nd[i] = rnd() * 2 - 1;
 
@@ -2113,7 +2114,7 @@ function wavB64(buf) {
       lp.frequency.cancelScheduledValues(w); lp.frequency.setTargetAtTime(on ? 850 : 16000, w, .4);
       music.gain.cancelScheduledValues(w); music.gain.setTargetAtTime(on ? .75 : 1, w, .4);
     };
-    E.sfx = (name, t) => {
+    const sfx0 = (name, t) => {
       if (name === 'boom') {
         tone(sfxOut, 'sine', 1900, t, .45, .05, {from: 700, glide: .42});
         noise(sfxOut, t + .45, 1.1, .5, 'lowpass', 1400, .7, {to: 200});
@@ -2162,6 +2163,16 @@ function wavB64(buf) {
       else if (name === 'chalk') [0, .22, .44, .7].forEach(o => noise(sfxOut, t + o, .16, .12, 'bandpass', 4200, 6, {to: 3600}));
       else if (name === 'wah') [62, 61, 60, 59].forEach((m, k) => tone(sfxOut, 'sawtooth', mf(m), t + k * .38, k === 3 ? 1.1 : .36, .13, {lp: 900, a: .04, hold: k === 3 ? .8 : .25, vib: k === 3 ? 5 : 0, depth: .025}));
     };
+    // Schwere Geräusche (Lacher vom Band: ~500 Klangbausteine, Applaus: ~270) einmal vorab offline rendern, danach nur noch
+    // als fertigen Klang abspielen (1 Baustein) – sonst ruckelt das Bild, solange sie erzeugt werden. 3 Varianten je Geräusch.
+    const BAKE = {laugh: 3.2, applause: 3.2}, baked = {};
+    const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+    if (!opt.bake && OAC && !(ctx instanceof OAC)) Object.keys(BAKE).forEach(n => { baked[n] = [];
+      for (let v = 0; v < 3; v++) try { const oc = new OAC(1, Math.ceil(ctx.sampleRate * BAKE[n]), ctx.sampleRate), m2 = Music(oc, {bake: 1, seed: 11 + v * 97});
+        m2.sfx(n, 0); const r = oc.startRendering(); if (r && r.then) r.then(b => baked[n].push(b)).catch(() => {}); } catch (e) {} });
+    E.sfx = (name, t) => { const b = baked[name];
+      if (b && b.length) { const s = ctx.createBufferSource(); s.buffer = b[Math.floor(rnd() * b.length) % b.length]; s.connect(sfxOut); s.start(Math.max(t, ctx.currentTime)); return; }
+      sfx0(name, t); };
     E.end = w => { master.gain.cancelScheduledValues(w); master.gain.setTargetAtTime(0, w, .4); E.on = {travel: false, stay: false, show: false}; E.till = {travel: w + 2, stay: w + 2, show: w + 2}; E.mode = 'none'; };
     return E;
   }
@@ -2544,7 +2555,7 @@ function wavB64(buf) {
     const a = mk('g', {}, parent); mk('line', {x1: 0, y1: 0, x2: 0, y2: len1, stroke: top, 'stroke-width': w1, 'stroke-linecap': 'round'}, a);
     const f = mk('g', {transform: `translate(0,${len1})`}, a); mk('line', {x1: 0, y1: 0, x2: 0, y2: len2, stroke: SKIN, 'stroke-width': w2, 'stroke-linecap': 'round'}, f); return {a, f};
   };
-  const PROPS = {jonas: '📣', simon: '🌹', patrick: '🍗', marco: '🍍', greisel: '💍', dajo: '📊'};
+  const PROPS = {jonas: '📣', simon: '🌹', patrick: '🍗', marco: '🍍', greisel: '💍', dajo: '🎤'};
   const FEATH = ['#ffcf1f', '#3ccf7f', '#ff5fa2', '#5fd3ff', '#ff8a3c', '#ffcf1f', '#3ccf7f'];
   ids.forEach((id, i) => {
     const L = D.look[id] || {}, p = byId[id], o = {id, i, L}, shirt = L.shirt || '#ffcf1f', pants = L.pants || '#1f3f8f';
@@ -3080,11 +3091,17 @@ function wavB64(buf) {
   let EP = null, EPID = 'ep1';
   const D = TRIP.dance || {look: {}}, NS = 'http://www.w3.org/2000/svg', W = 800, H = 450, FL = 392;
   const SET = Element.prototype.setAttribute;
+  // unsichtbare Elemente ganz aus dem Layout nehmen (display:none): Chrome setzt sonst bei jeder Zoom-Änderung der Kamera
+  // alle SVG-Texte neu (Schriftgröße hängt am Maßstab) – auch leere oder durchsichtige; das ließ die Folgen ruckeln
+  // Ausgeblendetes wird vorübergehend aus dem Dokument genommen (Platzhalter-Kommentar hält die Stelle)
+  const shown = e => { const off = !!(e.__off || e.__empty); if (e.__d === off) return; e.__d = off;
+    if (off) { if (e.parentNode) { e.__ph = e.__ph || document.createComment(''); e.parentNode.replaceChild(e.__ph, e); } }
+    else if (e.__ph && e.__ph.parentNode) e.__ph.parentNode.replaceChild(e, e.__ph); };
   function fastSet(k, v) { v = String(v); const c = this.__c || (this.__c = {}); if (c[k] === v) return; c[k] = v; SET.call(this, k, v);
-    if (k === 'opacity') { const off = !(parseFloat(v) > .004); if (this.__off !== off) { this.__off = off; this.style.display = off ? 'none' : ''; } } }
-  const TXT = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent'), fastTxt = {configurable: true, get() { return TXT.get.call(this); }, set(v) { v = String(v); if (this.__t === v) return; this.__t = v; TXT.set.call(this, v); }};
+    if (k === 'opacity') { this.__off = !(parseFloat(v) > .004); shown(this); } }
+  const TXT = Object.getOwnPropertyDescriptor(Node.prototype, 'textContent'), fastTxt = {configurable: true, get() { return TXT.get.call(this); }, set(v) { v = String(v); if (this.__t === v) return; this.__t = v; TXT.set.call(this, v); if (this.tagName === 'text') { this.__empty = !v; shown(this); } }};
   const mk = (tag, a, parent) => { const e = document.createElementNS(NS, tag); e.setAttribute = fastSet; Object.defineProperty(e, 'textContent', fastTxt);
-    for (const k in a) e.setAttribute(k, a[k]); if (parent) parent.appendChild(e); return e; };
+    if (parent) parent.appendChild(e); for (const k in a) e.setAttribute(k, a[k]); return e; };
   const emo = (ch, a, parent) => { const e = mk('text', Object.assign({'text-anchor': 'middle', 'dominant-baseline': 'central'}, a), parent); e.textContent = ch; return e; };
   const byId = Object.fromEntries(TRIP.crew.map(c => [c.id, c]));
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v)), ease = x => { x = clamp(x, 0, 1); return x < .5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; };
@@ -3341,7 +3358,9 @@ function wavB64(buf) {
   mk('path', {d: Array.from({length: 22}, (_, k) => `M${k * 40},${360 + (k % 3) * 8} l20,0`).join(' '), stroke: '#c4a96d', 'stroke-width': 3}, B.ny);
   const crowdNY = mk('g', {}, B.ny); for (let k = 0; k < 22; k++) { const x = k * 38 + hash(k, 4) * 10, h = 22 + hash(k, 5) * 10; mk('circle', {cx: x, cy: 300 - h, r: 8, fill: '#f4f1e8', opacity: .55}, crowdNY); mk('rect', {x: x - 8, y: 300 - h + 6, width: 16, height: h, rx: 6, fill: '#f4f1e8', opacity: .55}, crowdNY); }
   const fws = Array.from({length: 7}, (_, k) => { const b = mk('g', {}, B.ny), c = ['#ffcf1f', '#ff5fa2', '#3ce0ff', '#fff', '#3ccf7f', '#ff8a3c', '#c79bf0'][k];
-    for (let r = 0; r < 14; r++) mk('line', {stroke: c, 'stroke-width': 2.5, 'stroke-linecap': 'round'}, b); return {b, x: 90 + k * 105 + hash(k, 21) * 40, y: 60 + hash(k, 22) * 90, ph: hash(k, 23)}; });
+    // ein Pfad mit 14 Strahlen (Einheitsgröße), pro Bild nur Position/Größe setzen statt 56 Linien-Koordinaten
+    mk('path', {d: Array.from({length: 14}, (_, i) => { const a2 = i / 14 * 2 * PI; return `M${(C(a2) * .5).toFixed(3)},${(S(a2) * .5).toFixed(3)}L${C(a2).toFixed(3)},${S(a2).toFixed(3)}`; }).join(''), stroke: c, 'stroke-width': 2.5, 'stroke-linecap': 'round', 'vector-effect': 'non-scaling-stroke', fill: 'none'}, b);
+    return {b, x: 90 + k * 105 + hash(k, 21) * 40, y: 60 + hash(k, 22) * 90, ph: hash(k, 23)}; });
   const count = mk('text', {x: W / 2, y: 200, 'text-anchor': 'middle', class: 'se-count', opacity: 0}, hud);
   const waveG = mk('g', {}, F.ny), wave = mk('path', {fill: '#2f6fd0', stroke: '#e8f6ff', 'stroke-width': 5, 'stroke-linejoin': 'round', opacity: 0}, waveG), foam = mk('ellipse', {fill: '#fff', opacity: 0}, waveG);
   const waveN = mk('g', {opacity: 0}, hud); mk('rect', {x: 20, y: 64, width: 150, height: 40, rx: 20, fill: '#1f3f8f'}, waveN); const waveT = mk('text', {x: 95, y: 91, 'text-anchor': 'middle', class: 'se-badge'}, waveN);
@@ -4034,7 +4053,7 @@ function wavB64(buf) {
       const boom = L > A('ny5');
       fws.forEach(f => { const k = ((t / (boom ? 1100 : 2400) + f.ph) % 1), r = (10 + 55 * Math.sqrt(k)) * (boom ? 1 : .4);
         f.b.setAttribute('opacity', ((1 - k) * (L > 800 ? 1 : 0)).toFixed(2));
-        [...f.b.children].forEach((l, i) => { const a2 = i / 14 * 2 * PI; l.setAttribute('x1', (f.x + C(a2) * r * .5).toFixed(1)); l.setAttribute('y1', (f.y + S(a2) * r * .5 + k * 12).toFixed(1)); l.setAttribute('x2', (f.x + C(a2) * r).toFixed(1)); l.setAttribute('y2', (f.y + S(a2) * r + k * 12).toFixed(1)); }); });
+        f.b.setAttribute('transform', `translate(${f.x.toFixed(1)},${(f.y + k * 12).toFixed(1)}) scale(${r.toFixed(2)})`); });
       const c0 = A('ny4'), cs = d('ny4') / 3;
       [[c0, '3'], [c0 + cs, '2'], [c0 + 2 * cs, '1'], [A('ny5'), '🎆 2027 🎆']].forEach(([a2, s2], k) => { if (L > a2 && L < (k < 3 ? a2 + cs : a2 + 2600)) { const kk = span(L, a2, a2 + 400);
         count.setAttribute('opacity', 1); count.textContent = s2; count.setAttribute('transform', `translate(${W / 2},200) scale(${(1.6 - .6 * ease(kk)).toFixed(3)}) translate(${-W / 2},-200)`); } });
