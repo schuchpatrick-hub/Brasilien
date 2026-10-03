@@ -54,7 +54,7 @@ def main():
         say = ln['say']; score = lambda t: difflib.SequenceMatcher(None, ' '.join(norm(t)), ' '.join(norm(say))).ratio()
         best = None
         for i in range(N):
-            w = np.array(tts.tts(text=say, speaker=spk, language=lang, temperature=0.4, repetition_penalty=5.0, top_p=0.8, speed=1.05, split_sentences=len(say) > 120), dtype=np.float32)
+            w = np.array(tts.tts(text=say, speaker=spk, language=lang, temperature=0.4, repetition_penalty=5.0, top_p=0.8, speed=1.05, split_sentences=True), dtype=np.float32)   # Sätze einzeln (sonst verschluckt XTTS den zweiten), Pausen kürzt squeeze()
             nz = np.where(np.abs(w) > .015)[0]; w = w[max(0, nz[0] - 600):nz[-1] + 2400] if len(nz) else w
             w = squeeze(w, 24000)
             txt = asr(w); opts = [(score(txt), len(w), w, txt)]
@@ -70,7 +70,9 @@ def main():
                 else: j += 1
             lim = 24000 * max(1.6, len(say) * .085)   # deutlich zu lang = lange Pausen oder Gebrabbel → abwerten
             opts = [(o[0] - (.25 if o[1] > lim else 0),) + o[1:] for o in opts]
-            top = max(o[0] for o in opts); cand = min([o for o in opts if o[0] >= top - .01], key=lambda o: o[1])   # gleich gut verstanden → kürzeste (Gebrabbel ignoriert Whisper)
+            top = max(o[0] for o in opts)
+            # gleich gut verstanden → kürzeste (Gebrabbel überhört Whisper); bei kurzen Zeilen nur kürzen, wenn es klar besser wird (sonst fehlt das letzte Wort)
+            cand = min([o for o in opts if o[0] >= top - .01], key=lambda o: o[1]) if len(say) > 45 else max(opts[1:] and [o for o in opts[1:] if o[0] >= opts[0][0] + .04] or [opts[0]], key=lambda o: o[0])   # gleich gut verstanden → kürzeste (Gebrabbel ignoriert Whisper)
             if best is None or cand[0] > best[0]: best = cand
             if best[0] > .95 or lang != 'de' and best[0] > .6: break
         with tempfile.TemporaryDirectory() as tmp:
