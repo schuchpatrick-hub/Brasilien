@@ -7049,6 +7049,10 @@
       "waiter": [
         "Gilberto Mathias",
         "pt"
+      ],
+      "guide": [
+        "Marcos Rudaski",
+        "de"
       ]
     },
     "comedy": {
@@ -7120,7 +7124,634 @@
       "narrator": {
         "tempo": 1.04,
         "pitch": 1.0
+      },
+      "guide": {
+        "tempo": 1.14,
+        "pitch": 1.12,
+        "style": "nasal2"
       }
+    },
+    "ep4": {
+      "title": "Ab in den Dschungel",
+      "n": 4,
+      "admin": true,
+      "next": "📺 Folge 5: Paraty & Ilha Grande – bald im Kino",
+      "recapBadge": "⏪ Bisher: 🦷🌊  🦝💰  ✈️💍",
+      "badge": [
+        "🔞",
+        "Achtung, derb:",
+        "nur für Erwachsene"
+      ],
+      "credits": [
+        [
+          "Geknutscht & ausgeraubt",
+          "Simon (Handy weiter online)"
+        ],
+        [
+          "Erdbeben 4,2",
+          "Patrick (Kabine 3)"
+        ],
+        [
+          "Klopapier",
+          "ein Nasenbär 🦝"
+        ],
+        [
+          "Rülps-Weltmeisterin",
+          "Daijo 🇨🇿"
+        ],
+        [
+          "Köder",
+          "Greisels linker Fuß"
+        ],
+        [
+          "Leuchtturm",
+          "Jonas"
+        ],
+        [
+          "",
+          "Kein Delfin wurde geküsst. Leider."
+        ]
+      ],
+      "thumb": "🐊💩🐬",
+      "color": "#8a5a2b",
+      "lines": [
+        {
+          "key": "intro",
+          "who": "narrator",
+          "at": 1500,
+          "say": "Gringos! Die Serie. Folge vier: Ab in den Dschungel!",
+          "text": "📺 Gringos – Die Serie · Folge 4: Ab in den Dschungel!"
+        },
+        {
+          "key": "recap",
+          "who": "narrator",
+          "at": 5824,
+          "say": "Was bisher geschah: ein Gebiss im Wasserfall, ein Nasenbär mit Gruppenkonto und eine Ehe aus Bonusmeilen.",
+          "text": "Was bisher geschah: ein Gebiss im Wasserfall, ein Nasenbär mit Gruppenkonto und eine Ehe aus Bonusmeilen."
+        },
+        {
+          "key": "h1",
+          "who": "narrator",
+          "at": 15034,
+          "say": "Manaus. Zwei Uhr nachts. Dreißig Grad. Simon kommt nach Hause.",
+          "text": "Manaus, 2 Uhr nachts, 30 Grad. Simon kommt nach Hause."
+        },
+        {
+          "key": "h2",
+          "who": "simon",
+          "at": 21878,
+          "say": "Jungs! Ich hab geknutscht! Mit Zunge! Und sie hat mich überall angefasst!",
+          "text": "Jungs! Ich hab geknutscht! Mit Zunge! Und sie hat mich überall angefasst! 💋",
+          "face": "heart"
+        },
+        {
+          "key": "h3",
+          "who": "jonas",
+          "at": 27304,
+          "say": "Überall? Auch da, wo dein Handy war?",
+          "text": "Überall? Auch da, wo dein Handy war? 🤨"
+        },
+        {
+          "key": "h4",
+          "who": "simon",
+          "at": 30836,
+          "say": "Handy weg. Geldbeutel weg. Schuhe weg.",
+          "text": "Handy weg. Geldbeutel weg. Schuhe weg. 😱",
+          "face": "shock",
+          "close": 1
+        },
+        {
+          "key": "h5",
+          "who": "patrick",
+          "at": 34092,
+          "say": "Aber die Unterhose hast du noch?",
+          "text": "Aber die Unterhose hast du noch? 🩲"
+        },
+        {
+          "key": "h6",
+          "who": "simon",
+          "at": 37076,
+          "say": "Ja. Aber das ist nicht meine.",
+          "text": "Ja … aber das ist nicht meine. 👙",
+          "laugh": 1,
+          "react": {
+            "jonas": "shock",
+            "patrick": "shock"
+          }
+        },
+        {
+          "key": "h7",
+          "who": "narrator",
+          "at": 41474,
+          "say": "Simon schreibt ihr bis heute jeden Abend. Sie antwortet sogar. Von seinem Handy.",
+          "text": "Simon schreibt ihr bis heute jeden Abend. Sie antwortet sogar. Von seinem Handy. 📱",
+          "laugh": 1
+        },
+        {
+          "key": "r1",
+          "who": "narrator",
+          "at": 49934,
+          "say": "Am nächsten Morgen. Zwei Flüsse treffen sich und vermischen sich nicht.",
+          "text": "Am nächsten Morgen: Zwei Flüsse treffen sich – und vermischen sich nicht. 🟫🟨"
+        },
+        {
+          "key": "r2",
+          "who": "jonas",
+          "at": 55236,
+          "say": "Wie Simon und die Frauen. Kilometerlang nebeneinander. Nie Kontakt.",
+          "text": "Wie Simon und die Frauen. Kilometerlang nebeneinander. Nie Kontakt.",
+          "laugh": 1,
+          "react": {
+            "simon": "angry"
+          }
+        },
+        {
+          "key": "r3",
+          "who": "guide",
+          "at": 60990,
+          "say": "Olja! Rosa Flussdelfine!",
+          "text": "Olha! Rosa Flussdelfine! 🐬",
+          "name": "Guide"
+        },
+        {
+          "key": "r4",
+          "who": "patrick",
+          "at": 64278,
+          "say": "Ein rosa Delfin. Endlich einer mit Simons Hautfarbe.",
+          "text": "Ein rosa Delfin. Endlich einer mit Simons Hautfarbe. 🦞",
+          "laugh": 1,
+          "rshot": "simon"
+        },
+        {
+          "key": "r5",
+          "who": "marco",
+          "at": 69502,
+          "say": "Ähm. Die Blasen da hinten. Das war kein Delfin.",
+          "text": "Ähm … die Blasen da hinten. Das war kein Delfin. 💨",
+          "laugh": 1
+        },
+        {
+          "key": "r6",
+          "who": "simon",
+          "at": 73716,
+          "say": "Ich küss ihn. Delfine bringen Glück.",
+          "text": "Ich küss ihn. Delfine bringen Glück. 😘🐬"
+        },
+        {
+          "key": "r7",
+          "who": "greisel",
+          "at": 77548,
+          "say": "Schatz. Mir ist schlecht.",
+          "text": "Schatz … mir ist schlecht. 🤢",
+          "face": "dizzy"
+        },
+        {
+          "key": "r8",
+          "who": "dajo",
+          "at": 79798,
+          "say": "Nicht in den Fluss! Das ist ein Naturschutzgebiet!",
+          "text": "Nicht in den Fluss! Das ist ein Naturschutzgebiet!",
+          "face": "shock"
+        },
+        {
+          "key": "r9",
+          "who": "narrator",
+          "at": 86598,
+          "say": "Der Delfin ist jetzt grün. Und in Therapie.",
+          "text": "Der Delfin ist jetzt grün. Und in Therapie. 🛋️",
+          "laugh": 1
+        },
+        {
+          "key": "l1",
+          "who": "narrator",
+          "at": 92764,
+          "say": "Juma Lodge. Kabine drei. Das Klo hat keine Tür. Dafür Aussicht.",
+          "text": "Juma Lodge, Kabine 3. Das Klo hat keine Tür. Dafür Aussicht. 🚽🌴"
+        },
+        {
+          "key": "l2",
+          "who": "jonas",
+          "at": 97770,
+          "say": "Kleine Info: Das Eis in den Caipirinhas ist aus Flusswasser.",
+          "text": "Kleine Info: Das Eis in den Caipirinhas ist aus Flusswasser. 🧊"
+        },
+        {
+          "key": "l3",
+          "who": "patrick",
+          "at": 102390,
+          "say": "Ich hatte sechs.",
+          "text": "Ich hatte sechs. 😳",
+          "face": "shock",
+          "close": 1
+        },
+        {
+          "key": "l4",
+          "who": "narrator",
+          "at": 106382,
+          "say": "Er hat es fast geschafft.",
+          "text": "Er hat es … fast geschafft. 💩",
+          "laugh": 1
+        },
+        {
+          "key": "l5",
+          "who": "narrator",
+          "at": 111932,
+          "say": "Das Erdbebenzentrum Manaus meldete Stärke vier Komma zwei. Epizentrum: Kabine drei.",
+          "text": "Erdbebenzentrum Manaus: Stärke 4,2. Epizentrum: Kabine 3. 📈",
+          "laugh": 1
+        },
+        {
+          "key": "l6",
+          "who": "marco",
+          "at": 117978,
+          "say": "Die Affen flüchten! Sogar die Affen flüchten!",
+          "text": "Die Affen flüchten! Sogar die Affen flüchten! 🐒",
+          "face": "shock"
+        },
+        {
+          "key": "l7",
+          "who": "patrick",
+          "at": 122068,
+          "say": "Klopapier! Wer hat das Klopapier?",
+          "text": "Klopapier!! Wer hat das Klopapier?! 🧻",
+          "face": "shock"
+        },
+        {
+          "key": "l8",
+          "who": "patrick",
+          "at": 127114,
+          "say": "Egal. Ich nehm das große Blatt hier.",
+          "text": "Egal. Ich nehm das große Blatt hier. 🍃"
+        },
+        {
+          "key": "l9",
+          "who": "guide",
+          "at": 130046,
+          "say": "Nau! Das ist Feuerblatt! Brennt drei Tage!",
+          "text": "Não!! Das ist Feuerblatt! Brennt drei Tage! 🔥",
+          "name": "Guide",
+          "face": "shock"
+        },
+        {
+          "key": "l10",
+          "who": "narrator",
+          "at": 135450,
+          "say": "Patrick lernte an diesem Tag zwei portugiesische Wörter. Hospital. Und Ai.",
+          "text": "Patrick lernte an diesem Tag zwei portugiesische Wörter: „Hospital“. Und „Ai“. 🚑",
+          "laugh": 1
+        },
+        {
+          "key": "p1",
+          "who": "narrator",
+          "at": 143538,
+          "say": "Nachmittags. Piranha-Angeln. Köder: rohes Fleisch.",
+          "text": "Nachmittags: Piranha-Angeln. Köder: rohes Fleisch. 🥩"
+        },
+        {
+          "key": "p2",
+          "who": "dajo",
+          "at": 148838,
+          "say": "Fünf Stück. Und ihr Weicheier? Null.",
+          "text": "Fünf Stück. Und ihr Weicheier? Null. 🐟"
+        },
+        {
+          "key": "p3",
+          "who": "marco",
+          "at": 151870,
+          "say": "Wie machst du das?",
+          "text": "Wie machst du das?"
+        },
+        {
+          "key": "p4",
+          "who": "dajo",
+          "at": 153786,
+          "say": "Ganz einfach. Ich hab Greisels Fuß ins Wasser gehängt.",
+          "text": "Ganz einfach. Ich hab Greisels Fuß ins Wasser gehängt. 🦶",
+          "laugh": 1,
+          "react": {
+            "marco": "shock"
+          }
+        },
+        {
+          "key": "p5",
+          "who": "greisel",
+          "at": 158434,
+          "say": "Ja, Schatz.",
+          "text": "Ja, Schatz … 😴",
+          "laugh": 1
+        },
+        {
+          "key": "p6",
+          "who": "patrick",
+          "at": 161116,
+          "say": "Ich hab einen! Der ist riesig!",
+          "text": "Ich hab einen! Der ist riesig! 🎣"
+        },
+        {
+          "key": "p7",
+          "who": "patrick",
+          "at": 164876,
+          "say": "Mein Gebiss! Er hat es mir zurückgebracht!",
+          "text": "Mein Gebiss!! Er hat es mir zurückgebracht! 🦷",
+          "face": "heart",
+          "close": 1,
+          "laugh": 1
+        },
+        {
+          "key": "p8",
+          "who": "narrator",
+          "at": 169080,
+          "say": "Patrick hat den Piranha geküsst. Der Piranha hat zurückgebissen.",
+          "text": "Patrick hat den Piranha geküsst. Der Piranha hat zurückgebissen. 😘🐟",
+          "laugh": 1
+        },
+        {
+          "key": "b1",
+          "who": "narrator",
+          "at": 176548,
+          "say": "Abends. Die Bar ist nicht inklusive. Das hat keinen aufgehalten.",
+          "text": "Abends. Die Bar ist nicht inklusive. Das hat keinen aufgehalten. 🍹"
+        },
+        {
+          "key": "b2",
+          "who": "marco",
+          "at": 181616,
+          "say": "Rülps-Duell! Ich gegen Daijo! Wer verliert, zahlt!",
+          "text": "Rülps-Duell! Ich gegen Daijo! Wer verliert, zahlt!"
+        },
+        {
+          "key": "b3",
+          "who": "marco",
+          "at": 187716,
+          "say": "Na? Schlag das, Tschechin!",
+          "text": "Na? Schlag das, Tschechin! 😏"
+        },
+        {
+          "key": "b4",
+          "who": "narrator",
+          "at": 193528,
+          "say": "Ein Jaguar im Wald hat sich ergeben.",
+          "text": "Ein Jaguar im Wald hat sich ergeben. 🐆🏳️",
+          "laugh": 1
+        },
+        {
+          "key": "b5",
+          "who": "jonas",
+          "at": 197360,
+          "say": "Leute! Ich liebe euch! Ab heute gibt es Demokratie! Wir stimmen ab!",
+          "text": "Leute! Ich liebe euch! Ab heute gibt’s Demokratie! Wir stimmen ab! 🗳️",
+          "face": "dizzy"
+        },
+        {
+          "key": "b6",
+          "who": "patrick",
+          "at": 202314,
+          "say": "Schnell! Abstimmen, bevor er nüchtern wird!",
+          "text": "Schnell! Abstimmen, bevor er nüchtern wird! ✋",
+          "laugh": 1
+        },
+        {
+          "key": "b7",
+          "who": "narrator",
+          "at": 206880,
+          "say": "Stromausfall.",
+          "text": "Stromausfall. 🔌"
+        },
+        {
+          "key": "b8",
+          "who": "simon",
+          "at": 210286,
+          "say": "Wer auch immer du bist: Du küsst wie ein Engel. Ein bisschen kratzig.",
+          "text": "Wer auch immer du bist: Du küsst wie ein Engel. Ein bisschen kratzig. 😍"
+        },
+        {
+          "key": "b9",
+          "who": "patrick",
+          "at": 216464,
+          "say": "Gefällt dir meine Goldkette?",
+          "text": "Gefällt dir meine Goldkette? 📿",
+          "laugh": 1,
+          "rshot": "simon",
+          "react": {
+            "simon": "shock"
+          }
+        },
+        {
+          "key": "b10",
+          "who": "narrator",
+          "at": 220200,
+          "say": "Zwei Küsse in Brasilien. Einer hat ihn ausgeraubt. Der andere war Patrick.",
+          "text": "Zwei Küsse in Brasilien. Einer hat ihn ausgeraubt. Der andere war Patrick.",
+          "laugh": 1
+        },
+        {
+          "key": "k1",
+          "who": "narrator",
+          "at": 228288,
+          "say": "Nachts. Kaiman-Safari. Die Kaimane haben Jonas Foto schon gesehen.",
+          "text": "Nachts: Kaiman-Safari. Die Kaimane haben Jonas’ Foto schon gesehen. 🐊"
+        },
+        {
+          "key": "k2",
+          "who": "guide",
+          "at": 233480,
+          "say": "Psst. Kaimane sieht man nachts nur an den Augen.",
+          "text": "Psst. Kaimane sieht man nachts nur an den Augen. 🔦",
+          "name": "Guide"
+        },
+        {
+          "key": "k3",
+          "who": "jonas",
+          "at": 238456,
+          "say": "Warum gucken alle Augen zu mir?",
+          "text": "Warum gucken alle Augen zu mir?! 👀",
+          "face": "shock"
+        },
+        {
+          "key": "k4",
+          "who": "marco",
+          "at": 241178,
+          "say": "Deine Glatze spiegelt die Taschenlampe. Du bist ein Leuchtturm.",
+          "text": "Deine Glatze spiegelt die Taschenlampe. Du bist ein Leuchtturm. 🗼",
+          "laugh": 1
+        },
+        {
+          "key": "k5",
+          "who": "guide",
+          "at": 248084,
+          "say": "Sokorro! Hilfe!",
+          "text": "Socorro!! Hilfe!! 🆘",
+          "name": "Guide"
+        },
+        {
+          "key": "k6",
+          "who": "jonas",
+          "at": 249914,
+          "say": "Abstimmung! Wer ist dafür, dass wir ihn retten?",
+          "text": "Abstimmung! Wer ist dafür, dass wir ihn retten? 🗳️"
+        },
+        {
+          "key": "k7",
+          "who": "dajo",
+          "at": 255628,
+          "say": "Er hat den Bootsschlüssel.",
+          "text": "Er hat den Bootsschlüssel. 🔑"
+        },
+        {
+          "key": "k8",
+          "who": "narrator",
+          "at": 259240,
+          "say": "Einstimmig. Demokratie funktioniert. Der Kaiman trägt jetzt Fischerhut.",
+          "text": "Einstimmig. Demokratie funktioniert. Der Kaiman trägt jetzt Fischerhut. 🐊👒",
+          "laugh": 1
+        },
+        {
+          "key": "e1",
+          "who": "marco",
+          "at": 268042,
+          "say": "Wo ist meine Zahnbürste? Der Affe putzt sich damit den Hintern!",
+          "text": "Wo ist meine Zahnbürste?! Der Affe putzt sich damit den Hintern! 🐒🪥",
+          "face": "angry"
+        },
+        {
+          "key": "e2",
+          "who": "patrick",
+          "at": 272848,
+          "say": "Keine Sorge. Ich hab sie schon schlimmer benutzt.",
+          "text": "Keine Sorge. Ich hab sie schon schlimmer benutzt. 😇",
+          "laugh": 1,
+          "react": {
+            "marco": "shock"
+          }
+        },
+        {
+          "key": "e3",
+          "who": "greisel",
+          "at": 278886,
+          "say": "Sind wir schon in Rio?",
+          "text": "Sind wir schon in Rio? 🥱"
+        },
+        {
+          "key": "e4",
+          "who": "dajo",
+          "at": 281050,
+          "say": "Nein, Schatz. Du hast den ganzen Dschungel verschlafen.",
+          "text": "Nein, Schatz. Du hast den ganzen Dschungel verschlafen."
+        },
+        {
+          "key": "e5",
+          "who": "greisel",
+          "at": 285360,
+          "say": "Super. War es schön?",
+          "text": "Super. War’s schön? 😊",
+          "laugh": 1
+        },
+        {
+          "key": "e6",
+          "who": "narrator",
+          "at": 288500,
+          "say": "Bilanz Amazonas: ein Handy weg, ein Hut weg, ein Kuss mit Patrick. Und ein Hintern voller Feuerblatt.",
+          "text": "Bilanz Amazonas: ein Handy weg, ein Hut weg, ein Kuss mit Patrick. Und ein Hintern voller Feuerblatt. 🔥",
+          "laugh": 1
+        },
+        {
+          "key": "end",
+          "who": "narrator",
+          "at": 297262,
+          "say": "Nächste Folge: Paraty und Ilha Grande. Die letzten Tage. Die letzten Nerven.",
+          "text": "Nächste Folge: Paraty & Ilha Grande. Die letzten Tage. Die letzten Nerven."
+        }
+      ],
+      "scenes": [
+        {
+          "id": "intro",
+          "t": [
+            0,
+            13634
+          ]
+        },
+        {
+          "id": "hos",
+          "t": [
+            13634,
+            48634
+          ]
+        },
+        {
+          "id": "rio",
+          "t": [
+            48634,
+            91464
+          ]
+        },
+        {
+          "id": "cab",
+          "t": [
+            91464,
+            142238
+          ]
+        },
+        {
+          "id": "pir",
+          "t": [
+            142238,
+            175248
+          ]
+        },
+        {
+          "id": "jbar",
+          "t": [
+            175248,
+            226988
+          ]
+        },
+        {
+          "id": "kai",
+          "t": [
+            226988,
+            265842
+          ]
+        },
+        {
+          "id": "ham",
+          "t": [
+            265842,
+            296962
+          ]
+        },
+        {
+          "id": "end",
+          "t": [
+            296962,
+            313874
+          ]
+        }
+      ],
+      "voice": {},
+      "cold": {
+        "from": [
+          "l4",
+          400
+        ],
+        "to": [
+          "l5",
+          900
+        ],
+        "label": "⏪ Einen Tag früher …"
+      },
+      "cameo": [
+        {
+          "sc": "cab",
+          "key": "l7",
+          "d": -1200,
+          "dur": 2600,
+          "x": 600,
+          "x2": 900,
+          "y": 0,
+          "prop": "🧻",
+          "s": 0.8
+        }
+      ]
     }
   }
 }
