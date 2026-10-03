@@ -4401,8 +4401,9 @@
           "key": "sec5",
           "who": "officer",
           "at": 28462,
-          "say": "Alles über hundert Milliliter bleibt hier.",
-          "text": "Alles über 100 Milliliter bleibt hier. 👮"
+          "say": "Alles über hundert Milliliter bleibt hier. Meine Frau sagt danke.",
+          "text": "Alles über 100 Milliliter bleibt hier. Meine Frau sagt danke. 👮🧴",
+          "laugh": 1
         },
         {
           "key": "sec6",
@@ -4424,12 +4425,13 @@
           "key": "bar2",
           "who": "marco",
           "at": 39471,
-          "say": "In Brasilien ist es schon Mittag. Wir sind eigentlich spät dran.",
-          "text": "In Brasilien ist es schon Mittag. Wir sind eigentlich spät dran.",
+          "say": "In Brasilien ist es vier Uhr nachts. Das zählt also noch als gestern.",
+          "text": "In Brasilien ist es 4 Uhr nachts. Das zählt also noch als gestern. 🕓",
           "vo": {
             "pitch": 1.15,
             "speed": 0.95
-          }
+          },
+          "laugh": 1
         },
         {
           "key": "bar3",
@@ -4470,16 +4472,16 @@
           "key": "fly2",
           "who": "patrick",
           "at": 59723,
-          "say": "Beides, bitte!",
-          "text": "Beides, bitte! 🍗🍝",
+          "say": "Beides. Und das von meinem Nachbarn.",
+          "text": "Beides. Und das von meinem Nachbarn. 🍗🍝",
           "laugh": 1
         },
         {
           "key": "fly3",
           "who": "marco",
           "at": 66185,
-          "say": "Turbulenzen! Ich hab mein Testament nicht unterschrieben!",
-          "text": "Turbulenzen!! Ich hab mein Testament nicht unterschrieben! 😱",
+          "say": "Turbulenzen! Ich hab meinen Browserverlauf nicht gelöscht!",
+          "text": "Turbulenzen!! Ich hab meinen Browserverlauf nicht gelöscht! 😱",
           "vo": {
             "pitch": 1.15,
             "speed": 0.95
@@ -4610,8 +4612,8 @@
           "key": "uber2",
           "who": "marco",
           "at": 116145,
-          "say": "Der fährt hundertvierzig. Ich glaube, ich habe gerade Gott gesehen.",
-          "text": "Der fährt 140. Ich glaube, ich habe gerade Gott gesehen. 🙏",
+          "say": "Der fährt hundertvierzig. Gott hat uns gerade überholt. Und gehupt.",
+          "text": "Der fährt 140. Gott hat uns gerade überholt. Und gehupt. 🙏",
           "vo": {
             "pitch": 1.15,
             "speed": 0.95
@@ -4660,8 +4662,8 @@
           "key": "beach2",
           "who": "marco",
           "at": 134249,
-          "say": "Olá! Ich kann kein Portugiesisch. Aber ich kann sehr gut zuhören.",
-          "text": "Olá! Ich kann kein Portugiesisch. Aber ich kann sehr gut zuhören. 😎",
+          "say": "Olá! Ich spreche kein Portugiesisch. Aber ich kann sehr laut Deutsch.",
+          "text": "Olá! Ich spreche kein Portugiesisch. Aber ich kann sehr laut Deutsch. 📢",
           "vo": {
             "pitch": 1.15,
             "speed": 0.95
@@ -5644,8 +5646,9 @@
           "key": "cr1",
           "who": "jonas",
           "at": 109106,
-          "say": "Zweihundertzwanzig Stufen. Für eine Wolke.",
-          "text": "220 Stufen. Für eine Wolke. ☁️"
+          "say": "Zweihundertzwanzig Stufen. Und oben steht ein Typ, der auch nichts sieht.",
+          "text": "220 Stufen. Und oben steht ein Typ, der auch nichts sieht. ☁️",
+          "laugh": 1
         },
         {
           "key": "cr2",
@@ -5668,8 +5671,8 @@
           "key": "cr4",
           "who": "marco",
           "at": 120191,
-          "say": "Mach ein Foto! Ich bin auch ein Erlöser!",
-          "text": "Mach ein Foto! Ich bin auch ein Erlöser! 📸",
+          "say": "Mach ein Foto! Gleiche Pose. Nur mit mehr Bauch.",
+          "text": "Mach ein Foto! Gleiche Pose. Nur mit mehr Bauch. 📸",
           "vo": {
             "pitch": 1.15,
             "speed": 0.95
@@ -5724,8 +5727,8 @@
           "key": "ro5",
           "who": "patrick",
           "at": 146462,
-          "say": "Nur Pause. Gleich kommt der Nachtisch.",
-          "text": "Nur Pause. Gleich kommt der Nachtisch.",
+          "say": "Nur Pause. Mein Magen installiert gerade ein Update.",
+          "text": "Nur Pause. Mein Magen installiert gerade ein Update. ⏳",
           "laugh": 1
         },
         {
@@ -6549,8 +6552,9 @@
           "key": "g4",
           "who": "dajo",
           "at": 28948,
-          "say": "Deine Freunde. Für die nächsten zwei Wochen.",
-          "text": "Deine Freunde. Für die nächsten zwei Wochen."
+          "say": "Deine Freunde. Du hast Ja gesagt. Zu allem.",
+          "text": "Deine Freunde. Du hast Ja gesagt. Zu allem. 💍",
+          "laugh": 1
         },
         {
           "key": "g5",
@@ -6819,8 +6823,9 @@
           "key": "a5",
           "who": "jonas",
           "at": 161442,
-          "say": "Das Foto ist vom letzten Jahr.",
-          "text": "Das Foto ist vom letzten Jahr. 😅"
+          "say": "Die Haare sind nur im Urlaub.",
+          "text": "Die Haare sind nur im Urlaub. 😅",
+          "laugh": 1
         },
         {
           "key": "a6",
