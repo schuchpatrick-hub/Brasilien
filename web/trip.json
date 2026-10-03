@@ -4362,21 +4362,21 @@
         {
           "key": "intro",
           "who": "narrator",
-          "at": 6900,
+          "at": 1600,
           "say": "Gringos! Die Serie. Folge eins: Ab in den Süden!",
           "text": "📺 Gringos – Die Serie · Folge 1: Ab in den Süden!"
         },
         {
           "key": "sec1",
           "who": "officer",
-          "at": 16500,
+          "at": 11200,
           "say": "Nächster Koffer, bitte!",
           "text": "Nächster Koffer, bitte!"
         },
         {
           "key": "sec2",
           "who": "officer",
-          "at": 20309,
+          "at": 15009,
           "say": "Was ist denn das? Dreißig Flaschen Sonnencreme?",
           "text": "Was ist denn das? 30 Flaschen Sonnencreme?! 🧴",
           "react": {
@@ -4386,28 +4386,28 @@
         {
           "key": "sec3",
           "who": "simon",
-          "at": 23568,
+          "at": 18268,
           "say": "Lichtschutzfaktor fünfzig! Ich bin halt ein sensibler Typ.",
           "text": "Lichtschutzfaktor 50! Ich bin halt ein sensibler Typ. 😇"
         },
         {
           "key": "sec4",
           "who": "jonas",
-          "at": 27335,
+          "at": 22035,
           "say": "Simon, ohne Creme bist du in drei Tagen ein Brathähnchen. Und Patrick hat Hunger.",
           "text": "Simon, ohne Creme bist du in drei Tagen ein Brathähnchen. Und Patrick hat Hunger. 🍗"
         },
         {
           "key": "sec5",
           "who": "officer",
-          "at": 34052,
+          "at": 28752,
           "say": "Alles über hundert Milliliter bleibt hier.",
           "text": "Alles über 100 Milliliter bleibt hier. 👮"
         },
         {
           "key": "sec6",
           "who": "simon",
-          "at": 36619,
+          "at": 31319,
           "say": "Neiiin! Meine Babys!",
           "text": "Neiiin! Meine Babys! 😭",
           "close": 1,
@@ -4416,14 +4416,14 @@
         {
           "key": "bar1",
           "who": "patrick",
-          "at": 41249,
+          "at": 35949,
           "say": "Vier Bier, bitte! Im Urlaub zählt die Uhrzeit nicht.",
           "text": "Vier Bier, bitte! Im Urlaub zählt die Uhrzeit nicht. 🍺"
         },
         {
           "key": "bar2",
           "who": "marco",
-          "at": 45671,
+          "at": 40371,
           "say": "In Brasilien ist es schon Mittag. Wir sind eigentlich spät dran.",
           "text": "In Brasilien ist es schon Mittag. Wir sind eigentlich spät dran.",
           "vo": {
@@ -4434,7 +4434,7 @@
         {
           "key": "bar3",
           "who": "simon",
-          "at": 49944,
+          "at": 44644,
           "say": "Ich trinke auf meine Sonnencreme. Sie wurde nur dreißig Flaschen alt.",
           "text": "Ich trinke auf meine Sonnencreme. Sie wurde nur 30 Flaschen alt. 🕯️",
           "vo": {
@@ -4445,7 +4445,7 @@
         {
           "key": "bar4",
           "who": "jonas",
-          "at": 54064,
+          "at": 48764,
           "say": "Prost! Ruhe in Frieden, Lichtschutzfaktor fünfzig.",
           "text": "Prost! Ruhe in Frieden, Lichtschutzfaktor 50. ⚰️",
           "laugh": 1
@@ -4453,7 +4453,7 @@
         {
           "key": "bar5",
           "who": "patrick",
-          "at": 58097,
+          "at": 52797,
           "say": "Neue Regel: Wer zuerst kotzt, zahlt die nächste Runde!",
           "text": "Neue Regel: Wer zuerst kotzt, zahlt die nächste Runde! 🤮",
           "laugh": 1,
@@ -4462,14 +4462,14 @@
         {
           "key": "fly1",
           "who": "steward",
-          "at": 66323,
+          "at": 61023,
           "say": "Chicken oder Pasta?",
           "text": "Chicken oder Pasta?"
         },
         {
           "key": "fly2",
           "who": "patrick",
-          "at": 68096,
+          "at": 62796,
           "say": "Beides, bitte!",
           "text": "Beides, bitte! 🍗🍝",
           "laugh": 1
@@ -4477,7 +4477,7 @@
         {
           "key": "fly3",
           "who": "marco",
-          "at": 74776,
+          "at": 69476,
           "say": "Turbulenzen! Ich hab mein Testament nicht unterschrieben!",
           "text": "Turbulenzen!! Ich hab mein Testament nicht unterschrieben! 😱",
           "vo": {
@@ -4490,7 +4490,7 @@
         {
           "key": "fly8",
           "who": "marco",
-          "at": 78309,
+          "at": 73009,
           "say": "Mir ist schlecht. Wo ist die Tüte?",
           "text": "Mir ist schlecht … Wo ist die Tüte?!",
           "vo": {
@@ -4501,7 +4501,7 @@
         {
           "key": "fly9",
           "who": "jonas",
-          "at": 82871,
+          "at": 77571,
           "say": "Marco! Das war mein Lieblingshemd!",
           "text": "Marco!! Das war mein Lieblingshemd! 🤢",
           "face": "angry",
@@ -4510,7 +4510,7 @@
         {
           "key": "fly10",
           "who": "marco",
-          "at": 85458,
+          "at": 80158,
           "say": "Jetzt hat es wenigstens ein Muster.",
           "text": "Jetzt hat es wenigstens ein Muster.",
           "vo": {
@@ -4525,7 +4525,7 @@
         {
           "key": "fly4",
           "who": "jonas",
-          "at": 87965,
+          "at": 82665,
           "say": "Keine Panik. Wenn wir abstürzen, essen wir zuerst Patrick.",
           "text": "Keine Panik. Wenn wir abstürzen, essen wir zuerst Patrick.",
           "react": {
@@ -4535,7 +4535,7 @@
         {
           "key": "fly5",
           "who": "patrick",
-          "at": 92149,
+          "at": 86849,
           "say": "Gute Wahl. Ich bin schon mariniert.",
           "text": "Gute Wahl. Ich bin schon mariniert. 🍷",
           "laugh": 1
@@ -4543,7 +4543,7 @@
         {
           "key": "fly11",
           "who": "patrick",
-          "at": 95893,
+          "at": 90593,
           "say": "Oh nein. Die vier Essen wollen raus. Alle gleichzeitig.",
           "text": "Oh nein. Die vier Essen wollen raus. Alle gleichzeitig. 😰",
           "face": "shock",
@@ -4552,14 +4552,14 @@
         {
           "key": "fly12",
           "who": "steward",
-          "at": 102618,
+          "at": 97318,
           "say": "Das Anschnallzeichen leuchtet. Sie bleiben sitzen.",
           "text": "Das Anschnallzeichen leuchtet. Sie bleiben sitzen. 🔔"
         },
         {
           "key": "fly13",
           "who": "narrator",
-          "at": 105872,
+          "at": 100572,
           "say": "Er blieb sitzen. Reihe zwölf wurde später evakuiert.",
           "text": "Er blieb sitzen. Reihe 12 wurde später evakuiert. 💩",
           "vo": {
@@ -4571,14 +4571,14 @@
         {
           "key": "fly6",
           "who": "simon",
-          "at": 110774,
+          "at": 105474,
           "say": "Entschuldigung, haben Sie auch was für mich? Ihre Nummer vielleicht?",
           "text": "Entschuldigung, haben Sie auch was für mich? Ihre Nummer vielleicht? 😏"
         },
         {
           "key": "fly7",
           "who": "steward",
-          "at": 114916,
+          "at": 109616,
           "say": "Klar. Die vom Notausgang. Ganz hinten links.",
           "text": "Klar. Die vom Notausgang. Ganz hinten links. 🚪",
           "laugh": 1,
@@ -4587,21 +4587,21 @@
         {
           "key": "uber1",
           "who": "local",
-          "at": 121965,
+          "at": 116665,
           "say": "Bem-vindos ao Brasil!",
           "text": "Bem-vindos ao Brasil! 🇧🇷"
         },
         {
           "key": "uber6",
           "who": "local",
-          "at": 123642,
+          "at": 118342,
           "say": "Que cheiro é esse?!",
           "text": "Que cheiro é esse?! (Was stinkt hier so?!) 🤢"
         },
         {
           "key": "uber7",
           "who": "jonas",
-          "at": 124907,
+          "at": 119607,
           "say": "Das ist Patrick. Er hat im Flieger ein Andenken in der Hose.",
           "text": "Das ist Patrick. Er hat im Flieger ein Andenken in der Hose.",
           "laugh": 1
@@ -4609,7 +4609,7 @@
         {
           "key": "uber2",
           "who": "marco",
-          "at": 129747,
+          "at": 124447,
           "say": "Der fährt hundertvierzig. Ich glaube, ich habe gerade Gott gesehen.",
           "text": "Der fährt 140. Ich glaube, ich habe gerade Gott gesehen. 🙏",
           "vo": {
@@ -4621,14 +4621,14 @@
         {
           "key": "uber3",
           "who": "jonas",
-          "at": 134460,
+          "at": 129160,
           "say": "Schau mal, Simon. Die Sonne. Dein natürlicher Feind.",
           "text": "Schau mal, Simon. Die Sonne. Dein natürlicher Feind. ☀️"
         },
         {
           "key": "uber4",
           "who": "simon",
-          "at": 138773,
+          "at": 133473,
           "say": "Kein Problem. Ich hab am Flughafen neue gekauft. Faktor zehn.",
           "text": "Kein Problem. Ich hab am Flughafen neue gekauft. Faktor 10.",
           "vo": {
@@ -4639,7 +4639,7 @@
         {
           "key": "uber5",
           "who": "narrator",
-          "at": 143258,
+          "at": 137958,
           "say": "Er war nicht bereit.",
           "text": "Er war nicht bereit.",
           "vo": {
@@ -4652,14 +4652,14 @@
         {
           "key": "beach1",
           "who": "patrick",
-          "at": 147239,
+          "at": 141939,
           "say": "Caipirinha um zehn Uhr morgens. Ich liebe dieses Land.",
           "text": "Caipirinha um 10 Uhr morgens. Ich liebe dieses Land. 🍹"
         },
         {
           "key": "beach2",
           "who": "marco",
-          "at": 152408,
+          "at": 147108,
           "say": "Olá! Ich kann kein Portugiesisch. Aber ich kann sehr gut zuhören.",
           "text": "Olá! Ich kann kein Portugiesisch. Aber ich kann sehr gut zuhören. 😎",
           "vo": {
@@ -4670,21 +4670,21 @@
         {
           "key": "beach3",
           "who": "girl",
-          "at": 156781,
+          "at": 151481,
           "say": "Wie süß. Mein Freund ist da hinten. Er macht Capoeira.",
           "text": "Wie süß. Mein Freund ist da hinten. Er macht Capoeira. 💪"
         },
         {
           "key": "beach8",
           "who": "jonas",
-          "at": 164376,
+          "at": 159076,
           "say": "Olá! Ich bin Jonas. Deutscher. Sehr pünktlich.",
           "text": "Olá! Ich bin Jonas. Deutscher. Sehr pünktlich. 😎"
         },
         {
           "key": "beach9",
           "who": "girl2",
-          "at": 167949,
+          "at": 162649,
           "say": "Ein pünktlicher Mann? Das gefällt mir.",
           "text": "Ein pünktlicher Mann? Das gefällt mir. 😘",
           "react": {
@@ -4695,7 +4695,7 @@
         {
           "key": "beach10",
           "who": "marco",
-          "at": 172671,
+          "at": 167371,
           "say": "Ich wäre fast gestorben, und der kriegt einen Kuss?!",
           "text": "Ich wäre fast gestorben, und der kriegt einen Kuss?! 😤",
           "vo": {
@@ -4707,14 +4707,14 @@
         {
           "key": "beach5",
           "who": "simon",
-          "at": 183441,
+          "at": 178141,
           "say": "Ich glaube, ich bin leicht gebräunt.",
           "text": "Ich glaube, ich bin leicht gebräunt. 🙂"
         },
         {
           "key": "beach6",
           "who": "patrick",
-          "at": 186087,
+          "at": 180787,
           "say": "Du siehst aus wie ein Hummer, der schlechte Nachrichten bekommen hat.",
           "text": "Du siehst aus wie ein Hummer, der schlechte Nachrichten bekommen hat. 🦞",
           "laugh": 1,
@@ -4723,7 +4723,7 @@
         {
           "key": "beach7",
           "who": "narrator",
-          "at": 191326,
+          "at": 186026,
           "say": "Tag eins. Verluste: eine Würde, eine Hose und dreißig Flaschen Sonnencreme.",
           "text": "Tag 1. Verluste: eine Würde, eine Hose und 30 Flaschen Sonnencreme.",
           "laugh": 1
@@ -4731,7 +4731,7 @@
         {
           "key": "night1",
           "who": "marco",
-          "at": 198847,
+          "at": 193547,
           "say": "Noch eine Runde Caipirinha! Ich zahle!",
           "text": "Noch eine Runde Caipirinha! Ich zahle! 🍹",
           "vo": {
@@ -4742,14 +4742,14 @@
         {
           "key": "night2",
           "who": "jonas",
-          "at": 201627,
+          "at": 196327,
           "say": "Das hast du vor zwei Stunden auch gesagt. Wir warten immer noch.",
           "text": "Das hast du vor zwei Stunden auch gesagt. Wir warten immer noch."
         },
         {
           "key": "night3",
           "who": "patrick",
-          "at": 206021,
+          "at": 200721,
           "say": "Ich liebe euch, Jungs. Wirklich. Wer seid ihr nochmal?",
           "text": "Ich liebe euch, Jungs. Wirklich. Wer seid ihr nochmal? 🥴",
           "face": "dizzy",
@@ -4758,7 +4758,7 @@
         {
           "key": "night5",
           "who": "marco",
-          "at": 212425,
+          "at": 207125,
           "say": "Patrick hat zuerst gekotzt. Patrick zahlt!",
           "text": "Patrick hat zuerst gekotzt. Patrick zahlt! 💸",
           "vo": {
@@ -4773,7 +4773,7 @@
         {
           "key": "night4",
           "who": "simon",
-          "at": 215444,
+          "at": 210144,
           "say": "Nicht so laut! Mein Sonnenbrand hört mit.",
           "text": "Nicht so laut! Mein Sonnenbrand hört mit. 🔥",
           "vo": {
@@ -4784,7 +4784,7 @@
         {
           "key": "end",
           "who": "narrator",
-          "at": 220338,
+          "at": 215038,
           "say": "Fortsetzung folgt!",
           "text": "Fortsetzung folgt …"
         }
@@ -5031,56 +5031,56 @@
           "id": "intro",
           "t": [
             0,
-            14300
+            9000
           ]
         },
         {
           "id": "sec",
           "t": [
-            14300,
-            39849
+            9000,
+            34549
           ]
         },
         {
           "id": "bar",
           "t": [
-            39849,
-            64723
+            34549,
+            59423
           ]
         },
         {
           "id": "fly",
           "t": [
-            64723,
-            120565
+            59423,
+            115265
           ]
         },
         {
           "id": "uber",
           "t": [
-            120565,
-            145839
+            115265,
+            140539
           ]
         },
         {
           "id": "beach",
           "t": [
-            145839,
-            197647
+            140539,
+            192347
           ]
         },
         {
           "id": "night",
           "t": [
-            197647,
-            219738
+            192347,
+            214438
           ]
         },
         {
           "id": "end",
           "t": [
-            219738,
-            230738
+            214438,
+            225438
           ]
         }
       ],
@@ -5460,28 +5460,28 @@
         {
           "key": "intro",
           "who": "narrator",
-          "at": 6800,
+          "at": 1500,
           "say": "Gringos! Die Serie. Folge zwei: Silvester in Rio!",
           "text": "📺 Gringos – Die Serie · Folge 2: Silvester in Rio!"
         },
         {
           "key": "recap",
           "who": "narrator",
-          "at": 10657,
+          "at": 5357,
           "say": "Was bisher geschah: eine Hose verloren, eine Würde verloren, dreißig Flaschen Sonnencreme beerdigt.",
           "text": "Was bisher geschah: eine Hose verloren, eine Würde verloren, 30 Flaschen Sonnencreme beerdigt."
         },
         {
           "key": "land1",
           "who": "pilot",
-          "at": 19557,
+          "at": 14257,
           "say": "Hier spricht Ihr Kapitän. Die Landebahn in Rio ist sehr kurz. Wer beten kann, sollte jetzt anfangen.",
           "text": "📢 Hier spricht Ihr Kapitän. Die Landebahn in Rio ist sehr kurz. Wer beten kann, sollte jetzt anfangen."
         },
         {
           "key": "land2",
           "who": "marco",
-          "at": 25538,
+          "at": 20238,
           "say": "Ich hab im letzten Flug schon gebetet! Mein Guthaben ist aufgebraucht!",
           "text": "Ich hab im letzten Flug schon gebetet! Mein Guthaben ist aufgebraucht! 🙏",
           "vo": {
@@ -5494,7 +5494,7 @@
         {
           "key": "land3",
           "who": "patrick",
-          "at": 32283,
+          "at": 26983,
           "say": "Schaut mal, ein Fisch! Ist das schon das Mittagessen?",
           "text": "Schaut mal, ein Fisch! Ist das schon das Mittagessen? 🐟",
           "laugh": 1
@@ -5502,28 +5502,28 @@
         {
           "key": "land4",
           "who": "pilot",
-          "at": 36535,
+          "at": 31235,
           "say": "Willkommen in Rio. Bitte bleiben Sie angeschnallt, bis wir wieder trocken sind.",
           "text": "📢 Willkommen in Rio. Bitte bleiben Sie angeschnallt, bis wir wieder trocken sind."
         },
         {
           "key": "ny1",
           "who": "narrator",
-          "at": 43608,
+          "at": 38308,
           "say": "Copacabana. Zwei Millionen Menschen, alle in Weiß. Ein Paradies für Taschendiebe.",
           "text": "Copacabana. 2 Millionen Menschen, alle in Weiß. Ein Paradies für Taschendiebe."
         },
         {
           "key": "ny2",
           "who": "jonas",
-          "at": 49228,
+          "at": 43928,
           "say": "Mein Handy ist sicher. Es steckt in meiner Unterhose.",
           "text": "Mein Handy ist sicher. Es steckt in meiner Unterhose. 📱"
         },
         {
           "key": "ny3",
           "who": "patrick",
-          "at": 52827,
+          "at": 47527,
           "say": "Da sucht garantiert keiner. Da war seit Jahren niemand.",
           "text": "Da sucht garantiert keiner. Da war seit Jahren niemand.",
           "laugh": 1,
@@ -5534,21 +5534,21 @@
         {
           "key": "ny4",
           "who": "narrator",
-          "at": 58241,
+          "at": 52941,
           "say": "Drei! Zwei! Eins!",
           "text": "3 … 2 … 1 …"
         },
         {
           "key": "ny5",
           "who": "narrator",
-          "at": 60462,
+          "at": 55162,
           "say": "Feliz Ano Novo!",
           "text": "🎆 Feliz Ano Novo! 🎆"
         },
         {
           "key": "ny6",
           "who": "simon",
-          "at": 63188,
+          "at": 57888,
           "say": "Frohes neues Jahr, meine Schöne.",
           "text": "Frohes neues Jahr, meine Schöne … 😘",
           "vo": {
@@ -5560,7 +5560,7 @@
         {
           "key": "ny7",
           "who": "marco",
-          "at": 66908,
+          "at": 61608,
           "say": "Simon. Ich bin es. Marco. Aber danke, war gar nicht schlecht.",
           "text": "Simon … ich bin’s. Marco. Aber danke, war gar nicht schlecht. 😳",
           "vo": {
@@ -5576,14 +5576,14 @@
         {
           "key": "ny8",
           "who": "narrator",
-          "at": 71171,
+          "at": 65871,
           "say": "Brasilianischer Brauch: Über sieben Wellen springen. Sieben Wünsche.",
           "text": "Brasilianischer Brauch: über 7 Wellen springen – 7 Wünsche. 🌊"
         },
         {
           "key": "ny9",
           "who": "marco",
-          "at": 88673,
+          "at": 83373,
           "say": "Mein siebter Wunsch war: nicht ertrinken. Knapp geschafft.",
           "text": "Mein siebter Wunsch war: nicht ertrinken. Knapp geschafft. 🦀",
           "vo": {
@@ -5596,14 +5596,14 @@
         {
           "key": "kat1",
           "who": "narrator",
-          "at": 94686,
+          "at": 89386,
           "say": "Erster Januar. Elf Uhr. Die Sonne kennt keine Gnade.",
           "text": "1. Januar, 11 Uhr. Die Sonne kennt keine Gnade. ☀️"
         },
         {
           "key": "kat2",
           "who": "jonas",
-          "at": 98572,
+          "at": 93272,
           "say": "Wo ist mein Handy? Und warum fehlt meine Unterhose?",
           "text": "Wo ist mein Handy? Und warum fehlt meine Unterhose?! 😱",
           "face": "shock"
@@ -5611,7 +5611,7 @@
         {
           "key": "kat3",
           "who": "marco",
-          "at": 102601,
+          "at": 97301,
           "say": "Die liegen beide am Strand. Getrennt.",
           "text": "Die liegen beide am Strand. Getrennt.",
           "vo": {
@@ -5623,14 +5623,14 @@
         {
           "key": "kat4",
           "who": "patrick",
-          "at": 105310,
+          "at": 100010,
           "say": "Leute. Ich hab mir für immer frei tätowieren lassen.",
           "text": "Leute. Ich hab mir „Für immer frei“ tätowieren lassen. 💪"
         },
         {
           "key": "kat5",
           "who": "maid",
-          "at": 110187,
+          "at": 104887,
           "say": "Da steht Hähnchenpastete.",
           "text": "Da steht „Hähnchenpastete“. 🥟",
           "laugh": 1,
@@ -5642,7 +5642,7 @@
         {
           "key": "kat6",
           "who": "simon",
-          "at": 112445,
+          "at": 107145,
           "say": "Passt doch. Für immer Hähnchen.",
           "text": "Passt doch. Für immer Hähnchen. 🍗",
           "vo": {
@@ -5654,14 +5654,14 @@
         {
           "key": "cr1",
           "who": "jonas",
-          "at": 117252,
+          "at": 111952,
           "say": "Zweihundertzwanzig Stufen. Für eine Wolke.",
           "text": "220 Stufen. Für eine Wolke. ☁️"
         },
         {
           "key": "cr2",
           "who": "patrick",
-          "at": 120662,
+          "at": 115362,
           "say": "Ich sehe ein helles Licht. Ist das Jesus oder der Notarzt?",
           "text": "Ich sehe ein helles Licht … Ist das Jesus oder der Notarzt? 🚑",
           "face": "dizzy",
@@ -5670,7 +5670,7 @@
         {
           "key": "cr3",
           "who": "narrator",
-          "at": 125111,
+          "at": 119811,
           "say": "Jesus breitet die Arme aus. Vermutlich, um Patrick aufzufangen.",
           "text": "Jesus breitet die Arme aus. Vermutlich, um Patrick aufzufangen.",
           "laugh": 1
@@ -5678,7 +5678,7 @@
         {
           "key": "cr4",
           "who": "marco",
-          "at": 129992,
+          "at": 124692,
           "say": "Mach ein Foto! Ich bin auch ein Erlöser!",
           "text": "Mach ein Foto! Ich bin auch ein Erlöser! 📸",
           "vo": {
@@ -5689,7 +5689,7 @@
         {
           "key": "cr5",
           "who": "simon",
-          "at": 134337,
+          "at": 129037,
           "say": "Gesegnet. Von ganz oben.",
           "text": "Gesegnet. Von ganz oben. 🕊️💩",
           "vo": {
@@ -5701,14 +5701,14 @@
         {
           "key": "ro1",
           "who": "narrator",
-          "at": 139212,
+          "at": 133912,
           "say": "Rodízio. Grüne Karte: mehr Fleisch. Rote Karte: aufhören.",
           "text": "Rodízio: grüne Karte = mehr Fleisch, rote Karte = aufhören."
         },
         {
           "key": "ro2",
           "who": "patrick",
-          "at": 143784,
+          "at": 138484,
           "say": "Rote Karte? Die Seite existiert für mich nicht.",
           "text": "Rote Karte? Die Seite existiert für mich nicht. 🟢",
           "laugh": 1
@@ -5716,14 +5716,14 @@
         {
           "key": "ro3",
           "who": "waiter",
-          "at": 147799,
+          "at": 142499,
           "say": "Picanha?",
           "text": "Picanha? 🥩"
         },
         {
           "key": "ro4",
           "who": "marco",
-          "at": 154814,
+          "at": 149514,
           "say": "Er hat aufgehört zu kauen. Ist er tot?",
           "text": "Er hat aufgehört zu kauen. Ist er tot?",
           "vo": {
@@ -5734,7 +5734,7 @@
         {
           "key": "ro5",
           "who": "patrick",
-          "at": 157505,
+          "at": 152205,
           "say": "Nur Pause. Gleich kommt der Nachtisch.",
           "text": "Nur Pause. Gleich kommt der Nachtisch.",
           "laugh": 1
@@ -5742,21 +5742,21 @@
         {
           "key": "ro6",
           "who": "waiter",
-          "at": 161096,
+          "at": 155796,
           "say": "Mais?",
           "text": "Mais? (Noch mehr?)"
         },
         {
           "key": "zu1",
           "who": "narrator",
-          "at": 165823,
+          "at": 160523,
           "say": "Zuckerhut. Seilbahn. Dreihundertsechsundneunzig Meter über dem Boden.",
           "text": "Zuckerhut-Seilbahn. 396 Meter über dem Boden. 🚡"
         },
         {
           "key": "zu2",
           "who": "marco",
-          "at": 171348,
+          "at": 166048,
           "say": "Wir hängen fest! Bevor wir sterben: Ich hab euer ganzes Bier getrunken!",
           "text": "Wir hängen fest! Bevor wir sterben: Ich hab euer ganzes Bier getrunken! 🍺",
           "vo": {
@@ -5768,7 +5768,7 @@
         {
           "key": "zu3",
           "who": "simon",
-          "at": 175746,
+          "at": 170446,
           "say": "Und ich hab dein Handtuch für meinen Sonnenbrand benutzt. Es ist jetzt orange.",
           "text": "Und ich hab dein Handtuch für meinen Sonnenbrand benutzt. Es ist jetzt orange.",
           "vo": {
@@ -5780,7 +5780,7 @@
         {
           "key": "zu4",
           "who": "patrick",
-          "at": 180010,
+          "at": 174710,
           "say": "Und ich hab mit der roten Zahnbürste das Klo geputzt.",
           "text": "Und ich hab mit der roten Zahnbürste das Klo geputzt. 🪥",
           "laugh": 1
@@ -5788,7 +5788,7 @@
         {
           "key": "zu5",
           "who": "marco",
-          "at": 185932,
+          "at": 180632,
           "say": "Wir leben! Moment. Die rote Zahnbürste ist meine.",
           "text": "Wir leben! … Moment. Die rote Zahnbürste ist meine. 😨",
           "vo": {
@@ -5801,7 +5801,7 @@
         {
           "key": "zu6",
           "who": "patrick",
-          "at": 189708,
+          "at": 184408,
           "say": "Ich weiß.",
           "text": "Ich weiß. 😇",
           "close": 1,
@@ -5810,14 +5810,14 @@
         {
           "key": "call1",
           "who": "greisel",
-          "at": 193986,
+          "at": 188686,
           "say": "Hey Jungs! In drei Tagen sind wir da! Haben wir was verpasst?",
           "text": "Hey Jungs! In drei Tagen sind wir da! Haben wir was verpasst? 👋"
         },
         {
           "key": "call2",
           "who": "jonas",
-          "at": 200272,
+          "at": 194972,
           "say": "Nein. Absolut gar nichts.",
           "text": "Nein. Absolut gar nichts. 🙂",
           "laugh": 1
@@ -5825,7 +5825,7 @@
         {
           "key": "end",
           "who": "narrator",
-          "at": 205107,
+          "at": 199807,
           "say": "Nächste Folge: Daijo und Greisel kommen an. Möge Gott ihnen beistehen.",
           "text": "Nächste Folge: Daijo & Greisel kommen an. Möge Gott ihnen beistehen."
         }
@@ -6069,63 +6069,63 @@
           "id": "intro",
           "t": [
             0,
-            17957
+            12657
           ]
         },
         {
           "id": "land",
           "t": [
-            17957,
-            42108
+            12657,
+            36808
           ]
         },
         {
           "id": "ny",
           "t": [
-            42108,
-            93186
+            36808,
+            87886
           ]
         },
         {
           "id": "kat",
           "t": [
-            93186,
-            115652
+            87886,
+            110352
           ]
         },
         {
           "id": "cristo",
           "t": [
-            115652,
-            137712
+            110352,
+            132412
           ]
         },
         {
           "id": "rod",
           "t": [
-            137712,
-            164323
+            132412,
+            159023
           ]
         },
         {
           "id": "zucker",
           "t": [
-            164323,
-            192486
+            159023,
+            187186
           ]
         },
         {
           "id": "call",
           "t": [
-            192486,
-            204307
+            187186,
+            199007
           ]
         },
         {
           "id": "end",
           "t": [
-            204307,
-            216807
+            199007,
+            211507
           ]
         }
       ],
@@ -6459,63 +6459,63 @@
           "id": "intro",
           "t": [
             0,
-            17815
+            12515
           ]
         },
         {
           "id": "gig",
           "t": [
-            17815,
-            61269
+            12515,
+            55969
           ]
         },
         {
           "id": "boe",
           "t": [
-            61269,
-            101138
+            55969,
+            95838
           ]
         },
         {
           "id": "falls",
           "t": [
-            101138,
-            135961
+            95838,
+            130661
           ]
         },
         {
           "id": "quati",
           "t": [
-            135961,
-            167010
+            130661,
+            161710
           ]
         },
         {
           "id": "grenze",
           "t": [
-            167010,
-            193077
+            161710,
+            187777
           ]
         },
         {
           "id": "boot",
           "t": [
-            193077,
-            221746
+            187777,
+            216446
           ]
         },
         {
           "id": "duel",
           "t": [
-            221746,
-            254585
+            216446,
+            249285
           ]
         },
         {
           "id": "end",
           "t": [
-            254585,
-            267085
+            249285,
+            261785
           ]
         }
       ],
@@ -6523,35 +6523,35 @@
         {
           "key": "intro",
           "who": "narrator",
-          "at": 6800,
+          "at": 1500,
           "say": "Gringos! Die Serie. Folge drei: Daijo und Greisel kommen!",
           "text": "📺 Gringos – Die Serie · Folge 3: Daijo & Greisel kommen!"
         },
         {
           "key": "recap",
           "who": "narrator",
-          "at": 11217,
+          "at": 5917,
           "say": "Was bisher geschah: ein Tattoo, eine tote Zahnbürste und ein Kuss, über den keiner spricht.",
           "text": "Was bisher geschah: ein Tattoo, eine tote Zahnbürste und ein Kuss, über den keiner spricht."
         },
         {
           "key": "g1",
           "who": "narrator",
-          "at": 19315,
+          "at": 14015,
           "say": "Flughafen Galeão, sechs Uhr zehn. Zwei frisch Verheiratete landen in Brasilien. Einer davon bei Bewusstsein.",
           "text": "Galeão, 6:10 Uhr. Zwei frisch Verheiratete landen in Brasilien. Einer davon bei Bewusstsein."
         },
         {
           "key": "g2",
           "who": "dajo",
-          "at": 28535,
+          "at": 23235,
           "say": "Hallo Jungs! Greisel hat auf dem Flug zwei Schlaftabletten genommen.",
           "text": "Hallo Jungs! Greisel hat auf dem Flug zwei Schlaftabletten genommen. 💊"
         },
         {
           "key": "g3",
           "who": "greisel",
-          "at": 33698,
+          "at": 28398,
           "say": "Schatz, wer sind diese Obdachlosen?",
           "text": "Schatz … wer sind diese Obdachlosen? 😳",
           "laugh": 1
@@ -6559,14 +6559,14 @@
         {
           "key": "g4",
           "who": "dajo",
-          "at": 37625,
+          "at": 32325,
           "say": "Deine Freunde. Für die nächsten zwei Wochen.",
           "text": "Deine Freunde. Für die nächsten zwei Wochen."
         },
         {
           "key": "g5",
           "who": "greisel",
-          "at": 40818,
+          "at": 35518,
           "say": "Gib mir noch eine Tablette.",
           "text": "Gib mir noch eine Tablette. 💊",
           "laugh": 1
@@ -6574,7 +6574,7 @@
         {
           "key": "g6",
           "who": "jonas",
-          "at": 44927,
+          "at": 39627,
           "say": "Willkommen! Hier ist eure Rechnung für die erste Woche. Ihr wart ja im Herzen dabei.",
           "text": "Willkommen! Hier ist eure Rechnung für die erste Woche. Ihr wart ja im Herzen dabei. 🧾",
           "face": "cash"
@@ -6582,7 +6582,7 @@
         {
           "key": "g7",
           "who": "dajo",
-          "at": 51849,
+          "at": 46549,
           "say": "Ich habe eine Exel-Tabelle dagegen. Mit Piwo-Tabelle.",
           "text": "Ich hab eine Excel-Tabelle dagegen. Mit Pivot-Tabelle. 📊",
           "react": {
@@ -6592,7 +6592,7 @@
         {
           "key": "g8",
           "who": "narrator",
-          "at": 56653,
+          "at": 51353,
           "say": "Zum ersten Mal in seinem Leben hat Jonas Angst.",
           "text": "Zum ersten Mal in seinem Leben hat Jonas Angst.",
           "laugh": 1
@@ -6600,14 +6600,14 @@
         {
           "key": "b1",
           "who": "narrator",
-          "at": 62769,
+          "at": 57469,
           "say": "Flug nach Iguaçu. Beim Boarding gilt: Wer zuerst drin ist, hat gewonnen.",
           "text": "Flug nach Iguaçu. Beim Boarding gilt: Wer zuerst drin ist, hat gewonnen."
         },
         {
           "key": "b2",
           "who": "patrick",
-          "at": 68653,
+          "at": 63353,
           "say": "Ich hab mir einen Rollstuhl bestellt. Ich darf als Erster rein. Für zwölf Euro.",
           "text": "Ich hab mir einen Rollstuhl bestellt. Ich darf als Erster rein. Für 12 €. ♿",
           "face": "cash"
@@ -6615,7 +6615,7 @@
         {
           "key": "b3",
           "who": "simon",
-          "at": 74723,
+          "at": 69423,
           "say": "Patrick! Du kannst doch laufen!",
           "text": "Patrick! Du kannst doch laufen!",
           "vo": {
@@ -6626,7 +6626,7 @@
         {
           "key": "b4",
           "who": "patrick",
-          "at": 76876,
+          "at": 71576,
           "say": "Leise! Ich bin der Älteste. Mein Ausweis ist mein ärztliches Attest.",
           "text": "Leise! Ich bin der Älteste. Mein Ausweis ist mein ärztliches Attest. 👴",
           "laugh": 1
@@ -6634,7 +6634,7 @@
         {
           "key": "b5",
           "who": "dajo",
-          "at": 83940,
+          "at": 78640,
           "say": "Moment! Ist das etwa eine Boing?",
           "text": "Moment … ist das etwa eine BOEING?! 😱",
           "face": "shock",
@@ -6643,7 +6643,7 @@
         {
           "key": "b6",
           "who": "pilot",
-          "at": 87306,
+          "at": 82006,
           "say": "Liebe Fluggäste, keine Sorge. Die Tür ist nur mit Klebeband befestigt. Mit dem guten Klebeband.",
           "text": "📢 Liebe Fluggäste, keine Sorge: Die Tür ist nur mit Klebeband befestigt. Mit dem guten Klebeband.",
           "laugh": 1,
@@ -6654,7 +6654,7 @@
         {
           "key": "b7",
           "who": "dajo",
-          "at": 93621,
+          "at": 88321,
           "say": "Ich ändere mein Testament. Greisel kriegt nichts.",
           "text": "Ich ändere mein Testament. Greisel kriegt nichts. ✍️",
           "laugh": 1
@@ -6662,7 +6662,7 @@
         {
           "key": "b8",
           "who": "greisel",
-          "at": 97350,
+          "at": 92050,
           "say": "Passt, Schatz.",
           "text": "Passt, Schatz … 😴",
           "vo": {
@@ -6673,14 +6673,14 @@
         {
           "key": "f1",
           "who": "narrator",
-          "at": 102638,
+          "at": 97338,
           "say": "Die Iguaçu-Fälle. Zweihundertfünfundsiebzig Wasserfälle. Über eine Million Liter Wasser pro Sekunde.",
           "text": "Iguaçu-Fälle: 275 Wasserfälle, über 1 Million Liter Wasser pro Sekunde. 💦"
         },
         {
           "key": "f2",
           "who": "simon",
-          "at": 108714,
+          "at": 103414,
           "say": "Das ist genau das Gegenteil von Patrick nachts auf dem Klo.",
           "text": "Das ist genau das Gegenteil von Patrick nachts auf dem Klo. 🚽",
           "vo": {
@@ -6695,7 +6695,7 @@
         {
           "key": "f3",
           "who": "patrick",
-          "at": 112235,
+          "at": 106935,
           "say": "Ich höre das Wasser rauschen. Ich muss schon wieder.",
           "text": "Ich hör das Wasser rauschen … ich muss schon wieder. 😬",
           "laugh": 1,
@@ -6704,14 +6704,14 @@
         {
           "key": "f4",
           "who": "greisel",
-          "at": 117635,
+          "at": 112335,
           "say": "Schatz, endlich. Ein romantisches Foto. Nur wir zwei.",
           "text": "Schatz, endlich: ein romantisches Foto. Nur wir zwei. 💍📸"
         },
         {
           "key": "f5",
           "who": "simon",
-          "at": 124357,
+          "at": 119057,
           "say": "Oi, gatinha!",
           "text": "Oi, gatinha! 😘",
           "vo": {
@@ -6722,7 +6722,7 @@
         {
           "key": "f6",
           "who": "narrator",
-          "at": 128199,
+          "at": 122899,
           "say": "Simon wurde nie wieder gesehen. Bis zum Abendessen.",
           "text": "Simon wurde nie wieder gesehen. … Bis zum Abendessen.",
           "laugh": 1
@@ -6730,7 +6730,7 @@
         {
           "key": "f7",
           "who": "dajo",
-          "at": 131363,
+          "at": 126063,
           "say": "Aber das Foto ist schön geworden.",
           "text": "Aber das Foto ist schön geworden. 🖼️",
           "laugh": 1
@@ -6738,7 +6738,7 @@
         {
           "key": "q1",
           "who": "narrator",
-          "at": 137461,
+          "at": 132161,
           "say": "Achtung: die Nasenbären von Iguaçu. Organisierte Kriminalität mit Ringelschwanz.",
           "text": "Achtung: die Nasenbären von Iguaçu. Organisierte Kriminalität mit Ringelschwanz. 🦝",
           "laugh": 1
@@ -6746,14 +6746,14 @@
         {
           "key": "q2",
           "who": "jonas",
-          "at": 142616,
+          "at": 137316,
           "say": "Eintritt: vierzig Euro pro Person. Ich trag es gleich in Splitwise ein.",
           "text": "Eintritt: 40 € pro Person. Ich trag’s gleich in Splitwise ein. 📱"
         },
         {
           "key": "q3",
           "who": "jonas",
-          "at": 149368,
+          "at": 144068,
           "say": "Er hat mein Handy! Da ist Splitwise drauf!",
           "text": "Er hat mein Handy!! Da ist Splitwise drauf!! 😱",
           "face": "shock"
@@ -6761,7 +6761,7 @@
         {
           "key": "q4",
           "who": "marco",
-          "at": 152435,
+          "at": 147135,
           "say": "Lass ihn laufen! Wir sind frei!",
           "text": "Lass ihn laufen! Wir sind frei! 🕊️",
           "vo": {
@@ -6773,7 +6773,7 @@
         {
           "key": "q5",
           "who": "patrick",
-          "at": 154458,
+          "at": 149158,
           "say": "Ich war achthundert Euro im Minus. Ich adoptiere dieses Tier.",
           "text": "Ich war 800 € im Minus. Ich adoptiere dieses Tier. 🥹",
           "laugh": 1,
@@ -6782,7 +6782,7 @@
         {
           "key": "q6",
           "who": "narrator",
-          "at": 161157,
+          "at": 155857,
           "say": "Der Nasenbär hat sich nach Argentinien abgesetzt. Mit dem Gruppenkonto.",
           "text": "Der Nasenbär hat sich nach Argentinien abgesetzt. Mit dem Gruppenkonto. 🇦🇷",
           "laugh": 1
@@ -6790,14 +6790,14 @@
         {
           "key": "a1",
           "who": "narrator",
-          "at": 168510,
+          "at": 163210,
           "say": "Argentinische Grenze. Ohne Reisepass kommt hier keiner rein. Mit Reisepass auch nicht immer.",
           "text": "Argentinische Grenze. Ohne Reisepass kommt hier keiner rein. Mit Reisepass auch nicht immer."
         },
         {
           "key": "a2",
           "who": "officer",
-          "at": 174460,
+          "at": 169160,
           "say": "Pass, bitte. Moment. Dani Olmo? Ein Autogramm für meinen Sohn!",
           "text": "Pass, bitte … Moment. DANI OLMO?! Ein Autogramm für meinen Sohn! ⚽",
           "name": "Grenzbeamter"
@@ -6805,7 +6805,7 @@
         {
           "key": "a3",
           "who": "marco",
-          "at": 178907,
+          "at": 173607,
           "say": "Gerne. Und für Sie hätte ich noch eine Wohnung. Vierter Stock, ohne Aufzug.",
           "text": "Gerne. Und für Sie hätte ich noch eine Wohnung. 4. Stock, ohne Aufzug. 🏢",
           "vo": {
@@ -6818,7 +6818,7 @@
         {
           "key": "a4",
           "who": "officer",
-          "at": 184505,
+          "at": 179205,
           "say": "Und Sie? Auf dem Foto haben Sie Haare.",
           "text": "Und Sie? Auf dem Foto haben Sie Haare. 🤨",
           "name": "Grenzbeamter",
@@ -6829,14 +6829,14 @@
         {
           "key": "a5",
           "who": "jonas",
-          "at": 187155,
+          "at": 181855,
           "say": "Das Foto ist vom letzten Jahr.",
           "text": "Das Foto ist vom letzten Jahr. 😅"
         },
         {
           "key": "a6",
           "who": "officer",
-          "at": 189565,
+          "at": 184265,
           "say": "Zelle drei.",
           "text": "Zelle drei. 🔒",
           "name": "Grenzbeamter",
@@ -6846,21 +6846,21 @@
         {
           "key": "m1",
           "who": "narrator",
-          "at": 194577,
+          "at": 189277,
           "say": "Bootstour direkt unter die Wasserfälle. Daijo hat sich vorbereitet.",
           "text": "Bootstour direkt unter die Wasserfälle. Daijo hat sich vorbereitet."
         },
         {
           "key": "m2",
           "who": "dajo",
-          "at": 198361,
+          "at": 193061,
           "say": "Regenjacke. Taucherbrille. Schnorchel. Ich bin vorbereitet.",
           "text": "Regenjacke, Taucherbrille, Schnorchel. Ich bin vorbereitet. 🥽"
         },
         {
           "key": "m3",
           "who": "marco",
-          "at": 203187,
+          "at": 197887,
           "say": "Wir auch. Wir sind betrunken.",
           "text": "Wir auch. Wir sind betrunken. 🍻",
           "vo": {
@@ -6872,7 +6872,7 @@
         {
           "key": "m4",
           "who": "patrick",
-          "at": 207517,
+          "at": 202217,
           "say": "Mein Gebiss! Mein Gebiss ist weg!",
           "text": "Mein Gebiss!! Mein Gebiss ist weg!! 🦷",
           "face": "shock",
@@ -6881,7 +6881,7 @@
         {
           "key": "m5",
           "who": "greisel",
-          "at": 211548,
+          "at": 206248,
           "say": "Wo bin ich? Bin ich tot?",
           "text": "Wo bin ich? Bin ich tot? 😵",
           "face": "dizzy"
@@ -6889,14 +6889,14 @@
         {
           "key": "m6",
           "who": "dajo",
-          "at": 213854,
+          "at": 208554,
           "say": "Nein, Schatz. Flitterwochen.",
           "text": "Nein, Schatz. Flitterwochen. 💕"
         },
         {
           "key": "m7",
           "who": "greisel",
-          "at": 216632,
+          "at": 211332,
           "say": "Ach so. Dann wäre ich lieber tot.",
           "text": "Ach so. Dann wär ich lieber tot. 💀",
           "vo": {
@@ -6908,14 +6908,14 @@
         {
           "key": "d1",
           "who": "narrator",
-          "at": 223246,
+          "at": 217946,
           "say": "Abends. Ein Trinkduell. Daijo gegen Marco. Tschechien gegen den Rest der Welt.",
           "text": "Abends. Trinkduell: Daijo 🇨🇿 gegen Marco. Tschechien gegen den Rest der Welt."
         },
         {
           "key": "d2",
           "who": "marco",
-          "at": 231084,
+          "at": 225784,
           "say": "Ich sehe drei Daijos. Und alle drei gewinnen.",
           "text": "Ich seh drei Daijos … und alle drei gewinnen. 🥴",
           "vo": {
@@ -6928,7 +6928,7 @@
         {
           "key": "d3",
           "who": "dajo",
-          "at": 234194,
+          "at": 228894,
           "say": "Noch eine Runde. Zahlt mein Mann.",
           "text": "Noch eine Runde. Zahlt mein Mann. 💳",
           "laugh": 1
@@ -6936,7 +6936,7 @@
         {
           "key": "d4",
           "who": "greisel",
-          "at": 237008,
+          "at": 231708,
           "say": "Ja, Schatz.",
           "text": "Ja, Schatz … 😴",
           "laugh": 1
@@ -6944,7 +6944,7 @@
         {
           "key": "d5",
           "who": "patrick",
-          "at": 239818,
+          "at": 234518,
           "say": "Ich mal schon mal den Umriss. Für die Versicherung.",
           "text": "Ich mal schon mal den Umriss. Für die Versicherung. ✏️",
           "laugh": 1
@@ -6952,7 +6952,7 @@
         {
           "key": "d6",
           "who": "simon",
-          "at": 245113,
+          "at": 239813,
           "say": "Hallo Leute! Ich bin noch am Leben! Hat mich jemand vermisst?",
           "text": "Hallo Leute! Ich bin noch am Leben! Hat mich jemand vermisst? 🐟",
           "vo": {
@@ -6963,7 +6963,7 @@
         {
           "key": "d7",
           "who": "jonas",
-          "at": 248983,
+          "at": 243683,
           "say": "Nein. Aber der Nasenbär hat dir schon eine Rechnung geschickt.",
           "text": "Nein. Aber der Nasenbär hat dir schon eine Rechnung geschickt. 🦝🧾",
           "laugh": 1,
@@ -6972,7 +6972,7 @@
         {
           "key": "end",
           "who": "narrator",
-          "at": 255385,
+          "at": 250085,
           "say": "Nächste Folge: Ab in den Dschungel. Die Kaimane haben Jonas Foto schon gesehen. Und sich gefreut.",
           "text": "Nächste Folge: Ab in den Dschungel. Die Kaimane haben Jonas’ Foto schon gesehen. Und sich gefreut. 🐊"
         }
