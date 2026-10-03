@@ -6576,18 +6576,19 @@
           "key": "g7",
           "who": "dajo",
           "at": 40241,
-          "say": "Ich habe eine Exel-Tabelle dagegen. Mit Piwo-Tabelle.",
-          "text": "Ich hab eine Excel-Tabelle dagegen. Mit Pivot-Tabelle. 📊",
+          "say": "Gerne. Abzüglich eures Hochzeitsgeschenks. Ach so. Da kam ja nichts.",
+          "text": "Gerne. Abzüglich eures Hochzeitsgeschenks. … Ach so. Da kam ja nichts. 🎁",
           "react": {
             "jonas": "shock"
-          }
+          },
+          "laugh": 1
         },
         {
           "key": "g8",
           "who": "narrator",
           "at": 44378,
-          "say": "Zum ersten Mal in seinem Leben hat Jonas Angst.",
-          "text": "Zum ersten Mal in seinem Leben hat Jonas Angst.",
+          "say": "Zum ersten Mal in seinem Leben schuldet Jonas jemandem Geld.",
+          "text": "Zum ersten Mal in seinem Leben schuldet Jonas jemandem Geld. 💸",
           "laugh": 1
         },
         {
@@ -6648,16 +6649,16 @@
           "key": "b7",
           "who": "dajo",
           "at": 78279,
-          "say": "Ich ändere mein Testament. Greisel kriegt nichts.",
-          "text": "Ich ändere mein Testament. Greisel kriegt nichts. ✍️",
+          "say": "Schatz, falls wir abstürzen: Ich hab dich nur wegen der Bonusmeilen geheiratet.",
+          "text": "Schatz, falls wir abstürzen: Ich hab dich nur wegen der Bonusmeilen geheiratet. ✈️",
           "laugh": 1
         },
         {
           "key": "b8",
           "who": "greisel",
           "at": 81728,
-          "say": "Passt, Schatz.",
-          "text": "Passt, Schatz … 😴",
+          "say": "Und ich dich wegen dem Fensterplatz. Rutsch rüber.",
+          "text": "Und ich dich wegen dem Fensterplatz. Rutsch rüber. 🪟",
           "vo": {
             "speed": 0.85
           },

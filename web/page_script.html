@@ -3637,8 +3637,8 @@ function wavB64(buf) {
   const bonPile = mk('ellipse', {rx: 0, ry: 7, fill: '#fffdf5', stroke: '#bbb', 'stroke-width': 1.5}, bon);
   const bonSum = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 20, y: 64, width: 250, height: 40, rx: 20, fill: '#c0392b'}, bonSum); const bonSumT = mk('text', {x: 145, y: 91, 'text-anchor': 'middle', class: 'se-badge'}, bonSum); bonSumT.textContent = '🧾 Summe: R$ 9.999,99';
   const xl = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 430, y: 66, width: 350, height: 168, rx: 10, fill: '#fff', stroke: '#1d6f42', 'stroke-width': 3}, xl);
-  mk('rect', {x: 430, y: 66, width: 350, height: 34, rx: 10, fill: '#1d6f42'}, xl); const xlT = mk('text', {x: 446, y: 90, class: 'se-small'}, xl); xlT.textContent = '📊 Pivot: Wer schuldet wem?';
-  [['Jonas → Daijo', '2.480 €'], ['Jonas → Greisel', '1.950 €'], ['Splitwise', '❌ ungültig'], ['Summe', '🔥 Jonas pleite']].forEach(([a2, b2], k) => { const y = 124 + k * 27;
+  mk('rect', {x: 430, y: 66, width: 350, height: 34, rx: 10, fill: '#1d6f42'}, xl); const xlT = mk('text', {x: 446, y: 90, class: 'se-small'}, xl); xlT.textContent = '💍 Hochzeitsgeschenke der Jungs';
+  [['Jonas', '0 €'], ['Patrick', '0 €'], ['Simon', 'Karte (leer)'], ['Summe', '🔥 Ihr zahlt']].forEach(([a2, b2], k) => { const y = 124 + k * 27;
     mk('line', {x1: 436, y1: y + 8, x2: 774, y2: y + 8, stroke: '#cfe3d6', 'stroke-width': 1.5}, xl); mk('line', {x1: 620, y1: y - 18, x2: 620, y2: y + 8, stroke: '#cfe3d6', 'stroke-width': 1.5}, xl);
     const ta = mk('text', {x: 446, y, class: 'se-kiosk'}, xl); ta.textContent = a2; const tb = mk('text', {x: 630, y, class: 'se-kiosk', style: k === 3 ? 'fill:#c0392b' : ''}, xl); tb.textContent = b2; });
 
@@ -3667,7 +3667,7 @@ function wavB64(buf) {
   const bcT = mk('text', {x: 620, y: 100, 'text-anchor': 'middle', class: 'se-tat', style: 'fill:#c0392b'}, boeCard); bcT.textContent = '✈️ BOEING 737';
   const bcT2 = mk('text', {x: 620, y: 132, 'text-anchor': 'middle', class: 'se-kiosk'}, boeCard); bcT2.textContent = 'Tür: Klebeband (das gute) 🩹';
   const will = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 520, y: 170, width: 240, height: 120, rx: 6, fill: '#fff8e0', stroke: INK, 'stroke-width': 2.5}, will);
-  [['TESTAMENT', 'se-tat'], ['Greisel: ❌ nix', 'se-kiosk'], ['Excel-Datei: an die Welt', 'se-kiosk']].forEach(([s2, c2], k) => { const tx = mk('text', {x: 640, y: 204 + k * 32, 'text-anchor': 'middle', class: c2, style: k ? '' : 'font-size:24px'}, will); tx.textContent = s2; });
+  [['BONUSMEILEN', 'se-tat'], ['1 Ehemann: 12.000', 'se-kiosk'], ['Liebe: siehe oben', 'se-kiosk']].forEach(([s2, c2], k) => { const tx = mk('text', {x: 640, y: 204 + k * 32, 'text-anchor': 'middle', class: c2, style: k ? '' : 'font-size:24px'}, will); tx.textContent = s2; });
   const pray = e3(emo('🙏', {'font-size': 24, opacity: 0}, fxG)), wind3 = [0, 1, 2].map(() => e3(emo('💨', {'font-size': 26, opacity: 0}, fxG)));
 
   // Iguaçu-Fälle: Steg über der Teufelsschlucht
@@ -4157,7 +4157,7 @@ function wavB64(buf) {
         const up = L > A('g3') - 200 && L < A('g5') + d('g5'); if (up) { pose.greisel.tumble = -62; pose.greisel.y = FL - 70; pose.greisel.look = -1; }
         if (!up) snore(tx - 70, hyOf(FL - 56, .66) + 70, t); }
       if (P.dajo) { on('dajo', tx + 112, FL, {sc: .78, flip: -1}); idle(t, 5, pose.dajo); if (moving) walkP(t, pose.dajo); pose.dajo.aL = [64, 30]; pose.dajo.aR = [64, 30];
-        if (L > A('g4') - 200) { pose.dajo.aR = [100, 30]; } if (L > A('g7') - 400) { pose.dajo.aR = [80, 70]; pose.dajo.aL = [80, 70]; P.dajo.prop.textContent = '💻'; } }
+        if (L > A('g4') - 200) { pose.dajo.aR = [100, 30]; } if (L > A('g7') - 400) { pose.dajo.aR = [80, 70]; pose.dajo.aL = [80, 70]; P.dajo.prop.textContent = '🎁'; } }
       // Tablette fliegt in Greisels Mund
       const pk = span(L, A('g5') + d('g5') - 100, A('g5') + d('g5') + 600); if (pk > 0 && pk < 1) { const x1 = tx + 90, y1 = FL - 120, x2 = tx - 60, y2 = FL - 92;
         pill.setAttribute('opacity', 1); pill.setAttribute('x', (x1 + (x2 - x1) * pk).toFixed(1)); pill.setAttribute('y', (y1 + (y2 - y1) * pk - 70 * S(PI * pk)).toFixed(1)); }
