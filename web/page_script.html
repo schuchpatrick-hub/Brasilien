@@ -4198,7 +4198,7 @@ function wavB64(buf) {
       if (P.dajo && scare) { Object.assign(pose.dajo, {cry: 1, aL: [150, 30 * S(t / 70)], aR: [150, 30 * S(t / 80)], tilt: 8 * S(t / 90)});
         if (L > A('b7') - 200) { pose.dajo.aL = [60, 100]; pose.dajo.aR = [60, 100]; pose.dajo.tilt = 6; pray.setAttribute('opacity', 1); pray.setAttribute('x', SEAT3[0] + 30); pray.setAttribute('y', FL - 110); } }
       boeCard.setAttribute('opacity', win(L, A('b5') + 300, A('b6') + d('b6') + 300, 250).toFixed(2));
-      will.setAttribute('opacity', win(L, A('b7') + 400, len - 600, 250).toFixed(2));
+      will.setAttribute('opacity', win(L, A('b7') + 400, A('b8') - 150, 250).toFixed(2));
       const rattle = L > A('b6') + 1200 ? (L < A('b8') ? 1 : .4) : 0;
       doorG.setAttribute('transform', `translate(${(2.5 * rattle * S(t / 23)).toFixed(1)},${(1.5 * rattle * C(t / 29)).toFixed(1)})`);
       tapeF.setAttribute('transform', `translate(116,128) rotate(${(rattle ? -30 + 40 * S(t / 40) : 0).toFixed(1)})`); gapL.setAttribute('opacity', rattle && S(t / 50) > .3 ? .9 : 0);
