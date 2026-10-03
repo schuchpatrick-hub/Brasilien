@@ -54,6 +54,8 @@ def main():
                         y = w[:j * fr + fr + 2400]; t2 = asr(y); opts.append((score(t2), len(y), y, t2))
                     j = e
                 else: j += 1
+            lim = 24000 * max(1.6, len(say) * .085)   # deutlich zu lang = lange Pausen oder Gebrabbel → abwerten
+            opts = [(o[0] - (.25 if o[1] > lim else 0),) + o[1:] for o in opts]
             top = max(o[0] for o in opts); cand = max([o for o in opts if o[0] >= top - .005], key=lambda o: o[1])
             if best is None or cand[0] > best[0]: best = cand
             if best[0] > .95 or lang != 'de' and best[0] > .6: break
