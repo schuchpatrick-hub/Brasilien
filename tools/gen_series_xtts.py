@@ -21,6 +21,18 @@ import gen_dance_audio as G   # POLISH, env_of, ffmpeg, TRIP, OUT
 N = int(os.environ.get('TRIES', '4'))
 WH = os.environ.get('WHISPER', '')
 
+def squeeze(x, sr, thr=.01, keep=.16):
+    """Pausen innerhalb der Zeile auf höchstens `keep` Sekunden kürzen (XTTS macht zwischen Sätzen lange Pausen)."""
+    fr = int(sr * .01); q = np.array([np.sqrt((x[j:j + fr] ** 2).mean()) < thr for j in range(0, len(x) - fr + 1, fr)])
+    out, j, k = [], 0, int(keep / .01)
+    while j < len(q):
+        e = j
+        while e < len(q) and q[e] == q[j]: e += 1
+        seg = x[j * fr:e * fr]
+        if q[j] and j > 0 and e < len(q) and e - j > k: seg = np.concatenate([seg[:k * fr // 2], seg[-(k * fr - k * fr // 2):]])
+        out.append(seg); j = e
+    return np.concatenate(out + [x[len(q) * fr:]]) if out else x
+
 def main():
     from TTS.api import TTS
     import sherpa_onnx, scipy.signal as ss
@@ -41,8 +53,9 @@ def main():
         say = ln['say']; score = lambda t: difflib.SequenceMatcher(None, ' '.join(norm(t)), ' '.join(norm(say))).ratio()
         best = None
         for i in range(N):
-            w = np.array(tts.tts(text=say, speaker=spk, language=lang, temperature=0.4, repetition_penalty=5.0, top_p=0.8, split_sentences=True), dtype=np.float32)
+            w = np.array(tts.tts(text=say, speaker=spk, language=lang, temperature=0.4, repetition_penalty=5.0, top_p=0.8, speed=1.05, split_sentences=len(say) > 120), dtype=np.float32)
             nz = np.where(np.abs(w) > .015)[0]; w = w[max(0, nz[0] - 600):nz[-1] + 2400] if len(nz) else w
+            w = squeeze(w, 24000)
             txt = asr(w); opts = [(score(txt), len(w), w, txt)]
             # Gebrabbel am Ende: an Pausen (>= 120 ms, nach dem ersten Drittel) kürzen und die beste Fassung nehmen
             fr = 960; q = [np.sqrt((w[j:j + fr] ** 2).mean()) < .012 for j in range(0, len(w) - fr, fr)]; j = 0
@@ -56,7 +69,7 @@ def main():
                 else: j += 1
             lim = 24000 * max(1.6, len(say) * .085)   # deutlich zu lang = lange Pausen oder Gebrabbel → abwerten
             opts = [(o[0] - (.25 if o[1] > lim else 0),) + o[1:] for o in opts]
-            top = max(o[0] for o in opts); cand = max([o for o in opts if o[0] >= top - .005], key=lambda o: o[1])
+            top = max(o[0] for o in opts); cand = min([o for o in opts if o[0] >= top - .01], key=lambda o: o[1])   # gleich gut verstanden → kürzeste (Gebrabbel ignoriert Whisper)
             if best is None or cand[0] > best[0]: best = cand
             if best[0] > .95 or lang != 'de' and best[0] > .6: break
         with tempfile.TemporaryDirectory() as tmp:
