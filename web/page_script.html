@@ -2091,19 +2091,21 @@ function wavB64(buf) {
     // Atmo je Szene (Serie): gefiltertes Rauschen mit Bewegung, ein paar typische Einzelgeräusche
     E.amb = (kind, t0, t1) => {
       const C2 = {hall: ['bandpass', 650, .7, .05], cabin: ['lowpass', 240, .7, .13], sea: ['lowpass', 900, .5, .08], crowd: ['bandpass', 850, .6, .07], traffic: ['lowpass', 380, .7, .09],
-        restaurant: ['bandpass', 1300, .9, .035], wind: ['bandpass', 650, 1.4, .07], room: ['lowpass', 320, .5, .025], night: ['bandpass', 500, .5, .02], bar: ['bandpass', 900, .8, .045]}[kind];
+        restaurant: ['bandpass', 1300, .9, .035], wind: ['bandpass', 650, 1.4, .07], room: ['lowpass', 320, .5, .025], night: ['bandpass', 500, .5, .02], bar: ['bandpass', 900, .8, .045], falls: ['lowpass', 1500, .4, .11], forest: ['bandpass', 2600, .5, .012]}[kind];
       if (!C2 || t1 - t0 < 1) return;
       const src = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain(), lv = C2[3];
       src.buffer = nb; src.loop = true; f.type = C2[0]; f.frequency.value = C2[1]; f.Q.value = C2[2]; g.gain.value = 0;
       src.connect(f); f.connect(g); g.connect(ambOut);
       g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(lv, t0 + .9); g.gain.setValueAtTime(lv, Math.max(t0 + .9, t1 - .9)); g.gain.linearRampToValueAtTime(0, t1);
-      if (/sea|crowd|wind|restaurant|bar/.test(kind)) { const l = ctx.createOscillator(), lg = ctx.createGain(); l.frequency.value = kind === 'sea' ? .11 : kind === 'wind' ? .23 : .45; lg.gain.value = lv * .55; l.connect(lg); lg.connect(g.gain); l.start(t0); l.stop(t1); }
+      if (/sea|crowd|wind|restaurant|bar|falls/.test(kind)) { const l = ctx.createOscillator(), lg = ctx.createGain(); l.frequency.value = kind === 'sea' ? .11 : kind === 'wind' ? .23 : .45; lg.gain.value = lv * (kind === 'falls' ? .2 : .55); l.connect(lg); lg.connect(g.gain); l.start(t0); l.stop(t1); }
       if (kind === 'wind') { f.frequency.setValueAtTime(500, t0); for (let x = t0; x < t1; x += 2.5) f.frequency.linearRampToValueAtTime(500 + rnd() * 700, x + 2.5); }
       src.start(t0, rnd() * 1.5); src.stop(t1 + .05);
       if (kind === 'cabin') tone(ambOut, 'sine', 98, t0, t1 - t0, .03, {a: .9, hold: Math.max(.9, t1 - t0 - 1)});
       if (kind === 'night') for (let x = t0 + .5; x < t1 - .5; x += .9 + rnd() * .8) [0, .07, .14].forEach(o => tone(ambOut, 'sine', 4300 + rnd() * 300, x + o, .05, .012));
       if (kind === 'restaurant' || kind === 'bar') for (let x = t0 + 1; x < t1 - .5; x += 1.6 + rnd() * 2.5) tone(ambOut, 'sine', 2600 + rnd() * 900, x, .25, .012);
       if (kind === 'hall') for (let x = t0 + 2; x < t1 - 1; x += 6 + rnd() * 4) [0, .35].forEach((o, k) => tone(ambOut, 'sine', [784, 659][k], x + o, .5, .02));
+      if (kind === 'forest') for (let x = t0 + .6; x < t1 - .5; x += .7 + rnd() * 1.4) { const f = 2200 + rnd() * 1800; [0, .09].forEach(o => tone(ambOut, 'sine', f, x + o, .08, .02, {from: f * .8, glide: .05})); }
+      if (kind === 'falls') tone(ambOut, 'sine', 55, t0, t1 - t0, .05, {a: .9, hold: Math.max(.9, t1 - t0 - 1)});
       if (kind === 'crowd') for (let x = t0 + 1; x < t1 - .5; x += 1.2 + rnd() * 1.5) noise(ambOut, x, .4, .03, 'bandpass', 1500 + rnd() * 1200, 3, {a: .1});
     };
     E.setNight = (on, w) => {
@@ -2147,6 +2149,14 @@ function wavB64(buf) {
         [0, .3, .55].forEach(o => tone(sfxOut, 'sine', 1200 + rnd() * 400, t + o + .1, .5, .045, {from: 650, glide: .25, vib: 9, depth: .03, a: .05})); }
       else if (name === 'clap') { noise(sfxOut, t, .07, .7, 'highpass', 1800, .7); tone(sfxOut, 'sine', 160, t, .08, .4, {from: 300, glide: .03}); }
       else if (name === 'scratch') { noise(sfxOut, t, .18, .45, 'bandpass', 3200, 3, {to: 500}); noise(sfxOut, t + .18, .22, .4, 'bandpass', 600, 3, {to: 2800}); }
+      else if (name === 'pill') { [0, .06, .12, .2].forEach(o => noise(sfxOut, t + o, .03, .12, 'highpass', 5000, 2)); tone(sfxOut, 'sine', 900, t + .45, .12, .12, {from: 300, glide: .08}); }
+      else if (name === 'shutter') { noise(sfxOut, t, .03, .5, 'highpass', 3000, 1); noise(sfxOut, t + .08, .04, .35, 'bandpass', 2000, 2); tone(sfxOut, 'sine', 3200, t + .1, .3, .04, {from: 1200, glide: .25}); }
+      else if (name === 'tape') noise(sfxOut, t, .45, .3, 'bandpass', 1800, 3, {to: 5000, a: .02});
+      else if (name === 'paper') for (let k = 0; k < 10; k++) noise(sfxOut, t + k * .05 + rnd() * .03, .05, .1, 'bandpass', 3000 + rnd() * 2000, 2);
+      else if (name === 'squeak') [0, .14, .3].forEach((o, k) => tone(sfxOut, 'sine', 2400 + k * 300, t + o, .1, .06, {from: 1500, glide: .06}));
+      else if (name === 'clank') { [523, 1187, 1813, 2633].forEach((f, k) => tone(sfxOut, 'square', f, t, .9 - k * .15, .04, {lp: 4000})); noise(sfxOut, t, .15, .4, 'bandpass', 1500, 1); kick(sfxOut, t, .5); }
+      else if (name === 'clink') { tone(sfxOut, 'sine', 3520, t, .35, .06); tone(sfxOut, 'sine', 5280, t + .01, .25, .03); }
+      else if (name === 'chalk') [0, .22, .44, .7].forEach(o => noise(sfxOut, t + o, .16, .12, 'bandpass', 4200, 6, {to: 3600}));
       else if (name === 'wah') [62, 61, 60, 59].forEach((m, k) => tone(sfxOut, 'sawtooth', mf(m), t + k * .38, k === 3 ? 1.1 : .36, .13, {lp: 900, a: .04, hold: k === 3 ? .8 : .25, vib: k === 3 ? 5 : 0, depth: .025}));
     };
     E.end = w => { master.gain.cancelScheduledValues(w); master.gain.setTargetAtTime(0, w, .4); E.on = {travel: false, stay: false, show: false}; E.till = {travel: w + 2, stay: w + 2, show: w + 2}; E.mode = 'none'; };
@@ -3092,6 +3102,9 @@ function wavB64(buf) {
     rod: {amb: 'restaurant', mus: 'stay', night: 1, cap: '🥩 Rodízio · so viel Fleisch, wie man will'}, zucker: {amb: 'wind', mus: 'travel', cap: '🚡 Zuckerhut-Seilbahn'}, call: {amb: 'night', mus: 'stay', night: 1, cap: '📱 Videocall nach München'}, sec: {amb: 'hall', mus: 'travel', cap: '📍 München, Flughafen · 27.12.'}, bar: {amb: 'bar', mus: 'stay', night: 1, cap: '🍺 Flughafen-Bar · 16:30 Uhr'},
     fly: {amb: 'cabin', mus: 'travel', night: 1, cap: '✈️ Über dem Atlantik · Nachtflug'}, uber: {amb: 'traffic', mus: 'travel', cap: '🚕 São Paulo → Guarujá · 28.12., 6:40 Uhr'},
     beach: {amb: 'sea', mus: 'show', cap: '🏖️ Guarujá · Praia da Enseada'}, night: {amb: 'night', mus: 'stay', night: 1, cap: '🍹 Guarujá · abends'}, end: {mus: 'show'},
+    gig: {amb: 'hall', mus: 'travel', cap: '🛬 Rio-Galeão · 06.01., 6:10 Uhr'}, boe: {amb: 'cabin', mus: 'travel', cap: '✈️ Rio → Foz do Iguaçu'}, falls: {amb: 'falls', mus: 'show', cap: '🌊 Iguaçu · Garganta do Diabo'},
+    quati: {amb: 'forest', mus: 'stay', cap: '🦝 Iguaçu · Nasenbären-Revier'}, grenze: {amb: 'wind', mus: 'travel', cap: '🇦🇷 Grenze nach Argentinien'}, boot: {amb: 'falls', mus: 'travel', cap: '🚤 Bootstour unter die Fälle'},
+    duel: {amb: 'bar', mus: 'stay', night: 1, cap: '🍹 Foz do Iguaçu · abends · Trinkduell'},
     // fertig gebaute Szenen für spätere Folgen (trip.json → series.parked)
     ny: {amb: 'crowd', mus: 'show', cap: '🎆 Copacabana · Silvester 2026/27'}, buf: {mus: 'stay', cap: '🦜 Foz do Iguaçu · 06.01.'}, jg: {mus: 'stay', cap: '🌴 Amazonas · Juma Lodge'}, fv: {mus: 'show', cap: '⚽ Footvolley gegen Einheimische'}};
   const ALLSC = Object.keys(META).map(id => ({id}));
@@ -3216,7 +3229,7 @@ function wavB64(buf) {
     o.legL.a.setAttribute('transform', `translate(-9,2) rotate(${p.lL[0].toFixed(1)})`); o.legL.f.setAttribute('transform', `translate(0,30) rotate(${p.lL[1].toFixed(1)})`);
     o.legR.a.setAttribute('transform', `translate(9,2) rotate(${p.lR[0].toFixed(1)})`); o.legR.f.setAttribute('transform', `translate(0,30) rotate(${p.lR[1].toFixed(1)})`);
     o.head.setAttribute('transform', `translate(${(4 * p.look).toFixed(1)},-96) rotate(${(p.tilt + 9 * p.look).toFixed(1)})`);
-    const m = Math.max(p.mouth, mouthOf(o.id, t));
+    const m = p.hush ? p.mouth : Math.max(p.mouth, mouthOf(o.id, t));
     if (m > .15 && !p.still && !p.headOnly) { const gg = 10 * S(t / 210 + (o.x || 0) * .01); o.armR.f.setAttribute('transform', `translate(0,24) rotate(${(-p.aR[1] - gg).toFixed(1)})`); o.head.setAttribute('transform', `translate(${(4 * p.look).toFixed(1)},${(-96 - 1.5 * m).toFixed(1)}) rotate(${(p.tilt + 9 * p.look + 3 * S(t / 160)).toFixed(1)})`); }
     o.torso.setAttribute('transform', `translate(0,${(.9 * S(t / 700 + (o.x || 0) * .02)).toFixed(2)})`);
     if (o.npc) { o.mouth.setAttribute('ry', (2 + 9 * m).toFixed(1)); o.upper.setAttribute('transform', `translate(0,${(-4 * m).toFixed(1)})`); }
@@ -3250,7 +3263,7 @@ function wavB64(buf) {
   const recap = mk('g', {opacity: 0}, B.intro); mk('rect', {x: 200, y: 290, width: 400, height: 56, rx: 16, fill: '#10231d', opacity: .9}, recap);
   const recT = mk('text', {x: 400, y: 326, 'text-anchor': 'middle', class: 'se-badge'}, recap); recT.textContent = '⏪ Bisher: 👖❌  🤮  🧴⚰️  🦞';
   const later = mk('g', {}, B.intro); mk('rect', {x: 590, y: 16, width: 194, height: 60, rx: 14, fill: '#10231d', opacity: .85}, later);
-  emo('📞', {x: 616, y: 46, 'font-size': 24}, later); const lt = mk('text', {x: 636, y: 42, class: 'se-small'}, later); lt.textContent = 'Daijo & Greisel';
+  const laterE = emo('📞', {x: 616, y: 46, 'font-size': 24}, later); const lt = mk('text', {x: 636, y: 42, class: 'se-small'}, later); lt.textContent = 'Daijo & Greisel';
   const lt2 = mk('text', {x: 636, y: 62, class: 'se-small2'}, later); lt2.textContent = 'kommen später nach …';
 
   // Sicherheitskontrolle
@@ -3525,6 +3538,197 @@ function wavB64(buf) {
   const snow = Array.from({length: 26}, () => mk('circle', {r: 2.4, fill: '#fff'}, phoneG));
   const pot = emo('🪴', {'font-size': 40}, B.call);
 
+  // ======== Folge 3: Daijo & Greisel kommen ========
+  const E3 = [], e3 = el => { E3.push(el); return el; };   // Effekte der Folge 3, jedes Bild erst einmal aus
+  const hyOf = (y, s) => y - 156 * s;   // Kopfmitte einer Figur (Fußpunkt y, Größe s)
+  defs.insertAdjacentHTML('beforeend', '<pattern id="se-bon" width="26" height="9" patternUnits="userSpaceOnUse"><rect width="26" height="9" fill="#fffdf5"/><line x1="3" y1="5" x2="23" y2="5" stroke="#a9a9a9" stroke-width="1.6"/></pattern>' +
+    '<clipPath id="se-ppclip"><rect x="292" y="122" width="96" height="112" rx="6"/></clipPath>' +
+    '<linearGradient id="se-dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d0a2e"/><stop offset=".75" stop-color="#3a1f5c"/><stop offset="1" stop-color="#7a3a5c"/></linearGradient>');
+  const zz3 = [0, 1, 2].map(() => e3(mk('text', {class: 'se-zzz', opacity: 0}, fxG))); zz3.forEach(z => { z.textContent = 'Z'; });
+  function snore(x, y, t) { zz3.forEach((z, k) => { const ph = (t / 1400 + k / 3) % 1; z.setAttribute('opacity', (1 - ph).toFixed(2)); z.setAttribute('x', (x + 30 * ph + k * 4).toFixed(1)); z.setAttribute('y', (y - 60 * ph).toFixed(1)); z.setAttribute('style', `font-size:${(14 + 14 * ph).toFixed(0)}px`); }); }
+  const drops3 = Array.from({length: 8}, () => e3(emo('💧', {'font-size': 14, opacity: 0}, fxG)));
+  function drip(list, t) {   // list: [[x, yKopf], …] → Tropfen fallen von den Köpfen
+    drops3.forEach((e, k) => { const p = list[k % Math.max(1, list.length)]; if (!p) return; const ph = (t / 700 + k * .37) % 1;
+      e.setAttribute('opacity', (1 - ph).toFixed(2)); e.setAttribute('x', (p[0] + (k % 3 - 1) * 16).toFixed(1)); e.setAttribute('y', (p[1] + 20 + 50 * ph * ph).toFixed(1)); }); }
+  const pill = e3(emo('💊', {'font-size': 20, opacity: 0}, fxG)), flashW = e3(mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: '#fff', opacity: 0}, hud));
+  const heart3 = Array.from({length: 5}, () => e3(emo('❤️', {'font-size': 20, opacity: 0}, fxG)));
+  function hearts3(x, y, t) { heart3.forEach((h, k) => { const ph = (t / 1100 + k / 5) % 1; h.setAttribute('opacity', (1 - ph).toFixed(2)); h.setAttribute('x', (x + 30 * S(k * 2.1 + t / 400)).toFixed(1)); h.setAttribute('y', (y - 70 * ph).toFixed(1)); }); }
+  function coati(parent, s) {   // Nasenbär: Ringelschwanz, lange Schnauze
+    const g = e3(mk('g', {opacity: 0}, parent)), b = mk('g', {}, g);
+    mk('path', {d: 'M-24,-8 C-52,-12 -60,-44 -44,-64', fill: 'none', stroke: '#d8b88a', 'stroke-width': 10, 'stroke-linecap': 'round'}, b);
+    mk('path', {d: 'M-24,-8 C-52,-12 -60,-44 -44,-64', fill: 'none', stroke: '#4a2f17', 'stroke-width': 10, 'stroke-dasharray': '7 7'}, b);
+    g.legs = [-16, -5, 8, 19].map(x => mk('line', {x1: x, y1: 0, x2: x, y2: 15, stroke: '#4a2f17', 'stroke-width': 6, 'stroke-linecap': 'round'}, b));
+    mk('ellipse', {cx: 0, cy: -6, rx: 29, ry: 15, fill: '#9a6a3e', stroke: INK, 'stroke-width': 2}, b);
+    const h = mk('g', {transform: 'translate(25,-15)'}, b);
+    mk('path', {d: 'M-12,-10 Q4,-18 14,-7 L36,1 Q39,6 34,8 L6,9 Q-10,9 -12,-1Z', fill: '#9a6a3e', stroke: INK, 'stroke-width': 2}, h);
+    mk('path', {d: 'M10,-3 L33,3', stroke: '#f4e6cf', 'stroke-width': 3, 'stroke-linecap': 'round'}, h);
+    mk('circle', {cx: 36, cy: 4, r: 3.2, fill: INK}, h); mk('circle', {cx: 6, cy: -5, r: 2.8, fill: INK}, h); mk('circle', {cx: 7, cy: -6, r: 1, fill: '#fff'}, h);
+    mk('path', {d: 'M-5,-10 L-3,-20 L4,-13Z', fill: '#6b4422', stroke: INK, 'stroke-width': 1.5}, h);
+    g.shades = mk('path', {d: 'M0,-9 L14,-9 L13,-3 Q8,0 6,-4 L4,-4 Q2,0 -2,-3Z', fill: '#111', opacity: 0}, h);
+    g.prop = emo('', {x: 42, y: 4, 'font-size': 18}, h); g.s = s || 1; return g;
+  }
+  function coatiAt(c, x, y, flip, t, run, extra) { c.setAttribute('opacity', 1); const s = c.s * ((extra || {}).sc || 1), hop = run ? -5 * Math.abs(S(t / 70)) : 0;
+    c.setAttribute('transform', `translate(${x.toFixed(1)},${(y + hop).toFixed(1)}) rotate(${((extra || {}).rot || 0).toFixed(1)}) scale(${(flip * s).toFixed(3)},${s.toFixed(3)})`);
+    c.legs.forEach((l, k) => l.setAttribute('transform', `rotate(${(run ? 30 * S(t / 60 + k * 1.6) : 0).toFixed(1)},${[-16, -5, 8, 19][k]},0)`)); }
+  function fallsBG(g, low) {   // Iguaçu: Felskante mit vielen Fällen, Gischt, Regenbogen
+    const top = low ? 100 : 130, foot = low ? 300 : 330;
+    mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-day)'}, g);
+    mk('path', {d: `M-100,${top + 10} C60,${top - 30} 200,${top - 6} 330,${top - 18} C470,${top - 34} 620,${top + 4} 900,${top - 14} L900,${top + 40} L-100,${top + 40}Z`, fill: '#2f6b3a'}, g);
+    for (let k = 0; k < 14; k++) mk('circle', {cx: -80 + k * 72, cy: top - 4 + 10 * hash(k, 5), r: 26 + 12 * hash(k, 6), fill: ['#24603a', '#2f7a46', '#1d4d2a'][k % 3]}, g);
+    mk('rect', {x: -100, y: top + 30, width: W + 200, height: foot - top, fill: '#6a5544'}, g);
+    for (let k = 0; k < 9; k++) mk('path', {d: `M${-60 + k * 110},${top + 40} l${10 + 20 * hash(k, 7)},${(foot - top) * .6} l-14,${(foot - top) * .4}`, fill: 'none', stroke: '#4f3e31', 'stroke-width': 3}, g);
+    const lines = [], X = [-90, 18, 112, 238, 352, 452, 548, 680, 790], Wd = [92, 80, 104, 96, 82, 78, 116, 96, 80];
+    X.forEach((x, k) => { const w = Wd[k], y0 = top + 24 + 8 * hash(k, 9);   // Wasser stürzt über die Kante: oben gewölbt, unten breiter
+      mk('path', {d: `M${x},${y0 + 8} Q${x + w / 2},${y0 - 10} ${x + w},${y0 + 8} L${x + w + 10},${foot + 10} L${x - 10},${foot + 10}Z`, fill: '#f2faff', opacity: .95}, g);
+      lines.push(mk('path', {d: Array.from({length: Math.round(w / 8)}, (_, j) => `M${x + 4 + j * 8},${y0 + 6} L${x + 4 + j * 8 + (j - w / 16) * .6},${foot + 10}`).join(' '), stroke: '#b9def4', 'stroke-width': 2, 'stroke-dasharray': '30 7'}, g));
+      mk('ellipse', {cx: x + w / 2, cy: y0 + 4, rx: w / 2 + 4, ry: 6, fill: '#fff'}, g); });
+    const rb = mk('g', {opacity: .4}, g); ['#ff5f5f', '#ffcf1f', '#3ccf7f', '#5fa8ff'].forEach((c, k) => mk('path', {d: `M${80 + k * 8},${foot} A${300 - k * 8},${230 - k * 8} 0 0 1 ${700 - k * 8},${foot}`, fill: 'none', stroke: c, 'stroke-width': 7}, rb));
+    mk('rect', {x: -100, y: foot, width: W + 200, height: H, fill: '#5f9e94'}, g);
+    const mist = [0, 1, 2, 3, 4, 5].map(k => mk('ellipse', {cx: 60 + k * 140, cy: foot + 4, rx: 120, ry: 34, fill: '#fff', opacity: .6}, g));
+    const waves = mk('path', {d: Array.from({length: 26}, (_, k) => `M${k * 40 - 100},${foot + 40 + (k % 3) * 24} q10,-6 20,0`).join(' '), stroke: '#e8f6ff', 'stroke-width': 3, fill: 'none'}, g);
+    return {lines, mist, waves, foot};
+  }
+  function fallsAnim(F0, t) { F0.lines.forEach((l, k) => l.setAttribute('stroke-dashoffset', (-(t / 6 + k * 9) % 24).toFixed(1)));
+    F0.mist.forEach((m, k) => { m.setAttribute('opacity', (.45 + .2 * S(t / 700 + k)).toFixed(2)); m.setAttribute('rx', (120 + 14 * S(t / 900 + k * 2)).toFixed(1)); });
+    F0.waves.setAttribute('transform', `translate(${(12 * S(t / 500)).toFixed(1)},0)`); }
+
+  // Ankunftshalle Galeão
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-hall)'}, B.gig);
+  for (let k = 0; k < 12; k++) mk('rect', {x: -100 + k * 90, y: FL, width: 88, height: 80, fill: k % 2 ? '#9aa7b4' : '#a9b5c1'}, B.gig);
+  mk('rect', {x: -100, y: 16, width: W + 200, height: 42, fill: '#ffcf1f'}, B.gig);
+  const gigS = mk('text', {x: 400, y: 45, 'text-anchor': 'middle', class: 'se-sign', style: 'fill:#10231d'}, B.gig); gigS.textContent = '🛬 DESEMBARQUE · ARRIVALS · ANKUNFT';
+  const gigB = mk('g', {transform: 'translate(60,84)'}, B.gig); mk('rect', {width: 250, height: 74, rx: 6, fill: '#111'}, gigB);
+  [['MUC → GIG', '06:10 ✔'], ['GIG → IGU', '10:40 ✈'], ['Gringos', 'verkatert']].forEach((r, k) => { const tx = mk('text', {x: 10, y: 22 + k * 22, class: 'se-board'}, gigB); tx.textContent = r[0].padEnd(12, ' ') + r[1]; });
+  mk('rect', {x: 548, y: 108, width: 224, height: FL - 108, fill: '#6b7785', stroke: INK, 'stroke-width': 3}, B.gig);
+  mk('rect', {x: 558, y: 118, width: 204, height: FL - 118, fill: '#2b3440'}, B.gig);
+  const doorL = mk('rect', {x: 558, y: 118, width: 102, height: FL - 118, fill: '#bfe6fa', opacity: .8, stroke: '#7f9db0', 'stroke-width': 2}, B.gig), doorR = mk('rect', {x: 660, y: 118, width: 102, height: FL - 118, fill: '#bfe6fa', opacity: .8, stroke: '#7f9db0', 'stroke-width': 2}, B.gig);
+  emo('🪴', {x: 515, y: FL - 26, 'font-size': 46}, B.gig);
+  const trol = mk('g', {}, B.gig);
+  mk('rect', {x: -66, y: -84, width: 66, height: 34, rx: 6, fill: '#ff8a3c', stroke: INK, 'stroke-width': 2}, trol); mk('rect', {x: 2, y: -80, width: 60, height: 30, rx: 6, fill: '#8a4fbf', stroke: INK, 'stroke-width': 2}, trol);
+  mk('rect', {x: -74, y: -52, width: 148, height: 9, rx: 3, fill: '#8a939c', stroke: INK, 'stroke-width': 2}, trol);
+  mk('path', {d: 'M70,-50 L84,-112 L98,-112', fill: 'none', stroke: '#8a939c', 'stroke-width': 6, 'stroke-linecap': 'round'}, trol);
+  [-50, 50].forEach(x => { mk('line', {x1: x, y1: -44, x2: x, y2: -14, stroke: '#8a939c', 'stroke-width': 4}, trol); mk('circle', {cx: x, cy: -12, r: 12, fill: '#333', stroke: INK, 'stroke-width': 2}, trol); });
+  const welcome = mk('g', {}, F.gig); mk('rect', {x: 40, y: FL - 92, width: 220, height: 58, rx: 6, fill: '#fff', stroke: INK, 'stroke-width': 3}, welcome);
+  const wT1 = mk('text', {x: 150, y: FL - 68, 'text-anchor': 'middle', class: 'se-kiosk'}, welcome); wT1.textContent = 'BEM-VINDOS 🇧🇷';
+  const wT2 = mk('text', {x: 150, y: FL - 46, 'text-anchor': 'middle', class: 'se-kiosk', style: 'fill:#c0392b'}, welcome); wT2.textContent = 'DAIJO & GREISEL 💍';
+  const bon = e3(mk('g', {opacity: 0}, fxG)), bonR = mk('rect', {x: -16, y: 0, width: 32, height: 10, fill: 'url(#se-bon)', stroke: '#bbb', 'stroke-width': 1}, bon);
+  const bonH = mk('text', {x: 0, y: 12, 'text-anchor': 'middle', class: 'se-grave'}, bon); bonH.textContent = 'SPLITWISE';
+  const bonPile = mk('ellipse', {rx: 0, ry: 7, fill: '#fffdf5', stroke: '#bbb', 'stroke-width': 1.5}, bon);
+  const bonSum = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 20, y: 64, width: 250, height: 40, rx: 20, fill: '#c0392b'}, bonSum); const bonSumT = mk('text', {x: 145, y: 91, 'text-anchor': 'middle', class: 'se-badge'}, bonSum); bonSumT.textContent = '🧾 Summe: R$ 9.999,99';
+  const xl = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 430, y: 66, width: 350, height: 168, rx: 10, fill: '#fff', stroke: '#1d6f42', 'stroke-width': 3}, xl);
+  mk('rect', {x: 430, y: 66, width: 350, height: 34, rx: 10, fill: '#1d6f42'}, xl); const xlT = mk('text', {x: 446, y: 90, class: 'se-small'}, xl); xlT.textContent = '📊 Pivot: Wer schuldet wem?';
+  [['Jonas → Daijo', '2.480 €'], ['Jonas → Greisel', '1.950 €'], ['Splitwise', '❌ ungültig'], ['Summe', '🔥 Jonas pleite']].forEach(([a2, b2], k) => { const y = 124 + k * 27;
+    mk('line', {x1: 436, y1: y + 8, x2: 774, y2: y + 8, stroke: '#cfe3d6', 'stroke-width': 1.5}, xl); mk('line', {x1: 620, y1: y - 18, x2: 620, y2: y + 8, stroke: '#cfe3d6', 'stroke-width': 1.5}, xl);
+    const ta = mk('text', {x: 446, y, class: 'se-kiosk'}, xl); ta.textContent = a2; const tb = mk('text', {x: 630, y, class: 'se-kiosk', style: k === 3 ? 'fill:#c0392b' : ''}, xl); tb.textContent = b2; });
+
+  // Flieger Rio → Iguaçu (Boeing, tagsüber)
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: '#efe9df'}, B.boe);
+  mk('path', {d: 'M-100,40 Q400,-10 900,40 L900,110 L-100,110Z', fill: '#d6d0c4', stroke: '#b7b0a2', 'stroke-width': 2}, B.boe);
+  for (let k = 0; k < 6; k++) mk('line', {x1: 20 + k * 150, y1: 30, x2: 20 + k * 150, y2: 110, stroke: '#b7b0a2', 'stroke-width': 2}, B.boe);
+  const boeCl = [];
+  [240, 400, 560, 720].forEach(x => { const w = mk('g', {transform: `translate(${x},180)`}, B.boe); mk('rect', {x: -32, y: -40, width: 64, height: 80, rx: 28, fill: '#c9c2b4', stroke: '#9e978a', 'stroke-width': 3}, w);
+    mk('rect', {x: -24, y: -32, width: 48, height: 64, rx: 22, fill: '#7fc4f0'}, w); boeCl.push(mk('ellipse', {cx: 0, cy: 8, rx: 16, ry: 7, fill: '#fff'}, w)); });
+  mk('rect', {x: -100, y: FL, width: W + 200, height: 80, fill: '#5b6b8a'}, B.boe);
+  const doorG = mk('g', {}, B.boe); mk('rect', {x: 20, y: 112, width: 104, height: FL - 112, rx: 14, fill: '#d6d0c4', stroke: INK, 'stroke-width': 3}, doorG);
+  mk('circle', {cx: 72, cy: 170, r: 16, fill: '#7fc4f0', stroke: '#9e978a', 'stroke-width': 4}, doorG); mk('rect', {x: 92, y: 250, width: 22, height: 8, rx: 3, fill: '#8a939c'}, doorG);
+  mk('path', {d: 'M26,130 L118,360 M118,130 L26,360', stroke: '#b8bec6', 'stroke-width': 14, 'stroke-linecap': 'square', opacity: .95}, doorG);
+  const tapeF = mk('path', {d: 'M0,0 L26,-4 L24,10Z', fill: '#b8bec6', stroke: '#8a939c', 'stroke-width': 1.5}, doorG);
+  const gapL = mk('rect', {x: 16, y: 112, width: 4, height: FL - 112, fill: '#fff', opacity: 0}, doorG);
+  const exitS = mk('text', {x: 72, y: 104, 'text-anchor': 'middle', class: 'se-small', style: 'fill:#2f9e5a'}, B.boe); exitS.textContent = 'EXIT 🚪';
+  const SEAT3 = [300, 400, 500, 600, 700];
+  SEAT3.forEach(x => { mk('path', {d: `M${x - 48},${FL - 6} L${x - 42},${FL - 150} Q${x - 36},${FL - 172} ${x - 16},${FL - 166} L${x - 14},${FL - 56} L${x + 38},${FL - 52} L${x + 42},${FL - 6}Z`, fill: '#3b6ea8', stroke: INK, 'stroke-width': 2.5}, B.boe);
+    mk('rect', {x: x - 18, y: FL - 58, width: 60, height: 14, rx: 6, fill: '#4f83bf', stroke: INK, 'stroke-width': 2}, F.boe); });
+  const wcBack = e3(mk('g', {opacity: 0}, shadowsG)); mk('path', {d: 'M-30,-112 L-24,-30 L26,-30', fill: 'none', stroke: '#555', 'stroke-width': 6, 'stroke-linecap': 'round'}, wcBack);
+  const wcFront = e3(mk('g', {opacity: 0}, fxG)), wcSpk = mk('g', {}, wcFront);
+  mk('circle', {cx: 0, cy: 0, r: 30, fill: 'none', stroke: '#333', 'stroke-width': 6}, wcSpk); [0, 45, 90, 135].forEach(a2 => mk('line', {x1: -28, y1: 0, x2: 28, y2: 0, stroke: '#888', 'stroke-width': 2, transform: `rotate(${a2})`}, wcSpk));
+  mk('circle', {cx: 46, cy: 22, r: 8, fill: '#333'}, wcFront);
+  const boeCard = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 470, y: 64, width: 300, height: 90, rx: 12, fill: '#fff', stroke: INK, 'stroke-width': 3}, boeCard);
+  const bcT = mk('text', {x: 620, y: 100, 'text-anchor': 'middle', class: 'se-tat', style: 'fill:#c0392b'}, boeCard); bcT.textContent = '✈️ BOEING 737';
+  const bcT2 = mk('text', {x: 620, y: 132, 'text-anchor': 'middle', class: 'se-kiosk'}, boeCard); bcT2.textContent = 'Tür: Klebeband (das gute) 🩹';
+  const will = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 520, y: 170, width: 240, height: 120, rx: 6, fill: '#fff8e0', stroke: INK, 'stroke-width': 2.5}, will);
+  [['TESTAMENT', 'se-tat'], ['Greisel: ❌ nix', 'se-kiosk'], ['Excel-Datei: an die Welt', 'se-kiosk']].forEach(([s2, c2], k) => { const tx = mk('text', {x: 640, y: 204 + k * 32, 'text-anchor': 'middle', class: c2, style: k ? '' : 'font-size:24px'}, will); tx.textContent = s2; });
+  const pray = e3(emo('🙏', {'font-size': 24, opacity: 0}, fxG)), wind3 = [0, 1, 2].map(() => e3(emo('💨', {'font-size': 26, opacity: 0}, fxG)));
+
+  // Iguaçu-Fälle: Steg über der Teufelsschlucht
+  const FA = fallsBG(B.falls, 0);
+  const walk = mk('g', {}, F.falls); mk('rect', {x: -100, y: FL, width: W + 200, height: 16, fill: '#6b5b4a', stroke: INK, 'stroke-width': 2}, walk);
+  mk('path', {d: Array.from({length: 50}, (_, k) => `M${k * 20 - 100},${FL + 2} l0,12`).join(' '), stroke: '#4f4236', 'stroke-width': 2}, walk);
+  [FL - 64, FL - 34].forEach(y => mk('line', {x1: -100, y1: y, x2: 900, y2: y, stroke: '#5a5f66', 'stroke-width': 4}, walk));
+  for (let k = 0; k < 15; k++) mk('line', {x1: -60 + k * 70, y1: FL - 66, x2: -60 + k * 70, y2: FL, stroke: '#5a5f66', 'stroke-width': 5}, walk);
+  const wc3 = mk('g', {transform: 'translate(24,0)'}, B.falls); mk('rect', {x: -3, y: FL - 120, width: 6, height: 120, fill: '#5a3e22'}, wc3); mk('rect', {x: -30, y: FL - 150, width: 60, height: 36, rx: 6, fill: '#1f3f8f', stroke: INK, 'stroke-width': 2}, wc3);
+  const wcT = mk('text', {x: 0, y: FL - 125, 'text-anchor': 'middle', class: 'se-small'}, wc3); wcT.textContent = '🚻 ←';
+  const pola = e3(mk('g', {opacity: 0}, hud)); mk('path', {d: `M-10,-10H${W + 10}V${H + 10}H-10Z M26,72H${W - 26}V${H - 18}H26Z`, fill: '#fbfaf5', 'fill-rule': 'evenodd'}, pola);
+  mk('path', {d: `M26,72H${W - 26}V${H - 18}H26Z`, fill: 'none', stroke: '#d8d2c2', 'stroke-width': 2}, pola);
+  const polaT = mk('text', {x: W / 2, y: 52, 'text-anchor': 'middle', class: 'se-tat', style: 'font-size:34px'}, pola);
+  const splash3 = e3(emo('💦', {'font-size': 60, opacity: 0}, fxG)), foam3 = e3(mk('ellipse', {rx: 90, ry: 20, fill: '#fff', opacity: 0}, fxG)), phone3 = e3(emo('📱', {'font-size': 22, opacity: 0}, fxG));
+
+  // Nasenbären im Wald
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-jungle)'}, B.quati);
+  for (let k = 0; k < 8; k++) mk('rect', {x: -60 + k * 120 + 30 * hash(k, 41), y: 0, width: 22 + 12 * hash(k, 42), height: FL, fill: '#3b2a1c'}, B.quati);
+  for (let k = 0; k < 12; k++) mk('ellipse', {cx: -60 + k * 80, cy: 60 + 50 * hash(k, 43), rx: 90, ry: 60, fill: ['#1d4d2a', '#24603a', '#2f7a46'][k % 3], opacity: .95}, B.quati);
+  mk('rect', {x: -100, y: FL - 4, width: W + 200, height: 100, fill: '#c9a46a'}, B.quati);
+  const qs = mk('g', {transform: 'translate(706,0)'}, B.quati); mk('rect', {x: -4, y: FL - 140, width: 8, height: 140, fill: '#5a3e22'}, qs);
+  mk('rect', {x: -84, y: FL - 220, width: 168, height: 92, rx: 8, fill: '#f6c94c', stroke: INK, 'stroke-width': 3}, qs);
+  [['⚠️ NÃO ALIMENTE', 'se-kiosk'], ['OS QUATIS', 'se-kiosk'], ['(Nasenbären!)', 'se-kiosk2']].forEach(([s2, c2], k) => { const tx = mk('text', {x: 0, y: FL - 190 + k * 24, 'text-anchor': 'middle', class: c2}, qs); tx.textContent = s2; });
+  const arg = mk('g', {transform: 'translate(790,0)'}, B.quati); mk('path', {d: `M-40,${FL - 70} L20,${FL - 70} L36,${FL - 54} L20,${FL - 38} L-40,${FL - 38}Z`, fill: '#74acdf', stroke: INK, 'stroke-width': 2}, arg);
+  const argT = mk('text', {x: -8, y: FL - 48, 'text-anchor': 'middle', class: 'se-kiosk2'}, arg); argT.textContent = '🇦🇷 →';
+  const bushes = mk('g', {}, F.quati); [[-40, 40], [90, 30], [760, 46], [840, 36]].forEach(([x, r]) => mk('ellipse', {cx: x, cy: FL + 30, rx: r * 2, ry: r, fill: '#2f7a46', stroke: '#1d4d2a', 'stroke-width': 3}, bushes));
+  const C1 = coati(fxG, .9), C2 = coati(fxG, .85), C3 = coati(fxG, .8);
+  const fight = e3(mk('g', {opacity: 0}, fxG)); [[0, 0, 46], [-40, 10, 32], [40, 8, 34], [-18, -30, 30], [24, -26, 28]].forEach(([x, y, r]) => mk('circle', {cx: x, cy: y, r, fill: '#e8e0d0', stroke: '#b9ad96', 'stroke-width': 3}, fight));
+  const fightE = ['💥', '⭐', '🦝', '👟', '📱', '💥'].map(e => emo(e, {'font-size': 24}, fight));
+  const money = e3(emo('💰', {'font-size': 24, opacity: 0}, fxG));
+
+  // Grenze nach Argentinien
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-day)'}, B.grenze);
+  mk('path', {d: 'M-100,300 C120,250 260,270 420,250 C560,235 700,262 900,245 L900,320 L-100,320Z', fill: '#4d8f5a'}, B.grenze);
+  mk('rect', {x: -100, y: 300, width: W + 200, height: 200, fill: '#8a8f99'}, B.grenze); mk('path', {d: Array.from({length: 24}, (_, k) => `M${k * 40 - 100},${FL + 30} l22,0`).join(' '), stroke: '#fff', 'stroke-width': 3}, B.grenze);
+  const booth = mk('g', {transform: 'translate(610,0)'}, B.grenze); mk('rect', {x: -90, y: 150, width: 180, height: FL - 150, fill: '#e9e3d4', stroke: INK, 'stroke-width': 3}, booth);
+  mk('path', {d: 'M-104,154 L0,116 L104,154Z', fill: '#74acdf', stroke: INK, 'stroke-width': 3}, booth); mk('rect', {x: -70, y: 196, width: 140, height: 90, fill: '#3a4250'}, booth);
+  const migT = mk('text', {x: 0, y: 176, 'text-anchor': 'middle', class: 'se-kiosk'}, booth); migT.textContent = 'MIGRACIONES 🇦🇷';
+  const boothF = mk('g', {transform: 'translate(610,0)'}, F.grenze); mk('rect', {x: -90, y: 290, width: 180, height: FL - 290, fill: '#e9e3d4', stroke: INK, 'stroke-width': 3}, boothF); mk('rect', {x: -96, y: 284, width: 192, height: 12, rx: 3, fill: '#b5793f', stroke: INK, 'stroke-width': 2}, boothF);
+  const flagG = mk('g', {transform: 'translate(752,0)'}, B.grenze); mk('rect', {x: -3, y: 80, width: 6, height: FL - 80, fill: '#555'}, flagG);
+  const flag = mk('g', {}, flagG); ['#74acdf', '#fff', '#74acdf'].forEach((c, k) => mk('rect', {x: 3, y: 84 + k * 18, width: 84, height: 18, fill: c}, flag)); emo('☀️', {x: 45, y: 111, 'font-size': 15}, flag);
+  const pp = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 270, y: 96, width: 300, height: 166, rx: 12, fill: '#7a1f2b', stroke: INK, 'stroke-width': 3}, pp);
+  mk('rect', {x: 282, y: 108, width: 276, height: 142, rx: 8, fill: '#f6efe0'}, pp);
+  const ppImg = mk('image', {x: 292, y: 122, width: 96, height: 112, preserveAspectRatio: 'xMidYMid slice', 'clip-path': 'url(#se-ppclip)'}, pp);
+  const ppHair = mk('path', {d: 'M290,170 Q286,112 340,110 Q394,112 390,170 Q378,140 366,152 Q352,128 340,146 Q326,128 314,152 Q302,140 290,170Z', fill: '#6b3a1a', stroke: INK, 'stroke-width': 2}, pp);
+  const ppT1 = mk('text', {x: 400, y: 140, class: 'se-kiosk2'}, pp), ppT2 = mk('text', {x: 400, y: 168, class: 'se-kiosk', style: 'font-size:19px'}, pp), ppT3 = mk('text', {x: 400, y: 196, class: 'se-kiosk2'}, pp), ppT4 = mk('text', {x: 400, y: 224, class: 'se-kiosk2', style: 'fill:#c0392b'}, pp);
+  ppT1.textContent = 'PASSAPORTE · PASS';
+  function cell(parent) { const g = e3(mk('g', {opacity: 0}, parent)); mk('rect', {x: -62, y: -214, width: 124, height: 214, fill: 'none', stroke: '#333', 'stroke-width': 8}, g);
+    for (let k = 1; k < 6; k++) mk('line', {x1: -62 + k * 20.6, y1: -214, x2: -62 + k * 20.6, y2: 0, stroke: '#444', 'stroke-width': 5}, g);
+    const tg = mk('text', {x: 0, y: -224, 'text-anchor': 'middle', class: 'se-kiosk', style: 'fill:#fff;stroke:#111;stroke-width:3px;paint-order:stroke'}, g); g.t = tg; return g; }
+  const C4 = coati(fxG, .8), cellJ = cell(fxG), cellQ = cell(fxG); cellJ.t.textContent = 'ZELLE 3'; cellQ.t.textContent = 'ZELLE 4';
+
+  // Bootstour unter die Fälle
+  const FB = fallsBG(B.boot, 1);
+  const curtain3 = e3(mk('g', {opacity: 0}, F.boot)); mk('path', {d: 'M0,104 Q165,84 330,104 L340,480 L-10,480Z', fill: '#eef8ff', opacity: .94}, curtain3); mk('ellipse', {cx: 165, cy: 100, rx: 170, ry: 9, fill: '#fff'}, curtain3);
+  const curL = mk('path', {d: Array.from({length: 36}, (_, j) => `M${4 + j * 9},104 L${4 + j * 9},480`).join(' '), stroke: '#b9def4', 'stroke-width': 3, 'stroke-dasharray': '30 8'}, curtain3);
+  const boat = mk('g', {}, F.boot);
+  mk('path', {d: 'M-262,-46 L250,-46 Q300,-44 302,-18 Q300,8 250,10 L-250,10 Q-276,8 -276,-18 Q-276,-44 -262,-46Z', fill: '#4a4f57', stroke: INK, 'stroke-width': 3}, boat);
+  mk('path', {d: 'M-266,-20 L296,-20', stroke: '#ff8a3c', 'stroke-width': 7}, boat);
+  const btT = mk('text', {x: 10, y: 4, 'text-anchor': 'middle', class: 'se-small'}, boat); btT.textContent = 'MACUCO SAFARI 🌊';
+  mk('rect', {x: -306, y: -64, width: 34, height: 58, rx: 6, fill: '#222', stroke: INK, 'stroke-width': 2}, boat);
+  const goggles = e3(emo('🥽', {'font-size': 34, opacity: 0}, fxG)), teeth = e3(emo('🦷', {'font-size': 26, opacity: 0}, fxG)), fish3 = e3(emo('🐟', {'font-size': 38, opacity: 0}, fxG)), grin = e3(emo('🦷', {'font-size': 18, opacity: 0}, fxG));
+  const wetB = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 560, y: 64, width: 210, height: 40, rx: 20, fill: '#1f3f8f'}, wetB); const wetT = mk('text', {x: 665, y: 91, 'text-anchor': 'middle', class: 'se-badge'}, wetB); wetT.textContent = '💦 Nässe: 100 %';
+
+  // Trinkduell am Abend
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-dusk)'}, B.duel);
+  for (let k = 0; k < 30; k++) mk('circle', {cx: hash(k, 91) * W, cy: hash(k, 92) * 150, r: hash(k, 93) * 1.4 + .4, fill: '#fff', opacity: .7}, B.duel);
+  emo('🌙', {x: 90, y: 60, 'font-size': 40}, B.duel);
+  const neon3 = mk('text', {x: 470, y: 70, 'text-anchor': 'middle', class: 'se-neon', style: 'font-size:34px'}, B.duel); neon3.textContent = 'BAR DAS CATARATAS 🍹';
+  const lights3 = mk('g', {}, B.duel); mk('path', {d: 'M0,110 Q200,150 400,118 Q600,86 800,122', fill: 'none', stroke: '#222', 'stroke-width': 2}, lights3);
+  const bulbs3 = Array.from({length: 17}, (_, i) => { const x = i * 50, y = i < 8 ? 110 + 32 * S(PI * x / 400) : 118 - 26 * S(PI * (x - 400) / 400); return mk('circle', {cx: x, cy: y + 7, r: 6, fill: ['#ffcf1f', '#3ccf7f', '#ff5fa2', '#5fd3ff'][i % 4]}, lights3); });
+  mk('rect', {x: -100, y: FL - 4, width: W + 200, height: 100, fill: '#3a2a1e'}, B.duel);
+  const tableD = mk('g', {}, F.duel); mk('rect', {x: 236, y: FL - 70, width: 300, height: 16, rx: 5, fill: '#8a5a2b', stroke: INK, 'stroke-width': 2.5}, tableD);
+  mk('path', {d: `M256,${FL - 54} L262,${FL} M516,${FL - 54} L510,${FL}`, stroke: '#5a3e22', 'stroke-width': 8}, tableD);
+  const shotsD = Array.from({length: 12}, () => emo('🥃', {'font-size': 16, opacity: 0}, F.duel)), shotsM = Array.from({length: 12}, () => emo('🥃', {'font-size': 16, opacity: 0}, F.duel));
+  const duelB = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 250, y: 64, width: 300, height: 44, rx: 22, fill: '#10231d'}, duelB); const duelT = mk('text', {x: 400, y: 93, 'text-anchor': 'middle', class: 'se-score', style: 'font-size:20px'}, duelB);
+  const chalk = e3(mk('path', {fill: 'none', stroke: '#fff', 'stroke-width': 4, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', pathLength: 1, 'stroke-dasharray': '1 1', opacity: 0}, fxG));
+  const fishHead = e3(emo('🐟', {'font-size': 30, opacity: 0}, fxG)), weed3 = e3(emo('🌿', {'font-size': 24, opacity: 0}, fxG));
+  const note = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 200, y: 22, width: 400, height: 58, rx: 14, fill: '#fff', stroke: '#1cc29f', 'stroke-width': 3}, note);
+  const noteT = mk('text', {x: 220, y: 46, class: 'se-kiosk', style: 'fill:#1cc29f'}, note); noteT.textContent = '🦝 Quati-Splitwise · jetzt';
+  const noteT2 = mk('text', {x: 220, y: 69, class: 'se-kiosk2'}, note); noteT2.textContent = 'Du schuldest „Nasenbär“ 40 € (Eintritt) 🧾';
+
   // Derbe Effekte: Kotz-Bogen, Stinkwolke, Herzen, Fleck
   const puke = mk('path', {fill: 'none', stroke: '#9acd32', 'stroke-width': 11, 'stroke-linecap': 'round', pathLength: 1, 'stroke-dasharray': '1 1', opacity: 0}, fxG);
   const pukeDrops = Array.from({length: 8}, () => mk('circle', {r: 4, fill: '#8fbf3a', opacity: 0}, fxG));
@@ -3557,7 +3761,8 @@ function wavB64(buf) {
     const cr = EP.credits || [];
     credEls.forEach((g, k) => { const [a2, b2] = cr[k] || ['', '']; g.l.textContent = a2; g.r.textContent = b2;
       g.r.setAttribute('x', a2 ? W / 2 + 12 : W / 2); g.r.setAttribute('text-anchor', a2 ? 'start' : 'middle'); g.hidden2 = !b2; });
-    recap.setAttribute('opacity', 0);
+    recap.setAttribute('opacity', 0); recT.textContent = EP.recapBadge || '⏪ Bisher: 👖❌  🤮  🧴⚰️  🦞';
+    const bd = EP.badge || ['📞', 'Daijo & Greisel', 'kommen später nach …']; laterE.textContent = bd[0]; lt.textContent = bd[1]; lt2.textContent = bd[2];
   }
 
   // HUD: Ort, Untertitel, Abblende
@@ -3587,7 +3792,7 @@ function wavB64(buf) {
     [sunHand, crab, weed, plate, monkey, mhat, vine, ball, caipi, lob, card10, ice, puke, pukeBag, stain, kissM].forEach(e => e.setAttribute('opacity', 0)); [steam, pukeDrops, stink, stinkL, hearts].forEach(a => a.forEach(e => e.setAttribute('opacity', 0))); [fish, splashE, phone, lockE, broken, towels, crab2, pigeon, poop, splat, skewer, haloP, tat, wishB, spiessB, hgtB].forEach(e => e.setAttribute('opacity', 0));
     [mealBadge, waveN, ban, slowT, tetris, ook, score, ff, count, miniB, stampT, speedB, lapse, dayB, roundB, beltB].forEach(e => e.setAttribute('opacity', 0));
     Object.values(P).forEach(o => { o.prop.textContent = ''; });
-    jhat.setAttribute('opacity', 0); party.forEach(h => h.setAttribute('opacity', 0));
+    jhat.setAttribute('opacity', 0); party.forEach(h => h.setAttribute('opacity', 0)); E3.forEach(e => e.setAttribute('opacity', 0));
     let cam = {x: W / 2, y: H / 2, z: 1};
     const on = (id, x, y, extra) => Object.assign(pose[id], {on: 1, x, y: y === undefined ? FL : y}, extra || {});
     const crew4 = ['jonas', 'patrick', 'simon', 'marco'].filter(id => P[id]); on2 = on;
@@ -3599,7 +3804,8 @@ function wavB64(buf) {
       ti2.setAttribute('opacity', k2.toFixed(2)); tiR.setAttribute('opacity', k3.toFixed(2)); tiR.setAttribute('transform', `translate(0,${(20 * (1 - ease(k3))).toFixed(1)})`);
       const rc = LAT.recap !== undefined ? win(L, LAT.recap - 200, sc.t[1] - 300, 300) : 0; recap.setAttribute('opacity', rc.toFixed(2));
       later.setAttribute('opacity', (span(L, 5200, 5700) * (1 - rc)).toFixed(2));
-      crew4.forEach((id, i) => { const d = 3000 + i * 250, k = span(L, d, d + 500); on(id, [90, 200, 600, 710][i], FL + 50 + 140 * (1 - ease(k)), {sc: .62});
+      const cast = (EP.n || 1) >= 3 ? CREW : crew4, XS = cast.length > 4 ? [46, 122, 198, 602, 678, 754] : [90, 200, 600, 710];
+      cast.forEach((id, i) => { const d = 3000 + i * 250, k = span(L, d, d + 500); on(id, XS[i], FL + 50 + 140 * (1 - ease(k)), {sc: .62});
         if (L > d + 500) cheerP(t, pose[id], i); pose[id].mouth = L > 6000 && (Math.floor(t / 200) + i) % 3 === 0 ? .5 : 0; });
     }
     else if (sc.id === 'sec') {
@@ -3902,6 +4108,210 @@ function wavB64(buf) {
       if (P.jonas && L > A('call2')) { pose.jonas.mouth = Math.max(pose.jonas.mouth, 0); pose.jonas.tilt = 0; }
       cam = L < A('call2') ? {x: 260, y: 225, z: 1.2} : {x: 470, y: 225, z: 1.05};
     }
+    else if (sc.id === 'gig') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      const dOpen = span(L, A('g2') - 2900, A('g2') - 2300) * (1 - span(L, A('g2') + 400, A('g2') + 1000));
+      doorL.setAttribute('x', (558 - 96 * dOpen).toFixed(1)); doorR.setAttribute('x', (660 + 96 * dOpen).toFixed(1));
+      const tx = 840 - 250 * ease(span(L, A('g2') - 2500, A('g2') - 300)), moving = L > A('g2') - 2500 && L < A('g2') - 300;
+      trol.setAttribute('transform', `translate(${tx.toFixed(1)},${FL})`);
+      // Greisel schläft auf dem Gepäckwagen, Daijo schiebt
+      if (P.greisel) { on('greisel', tx - 4, FL - 56, {sc: .66, tumble: -90, noShadow: 1}); Object.assign(pose.greisel, {aL: [170, 0], aR: [120, 20], lL: [10, 0], lR: [-6, 0]});
+        const up = L > A('g3') - 200 && L < A('g5') + d('g5'); if (up) { pose.greisel.tumble = -62; pose.greisel.y = FL - 70; pose.greisel.look = -1; }
+        if (!up) snore(tx - 70, hyOf(FL - 56, .66) + 70, t); }
+      if (P.dajo) { on('dajo', tx + 112, FL, {sc: .78, flip: -1}); idle(t, 5, pose.dajo); if (moving) walkP(t, pose.dajo); pose.dajo.aL = [64, 30]; pose.dajo.aR = [64, 30];
+        if (L > A('g4') - 200) { pose.dajo.aR = [100, 30]; } if (L > A('g7') - 400) { pose.dajo.aR = [80, 70]; pose.dajo.aL = [80, 70]; P.dajo.prop.textContent = '💻'; } }
+      // Tablette fliegt in Greisels Mund
+      const pk = span(L, A('g5') + d('g5') - 100, A('g5') + d('g5') + 600); if (pk > 0 && pk < 1) { const x1 = tx + 90, y1 = FL - 120, x2 = tx - 60, y2 = FL - 92;
+        pill.setAttribute('opacity', 1); pill.setAttribute('x', (x1 + (x2 - x1) * pk).toFixed(1)); pill.setAttribute('y', (y1 + (y2 - y1) * pk - 70 * S(PI * pk)).toFixed(1)); }
+      // Begrüßungskomitee: Schild, Jonas mit Rechnung
+      const X = {marco: 80, simon: 220, patrick: 320, jonas: 420};
+      crew4.forEach((id, i) => { on(id, X[id], FL, {sc: .78}); idle(t, i, pose[id]); });
+      ['marco', 'simon'].forEach(id => { if (P[id]) { pose[id].aL = [50, 50]; pose[id].aR = [50, 50]; } });
+      if (P.simon) { pose.simon.burn = .55; } if (P.patrick) { pose.patrick.rot = 3 * S(t / 500); pose.patrick.tilt += 4 * S(t / 380); }
+      if (P.jonas) { if (L > A('g6')) pose.jonas.aR = [80, 10];
+        if (L > A('g8') - 300) Object.assign(pose.jonas, {cry: 1, tilt: 6 * S(t / 60), aR: [20, 10], aL: [20, 10]}); }
+      const bk = span(L, A('g6') + 600, A('g6') + 2600);
+      if (bk > 0) { const hx = 420 + 30, hy0 = FL - 112, len2 = (FL - hy0) * Math.min(1, bk * 1.4); bon.setAttribute('opacity', 1); bon.setAttribute('transform', `translate(${hx},${hy0})`);
+        bonR.setAttribute('height', len2.toFixed(1)); bonH.setAttribute('opacity', bk > .2 ? 1 : 0); bonPile.setAttribute('cy', (FL - hy0 - 4).toFixed(1)); bonPile.setAttribute('rx', (60 * Math.max(0, bk * 1.4 - 1) / .4).toFixed(1));
+        if (L > A('g8') - 300) bon.setAttribute('transform', `translate(${hx},${hy0}) rotate(${(8 * S(t / 70)).toFixed(1)})`); }
+      bonSum.setAttribute('opacity', win(L, A('g6') + 2300, A('g7') + 400, 250).toFixed(2));
+      const xk = win(L, A('g7') + 500, A('g8') + 200, 300); xl.setAttribute('opacity', xk.toFixed(2)); xl.setAttribute('transform', `translate(${(60 * (1 - ease(xk))).toFixed(1)},0)`);
+      cam = L < A('g2') - 2600 ? {x: 400, y: 225, z: 1} : L < A('g2') ? {x: 600, y: 250, z: 1.1} : L < A('g6') - 900 ? {x: 590, y: 260, z: 1.35} : L < A('g7') ? {x: 480, y: 250, z: 1.2} : L < A('g8') ? {x: 420, y: 240, z: 1.05} : {x: 420, y: 255, z: 1.55};
+    }
+    else if (sc.id === 'boe') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      boeCl.forEach((c, k) => c.setAttribute('transform', `translate(${(((-t / 18 + k * 23) % 60) + 30).toFixed(1)},0)`));
+      const turb = L > A('b6') + 200 && L < A('b8'), sh = turb ? 5 : 0;
+      const SEATS = {dajo: SEAT3[0], greisel: SEAT3[1], jonas: SEAT3[2], marco: SEAT3[3], simon: SEAT3[4]};
+      Object.entries(SEATS).forEach(([id, x], i) => { if (!P[id]) return; on(id, x + sh * S(t / 37 + i), FL - 26 - sh * C(t / 41 + i), {sc: .76, floor: FL - 20, noShadow: 1}); sitP(pose[id]); pose[id].tilt = 2 * S(t / 900 + i); });
+      if (P.greisel) { Object.assign(pose.greisel, {tilt: 24, rot: 6}); snore(SEAT3[1] + 34, hyOf(FL - 26, .76) - 4, t); }
+      if (P.simon) pose.simon.burn = .55;
+      // Patrick im Rollstuhl, geschoben von der Flugbegleiterin
+      const wk = span(L, A('b2') - 2000, A('b2') - 200), px = -80 + 260 * ease(wk), rolling = wk > 0 && wk < 1;
+      if (P.patrick && L > A('b2') - 2000) { on('patrick', px, FL - 22, {sc: .74, noShadow: 1}); sitP(pose.patrick); pose.patrick.aL = [40, 30]; pose.patrick.aR = [40, 30];
+        if (L > A('b4') - 200) { pose.patrick.aR = [60, 80]; pose.patrick.look = 1; } if (L > A('b4') + d('b4')) { P.patrick.prop.textContent = '🥂'; pose.patrick.aR = [110, 40]; }
+        [wcBack, wcFront].forEach(g => { g.setAttribute('opacity', 1); g.setAttribute('transform', `translate(${(px - 4).toFixed(1)},${FL - 30})`); });
+        wcSpk.setAttribute('transform', `rotate(${(px * 2).toFixed(1)})`);
+        on('steward', px - 78, FL, {sc: .8}); idle(t, 6, pose.steward); pose.steward.aL = [70, 30]; pose.steward.aR = [70, 30]; if (rolling) walkP(t, pose.steward);
+        if (L > A('b2') - 200) { pose.steward.x = px - 78 - 40 * span(L, A('b4') + d('b4'), A('b4') + d('b4') + 800); } }
+      if (P.simon && L > A('b3') - 200 && L < A('b3') + d('b3') + 400) { pose.simon.aR = [90, 0]; pose.simon.look = -1; pose.simon.tilt = -10; }
+      // Daijo entdeckt die Boeing, die Tür klappert
+      const scare = L > A('b5') - 200;
+      if (P.dajo && scare) { Object.assign(pose.dajo, {cry: 1, aL: [150, 30 * S(t / 70)], aR: [150, 30 * S(t / 80)], tilt: 8 * S(t / 90)});
+        if (L > A('b7') - 200) { pose.dajo.aL = [60, 100]; pose.dajo.aR = [60, 100]; pose.dajo.tilt = 6; pray.setAttribute('opacity', 1); pray.setAttribute('x', SEAT3[0] + 30); pray.setAttribute('y', FL - 110); } }
+      boeCard.setAttribute('opacity', win(L, A('b5') + 300, A('b6') + d('b6') + 300, 250).toFixed(2));
+      will.setAttribute('opacity', win(L, A('b7') + 400, len - 600, 250).toFixed(2));
+      const rattle = L > A('b6') + 1200 ? (L < A('b8') ? 1 : .4) : 0;
+      doorG.setAttribute('transform', `translate(${(2.5 * rattle * S(t / 23)).toFixed(1)},${(1.5 * rattle * C(t / 29)).toFixed(1)})`);
+      tapeF.setAttribute('transform', `translate(116,128) rotate(${(rattle ? -30 + 40 * S(t / 40) : 0).toFixed(1)})`); gapL.setAttribute('opacity', rattle && S(t / 50) > .3 ? .9 : 0);
+      wind3.forEach((e, k) => { if (!rattle) return; const ph = (t / 600 + k / 3) % 1; e.setAttribute('opacity', (rattle * (1 - ph)).toFixed(2)); e.setAttribute('x', (120 + 200 * ph).toFixed(1)); e.setAttribute('y', (160 + k * 60 + 10 * S(t / 90 + k)).toFixed(1)); });
+      cam = L < A('b2') - 2000 ? {x: 460, y: 225, z: 1} : L < A('b5') - 300 ? {x: clamp(px + 80, 220, 600), y: 245, z: 1.25} : L < A('b8') - 200 ? {x: 210, y: 240, z: 1.3} : L < A('b8') + d('b8') + 600 ? {x: 330, y: 255, z: 1.4} : {x: 330, y: 230, z: 1.1};
+    }
+    else if (sc.id === 'falls') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      // Fotos: Standbild mit Polaroid-Rahmen; bei „Aber das Foto ist schön geworden“ kommt Foto 2 noch einmal
+      const shot1 = A('f4') + d('f4') + 250, fall0 = A('f5') + d('f5') + 150, shot2 = fall0 + 560, fb0 = A('f7') - 150, fb1 = len - 350;
+      let Lf = L, polaK = 0; if (L > shot1 && L < shot1 + 1500) { Lf = shot1; polaK = 1; } if (L > shot2 && L < shot2 + 1000) { Lf = shot2; polaK = 2; } if (L > fb0 && L < fb1) { Lf = shot2; polaK = 3; }
+      const tf = t - (L - Lf), Lx = Lf;
+      fallsAnim(FA, tf);
+      const X = {patrick: 110, simon: 220, jonas: 330, greisel: 450, dajo: 560, marco: 650};
+      CREW.forEach((id, i) => { on(id, X[id], FL, {sc: .78}); idle(tf, i, pose[id]); });
+      on('girl2', 745, FL, {sc: .76, flip: -1}); idle(tf, 7, pose.girl2);
+      if (P.simon) pose.simon.burn = .55;
+      // Patrick muss schon wieder: Knie zusammen, dann Sprint Richtung Klo
+      if (P.patrick) { if (Lx > A('f3') - 200) { pose.patrick.lL = [12, -8]; pose.patrick.lR = [-12, -8]; pose.patrick.aL = [20, -30]; pose.patrick.aR = [20, -30]; pose.patrick.tilt = 5 * S(tf / 80); }
+        const rk = span(Lx, A('f3') + d('f3') + 100, A('f3') + d('f3') + 1300); if (rk > 0) { pose.patrick.flip = -1; pose.patrick.x = 110 - 260 * rk; walkP(tf, pose.patrick, 70); if (rk >= 1) pose.patrick.on = 0; } }
+      // Selfie: Greisel und Daijo, dahinter die Fotobomber
+      const sk = span(Lx, A('f4') - 300, A('f4') + 400);
+      if (P.greisel && Lx > A('f4') - 300) { pose.greisel.aR = [160, 20]; P.greisel.prop.textContent = '📱'; pose.greisel.tilt = 8; }
+      if (P.dajo && Lx > A('f4') - 300) { pose.dajo.x = 545 - 30 * ease(sk); pose.dajo.tilt = -12; }
+      const bomb = span(Lx, A('f4') + 600, A('f4') + 1600);
+      if (P.marco && bomb > 0) { pose.marco.x = 650 - 145 * ease(bomb); pose.marco.y = FL + 6; if (bomb < 1) walkP(tf, pose.marco); else { pose.marco.aL = [172, 150]; pose.marco.aR = [172, 150]; pose.marco.mouth = .6; pose.marco.y = FL - 46 * Math.abs(S(tf / 260)); pose.marco.x = 500; } }
+      if (P.jonas && bomb > 0) { pose.jonas.x = 330 + 80 * ease(bomb); if (bomb < 1) walkP(tf, pose.jonas); else { pose.jonas.aR = [150, 20]; P.jonas.prop.textContent = '🧾'; } }
+      // Simon klettert aufs Geländer, winkt der Brasilianerin – und fällt
+      if (P.simon) { const ck = span(Lx, A('f5') - 1000, A('f5') - 300); pose.simon.x = 220 + 30 * ck; pose.simon.y = FL - 64 * ease(ck); pose.simon.noShadow = ck > 0 ? 1 : 0;
+        if (Lx > A('f5') - 300) { pose.simon.aR = [160, 25 * S(tf / 90)]; pose.simon.hip = 4 * S(tf / 150); pose.simon.look = 1; }
+        const fk = (Lx - fall0) / 1500; if (fk > 0) { Object.assign(pose.simon, {tumble: -50 - 260 * fk, y: FL - 64 + 520 * fk * fk + (-120 * Math.min(1, fk * 3)) * (1 - fk), x: 250 - 40 * fk, aL: [170, 60 * S(tf / 60)], aR: [170, 60 * C(tf / 60)], lL: [40 * S(tf / 50), 0], lR: [-40 * S(tf / 50), 0], mouth: 1}); if (fk > 1) pose.simon.on = 0; } }
+      const spk = span(Lx, fall0 + 1300, fall0 + 3200); if (spk > 0 && spk < 1) { splash3.setAttribute('opacity', (1 - spk).toFixed(2)); splash3.setAttribute('x', 230); splash3.setAttribute('y', (FA.foot + 30 - 40 * spk).toFixed(1)); foam3.setAttribute('opacity', (1 - spk).toFixed(2)); foam3.setAttribute('cx', 230); foam3.setAttribute('cy', FA.foot + 40); }
+      if (Lx > fall0 + 200 && Lx < A('f7')) { CREW.forEach(id => { if (P[id] && id !== 'simon' && id !== 'patrick') { pose[id].look = -1; pose[id].tilt = 14; } }); if (P.dajo) { P.dajo.prop.textContent = '📱'; pose.dajo.aR = [120, 20]; } if (P.greisel) P.greisel.prop.textContent = ''; }
+      if (Lx > fall0 + 200) { pose.girl2.cry = 0; pose.girl2.aL = [90, 60]; pose.girl2.aR = [90, 60]; }
+      if (polaK === 3 && P.dajo) { pose.dajo.mouth = 0; }
+      if (polaK) Object.values(pose).forEach(p => { p.hush = 1; });
+      pola.setAttribute('opacity', polaK ? 1 : 0); polaT.textContent = polaK === 1 ? 'Nur wir zwei 💍 (+3)' : polaK === 2 ? 'Klick! 📸' : 'Flitterwochen, Tag 2 ❤️';
+      flashW.setAttribute('opacity', Math.max(L > shot1 ? 1 - span(L, shot1, shot1 + 350) : 0, L > shot2 ? 1 - span(L, shot2, shot2 + 350) : 0).toFixed(2));
+      cam = Lx < A('f2') ? {x: 260 + 280 * ease(span(Lx, 0, A('f2'))), y: 200, z: 1.06} : Lx < A('f4') - 300 ? {x: 190, y: 250, z: 1.3} : Lx < A('f5') - 1100 ? {x: 520, y: 240, z: 1.2} : Lx < fall0 ? {x: 300, y: 225, z: 1.2} : Lx < fall0 + 1600 ? {x: 270, y: 290, z: 1.1} : {x: 400, y: 225, z: 1};
+      if (polaK) cam = Object.assign({}, cam, {z: cam.z * .96});
+    }
+    else if (sc.id === 'quati') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      const X = {marco: 110, patrick: 210, jonas: 380, greisel: 610, dajo: 680};
+      CREW.forEach((id, i) => { if (id === 'simon') return; on(id, X[id], FL, {sc: .78}); idle(t, i, pose[id]); });
+      if (P.greisel) { pose.greisel.tilt = 10; pose.greisel.mouth = S(t / 1600) > .8 ? .9 : 0; }
+      if (P.dajo) pose.dajo.flip = -1;
+      // Nasenbär 1 schleicht sich an, schnappt das Handy, Rauferei mit Jonas
+      const G = A('q3') - 800, c1in = span(L, 300, A('q2'));
+      if (P.jonas) { pose.jonas.flip = -1; if (L > A('q2') - 300 && L < G) { pose.jonas.aR = [70, 90]; P.jonas.prop.textContent = '📱'; } }
+      let c1x = 790 - 360 * ease(c1in), c1y = FL + 6, run1 = c1in > 0 && c1in < 1;
+      if (L > G) { const k = span(L, G, G + 300); c1x = 430 - 60 * k; c1y = FL + 6 - 60 * S(PI * k); C1.prop.textContent = '📱'; }
+      if (L > G + 300) { const k = span(L, G + 300, G + 1000); c1x = 370 + 140 * k; c1y = FL + 6; run1 = true; }
+      const f0 = G + 1100, f1 = G + 2700;
+      if (P.jonas && L > G + 300) { const k = span(L, G + 400, f0); pose.jonas.flip = 1; pose.jonas.x = 380 + 120 * ease(k); walkP(t, pose.jonas, 70); pose.jonas.aL = [150, 10]; pose.jonas.aR = [150, 10]; }
+      const inFight = L > f0 && L < f1;
+      fight.setAttribute('opacity', inFight ? 1 : 0); if (inFight) { fight.setAttribute('transform', `translate(${(520 + 8 * S(t / 40)).toFixed(1)},${(FL - 60 + 6 * C(t / 50)).toFixed(1)}) rotate(${(t / 4 % 360).toFixed(0)},0,0)`);
+        fightE.forEach((e, k) => { const a2 = t / 120 + k; e.setAttribute('x', (40 * C(a2)).toFixed(1)); e.setAttribute('y', (30 * S(a2)).toFixed(1)); e.setAttribute('transform', `rotate(${(-t / 4 % 360).toFixed(0)})`); }); if (P.jonas) pose.jonas.on = 0; }
+      if (P.jonas && L >= f1) Object.assign(pose.jonas, {on: 1, x: 500, y: FL + 22, tumble: 90, cry: 1, noShadow: 1, aL: [100, 20], aR: [100, 20]});
+      if (L > f1) { const k = span(L, f1 + 200, f1 + 1400); c1x = 540 + 360 * k; run1 = k > 0 && k < 1; }
+      if (!inFight && c1x < 880) coatiAt(C1, c1x, c1y, L > G + 300 ? 1 : -1, t, run1);
+      // Nasenbär 2 lässt sich von Patrick adoptieren, Nr. 3 guckt aus dem Busch
+      const c2k = span(L, A('q4'), A('q5'));
+      coatiAt(C2, 760 - 470 * ease(c2k), FL + 8, -1, t, c2k > 0 && c2k < 1); coatiAt(C3, 760 + 6 * S(t / 300), FL + 12 - 14 * Math.max(0, S(t / 700)), -1, t, false);
+      if (P.patrick && L > A('q5') - 300) { Object.assign(pose.patrick, {y: FL + 24, lL: [70, -110], lR: [60, -100], aL: [60, 40], aR: [60, 40], tilt: 10}); hearts3(250, FL - 140, t); }
+      if (P.marco && L > A('q4') - 200 && L < A('q5') + 600) cheerP(t, pose.marco, 0);
+      // Nasenbär 1 setzt sich mit Sonnenbrille und Geldsack nach Argentinien ab
+      if (L > A('q6') - 400) { const k = span(L, A('q6') - 400, len - 300); const x = 120 + 640 * k; C1.shades.setAttribute('opacity', 1); C1.prop.textContent = '📱'; coatiAt(C1, x, FL - 36, 1, t, true, {sc: .8});
+        money.setAttribute('opacity', 1); money.setAttribute('x', (x - 10).toFixed(1)); money.setAttribute('y', (FL - 90 + 3 * S(t / 70)).toFixed(1)); } else C1.shades.setAttribute('opacity', 0);
+      cam = L < A('q2') - 300 ? {x: 420, y: 225, z: 1} : L < G ? {x: 400, y: 245, z: 1.3} : L < f1 + 800 ? {x: 470, y: 250, z: 1.15} : L < A('q6') - 400 ? {x: 230, y: 250, z: 1.3} : {x: 440, y: 230, z: 1.05};
+    }
+    else if (sc.id === 'grenze') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      flag.setAttribute('transform', `skewY(${(4 * S(t / 260)).toFixed(1)})`);
+      on('officer', 610, FL - 22, {sc: .8, flip: -1, noShadow: 1}); idle(t, 0, pose.officer);
+      const mOut = span(L, A('a3') + d('a3') + 400, A('a4') - 200), jIn = span(L, A('a3') + d('a3') + 600, A('a4') - 100);
+      const X = {greisel: 80, dajo: 160, patrick: 260, jonas: 360, marco: 470};
+      ['greisel', 'dajo', 'patrick', 'jonas', 'marco'].forEach((id, i) => { if (!P[id]) return; on(id, X[id], FL, {sc: .78}); idle(t, i, pose[id]); });
+      if (P.greisel) { Object.assign(pose.greisel, {rot: 10, tilt: 26}); snore(110, hyOf(FL, .78) - 30, t); }
+      if (P.marco) { if (L > A('a2') - 400 && L < A('a3')) pose.marco.aR = [90, 0]; if (L > A('a2') + 2400 && L < A('a3')) { pose.marco.aR = [70, 40 + 30 * S(t / 90)]; P.marco.prop.textContent = '🖊️'; }
+        if (L > A('a3') && L < A('a3') + d('a3')) { pose.marco.aR = [90, 0]; P.marco.prop.textContent = '🏢'; }
+        if (mOut > 0) { pose.marco.x = 470 + 400 * ease(mOut); walkP(t, pose.marco); } }
+      if (L > A('a2') + 1200 && L < A('a3')) { pose.officer.aR = [90, 10]; P.officer.prop.textContent = '📝'; pose.officer.mouth = Math.max(pose.officer.mouth, 0); }
+      if (P.jonas && jIn > 0) { pose.jonas.x = 360 + 110 * ease(jIn); if (jIn < 1) walkP(t, pose.jonas); }
+      if (P.jonas && L > A('a5') - 200) { pose.jonas.aL = [150, 120]; pose.jonas.tilt = -6; }
+      // Pass einblenden: Marco = Dani Olmo, Jonas mit Haaren
+      const ppM = win(L, A('a2') - 100, A('a3') - 200, 250), ppJ = win(L, A('a4') - 200, A('a6') - 100, 250), ppk = Math.max(ppM, ppJ);
+      pp.setAttribute('opacity', ppk.toFixed(2)); pp.setAttribute('transform', `translate(400,180) scale(${(.8 + .2 * ease(ppk)).toFixed(3)}) translate(-400,-180)`);
+      if (ppk > 0) { const who = ppM > 0 ? 'marco' : 'jonas'; ppImg.setAttribute('href', (byId[who] || {}).photo || ''); ppHair.setAttribute('opacity', who === 'jonas' ? 1 : 0);
+        ppT2.textContent = who === 'marco' ? 'MARCO' : 'JONAS'; ppT3.textContent = who === 'marco' ? 'Beruf: Makler 🏢' : 'Haare: ja (2025)'; ppT4.textContent = who === 'marco' ? 'Ähnlichkeit: DANI OLMO ⚽' : 'Ähnlichkeit: 12 % 🤨'; }
+      if (L > A('a3') + d('a3') && L < A('a3') + d('a3') + 1300) { stampT.setAttribute('opacity', 1); stampT.textContent = '¡BIENVENIDO!'; }
+      // Zelle drei – daneben sitzt schon der Nasenbär mit Jonas’ Handy
+      const ck = span(L, A('a6') + d('a6') - 100, A('a6') + d('a6') + 300);
+      if (ck > 0) { cellJ.setAttribute('opacity', 1); cellJ.setAttribute('transform', `translate(470,${(FL - 340 * (1 - ease(ck))).toFixed(1)})`); if (P.jonas) { pose.jonas.cry = 1; pose.jonas.aL = [20, 10]; pose.jonas.aR = [20, 10]; }
+        const qk = span(L, A('a6') + d('a6') + 500, A('a6') + d('a6') + 900); cellQ.setAttribute('opacity', qk > 0 ? 1 : 0); cellQ.setAttribute('transform', `translate(330,${(FL - 340 * (1 - ease(qk))).toFixed(1)})`);
+        if (qk > 0) { C4.prop.textContent = '📱'; C4.shades.setAttribute('opacity', 1); coatiAt(C4, 320, FL - 6, 1, t, false, {rot: -6 + 6 * S(t / 200)}); } }
+      cam = L < A('a2') - 400 ? {x: 420, y: 225, z: 1} : L < A('a4') - 400 ? {x: 540, y: 235, z: 1.3} : L < A('a6') + d('a6') ? {x: 520, y: 240, z: 1.3} : {x: 540, y: 250, z: 1.15};
+    }
+    else if (sc.id === 'boot') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      fallsAnim(FB, t);
+      const H0 = A('m4') - 2700, H1 = H0 + 2000;
+      const bx = L < H0 ? 120 + 320 * ease(span(L, 0, H0)) : L < H1 ? 440 + 40 * span(L, H0, H0 + 600) : 480 - 140 * ease(span(L, H1, H1 + 1500));
+      const hit = L > H0 && L < H1, by = FB.foot + 80 + 4 * S(t / 300) + (hit ? 5 * S(t / 33) : 0), br = 1.8 * S(t / 520) + (hit ? 3 * S(t / 41) : 0);
+      boat.setAttribute('transform', `translate(${bx.toFixed(1)},${by.toFixed(1)}) rotate(${br.toFixed(2)})`);
+      const REL = {dajo: -200, greisel: -110, patrick: -20, marco: 70, jonas: 160}, wet = L > H0 + 300;
+      Object.entries(REL).forEach(([id, rx], i) => { if (!P[id]) return; const cs = C(br * PI / 180), sn = S(br * PI / 180);
+        on(id, bx + rx * cs + 14 * sn, by + rx * sn - 12, {sc: .7, noShadow: 1}); sitP(pose[id]); pose[id].tilt = 3 * S(t / 600 + i); if (hit) { pose[id].aL = [160, 30 * S(t / 50 + i)]; pose[id].aR = [160, 30 * C(t / 55 + i)]; pose[id].mouth = 1; pose[id].tilt = 12 * S(t / 70 + i); } });
+      if (P.dajo) { pose.dajo.shirt = '#ffd23f'; if (!hit) { pose.dajo.aR = L > A('m2') && L < A('m3') ? [120, 20] : pose.dajo.aR; pose.dajo.mouth = hit ? 0 : pose.dajo.mouth; }
+        goggles.setAttribute('opacity', 1); goggles.setAttribute('x', pose.dajo.x.toFixed(1)); goggles.setAttribute('y', (hyOf(pose.dajo.y, .7) - 4).toFixed(1)); }
+      if (P.greisel) { if (L < H0 + 200 || L > A('m7') + d('m7') + 300) { Object.assign(pose.greisel, {tilt: 26, rot: 8}); snore(bx - 80, by - 140, t); }
+        else if (L > A('m5') - 300 && L < A('m5') + d('m5') + 200) { pose.greisel.cry = 1; pose.greisel.aL = [120, 30]; pose.greisel.aR = [120, 30]; } }
+      if (wet) drip(['greisel', 'patrick', 'marco', 'jonas'].filter(id => P[id]).map(id => [pose[id].x, hyOf(pose[id].y, .7)]), t);
+      wetB.setAttribute('opacity', win(L, H1 - 200, A('m5') - 400, 300).toFixed(2));
+      const ck3 = ease(span(L, H0 - 300, H0 + 300)) * (1 - ease(span(L, H1 - 300, H1 + 500)));   // der große Fall vorne, beim Durchfahren breiter
+      curtain3.setAttribute('opacity', 1); curtain3.setAttribute('transform', `translate(${(590 - 130 * ck3).toFixed(1)},0)`); curL.setAttribute('stroke-dashoffset', (-(t / 3) % 34).toFixed(1));
+      flashW.setAttribute('opacity', (hit ? .35 + .25 * Math.abs(S(t / 90)) : 0).toFixed(2));
+      // Patricks Gebiss fliegt davon, ein Fisch trägt es jetzt
+      if (P.patrick && L > A('m4') - 300 && L < A('m4') + d('m4') + 400) { pose.patrick.aL = [150, 30 * S(t / 80)]; pose.patrick.aR = [150, 30 * C(t / 80)]; pose.patrick.mouth = .9; }
+      const tk = span(L, A('m4') - 600, A('m4') + 600); if (tk > 0 && tk < 1) { const x0 = bx - 20, y0 = by - 150; teeth.setAttribute('opacity', 1); teeth.setAttribute('x', (x0 + 230 * tk).toFixed(1)); teeth.setAttribute('y', (y0 - 90 * S(PI * tk) + 120 * tk).toFixed(1)); teeth.setAttribute('transform', `rotate(${(tk * 720).toFixed(0)},${(x0 + 230 * tk).toFixed(1)},${(y0 - 90 * S(PI * tk) + 120 * tk).toFixed(1)})`); }
+      const fk = span(L, A('m5') - 1700, A('m5') - 200); if (fk > 0 && fk < 1) { const fx = 620 - 120 * fk, fy = FB.foot + 90 - 150 * S(PI * fk); fish3.setAttribute('opacity', 1); fish3.setAttribute('x', fx.toFixed(1)); fish3.setAttribute('y', fy.toFixed(1)); fish3.setAttribute('transform', `rotate(${(-40 + 80 * fk).toFixed(0)},${fx.toFixed(1)},${fy.toFixed(1)})`);
+        grin.setAttribute('opacity', 1); grin.setAttribute('x', (fx - 22).toFixed(1)); grin.setAttribute('y', (fy + 4).toFixed(1)); }
+      cam = L < A('m2') - 300 ? {x: 400, y: 225, z: 1} : L < H0 - 400 ? {x: bx - 170, y: 270, z: 1.35} : L < A('m4') - 300 ? {x: 540, y: 240, z: 1.1} : L < A('m5') - 1700 ? {x: bx - 20, y: 260, z: 1.35} : L < A('m5') - 200 ? {x: 520, y: 290, z: 1.2} : {x: bx - 90, y: 270, z: 1.45};
+    }
+    else if (sc.id === 'duel') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      bulbs3.forEach((b2, i) => b2.setAttribute('opacity', (Math.floor(t / 400) + i) % 3 ? 1 : .45));
+      const n = clamp(Math.floor(13 * span(L, A('d1') + 1500, A('d2') - 200)), 0, 12), nM = Math.min(n, Math.max(0, n - (L > A('d2') - 400 ? 1 : 0)));
+      shotsD.forEach((g, k) => { g.setAttribute('opacity', k < n ? 1 : 0); g.setAttribute('x', 262 + (k % 6) * 15); g.setAttribute('y', FL - 80 - Math.floor(k / 6) * 15); });
+      shotsM.forEach((g, k) => { g.setAttribute('opacity', k < nM ? 1 : 0); g.setAttribute('x', 510 - (k % 6) * 15); g.setAttribute('y', FL - 80 - Math.floor(k / 6) * 15); });
+      duelB.setAttribute('opacity', L > A('d1') + 1200 && L < A('d5') ? 1 : 0); duelT.textContent = `🥃 Daijo ${n} : ${nM} Marco`;
+      if (P.dajo) { on('dajo', 210, FL - 22, {sc: .76, noShadow: 1}); sitP(pose.dajo); idle(t, 5, pose.dajo); pose.dajo.aR = [70, 60]; if (L > A('d3') - 200 && L < A('d3') + d('d3')) pose.dajo.aR = [150, 20]; if (L > A('d3') && L < A('d5')) P.dajo.prop.textContent = '💳'; }
+      if (P.greisel) { on('greisel', 390, FL - 30, {sc: .72, noShadow: 1}); sitP(pose.greisel); Object.assign(pose.greisel, {tilt: 60, rot: 18, aL: [100, 60], aR: [100, 60]}); snore(420, FL - 150, t); }
+      if (P.jonas) { on('jonas', 55, FL, {sc: .78}); idle(t, 0, pose.jonas); pose.jonas.burn = .2; if (L > A('d7') - 200) { pose.jonas.aR = [90, 0]; } }
+      const fall = span(L, A('d4') + d('d4') + 200, A('d4') + d('d4') + 750);
+      if (P.marco) { on('marco', 576 + 50 * fall, FL - 22 + 54 * fall * fall, {sc: .76, flip: -1, noShadow: 1, tumble: 92 * fall * fall}); sitP(pose.marco); idle(t, 3, pose.marco);
+        const dr = n / 12; pose.marco.rot = 10 * dr * S(t / 420); pose.marco.tilt += 14 * dr * S(t / 300); pose.marco.burn = .35 * dr; pose.marco.aR = [70, 60];
+        if (L > A('d2') - 200 && L < A('d2') + d('d2')) pose.marco.aR = [120, 30 + 20 * S(t / 150)];
+        if (fall > 0) Object.assign(pose.marco, {rot: 0, aL: [90, 0], aR: [90, 0], lL: [40, 0], lR: [-30, 0], tilt: 0}); }
+      const cx = 690, cy = FL + 2, chk = span(L, A('d5') - 200, A('d5') + d('d5') + 900);
+      if (chk > 0) { chalk.setAttribute('opacity', 1); chalk.setAttribute('stroke-dashoffset', (1 - chk).toFixed(3));
+        chalk.setAttribute('d', `M${cx - 92},${cy + 6} L${cx - 96},${cy - 12} L${cx - 36},${cy - 20} L${cx - 10},${cy - 62} L${cx + 6},${cy - 56} L${cx - 6},${cy - 22} L${cx + 40},${cy - 26} A36,36 0 1,1 ${cx + 40},${cy + 18} L${cx - 6},${cy + 14} L${cx + 8},${cy + 52} L${cx - 8},${cy + 58} L${cx - 36},${cy + 18} L${cx - 92},${cy + 6}Z`); }
+      if (P.patrick) { const kneel = L > A('d5') - 600; on('patrick', kneel ? 790 : 760, kneel ? FL + 20 : FL, {sc: .78, flip: -1}); idle(t, 1, pose.patrick);
+        if (kneel) Object.assign(pose.patrick, {lL: [70, -110], lR: [60, -100], aR: [100, 60 + 20 * S(t / 120)], tilt: 14}); if (kneel && L < A('d6')) P.patrick.prop.textContent = '✏️'; }
+      if (P.simon && L > A('d6') - 1700) { const k = span(L, A('d6') - 1700, A('d6') - 200); on('simon', -60 + 195 * ease(k), FL, {sc: .78, burn: .5}); idle(t, 2, pose.simon); if (k < 1) walkP(t, pose.simon, 200);
+        if (L > A('d6') - 200) pose.simon.aR = [150, 20 * S(t / 120)]; if (L > A('d7') + d('d7') - 400) { pose.simon.cry = 1; pose.simon.aR = [20, 10]; }
+        const hx = pose.simon.x, hy = hyOf(FL, .78); fishHead.setAttribute('opacity', 1); fishHead.setAttribute('x', (hx + 4).toFixed(1)); fishHead.setAttribute('y', (hy - 44 + 3 * S(t / 200)).toFixed(1)); fishHead.setAttribute('transform', `rotate(${(-20 + 15 * S(t / 160)).toFixed(0)},${(hx + 4).toFixed(1)},${(hy - 44).toFixed(1)})`);
+        weed3.setAttribute('opacity', 1); weed3.setAttribute('x', (hx + 22).toFixed(1)); weed3.setAttribute('y', (hy + 60).toFixed(1)); drip([[hx, hy], [hx - 10, hy], [hx + 12, hy]], t); }
+      note.setAttribute('opacity', win(L, A('d7') + 1200, len - 200, 250).toFixed(2)); note.setAttribute('transform', `translate(0,${(-30 * (1 - ease(span(L, A('d7') + 1200, A('d7') + 1600)))).toFixed(1)})`);
+      cam = L < A('d1') + 1200 ? {x: 400, y: 225, z: 1} : L < A('d2') - 300 ? {x: 390, y: 250, z: 1.15} : L < A('d3') - 200 ? {x: 560, y: 250, z: 1.4} : L < A('d4') + d('d4') + 200 ? {x: 300, y: 250, z: 1.3} : L < A('d6') - 1700 ? {x: 690, y: 280, z: 1.4} : L < A('d7') - 200 ? {x: 160, y: 240, z: 1.3} : {x: 220, y: 235, z: 1.15};
+    }
     else if (sc.id === 'buf') {
       fallsF.forEach((f, k) => f.setAttribute('stroke-dashoffset', (-(t / 8 + k * 7) % 20).toFixed(1)));
       ban.setAttribute('opacity', win(L, 300, 4200, 400).toFixed(2));
@@ -3969,7 +4379,8 @@ function wavB64(buf) {
     else if (sc.id === 'end') {
       credEls.forEach((g, k) => { if (g.hidden2) { g.setAttribute('opacity', 0); return; } const y = 202 + k * 28; g.setAttribute('transform', `translate(0,${y.toFixed(1)})`); g.setAttribute('opacity', (span(L, 1500 + k * 400, 2100 + k * 400) * (1 - span(L, 10800, 11800))).toFixed(2)); });
       cont.setAttribute('opacity', span(L, 200, 900).toFixed(2)); nxt.setAttribute('opacity', span(L, 1200, 1800).toFixed(2));
-      crew4.forEach((id, i) => { on(id, 200 + i * 130, FL + 52, {sc: .4}); idle(t, i, pose[id]); const bow = win(L, 3000 + i * 150, 6000, 400); pose[id].rot = 25 * bow; });
+      const cast = (EP.n || 1) >= 3 ? CREW : crew4, gap = cast.length > 4 ? 100 : 130, x0 = 400 - gap * (cast.length - 1) / 2;
+      cast.forEach((id, i) => { on(id, x0 + i * gap, FL + 52, {sc: .4}); idle(t, i, pose[id]); const bow = win(L, 3000 + i * 150, 6000, 400); pose[id].rot = 25 * bow; });
     }
     Object.keys(P).forEach(id => apply(P[id], pose[id], t));
     // Kamera: Szenen-Einstellung, leicht zum Sprecher hin
@@ -3986,7 +4397,7 @@ function wavB64(buf) {
     if (sc.cap) { capT.textContent = sc.cap; capT.setAttribute('style', `font-size:${(17 * UI).toFixed(1)}px`); capR.setAttribute('height', (36 * UI).toFixed(1)); capT.setAttribute('y', (18 + 24 * UI).toFixed(1)); capR.setAttribute('width', (capT.textContent.length * 9.2 * UI + 40).toFixed(0)); }
     const cur = LINES.find(l => t >= l.at && t <= l.at + l.dur + 500);
     subG.setAttribute('opacity', cur && subsOn ? win(t, cur.at - 120, cur.at + cur.dur + 500, 160).toFixed(2) : 0);
-    if (cur) { const txt = (cur.who === 'narrator' ? '' : nameOf(cur.who) + ': ') + cur.text, fs = 17 * UI, cw = fs * .53;
+    if (cur) { const txt = (cur.who === 'narrator' ? '' : (cur.name || nameOf(cur.who)) + ': ') + cur.text, fs = 17 * UI, cw = fs * .53;
       // zu lang für eine Zeile: an der Lücke nahe der Mitte umbrechen
       let l1 = txt, l2 = ''; if (txt.length * cw + 30 > W - 30) { const mid = txt.length / 2; let best = -1; for (let i = 0; i < txt.length; i++) if (txt[i] === ' ' && (best < 0 || Math.abs(i - mid) < Math.abs(best - mid))) best = i; if (best > 0) { l1 = txt.slice(0, best); l2 = txt.slice(best + 1); } }
       subT.textContent = l1; subT2.textContent = l2; [subT, subT2].forEach(e => e.setAttribute('style', `font-size:${fs.toFixed(1)}px`));
@@ -4029,12 +4440,27 @@ function wavB64(buf) {
       ['ro2', 1600, 'ding'], ['ro4', -300, 'scratch'], ['ro6', 600, 'boing'],
       ['zu2', -1700, 'crash'], ['zu2', -1400, 'scratch'], ['zu5', -1400, 'ding'], ['zu6', 200, 'wah'],
       ['call2', 0, 'puke'],
+      ['g2', -2900, 'ding'], ['g2', -2500, 'squeak'], ['g3', -200, 'scratch'], ['g8', 0, 'wah'], ['g7', 600, 'ding'],
+      ['b2', -2000, 'squeak'], ['b3', 0, 'scratch'], ['b4', 2400, 'ding'], ['b5', 0, 'scratch'], ['b6', 1200, 'tape'], ['b6', 1700, 'thud'], ['b6', 2600, 'thud'], ['b7', 0, 'gong'], ['b8', 700, 'wah'],
+      ['f3', 300, 'boing'], ['f5', -1000, 'squeak'], ['f6', 0, 'gong'],
+      ['q1', 200, 'squeak'], ['q3', -800, 'squeak'], ['q3', -500, 'scratch'], ['q4', 0, 'cheer'], ['q6', 0, 'whistle'],
+      ['a2', 1400, 'ding'], ['a4', -300, 'scratch'], ['a6', 300, 'wah'],
+      ['m1', 0, 'boat'], ['m3', 400, 'boat'], ['m4', -600, 'boing'], ['m7', 1200, 'wah'],
+      ['d1', 0, 'cheer'], ['d3', 900, 'ding'], ['d6', -1700, 'splash'], ['d7', 1200, 'ding'],
       ['night1', 0, 'cheer'], ['night3', 3500, 'puke'], ['night5', -400, 'whistle'], ['night4', 2400, 'applause'], ['end', -400, 'applause']];
     fx.forEach(([k, d, n]) => { if (LAT[k] !== undefined) m.sfx(n, A(k, d)); });
     if (LAT.fly2 !== undefined) for (let n = 0; n < 4; n++) m.sfx('munch', A('fly2', 1000 + n * 1300));
     if (LAT.beach10 !== undefined) for (let s2 = 0; s2 < 6; s2++) m.sfx('ding', A('beach10', 3000 + s2 * 1100));
     if (LAT.ny8 !== undefined) { const w0 = LAT.ny8 + ((LINES.find(l => l.key === 'ny8') || {}).dur || 0) + 300; for (let k = 0; k < 6; k++) m.sfx('splash', at(w0 + k * 1900 + 1100)); }
     if (LAT.ro3 !== undefined) for (let k = 0; k < 12; k++) m.sfx('munch', at(LAT.ro3 + k * ((LAT.ro4 - 400 - LAT.ro3) / 12)));
+    // Folge 3: Zeitpunkte, die von Sprechlängen abhängen
+    const dl = k => ((LINES.find(l => l.key === k) || {}).dur || 0), has = k => LAT[k] !== undefined;
+    if (has('g5')) { m.sfx('pill', A('g5', dl('g5') - 100)); m.sfx('boing', A('g5', dl('g5') + 600)); m.sfx('paper', A('g6', 600)); m.sfx('paper', A('g6', 1500)); }
+    if (has('f4')) { const s1 = LAT.f4 + dl('f4') + 250, f0 = LAT.f5 + dl('f5') + 150; m.sfx('shutter', at(s1)); m.sfx('wah', at(f0)); m.sfx('whoo', at(f0 + 100)); m.sfx('shutter', at(f0 + 560)); m.sfx('splash', at(f0 + 1300)); m.sfx('shutter', at(LAT.f7 - 150)); }
+    if (has('q3')) { const G = LAT.q3 - 800; [1100, 1350, 1600, 1900, 2150, 2400].forEach((o, k) => m.sfx(k % 2 ? 'thud' : 'crash', at(G + o))); m.sfx('kiss', A('q5', dl('q5'))); }
+    if (has('a3')) { m.sfx('thud', A('a3', dl('a3'))); m.sfx('clank', A('a6', dl('a6') - 100)); m.sfx('clank', A('a6', dl('a6') + 500)); m.sfx('squeak', A('a6', dl('a6') + 900)); }
+    if (has('m4')) { const H0 = LAT.m4 - 2700; m.sfx('splash', at(H0)); m.sfx('crash', at(H0 + 200)); m.sfx('splash', at(H0 + 700)); m.sfx('splash', at(H0 + 1400)); m.sfx('splash', A('m5', -1700)); m.sfx('ding', A('m5', -900)); }
+    if (has('d1')) { for (let k = 0; k < 12; k++) m.sfx('clink', at(LAT.d1 + 1500 + k * (LAT.d2 - 200 - LAT.d1 - 1500) / 13)); m.sfx('crash', A('d4', dl('d4') + 650)); m.sfx('thud', A('d4', dl('d4') + 750)); m.sfx('chalk', A('d5', -100)); m.sfx('chalk', A('d5', 900)); }
     m.end(at(END - 600));
   }
   function sceneChanged(sc) {
@@ -4198,7 +4624,7 @@ setGroup(G);
   }
   const hf = document.getElementById('hf-open'), open = hf ? parseInt(hf.textContent, 10) : NaN;
   if (!isNaN(open)) hint('reise', open > 0 ? open + (open === 1 ? ' Flug' : ' Flüge') + ' noch offen' : 'Alle Flüge gebucht ✓');
-  hint('kino-tab', 'Neu: Serie, Folge 2 📺');
+  hint('kino-tab', 'Neu: Serie, Folge 3 📺');
   const kf = document.getElementById('kino-film');
   if (kf) kf.addEventListener('click', () => { jump('route', true); setTimeout(() => { const mp = document.getElementById('map-play'); if (mp && mp.getAttribute('aria-pressed') !== 'true') mp.click(); }, 900); });
 })();

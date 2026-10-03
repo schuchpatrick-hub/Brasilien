@@ -5976,6 +5976,761 @@
           ]
         }
       ]
+    },
+    "ep3": {
+      "title": "Daijo & Greisel kommen",
+      "n": 3,
+      "voice": {
+        "intro": {
+          "dur": 3817,
+          "env": "348889987542000039965488887888874000022178976933747768987510002878999997119933225687432659876400"
+        },
+        "recap": {
+          "dur": 4898,
+          "env": "689854009769964987396774069733861529962189983539844925567799599986206983002995449996639996554300008899799555799974146551100"
+        },
+        "g1": {
+          "dur": 6820,
+          "env": "132999665498752297588778777654215860565198254977400000463777799822169876417769897584049248779999810049589953497348988566665100001799998887423599837859877866620033456554200"
+        },
+        "g2": {
+          "dur": 4159,
+          "env": "46999999884579898856761010001679999996699987990159415877444894340657999899799944168605871079696566302000"
+        },
+        "g3": {
+          "dur": 2229,
+          "env": "58749821232100199999837851699989823910499985789999548755"
+        },
+        "g4": {
+          "dur": 2717,
+          "env": "67878732226532231322100000000002977989997751484454498876138522132210"
+        },
+        "g5": {
+          "dur": 1641,
+          "env": "798540000599999621366997045579410779726731"
+        },
+        "g6": {
+          "dur": 4103,
+          "env": "6996557778763000011996359311789688388964179984496647731796786412200099948842577467769873126996167776400"
+        },
+        "g7": {
+          "dur": 3696,
+          "env": "676210596689729747989954723667899048850997933872068862055420000762502885988305578405887743100"
+        },
+        "g8": {
+          "dur": 2616,
+          "env": "539733998943019998788621987988876999298794028888888844117763310100"
+        },
+        "b1": {
+          "dur": 4084,
+          "env": "3399920399843993229987563754000007779862978789999598997230598326669520349868984001000187213746988775100"
+        },
+        "b2": {
+          "dur": 4632,
+          "env": "98563577402599984377897776398867506999946955399944797402876683111784420199874206865776764112299814469997211029984895"
+        },
+        "b3": {
+          "dur": 1853,
+          "env": "15623328611211111002931588744319422697421253100"
+        },
+        "b4": {
+          "dur": 4030,
+          "env": "78876899567489844008887984249894238311555977773018878542777764410284304986618961520199649420163338410"
+        },
+        "b5": {
+          "dur": 2567,
+          "env": "58899878752000011001000019761499541088035189972788980399998776300"
+        },
+        "b6": {
+          "dur": 5715,
+          "env": "49994943449934884201741000055568433876305310000003761354699995474011997781203399472185631037343542201341020000295377874796069742695042066342030"
+        },
+        "b7": {
+          "dur": 3240,
+          "env": "685257689993988989875777705654565431004400000356989866995044694041058875540045420"
+        },
+        "b8": {
+          "dur": 1091,
+          "env": "7899665103000597799995024541"
+        },
+        "f1": {
+          "dur": 5576,
+          "env": "49327359975394329766640000000025307679939999972115989898588101739844087443963377666402995471138899999998999988773468476328211774682598966500"
+        },
+        "f2": {
+          "dur": 3121,
+          "env": "1846987521866668669676529759945566885447763483367414888532768932777255985432100"
+        },
+        "f3": {
+          "dur": 2995,
+          "env": "874551069999978177633237653268624668644253000674530799534442997741686298653"
+        },
+        "f4": {
+          "dur": 3478,
+          "env": "675497132006998506999655459999986898988898964686575433897145476599999994369951342677888"
+        },
+        "f5": {
+          "dur": 1142,
+          "env": "79999995310001982447864343110"
+        },
+        "f6": {
+          "dur": 2564,
+          "env": "12899999988959999998959992683348765300009832889877869718965375200"
+        },
+        "f7": {
+          "dur": 2040,
+          "env": "673985966412897059941086403699877599416855302045200"
+        },
+        "q1": {
+          "dur": 4555,
+          "env": "566534998300039998875397999799532961965598575553773009845998973499914924589999998950459911399597999966735766512410"
+        },
+        "q2": {
+          "dur": 3709,
+          "env": "579977358914000003951479579972282248259765766510000089305765539437889758995049246953856688710"
+        },
+        "q3": {
+          "dur": 2185,
+          "env": "4988620589999996464100069747620430239131199597473677410"
+        },
+        "q4": {
+          "dur": 1623,
+          "env": "68752111089999979851166489963881311126666"
+        },
+        "q5": {
+          "dur": 3738,
+          "env": "8856406777402664304998983100699998388420879899999974349675465657710258996991069985950264699961"
+        },
+        "q6": {
+          "dur": 4053,
+          "env": "398898988971967988975951398305995301876399944699998377200363375013101000296177957357139916487643665300"
+        },
+        "a1": {
+          "dur": 5050,
+          "env": "5763788647999776816368896353651000007999996587874832877330075896429714388999737788755000098357677859424875623885269934599986300"
+        },
+        "a2": {
+          "dur": 4047,
+          "env": "459874762395328850000099999887643000078877973699999999840000019974996599556599983289999999995488876300"
+        },
+        "a3": {
+          "dur": 4098,
+          "env": "5665567646985311399213878537146321895210689891289989983210479913986551596201000079899855886311233995000"
+        },
+        "a4": {
+          "dur": 2350,
+          "env": "69862448999720000049312997221799543999559859847999997763241"
+        },
+        "a5": {
+          "dur": 1532,
+          "env": "298541139617967602175899410069988876300"
+        },
+        "a6": {
+          "dur": 712,
+          "env": "264999975937877410"
+        },
+        "m1": {
+          "dur": 3384,
+          "env": "6973854695899893044998396796876639423988785003999999999992499673319883786498744650400"
+        },
+        "m2": {
+          "dur": 5683,
+          "env": "12279980553057774411111000368981239910339999987641000875677604856614972159996731110000000760799431067889966545657968843666996056673089888765200"
+        },
+        "m3": {
+          "dur": 1232,
+          "env": "5999922983491316833596167799963"
+        },
+        "m4": {
+          "dur": 1649,
+          "env": "697789779404964446888897692895201720167320"
+        },
+        "m5": {
+          "dur": 1523,
+          "env": "698885027789776432899658865206326797400"
+        },
+        "m6": {
+          "dur": 1824,
+          "env": "6988788697103544330000000012594077641631133200"
+        },
+        "m7": {
+          "dur": 1637,
+          "env": "88745555997599999879896398740642116761001"
+        },
+        "d1": {
+          "dur": 4438,
+          "env": "576614873875000099855399811786788746004879999713995998987705187310003739988749999989969898752776502887588754030"
+        },
+        "d2": {
+          "dur": 3780,
+          "env": "95332381334678641069598868633264124767663794113996179810158613210377113376520289858983269978764"
+        },
+        "d3": {
+          "dur": 2767,
+          "env": "6995459999993699999877873000000000000000011579998955677768776756432100"
+        },
+        "d4": {
+          "dur": 1003,
+          "env": "79999999950001785998113321"
+        },
+        "d5": {
+          "dur": 2775,
+          "env": "7744029987897474598979898987984159998486321219967896278448966689578520"
+        },
+        "d6": {
+          "dur": 3470,
+          "env": "365799889999266897432297717778844677898896398752211225722998777799997853366899789813210"
+        },
+        "d7": {
+          "dur": 2948,
+          "env": "79999997610004939699999898699508999995296049785397479995899828997858220310"
+        },
+        "end": {
+          "dur": 5211,
+          "env": "89958449522888946987200006502999997699988750000028715288999989999979959969999999542874996399985489987630000079556983598232576600400"
+        }
+      },
+      "next": "📺 Folge 4: Ab in den Dschungel – bald im Kino",
+      "recapBadge": "⏪ Bisher: 🥟  🪥⚰️  💋  📱🩲",
+      "badge": [
+        "💍",
+        "Jetzt mit Daijo",
+        "& Greisel (frisch verheiratet)"
+      ],
+      "credits": [
+        [
+          "Schlaftabletten",
+          "Greisel (2 + 1 + 1)"
+        ],
+        [
+          "Rollstuhl",
+          "Patrick (12 €, Attest: Ausweis)"
+        ],
+        [
+          "Stunt im Wasserfall",
+          "Simon (ohne Double)"
+        ],
+        [
+          "Zelle drei",
+          "Jonas (Haare im Pass)"
+        ],
+        [
+          "Gebiss",
+          "Patrick (wird noch gesucht)"
+        ],
+        [
+          "",
+          "Kein Nasenbär wurde verletzt. Jonas schon."
+        ]
+      ],
+      "scenes": [
+        {
+          "id": "intro",
+          "t": [
+            0,
+            12515
+          ]
+        },
+        {
+          "id": "gig",
+          "t": [
+            12515,
+            51696
+          ]
+        },
+        {
+          "id": "boe",
+          "t": [
+            51696,
+            88508
+          ]
+        },
+        {
+          "id": "falls",
+          "t": [
+            88508,
+            120924
+          ]
+        },
+        {
+          "id": "quati",
+          "t": [
+            120924,
+            148287
+          ]
+        },
+        {
+          "id": "grenze",
+          "t": [
+            148287,
+            173976
+          ]
+        },
+        {
+          "id": "boot",
+          "t": [
+            173976,
+            200408
+          ]
+        },
+        {
+          "id": "duel",
+          "t": [
+            200408,
+            233189
+          ]
+        },
+        {
+          "id": "end",
+          "t": [
+            233189,
+            245689
+          ]
+        }
+      ],
+      "lines": [
+        {
+          "key": "intro",
+          "who": "narrator",
+          "at": 1500,
+          "say": "Gringos! Die Serie. Folge drei: Daijo und Greisel kommen!",
+          "text": "📺 Gringos – Die Serie · Folge 3: Daijo & Greisel kommen!"
+        },
+        {
+          "key": "recap",
+          "who": "narrator",
+          "at": 5917,
+          "say": "Was bisher geschah: ein Tattoo, eine tote Zahnbürste und ein Kuss, über den keiner spricht.",
+          "text": "Was bisher geschah: ein Tattoo, eine tote Zahnbürste und ein Kuss, über den keiner spricht."
+        },
+        {
+          "key": "g1",
+          "who": "narrator",
+          "at": 14015,
+          "say": "Flughafen Galeão, sechs Uhr zehn. Zwei frisch Verheiratete landen in Brasilien. Einer davon bei Bewusstsein.",
+          "text": "Galeão, 6:10 Uhr. Zwei frisch Verheiratete landen in Brasilien. Einer davon bei Bewusstsein."
+        },
+        {
+          "key": "g2",
+          "who": "dajo",
+          "at": 23235,
+          "say": "Hallo Jungs! Greisel hat auf dem Flug zwei Schlaftabletten genommen.",
+          "text": "Hallo Jungs! Greisel hat auf dem Flug zwei Schlaftabletten genommen. 💊"
+        },
+        {
+          "key": "g3",
+          "who": "greisel",
+          "at": 27994,
+          "say": "Schatz, wer sind diese Obdachlosen?",
+          "text": "Schatz … wer sind diese Obdachlosen? 😳",
+          "vo": {
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "g4",
+          "who": "dajo",
+          "at": 30523,
+          "say": "Deine Freunde. Für die nächsten zwei Wochen.",
+          "text": "Deine Freunde. Für die nächsten zwei Wochen."
+        },
+        {
+          "key": "g5",
+          "who": "greisel",
+          "at": 33640,
+          "say": "Gib mir noch eine Tablette.",
+          "text": "Gib mir noch eine Tablette. 💊",
+          "vo": {
+            "speed": 0.88
+          }
+        },
+        {
+          "key": "g6",
+          "who": "jonas",
+          "at": 36881,
+          "say": "Willkommen! Hier ist eure Rechnung für die erste Woche. Ihr wart ja im Herzen dabei.",
+          "text": "Willkommen! Hier ist eure Rechnung für die erste Woche. Ihr wart ja im Herzen dabei. 🧾"
+        },
+        {
+          "key": "g7",
+          "who": "dajo",
+          "at": 42484,
+          "say": "Ich habe eine Exel-Tabelle dagegen. Mit Piwo-Tabelle.",
+          "text": "Ich hab eine Excel-Tabelle dagegen. Mit Pivot-Tabelle. 📊"
+        },
+        {
+          "key": "g8",
+          "who": "narrator",
+          "at": 47080,
+          "say": "Zum ersten Mal in seinem Leben hat Jonas Angst.",
+          "text": "Zum ersten Mal in seinem Leben hat Jonas Angst."
+        },
+        {
+          "key": "b1",
+          "who": "narrator",
+          "at": 53196,
+          "say": "Flug nach Iguaçu. Beim Boarding gilt: Wer zuerst drin ist, hat gewonnen.",
+          "text": "Flug nach Iguaçu. Beim Boarding gilt: Wer zuerst drin ist, hat gewonnen."
+        },
+        {
+          "key": "b2",
+          "who": "patrick",
+          "at": 59080,
+          "say": "Ich hab mir einen Rollstuhl bestellt. Ich darf als Erster rein. Für zwölf Euro.",
+          "text": "Ich hab mir einen Rollstuhl bestellt. Ich darf als Erster rein. Für 12 €. ♿",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "b3",
+          "who": "simon",
+          "at": 64012,
+          "say": "Patrick! Du kannst doch laufen!",
+          "text": "Patrick! Du kannst doch laufen!",
+          "vo": {
+            "pitch": 1.1,
+            "speed": 0.92
+          }
+        },
+        {
+          "key": "b4",
+          "who": "patrick",
+          "at": 66165,
+          "say": "Leise! Ich bin der Älteste. Mein Ausweis ist mein ärztliches Attest.",
+          "text": "Leise! Ich bin der Älteste. Mein Ausweis ist mein ärztliches Attest. 👴",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "b5",
+          "who": "dajo",
+          "at": 71895,
+          "say": "Moment! Ist das etwa eine Boing?",
+          "text": "Moment … ist das etwa eine BOEING?! 😱"
+        },
+        {
+          "key": "b6",
+          "who": "pilot",
+          "at": 75162,
+          "say": "Liebe Fluggäste, keine Sorge. Die Tür ist nur mit Klebeband befestigt. Mit dem guten Klebeband.",
+          "text": "📢 Liebe Fluggäste, keine Sorge: Die Tür ist nur mit Klebeband befestigt. Mit dem guten Klebeband."
+        },
+        {
+          "key": "b7",
+          "who": "dajo",
+          "at": 81477,
+          "say": "Ich ändere mein Testament. Greisel kriegt nichts.",
+          "text": "Ich ändere mein Testament. Greisel kriegt nichts. ✍️"
+        },
+        {
+          "key": "b8",
+          "who": "greisel",
+          "at": 85017,
+          "say": "Passt, Schatz.",
+          "text": "Passt, Schatz … 😴",
+          "vo": {
+            "speed": 0.85
+          }
+        },
+        {
+          "key": "f1",
+          "who": "narrator",
+          "at": 90008,
+          "say": "Die Iguaçu-Fälle. Zweihundertfünfundsiebzig Wasserfälle. Über eine Million Liter Wasser pro Sekunde.",
+          "text": "Iguaçu-Fälle: 275 Wasserfälle, über 1 Million Liter Wasser pro Sekunde. 💦"
+        },
+        {
+          "key": "f2",
+          "who": "simon",
+          "at": 96084,
+          "say": "Das ist genau das Gegenteil von Patrick nachts auf dem Klo.",
+          "text": "Das ist genau das Gegenteil von Patrick nachts auf dem Klo. 🚽",
+          "vo": {
+            "pitch": 1.1,
+            "speed": 0.92
+          }
+        },
+        {
+          "key": "f3",
+          "who": "patrick",
+          "at": 99605,
+          "say": "Ich höre das Wasser rauschen. Ich muss schon wieder.",
+          "text": "Ich hör das Wasser rauschen … ich muss schon wieder. 😬",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "f4",
+          "who": "greisel",
+          "at": 104500,
+          "say": "Schatz, endlich. Ein romantisches Foto. Nur wir zwei.",
+          "text": "Schatz, endlich: ein romantisches Foto. Nur wir zwei. 💍📸"
+        },
+        {
+          "key": "f5",
+          "who": "simon",
+          "at": 109278,
+          "say": "Oi, gatinha!",
+          "text": "Oi, gatinha! 😘",
+          "vo": {
+            "pitch": 1.1,
+            "speed": 0.92
+          }
+        },
+        {
+          "key": "f6",
+          "who": "narrator",
+          "at": 113120,
+          "say": "Simon wurde nie wieder gesehen. Bis zum Abendessen.",
+          "text": "Simon wurde nie wieder gesehen. … Bis zum Abendessen."
+        },
+        {
+          "key": "f7",
+          "who": "dajo",
+          "at": 116284,
+          "say": "Aber das Foto ist schön geworden.",
+          "text": "Aber das Foto ist schön geworden. 🖼️"
+        },
+        {
+          "key": "q1",
+          "who": "narrator",
+          "at": 122424,
+          "say": "Achtung: die Nasenbären von Iguaçu. Organisierte Kriminalität mit Ringelschwanz.",
+          "text": "Achtung: die Nasenbären von Iguaçu. Organisierte Kriminalität mit Ringelschwanz. 🦝"
+        },
+        {
+          "key": "q2",
+          "who": "jonas",
+          "at": 127579,
+          "say": "Eintritt: vierzig Euro pro Person. Ich trag es gleich in Splitwise ein.",
+          "text": "Eintritt: 40 € pro Person. Ich trag’s gleich in Splitwise ein. 📱"
+        },
+        {
+          "key": "q3",
+          "who": "jonas",
+          "at": 132888,
+          "say": "Er hat mein Handy! Da ist Splitwise drauf!",
+          "text": "Er hat mein Handy!! Da ist Splitwise drauf!! 😱"
+        },
+        {
+          "key": "q4",
+          "who": "marco",
+          "at": 135373,
+          "say": "Lass ihn laufen! Wir sind frei!",
+          "text": "Lass ihn laufen! Wir sind frei! 🕊️",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "q5",
+          "who": "patrick",
+          "at": 137396,
+          "say": "Ich war achthundert Euro im Minus. Ich adoptiere dieses Tier.",
+          "text": "Ich war 800 € im Minus. Ich adoptiere dieses Tier. 🥹",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "q6",
+          "who": "narrator",
+          "at": 142434,
+          "say": "Der Nasenbär hat sich nach Argentinien abgesetzt. Mit dem Gruppenkonto.",
+          "text": "Der Nasenbär hat sich nach Argentinien abgesetzt. Mit dem Gruppenkonto. 🇦🇷"
+        },
+        {
+          "key": "a1",
+          "who": "narrator",
+          "at": 149787,
+          "say": "Argentinische Grenze. Ohne Reisepass kommt hier keiner rein. Mit Reisepass auch nicht immer.",
+          "text": "Argentinische Grenze. Ohne Reisepass kommt hier keiner rein. Mit Reisepass auch nicht immer."
+        },
+        {
+          "key": "a2",
+          "who": "officer",
+          "at": 155737,
+          "say": "Pass, bitte. Moment. Dani Olmo? Ein Autogramm für meinen Sohn!",
+          "text": "Pass, bitte … Moment. DANI OLMO?! Ein Autogramm für meinen Sohn! ⚽",
+          "name": "Grenzbeamter"
+        },
+        {
+          "key": "a3",
+          "who": "marco",
+          "at": 160184,
+          "say": "Gerne. Und für Sie hätte ich noch eine Wohnung. Vierter Stock, ohne Aufzug.",
+          "text": "Gerne. Und für Sie hätte ich noch eine Wohnung. 4. Stock, ohne Aufzug. 🏢",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "a4",
+          "who": "officer",
+          "at": 165782,
+          "say": "Und Sie? Auf dem Foto haben Sie Haare.",
+          "text": "Und Sie? Auf dem Foto haben Sie Haare. 🤨",
+          "name": "Grenzbeamter"
+        },
+        {
+          "key": "a5",
+          "who": "jonas",
+          "at": 168432,
+          "say": "Das Foto ist vom letzten Jahr.",
+          "text": "Das Foto ist vom letzten Jahr. 😅"
+        },
+        {
+          "key": "a6",
+          "who": "officer",
+          "at": 170464,
+          "say": "Zelle drei.",
+          "text": "Zelle drei. 🔒",
+          "name": "Grenzbeamter"
+        },
+        {
+          "key": "m1",
+          "who": "narrator",
+          "at": 175476,
+          "say": "Bootstour direkt unter die Wasserfälle. Daijo hat sich vorbereitet.",
+          "text": "Bootstour direkt unter die Wasserfälle. Daijo hat sich vorbereitet."
+        },
+        {
+          "key": "m2",
+          "who": "dajo",
+          "at": 179260,
+          "say": "Regenponcho. Taucherbrille. Wasserdichte Hülle. Steht alles in der Exel-Tabelle.",
+          "text": "Regenponcho, Taucherbrille, wasserdichte Hülle. Steht alles in der Excel-Tabelle. 🥽",
+          "vo": {
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "m3",
+          "who": "marco",
+          "at": 185243,
+          "say": "Welche Exel-Tabelle?",
+          "text": "Welche Excel-Tabelle? 🤷",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "m4",
+          "who": "patrick",
+          "at": 189275,
+          "say": "Mein Gebiss! Mein Gebiss ist weg!",
+          "text": "Mein Gebiss!! Mein Gebiss ist weg!! 🦷",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "m5",
+          "who": "greisel",
+          "at": 192424,
+          "say": "Wo bin ich? Bin ich tot?",
+          "text": "Wo bin ich? Bin ich tot? 😵"
+        },
+        {
+          "key": "m6",
+          "who": "dajo",
+          "at": 194247,
+          "say": "Nein, Schatz. Flitterwochen.",
+          "text": "Nein, Schatz. Flitterwochen. 💕"
+        },
+        {
+          "key": "m7",
+          "who": "greisel",
+          "at": 196571,
+          "say": "Ach so. Dann lieber tot.",
+          "text": "Ach so. Dann lieber tot. 💀",
+          "vo": {
+            "speed": 0.88
+          }
+        },
+        {
+          "key": "d1",
+          "who": "narrator",
+          "at": 201908,
+          "say": "Abends. Ein Trinkduell. Daijo gegen Marco. Tschechien gegen den Rest der Welt.",
+          "text": "Abends. Trinkduell: Daijo 🇨🇿 gegen Marco. Tschechien gegen den Rest der Welt."
+        },
+        {
+          "key": "d2",
+          "who": "marco",
+          "at": 209746,
+          "say": "Ich verkauf dir den Wasserfall. Mit Seeblick. Sechs Prozent Provision.",
+          "text": "Ich verkauf dir den Wasserfall. Mit Seeblick. 6 % Provision. 🥴",
+          "vo": {
+            "pitch": 1.15,
+            "speed": 0.95
+          }
+        },
+        {
+          "key": "d3",
+          "who": "dajo",
+          "at": 213926,
+          "say": "Noch eine Runde. Zahlt mein Mann.",
+          "text": "Noch eine Runde. Zahlt mein Mann. 💳"
+        },
+        {
+          "key": "d4",
+          "who": "greisel",
+          "at": 216993,
+          "say": "Ja, Schatz.",
+          "text": "Ja, Schatz … 😴",
+          "vo": {
+            "speed": 0.85
+          }
+        },
+        {
+          "key": "d5",
+          "who": "patrick",
+          "at": 219796,
+          "say": "Ich mal schon mal den Umriss. Für die Versicherung.",
+          "text": "Ich mal schon mal den Umriss. Für die Versicherung. ✏️",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.9
+          }
+        },
+        {
+          "key": "d6",
+          "who": "simon",
+          "at": 224371,
+          "say": "Hallo Leute! Ich bin noch am Leben! Hat mich jemand vermisst?",
+          "text": "Hallo Leute! Ich bin noch am Leben! Hat mich jemand vermisst? 🐟",
+          "vo": {
+            "pitch": 1.0,
+            "speed": 0.88
+          }
+        },
+        {
+          "key": "d7",
+          "who": "jonas",
+          "at": 228241,
+          "say": "Nein. Aber der Nasenbär hat dir schon eine Rechnung geschickt.",
+          "text": "Nein. Aber der Nasenbär hat dir schon eine Rechnung geschickt. 🦝🧾"
+        },
+        {
+          "key": "end",
+          "who": "narrator",
+          "at": 233989,
+          "say": "Nächste Folge: Ab in den Dschungel. Die Kaimane haben Jonas Foto schon gesehen. Und sich gefreut.",
+          "text": "Nächste Folge: Ab in den Dschungel. Die Kaimane haben Jonas’ Foto schon gesehen. Und sich gefreut. 🐊"
+        }
+      ]
     }
   }
 }
