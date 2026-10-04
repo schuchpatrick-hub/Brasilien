@@ -7149,7 +7149,7 @@
         ],
         [
           "Erdbeben 4,2",
-          "Patrick (Kabine 3)"
+          "Marco (Kabine 3)"
         ],
         [
           "Klopapier",
@@ -7161,15 +7161,15 @@
         ],
         [
           "Köder",
-          "Greisels linker Fuß"
+          "Greisels Fuß (kitzelt nur)"
         ],
         [
           "Leuchtturm",
           "Jonas"
         ],
         [
-          "",
-          "Kein Delfin wurde geküsst. Leider."
+          "Kotztüte",
+          "Daijo (unfreiwillig)"
         ]
       ],
       "thumb": "🐊💩🐬",
@@ -7317,8 +7317,8 @@
           "key": "r9",
           "who": "narrator",
           "at": 86051,
-          "say": "Der Delfin ist jetzt grün. Und in Therapie.",
-          "text": "Der Delfin ist jetzt grün. Und in Therapie. 🛋️",
+          "say": "Er hat gehorcht. Nicht in den Fluss.",
+          "text": "Er hat gehorcht. Nicht in den Fluss. 🤢",
           "laugh": 1
         },
         {
@@ -7337,7 +7337,7 @@
         },
         {
           "key": "l3",
-          "who": "patrick",
+          "who": "marco",
           "at": 102553,
           "say": "Ich hatte sechs.",
           "text": "Ich hatte sechs. 😳",
@@ -7362,7 +7362,7 @@
         },
         {
           "key": "l6",
-          "who": "marco",
+          "who": "patrick",
           "at": 118993,
           "say": "Die Affen flüchten! Sogar die Affen flüchten!",
           "text": "Die Affen flüchten! Sogar die Affen flüchten! 🐒",
@@ -7370,7 +7370,7 @@
         },
         {
           "key": "l7",
-          "who": "patrick",
+          "who": "marco",
           "at": 122338,
           "say": "Klopapier! Wer hat das Klopapier?",
           "text": "Klopapier!! Wer hat das Klopapier?! 🧻",
@@ -7378,7 +7378,7 @@
         },
         {
           "key": "l8",
-          "who": "patrick",
+          "who": "marco",
           "at": 126983,
           "say": "Egal. Ich nehm das große Blatt hier.",
           "text": "Egal. Ich nehm das große Blatt hier. 🍃"
@@ -7396,8 +7396,8 @@
           "key": "l10",
           "who": "narrator",
           "at": 135504,
-          "say": "Patrick lernte an diesem Tag zwei portugiesische Wörter. Hospital. Und Ai.",
-          "text": "Patrick lernte an diesem Tag zwei portugiesische Wörter: „Hospital“. Und „Ai“. 🚑",
+          "say": "Marco lernte an diesem Tag zwei portugiesische Wörter. Hospital. Und Ai.",
+          "text": "Marco lernte an diesem Tag zwei portugiesische Wörter: „Hospital“. Und „Ai“. 🚑",
           "laugh": 1
         },
         {
@@ -7436,8 +7436,8 @@
           "key": "p5",
           "who": "greisel",
           "at": 161163,
-          "say": "Ja, Schatz.",
-          "text": "Ja, Schatz … 😴",
+          "say": "Kitzelt ein bisschen.",
+          "text": "Kitzelt ein bisschen. 😎",
           "laugh": 1
         },
         {
@@ -7632,28 +7632,28 @@
           "key": "e3",
           "who": "greisel",
           "at": 280214,
-          "say": "Sind wir schon in Rio?",
-          "text": "Sind wir schon in Rio? 🥱"
+          "say": "Ich wollte nur testen, ob der Boden hält.",
+          "text": "Ich wollte nur testen, ob der Boden hält. 🧐"
         },
         {
           "key": "e4",
           "who": "dajo",
-          "at": 281703,
-          "say": "Nein, Schatz. Du hast den ganzen Dschungel verschlafen.",
-          "text": "Nein, Schatz. Du hast den ganzen Dschungel verschlafen."
+          "at": 281603,
+          "say": "Und?",
+          "text": "Und? 🤨"
         },
         {
           "key": "e5",
           "who": "greisel",
-          "at": 285687,
-          "say": "Super. War es schön?",
-          "text": "Super. War’s schön? 😊",
+          "at": 285387,
+          "say": "Der Boden hält. Mein Rücken nicht.",
+          "text": "Der Boden hält. Mein Rücken nicht. 🦴",
           "laugh": 1
         },
         {
           "key": "e6",
           "who": "narrator",
-          "at": 288661,
+          "at": 288361,
           "say": "Bilanz Amazonas: ein Handy weg, ein Hut weg, ein Kuss mit Patrick. Und ein Hintern voller Feuerblatt.",
           "text": "Bilanz Amazonas: ein Handy weg, ein Hut weg, ein Kuss mit Patrick. Und ein Hintern voller Feuerblatt. 🔥",
           "laugh": 1
@@ -7661,7 +7661,7 @@
         {
           "key": "end",
           "who": "narrator",
-          "at": 298019,
+          "at": 297719,
           "say": "Nächste Folge: Paraty und Ilha Grande. Die letzten Tage. Die letzten Nerven.",
           "text": "Nächste Folge: Paraty & Ilha Grande. Die letzten Tage. Die letzten Nerven."
         }
@@ -7720,14 +7720,14 @@
           "id": "ham",
           "t": [
             269592,
-            297719
+            297419
           ]
         },
         {
           "id": "end",
           "t": [
-            297719,
-            314826
+            297419,
+            314526
           ]
         }
       ],
