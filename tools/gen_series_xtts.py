@@ -36,7 +36,7 @@ def squeeze(x, sr, thr=.01, keep=.16):
 CLEAN = os.path.join(G.ROOT, 'tools', 'data', 'xtts')   # unbearbeitete XTTS-Fassungen (gitignored), Grundlage für --comedy
 
 def comedy(src, dst, c):
-    """Comic-Klang je Figur (trip.json → series.comedy {who: {tempo, pitch, style}}): schneller, höher, Cartoon-Klangfarbe."""
+    """Comic-Klang je Figur (trip.json → series.comedy {who: {tempo, pitch, style, tight}}): schneller, höher, Cartoon-Klangfarbe, kurze Pausen."""
     c = c or {}; t, p = c.get('tempo', 1), c.get('pitch', 1)
     # Klangfarben (c.style): nasal = Terrance-&-Phillip-Nase, opa = Zittern, mega = Megafon, sleepy = langsames Wabern
     STY = {'nasal': 'highpass=f=280,equalizer=f=1150:t=q:w=1.1:g=8,equalizer=f=2600:t=q:w=1:g=3,lowpass=f=6500',
@@ -44,7 +44,9 @@ def comedy(src, dst, c):
            'opa': 'vibrato=f=6.5:d=0.18,highpass=f=200,equalizer=f=1500:t=q:w=1:g=4',
            'mega': 'highpass=f=450,lowpass=f=3200,equalizer=f=1800:t=q:w=1:g=5,acrusher=bits=10:mode=log:mix=0.15',
            'sleepy': 'vibrato=f=2.2:d=0.12,equalizer=f=1200:t=q:w=1:g=3'}
-    af = ','.join(x for x in [f'rubberband=tempo={t}:pitch={p}:pitchq=quality:formant=shifted' if (t, p) != (1, 1) else '',
+    # tight: Pausen in der Zeile auf ~70 ms kürzen (Sprecher soll flott durchsprechen)
+    af = ','.join(x for x in ['silenceremove=stop_periods=-1:stop_duration=0.09:stop_threshold=-36dB:stop_silence=0.07' if c.get('tight') else '',
+                              f'rubberband=tempo={t}:pitch={p}:pitchq=quality:formant=shifted' if (t, p) != (1, 1) else '',
                               STY.get(c.get('style'), ''), 'loudnorm=I=-16:TP=-1.5:LRA=7' if c.get('style') else ''] if x) or 'anull'
     with tempfile.TemporaryDirectory() as tmp:
         pcm = os.path.join(tmp, 'c.wav')
