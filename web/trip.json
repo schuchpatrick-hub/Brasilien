@@ -1940,14 +1940,24 @@
       "sub": "GOL G3 1016, gebucht"
     },
     {
-      "label": "Guarujá + Rio",
+      "label": "Guarujá",
+      "cat": "stay",
+      "sub": "Casa Praiana · 3 Nächte · 530 € für 4",
+      "a": {
+        "v": 132.5,
+        "k": "fix"
+      },
+      "b": null
+    },
+    {
+      "label": "Rio",
+      "cat": "stay",
+      "sub": "Tabas – Cena Carioca · 6 Nächte",
       "a": {
         "k": "split",
         "t": "über Splitwise"
       },
-      "b": null,
-      "cat": "stay",
-      "sub": "28.12.–06.01. · Casa Praiana & Tabas · 9 Nächte"
+      "b": null
     },
     {
       "label": "Foz do Iguaçu",
@@ -10104,6 +10114,14 @@
     ]
   },
   "news": [
+    {
+      "id": "n251005f",
+      "d": "2026-10-05",
+      "tab": "reise",
+      "to": "kosten",
+      "e": "🏖️",
+      "t": "Unterkunft Guarujá: 132,50 € pro Person"
+    },
     {
       "id": "n251005e",
       "d": "2026-10-05",
