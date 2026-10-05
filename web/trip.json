@@ -4371,7 +4371,7 @@
         {
           "key": "sec1",
           "who": "officer",
-          "at": 9098,
+          "at": 9153,
           "say": "Nächster Koffer, bitte!",
           "text": "Nächster Koffer, bitte!",
           "sc": "sec",
@@ -4380,7 +4380,7 @@
         {
           "key": "sec2",
           "who": "officer",
-          "at": 12691,
+          "at": 13082,
           "say": "Was ist denn das? Dreißig Flaschen Sonnencreme?",
           "text": "Was ist denn das? 30 Flaschen Sonnencreme?! 🧴",
           "react": {
@@ -4393,7 +4393,7 @@
         {
           "key": "sec3",
           "who": "simon",
-          "at": 16207,
+          "at": 16653,
           "say": "Lichtschutzfaktor fünfzig! Ich bin halt ein sensibler Typ.",
           "text": "Lichtschutzfaktor 50! Ich bin halt ein sensibler Typ. 😇",
           "sc": "sec",
@@ -4402,7 +4402,7 @@
         {
           "key": "sec4",
           "who": "jonas",
-          "at": 20223,
+          "at": 20759,
           "say": "Simon, ohne Creme bist du in drei Tagen ein Brathähnchen. Und Patrick hat Hunger.",
           "text": "Simon, ohne Creme bist du in drei Tagen ein Brathähnchen. Und Patrick hat Hunger. 🍗",
           "lol": 1,
@@ -4413,7 +4413,7 @@
         {
           "key": "sec5",
           "who": "officer",
-          "at": 26355,
+          "at": 26975,
           "say": "Alles über hundert Milliliter bleibt hier. Meine Frau sagt danke.",
           "text": "Alles über 100 Milliliter bleibt hier. Meine Frau sagt danke. 👮🧴",
           "lol": [
@@ -4426,7 +4426,7 @@
         {
           "key": "sec6",
           "who": "simon",
-          "at": 31657,
+          "at": 32345,
           "say": "Neiiin! Meine Babys!",
           "text": "Neiiin! Meine Babys! 😭",
           "close": 1,
@@ -4445,14 +4445,14 @@
           "comedy": {
             "style": "mega"
           },
-          "at": 35205,
+          "at": 35956,
           "sc": "bar",
           "gap": 131
         },
         {
           "key": "bar1",
           "who": "patrick",
-          "at": 43523,
+          "at": 44335,
           "say": "Vier Bier, bitte! Im Urlaub zählt die Uhrzeit nicht.",
           "text": "Vier Bier, bitte! Im Urlaub zählt die Uhrzeit nicht. 🍺",
           "sc": "bar",
@@ -4461,7 +4461,7 @@
         {
           "key": "bar2",
           "who": "marco",
-          "at": 46851,
+          "at": 47743,
           "say": "In Brasilien ist es vier Uhr nachts. Das zählt also noch als gestern.",
           "text": "In Brasilien ist es 4 Uhr nachts. Das zählt also noch als gestern. 🕓",
           "vo": {
@@ -4478,7 +4478,7 @@
         {
           "key": "bar3",
           "who": "simon",
-          "at": 50882,
+          "at": 51863,
           "say": "Ich trinke auf meine Sonnencreme. Sie wurde nur dreißig Flaschen alt.",
           "text": "Ich trinke auf meine Sonnencreme. Sie wurde nur 30 Flaschen alt. 🕯️",
           "vo": {
@@ -4491,7 +4491,7 @@
         {
           "key": "bar4",
           "who": "jonas",
-          "at": 54574,
+          "at": 55631,
           "say": "Prost! Ruhe in Frieden, Lichtschutzfaktor fünfzig.",
           "text": "Prost! Ruhe in Frieden, Lichtschutzfaktor 50. ⚰️",
           "lol": [
@@ -4504,7 +4504,7 @@
         {
           "key": "bar5",
           "who": "patrick",
-          "at": 58722,
+          "at": 59865,
           "say": "Neue Regel: Wer zuerst kotzt, zahlt die nächste Runde!",
           "text": "Neue Regel: Wer zuerst kotzt, zahlt die nächste Runde! 🤮",
           "rshot": "marco",
@@ -4515,7 +4515,7 @@
         {
           "key": "fly1",
           "who": "steward",
-          "at": 65549,
+          "at": 66774,
           "say": "Chicken oder Pasta?",
           "text": "Chicken oder Pasta?",
           "sc": "fly",
@@ -4526,7 +4526,7 @@
           "who": "marco",
           "say": "Pasta, bitte.",
           "text": "Pasta, bitte. 🍝",
-          "at": 67479,
+          "at": 68761,
           "sc": "fly",
           "gap": 450
         },
@@ -4535,14 +4535,14 @@
           "who": "jonas",
           "say": "Chicken.",
           "text": "Chicken. 🍗",
-          "at": 68802,
+          "at": 69985,
           "sc": "fly",
           "gap": 350
         },
         {
           "key": "fly2",
           "who": "patrick",
-          "at": 69972,
+          "at": 71225,
           "say": "Beides, bitte. Und das von meinem Nachbarn.",
           "text": "Beides, bitte. Und das von meinem Nachbarn. 🍗🍝",
           "react": {
@@ -4558,7 +4558,7 @@
         {
           "key": "fly3",
           "who": "marco",
-          "at": 76019,
+          "at": 77350,
           "say": "Turbulenzen! Ich hab meinen Browserverlauf nicht gelöscht!",
           "text": "Turbulenzen!! Ich hab meinen Browserverlauf nicht gelöscht! 😱",
           "vo": {
@@ -4573,7 +4573,7 @@
         {
           "key": "fly8",
           "who": "marco",
-          "at": 78984,
+          "at": 80387,
           "say": "Mir ist schlecht. Wo ist die Tüte?",
           "text": "Mir ist schlecht … Wo ist die Tüte?!",
           "vo": {
@@ -4586,7 +4586,7 @@
         {
           "key": "fly9",
           "who": "jonas",
-          "at": 83367,
+          "at": 84842,
           "say": "Marco! Das war mein Lieblingshemd!",
           "text": "Marco!! Das war mein Lieblingshemd! 🤢",
           "face": "angry",
@@ -4597,7 +4597,7 @@
         {
           "key": "fly10",
           "who": "marco",
-          "at": 85877,
+          "at": 87460,
           "say": "Jetzt hat es wenigstens ein Muster.",
           "text": "Jetzt hat es wenigstens ein Muster.",
           "vo": {
@@ -4618,14 +4618,14 @@
           "who": "card",
           "text": "Stunde 3 von 12 …",
           "cdur": 2400,
-          "at": 88024,
+          "at": 89689,
           "sc": "fly",
           "gap": 700
         },
         {
           "key": "fly11",
           "who": "patrick",
-          "at": 91124,
+          "at": 92789,
           "say": "Oh nein. Die vier Essen wollen raus. Alle gleichzeitig.",
           "text": "Oh nein. Die vier Essen wollen raus. Alle gleichzeitig. 😰",
           "face": "shock",
@@ -4637,7 +4637,7 @@
         {
           "key": "fly12",
           "who": "steward",
-          "at": 97759,
+          "at": 99504,
           "say": "Das Anschnallzeichen leuchtet. Sie bleiben sitzen.",
           "text": "Das Anschnallzeichen leuchtet. Sie bleiben sitzen. 🔔",
           "sc": "fly",
@@ -4646,7 +4646,7 @@
         {
           "key": "fly13",
           "who": "narrator",
-          "at": 101578,
+          "at": 103374,
           "say": "Er blieb sitzen. Reihe zwölf wurde später evakuiert.",
           "text": "Er blieb sitzen. Reihe 12 wurde später evakuiert. 💩",
           "vo": {
@@ -4659,7 +4659,7 @@
         {
           "key": "fly6",
           "who": "simon",
-          "at": 105771,
+          "at": 107624,
           "say": "Entschuldigung, haben Sie auch was für mich? Ihre Nummer vielleicht?",
           "text": "Entschuldigung, haben Sie auch was für mich? Ihre Nummer vielleicht? 😏",
           "sc": "fly",
@@ -4668,7 +4668,7 @@
         {
           "key": "fly7",
           "who": "steward",
-          "at": 109437,
+          "at": 111367,
           "say": "Klar. Die vom Notausgang. Ganz hinten links.",
           "text": "Klar. Die vom Notausgang. Ganz hinten links. 🚪",
           "laugh": 1,
@@ -4681,7 +4681,7 @@
         {
           "key": "uber1",
           "who": "local",
-          "at": 116697,
+          "at": 118686,
           "say": "Bem-vindos ao Brasil!",
           "text": "Bem-vindos ao Brasil! 🇧🇷",
           "sc": "uber",
@@ -4690,7 +4690,7 @@
         {
           "key": "uber6",
           "who": "local",
-          "at": 118219,
+          "at": 120407,
           "say": "Que cheiro é esse?!",
           "text": "Que cheiro é esse?! (Was stinkt hier so?!) 🤢",
           "sc": "uber",
@@ -4699,7 +4699,7 @@
         {
           "key": "uber7",
           "who": "jonas",
-          "at": 119788,
+          "at": 122033,
           "say": "Das ist Patrick. Er hat im Flieger ein Andenken in der Hose.",
           "text": "Das ist Patrick. Er hat im Flieger ein Andenken in der Hose.",
           "lol": [
@@ -4713,7 +4713,7 @@
         {
           "key": "uber2",
           "who": "marco",
-          "at": 123581,
+          "at": 125905,
           "say": "Der fährt hundertvierzig. Gott hat uns gerade überholt. Und hat gehupt.",
           "text": "Der fährt 140. Gott hat uns gerade überholt. Und hat gehupt. 🙏",
           "vo": {
@@ -4727,7 +4727,7 @@
         {
           "key": "uber3",
           "who": "jonas",
-          "at": 128838,
+          "at": 131232,
           "say": "Schau mal, Simon. Die Sonne. Dein natürlicher Feind.",
           "text": "Schau mal, Simon. Die Sonne. Dein natürlicher Feind. ☀️",
           "sc": "uber",
@@ -4736,8 +4736,8 @@
         {
           "key": "uber4",
           "who": "simon",
-          "at": 132008,
-          "say": "Kein Problem. Ich hab am Flughafen neue gekauft. Faktor zehn.",
+          "at": 134510,
+          "say": "Kein Problem, ich hab am Flughafen neue gekauft, Faktor zehn",
           "text": "Kein Problem. Ich hab am Flughafen neue gekauft. Faktor 10.",
           "vo": {
             "pitch": 1.1,
@@ -4750,7 +4750,7 @@
         {
           "key": "uber5",
           "who": "narrator",
-          "at": 135518,
+          "at": 138438,
           "say": "Er war nicht bereit.",
           "text": "Er war nicht bereit.",
           "vo": {
@@ -4769,7 +4769,7 @@
         {
           "key": "beach1",
           "who": "patrick",
-          "at": 139750,
+          "at": 142743,
           "say": "Caipirinha um zehn Uhr morgens. Ich liebe dieses Land.",
           "text": "Caipirinha um 10 Uhr morgens. Ich liebe dieses Land. 🍹",
           "sc": "beach",
@@ -4780,14 +4780,14 @@
           "who": "narrator",
           "say": "Marco gilt als Frauenheld, sagt Marco",
           "text": "Marco gilt als Frauenheld. … Sagt Marco.",
-          "at": 143160,
+          "at": 146233,
           "sc": "beach",
           "gap": 599
         },
         {
           "key": "beach2",
           "who": "marco",
-          "at": 146456,
+          "at": 149586,
           "say": "Olá! Ich spreche kein Portugiesisch. Aber ich kann sehr laut Deutsch.",
           "text": "Olá! Ich spreche kein Portugiesisch. Aber ich kann sehr laut Deutsch. 📢",
           "vo": {
@@ -4800,7 +4800,7 @@
         {
           "key": "beach3",
           "who": "girl",
-          "at": 151720,
+          "at": 154926,
           "say": "Wie süß. Mein Freund ist da hinten. Er macht Capoeira.",
           "text": "Wie süß. Mein Freund ist da hinten. Er macht Capoeira. 💪",
           "lol": [
@@ -4812,7 +4812,7 @@
         {
           "key": "beach8",
           "who": "jonas",
-          "at": 160053,
+          "at": 163314,
           "say": "Olá! Ich bin Jonas. Deutscher. Sehr pünktlich.",
           "text": "Olá! Ich bin Jonas. Deutscher. Sehr pünktlich. 😎",
           "sc": "beach",
@@ -4821,7 +4821,7 @@
         {
           "key": "beach9",
           "who": "girl2",
-          "at": 163221,
+          "at": 166591,
           "say": "Ein pünktlicher Mann? Das gefällt mir.",
           "text": "Ein pünktlicher Mann? Das gefällt mir. 😘",
           "react": {
@@ -4835,7 +4835,7 @@
         {
           "key": "beach10",
           "who": "marco",
-          "at": 168795,
+          "at": 172233,
           "say": "Ich wäre fast gestorben, und der kriegt einen Kuss?!",
           "text": "Ich wäre fast gestorben, und der kriegt einen Kuss?! 😤",
           "vo": {
@@ -4849,7 +4849,7 @@
         {
           "key": "beach5",
           "who": "simon",
-          "at": 176210,
+          "at": 179717,
           "say": "Ich glaube, ich bin leicht gebräunt.",
           "text": "Ich glaube, ich bin leicht gebräunt. 🙂",
           "sc": "beach",
@@ -4858,7 +4858,7 @@
         {
           "key": "beach6",
           "who": "patrick",
-          "at": 178814,
+          "at": 182378,
           "say": "Du siehst aus wie ein Hummer, der schlechte Nachrichten bekommen hat.",
           "text": "Du siehst aus wie ein Hummer, der schlechte Nachrichten bekommen hat. 🦞",
           "laugh": 1,
@@ -4873,14 +4873,14 @@
           "who": "card",
           "text": "Abends. | 7 Caipirinhas später …",
           "cdur": 2800,
-          "at": 185055,
+          "at": 188697,
           "sc": "night",
           "gap": 1200
         },
         {
           "key": "night1",
           "who": "marco",
-          "at": 188555,
+          "at": 192197,
           "say": "Noch eine Runde Caipirinha! Ich zahle!",
           "text": "Noch eine Runde Caipirinha! Ich zahle! 🍹",
           "vo": {
@@ -4893,7 +4893,7 @@
         {
           "key": "night2",
           "who": "jonas",
-          "at": 191117,
+          "at": 194834,
           "say": "Das hast du vor zwei Stunden auch gesagt. Wir warten immer noch.",
           "text": "Das hast du vor zwei Stunden auch gesagt. Wir warten immer noch.",
           "lol": [
@@ -4915,14 +4915,14 @@
             "simon"
           ],
           "mad": "marco",
-          "at": 194593,
+          "at": 198389,
           "sc": "night",
           "gap": 600
         },
         {
           "key": "night3",
           "who": "patrick",
-          "at": 202902,
+          "at": 206801,
           "say": "Ich liebe euch, Jungs. Wirklich. Wer seid ihr nochmal?",
           "text": "Ich liebe euch, Jungs. Wirklich. Wer seid ihr nochmal? 🥴",
           "face": "dizzy",
@@ -4937,7 +4937,7 @@
         {
           "key": "night5",
           "who": "marco",
-          "at": 207039,
+          "at": 211009,
           "say": "Patrick hat zuerst gekotzt. Patrick zahlt!",
           "text": "Patrick hat zuerst gekotzt. Patrick zahlt! 💸",
           "vo": {
@@ -4958,7 +4958,7 @@
         {
           "key": "night4",
           "who": "simon",
-          "at": 209907,
+          "at": 213945,
           "say": "Licht aus, Jungs. Ich leuchte selber.",
           "text": "Licht aus, Jungs. Ich leuchte selber. 🔥💡",
           "vo": {
@@ -4976,7 +4976,7 @@
         {
           "key": "end",
           "who": "narrator",
-          "at": 214876,
+          "at": 218979,
           "say": "Nächste Folge: Silvester in Rio. Jonas versteckt sein Handy da, wo garantiert keiner sucht.",
           "text": "Nächste Folge: Silvester in Rio. Jonas versteckt sein Handy da, wo garantiert keiner sucht. 📱",
           "sc": "end",
@@ -4985,79 +4985,79 @@
       ],
       "voice": {
         "intro": {
-          "dur": 3498,
-          "env": "6999999865698751000978899968757773000279885965899947887300079923210009999999879985898500",
+          "dur": 3553,
+          "env": "69999998656987510009788999687577730002798859658999478873000799232100099999998799858985000",
           "o": 250
         },
         "sec1": {
-          "dur": 1049,
-          "env": "135583384999479608715786410",
-          "o": 3998
+          "dur": 1385,
+          "env": "24766522661699747665148615665561000",
+          "o": 4053
         },
         "sec2": {
-          "dur": 2778,
-          "env": "6952264226322788632222100069985432332666547588322146524321998644321000",
-          "o": 5296
+          "dur": 2833,
+          "env": "79533752375239777333332000899655434438886596994222587254229998654211000",
+          "o": 5688
         },
         "sec3": {
-          "dur": 3316,
-          "env": "59743359623881079989520000497222574000243089669953997654396523641699973100034630110",
-          "o": 8325
+          "dur": 3406,
+          "env": "59743359623881079989520000497222574000243089669953997654396523641699973100034630110000",
+          "o": 8771
         },
         "sec5": {
-          "dur": 4736,
-          "env": "76446764333320005532876655622287434224354234248875510027843147854466562000386457998998453898542366654321001895226676410",
-          "o": 16760
+          "dur": 4804,
+          "env": "7644676433332000553287665562228743422435423424886551002785424475335556200038645699999845389854236665432100189522667652000",
+          "o": 17381
         },
         "sec6": {
-          "dur": 1848,
-          "env": "45588755999644322200007975841898914554310122100",
-          "o": 21746
+          "dur": 1911,
+          "env": "455887559996443222000079758418989145543101221000",
+          "o": 22435
         },
         "fly1": {
-          "dur": 1480,
-          "env": "68889207999940000586750278856616765200",
-          "o": 48225
+          "dur": 1537,
+          "env": "688892079999400005867502788566167652000",
+          "o": 49448
         },
         "fly2": {
-          "dur": 2047,
-          "env": "9999897409556420039634099677635933797799987509642100",
-          "o": 51898
+          "dur": 2125,
+          "env": "999989740955642003963409967763593379779998750964210000",
+          "o": 53150
         },
         "end": {
-          "dur": 6098,
-          "env": "999878649466966445653100097996696787399898500099999799987665410009978889778755888459522198889899998697279877872000698498578955799623789789877796425641110",
-          "o": 149815
+          "dur": 6192,
+          "env": "99987864946696644565310009799669678739989850009999979998766541000997888977875588845952219888989999869727987787200069849857895579962378978987779642564111000",
+          "o": 153916
         },
         "sec4": {
-          "dur": 4620,
-          "env": "11254497522000684614265542100004310432034996113898423200553213377911254313431100352015782378511210007830103632568620",
-          "o": 11891
+          "dur": 4704,
+          "env": "1125449752200068461426554210000431043203499611389842320055321337791125431343110035201578237851121000783010363256862000",
+          "o": 12427
         },
         "bar1": {
-          "dur": 2628,
-          "env": "598937797500593564200066434896998500056574233066227536773389634140",
-          "o": 30913
+          "dur": 2708,
+          "env": "59893779750059356420006643489699850005657423306622753677338963414000",
+          "o": 31725
         },
         "bar2": {
-          "dur": 3631,
-          "env": "6653997346658947514433247953699377764200222000993211379765299945964984688522394321477621100",
-          "o": 33791
+          "dur": 3720,
+          "env": "665399734665894751443324795369937776420022200099321137976529994596498468852239432147762110000",
+          "o": 34683
         },
         "bar3": {
-          "dur": 3042,
-          "env": "44336752798237646349644355543200001552784875673259963233213993435799865102100",
-          "o": 37673
+          "dur": 3118,
+          "env": "443367527982376463496443555432000015527848756732599632332139934357998651021000",
+          "o": 38653
         },
         "bar4": {
-          "dur": 3532,
-          "env": "39932110010000024579664520026531124452231000011000025643457121970226976100028421012421210",
-          "o": 40965
+          "dur": 3618,
+          "env": "3993211001000002457966452002653112445223100001100002564345712197022697610002842101242121000",
+          "o": 42021
         },
         "fly3": {
-          "dur": 2565,
-          "env": "38926859522233200033348923853499995383695895113433016748984431100",
-          "o": 54195
+          "dur": 2637,
+          "env": "389268595222332000333489238534999953836958951134330167489844311000",
+          "o": 55525
         },
         "fly4": {
           "dur": 2749,
@@ -5070,64 +5070,64 @@
           "o": 65798
         },
         "fly6": {
-          "dur": 2966,
-          "env": "642457462563200000698341459721731143451210003363656554335476114599732201100",
-          "o": 74082
+          "dur": 3043,
+          "env": "65345746256320000068634246972174115355131000346366665433647611459973220220000",
+          "o": 75935
         },
         "fly7": {
-          "dur": 2958,
-          "env": "33899965310003762245555672266547326533310006987757589982128777999955665200",
-          "o": 77298
+          "dur": 3017,
+          "env": "3389996531000376224555567226654732653331000698775758998212877799995566520000",
+          "o": 79229
         },
         "uber1": {
-          "dur": 960,
-          "env": "2998669879599299946663000",
-          "o": 80506
+          "dur": 1159,
+          "env": "39974358874765992997445653000",
+          "o": 82495
         },
         "uber2": {
-          "dur": 4457,
-          "env": "5687226679513764299931246401243233310000099961378218422225457873564319949985421021000008643135772120564476121310",
-          "o": 86087
+          "dur": 4527,
+          "env": "579723667961386429993224640124323331000009996137922852322556897456431994998642102100000965413588212056548622131000",
+          "o": 88410
         },
         "uber3": {
-          "dur": 2671,
-          "env": "4599859975112335883200003423963543100006864682025995339610297421000",
-          "o": 90793
+          "dur": 2779,
+          "env": "4599859975112335883200003423963543100006864682025995339610297421000000",
+          "o": 93187
         },
         "uber4": {
-          "dur": 2810,
-          "env": "58955136434652210005523592595225655961354878744503652110002950057664200",
-          "o": 93714
+          "dur": 3228,
+          "env": "599865259358785321000244695399324744699225589875151579311000169322997023798622000",
+          "o": 96217
         },
         "uber5": {
-          "dur": 1186,
-          "env": "997699999975009969899865058610",
-          "o": 96774
+          "dur": 1259,
+          "env": "99769999997500996989986505862000",
+          "o": 99695
         },
         "beach1": {
-          "dur": 2811,
-          "env": "89827969889999798541777977468986998312247730047756994998365568579641530",
-          "o": 98210
+          "dur": 2891,
+          "env": "6982796988999979854177797746898699831224773004775699499836556857964153000",
+          "o": 101204
         },
         "beach2": {
-          "dur": 4614,
-          "env": "89998789888641004453384471685320399307414432344543100999855889661011100444432586322236677554499997212007985202433100",
-          "o": 104218
+          "dur": 4690,
+          "env": "8999878988864100445338447168532039930741443234454310099985588966101110044443258632223667755449999721200798520243310000",
+          "o": 107348
         },
         "beach3": {
-          "dur": 4884,
-          "env": "775999999866799854566641000699998422169999999872210000686615997749999845267642000079899887422022200002398105996877545654200",
-          "o": 109082
+          "dur": 4939,
+          "env": "7759999998667998545666410006999984221699999998722100006866159977499998452676420000798998874220222000023981059968775456542000",
+          "o": 112288
         },
         "beach5": {
-          "dur": 1904,
-          "env": "121499815755342100001320454499531000412167543200",
-          "o": 122642
+          "dur": 1961,
+          "env": "12149981575534210000132045449953100041216754320000",
+          "o": 126147
         },
         "beach6": {
-          "dur": 3189,
-          "env": "38858764498656655335766563367764320003887656649743297986433443054645673536640540",
-          "o": 124795
+          "dur": 3267,
+          "env": "3885876449865665533576656336776432000388765664974329798643344305464567353664054000",
+          "o": 128358
         },
         "beach7": {
           "dur": 5579,
@@ -5135,114 +5135,114 @@
           "o": 133215
         },
         "night1": {
-          "dur": 1912,
-          "env": "389478837669646526861144554466642331249986476410",
-          "o": 128234
+          "dur": 1987,
+          "env": "38947883766964652686114455446664233124998647641000",
+          "o": 131875
         },
         "night2": {
-          "dur": 2876,
-          "env": "892113510241265014963424630134994203326830000000247629993033225465345310",
-          "o": 130395
+          "dur": 2955,
+          "env": "99221362125128611597452473124599421442794000000024862998303432657635641000",
+          "o": 134112
         },
         "night3": {
-          "dur": 3538,
-          "env": "79787988979966754100026985325888861002596267964541004448999656987211899999444598978654510",
-          "o": 141480
+          "dur": 3609,
+          "env": "7978798897996675410002698532588886100259626796454100444899965698721189999944459897865452000",
+          "o": 145378
         },
         "night4": {
-          "dur": 1828,
-          "env": "4672320069973222464322210003338732142375345310",
-          "o": 147736
+          "dur": 1893,
+          "env": "467232006997322246432221000333873214237534531000",
+          "o": 151773
         },
         "bar5": {
-          "dur": 3228,
-          "env": "698887749752553101110001489935767996540779516414100168896344078889646265365546420",
-          "o": 44747
+          "dur": 3310,
+          "env": "69888774975255310111000148993576799654077951641410016889634407888964626536554642000",
+          "o": 45888
         },
         "fly8": {
-          "dur": 1783,
-          "env": "355799652134489943311001899947420341465137520",
-          "o": 57010
+          "dur": 1855,
+          "env": "35579965213448994331100189994742034146513752000",
+          "o": 58412
         },
         "fly9": {
-          "dur": 1810,
-          "env": "2499712454320000698111199486434432532125311000",
-          "o": 59042
+          "dur": 1918,
+          "env": "249971245432000069811119948643443253212531100000",
+          "o": 60518
         },
         "fly10": {
-          "dur": 1447,
-          "env": "4981323863634984454123872596541698410",
-          "o": 61102
+          "dur": 1529,
+          "env": "498132386363498445412387259654169851000",
+          "o": 62686
         },
         "fly11": {
-          "dur": 4035,
-          "env": "89666688766544500035456799799775668499866499997667776510023776322133005879996410005897544587731576751",
-          "o": 62799
+          "dur": 4115,
+          "env": "8966668876654450003545679979977566849986649999766777651002377632213300587999641000589755458773157675100",
+          "o": 64465
         },
         "fly12": {
-          "dur": 3205,
-          "env": "664530588757488885254887634576545676744512431010000379995798765479979932665433200",
-          "o": 67084
+          "dur": 3256,
+          "env": "6645305887574888852548876345765456767445124310100003799957987654799799326654332000",
+          "o": 68829
         },
         "fly13": {
-          "dur": 3293,
-          "env": "99589937879479566630005997799785198528778645542000997988139945965887751895899612510",
-          "o": 70539
+          "dur": 3350,
+          "env": "995899378794795666300059977997851985287786455420009979881399459658877518958996125100",
+          "o": 72335
         },
         "uber6": {
-          "dur": 919,
-          "env": "56766797699986643434200",
-          "o": 81716
+          "dur": 976,
+          "env": "5676679769998664343420000",
+          "o": 83904
         },
         "uber7": {
-          "dur": 2951,
-          "env": "99411100631101003671124201000785862743114537988425832263213223254233311320",
-          "o": 82885
+          "dur": 3030,
+          "env": "9952220185210200488223520110099797395422575999953794338422533437624441143000",
+          "o": 85130
         },
         "beach8": {
-          "dur": 2468,
-          "env": "57489996410044220744357534641111000078842355420001145730252100",
-          "o": 114216
+          "dur": 2577,
+          "env": "57489996410044220744357534641111000078842355420001145730252100000",
+          "o": 117477
         },
         "beach9": {
-          "dur": 2992,
-          "env": "799999710002999239966999999889840000887577640199555689987206378778876655420",
-          "o": 116934
+          "dur": 3060,
+          "env": "79999971000299923996699999988984000088757764019955568998720637877887665542000",
+          "o": 120304
         },
         "beach10": {
-          "dur": 2215,
-          "env": "33688758314442479995254445554322352471461074213698522100",
-          "o": 120176
+          "dur": 2284,
+          "env": "3368875831444247999525444555432235247146107421369852220000",
+          "o": 123613
         },
         "night5": {
-          "dur": 2218,
-          "env": "88843577630586025668721162699121002982596202399998651110",
-          "o": 145268
+          "dur": 2286,
+          "env": "8884357763058602566872116269912100298259620239999865111000",
+          "o": 149237
         },
         "pa1": {
-          "dur": 6818,
-          "env": "887630442100004424135432117641331000244218996642646762227421289743253210003851445434663564335655655200008931597110562214999823200122696333614998653021000998210023244211100",
-          "o": 23844
+          "dur": 6879,
+          "env": "8876304421000044241354321176413310002442189966426467622274212897432532100038514454346635643356556552000089315971105622149998232001226963336149986530210009982100232442111000",
+          "o": 24596
         },
         "fly1m": {
-          "dur": 973,
-          "env": "8983210788665543110026300",
-          "o": 49956
+          "dur": 874,
+          "env": "9932399510082499666000",
+          "o": 51236
         },
         "fly1j": {
-          "dur": 470,
-          "env": "799817984210",
-          "o": 51179
+          "dur": 540,
+          "env": "79981798421000",
+          "o": 52359
         },
         "beach1n": {
-          "dur": 2696,
-          "env": "99888328995799439878855777779988898763027531001876431498775065875300",
-          "o": 101271
+          "dur": 2753,
+          "env": "998883289957994398788557777799888987630275310018764314987750658753000",
+          "o": 104345
         },
         "night2n": {
-          "dur": 7709,
-          "env": "9999999937969766454200079997167997760002979886556256200099999999569999974556541000999988276998761000996977688720663000999999894795896545664100199998507698999885099978609999998468669627896541001",
-          "o": 133521
+          "dur": 7812,
+          "env": "9999999937969766454200079997167997760002979886556256200099999999569999974556541000999988276998761000996977688720663000999999894795896545664100199998507698999885099978609999998468669627896541001000",
+          "o": 137316
         }
       },
       "scenes": [
@@ -5250,63 +5250,63 @@
           "id": "intro",
           "t": [
             0,
-            6898
+            6953
           ],
           "tail": 1800
         },
         {
           "id": "sec",
           "t": [
-            6898,
-            35074
+            6953,
+            35825
           ],
           "tail": 1569
         },
         {
           "id": "bar",
           "t": [
-            35074,
-            63949
+            35825,
+            65174
           ],
           "tail": 1999
         },
         {
           "id": "fly",
           "t": [
-            63949,
-            115297
+            65174,
+            117286
           ],
           "tail": 2902
         },
         {
           "id": "uber",
           "t": [
-            115297,
-            138350
+            117286,
+            141343
           ],
           "tail": 1646
         },
         {
           "id": "beach",
           "t": [
-            138350,
-            183855
+            141343,
+            187497
           ],
           "tail": 1852
         },
         {
           "id": "night",
           "t": [
-            183855,
-            214276
+            187497,
+            218379
           ],
           "tail": 2541
         },
         {
           "id": "end",
           "t": [
-            214276,
-            230365
+            218379,
+            234562
           ],
           "tail": 9391
         }
@@ -5696,7 +5696,7 @@
         {
           "key": "land1",
           "who": "pilot",
-          "at": 8503,
+          "at": 8557,
           "say": "Hier spricht Ihr Kapitän. Die Landebahn in Rio ist sehr kurz. Wer beten kann, sollte jetzt anfangen.",
           "text": "📢 Hier spricht Ihr Kapitän. Die Landebahn in Rio ist sehr kurz. Wer beten kann, sollte jetzt anfangen.",
           "sc": "land",
@@ -5705,7 +5705,7 @@
         {
           "key": "land2",
           "who": "marco",
-          "at": 14637,
+          "at": 14751,
           "say": "Ich hab im letzten Flug schon gebetet! Mein Guthaben ist aufgebraucht!",
           "text": "Ich hab im letzten Flug schon gebetet! Mein Guthaben ist aufgebraucht! 🙏",
           "vo": {
@@ -5724,7 +5724,7 @@
         {
           "key": "land3",
           "who": "patrick",
-          "at": 20875,
+          "at": 21062,
           "say": "Schaut mal, ein Fisch! Ist das schon das Mittagessen?",
           "text": "Schaut mal, ein Fisch! Ist das schon das Mittagessen? 🐟",
           "roll": "marco",
@@ -5734,7 +5734,7 @@
         {
           "key": "land4",
           "who": "pilot",
-          "at": 24073,
+          "at": 24331,
           "say": "Willkommen in Rio. Bitte bleiben Sie angeschnallt, bis wir wieder trocken sind.",
           "text": "📢 Willkommen in Rio. Bitte bleiben Sie angeschnallt, bis wir wieder trocken sind.",
           "sc": "land",
@@ -5743,7 +5743,7 @@
         {
           "key": "ny2",
           "who": "jonas",
-          "at": 31787,
+          "at": 32107,
           "say": "Mein Handy ist sicher. Es steckt in meiner Unterhose.",
           "text": "Mein Handy ist sicher. Es steckt in meiner Unterhose. 📱",
           "sc": "ny",
@@ -5752,7 +5752,7 @@
         {
           "key": "ny3",
           "who": "patrick",
-          "at": 35060,
+          "at": 35457,
           "say": "Da sucht garantiert keiner. Da war seit Jahren niemand.",
           "text": "Da sucht garantiert keiner. Da war seit Jahren niemand.",
           "react": {
@@ -5766,7 +5766,7 @@
         {
           "key": "ny4",
           "who": "narrator",
-          "at": 38869,
+          "at": 39348,
           "say": "Drei. Zwei. Eins.",
           "text": "3 … 2 … 1 …",
           "sc": "ny",
@@ -5775,7 +5775,7 @@
         {
           "key": "ny5",
           "who": "narrator",
-          "at": 41813,
+          "at": 42359,
           "say": "Feliz Ano Novo!",
           "text": "🎆 Feliz Ano Novo! 🎆",
           "sc": "ny",
@@ -5784,7 +5784,7 @@
         {
           "key": "ny6",
           "who": "simon",
-          "at": 45246,
+          "at": 45892,
           "say": "Frohes neues Jahr, meine Schöne.",
           "text": "Frohes neues Jahr, meine Schöne … 😘",
           "vo": {
@@ -5798,7 +5798,7 @@
         {
           "key": "ny7",
           "who": "marco",
-          "at": 48655,
+          "at": 49722,
           "say": "Simon. Ich bin es. Marco. Aber danke, war gar nicht schlecht.",
           "text": "Simon … ich bin’s. Marco. Aber danke, war gar nicht schlecht. 😳",
           "vo": {
@@ -5822,7 +5822,7 @@
         {
           "key": "ny8",
           "who": "narrator",
-          "at": 52881,
+          "at": 54013,
           "say": "Brasilianischer Brauch: Über sieben Wellen springen. Sieben Wünsche.",
           "text": "Brasilianischer Brauch: über 7 Wellen springen – 7 Wünsche. 🌊",
           "sc": "ny",
@@ -5833,7 +5833,7 @@
           "who": "simon",
           "say": "Kein Sonnenbrand mehr!",
           "text": "Wunsch 1: Kein Sonnenbrand mehr! 🙏",
-          "at": 56547,
+          "at": 57679,
           "anchor": [
             "ny8",
             3666
@@ -5844,16 +5844,60 @@
           "who": "patrick",
           "say": "Unendlich Rodízio!",
           "text": "Wunsch 2: Unendlich Rodízio! 🥩",
-          "at": 58447,
+          "at": 59579,
           "anchor": [
             "ny8",
             5566
           ]
         },
         {
+          "key": "ny8j",
+          "who": "jonas",
+          "say": "Dass mein Handy sicher bleibt!",
+          "text": "Wunsch 3: Dass mein Handy sicher bleibt! 📱",
+          "anchor": [
+            "ny8",
+            7466
+          ],
+          "at": 61479
+        },
+        {
+          "key": "ny8m",
+          "who": "marco",
+          "say": "Eine Frau!",
+          "text": "Wunsch 4: Eine Frau! 💃",
+          "anchor": [
+            "ny8",
+            9366
+          ],
+          "at": 63379
+        },
+        {
+          "key": "ny8m2",
+          "who": "marco",
+          "say": "Irgendeine Frau!",
+          "text": "Wunsch 5: Irgendeine Frau! 🙏",
+          "anchor": [
+            "ny8",
+            11266
+          ],
+          "at": 65279
+        },
+        {
+          "key": "ny8s2",
+          "who": "simon",
+          "say": "Dass keiner vom Kuss erfährt!",
+          "text": "Wunsch 6: Dass keiner vom Kuss erfährt! 🤫",
+          "anchor": [
+            "ny8",
+            13166
+          ],
+          "at": 67179
+        },
+        {
           "key": "ny9",
           "who": "marco",
-          "at": 70006,
+          "at": 71131,
           "say": "Mein siebter Wunsch war: nicht ertrinken. Knapp geschafft.",
           "text": "Mein siebter Wunsch war: nicht ertrinken. Knapp geschafft. 🦀",
           "vo": {
@@ -5872,7 +5916,7 @@
         {
           "key": "kat1",
           "who": "narrator",
-          "at": 76538,
+          "at": 77759,
           "say": "Erster Januar, elf Uhr, die Jungs wachen auf, ihre Würde schläft noch",
           "text": "1. Januar, 11 Uhr. Die Jungs wachen auf. Ihre Würde schläft noch. ☀️",
           "sc": "kat",
@@ -5881,7 +5925,7 @@
         {
           "key": "kat2",
           "who": "jonas",
-          "at": 81991,
+          "at": 83278,
           "say": "Wo ist mein Handy? Und warum fehlt meine Unterhose?",
           "text": "Wo ist mein Handy? Und warum fehlt meine Unterhose?! 😱",
           "face": "shock",
@@ -5891,7 +5935,7 @@
         {
           "key": "kat3",
           "who": "marco",
-          "at": 84968,
+          "at": 86336,
           "say": "Die liegen beide am Strand. Getrennt.",
           "text": "Die liegen beide am Strand. Getrennt.",
           "vo": {
@@ -5906,7 +5950,7 @@
         {
           "key": "kat4",
           "who": "patrick",
-          "at": 87221,
+          "at": 89028,
           "say": "Leute. Ich hab mir für immer frei tätowieren lassen.",
           "text": "Leute. Ich hab mir „Für immer frei“ tätowieren lassen. 💪",
           "sc": "kat",
@@ -5915,7 +5959,7 @@
         {
           "key": "kat5",
           "who": "maid",
-          "at": 90900,
+          "at": 92811,
           "say": "Da steht Hühnerpastete.",
           "text": "Da steht „Hühnerpastete“. 🥟",
           "rshot": "patrick",
@@ -5930,7 +5974,7 @@
         {
           "key": "kat6",
           "who": "simon",
-          "at": 93253,
+          "at": 95223,
           "say": "Passt doch. Für immer Hähnchen.",
           "text": "Passt doch. Für immer Hähnchen. 🍗",
           "vo": {
@@ -5946,7 +5990,7 @@
         {
           "key": "cr1",
           "who": "jonas",
-          "at": 98135,
+          "at": 100160,
           "say": "Zweihundertzwanzig Stufen. Und oben steht ein Typ, der auch nichts sieht.",
           "text": "220 Stufen. Und oben steht ein Typ, der auch nichts sieht. ☁️",
           "sc": "cristo",
@@ -5955,7 +5999,7 @@
         {
           "key": "cr2",
           "who": "patrick",
-          "at": 102067,
+          "at": 104182,
           "say": "Ich sehe ein helles Licht. Ist das Jesus oder der Notarzt?",
           "text": "Ich sehe ein helles Licht … Ist das Jesus oder der Notarzt? 🚑",
           "face": "dizzy",
@@ -5966,7 +6010,7 @@
         {
           "key": "cr4",
           "who": "marco",
-          "at": 105480,
+          "at": 107684,
           "say": "Mach ein Foto! Gleiche Pose. Nur mit mehr Bauch.",
           "text": "Mach ein Foto! Gleiche Pose. Nur mit mehr Bauch. 📸",
           "vo": {
@@ -5979,7 +6023,7 @@
         {
           "key": "cr5",
           "who": "simon",
-          "at": 111261,
+          "at": 113555,
           "say": "Gesegnet. Von ganz oben.",
           "text": "Gesegnet. Von ganz oben. 🕊️💩",
           "vo": {
@@ -5993,7 +6037,7 @@
         {
           "key": "ro1",
           "who": "narrator",
-          "at": 116001,
+          "at": 118351,
           "say": "Rodízio. Grüne Karte: mehr Fleisch. Rote Karte: aufhören.",
           "text": "Rodízio: grüne Karte = mehr Fleisch, rote Karte = aufhören.",
           "sc": "rod",
@@ -6002,7 +6046,7 @@
         {
           "key": "ro2",
           "who": "patrick",
-          "at": 120616,
+          "at": 123020,
           "say": "Rote Karte? Die Seite existiert für mich nicht.",
           "text": "Rote Karte? Die Seite existiert für mich nicht. 🟢",
           "palm": "jonas",
@@ -6012,7 +6056,7 @@
         {
           "key": "ro3",
           "who": "waiter",
-          "at": 123492,
+          "at": 125975,
           "say": "Picanha?",
           "text": "Picanha? 🥩",
           "sc": "rod",
@@ -6023,7 +6067,7 @@
           "who": "card",
           "text": "2 Stunden | und 4 Kilo Fleisch später …",
           "cdur": 2400,
-          "at": 127799,
+          "at": 130348,
           "anchor": [
             "ro4",
             -2900
@@ -6032,7 +6076,7 @@
         {
           "key": "ro4",
           "who": "marco",
-          "at": 130699,
+          "at": 133248,
           "say": "Er hat aufgehört zu kauen. Ist er tot?",
           "text": "Er hat aufgehört zu kauen. Ist er tot?",
           "vo": {
@@ -6045,7 +6089,7 @@
         {
           "key": "ro5",
           "who": "patrick",
-          "at": 134382,
+          "at": 137006,
           "say": "Nur Pause. Mein Magen installiert gerade ein Update.",
           "text": "Nur Pause. Mein Magen installiert gerade ein Update. ⏳",
           "lol": [
@@ -6059,7 +6103,7 @@
         {
           "key": "ro6",
           "who": "waiter",
-          "at": 137811,
+          "at": 140515,
           "say": "Mais?",
           "text": "Mais? (Noch mehr?)",
           "sc": "rod",
@@ -6070,7 +6114,7 @@
           "who": "waiter",
           "say": "Ambulânsia?",
           "text": "Ambulância? (Krankenwagen?) 🚑",
-          "at": 139421,
+          "at": 142192,
           "sc": "rod",
           "gap": 1000
         },
@@ -6081,14 +6125,14 @@
           "text": "… Sim. 😴",
           "lol": 1,
           "sting": "tusch",
-          "at": 141066,
+          "at": 143893,
           "sc": "rod",
           "gap": 900
         },
         {
           "key": "zu2",
           "who": "marco",
-          "at": 145139,
+          "at": 148048,
           "say": "Wir hängen fest! Bevor wir sterben: Ich hab euer ganzes Bier getrunken!",
           "text": "Wir hängen fest! Bevor wir sterben: Ich hab euer ganzes Bier getrunken! 🍺",
           "vo": {
@@ -6102,7 +6146,7 @@
         {
           "key": "zu3",
           "who": "simon",
-          "at": 148487,
+          "at": 151489,
           "say": "Und ich hab dein Handtuch für meinen Sonnenbrand benutzt. Es ist jetzt orange.",
           "text": "Und ich hab dein Handtuch für meinen Sonnenbrand benutzt. Es ist jetzt orange.",
           "vo": {
@@ -6116,7 +6160,7 @@
         {
           "key": "zu4",
           "who": "patrick",
-          "at": 151496,
+          "at": 155871,
           "say": "Und ich hab mit der roten Zahnbürste das Klo geputzt.",
           "text": "Und ich hab mit der roten Zahnbürste das Klo geputzt. 🪥",
           "lol": [
@@ -6129,7 +6173,7 @@
         {
           "key": "zu5",
           "who": "marco",
-          "at": 155265,
+          "at": 159743,
           "say": "Wir leben! Moment. Die rote Zahnbürste ist meine.",
           "text": "Wir leben! … Moment. Die rote Zahnbürste ist meine. 😨",
           "vo": {
@@ -6144,7 +6188,7 @@
         {
           "key": "zu6",
           "who": "patrick",
-          "at": 159462,
+          "at": 164018,
           "say": "Ich weiß.",
           "text": "Ich weiß. 😇",
           "close": 1,
@@ -6157,7 +6201,7 @@
         {
           "key": "call1",
           "who": "greisel",
-          "at": 163846,
+          "at": 168482,
           "say": "Hey Jungs! In drei Tagen sind wir da! Haben wir was verpasst?",
           "text": "Hey Jungs! In drei Tagen sind wir da! Haben wir was verpasst? 👋",
           "sc": "call",
@@ -6166,7 +6210,7 @@
         {
           "key": "call2",
           "who": "jonas",
-          "at": 167561,
+          "at": 172272,
           "say": "Nein. Absolut gar nichts.",
           "text": "Nein. Absolut gar nichts. 🙂",
           "lol": [
@@ -6187,7 +6231,7 @@
           },
           "sc": "call",
           "gap": 600,
-          "at": 170112
+          "at": 174894
         },
         {
           "key": "call4",
@@ -6197,12 +6241,12 @@
           "lol": 1,
           "sc": "call",
           "gap": 700,
-          "at": 175662
+          "at": 180511
         },
         {
           "key": "end",
           "who": "narrator",
-          "at": 179278,
+          "at": 184208,
           "say": "Nächste Folge: Daijo und Greisel kommen an. Möge Gott ihnen beistehen.",
           "text": "Nächste Folge: Daijo & Greisel kommen an. Möge Gott ihnen beistehen.",
           "sc": "end",
@@ -6211,8 +6255,8 @@
       ],
       "voice": {
         "intro": {
-          "dur": 3648,
-          "env": "79999999886779873000996879877987765510006998892884978899554000298986997882987988599997567300",
+          "dur": 3702,
+          "env": "799999998867798730009968798779877655100069988928849788995540002989869978829879885999975673000",
           "o": 250
         },
         "recap": {
@@ -6221,24 +6265,24 @@
           "o": 4148
         },
         "land1": {
-          "dur": 5579,
-          "env": "89998469785976963950899743210001342001999855985986758787997799776643557630978754057762000579852896097688655531000669944999625469644667535300",
-          "o": 4148
+          "dur": 5639,
+          "env": "899984697859769639508997432100013420019998559859867587879977997766435576309787540577620005798528960976886555310006699449996254696446675353100",
+          "o": 4202
         },
         "land2": {
-          "dur": 3638,
-          "env": "6446983165348602204323477625589326912876518851110017964217871379962434215996214727899984110",
-          "o": 9977
+          "dur": 3711,
+          "env": "644698316534860220432347762558932691287651885111001796421787137996243421599621472789998411000",
+          "o": 10091
         },
         "land3": {
-          "dur": 2598,
-          "env": "89999707999961111000775467869877400097965978977449986969939996642",
-          "o": 13866
+          "dur": 2669,
+          "env": "8999970799996111100077546786987740009796597897744998696993999664100",
+          "o": 14052
         },
         "land4": {
-          "dur": 4333,
-          "env": "8999728886999789895986766421003699137853179764665996855598866865443332000296455567357395307776254555663203410",
-          "o": 16713
+          "dur": 4395,
+          "env": "89997288869997898959867664210036991378531797646659968555988668654433320002964555673573953077762545556632034100",
+          "o": 16971
         },
         "ny1": {
           "dur": 5161,
@@ -6246,84 +6290,84 @@
           "o": 28065
         },
         "ny2": {
-          "dur": 2573,
-          "env": "28943244236542013533999510048522202438500463995674741563445266410",
-          "o": 21296
+          "dur": 2650,
+          "env": "2894324423654201353399951004852220243850046399567474156344526641000",
+          "o": 21616
         },
         "ny3": {
-          "dur": 2609,
-          "env": "897694339956417685526953664003989949996797229997629753255466204620",
-          "o": 24120
+          "dur": 2691,
+          "env": "89769433995641768552695366400398994999679722999762975325546620462000",
+          "o": 24516
         },
         "ny4": {
-          "dur": 2329,
-          "env": "59988888643321000000058754676799999500000005889999667776400",
-          "o": 26979
+          "dur": 2396,
+          "env": "599888886433210000000587546767999995000000058899996677764000",
+          "o": 27458
         },
         "ny5": {
-          "dur": 1712,
-          "env": "5989999989898751000799999999999755986650000",
-          "o": 29558
+          "dur": 1812,
+          "env": "5989999989898751000799999999999755986650000000",
+          "o": 30104
         },
         "ny6": {
-          "dur": 1709,
-          "env": "2477676421478753216899976321000267533443100",
-          "o": 31520
+          "dur": 2130,
+          "env": "244757522358775224799996310004974342443565433210000000",
+          "o": 32166
         },
         "ny7": {
-          "dur": 3326,
-          "env": "237669853443442484486222997540798876689769819944236754101100259519983544234475332100",
-          "o": 33479
+          "dur": 3391,
+          "env": "2376698534434424844862229975407988766897698199442367541011002595199835442344753321000",
+          "o": 34546
         },
         "ny8": {
-          "dur": 3116,
+          "dur": 3109,
           "env": "986778888777886576386777645530004996786667898539874677777875487514879886652000",
-          "o": 37055
+          "o": 38187
         },
         "ny9": {
-          "dur": 3160,
-          "env": "55222574159679645469999876541001379554206995046764259542100242781010474577421000",
-          "o": 43281
+          "dur": 3256,
+          "env": "5522257415967964546999987654100137955420699504676425954210024278101047457742100000",
+          "o": 50838
         },
         "kat1": {
-          "dur": 4791,
-          "env": "987859988787768889600039874541798867430008999897787377656986687875344442000897885798863987774888844208984331898766544420",
-          "o": 46691
+          "dur": 4857,
+          "env": "98785998878776888960003987454179886743000899989778737765698668787534444200089788579886398777488884420898433189876654442000",
+          "o": 54343
         },
         "kat2": {
-          "dur": 2277,
-          "env": "368610385334453520004542199946221268136645552253234313310",
-          "o": 51732
+          "dur": 2358,
+          "env": "36861038533445352000454219994622126813664555225323431331000",
+          "o": 59450
         },
         "kat3": {
-          "dur": 1553,
-          "env": "343544234319999851887100795335414872000",
-          "o": 54259
+          "dur": 1992,
+          "env": "34443254598956752534841000066600045579532100222000",
+          "o": 62058
         },
         "kat4": {
-          "dur": 2580,
-          "env": "89993793798550678541006578718964689694459993078466335767799784310",
-          "o": 56063
+          "dur": 2684,
+          "env": "89993793798550678541006578718964689694459993078466335767799784310000",
+          "o": 64300
         },
         "kat5": {
-          "dur": 1653,
-          "env": "999667328774320006999823854337993146543100",
-          "o": 58893
+          "dur": 1712,
+          "env": "9996673287743200069998238543379931465431000",
+          "o": 67234
         },
         "kat6": {
-          "dur": 1571,
-          "env": "4895110067741210001755457645653133432000",
-          "o": 60796
+          "dur": 1626,
+          "env": "48951100677412100017554576456531334320000",
+          "o": 69196
         },
         "cr1": {
-          "dur": 3280,
-          "env": "12799652001764980117841133342363111100034331005523773552774941254047732532012420000",
-          "o": 62617
+          "dur": 3370,
+          "env": "1279965200176498011784113334236311110003433100552377355277494125404773253201242000000",
+          "o": 71073
         },
         "cr2": {
-          "dur": 2713,
-          "env": "77466547989658897647754110096729956454576675665437658669854379524730",
-          "o": 66148
+          "dur": 2802,
+          "env": "77466547976458897647754110096729856454576675665437658669854367424730000",
+          "o": 74692
         },
         "cr3": {
           "dur": 3960,
@@ -6331,44 +6375,44 @@
           "o": 81291
         },
         "cr4": {
-          "dur": 3781,
-          "env": "39975588742228997299997400000478797344589982006987623564300000368999547503125789974199998646510",
-          "o": 69110
+          "dur": 3871,
+          "env": "3997558874222899729999740000047879734458998200698762356430000036899954750312578997419999864651000",
+          "o": 77744
         },
         "cr5": {
-          "dur": 1529,
-          "env": "473225751134420200057479732207885343100",
-          "o": 73142
+          "dur": 1585,
+          "env": "4732257511344202000574797322078853431000",
+          "o": 81865
         },
         "ro1": {
-          "dur": 4094,
-          "env": "9979965986965530007999997188988249750000999864698688857975100079998549616998993498861000999566986699500",
-          "o": 74921
+          "dur": 4148,
+          "env": "99799659869655300079999971889882497500009998646986888579751000799985496169989934988610009995669866995000",
+          "o": 83700
         },
         "ro2": {
-          "dur": 2356,
-          "env": "68778648708997659853000687997289992767826987455658567955631",
-          "o": 79264
+          "dur": 2435,
+          "env": "6877864870899765985300068799728999276782698745565856795563100",
+          "o": 88098
         },
         "ro3": {
-          "dur": 643,
-          "env": "69300899999974100",
-          "o": 81871
+          "dur": 709,
+          "env": "693008999999741000",
+          "o": 90783
         },
         "ro4": {
-          "dur": 2983,
-          "env": "577668910009999422068558897502103454136768683111000003321045520027878640210",
-          "o": 82764
+          "dur": 3058,
+          "env": "68978991000999853307966999860321346513787979422100000343205663003899975031000",
+          "o": 91742
         },
         "ro5": {
-          "dur": 2729,
-          "env": "673697566520038654999768725565597898227488848971110087730960038862630",
-          "o": 85997
+          "dur": 2809,
+          "env": "88469768752004986588867983667669899922959995998121008774095003998383000",
+          "o": 95050
         },
         "ro6": {
-          "dur": 610,
-          "env": "5899996657764200",
-          "o": 88977
+          "dur": 677,
+          "env": "58999966577642000",
+          "o": 98109
         },
         "zu1": {
           "dur": 4226,
@@ -6376,74 +6420,94 @@
           "o": 108245
         },
         "zu2": {
-          "dur": 2748,
-          "env": "586675743388321100463599265637986243449399784973254211458261385124100",
-          "o": 91855
+          "dur": 2841,
+          "env": "585664743376321100353599265636876243448399673763254211458261385124100000",
+          "o": 101192
         },
         "zu3": {
-          "dur": 2359,
-          "env": "66444791584569632486352574974542597653368431210243440221000",
-          "o": 94853
+          "dur": 3732,
+          "env": "7973023100383679700997678975258766259697653987653579431104445113200064631791221099799846652000",
+          "o": 104284
         },
         "zu4": {
-          "dur": 1969,
-          "env": "78777948769865408577996479965188952569752623452620",
-          "o": 97463
+          "dur": 2072,
+          "env": "8876785869978567669865995557985357986335126326424000",
+          "o": 108265
         },
         "zu5": {
-          "dur": 3447,
-          "env": "256864436556247421000048996434675210110005775999944941348897359962195542123485442465310",
-          "o": 99682
+          "dur": 3525,
+          "env": "25686443655624742100004899643467521011000577599994494134889735996219554212348544246541000",
+          "o": 110587
         },
         "zu6": {
-          "dur": 884,
-          "env": "99889862004899978999810",
-          "o": 103379
+          "dur": 964,
+          "env": "9988986200489997899982000",
+          "o": 114362
         },
         "call1": {
-          "dur": 3015,
-          "env": "7998856786777773000899597786259999598775566438654000269556996977484298886220",
-          "o": 104513
+          "dur": 3090,
+          "env": "799885678677777300089959778625999959877556643865400026955699697748429888622000",
+          "o": 115576
         },
         "call2": {
-          "dur": 1951,
-          "env": "2279966442110000993022365356500179995254200000110",
-          "o": 107778
+          "dur": 2022,
+          "env": "227996644211000099302236535650017999525420000011000",
+          "o": 118917
         },
         "end": {
-          "dur": 4183,
-          "env": "999869649346978836975200037978899864699924877799879989981000989779996109978843100089999975983389872276410",
-          "o": 116287
+          "dur": 5664,
+          "env": "9997686494568678479786100089878989997596896107886778769776520007997999617986553000099994973398822876532000999999862878987885078777677400039200",
+          "o": 127644
         },
         "ny8s": {
-          "dur": 1297,
-          "env": "489975425965542695303565421001210",
-          "o": 40421
+          "dur": 1365,
+          "env": "48997542596554269530356542100121000",
+          "o": 41546
         },
         "ny8p": {
-          "dur": 1063,
-          "env": "999998259667544849827645320",
-          "o": 41968
+          "dur": 1139,
+          "env": "99999825966754484982764532000",
+          "o": 43161
         },
         "ro7": {
-          "dur": 745,
-          "env": "9987899999877797300",
-          "o": 89837
+          "dur": 801,
+          "env": "998789999987779730000",
+          "o": 99036
         },
         "ro8": {
-          "dur": 773,
-          "env": "89996842103976516830",
-          "o": 90832
+          "dur": 855,
+          "env": "8999684210397651683000",
+          "o": 100088
         },
         "call3": {
-          "dur": 4850,
-          "env": "89996979666420019986689987655732986883899966169943456559337778668739938643686662689651302000376499861787196299659678655200",
-          "o": 109979
+          "dur": 4917,
+          "env": "899969796664200199866899876557329868838999661699434565593377787687399386436866626896513020003764998618871962996596786553000",
+          "o": 121188
         },
         "call4": {
-          "dur": 958,
-          "env": "149911149745432005412220",
-          "o": 115079
+          "dur": 1039,
+          "env": "14991114974543200541222000",
+          "o": 126356
+        },
+        "ny8j": {
+          "dur": 1845,
+          "env": "79411118853343114321243200035239715974000110000",
+          "o": 44550
+        },
+        "ny8m": {
+          "dur": 806,
+          "env": "994853469999953111000",
+          "o": 46645
+        },
+        "ny8m2": {
+          "dur": 959,
+          "env": "899545399739622699993100",
+          "o": 47700
+        },
+        "ny8s2": {
+          "dur": 1678,
+          "env": "682214798545661047430356411137511456431000",
+          "o": 48909
         }
       },
       "next": "📺 Folge 3: Daijo & Greisel kommen – bald im Kino",
@@ -6478,71 +6542,71 @@
           "id": "intro",
           "t": [
             0,
-            6903
+            6957
           ],
           "tail": 1755
         },
         {
           "id": "land",
           "t": [
-            6903,
-            30287
+            6957,
+            30607
           ],
           "tail": 1881
         },
         {
           "id": "ny",
           "t": [
-            30287,
-            75038
+            30607,
+            76259
           ],
           "tail": 1872
         },
         {
           "id": "kat",
           "t": [
-            75038,
-            96535
+            76259,
+            98560
           ],
           "tail": 1711
         },
         {
           "id": "cristo",
           "t": [
-            96535,
-            114501
+            98560,
+            116851
           ],
           "tail": 1711
         },
         {
           "id": "rod",
           "t": [
-            114501,
-            143639
+            116851,
+            146548
           ],
           "tail": 1800
         },
         {
           "id": "zucker",
           "t": [
-            143639,
-            162346
+            146548,
+            166982
           ],
           "tail": 2000
         },
         {
           "id": "call",
           "t": [
-            162346,
-            178478
+            166982,
+            183408
           ],
           "tail": 1858
         },
         {
           "id": "end",
           "t": [
-            178478,
-            191208
+            183408,
+            197619
           ],
           "tail": 7747
         }
@@ -6579,8 +6643,8 @@
       "n": 3,
       "voice": {
         "intro": {
-          "dur": 3971,
-          "env": "7999998988798740001977698868977630002896848839799897651000987886898876289934059887877597368899987400",
+          "dur": 4028,
+          "env": "79999989887987400019776988689776300028968488397998976510009878868988762899340598878775973688999874000",
           "o": 250
         },
         "recap": {
@@ -6589,84 +6653,84 @@
           "o": 4472
         },
         "g1": {
-          "dur": 5904,
-          "env": "7899647974499587799987886641000599627850997078766543310007849667456788865676786775492998868943989869778997555444200087889849334987674977878649556410",
-          "o": 4472
+          "dur": 5976,
+          "env": "789964797449958779998788664100059962785099707876654331000784966745678886567678677549299886894398986977899755544420008788984933498767497787864955641000",
+          "o": 4528
         },
         "g2": {
-          "dur": 3266,
-          "env": "7987899999343320003799773887981482076113784100231785366539972036246504657798876310",
-          "o": 10626
+          "dur": 3336,
+          "env": "798789999934332000379977388798148207611378410023178536653997203624650465779887631000",
+          "o": 10753
         },
         "g3": {
-          "dur": 2234,
-          "env": "79878973676761004989888767566189979696108667447666633210",
-          "o": 14143
+          "dur": 2304,
+          "env": "7987897367676100498988876756618997969610866744766663321000",
+          "o": 14339
         },
         "g4": {
-          "dur": 3147,
-          "env": "9998876320001249998745420000007878987993201799993762686410000033345207877654210",
-          "o": 16627
+          "dur": 3214,
+          "env": "999887632000124999874542000000787898799320179999376268641000003334520787765421000",
+          "o": 16893
         },
         "g5": {
-          "dur": 1316,
-          "env": "792499897799938969994695498644410",
-          "o": 20024
+          "dur": 1397,
+          "env": "79249989779993896999469549864442000",
+          "o": 20357
         },
         "g6": {
-          "dur": 3330,
-          "env": "157415866531000049672169966483336412426694216295256300156299612996324880223881975300",
-          "o": 21590
+          "dur": 3406,
+          "env": "15741586653100004967216996648333641242669421629525630015629961299632488022388197530000",
+          "o": 22004
         },
         "g7": {
-          "dur": 4320,
-          "env": "5630002356526996223777375326843025741114552321111000000568743112222545655310000005866410369957665452110013200",
-          "o": 25170
+          "dur": 4394,
+          "env": "56300023565269962237773753268430257411145523211110000005687431122225456553100000058764103699576654521100132000",
+          "o": 25660
         },
         "g8": {
-          "dur": 4135,
-          "env": "98981099878608999888865998698899999893999600039899869538989999888777520004999999979898610009988530037500",
-          "o": 29740
+          "dur": 4192,
+          "env": "989810998786089998888659986988999998939996000398998695389899998887775200049999999798986100099885300375100",
+          "o": 30304
         },
         "b1": {
-          "dur": 6327,
-          "env": "789999436998755326972887775876565410009000299998887899849988254000398569784099887772059988626878860678723159769977556200099837789743663100279788721999876320001",
-          "o": 34125
+          "dur": 6430,
+          "env": "78999943699875532697288777587656541000900029999888789984998825400039856978409988777205998862687886067872315976997755620009983778974366310027978872199987632000100",
+          "o": 34746
         },
         "b2": {
-          "dur": 3551,
-          "env": "66673587644758757447435637521100655199436946269766398689753210001479246369984330599632210",
-          "o": 40702
+          "dur": 3620,
+          "env": "6667358764475875744743563752110065519943694626976639868975321000147924636998433059963221000",
+          "o": 41427
         },
         "b3": {
-          "dur": 1795,
-          "env": "687502465410000035416873106733469973212433100",
-          "o": 44503
+          "dur": 1855,
+          "env": "68750246541000003541687310673346997321243310000",
+          "o": 45297
         },
         "b4": {
-          "dur": 3534,
-          "env": "47977665664321100355398997762336423200038756887653999464574067664186524514636556304634520",
-          "o": 46548
+          "dur": 3615,
+          "env": "4797766566432110035539899776233642320003875688765399946457406766418652451463655630463453000",
+          "o": 47403
         },
         "b5": {
-          "dur": 2067,
-          "env": "7998899968630100099632089721076129998888636889995510",
-          "o": 50332
+          "dur": 2130,
+          "env": "799889996863010009963208972107612999888863688999553000",
+          "o": 51268
         },
         "b6": {
-          "dur": 6236,
-          "env": "777754599964554898100098444553397541003886544334765457565424653100186186899865319986922558975384574424085447544238561220009508754699205844857653840854213420",
-          "o": 52649
+          "dur": 6304,
+          "env": "77775459996455489810009844455339754100388654433476545756542465310018618689986531998692255897538457442408544754423856122000950875469920584485765384085421342000",
+          "o": 53648
         },
         "b7": {
-          "dur": 5729,
-          "env": "354996002320000003698867999720068812652276510232332000000999633322245589910028432799999897643310003997879738999964337989755432016777874677202410",
-          "o": 59135
+          "dur": 5795,
+          "env": "3549960023200000036988679997200688126522765102323320000009996333222455899100284327999998976433100039978697389988643379897554320167778746772024000",
+          "o": 60202
         },
         "b8": {
-          "dur": 2792,
-          "env": "8971478349865995737755574686594178951776510059972677766300057985977520",
-          "o": 65115
+          "dur": 2864,
+          "env": "796157834986599574776557568658317884187751005998278777630005798697752000",
+          "o": 66247
         },
         "f1": {
           "dur": 6389,
@@ -6674,64 +6738,64 @@
           "o": 73379
         },
         "f2": {
-          "dur": 2807,
-          "env": "62121045599736210442432685403533057712353013585210115650033213255532000",
-          "o": 68156
+          "dur": 2895,
+          "env": "8324206879984932057364289861485407982358402489531022797104542437875310000",
+          "o": 69361
         },
         "f3": {
-          "dur": 1977,
-          "env": "89675856496596787957421110198574697889677997997520",
-          "o": 71213
+          "dur": 2058,
+          "env": "8967585649659678795742111019857469788967799799752000",
+          "o": 72506
         },
         "f4": {
-          "dur": 3267,
-          "env": "7976338776400078731557474200096899799999994588888743564352110008999599757648654200",
-          "o": 73440
+          "dur": 3340,
+          "env": "797633877640007873155747420009689979999999458888874356435211000899959975764865420000",
+          "o": 74813
         },
         "f5": {
-          "dur": 709,
-          "env": "998842750144544210",
-          "o": 76957
+          "dur": 774,
+          "env": "99884275014454421000",
+          "o": 78404
         },
         "f6": {
-          "dur": 3152,
-          "env": "8989999998998999999994995986597888755520012210009978749797758998587427789645410",
-          "o": 77916
+          "dur": 3209,
+          "env": "898999999899899999999499598659788875552001221000997874979775899858742778964541000",
+          "o": 79428
         },
         "f7": {
-          "dur": 1625,
-          "env": "99959784311463378842135578887536666132200",
-          "o": 81318
+          "dur": 1689,
+          "env": "9995978431146337884213557888753666613220000",
+          "o": 82887
         },
         "q1": {
-          "dur": 5110,
-          "env": "99766269898810009999777796987498779773598798499768875654410009876999877799339736798997888840699940652039737798998578557686787620",
-          "o": 83193
+          "dur": 5167,
+          "env": "9976626989881000999977779698749877977359879849976887565441000987699987779933973679899788884069994065203973779899857855768678762000",
+          "o": 84825
         },
         "q2": {
-          "dur": 3134,
-          "env": "9655247301001791253699946640016716627784100342498274129972356451362134289972100",
-          "o": 93777
+          "dur": 3209,
+          "env": "965524730100179125369994664001671662778410034249827412997235645136213428997210000",
+          "o": 95596
         },
         "q3": {
-          "dur": 2190,
-          "env": "7875980269664265423310002999946521113305611331423695100",
-          "o": 97161
+          "dur": 2295,
+          "env": "7875980269664265423310002999946521113305611331423695100000",
+          "o": 99054
         },
         "q4": {
-          "dur": 1522,
-          "env": "498235438999532210268622742212589753100",
-          "o": 99601
+          "dur": 1590,
+          "env": "4982354389995322102686227422125897532000",
+          "o": 101600
         },
         "q5": {
-          "dur": 3063,
-          "env": "77669984575435869936985255488547434367730011009976740959805899967667445567410",
-          "o": 101373
+          "dur": 3143,
+          "env": "7766998457543586993698525548854743436773001100997674095980589996766744556742000",
+          "o": 103440
         },
         "q6": {
-          "dur": 4354,
-          "env": "9889877788884388876663457951769654986445686798615697886756420667554087411000962887877546984189555887349776520",
-          "o": 104686
+          "dur": 4452,
+          "env": "9889877788884388876663457951769654986445686798615697886756420667554087411000962887877546984189555887349776520000",
+          "o": 106833
         },
         "a1": {
           "dur": 5082,
@@ -6739,29 +6803,29 @@
           "o": 121152
         },
         "a2": {
-          "dur": 3865,
-          "env": "7996322333300744687830001543963214563000788324577652455310006443677476399882258628744422497531110",
-          "o": 109290
+          "dur": 3934,
+          "env": "799632233330074468783000154396321456300078832457765245531000644367747639988225862874442249753111000",
+          "o": 111534
         },
         "a3": {
-          "dur": 3078,
-          "env": "89875356300393355434444681745457783736995784300039981975519914099566993213420",
-          "o": 113406
+          "dur": 3148,
+          "env": "8987535630039335543444468174545778373699578430003998197551991409956699321343000",
+          "o": 115718
         },
         "a4": {
-          "dur": 2762,
-          "env": "5631233433232100069957635623577553276655698994122223335999877556545200",
-          "o": 116733
+          "dur": 2834,
+          "env": "66412334333321000687477356235876632867656988841222343469999785576563000",
+          "o": 119117
         },
         "a5": {
-          "dur": 1532,
-          "env": "464699889541112420246766210003673873000",
-          "o": 119745
+          "dur": 1637,
+          "env": "46469988954111242024676621000367387300000",
+          "o": 122201
         },
         "a6": {
-          "dur": 868,
-          "env": "1357555157999986443200",
-          "o": 121526
+          "dur": 934,
+          "env": "135755515799998644320000",
+          "o": 124088
         },
         "m1": {
           "dur": 3779,
@@ -6769,84 +6833,84 @@
           "o": 139839
         },
         "m2": {
-          "dur": 3333,
-          "env": "499968887821554100028996246842468654100026499997434587500046159912998694799952695100",
-          "o": 122645
+          "dur": 3398,
+          "env": "4999688878215541000289962368424676541000264899974345875000461599129986947998526841000",
+          "o": 125272
         },
         "m3": {
-          "dur": 1478,
-          "env": "1458889999532456334315616897414742100",
-          "o": 126227
+          "dur": 1566,
+          "env": "1458889999532456334315616897414742100000",
+          "o": 128919
         },
         "m4": {
-          "dur": 1755,
-          "env": "59877949988762004999859964997873786218861341",
-          "o": 127955
+          "dur": 1835,
+          "env": "5987794998876200499985996499787378621886134100",
+          "o": 130736
         },
         "m5": {
-          "dur": 1546,
-          "env": "369764499797666653000399996617974413410",
-          "o": 129960
+          "dur": 1616,
+          "env": "36976449979766665300039999661797441341000",
+          "o": 132821
         },
         "m6": {
-          "dur": 1663,
-          "env": "789866549899951232000112652787477611343210",
-          "o": 131756
+          "dur": 1729,
+          "env": "78986654989995123200011265278747761134321000",
+          "o": 134688
         },
         "m7": {
-          "dur": 1767,
-          "env": "998766642110007777697656558576597306642226300",
-          "o": 133669
+          "dur": 1833,
+          "env": "9987666421100077776976565585765973066422263000",
+          "o": 136667
         },
         "d1": {
-          "dur": 5347,
-          "env": "97875898788730005999616789963089567775200067988979998886400039869999898308887300039878767779767961100998899999698788666409967975413720",
-          "o": 135687
+          "dur": 5402,
+          "env": "9787589878873000599961678996308956777520006798897999888640003986999989830888730003987876777976796110099889999969878866640996797541372000",
+          "o": 138750
         },
         "d2": {
-          "dur": 2293,
-          "env": "5544324878428999619964576222000974209996894389763363433200",
-          "o": 141283
+          "dur": 2365,
+          "env": "554432487842899961996457622200097420999689438976336343320000",
+          "o": 144402
         },
         "d3": {
-          "dur": 1867,
-          "env": "67843365265367654420000226999951277865668875310",
-          "o": 143827
+          "dur": 1930,
+          "env": "6784336526536765442000022699995127786566887531000",
+          "o": 147018
         },
         "d4": {
-          "dur": 935,
-          "env": "599999978898999528788510",
-          "o": 145944
+          "dur": 1019,
+          "env": "59999997889899952878851000",
+          "o": 149197
         },
         "d5": {
-          "dur": 2130,
-          "env": "655979669979899968686201100279699855320028788664642520",
-          "o": 147129
+          "dur": 2211,
+          "env": "65597966997989996868620110027969985532002878866464252000",
+          "o": 150466
         },
         "d6": {
-          "dur": 3049,
-          "env": "79977996599970575422000754404988983996658743431000594056522585975226855422100",
-          "o": 149509
+          "dur": 3107,
+          "env": "799769966999705754220007544049889839966587434310005940565225859752268554221000",
+          "o": 152927
         },
         "d7": {
-          "dur": 2494,
-          "env": "369763100069696385379982134487937405343465545566222542244433001",
-          "o": 152808
+          "dur": 2798,
+          "env": "2687553210003995956854999613247797473176538589567472325524454511021000",
+          "o": 156284
         },
         "end": {
-          "dur": 5115,
-          "env": "99868686679885875200089501009996999788887764101133204937889988999987788789988776588559576999677789886630007967877736877785650530",
-          "o": 155552
+          "dur": 5182,
+          "env": "9986868667988587520008950100999699978888776410113320493788998899998778878998877658855957699967778988663000796787773687778565053000",
+          "o": 159332
         },
         "q1d": {
-          "dur": 1513,
-          "env": "69984566541001899786533387999224996420",
-          "o": 88553
+          "dur": 1582,
+          "env": "6998456654100189978653338799922499642000",
+          "o": 90243
         },
         "q1g": {
-          "dur": 3211,
-          "env": "799898677789935376354221000757643333211005668786542000488662006995996873656642100",
-          "o": 90316
+          "dur": 3271,
+          "env": "7998986777899353763542210007576433332110056687865420004886620069959968736566421000",
+          "o": 92075
         },
         "d1n": {
           "dur": 5367,
@@ -6892,71 +6956,71 @@
           "id": "intro",
           "t": [
             0,
-            7171
+            7228
           ],
           "tail": 1700
         },
         {
           "id": "gig",
           "t": [
-            7171,
-            46623
+            7228,
+            47247
           ],
           "tail": 2000
         },
         {
           "id": "boe",
           "t": [
-            46623,
-            88454
+            47247,
+            89660
           ],
           "tail": 1800
         },
         {
           "id": "falls",
           "t": [
-            88454,
-            112691
+            89660,
+            114325
           ],
           "tail": 2000
         },
         {
           "id": "quati",
           "t": [
-            112691,
-            145888
+            114325,
+            148134
           ],
           "tail": 1800
         },
         {
           "id": "grenze",
           "t": [
-            145888,
-            164993
+            148134,
+            167621
           ],
           "tail": 2000
         },
         {
           "id": "boot",
           "t": [
-            164993,
-            186235
+            167621,
+            189298
           ],
           "tail": 2200
         },
         {
           "id": "duel",
           "t": [
-            186235,
-            217850
+            189298,
+            221630
           ],
           "tail": 2000
         },
         {
           "id": "end",
           "t": [
-            217850,
-            230254
+            221630,
+            234101
           ],
           "tail": 6489
         }
@@ -6974,7 +7038,7 @@
         {
           "key": "g1",
           "who": "narrator",
-          "at": 8671,
+          "at": 8728,
           "say": "Flughafen Galeão, sechs Uhr zehn. Zwei frisch Verheiratete landen in Brasilien. Einer davon bei Bewusstsein.",
           "text": "Galeão, 6:10 Uhr. Zwei frisch Verheiratete landen in Brasilien. Einer davon bei Bewusstsein.",
           "sc": "gig",
@@ -6983,7 +7047,7 @@
         {
           "key": "g2",
           "who": "dajo",
-          "at": 16975,
+          "at": 17104,
           "say": "Hallo Jungs! Greisel hat auf dem Flug zwei Schlaftabletten genommen.",
           "text": "Hallo Jungs! Greisel hat auf dem Flug zwei Schlaftabletten genommen. 💊",
           "sc": "gig",
@@ -6992,7 +7056,7 @@
         {
           "key": "g3",
           "who": "greisel",
-          "at": 20841,
+          "at": 21040,
           "say": "Schatz, wer sind diese Obdachlosen?",
           "text": "Schatz … wer sind diese Obdachlosen? 😳",
           "lol": [
@@ -7006,7 +7070,7 @@
         {
           "key": "g4",
           "who": "dajo",
-          "at": 23675,
+          "at": 23944,
           "say": "Deine Freunde. Du hast Ja gesagt. Zu allem.",
           "text": "Deine Freunde. Du hast Ja gesagt. Zu allem. 💍",
           "sc": "gig",
@@ -7015,7 +7079,7 @@
         {
           "key": "g5",
           "who": "greisel",
-          "at": 27522,
+          "at": 27858,
           "say": "Gib mir noch eine Tablette.",
           "text": "Gib mir noch eine Tablette. 💊",
           "lol": [
@@ -7030,7 +7094,7 @@
         {
           "key": "g6",
           "who": "jonas",
-          "at": 30438,
+          "at": 30855,
           "say": "Willkommen! Hier ist eure Rechnung für die erste Woche. Ihr wart ja im Herzen dabei.",
           "text": "Willkommen! Hier ist eure Rechnung für die erste Woche. Ihr wart ja im Herzen dabei. 🧾",
           "face": "cash",
@@ -7040,7 +7104,7 @@
         {
           "key": "g7",
           "who": "dajo",
-          "at": 35268,
+          "at": 35761,
           "say": "Abzüglich eures Hochzeitsgeschenks. Ach so. Da kam ja nichts.",
           "text": "Abzüglich eures Hochzeitsgeschenks. … Ach so. Da kam ja nichts. 🎁",
           "react": {
@@ -7052,7 +7116,7 @@
         {
           "key": "g8",
           "who": "narrator",
-          "at": 40488,
+          "at": 41055,
           "say": "Zum ersten Mal in seinem Leben schuldet Jonas jemandem Geld.",
           "text": "Zum ersten Mal in seinem Leben schuldet Jonas jemandem Geld. 💸",
           "lol": 1,
@@ -7063,7 +7127,7 @@
         {
           "key": "b1",
           "who": "narrator",
-          "at": 48123,
+          "at": 48747,
           "say": "Flug nach Iguaçu. Beim Boarding gilt: Wer zuerst drin ist, hat gewonnen. Patrick verliert nie.",
           "text": "Flug nach Iguaçu. Beim Boarding gilt: Wer zuerst drin ist, hat gewonnen. Patrick verliert nie.",
           "sc": "boe",
@@ -7072,7 +7136,7 @@
         {
           "key": "b2",
           "who": "patrick",
-          "at": 56250,
+          "at": 56977,
           "say": "Ich hab mir einen Rollstuhl bestellt. Ich darf als Erster rein. Für zwölf Euro.",
           "text": "Ich hab mir einen Rollstuhl bestellt. Ich darf als Erster rein. Für 12 €. ♿",
           "face": "cash",
@@ -7082,7 +7146,7 @@
         {
           "key": "b3",
           "who": "simon",
-          "at": 60101,
+          "at": 60897,
           "say": "Patrick! Du kannst doch laufen!",
           "text": "Patrick! Du kannst doch laufen!",
           "vo": {
@@ -7095,7 +7159,7 @@
         {
           "key": "b4",
           "who": "patrick",
-          "at": 62546,
+          "at": 63402,
           "say": "Leise! Ich bin der Älteste. Mein Ausweis ist mein ärztliches Attest.",
           "text": "Leise! Ich bin der Älteste. Mein Ausweis ist mein ärztliches Attest. 👴",
           "roll": "simon",
@@ -7109,7 +7173,7 @@
         {
           "key": "b5",
           "who": "dajo",
-          "at": 67780,
+          "at": 68717,
           "say": "Moment! Ist das etwa eine Boing?",
           "text": "Moment … ist das etwa eine BOEING?! 😱",
           "face": "shock",
@@ -7121,7 +7185,7 @@
         {
           "key": "b6",
           "who": "pilot",
-          "at": 70547,
+          "at": 71547,
           "say": "Liebe Fluggäste, keine Sorge. Die Tür ist nur mit Klebeband befestigt. Mit dem guten Klebeband.",
           "text": "📢 Liebe Fluggäste, keine Sorge: Die Tür ist nur mit Klebeband befestigt. Mit dem guten Klebeband.",
           "react": {
@@ -7136,7 +7200,7 @@
         {
           "key": "b7",
           "who": "dajo",
-          "at": 77383,
+          "at": 78451,
           "say": "Schatz. Wenn wir abstürzen: Ich hab dich nur wegen der Bonusmeilen geheiratet.",
           "text": "Schatz … wenn wir abstürzen: Ich hab dich nur wegen der Bonusmeilen geheiratet. ✈️",
           "sc": "boe",
@@ -7145,7 +7209,7 @@
         {
           "key": "b8",
           "who": "greisel",
-          "at": 83862,
+          "at": 84996,
           "say": "Und ich dich wegen dem Fensterplatz. Rutsch rüber.",
           "text": "Und ich dich wegen dem Fensterplatz. Rutsch rüber. 🪟",
           "vo": {
@@ -7160,7 +7224,7 @@
         {
           "key": "f2",
           "who": "simon",
-          "at": 89954,
+          "at": 91160,
           "say": "Das ist genau das Gegenteil von Patrick nachts auf dem Klo.",
           "text": "Das ist genau das Gegenteil von Patrick nachts auf dem Klo. 🚽",
           "vo": {
@@ -7183,7 +7247,7 @@
         {
           "key": "f3",
           "who": "patrick",
-          "at": 93361,
+          "at": 94655,
           "say": "Ich höre das Wasser rauschen. Ich muss schon wieder.",
           "text": "Ich hör das Wasser rauschen … ich muss schon wieder. 😬",
           "face": "shock",
@@ -7194,7 +7258,7 @@
         {
           "key": "f4",
           "who": "greisel",
-          "at": 97238,
+          "at": 98613,
           "say": "Schatz, endlich. Ein romantisches Foto. Nur wir zwei.",
           "text": "Schatz, endlich: ein romantisches Foto. Nur wir zwei. 💍📸",
           "sc": "falls",
@@ -7203,7 +7267,7 @@
         {
           "key": "f5",
           "who": "simon",
-          "at": 101805,
+          "at": 103253,
           "say": "Oi, gatinha!",
           "text": "Oi, gatinha! 😘",
           "vo": {
@@ -7220,7 +7284,7 @@
         {
           "key": "f6",
           "who": "narrator",
-          "at": 105214,
+          "at": 106727,
           "say": "Simon wurde nie wieder gesehen. Bis zum Abendessen.",
           "text": "Simon wurde nie wieder gesehen. … Bis zum Abendessen.",
           "sc": "falls",
@@ -7229,7 +7293,7 @@
         {
           "key": "f7",
           "who": "dajo",
-          "at": 109066,
+          "at": 110636,
           "say": "Aber das Foto ist schön geworden.",
           "text": "Aber das Foto ist schön geworden. 🖼️",
           "lol": [
@@ -7243,7 +7307,7 @@
         {
           "key": "q1",
           "who": "narrator",
-          "at": 114191,
+          "at": 115825,
           "say": "Achtung: die Nasenbären von Iguaçu. Organisierte Kriminalität mit Ringelschwanz.",
           "text": "Achtung: die Nasenbären von Iguaçu. Organisierte Kriminalität mit Ringelschwanz. 🦝",
           "sc": "quati",
@@ -7255,7 +7319,7 @@
           "say": "Hey! Mein Sandwich!",
           "text": "Hey! Mein Sandwich! 🥪",
           "face": "angry",
-          "at": 119801,
+          "at": 121492,
           "sc": "quati",
           "gap": 500
         },
@@ -7268,14 +7332,14 @@
             "patrick",
             "marco"
           ],
-          "at": 121814,
+          "at": 123574,
           "sc": "quati",
           "gap": 500
         },
         {
           "key": "q2",
           "who": "jonas",
-          "at": 125625,
+          "at": 127445,
           "say": "Eintritt: vierzig Euro pro Person. Ich trag es gleich in Splitwise ein.",
           "text": "Eintritt: 40 € pro Person. Ich trag’s gleich in Splitwise ein. 📱",
           "sc": "quati",
@@ -7284,7 +7348,7 @@
         {
           "key": "q3",
           "who": "jonas",
-          "at": 130359,
+          "at": 132254,
           "say": "Er hat mein Handy! Da ist Splitwise drauf!",
           "text": "Er hat mein Handy!! Da ist Splitwise drauf!! 😱",
           "face": "shock",
@@ -7294,7 +7358,7 @@
         {
           "key": "q4",
           "who": "marco",
-          "at": 133199,
+          "at": 135199,
           "say": "Lass ihn laufen! Wir sind frei!",
           "text": "Lass ihn laufen! Wir sind frei! 🕊️",
           "vo": {
@@ -7311,7 +7375,7 @@
         {
           "key": "q5",
           "who": "patrick",
-          "at": 135371,
+          "at": 137439,
           "say": "Ich war achthundert Euro im Minus. Ich adoptiere dieses Tier.",
           "text": "Ich war 800 € im Minus. Ich adoptiere dieses Tier. 🥹",
           "face": "heart",
@@ -7322,7 +7386,7 @@
         {
           "key": "q6",
           "who": "narrator",
-          "at": 139734,
+          "at": 141882,
           "say": "Der Nasenbär hat sich nach Argentinien abgesetzt. Mit dem Gruppenkonto.",
           "text": "Der Nasenbär hat sich nach Argentinien abgesetzt. Mit dem Gruppenkonto. 🇦🇷",
           "mad": "jonas",
@@ -7336,7 +7400,7 @@
         {
           "key": "a2",
           "who": "officer",
-          "at": 147388,
+          "at": 149634,
           "say": "Pass, bitte. Moment. Dani Olmo? Ein Autogramm für meinen Sohn!",
           "text": "Pass, bitte … Moment. DANI OLMO?! Ein Autogramm für meinen Sohn! ⚽",
           "name": "Grenzbeamter",
@@ -7346,7 +7410,7 @@
         {
           "key": "a3",
           "who": "marco",
-          "at": 151903,
+          "at": 154218,
           "say": "Gerne. Und für Sie hätte ich noch eine Wohnung. Vierter Stock, ohne Aufzug.",
           "text": "Gerne. Und für Sie hätte ich noch eine Wohnung. 4. Stock, ohne Aufzug. 🏢",
           "vo": {
@@ -7361,7 +7425,7 @@
         {
           "key": "a4",
           "who": "officer",
-          "at": 156481,
+          "at": 158866,
           "say": "Und Sie? Auf dem Foto haben Sie Haare.",
           "text": "Und Sie? Auf dem Foto haben Sie Haare. 🤨",
           "name": "Grenzbeamter",
@@ -7374,7 +7438,7 @@
         {
           "key": "a5",
           "who": "jonas",
-          "at": 159843,
+          "at": 162300,
           "say": "Die Haare sind nur im Urlaub.",
           "text": "Die Haare sind nur im Urlaub. 😅",
           "sc": "grenze",
@@ -7383,7 +7447,7 @@
         {
           "key": "a6",
           "who": "officer",
-          "at": 162125,
+          "at": 164687,
           "say": "Zelle drei.",
           "text": "Zelle drei. 🔒",
           "name": "Grenzbeamter",
@@ -7399,7 +7463,7 @@
         {
           "key": "m2",
           "who": "dajo",
-          "at": 166493,
+          "at": 169121,
           "say": "Regenjacke. Taucherbrille. Schnorchel. Ich bin vorbereitet.",
           "text": "Regenjacke, Taucherbrille, Schnorchel. Ich bin vorbereitet. 🥽",
           "comedy": {
@@ -7411,7 +7475,7 @@
         {
           "key": "m3",
           "who": "marco",
-          "at": 170476,
+          "at": 173169,
           "say": "Wir auch. Wir sind betrunken.",
           "text": "Wir auch. Wir sind betrunken. 🍻",
           "vo": {
@@ -7430,7 +7494,7 @@
         {
           "key": "m4",
           "who": "patrick",
-          "at": 174754,
+          "at": 177535,
           "say": "Mein Gebiss! Mein Gebiss ist weg!",
           "text": "Mein Gebiss!! Mein Gebiss ist weg!! 🦷",
           "face": "shock",
@@ -7441,7 +7505,7 @@
         {
           "key": "m5",
           "who": "greisel",
-          "at": 178009,
+          "at": 180870,
           "say": "Wo bin ich? Bin ich tot?",
           "text": "Wo bin ich? Bin ich tot? 😵",
           "face": "dizzy",
@@ -7451,7 +7515,7 @@
         {
           "key": "m6",
           "who": "dajo",
-          "at": 179855,
+          "at": 182786,
           "say": "Nein, Schatz. Flitterwochen.",
           "text": "Nein, Schatz. Flitterwochen. 💕",
           "sc": "boot",
@@ -7460,7 +7524,7 @@
         {
           "key": "m7",
           "who": "greisel",
-          "at": 182268,
+          "at": 185265,
           "say": "Ach so. Dann wäre ich lieber tot.",
           "text": "Ach so. Dann wär ich lieber tot. 💀",
           "vo": {
@@ -7476,7 +7540,7 @@
         {
           "key": "d1",
           "who": "narrator",
-          "at": 187735,
+          "at": 190798,
           "say": "Abends. Ein Trinkduell. Daijo gegen Marco. Tschechien gegen den Rest der Welt.",
           "text": "Abends. Trinkduell: Daijo 🇨🇿 gegen Marco. Tschechien gegen den Rest der Welt.",
           "sc": "duel",
@@ -7487,14 +7551,14 @@
           "who": "card",
           "text": "12 Shots später …",
           "cdur": 2400,
-          "at": 193582,
+          "at": 196700,
           "sc": "duel",
           "gap": 500
         },
         {
           "key": "d2",
           "who": "marco",
-          "at": 197482,
+          "at": 200600,
           "say": "Ich sehe drei Daijos. Und alle drei gewinnen.",
           "text": "Ich seh drei Daijos … und alle drei gewinnen. 🥴",
           "vo": {
@@ -7513,7 +7577,7 @@
         {
           "key": "d3",
           "who": "dajo",
-          "at": 200375,
+          "at": 203565,
           "say": "Noch eine Runde. Zahlt mein Mann.",
           "text": "Noch eine Runde. Zahlt mein Mann. 💳",
           "roll": "marco",
@@ -7523,7 +7587,7 @@
         {
           "key": "d4",
           "who": "greisel",
-          "at": 202942,
+          "at": 206195,
           "say": "Ja, Schatz.",
           "text": "Ja, Schatz … 😴",
           "lol": [
@@ -7537,7 +7601,7 @@
         {
           "key": "d5",
           "who": "patrick",
-          "at": 205677,
+          "at": 209014,
           "say": "Ich mal schon mal den Umriss. Für die Versicherung.",
           "text": "Ich mal schon mal den Umriss. Für die Versicherung. ✏️",
           "lol": 1,
@@ -7547,7 +7611,7 @@
         {
           "key": "d6",
           "who": "simon",
-          "at": 209607,
+          "at": 213025,
           "say": "Hallo Leute! Ich bin noch am Leben! Hat mich jemand vermisst?",
           "text": "Hallo Leute! Ich bin noch am Leben! Hat mich jemand vermisst? 🐟",
           "vo": {
@@ -7560,8 +7624,8 @@
         {
           "key": "d7",
           "who": "jonas",
-          "at": 213356,
-          "say": "Nein. Aber der Nasenbär hat dir schon eine Rechnung geschickt.",
+          "at": 216832,
+          "say": "Nein, aber der Nasenbär hat dir schon eine Rechnung geschickt",
           "text": "Nein. Aber der Nasenbär hat dir schon eine Rechnung geschickt. 🦝🧾",
           "rshot": "simon",
           "lol": 1,
@@ -7572,7 +7636,7 @@
         {
           "key": "end",
           "who": "narrator",
-          "at": 218650,
+          "at": 222430,
           "say": "Nächste Folge: Ab in den Dschungel. Die Kaimane haben Jonas Foto schon gesehen. Und sich gefreut.",
           "text": "Nächste Folge: Ab in den Dschungel. Die Kaimane haben Jonas’ Foto schon gesehen. Und sich gefreut. 🐊",
           "sc": "end",
@@ -7790,7 +7854,7 @@
         {
           "key": "h1",
           "who": "narrator",
-          "at": 9215,
+          "at": 9403,
           "say": "Manaus, zwei Uhr nachts, dreißig Grad, Simon kommt nach Hause, zumindest der Teil, den man ihm gelassen hat",
           "text": "Manaus, 2 Uhr nachts, 30 Grad. Simon kommt nach Hause. Zumindest der Teil, den man ihm gelassen hat.",
           "sc": "hos",
@@ -7799,7 +7863,7 @@
         {
           "key": "h2",
           "who": "simon",
-          "at": 16833,
+          "at": 17098,
           "say": "Jungs! Ich hab geknutscht! Mit Zunge! Und sie hat mich überall angefasst!",
           "text": "Jungs! Ich hab geknutscht! Mit Zunge! Und sie hat mich überall angefasst! 💋",
           "face": "heart",
@@ -7809,7 +7873,7 @@
         {
           "key": "h3",
           "who": "jonas",
-          "at": 21542,
+          "at": 21872,
           "say": "Überall? Auch da, wo dein Handy war?",
           "text": "Überall? Auch da, wo dein Handy war? 🤨",
           "lol": [
@@ -7822,7 +7886,7 @@
         {
           "key": "h4",
           "who": "simon",
-          "at": 24295,
+          "at": 24720,
           "say": "Handy weg. Geldbeutel weg. Schuhe weg.",
           "text": "Handy weg. Geldbeutel weg. Schuhe weg. 😱",
           "face": "shock",
@@ -7833,7 +7897,7 @@
         {
           "key": "h5",
           "who": "patrick",
-          "at": 26971,
+          "at": 27460,
           "say": "Aber die Unterhose hast du noch?",
           "text": "Aber die Unterhose hast du noch? 🩲",
           "sc": "hos",
@@ -7842,7 +7906,7 @@
         {
           "key": "h6",
           "who": "simon",
-          "at": 29377,
+          "at": 29946,
           "say": "Ja. Aber das ist nicht meine.",
           "text": "Ja … aber das ist nicht meine. 👙",
           "laugh": 1,
@@ -7857,7 +7921,7 @@
         {
           "key": "h7",
           "who": "narrator",
-          "at": 33324,
+          "at": 33963,
           "say": "Simon schreibt ihr bis heute jeden Abend. Sie antwortet sogar. Von seinem Handy.",
           "text": "Simon schreibt ihr bis heute jeden Abend. Sie antwortet sogar. Von seinem Handy. 📱",
           "palm": "simon",
@@ -7871,7 +7935,7 @@
         {
           "key": "r1",
           "who": "narrator",
-          "at": 40025,
+          "at": 40838,
           "say": "Am nächsten Morgen. Zwei Flüsse treffen sich und vermischen sich nicht.",
           "text": "Am nächsten Morgen: Zwei Flüsse treffen sich – und vermischen sich nicht. 🟫🟨",
           "sc": "rio",
@@ -7880,7 +7944,7 @@
         {
           "key": "r2",
           "who": "jonas",
-          "at": 43962,
+          "at": 44870,
           "say": "Wie Simon und die Frauen. Kilometerlang nebeneinander. Nie Kontakt.",
           "text": "Wie Simon und die Frauen. Kilometerlang nebeneinander. Nie Kontakt.",
           "react": {
@@ -7894,7 +7958,7 @@
         {
           "key": "r3",
           "who": "guide",
-          "at": 49275,
+          "at": 50269,
           "say": "Olja! Rosa Flussdelfine!",
           "text": "Olha! Rosa Flussdelfine! 🐬",
           "name": "Guide",
@@ -7904,7 +7968,7 @@
         {
           "key": "r4",
           "who": "patrick",
-          "at": 53378,
+          "at": 54439,
           "say": "Ein rosa Delfin. Endlich einer mit Simons Hautfarbe.",
           "text": "Ein rosa Delfin. Endlich einer mit Simons Hautfarbe. 🦞",
           "rshot": "simon",
@@ -7916,7 +7980,7 @@
         {
           "key": "r5",
           "who": "marco",
-          "at": 58149,
+          "at": 59292,
           "say": "Ähm. Die Blasen da hinten. Das war kein Delfin.",
           "text": "Ähm … die Blasen da hinten. Das war kein Delfin. 💨",
           "palm": "dajo",
@@ -7926,7 +7990,7 @@
         {
           "key": "r6",
           "who": "simon",
-          "at": 62647,
+          "at": 63862,
           "say": "Ich küss ihn. Das bringt Glück.",
           "text": "Ich küss ihn. Das bringt Glück. 😘🐬",
           "sc": "rio",
@@ -7935,7 +7999,7 @@
         {
           "key": "r7",
           "who": "greisel",
-          "at": 65485,
+          "at": 66776,
           "say": "Schatz. Mir ist schlecht.",
           "text": "Schatz … mir ist schlecht. 🤢",
           "face": "dizzy",
@@ -7945,7 +8009,7 @@
         {
           "key": "r8",
           "who": "dajo",
-          "at": 68102,
+          "at": 69457,
           "say": "Nicht in den Fluss! Das ist ein Naturschutzgebiet!",
           "text": "Nicht in den Fluss! Das ist ein Naturschutzgebiet!",
           "face": "shock",
@@ -7963,7 +8027,7 @@
         {
           "key": "l2",
           "who": "jonas",
-          "at": 75875,
+          "at": 77318,
           "say": "Kleine Info: Das Eis in den Caipirinhas ist aus Flusswasser.",
           "text": "Kleine Info: Das Eis in den Caipirinhas ist aus Flusswasser. 🧊",
           "sc": "cab",
@@ -7972,7 +8036,7 @@
         {
           "key": "l3",
           "who": "marco",
-          "at": 79541,
+          "at": 81076,
           "say": "Ich hatte sechs.",
           "text": "Ich hatte sechs. 😳",
           "face": "shock",
@@ -7989,7 +8053,7 @@
         {
           "key": "l4",
           "who": "narrator",
-          "at": 82703,
+          "at": 84309,
           "say": "Er hat es fast geschafft.",
           "text": "Er hat es … fast geschafft. 💩",
           "sc": "cab",
@@ -7998,7 +8062,7 @@
         {
           "key": "l5",
           "who": "narrator",
-          "at": 87312,
+          "at": 88992,
           "say": "Das Erdbebenzentrum Manaus meldete Stärke vier Komma zwei. Epizentrum: Kabine drei.",
           "text": "Erdbebenzentrum Manaus: Stärke 4,2. Epizentrum: Kabine 3. 📈",
           "sc": "cab",
@@ -8007,7 +8071,7 @@
         {
           "key": "l6",
           "who": "patrick",
-          "at": 93235,
+          "at": 95030,
           "say": "Die Affen flüchten! Sogar die Affen flüchten!",
           "text": "Die Affen flüchten! Sogar die Affen flüchten! 🐒",
           "face": "shock",
@@ -8017,7 +8081,7 @@
         {
           "key": "l7",
           "who": "marco",
-          "at": 96541,
+          "at": 98407,
           "say": "Klopapier! Wer hat das Klopapier?",
           "text": "Klopapier!! Wer hat das Klopapier?! 🧻",
           "face": "shock",
@@ -8027,7 +8091,7 @@
         {
           "key": "l8",
           "who": "marco",
-          "at": 101371,
+          "at": 103322,
           "say": "Egal. Ich nehm das große Blatt hier.",
           "text": "Egal. Ich nehm das große Blatt hier. 🍃",
           "sc": "cab",
@@ -8036,7 +8100,7 @@
         {
           "key": "l9",
           "who": "guide",
-          "at": 104208,
+          "at": 106246,
           "say": "Nau! Das ist Feuerblatt! Brennt drei Tage!",
           "text": "Não!! Das ist Feuerblatt! Brennt drei Tage! 🔥",
           "name": "Guide",
@@ -8047,7 +8111,7 @@
         {
           "key": "l10",
           "who": "narrator",
-          "at": 110104,
+          "at": 112205,
           "say": "Marco lernte an diesem Tag zwei portugiesische Wörter. Hospital. Und Ai.",
           "text": "Marco lernte an diesem Tag zwei portugiesische Wörter: „Hospital“. Und „Ai“. 🚑",
           "sc": "cab",
@@ -8056,7 +8120,7 @@
         {
           "key": "p2",
           "who": "dajo",
-          "at": 117181,
+          "at": 119436,
           "say": "Fünf Stück. Und ihr Weicheier? Null.",
           "text": "Fünf Stück. Und ihr Weicheier? Null. 🐟",
           "sc": "pir",
@@ -8065,7 +8129,7 @@
         {
           "key": "p3",
           "who": "marco",
-          "at": 120590,
+          "at": 122987,
           "say": "Wie machst du das?",
           "text": "Wie machst du das?",
           "sc": "pir",
@@ -8074,7 +8138,7 @@
         {
           "key": "p4",
           "who": "dajo",
-          "at": 122111,
+          "at": 124577,
           "say": "Ganz einfach. Ich hab Greisels Fuß ins Wasser gehängt.",
           "text": "Ganz einfach. Ich hab Greisels Fuß ins Wasser gehängt. 🦶",
           "react": {
@@ -8091,7 +8155,7 @@
         {
           "key": "p5",
           "who": "greisel",
-          "at": 126413,
+          "at": 128992,
           "say": "Kitzelt ein bisschen.",
           "text": "Kitzelt ein bisschen. 😎",
           "lol": [
@@ -8104,7 +8168,7 @@
         {
           "key": "p6",
           "who": "patrick",
-          "at": 128923,
+          "at": 131686,
           "say": "Ich hab einen! Der ist riesig!",
           "text": "Ich hab einen! Der ist riesig! 🎣",
           "sc": "pir",
@@ -8113,7 +8177,7 @@
         {
           "key": "p7",
           "who": "patrick",
-          "at": 132525,
+          "at": 135367,
           "say": "Mein Gebiss! Er hat es mir zurückgebracht!",
           "text": "Mein Gebiss!! Er hat es mir zurückgebracht! 🦷",
           "face": "heart",
@@ -8124,7 +8188,7 @@
         {
           "key": "j2",
           "who": "marco",
-          "at": 138305,
+          "at": 141258,
           "say": "Rülps-Duell! Ich gegen Daijo! Wer verliert, zahlt!",
           "text": "Rülps-Duell! Ich gegen Daijo! Wer verliert, zahlt!",
           "comedy": {
@@ -8137,7 +8201,7 @@
         {
           "key": "j3",
           "who": "marco",
-          "at": 145059,
+          "at": 148081,
           "say": "Na? Schlag das, Tschechin!",
           "text": "Na? Schlag das, Tschechin! 😏",
           "sc": "jbar",
@@ -8146,7 +8210,7 @@
         {
           "key": "j4",
           "who": "narrator",
-          "at": 151040,
+          "at": 154138,
           "say": "Ein Jaguar im Wald hat sich ergeben.",
           "text": "Ein Jaguar im Wald hat sich ergeben. 🐆🏳️",
           "lol": 1,
@@ -8159,7 +8223,7 @@
           "say": "Hicks! Zehn Punkte für mich!",
           "text": "Hicks! … 10 Punkte für mich. 🫢",
           "lol": 1,
-          "at": 153815,
+          "at": 157023,
           "sc": "jbar",
           "gap": 700
         },
@@ -8168,14 +8232,14 @@
           "who": "card",
           "text": "9 Caipirinhas später …",
           "cdur": 2400,
-          "at": 156674,
+          "at": 159957,
           "sc": "jbar",
           "gap": 1200
         },
         {
           "key": "j5",
           "who": "jonas",
-          "at": 159674,
+          "at": 162957,
           "say": "Leute! Ich liebe euch! Ab heute gibt es Demokratie! Wir stimmen ab!",
           "text": "Leute! Ich liebe euch! Ab heute gibt’s Demokratie! Wir stimmen ab! 🗳️",
           "face": "dizzy",
@@ -8185,7 +8249,7 @@
         {
           "key": "j6",
           "who": "patrick",
-          "at": 165025,
+          "at": 168384,
           "say": "Schnell! Abstimmen, bevor er nüchtern wird!",
           "text": "Schnell! Abstimmen, bevor er nüchtern wird! ✋",
           "lol": [
@@ -8199,7 +8263,7 @@
         {
           "key": "j7",
           "who": "narrator",
-          "at": 168849,
+          "at": 172320,
           "say": "Stromausfall.",
           "text": "Stromausfall. 🔌",
           "sc": "jbar",
@@ -8208,7 +8272,7 @@
         {
           "key": "j8",
           "who": "simon",
-          "at": 171986,
+          "at": 175567,
           "say": "Wer auch immer du bist: Du küsst wie ein Engel. Ein bisschen kratzig.",
           "text": "Wer auch immer du bist: Du küsst wie ein Engel. Ein bisschen kratzig. 😍",
           "sc": "jbar",
@@ -8217,7 +8281,7 @@
         {
           "key": "j9",
           "who": "patrick",
-          "at": 176954,
+          "at": 180618,
           "say": "Gefällt dir meine Goldkette?",
           "text": "Gefällt dir meine Goldkette? 📿",
           "rshot": "simon",
@@ -8239,7 +8303,7 @@
         {
           "key": "j10",
           "who": "narrator",
-          "at": 179903,
+          "at": 183656,
           "say": "Zwei Küsse in Brasilien. Einer hat ihn ausgeraubt. Der andere war Patrick.",
           "text": "Zwei Küsse in Brasilien. Einer hat ihn ausgeraubt. Der andere war Patrick.",
           "laugh": 1,
@@ -8249,7 +8313,7 @@
         {
           "key": "k2",
           "who": "guide",
-          "at": 187712,
+          "at": 191628,
           "say": "Psst. Kaimane sieht man nachts nur an den Augen.",
           "text": "Psst. Kaimane sieht man nachts nur an den Augen. 🔦",
           "name": "Guide",
@@ -8259,7 +8323,7 @@
         {
           "key": "k3",
           "who": "jonas",
-          "at": 192563,
+          "at": 196532,
           "say": "Warum gucken alle Augen zu mir?",
           "text": "Warum gucken alle Augen zu mir?! 👀",
           "face": "shock",
@@ -8269,7 +8333,7 @@
         {
           "key": "k4",
           "who": "marco",
-          "at": 195205,
+          "at": 199254,
           "say": "Deine Glatze spiegelt die Taschenlampe. Du bist ein Leuchtturm.",
           "text": "Deine Glatze spiegelt die Taschenlampe. Du bist ein Leuchtturm. 🗼",
           "lol": 1,
@@ -8280,7 +8344,7 @@
         {
           "key": "k5",
           "who": "guide",
-          "at": 201301,
+          "at": 205446,
           "say": "Sokorro! Hilfe!",
           "text": "Socorro!! Hilfe!! 🆘",
           "name": "Guide",
@@ -8292,7 +8356,7 @@
         {
           "key": "k6",
           "who": "jonas",
-          "at": 203549,
+          "at": 207781,
           "say": "Abstimmung! Wer ist dafür, dass wir ihn retten?",
           "text": "Abstimmung! Wer ist dafür, dass wir ihn retten? 🗳️",
           "sc": "kai",
@@ -8301,7 +8365,7 @@
         {
           "key": "k7",
           "who": "dajo",
-          "at": 208387,
+          "at": 212700,
           "say": "Er hat den Bootsschlüssel.",
           "text": "Er hat den Bootsschlüssel. 🔑",
           "lol": 1,
@@ -8311,7 +8375,7 @@
         {
           "key": "k8",
           "who": "narrator",
-          "at": 211663,
+          "at": 216052,
           "say": "Einstimmig. Demokratie funktioniert. Der Kaiman trägt jetzt Fischerhut.",
           "text": "Einstimmig. Demokratie funktioniert. Der Kaiman trägt jetzt Fischerhut. 🐊👒",
           "sc": "kai",
@@ -8320,7 +8384,7 @@
         {
           "key": "e1",
           "who": "marco",
-          "at": 220932,
+          "at": 225474,
           "say": "Wo ist meine Zahnbürste? Der Affe putzt sich damit den Hintern!",
           "text": "Wo ist meine Zahnbürste?! Der Affe putzt sich damit den Hintern! 🐒🪥",
           "face": "angry",
@@ -8330,7 +8394,7 @@
         {
           "key": "e2",
           "who": "patrick",
-          "at": 225073,
+          "at": 229681,
           "say": "Keine Sorge. Ich hab sie schon schlimmer benutzt.",
           "text": "Keine Sorge. Ich hab sie schon schlimmer benutzt. 😇",
           "laugh": 1,
@@ -8345,7 +8409,7 @@
         {
           "key": "e3",
           "who": "greisel",
-          "at": 229554,
+          "at": 234648,
           "say": "Ich wollte nur testen, ob der Boden hält.",
           "text": "Ich wollte nur testen, ob der Boden hält. 🧐",
           "sc": "ham",
@@ -8354,7 +8418,7 @@
         {
           "key": "e4",
           "who": "dajo",
-          "at": 231808,
+          "at": 236969,
           "say": "Und?",
           "text": "Und? 🤨",
           "sc": "ham",
@@ -8363,7 +8427,7 @@
         {
           "key": "e5",
           "who": "greisel",
-          "at": 232971,
+          "at": 238209,
           "say": "Der Boden hält. Mein Rücken nicht.",
           "text": "Der Boden hält. Mein Rücken nicht. 🦴",
           "lol": 1,
@@ -8373,7 +8437,7 @@
         {
           "key": "e6",
           "who": "jonas",
-          "at": 236931,
+          "at": 242235,
           "say": "Simon, Splitwise meldet sich: Dein Handy hat gerade vierhundert Euro überwiesen. An Gatinha",
           "text": "Simon, Splitwise meldet sich: Dein Handy hat gerade 400 € überwiesen. An „Gatinha“. 📱💸",
           "sc": "ham",
@@ -8390,12 +8454,12 @@
           "lol": 1,
           "sc": "ham",
           "gap": 700,
-          "at": 241866
+          "at": 247250
         },
         {
           "key": "end",
           "who": "narrator",
-          "at": 248417,
+          "at": 253868,
           "say": "Nächste Folge: Paraty und Ilha Grande. Die letzten Tage. Die letzten Nerven.",
           "text": "Nächste Folge: Paraty & Ilha Grande. Die letzten Tage. Die letzten Nerven.",
           "sc": "end",
@@ -8407,79 +8471,79 @@
           "id": "intro",
           "t": [
             0,
-            7815
+            8003
           ],
           "tail": 1600
         },
         {
           "id": "hos",
           "t": [
-            7815,
-            38725
+            8003,
+            39538
           ],
           "tail": 1800
         },
         {
           "id": "rio",
           "t": [
-            38725,
-            74575
+            39538,
+            76018
           ],
           "tail": 4200
         },
         {
           "id": "cab",
           "t": [
-            74575,
-            115881
+            76018,
+            118136
           ],
           "tail": 1800
         },
         {
           "id": "pir",
           "t": [
-            115881,
-            137005
+            118136,
+            139958
           ],
           "tail": 2100
         },
         {
           "id": "jbar",
           "t": [
-            137005,
-            186412
+            139958,
+            190328
           ],
           "tail": 1800
         },
         {
           "id": "kai",
           "t": [
-            186412,
-            218732
+            190328,
+            223274
           ],
           "tail": 1800
         },
         {
           "id": "ham",
           "t": [
-            218732,
-            248117
+            223274,
+            253568
           ],
           "tail": 5200
         },
         {
           "id": "end",
           "t": [
-            248117,
-            264029
+            253568,
+            269641
           ],
           "tail": 11500
         }
       ],
       "voice": {
         "intro": {
-          "dur": 4715,
-          "env": "5997766685347773000510029988976798765300079997877410004567699457977755300020006972000799799996679896320006999997766530",
+          "dur": 4903,
+          "env": "599776667534776300051000499788667977553000899877763100005779798457976555200120000796100089969998668989643000899999776553000",
           "o": 250
         },
         "recap": {
@@ -8488,79 +8552,79 @@
           "o": 5215
         },
         "h1": {
-          "dur": 5018,
-          "env": "997887697620066365667779975551875000986676753668641003976566998356319945775764310076399997728615888555400069999579785878654620",
-          "o": 5215
+          "dur": 5095,
+          "env": "99788769762006636566777997555187500098667676366864100397656699835631994577576431007639999772861578865530006999957968587865463000",
+          "o": 5403
         },
         "h2": {
-          "dur": 4109,
-          "env": "2499987512100055346950562458723522000377012239988774100397720221001255687026541473886755675462259432110",
-          "o": 10482
+          "dur": 4174,
+          "env": "249998751210005534695056245872352200037701223998877410039772022100125568702654147388675567546225943211000",
+          "o": 10748
         },
         "h3": {
-          "dur": 1853,
-          "env": "45432779998963331006994129972658422332435964210",
-          "o": 14842
+          "dur": 1948,
+          "env": "4543277999896333100699412997265842233243596421000",
+          "o": 15172
         },
         "h4": {
-          "dur": 2026,
-          "env": "898576269400000079940098337359601000146679957971210",
-          "o": 16945
+          "dur": 2090,
+          "env": "89857626940000007994009833735960100014667995797121000",
+          "o": 17370
         },
         "h5": {
-          "dur": 1656,
-          "env": "894998766521003659855753796796775417888620",
-          "o": 19221
+          "dur": 1736,
+          "env": "89499876652100365985575379679677541788862000",
+          "o": 19710
         },
         "h6": {
-          "dur": 1747,
-          "env": "66599998521000000495999511932223421278653210",
-          "o": 21127
+          "dur": 1817,
+          "env": "6659999852100000049599951193222342127865321000",
+          "o": 21696
         },
         "h7": {
-          "dur": 3601,
-          "env": "6868989988667511375887578726868849667747841210006655563453857649989960003759766899999775510",
-          "o": 23124
+          "dur": 3775,
+          "env": "68689899886675113758875787268688496677478412100005756574353766656989981000154988669999949563000",
+          "o": 23762
         },
         "r1": {
-          "dur": 3287,
-          "env": "99789778449999863775101331007756754675878735676266776565000995776987666746749755010",
-          "o": 26976
+          "dur": 3382,
+          "env": "9978977844999986377510133100775675467587873567626677656500099577698766674674975501000",
+          "o": 27787
         },
         "r2": {
-          "dur": 4113,
-          "env": "3532245689431000173115421000179987310000026775636579533100002545532056347426541000002555420466303997200",
-          "o": 30513
+          "dur": 4199,
+          "env": "353224568943100017311542100017998731000002677563657953310000254553205634742654100000255542046630399720000",
+          "o": 31420
         },
         "r3": {
-          "dur": 2703,
-          "env": "69999978888974100013347999998986464200005996971298441995126654875200",
-          "o": 34875
+          "dur": 2770,
+          "env": "6999997867786410001334799999998646420000599696129844189512665476420000",
+          "o": 35869
         },
         "r4": {
-          "dur": 3171,
-          "env": "78999778779965995344433220000008861597687520076779988538866498558798235587467310",
-          "o": 37828
+          "dur": 3253,
+          "env": "7899977877996599534443322000000886159768752007677998853886649855879823558746741000",
+          "o": 38889
         },
         "r5": {
-          "dur": 3598,
-          "env": "997775398645442100000362489999944764249954584300776443100003943379892389877653894445432100",
-          "o": 41250
+          "dur": 3670,
+          "env": "99777539864544210000036248999994476424995458430077644310000394337989238987765389444543211000",
+          "o": 42392
         },
         "r6": {
-          "dur": 1638,
-          "env": "34426722145642100000099320499721045850430",
-          "o": 45097
+          "dur": 1714,
+          "env": "3442672214564210000009932049972104585043000",
+          "o": 46311
         },
         "r7": {
-          "dur": 2017,
-          "env": "898763487862000001999999986442100499749988977754400",
-          "o": 46986
+          "dur": 2081,
+          "env": "89876348786200000199999998644210049974998897775440000",
+          "o": 48275
         },
         "r8": {
-          "dur": 2273,
-          "env": "799644015686322496333200076422414989803379764621126176410",
-          "o": 49253
+          "dur": 2361,
+          "env": "799644015686322496333200076422414989803379764621126176410000",
+          "o": 50606
         },
         "r9": {
           "dur": 1957,
@@ -8573,49 +8637,49 @@
           "o": 59175
         },
         "l2": {
-          "dur": 2916,
-          "env": "2596653332023200008711898521134532354113432338711100531179421144114611220",
-          "o": 51776
+          "dur": 3008,
+          "env": "2697455432105320000195199942213326332489520354323599711121681214411651141000",
+          "o": 53217
         },
         "l3": {
-          "dur": 562,
-          "env": "879938738744300",
-          "o": 54943
+          "dur": 633,
+          "env": "8799387387443000",
+          "o": 56475
         },
         "l4": {
-          "dur": 1009,
-          "env": "99995378647672049966561200",
-          "o": 55754
+          "dur": 1083,
+          "env": "9999537864767204996656120000",
+          "o": 57358
         },
         "l5": {
-          "dur": 5423,
-          "env": "6877279700794996868825668788899988740019997873678579854644586168799995000866879986410028000965787876447856200377479989999600049977984410",
-          "o": 57013
+          "dur": 5538,
+          "env": "6877279600694996768724668788899988740019997773678579854644586167799995000776879986410028000095588687544667610048648998999950004987796541000",
+          "o": 58691
         },
         "l6": {
-          "dur": 2406,
-          "env": "4767996343554454686640000169479997367620295333322347575044310",
-          "o": 62686
+          "dur": 2477,
+          "env": "47679963435544546866400001694799973676202953333223475750443000",
+          "o": 64479
         },
         "l7": {
-          "dur": 2230,
-          "env": "76896089244576530000157798699209943313569906980344698610",
-          "o": 65341
+          "dur": 2315,
+          "env": "7689608924457653000015779869920994331356990698034469862000",
+          "o": 67206
         },
         "l8": {
-          "dur": 2537,
-          "env": "6633999886300000334321477643598221167898782274036991011234556310",
-          "o": 67821
+          "dur": 2624,
+          "env": "663399988630000033432147764359822116789878227403699101123455631000",
+          "o": 69771
         },
         "l9": {
-          "dur": 3496,
-          "env": "3456899999976531000297344246442011399897651266510220003565552320055787673134988864465200",
-          "o": 70608
+          "dur": 3559,
+          "env": "34568999999765310002973442464420113998976512665102200035655523200557876731349888644652000",
+          "o": 72645
         },
         "l10": {
-          "dur": 3977,
-          "env": "8999815796999446544975733544322755699136734622776675645866443542000685281676898830009944000696578810",
-          "o": 74354
+          "dur": 4131,
+          "env": "89998157969994465449757335443227556991367346227766756458664435420000685381777898830000895410069657882000",
+          "o": 76454
         },
         "p1": {
           "dur": 3308,
@@ -8623,34 +8687,34 @@
           "o": 90675
         },
         "p2": {
-          "dur": 3009,
-          "env": "9978532242000595935518400099743216983699632136689943004999665200058630197510",
-          "o": 78581
+          "dur": 3151,
+          "env": "9977532231000485935518400029964311896388653213677995200069976641001675204964000",
+          "o": 80834
         },
         "p3": {
-          "dur": 821,
-          "env": "565445964249399643210",
-          "o": 81840
+          "dur": 890,
+          "env": "56544596424939964321000",
+          "o": 84235
         },
         "p4": {
-          "dur": 3402,
-          "env": "87644622100197342125310079862369711559999275753112210011444754239943983276286776653000",
-          "o": 82911
+          "dur": 3515,
+          "env": "8765562220019734212631000998533795115699982753321132000124448433599339523854867767520000",
+          "o": 85376
         },
         "p5": {
-          "dur": 910,
-          "env": "69929884499959898653210",
-          "o": 86563
+          "dur": 1094,
+          "env": "5952766325554485865443320000",
+          "o": 89141
         },
         "p6": {
-          "dur": 2102,
-          "env": "79789972798697651004999999976543100678226765675456640",
-          "o": 87723
+          "dur": 2181,
+          "env": "7978997279869765100499999997654310067822676567545665000",
+          "o": 90485
         },
         "p7": {
-          "dur": 2380,
-          "env": "598885985389577774003998992297768995577844203946587543033000",
-          "o": 90075
+          "dur": 2491,
+          "env": "598885985389577774003998992297768995577844203946587543033000000",
+          "o": 92916
         },
         "p8": {
           "dur": 3486,
@@ -8663,49 +8727,49 @@
           "o": 112093
         },
         "j2": {
-          "dur": 4154,
-          "env": "59999434237998878776410000005652685255423777665327984664100000039887872359985465787631202449998853410320",
-          "o": 92706
+          "dur": 4223,
+          "env": "5999943423799887877641000000565268525542377766532798466410000003988787335998546578763120244999885341032000",
+          "o": 95657
         },
         "j3": {
-          "dur": 2181,
-          "env": "3466789899866300000666999953189952210568544553221246410",
-          "o": 97110
+          "dur": 2257,
+          "env": "346678989986630000066699995318995221056854455322124642000",
+          "o": 100130
         },
         "j4": {
-          "dur": 2075,
-          "env": "9999985699756785766630546727776750009972786316753001",
-          "o": 99541
+          "dur": 2185,
+          "env": "9999985699756785766630546727776750009972786316753001000",
+          "o": 102637
         },
         "j5": {
-          "dur": 4701,
-          "env": "3898811787721004522123553995996420111100000994003996712952550274221000374595347921242100000111355796541674645998000110",
-          "o": 103775
+          "dur": 4777,
+          "env": "389881178772100452212355399599642011110000099300399561295255027422100037459534793124210000011135579654167464599800011000",
+          "o": 107057
         },
         "j6": {
-          "dur": 2324,
-          "env": "68756787643001961675085675549434799988964428645257662022011",
-          "o": 108726
+          "dur": 2436,
+          "env": "6875678764300196167508567554943479998896442864525766202201000",
+          "o": 112084
         },
         "j7": {
-          "dur": 937,
-          "env": "586689999996499999930011",
-          "o": 111300
+          "dur": 1047,
+          "env": "586689999996499999930010000",
+          "o": 114770
         },
         "j8": {
-          "dur": 3468,
-          "env": "258995377575361466221000043046321004689965367544200047664264226755421000368940227602310",
-          "o": 112487
+          "dur": 3551,
+          "env": "25899537757536146622100004304632100468996536754420004766426422675542100036894022760231000",
+          "o": 116067
         },
         "j9": {
-          "dur": 1349,
-          "env": "5845971599679768639974224791598330",
-          "o": 116205
+          "dur": 1438,
+          "env": "584597159967976863997422479159833000",
+          "o": 119868
         },
         "j10": {
-          "dur": 4709,
-          "env": "5756665542000588876765300047666666769765654430004988999700047289988771767644000007656796798850005989994000775264430310",
-          "o": 117804
+          "dur": 4872,
+          "env": "57565654420005787767653000476666667697656544200003999999800037349978762676543100000765659768886100498989500067516443022000",
+          "o": 121555
         },
         "k1": {
           "dur": 3528,
@@ -8713,84 +8777,84 @@
           "o": 146308
         },
         "k2": {
-          "dur": 3251,
-          "env": "5666667510011000000387653788755876300003579513875476332035355898874974579998344100",
-          "o": 122763
+          "dur": 3304,
+          "env": "56666675100110000003876537887558763000035795138754763320353558988749745799983441000",
+          "o": 126677
         },
         "k3": {
-          "dur": 1942,
-          "env": "1599745212100004602622110000876757862221121335310",
-          "o": 126264
+          "dur": 2022,
+          "env": "159974521210000460262211000087675786222112133531000",
+          "o": 130231
         },
         "k4": {
-          "dur": 3496,
-          "env": "8856614796022676530025135425611412864544676202574000796386321986545599854420159988521100",
-          "o": 128456
+          "dur": 3592,
+          "env": "885661479602267653002513542561141286454467620257400079638632198654559985442015998852110000",
+          "o": 132503
         },
         "k5": {
-          "dur": 1748,
-          "env": "37950369986567977643200007976763169988752100",
-          "o": 132201
+          "dur": 1835,
+          "env": "3795036998656797764320000797676316998875210000",
+          "o": 136344
         },
         "k6": {
-          "dur": 2438,
-          "env": "9942314335410003200126673421119711385100284111231233344013100",
-          "o": 134200
+          "dur": 2519,
+          "env": "994231433541000320012667342111971138510028411123123334401310000",
+          "o": 138429
         },
         "k7": {
-          "dur": 1676,
-          "env": "998679321296663004977711331004647953354210",
-          "o": 136888
+          "dur": 1752,
+          "env": "99867932129666300498771133100464795335532000",
+          "o": 141198
         },
         "k8": {
-          "dur": 5269,
-          "env": "799687377674563000700078982763558783001587387999987412100277544379921674431000987077643599999875000355401697388120003788665427642120",
-          "o": 138815
+          "dur": 5422,
+          "env": "7996773776745630007000088974662549662002686487998996402100386534489820864420000386446864379999887400045530268548702000479756532763122000",
+          "o": 143200
         },
         "e1": {
-          "dur": 3441,
-          "env": "199996421166536123998632499984312997300079899228611793321254349964714634964189877432100",
-          "o": 144334
+          "dur": 3507,
+          "env": "1999964211665361239986324999843129973000798992286117933212543499647146349641898774321000",
+          "o": 148872
         },
         "e2": {
-          "dur": 1881,
-          "env": "899768778983752005857783878885786999879561472210",
-          "o": 148024
+          "dur": 2367,
+          "env": "586655865557652364200175456632557564654957734546235230014000",
+          "o": 152629
         },
         "e3": {
-          "dur": 1954,
-          "env": "8856859999289785296310009206743997535467786516520",
-          "o": 150155
+          "dur": 2021,
+          "env": "885685999928978529631000920674399753546778651652000",
+          "o": 155246
         },
         "e4": {
-          "dur": 413,
-          "env": "99999593110",
-          "o": 152359
+          "dur": 490,
+          "env": "9999959311000",
+          "o": 157518
         },
         "e5": {
-          "dur": 2460,
-          "env": "79569997899940001864212520000006998788866339998930006997863610",
-          "o": 153021
+          "dur": 2526,
+          "env": "7956999789994000186421252000000699878886633999893000699786361000",
+          "o": 158257
         },
         "e6": {
-          "dur": 4235,
-          "env": "1365862000130340133244433301210007653354336563047699541014833371595434310216412210000573411673015523156861",
-          "o": 155731
+          "dur": 4315,
+          "env": "136586200013034013324443330121000765335433656304769954101483347159543431021641221000057441167301552315686100",
+          "o": 161033
         },
         "end": {
-          "dur": 4112,
-          "env": "7998784643444423310007775774257994436997647777664200037699377329815555537886200178884672899988854436310",
-          "o": 161518
+          "dur": 4273,
+          "env": "89997846434544233100078757742679944369976477777642100039899377329915555537887200028889367289998895443631000",
+          "o": 166967
         },
         "j4g": {
-          "dur": 1659,
-          "env": "799414666666510026766653665155566699665310",
-          "o": 101865
+          "dur": 1734,
+          "env": "79941466666651002676665366515556669966541000",
+          "o": 105073
         },
         "e7": {
-          "dur": 1051,
-          "env": "135652367730347898974212200",
-          "o": 160217
+          "dur": 1118,
+          "env": "1356523677303478989742122000",
+          "o": 165599
         }
       },
       "cold": {

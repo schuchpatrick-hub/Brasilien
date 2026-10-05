@@ -45,9 +45,12 @@ def comedy(src, dst, c):
            'mega': 'highpass=f=450,lowpass=f=3200,equalizer=f=1800:t=q:w=1:g=5,acrusher=bits=10:mode=log:mix=0.15',
            'sleepy': 'vibrato=f=2.2:d=0.12,equalizer=f=1200:t=q:w=1:g=3'}
     # tight: Pausen in der Zeile auf ~70 ms kürzen (Sprecher soll flott durchsprechen)
-    af = ','.join(x for x in ['silenceremove=stop_periods=-1:stop_duration=0.09:stop_threshold=-36dB:stop_silence=0.07' if c.get('tight') else '',
+    # apad vorne: rubberband und silenceremove schnitten sonst das leise Satzende ab („Faktor zeh…“); am Schluss nur die Stille wieder weg
+    af = ','.join(x for x in ['apad=pad_dur=0.5',
+                              'silenceremove=stop_periods=-1:stop_duration=0.12:stop_threshold=-44dB:stop_silence=0.08' if c.get('tight') else '',
                               f'rubberband=tempo={t}:pitch={p}:pitchq=quality:formant=shifted' if (t, p) != (1, 1) else '',
-                              STY.get(c.get('style'), ''), 'loudnorm=I=-16:TP=-1.5:LRA=7' if c.get('style') else ''] if x) or 'anull'
+                              STY.get(c.get('style'), ''), 'loudnorm=I=-16:TP=-1.5:LRA=7' if c.get('style') else '',
+                              'areverse,silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.1,areverse'] if x)
     with tempfile.TemporaryDirectory() as tmp:
         pcm = os.path.join(tmp, 'c.wav')
         G.run_ff(src, pcm, af)
@@ -91,11 +94,14 @@ def main():
         k = ln['key']
         if ln['who'] == 'card' or (only and k not in only) or (not only and k in done): continue
         spk, lang = X[ln.get('voice', ln['who'])]
-        say = ln['say']; score = lambda t: difflib.SequenceMatcher(None, ' '.join(norm(t)), ' '.join(norm(say))).ratio()
+        say = ln['say']; lastw = (norm(say) or [''])[-1]
+        # Verständlichkeit; fehlt das letzte Wort (XTTS verschluckt es gern), deutlich abwerten
+        score = lambda t: difflib.SequenceMatcher(None, ' '.join(norm(t)), ' '.join(norm(say))).ratio() - (0 if any(difflib.SequenceMatcher(None, lastw, x).ratio() > .6 for x in norm(t)[-3:]) else .2)
         best = None
         for i in range(N):
             w = np.array(tts.tts(text=say, speaker=spk, language=lang, temperature=0.4, repetition_penalty=5.0, top_p=0.8, speed=1.05, split_sentences=True), dtype=np.float32)   # Sätze einzeln (sonst verschluckt XTTS den zweiten), Pausen kürzt squeeze()
-            nz = np.where(np.abs(w) > .015)[0]; w = w[max(0, nz[0] - 600):nz[-1] + 2400] if len(nz) else w
+            nz = np.where(np.abs(w) > .015)[0]; nz2 = np.where(np.abs(w) > .003)[0]   # Ende großzügig: leise Endlaute (‚t‘, ‚s‘) nicht abschneiden
+            w = w[max(0, nz[0] - 600):min(len(w), max(nz[-1] + 2400, nz2[-1] + 1200))] if len(nz) else w
             w = squeeze(w, 24000)
             txt = asr(w); opts = [(score(txt), len(w), w, txt)]
             # Gebrabbel am Ende: an Pausen (>= 120 ms, nach dem ersten Drittel) kürzen und die beste Fassung nehmen
@@ -105,7 +111,7 @@ def main():
                     e = j
                     while e < len(q) and q[e]: e += 1
                     if e - j >= 3 and j * fr > len(w) * .35:
-                        y = w[:j * fr + fr + 2400]; t2 = asr(y); opts.append((score(t2), len(y), y, t2))
+                        y = w[:j * fr + fr + 3600]; t2 = asr(y); opts.append((score(t2), len(y), y, t2))
                     j = e
                 else: j += 1
             lim = 24000 * max(1.6, len(say) * .085)   # deutlich zu lang = lange Pausen oder Gebrabbel → abwerten
