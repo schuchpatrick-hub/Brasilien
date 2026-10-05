@@ -10141,6 +10141,38 @@
   },
   "news": [
     {
+      "id": "n251005l",
+      "d": "2026-10-05",
+      "tab": "vorfreude-tab",
+      "to": "kapsel",
+      "e": "⏳",
+      "t": "Zeitkapsel jetzt Schritt für Schritt: eine Frage pro Karte, am Ende Übersicht und Versiegeln"
+    },
+    {
+      "id": "n251005k",
+      "d": "2026-10-05",
+      "tab": "uebersicht",
+      "to": "themen",
+      "e": "🔍",
+      "t": "Schnellsuche oben in der Reiterleiste: Hotel, Flug, Satz oder Packliste finden"
+    },
+    {
+      "id": "n251005j",
+      "d": "2026-10-05",
+      "tab": "reise",
+      "to": "fluege",
+      "e": "✈️",
+      "t": "Flüge zum Durchwischen, der nächste Flug kommt zuerst"
+    },
+    {
+      "id": "n251005i",
+      "d": "2026-10-05",
+      "tab": "tage-tab",
+      "to": "tage",
+      "e": "🗺️",
+      "t": "Tag für Tag nach Stationen wie auf der Karte, heutige Station zuerst"
+    },
+    {
       "id": "n251005h",
       "d": "2026-10-05",
       "tab": "uebersicht",
