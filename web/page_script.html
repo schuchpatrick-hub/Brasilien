@@ -427,11 +427,61 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
 /* ---------- Sprachfuehrer mit Sprachausgabe ---------- */
 (function () {
   const box = document.getElementById('phrases');
-  box.innerHTML = TRIP.phrases.map((c, ci) => '<div class="pcat"><h3>' + esc(c.cat) + '</h3>' +
-    c.items.map((p, pi) => '<div class="phr"><div class="txt"><div class="de">' + esc(p.de) + '</div><div class="pt" lang="pt-BR">' + esc(p.pt) +
+  const row = (p, ci, pi) => '<div class="phr"><div class="txt" role="button" tabindex="0" title="Aussprache zeigen"><div class="pt" lang="pt-BR">' + esc(p.pt) + '</div><div class="de">' + esc(p.de) +
       '</div><div class="say">' + esc(p.say) + '</div></div>' +
-      '<button type="button" class="play" data-c="' + ci + '" data-p="' + pi + '" aria-label="Vorsprechen: ' + esc(p.pt) + '">▶</button></div>').join('') +
-    '</div>').join('');
+      '<button type="button" class="play" data-c="' + ci + '" data-p="' + pi + '" aria-label="Vorsprechen: ' + esc(p.pt) + '">▶</button></div>';
+  if (PRINT) {   // PDF: alles untereinander, mit Aussprache
+    box.innerHTML = TRIP.phrases.map((c, ci) => '<div class="pcat"><h3>' + esc(c.cat) + '</h3>' + c.items.map((p, pi) => row(p, ci, pi)).join('') + '</div>').join('');
+  } else {
+    // Kompakt: Themen-Chips, immer nur ein Thema offen; Aussprache erst beim Antippen; Satz des Tages; Karteikarten zum Üben
+    const ICON = [['Grundlagen', '👋'], ['Restaurant', '🍹'], ['Unterwegs', '🚕'], ['Strand', '🏖️'], ['Party', '🎉'], ['Notfall', '🆘'], ['Überleben', '😈']];
+    const ico = c => (ICON.find(x => c.cat.includes(x[0])) || ['', '💬'])[1], short = c => c.cat.replace(/\s*\(.*\)/, '').replace(' & Smalltalk', '').replace('Überlebenssätze', 'Überleben');
+    const all = TRIP.phrases.flatMap((c, ci) => c.items.map((p, pi) => ({p, ci, pi}))), today = isoToday();
+    const dayIdx = Math.floor(Date.parse(today + 'T12:00:00Z') / 864e5) % all.length, dp = all[dayIdx];
+    box.classList.add('compact');
+    box.innerHTML = '<div class="ph-day"><span class="eyebrow">💬 Satz des Tages</span>' + row(dp.p, dp.ci, dp.pi) + '</div>' +
+      '<div class="ph-cats" role="tablist" aria-label="Themen">' + TRIP.phrases.map((c, ci) => '<button type="button" role="tab" data-ci="' + ci + '"' + (/Notfall/.test(c.cat) ? ' class="sos"' : '') + '>' + ico(c) + ' ' + esc(short(c)) + '</button>').join('') +
+      '<button type="button" role="tab" data-ci="learn" class="learn">🎴 Üben</button></div>' +
+      TRIP.phrases.map((c, ci) => '<div class="pcat" data-ci="' + ci + '" hidden>' + c.items.map((p, pi) => row(p, ci, pi)).join('') + '</div>').join('') +
+      '<div class="ph-learn" hidden></div>';
+    const tabs = [...box.querySelectorAll('.ph-cats button')], learnBox = box.querySelector('.ph-learn');
+    const catOf = re => TRIP.phrases.findIndex(c => re.test(c.cat));
+    function show(ci, save) {
+      tabs.forEach(b => b.setAttribute('aria-selected', String(b.dataset.ci === String(ci))));
+      box.querySelectorAll('.pcat[data-ci]').forEach(p => { p.hidden = p.dataset.ci !== String(ci); });
+      learnBox.hidden = ci !== 'learn'; if (ci === 'learn') learn();
+      if (save) { store.set('phCat', String(ci)); store.set('phCatDay', today); }
+    }
+    tabs.forEach(b => b.addEventListener('click', () => show(b.dataset.ci === 'learn' ? 'learn' : +b.dataset.ci, true)));
+    // Start: heute selbst gewählt → das; unterwegs nach Uhrzeit in Rio (abends Party, mittags/abends Restaurant); sonst zuletzt gewähltes
+    let start = store.get('phCat'); const manual = store.get('phCatDay') === today;
+    if (!manual && today >= '2026-12-27' && today <= '2027-01-21') { let h = 12; try { h = +new Intl.DateTimeFormat('en-GB', {timeZone: 'America/Sao_Paulo', hour: 'numeric', hour12: false}).format(new Date()); } catch (e) {}
+      start = String(h >= 21 || h < 4 ? catOf(/Party/) : (h >= 11 && h < 15) || (h >= 18 && h < 21) ? catOf(/Restaurant/) : h >= 15 ? catOf(/Strand/) : catOf(/Grundlagen/)); }
+    show(start === 'learn' ? 'learn' : start !== null && TRIP.phrases[+start] ? +start : 0, false);
+    // Aussprache bei Antippen des Satzes
+    box.addEventListener('click', e => { const t = e.target.closest('.txt'); if (t) t.parentNode.classList.toggle('say-on'); });
+    box.addEventListener('keydown', e => { const t = e.target.closest('.txt'); if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); t.parentNode.classList.toggle('say-on'); } });
+    // Karteikarten: Deutsch sehen, aufdecken (spielt ab), „Kann ich“ / „Nochmal“; gelernt pro Handy (localStorage br26.phLearned)
+    let learned = []; try { learned = JSON.parse(store.get('phLearned') || '[]'); } catch (e) {}
+    let cur = null, shown = false;
+    const key = x => x.ci + '-' + x.pi;
+    function next() { const open = all.filter(x => !learned.includes(key(x))); cur = open.length ? open[Math.floor(Math.random() * open.length)] : null; shown = false; learn(); }
+    function learn() {
+      if (!cur || learned.includes(key(cur))) { const open = all.filter(x => !learned.includes(key(x))); cur = open.length ? open[Math.floor(Math.random() * open.length)] : null; shown = false; }
+      const n = learned.length, pc = Math.round(n / all.length * 100);
+      learnBox.innerHTML = '<div class="pl-prog"><span>' + n + ' von ' + all.length + ' gelernt</span><span class="pl-bar"><i style="width:' + pc + '%"></i></span></div>' +
+        (cur ? '<div class="pl-card"><span class="eyebrow">' + ico(TRIP.phrases[cur.ci]) + ' ' + esc(short(TRIP.phrases[cur.ci])) + '</span><div class="pl-de">' + esc(cur.p.de) + '</div>' +
+          (shown ? '<div class="pl-pt" lang="pt-BR">' + esc(cur.p.pt) + '</div><div class="say">' + esc(cur.p.say) + '</div>' +
+            '<div class="pl-btns"><button type="button" class="play" data-c="' + cur.ci + '" data-p="' + cur.pi + '" aria-label="Nochmal anhören">▶</button><button type="button" class="btn ghost" data-l="again">↺ Nochmal</button><button type="button" class="btn" data-l="ok">✓ Kann ich</button></div>'
+            : '<div class="pl-btns"><button type="button" class="btn" data-l="show">Aufdecken 👀</button></div>') + '</div>'
+          : '<div class="pl-card"><div class="pl-de">🏆 Alle ' + all.length + ' Sätze gelernt! Du bist offiziell kein Gringo mehr. Fast.</div><div class="pl-btns"><button type="button" class="btn ghost" data-l="reset">Von vorn üben</button></div></div>');
+    }
+    learnBox.addEventListener('click', e => { const b = e.target.closest('[data-l]'); if (!b) return; const a = b.dataset.l;
+      if (a === 'show') { shown = true; learn(); const pb = learnBox.querySelector('.play'); if (pb) pb.click(); }
+      else if (a === 'ok') { learned.push(key(cur)); store.set('phLearned', JSON.stringify(learned)); next(); }
+      else if (a === 'again') next();
+      else if (a === 'reset') { learned = []; store.set('phLearned', '[]'); next(); } });
+  }
   const st = document.getElementById('speak-status');
   const slow = document.getElementById('speak-slow');
   const dev = document.getElementById('speak-device');

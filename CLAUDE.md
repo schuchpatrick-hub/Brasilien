@@ -102,6 +102,7 @@ Tastenfeld (`#fx-pad`). Nach dem Speichern von Drinks, Partien und Karten-Ereign
 (löscht die eben angelegten Dokumente). Drinks: „⚡ Nochmal dasselbe“ (`#dr-again`, letzte 4 Kombinationen im localStorage
 `br26.drinkRecent`) und Schnellwahl Alle / Keiner. Admin-Knopf „＋“ unten rechts (`showFab()`, nur mit Schreibrecht, nicht in der Gast-Ansicht): springt zu Drink, Spiel, Check-in, Kartenwert und zeigt die „Nochmal“-Drinks.
 Sprachführer: Handy-Stimme (pt-BR, bevorzugt Premium/Natural) ist Standard, wenn vorhanden; sonst MP3.
+Sprachführer kompakt (`#phrases.compact`): Themen-Chips `.ph-cats` (immer nur ein Thema offen, Notfall rot, zuletzt gewähltes im localStorage `br26.phCat`; unterwegs 27.12.–21.01. ohne eigene Wahl am selben Tag automatisch nach Uhrzeit in Rio: abends Party, mittags/abends Restaurant, nachmittags Strand), Aussprache erst beim Antippen des Satzes (`.say-on`), „Satz des Tages“ (`.ph-day`, wechselt täglich), Karteikarten „🎴 Üben“ (`.ph-learn`, gelernt im localStorage `br26.phLearned`). Im PDF alles untereinander.
 
 ## Offline-Warteschlange und Live-Anzeige
 
