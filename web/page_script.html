@@ -1949,8 +1949,18 @@ function wavB64(buf) {
   // Bei Nacht gedämpft und langsamer. Ereignisse werden mitgeschrieben (tlog), damit die Video-Aufnahme dieselbe Musik
   // offline als Tonspur rendern kann (window.__tripAudio).
   const mf = m => 440 * Math.pow(2, (m - 69) / 12);
+  // Echte Geräusche (freie Aufnahmen aus FSD50K): ein Paket audio/sfx.mp3, Ausschnitte in TRIP.sfx {Name: [[Start s, Länge s, Lautstärke], …]}
+  const SFXLIB = {buf: null, p: null};
+  function loadSfx(ctx) {
+    if (SFXLIB.p || !TRIP.sfx || PRINT) return SFXLIB.p;
+    SFXLIB.p = fetch('audio/sfx.mp3').then(r => { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
+      .then(a => new Promise((ok, no) => { const q = ctx.decodeAudioData(a, ok, no); if (q && q.then) q.then(ok, no); })).then(b => (SFXLIB.buf = b)).catch(() => null);
+    return SFXLIB.p;
+  }
+  window.__sfxLoad = () => { const OAC0 = window.OfflineAudioContext || window.webkitOfflineAudioContext; return loadSfx(new OAC0(1, 1, 44100)); };   // Video: vorher abwarten
   function Music(ctx, opt) {
     opt = opt || {};
+    if (!opt.bake) try { loadSfx(ctx); } catch (e) {}
     const E = {ctx, mode: 'none', night: false, step: 0, next: 0, drums: [], on: {travel: false, stay: false, show: false}, till: {travel: 0, stay: 0, show: 0}};
     const master = ctx.createGain(); master.gain.value = .7;
     const comp = ctx.createDynamicsCompressor(); master.connect(comp); comp.connect(ctx.destination);
@@ -2176,7 +2186,9 @@ function wavB64(buf) {
     if (!opt.bake && OAC && !(ctx instanceof OAC)) Object.keys(BAKE).forEach(n => { baked[n] = [];
       for (let v = 0; v < 3; v++) try { const oc = new OAC(1, Math.ceil(ctx.sampleRate * BAKE[n]), ctx.sampleRate), m2 = Music(oc, {bake: 1, seed: 11 + v * 97});
         m2.sfx(n, 0); const r = oc.startRendering(); if (r && r.then) r.then(b => baked[n].push(b)).catch(() => {}); } catch (e) {} });
-    E.sfx = (name, t) => { const b = baked[name];
+    E.sfx = (name, t) => { const b = baked[name], smp = !opt.bake && SFXLIB.buf && TRIP.sfx && TRIP.sfx[name];
+      if (smp && smp.length) { const v = smp[Math.floor(rnd() * smp.length) % smp.length], s = ctx.createBufferSource(), g = ctx.createGain();
+        s.buffer = SFXLIB.buf; g.gain.value = v[2] || 1; s.connect(g); g.connect(sfxOut); s.start(Math.max(t, ctx.currentTime), v[0], v[1]); return; }
       if (b && b.length) { const s = ctx.createBufferSource(); s.buffer = b[Math.floor(rnd() * b.length) % b.length]; s.connect(sfxOut); s.start(Math.max(t, ctx.currentTime)); return; }
       sfx0(name, t); };
     E.end = w => { master.gain.cancelScheduledValues(w); master.gain.setTargetAtTime(0, w, .4); E.on = {travel: false, stay: false, show: false}; E.till = {travel: w + 2, stay: w + 2, show: w + 2}; E.mode = 'none'; };
@@ -3223,6 +3235,23 @@ function wavB64(buf) {
         mk('path', {d: `M${ex - 11},${eyY + 4} Q${ex},${eyY - 10} ${ex + 11},${eyY + 4}`, fill: 'none', stroke: INK, 'stroke-width': 5, 'stroke-linecap': 'round'}, o.fx.lol);
         mk('path', {d: `M${ex + k * 13},${eyY + 6} q${k * 4},7 0,11 q${-k * 4},-4 0,-11Z`, fill: '#7fd3ff', stroke: '#2a6f99', 'stroke-width': 1.2}, o.fx.lol); });
       emo('HAHA', {x: R * .15, y: -R * 1.18, 'font-size': 17, 'font-weight': 900, fill: '#ffd23f', stroke: INK, 'stroke-width': 3, 'paint-order': 'stroke', transform: 'rotate(-8)'}, o.fx.lol);
+      // Augenrollen: Augen weiß, Pupillen ganz oben
+      o.fx.roll = mk('g', {opacity: 0}, fg); [-1, 1].forEach(k => { const ex = cF + k * eyX; mk('ellipse', {cx: ex, cy: eyY, rx: 9.5, ry: 11, fill: '#fff', stroke: INK, 'stroke-width': 2.2}, o.fx.roll);
+        mk('circle', {cx: ex + 1.5 * k, cy: eyY - 6.5, r: 3.8, fill: INK}, o.fx.roll); mk('path', {d: `M${ex - 10},${eyY - 9} Q${ex},${eyY - 13} ${ex + 10},${eyY - 9}`, fill: 'none', stroke: INK, 'stroke-width': 2.5, 'stroke-linecap': 'round'}, o.fx.roll); });
+      // Hand vors Gesicht (Facepalm): flache Hand mit Fingern über den Augen
+      o.fx.palm = mk('g', {opacity: 0, transform: `rotate(-18,${cF},${eyY})`}, fg); const palmFill = [];
+      [-24, -12, 0, 12].forEach((dx, k) => palmFill.push(mk('rect', {x: cF + dx - 5.5, y: eyY - 30 + (k === 0 || k === 3 ? 5 : 0), width: 11, height: 30, rx: 5.5, fill: SKIN, stroke: INK, 'stroke-width': 2}, o.fx.palm)));
+      palmFill.push(mk('ellipse', {cx: cF - 6, cy: eyY + 6, rx: 27, ry: 16, fill: SKIN, stroke: INK, 'stroke-width': 2}, o.fx.palm));
+      palmFill.push(mk('path', {d: `M${cF + 18},${eyY + 10} q14,-4 18,-16 q2,-6 -4,-6 q-8,6 -16,8Z`, fill: SKIN, stroke: INK, 'stroke-width': 2}, o.fx.palm));
+      // Blinzeln: Lider in Hautfarbe (aus der Wange im Foto gemessen) mit Wimpernstrich
+      o.lid = mk('g', {opacity: 0}, fg); const lids = [-1, 1].map(k => { const ex = cF + k * eyX;
+        const e = mk('ellipse', {cx: ex, cy: eyY - 1, rx: 10.5, ry: 7.5, fill: SKIN}, o.lid);
+        mk('path', {d: `M${ex - 10.5},${eyY + 1} Q${ex},${eyY + 7} ${ex + 10.5},${eyY + 1}`, fill: 'none', stroke: INK, 'stroke-width': 2.5, 'stroke-linecap': 'round'}, o.lid); return e; });
+      if (p.photo) { const im = new Image(); im.onload = () => { try { const cv = document.createElement('canvas'), N = 48; cv.width = cv.height = N; const cx = cv.getContext('2d'); cx.drawImage(im, 0, 0, N, N);
+        const px = [], take = (u, v) => { const d = cx.getImageData(Math.round(u * N), Math.round(v * N), 1, 1).data; px.push([d[0], d[1], d[2]]); };
+        [-1, 1].forEach(k => [0, .02].forEach(dx => [.06, .09].forEach(dy => take(.5 + k * (f.ex || .13) + dx * k, (f.e || .5) + dy))));
+        const med = j => px.map(q => q[j]).sort((a, b) => a - b)[px.length >> 1], col = `rgb(${med(0)},${med(1)},${med(2)})`;
+        lids.concat(palmFill).forEach(e => e.setAttribute('fill', col)); } catch (e) {} }; im.src = p.photo; }
     } else {   // gezeichnete Nebenfigur
       o.npc = true; o.mY = 14; o.c = 30;
       o.upper = mk('g', {}, o.head); o.lower = mk('g', {}, o.head);
@@ -3263,6 +3292,8 @@ function wavB64(buf) {
   const walkP = (t, p, sp) => { const w = S(t / (sp || 160)); return Object.assign(p, {lL: [24 * w, -10 * Math.max(0, -w)], lR: [-24 * w, -10 * Math.max(0, w)], aL: [22 * -w, 10], aR: [22 * w, 10], bob: -3 * Math.abs(w), tilt: 3 * w}); };
   const sitP = p => Object.assign(p, {lL: [80, -80], lR: [76, -78], aL: [30, 40], aR: [30, 40]});
   const cheerP = (t, p, i) => Object.assign(p, {aL: [165 + 10 * S(t / 120 + i), 10], aR: [165 + 10 * S(t / 130 + i), 10], bob: -8 * Math.abs(S(t / 180 + i))});
+  const armsFree = p => Math.abs(p.aL[0] - 11) < 6 && Math.abs(p.aR[0] - 11) < 6 && Math.abs(p.aL[1] - 8) < 4 && Math.abs(p.aR[1] - 8) < 4;
+  const HASH = id => { let h = 7; for (const ch of id) h = (h * 31 + ch.charCodeAt(0)) % 9973; return h; };
   const jumpK = (t, a, d) => { const k = (t - a) / (d || 600); return k > 0 && k < 1 ? S(PI * k) : 0; };
   function mouthOf(id, t) {
     for (const l of LINES) { if (l.who !== id || t < l.at || t > l.at + l.dur) continue;
@@ -3296,6 +3327,7 @@ function wavB64(buf) {
     if (o.L0 === undefined) o.L0 = o.shirt.getAttribute('fill');
     o.shirt.setAttribute('fill', p.shirt || o.L0);
     if (o.fx) { const fc = p.face || ''; for (const k in o.fx) o.fx[k].setAttribute('opacity', fc === k ? 1 : 0); }
+    if (o.lid) o.lid.setAttribute('opacity', p.blink && !p.face && !p.hush && !p.still ? 1 : 0);
     o.tears.forEach((d, k) => { const ph = (t / 450 + k * .5) % 1; d.setAttribute('opacity', p.cry ? (1 - ph).toFixed(2) : 0);
       d.setAttribute('transform', `translate(${k ? 26 : -26},${(-4 + ph * 34).toFixed(1)})`); });
     const air = clamp((FL - p.y) / 140, 0, 1);
@@ -3505,6 +3537,11 @@ function wavB64(buf) {
   const glasses = Array.from({length: 12}, (_, k) => emo('🍹', {'font-size': 24, opacity: 0}, F.night));
   const roundB = mk('g', {opacity: 0}, hud); mk('rect', {x: 560, y: 64, width: 210, height: 40, rx: 20, fill: '#2f9e5a'}, roundB); const roundT = mk('text', {x: 665, y: 91, 'text-anchor': 'middle', class: 'se-badge'}, roundB);
   const ice = emo('🧊', {'font-size': 26, opacity: 0}, fxG);
+  // Licht aus: alles dunkel, nur Simons Sonnenbrand leuchtet (Verlauf in Weltkoordinaten, Mitte = Simons Kopf)
+  const sglow = mk('radialGradient', {id: 'se-sglow', gradientUnits: 'userSpaceOnUse', cx: 545, cy: 257, r: 170}, defs);
+  [[0, '#ff7a2a', .18], [.32, '#ff5a1a', .12], [.55, '#05040c', .86], [1, '#05040c', .93]].forEach(([o2, c, a]) => mk('stop', {offset: o2, 'stop-color': c, 'stop-opacity': a}, sglow));
+  const nightOff = mk('rect', {x: -400, y: -300, width: W + 800, height: H + 600, fill: 'url(#se-sglow)', opacity: 0}, fxG);
+  const sHalo = mk('circle', {r: 46, fill: 'none', stroke: '#ffb347', 'stroke-width': 10, opacity: 0, style: 'filter:blur(6px)'}, fxG);
 
   // ======== Folge 2: Silvester in Rio ========
   const headAt = (id, x, yH, sc2, extra) => on2(id, x, yH + 156 * sc2, Object.assign({sc: sc2, headOnly: 1, noShadow: 1}, extra || {}));
@@ -3596,6 +3633,7 @@ function wavB64(buf) {
 
   // ======== Folge 3: Daijo & Greisel kommen ========
   const E3 = [], e3 = el => { E3.push(el); return el; };   // Effekte der Folge 3, jedes Bild erst einmal aus
+  [nightOff, sHalo].forEach(e3);
   const hyOf = (y, s) => y - 156 * s;   // Kopfmitte einer Figur (Fußpunkt y, Größe s)
   defs.insertAdjacentHTML('beforeend', '<pattern id="se-bon" width="26" height="9" patternUnits="userSpaceOnUse"><rect width="26" height="9" fill="#fffdf5"/><line x1="3" y1="5" x2="23" y2="5" stroke="#a9a9a9" stroke-width="1.6"/></pattern>' +
     '<clipPath id="se-ppclip"><rect x="292" y="122" width="96" height="112" rx="6"/></clipPath>' +
@@ -3967,6 +4005,44 @@ function wavB64(buf) {
   const monk4 = e3(emo('🐒', {'font-size': 50, opacity: 0}, fxG)), brush4 = e3(emo('🪥', {'font-size': 26, opacity: 0}, fxG));
   const bil4 = card4(470, 64, 310, 178, '📒 BILANZ AMAZONAS', ['📱 Handy: weg', '👒 Fischerhut: Kaiman', '💋 Kuss: Patrick 😬', '🍑 Hintern: 🔥🔥🔥'], '#8a5a2b');
 
+  // Versteckte Gags im Hintergrund: Schilder, Plakate und ein Nasenbär, der sich in jeder Szene irgendwo versteckt
+  function sign(g, x, y, rows, o) {   // Schild: rows = [[Text, Größe, Farbe?]], o = {w, bg, rot, post}
+    o = o || {}; const w = o.w || 120, h = 10 + rows.reduce((a, r) => a + (r[1] || 12) + 4, 0), gg = mk('g', {transform: `translate(${x},${y}) rotate(${o.rot || 0})`}, g);
+    if (o.post) mk('rect', {x: -3, y: h / 2, width: 6, height: o.post, fill: '#5a3e22'}, gg);
+    mk('rect', {x: -w / 2, y: -h / 2, width: w, height: h, rx: 5, fill: o.bg || '#fdf6dc', stroke: INK, 'stroke-width': 2}, gg);
+    let yy = -h / 2 + 5; rows.forEach(([txt, fs, col]) => { fs = fs || 12; yy += fs + 2; const tx = mk('text', {x: 0, y: yy - 2, 'text-anchor': 'middle', style: `font:800 ${fs}px var(--body);fill:${col || INK}`}, gg); tx.textContent = txt; yy += 2; });
+    return gg;
+  }
+  const peek = (g, x, y, s, rot) => { const e = emo('🦝', {x, y, 'font-size': 22 * (s || 1), transform: rot ? `rotate(${rot},${x},${y})` : ''}, g); return e; };
+  // Folge 1
+  if (B.sec) { sign(B.sec, 80, 160, [['GESUCHT', 14, '#c0392b'], ['🦝', 26], ['Belohnung: 1 Sonnencreme', 9]], {w: 118, rot: -3}); peek(B.sec, 488, FL - 26, .9); }
+  if (B.bar) { sign(B.bar, 640, 175, [['HAPPY HOUR', 14, '#ffcf1f'], ['6 – 9 Uhr morgens', 11, '#fff'], ['(nur für Gringos)', 9, '#ddd']], {w: 130, bg: '#2b2b2b', rot: 2}); }
+  if (B.fly) { sign(B.fly, 440, 136, [['Reihe 12', 10]], {w: 62}); sign(B.fly, 700, 140, [['🚾 besetzt', 10, '#c0392b'], ['seit Stunde 3', 8]], {w: 82}); }
+  if (B.beach) { sign(B.beach, 60, FL - 70, [['☀️ UV-Index heute', 9], ['14', 18, '#c0392b'], ['Simon: 99', 9]], {w: 92, post: 60, rot: -4}); peek(B.beach, 610, FL - 8, .8); }
+  if (B.night) { sign(B.night, 655, 225, [['🍹 Caipirinha 12 R$', 11], ['💧 Wasser 30 R$', 11], ['🙂 Würde: ausverkauft', 9, '#c0392b']], {w: 128, rot: 2}); }
+  if (B.uber) { const bs = sign(car, -150, -24, [['JESUS FÄHRT MIT', 8], ['(bitte trotzdem beten)', 6]], {w: 74, bg: '#ffcf1f'}); }
+  // Folge 2
+  if (B.ny) { sign(B.ny, 70, FL - 95, [['Taschendiebe', 10], ['bitte rechts', 10], ['anstellen →', 10]], {w: 90, post: 70, rot: -3}); }
+  if (B.kat) { sign(B.kat, 90, 110, [['⭐ Gast des Monats', 9], ['🦝', 28]], {w: 100, bg: '#fff8e1', rot: -2}); }
+  if (B.cristo) { sign(B.cristo, 700, FL - 70, [['AUSSICHT HEUTE', 9], ['☁️ 0 %', 16, '#1f3f8f']], {w: 92, post: 50, rot: 3}); peek(B.cristo, 455, FL - 112, .7); }
+  if (B.rod) { sign(B.rod, 120, 150, [['RODÍZIO', 13, '#c0392b'], ['All you can eat*', 10], ['*Patrick: Hausverbot', 8]], {w: 118, rot: -2}); }
+  if (B.zucker) { peek(B.zucker, 742, 300, .8, -10); }
+  // Folge 3
+  if (B.gig) { sign(B.gig, 680, 140, [['FUNDBÜRO', 11, '#1f3f8f'], ['1 Würde (Folge 1)', 9], ['30× Sonnencreme', 9]], {w: 112, rot: 2}); peek(B.gig, 742, FL - 70, .8); }
+  if (B.boe) { sign(B.boe, 560, 136, [['Fensterplatz:', 9], ['reserviert für Greisel 😴', 8]], {w: 128}); }
+  if (B.falls) { sign(B.falls, 60, FL - 165, [['BADEN VERBOTEN', 9, '#c0392b'], ['(ja, Simon, du auch)', 8]], {w: 108, post: 140, rot: -3}); }
+  if (B.quati) { sign(B.quati, 706, FL - 112, [['…sie haben Splitwise!', 9, '#c0392b']], {w: 132}); peek(B.quati, 330, FL - 196, .7, 15); }
+  if (B.grenze) { sign(B.grenze, 120, 150, [['SE BUSCA', 13, '#c0392b'], ['🦝', 28], ['Gruppenkonto', 9]], {w: 96, rot: -3}); }
+  if (B.duel) { sign(B.duel, 640, 230, [['🚑 Sanitäter', 10], ['heute: Patrick ✏️', 9]], {w: 108, rot: 3}); }
+  // Folge 4
+  if (B.hos) { sign(B.hos, 460, 150, [['HAUSREGEL', 10, '#c0392b'], ['Wertsachen? Welche', 9], ['Wertsachen? 😉', 9]], {w: 112, rot: -2}); peek(B.hos, 560, FL - 20, .8); }
+  if (B.rio) { sign(B.rio, 730, FL - 64, [['🐬 BITTE NICHT', 9], ['KÜSSEN', 11, '#c0392b']], {w: 92, post: 40, rot: 4}); }
+  if (B.cab) { sign(B.cab, 110, 120, [['⚠️ Kabine 3', 10], ['seismisch aktiv', 9]], {w: 100, rot: -3}); }
+  if (B.pir) { sign(B.pir, 80, FL - 150, [['BADEN AUF EIGENE', 8], ['GEFAHR 🐟', 9, '#c0392b'], ['Fußpflege gratis', 8]], {w: 100, post: 60, rot: -4}); }
+  if (B.jbar) { sign(B.jbar, 630, 190, [['Rülpsen ab 22 Uhr', 10, '#ffcf1f'], ['nur mit Genehmigung', 9, '#fff']], {w: 134, bg: '#2b2b2b', rot: 2}); }
+  if (B.kai) { sign(B.kai, 120, FL - 175, [['KAIMANE NICHT FÜTTERN', 8], ['(Jonas zählt nicht)', 8, '#c0392b']], {w: 128, post: 110, rot: -3}); }
+  if (B.ham) { sign(B.ham, 735, FL - 80, [['max. 100 kg', 10], ['pro Hängematte', 8], ['(Greisel?)', 8, '#c0392b']], {w: 92, post: 50, rot: 3}); peek(B.ham, 60, FL - 10, .8); }
+
   // Derbe Effekte: Kotz-Bogen, Stinkwolke, Herzen, Fleck
   const puke = mk('path', {fill: 'none', stroke: '#9acd32', 'stroke-width': 11, 'stroke-linecap': 'round', pathLength: 1, 'stroke-dasharray': '1 1', opacity: 0}, fxG);
   const pukeDrops = Array.from({length: 8}, () => mk('circle', {r: 4, fill: '#8fbf3a', opacity: 0}, fxG));
@@ -4227,6 +4303,11 @@ function wavB64(buf) {
       if (pk > .6 && L < A('night5') + 2500) ['jonas', 'marco', 'simon'].forEach(id => { if (P[id]) { pose[id].y -= 20 * Math.abs(S(t / 140)); pose[id].aL = [150, 10]; pose[id].aR = [150, 10]; } });
       if (P.marco && L > A('night5') && L < A('night5') + 2400) { pose.marco.aR = [90, 0]; pose.marco.look = 1; }
       if (P.simon) { pose.simon.burn = .62; pose.simon.shirt = '#e86a5a'; ice.setAttribute('opacity', 1); ice.setAttribute('x', X.simon + 2); ice.setAttribute('y', FL - 10 - 60 * .8 - 96 * .8 - 46); }
+      // Licht aus: Simon leuchtet selber
+      const nd = (LINES.find(l => l.key === 'night4') || {}).dur || 2000, off = span(L, A('night4') + nd * .42, A('night4') + nd * .42 + 250);
+      nightOff.setAttribute('opacity', off.toFixed(2)); lightsN.setAttribute('opacity', (1 - off).toFixed(2));
+      sHalo.setAttribute('opacity', (off * (.75 + .25 * S(t / 160))).toFixed(2)); sHalo.setAttribute('cx', X.simon); sHalo.setAttribute('cy', FL - 10 - 60 * .8 - 96 * .8);
+      if (P.simon && off > 0) pose.simon.burn = .62 + .3 * off;
       cam = {x: L < A('night2') ? 350 : L < A('night3') ? 300 : L < pk0 + 1800 ? 450 : L < A('night4') ? 400 : 545, y: 250, z: L < A('night1') ? 1 : 1.2};
     }
     else if (sc.id === 'land') {
@@ -4875,12 +4956,29 @@ function wavB64(buf) {
       if (l.face && pose[l.who] && pose[l.who].on) pose[l.who].face = l.face;
       if (l.react) for (const id in l.react) if (pose[id] && pose[id].on) pose[id].face = l.react[id]; }
     // Reaktionen nach einer Pointe/Panne: lol = die anderen lachen sich kaputt (1 = alle außer Sprecher und mad), mad = regt sich auf
-    for (const l of LINES) { if (!l.lol && !l.mad) continue; const r0 = l.at + l.dur + (l.rxd || 250), r1 = r0 + (l.rxl || 1900); if (t < r0 || t > r1) continue;
+    for (const l of LINES) { if (!l.lol && !l.mad && !l.palm && !l.roll) continue; const r0 = l.at + l.dur + (l.rxd || 250), r1 = r0 + (l.rxl || 1900); if (t < r0 || t > r1) continue;
       const k = win(t, r0, r1, 200), mad = [].concat(l.mad || []), busy = id => LINES.some(m2 => m2.who === id && t >= m2.at - 150 && t <= m2.at + m2.dur);
       const lol = l.lol === 1 ? CREW.filter(id => id !== l.who && !mad.includes(id)) : [].concat(l.lol || []);
+      const vic = mad.map(id => pose[id]).find(q => q && q.on);
       lol.forEach((id, i) => { const p = pose[id]; if (!p || !p.on || p.hush || busy(id)) return; p.face = 'lol';
-        p.mouth = Math.max(p.mouth || 0, k * (.45 + .4 * Math.abs(S(t / 95 + i)))); p.tilt = (p.tilt || 0) + k * (-7 + 6 * S(t / 120 + i * 1.7)); });
-      mad.forEach(id => { const p = pose[id]; if (!p || !p.on || busy(id)) return; p.face = 'angry'; p.tilt = (p.tilt || 0) + k * 7 * S(t / 45); }); }
+        p.mouth = Math.max(p.mouth || 0, k * (.45 + .4 * Math.abs(S(t / 95 + i)))); p.tilt = (p.tilt || 0) + k * (-7 + 6 * S(t / 120 + i * 1.7));
+        if (armsFree(p) && !p.headOnly && !p.still && k > .5) { const right = vic ? (vic.x - p.x) * (p.flip || 1) > 0 : i % 2;   // auf das Opfer zeigen, andere Hand am Bauch
+          const pt = [78 + 6 * S(t / 140 + i), -8], belly = [14, -95 + 8 * S(t / 90 + i)]; if (right) { p.aR = pt; p.aL = belly; } else { p.aL = pt; p.aR = belly; }
+          p.bob = (p.bob || 0) - 3 * Math.abs(S(t / 110 + i)); } });
+      mad.forEach(id => { const p = pose[id]; if (!p || !p.on || busy(id)) return; p.face = 'angry'; p.tilt = (p.tilt || 0) + k * 7 * S(t / 45);
+        if (armsFree(p) && !p.headOnly && !p.still && k > .5) { p.aL = [38 + 8 * S(t / 55), 125]; p.aR = [38 + 8 * S(t / 55 + 1), 125]; } });   // Fäuste schütteln
+      [].concat(l.palm || []).forEach(id => { const p = pose[id]; if (!p || !p.on || busy(id)) return; p.face = 'palm'; p.tilt = (p.tilt || 0) + 10 * k; p.look = 0;
+        if (armsFree(p) && !p.headOnly && !p.still) { p.aR = [40 * k, 8 + 150 * k]; } });   // Hand vors Gesicht, Kopf schütteln
+      [].concat(l.roll || []).forEach(id => { const p = pose[id]; if (!p || !p.on || busy(id)) return; p.face = 'roll'; p.tilt = (p.tilt || 0) - 8 * k; p.look = 0; }); }
+    // Leben: blinzeln, Zuhörer schauen zum Sprecher, Gesten beim Sprechen (nur wenn die Szene die Arme nicht selbst steuert)
+    const spk = LINES.find(l => t >= l.at && t <= l.at + l.dur && P[l.who] && pose[l.who] && pose[l.who].on);
+    Object.keys(P).forEach(id => { const p = pose[id]; if (!p || !p.on) return;
+      const h = HASH(id), per = 2700 + h % 1900, ph = (t + h * 37) % per; p.blink = ph < 110 || (h % 3 === 0 && ph > 240 && ph < 340);
+      if (p.headOnly || p.still) return;
+      if (spk && spk.who !== id && !p.look) { const q = pose[spk.who]; p.look = clamp((q.x - p.x) / 160, -1, 1) * .6 * (p.flip < 0 ? -1 : 1); }
+      if (spk && spk.who === id && armsFree(p)) { const k = (t - spk.at) / spk.dur, txt = (spk.text || spk.say || '').replace(/[^\p{L}\p{N}\p{P}\s]/gu, '').trim();
+        if (/\?$/.test(txt) && k > .72) { const e = span(k, .72, .85); p.aL = [10 + 22 * e, 8 + 70 * e]; p.aR = [10 + 22 * e, 8 + 70 * e]; p.tilt += 6 * e; }   // Schulterzucken
+        else if (/!$/.test(txt) && k < .5) { const e = win(k * 1000, 0, 500, 120); p.aR = [10 + 60 * e, 8 + 10 * e + 6 * e * S(t / 90)]; } } });   // Ausruf: Arm hoch
     Object.keys(P).forEach(id => apply(P[id], pose[id], t));
     // Schnitte: close = Großaufnahme des Sprechers, rshot = danach kurz das Gesicht von jemand anderem (harter Schnitt)
     let shot = null;
@@ -4949,7 +5047,7 @@ function wavB64(buf) {
     const at = ms => t0 + ms / 1000, A = (k, d) => at((LAT[k] || 0) + (d || 0)), sAt = id => (SC.find(s => s.id === id) || {t: [0]}).t[0];
     // Ducking: während jemand spricht, geht die Musik weich runter
     LINES.slice().sort((x, y) => x.at - y.at).forEach(l => { m.duck(.24, at(l.at - 120), .07); m.duck(.5, at(l.at + l.dur + 120), .35);
-      if (l.laugh) m.sfx('laugh', at(l.at + l.dur + 120)); else if (l.lol) m.sfx('laugh', at(l.at + l.dur + (l.rxd || 250))); });
+      if (l.laugh) m.sfx('laugh', at(l.at + l.dur + 120)); else if (l.lol && !l.nolaugh) m.sfx('laugh', at(l.at + l.dur + (l.rxd || 250))); });
     SC.forEach((sc, k) => { if (sc.amb && m.amb) m.amb(sc.amb, at(sc.t[0]), at(sc.t[1])); if (k) m.sfx('swish', at(sc.t[0] - 380)); });
     const fx = [['sec2', -300, 'whistle'], ['sec2', 400, 'ding'],
       ['bar1', 1500, 'ding'], ['bar3', 600, 'gong'], ['bar4', 2600, 'ding'], ['bar4', 2700, 'cheer'], ['bar5', 400, 'boing'],
