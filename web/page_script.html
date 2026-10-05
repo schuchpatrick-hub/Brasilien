@@ -5194,7 +5194,7 @@ function wavB64(buf) {
     const at = ms => t0 + ms / 1000, A = (k, d) => at((LAT[k] || 0) + (d || 0)), sAt = id => (SC.find(s => s.id === id) || {t: [0]}).t[0];
     // Ducking: während jemand spricht, geht die Musik weich runter
     LINES.slice().sort((x, y) => x.at - y.at).forEach(l => { m.duck(.24, at(l.at - 120), .07); m.duck(.5, at(l.at + l.dur + 120), .35);
-      if (l.laugh) m.sfx('laugh', at(l.at + l.dur + 120)); else if (l.lol && !l.nolaugh) m.sfx('laugh', at(l.at + l.dur + (l.rxd || 250))); });
+      if (l.laugh) m.sfx('laugh', at(l.at + l.dur + 120)); });   // Lacher vom Band nur an den stärksten Pointen (Wunsch Patrick: sparsam)
     SC.forEach((sc, k) => { if (sc.amb && m.amb) m.amb(sc.amb, at(sc.t[0]), at(sc.t[1])); if (sc.wx === 'rain' && m.amb) m.amb('rain', at(sc.t[0]), at(sc.t[1]));
       if (k) m.sfx(sc.tr === 'splash' ? 'splash' : 'swish', at(sc.t[0] - (sc.tr === 'splash' ? 300 : 380))); if (k && sc.tr === 'plane') m.sfx('plane', at(sc.t[0] - 900)); });
     // Musik-Stiche an Pointen (sting: tusch/drama/slowmo, stingAt: 'start' = am Zeilenanfang) und Zwischentitel (Projektor + Klavier, Musik leiser)
