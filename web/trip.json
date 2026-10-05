@@ -7721,6 +7721,10 @@
       "guide": [
         "Marcos Rudaski",
         "de"
+      ],
+      "dona": [
+        "Brenda Stern",
+        "pt"
       ]
     },
     "comedy": {
@@ -7797,6 +7801,11 @@
         "tempo": 1.14,
         "pitch": 1.12,
         "style": "nasal2"
+      },
+      "dona": {
+        "tempo": 1.12,
+        "pitch": 1.12,
+        "style": "opa"
       }
     },
     "ep4": {
@@ -8894,6 +8903,911 @@
           "tight": 1
         }
       }
+    },
+    "ep5": {
+      "title": "Das große Finale",
+      "n": 5,
+      "admin": true,
+      "next": "📺 Staffel 2: Der Nasenbär kommt nach München",
+      "recapBadge": "⏪ Bisher: 🎆📋  💋⚡  🦝💸",
+      "thumb": "🏝️🦝📱",
+      "color": "#1f8fa8",
+      "credits": [
+        [
+          "Rettungsschwimmer",
+          "Greisel 🦸"
+        ],
+        [
+          "Gabriela",
+          "ein Getränk 🍹"
+        ],
+        [
+          "Irgendeine Frau",
+          "Dona Rosa 👵"
+        ],
+        [
+          "Ball",
+          "Simons Gesicht 🔴"
+        ],
+        [
+          "Fotograf",
+          "Greisel (Augen kurz offen)"
+        ],
+        [
+          "Handy",
+          "der Atlantik 🌊"
+        ],
+        [
+          "",
+          "Obrigado fürs Zuschauen! 🇧🇷"
+        ]
+      ],
+      "lines": [
+        {
+          "key": "intro",
+          "who": "narrator",
+          "at": 1500,
+          "sc": "intro",
+          "gap": 1500,
+          "say": "Gringos! Die Serie, Folge fünf: Das große Finale!",
+          "text": "📺 Gringos – Die Serie · Folge 5: Das große Finale!"
+        },
+        {
+          "key": "v1",
+          "who": "local",
+          "at": 8146,
+          "sc": "van",
+          "gap": 1600,
+          "say": "Seis pessoas? Num Uno?",
+          "text": "Seis pessoas? Num Uno? (Sechs Leute? In einem Fiat Uno?) 🚗",
+          "name": "Fahrer"
+        },
+        {
+          "key": "v2",
+          "who": "greisel",
+          "at": 10274,
+          "sc": "van",
+          "gap": 600,
+          "say": "Ich fahr im Kofferraum, da ist es wenigstens ruhig",
+          "text": "Ich fahr im Kofferraum. Da ist es wenigstens ruhig. 🧳"
+        },
+        {
+          "key": "v3",
+          "who": "jonas",
+          "at": 14418,
+          "sc": "van",
+          "gap": 1500,
+          "say": "Leute, noch sechs Tage, und von unseren sieben Silvester-Wünschen ist noch keiner erfüllt",
+          "text": "Leute, noch 6 Tage. Und von unseren 7 Silvester-Wünschen ist noch keiner erfüllt! 📋"
+        },
+        {
+          "key": "v4",
+          "who": "dajo",
+          "at": 18739,
+          "sc": "van",
+          "gap": 600,
+          "say": "Zeig mal her, unendlich Rodízio? Patrick, du hast doch Hausverbot",
+          "text": "Zeig mal her … „Unendlich Rodízio“? Patrick, du hast doch Hausverbot. 🥩🚫",
+          "lol": [
+            "jonas",
+            "simon",
+            "marco"
+          ],
+          "roll": "patrick"
+        },
+        {
+          "key": "v5",
+          "who": "marco",
+          "at": 23105,
+          "sc": "van",
+          "gap": 700,
+          "say": "Wenigstens Nummer sieben klappt, nicht ertrinken",
+          "text": "Wenigstens Nummer 7 klappt: Nicht ertrinken. 🏊"
+        },
+        {
+          "key": "v6",
+          "who": "simon",
+          "at": 25989,
+          "sc": "van",
+          "gap": 500,
+          "say": "Marco, morgen ist Bootstour",
+          "text": "Marco … morgen ist Bootstour. 🚤",
+          "rshot": "marco",
+          "react": {
+            "marco": "shock"
+          }
+        },
+        {
+          "key": "c6",
+          "who": "card",
+          "at": 28871,
+          "sc": "van",
+          "gap": 1300,
+          "text": "Stunde 3 von 4 … | Aus dem Kofferraum: Stille.",
+          "cdur": 2600
+        },
+        {
+          "key": "v7",
+          "who": "greisel",
+          "at": 31971,
+          "sc": "van",
+          "gap": 500,
+          "say": "Hier hinten hab ich Beinfreiheit, ihr nicht",
+          "text": "Hier hinten hab ich Beinfreiheit. Ihr nicht. 😎",
+          "roll": "jonas",
+          "mad": "patrick"
+        },
+        {
+          "key": "y1",
+          "who": "narrator",
+          "at": 37006,
+          "sc": "pty",
+          "gap": 1300,
+          "say": "Paraty, das Pflaster ist dreihundert Jahre alt, seitdem ist hier keiner mehr gerade gelaufen",
+          "text": "Paraty. Das Pflaster ist 300 Jahre alt. Seitdem ist hier keiner mehr gerade gelaufen."
+        },
+        {
+          "key": "y2",
+          "who": "greisel",
+          "at": 45947,
+          "sc": "pty",
+          "gap": 4200,
+          "say": "Augen zu, dann geht's",
+          "text": "Augen zu. Dann geht’s. 😌"
+        },
+        {
+          "key": "y3",
+          "who": "dajo",
+          "at": 48123,
+          "sc": "pty",
+          "gap": 900,
+          "say": "Bei Flut läuft hier das Meer durch die Straßen, aber laut meinem Plan ist jetzt Ebbe",
+          "text": "Bei Flut läuft hier das Meer durch die Straßen. Aber laut meinem Plan ist jetzt Ebbe. 📋"
+        },
+        {
+          "key": "y4",
+          "who": "patrick",
+          "at": 53121,
+          "sc": "pty",
+          "gap": 1700,
+          "say": "Daijo, dein Plan hat nasse Füße",
+          "text": "Daijo … dein Plan hat nasse Füße. 🌊",
+          "lol": [
+            "jonas",
+            "simon",
+            "marco"
+          ],
+          "palm": "dajo"
+        },
+        {
+          "key": "y5",
+          "who": "waiter",
+          "at": 55845,
+          "sc": "pty",
+          "gap": 900,
+          "say": "Uma Gabriela, senhores?",
+          "text": "Uma Gabriela, senhores? (Der Drink von Paraty) 🍹",
+          "name": "Kellner"
+        },
+        {
+          "key": "y6",
+          "who": "marco",
+          "at": 57599,
+          "sc": "pty",
+          "gap": 500,
+          "say": "Gabriela! Endlich eine Frau, die von selbst zu mir kommt",
+          "text": "Gabriela! Endlich eine Frau, die von selbst zu mir kommt! 😍",
+          "face": "heart"
+        },
+        {
+          "key": "y7",
+          "who": "waiter",
+          "at": 61309,
+          "sc": "pty",
+          "gap": 600,
+          "say": "Gabriela é a bebida, senhor",
+          "text": "Gabriela é a bebida, senhor. (Gabriela ist das Getränk.) 🍹",
+          "name": "Kellner",
+          "lol": 1,
+          "mad": "marco"
+        },
+        {
+          "key": "w1",
+          "who": "local",
+          "at": 66007,
+          "sc": "schoon",
+          "gap": 1500,
+          "say": "Open bar! Tudo incluído!",
+          "text": "Open Bar! Tudo incluído! (Alles inklusive!) 🍹",
+          "name": "Bootsmann"
+        },
+        {
+          "key": "w2",
+          "who": "jonas",
+          "at": 68251,
+          "sc": "schoon",
+          "gap": 700,
+          "say": "Ich trag's trotzdem in Splitwise ein, aus Prinzip",
+          "text": "Ich trag’s trotzdem in Splitwise ein. Aus Prinzip. 📱",
+          "lol": [
+            "patrick",
+            "simon"
+          ],
+          "roll": "dajo"
+        },
+        {
+          "key": "w3",
+          "who": "marco",
+          "at": 73706,
+          "sc": "schoon",
+          "gap": 3000,
+          "say": "Hilfe! Ich ertrinke! Wunsch Nummer sieben!",
+          "text": "Hilfe!! Ich ertrinke!! Wunsch Nummer 7!! 😱",
+          "face": "shock"
+        },
+        {
+          "key": "w4",
+          "who": "greisel",
+          "at": 76588,
+          "sc": "schoon",
+          "gap": 500,
+          "say": "Ich komme!",
+          "text": "Ich komme!! 🦸",
+          "sting": "slowmo",
+          "stingAt": "start"
+        },
+        {
+          "key": "w5",
+          "who": "greisel",
+          "at": 79877,
+          "sc": "schoon",
+          "gap": 2600,
+          "say": "Marco, steh auf",
+          "text": "Marco … steh auf.",
+          "laugh": 1,
+          "lol": 1,
+          "mad": "marco",
+          "rxd": 900
+        },
+        {
+          "key": "w6",
+          "who": "marco",
+          "at": 82377,
+          "sc": "schoon",
+          "gap": 1300,
+          "say": "Danke, Greisel, du bist mein Held",
+          "text": "Danke, Greisel. Du bist mein Held. 🥲",
+          "face": "heart"
+        },
+        {
+          "key": "x1",
+          "who": "local",
+          "at": 88261,
+          "sc": "abr",
+          "gap": 1600,
+          "say": "Carrinho! Dez reais a mala!",
+          "text": "Carrinho! Dez reais a mala! (Zehn Reais pro Koffer!) 🛒",
+          "name": "Gepäckträger"
+        },
+        {
+          "key": "x2",
+          "who": "patrick",
+          "at": 92370,
+          "sc": "abr",
+          "gap": 2200,
+          "say": "Und für zwanzig nimmst du mich mit, ich hab Erfahrung mit Rollstühlen",
+          "text": "Und für zwanzig nimmst du mich mit. Ich hab Erfahrung mit Rollstühlen. ♿",
+          "lol": [
+            "jonas",
+            "simon"
+          ],
+          "roll": "dajo"
+        },
+        {
+          "key": "x3",
+          "who": "dona",
+          "at": 97518,
+          "sc": "abr",
+          "gap": 2400,
+          "say": "Ai, que gatinho!",
+          "text": "Ai, que gatinho! (Was für ein Kätzchen!) 😘"
+        },
+        {
+          "key": "x4",
+          "who": "simon",
+          "at": 99582,
+          "sc": "abr",
+          "gap": 600,
+          "say": "Gatinha?! Bist du's?",
+          "text": "Gatinha?! Bist du’s?! 📱💔",
+          "face": "shock",
+          "lol": [
+            "jonas",
+            "dajo"
+          ]
+        },
+        {
+          "key": "x5",
+          "who": "marco",
+          "at": 101864,
+          "sc": "abr",
+          "gap": 900,
+          "say": "Daijo, Wunsch Nummer fünf, irgendeine Frau, zählt das?",
+          "text": "Daijo! Wunsch 5: „Irgendeine Frau“. Zählt das?"
+        },
+        {
+          "key": "x6",
+          "who": "dajo",
+          "at": 105367,
+          "sc": "abr",
+          "gap": 600,
+          "say": "Da steht irgendeine, also ja",
+          "text": "Da steht „irgendeine“. Also: ja. ✅",
+          "laugh": 1,
+          "lol": 1
+        },
+        {
+          "key": "o1",
+          "who": "local",
+          "at": 110860,
+          "sc": "lopes",
+          "gap": 1400,
+          "say": "Gringos contra a gente? Valeu!",
+          "text": "Gringos contra a gente? Valeu! (Gringos gegen uns? Gerne!) 😎"
+        },
+        {
+          "key": "o2",
+          "who": "marco",
+          "at": 119108,
+          "sc": "lopes",
+          "gap": 6500,
+          "say": "Zwanzig zu null, Leute, wir brauchen einen Plan",
+          "text": "20 zu 0. Leute, wir brauchen einen Plan! 😩"
+        },
+        {
+          "key": "o3",
+          "who": "simon",
+          "at": 124337,
+          "sc": "lopes",
+          "gap": 2600,
+          "say": "Punkt! Mit dem Gesicht!",
+          "text": "PUNKT!! Mit dem Gesicht!! 🔴⚽",
+          "sting": "tusch"
+        },
+        {
+          "key": "o4",
+          "who": "local",
+          "at": 126550,
+          "sc": "lopes",
+          "gap": 700,
+          "say": "Desculpa, achamos que o rosto dele era a bola",
+          "text": "Desculpa … (Sorry, wir dachten, sein Gesicht ist der Ball.) 🔴",
+          "lol": 1,
+          "mad": "simon"
+        },
+        {
+          "key": "n1",
+          "who": "jonas",
+          "at": 132102,
+          "sc": "fest",
+          "gap": 1400,
+          "say": "Letzter Abend, Gruppenfoto, und mein Handy hat die ganze Reise überlebt",
+          "text": "Letzter Abend! Gruppenfoto! Und mein Handy hat die ganze Reise überlebt. 📱✨"
+        },
+        {
+          "key": "n2",
+          "who": "patrick",
+          "at": 135563,
+          "sc": "fest",
+          "gap": 600,
+          "say": "Warte, ich zeig euch noch das beste Foto der Reise",
+          "text": "Wartet, ich zeig euch noch das beste Foto der Reise. 📸"
+        },
+        {
+          "key": "n3",
+          "who": "simon",
+          "at": 139710,
+          "sc": "fest",
+          "gap": 1400,
+          "say": "Wer hat das fotografiert?!",
+          "text": "Wer hat das fotografiert?! 😱",
+          "face": "shock"
+        },
+        {
+          "key": "n4",
+          "who": "greisel",
+          "at": 141678,
+          "sc": "fest",
+          "gap": 500,
+          "say": "Ich, ich hab ein Mal die Augen aufgemacht",
+          "text": "Ich. Ich hab ein Mal die Augen aufgemacht. 😴📸",
+          "lol": 1,
+          "mad": "simon"
+        },
+        {
+          "key": "n5",
+          "who": "jonas",
+          "at": 145390,
+          "sc": "fest",
+          "gap": 1200,
+          "say": "So, jetzt alle! Sagt Caipirinha!",
+          "text": "So, jetzt alle! Sagt „Caipirinha“! 📸"
+        },
+        {
+          "key": "n6",
+          "who": "jonas",
+          "at": 148817,
+          "sc": "fest",
+          "gap": 1500,
+          "say": "Der Nasenbär, nicht schon wieder!",
+          "text": "DER NASENBÄR!! Nicht schon wieder!! 🦝📱",
+          "face": "shock",
+          "close": 1,
+          "sting": "drama",
+          "stingAt": "start"
+        },
+        {
+          "key": "n7",
+          "who": "dajo",
+          "at": 154456,
+          "sc": "fest",
+          "gap": 3900,
+          "say": "Ups",
+          "text": "Ups. 🫢"
+        },
+        {
+          "key": "n8",
+          "who": "narrator",
+          "at": 155631,
+          "sc": "fest",
+          "gap": 700,
+          "say": "Wunsch Nummer drei, mein Handy bleibt sicher, neunzehn Tage erfüllt, dann drei Sekunden nicht mehr",
+          "text": "Wunsch Nr. 3 – „Mein Handy bleibt sicher“: 19 Tage erfüllt. Dann 3 Sekunden nicht mehr.",
+          "laugh": 1
+        },
+        {
+          "key": "n9",
+          "who": "jonas",
+          "at": 160872,
+          "sc": "fest",
+          "gap": 900,
+          "say": "Das trag ich in Splitwise ein, an den Nasenbären",
+          "text": "Das trag ich in Splitwise ein. An den Nasenbären. 🦝💸",
+          "lol": 1
+        },
+        {
+          "key": "i1",
+          "who": "dajo",
+          "at": 170454,
+          "sc": "pier",
+          "gap": 1500,
+          "say": "Und, was nehmt ihr mit nach Hause?",
+          "text": "Und? Was nehmt ihr mit nach Hause? 🧳"
+        },
+        {
+          "key": "i2",
+          "who": "simon",
+          "at": 172900,
+          "sc": "pier",
+          "gap": 500,
+          "say": "Sonnenbrand",
+          "text": "Sonnenbrand. 🦞"
+        },
+        {
+          "key": "i3",
+          "who": "marco",
+          "at": 174049,
+          "sc": "pier",
+          "gap": 400,
+          "say": "Eine Frau, irgendeine",
+          "text": "Eine Frau. Irgendeine. 👵"
+        },
+        {
+          "key": "i4",
+          "who": "patrick",
+          "at": 176355,
+          "sc": "pier",
+          "gap": 400,
+          "say": "Ein Tattoo, Pastel de Frango",
+          "text": "Ein Tattoo. Pastel de Frango. 🥟"
+        },
+        {
+          "key": "i5",
+          "who": "jonas",
+          "at": 178473,
+          "sc": "pier",
+          "gap": 400,
+          "say": "Splitwise, minus dreitausend Euro",
+          "text": "Splitwise. Minus 3.000 €. 📉",
+          "lol": 1
+        },
+        {
+          "key": "i6",
+          "who": "greisel",
+          "at": 181715,
+          "sc": "pier",
+          "gap": 900,
+          "say": "Und wir bleiben noch einen Tag, ohne euch, endlich Ruhe",
+          "text": "Und wir bleiben noch einen Tag. Ohne euch. Endlich Ruhe. 😌"
+        },
+        {
+          "key": "i7",
+          "who": "dajo",
+          "at": 186559,
+          "sc": "pier",
+          "gap": 2200,
+          "say": "Ihr fehlt mir jetzt schon, ein bisschen",
+          "text": "Ihr fehlt mir jetzt schon. … Ein bisschen. 🥲"
+        },
+        {
+          "key": "end",
+          "who": "narrator",
+          "at": 194033,
+          "sc": "end",
+          "gap": 1500,
+          "say": "Das war Staffel eins, der Nasenbär hat übrigens einen Flug nach München gebucht",
+          "text": "Das war Staffel 1. Der Nasenbär hat übrigens einen Flug nach München gebucht. 🦝✈️"
+        }
+      ],
+      "scenes": [
+        {
+          "id": "intro",
+          "t": [
+            0,
+            6546
+          ],
+          "tail": 1600
+        },
+        {
+          "id": "van",
+          "t": [
+            6546,
+            35706
+          ],
+          "tail": 1800
+        },
+        {
+          "id": "pty",
+          "t": [
+            35706,
+            64507
+          ],
+          "tail": 1800
+        },
+        {
+          "id": "schoon",
+          "t": [
+            64507,
+            86661
+          ],
+          "tail": 2400
+        },
+        {
+          "id": "abr",
+          "t": [
+            86661,
+            109460
+          ],
+          "tail": 1800
+        },
+        {
+          "id": "lopes",
+          "t": [
+            109460,
+            130702
+          ],
+          "tail": 2000
+        },
+        {
+          "id": "fest",
+          "t": [
+            130702,
+            168954
+          ],
+          "tail": 5600
+        },
+        {
+          "id": "pier",
+          "t": [
+            168954,
+            192533
+          ],
+          "tail": 3400
+        },
+        {
+          "id": "end",
+          "t": [
+            192533,
+            208993
+          ],
+          "tail": 11500
+        }
+      ],
+      "voice": {
+        "n5": {
+          "dur": 1927,
+          "env": "1375310015830100299575200018940146413667445530000",
+          "o": 87289
+        },
+        "n6": {
+          "dur": 1739,
+          "env": "89749993143176778620003743124563113328653000",
+          "o": 89466
+        },
+        "n7": {
+          "dur": 475,
+          "env": "999922443000",
+          "o": 91455
+        },
+        "n8": {
+          "dur": 4341,
+          "env": "9978775898837776744300098878755794686177665775200299766769846766374465698725100978586656755677456967267543000",
+          "o": 92181
+        },
+        "n9": {
+          "dur": 2482,
+          "env": "894110269442433203511322788531000783353379711315667342210000000",
+          "o": 96772
+        },
+        "i1": {
+          "dur": 1946,
+          "env": "7997763100159532288854039999703763499765223320000",
+          "o": 99505
+        },
+        "i2": {
+          "dur": 749,
+          "env": "1696564316975412000",
+          "o": 101700
+        },
+        "i3": {
+          "dur": 1906,
+          "env": "897336221369999986553210078754274328966436641000",
+          "o": 102699
+        },
+        "i4": {
+          "dur": 1718,
+          "env": "9997510792279752003957349987499235864265200",
+          "o": 104855
+        },
+        "i5": {
+          "dur": 2342,
+          "env": "43046413432787310001343662111014997511499621320199742452000",
+          "o": 106823
+        },
+        "i6": {
+          "dur": 2644,
+          "env": "8979699779999557776954898667888987999797510067971898966686865530000",
+          "o": 109415
+        },
+        "i7": {
+          "dur": 2574,
+          "env": "89998777544310026661158931277537601135356744120037632893237542000",
+          "o": 112309
+        },
+        "end": {
+          "dur": 3460,
+          "env": "788775977558656656799777300098986899565677767243993776996746987458816945996677546633000",
+          "o": 115133
+        },
+        "intro": {
+          "dur": 3446,
+          "env": "897599977766788873002887755479979510027779667756646520059887266756887535757998778762000",
+          "o": 250
+        },
+        "v1": {
+          "dur": 1528,
+          "env": "459964396759999465530004576557987500000",
+          "o": 3946
+        },
+        "v2": {
+          "dur": 2644,
+          "env": "9865898849764784898653000998997520009779857669997688568996468751000",
+          "o": 5724
+        },
+        "v3": {
+          "dur": 3721,
+          "env": "3996239831002892229232179955631039531175354366742233561867721846435237213942278567731354100000",
+          "o": 8618
+        },
+        "v4": {
+          "dur": 3666,
+          "env": "38726976998730008994787228862235625851446563002891363300179987973189620039785312740578851000",
+          "o": 12589
+        },
+        "v5": {
+          "dur": 2384,
+          "env": "685574235432389699632342343499800200035553115722596415720000",
+          "o": 16504
+        },
+        "v6": {
+          "dur": 1582,
+          "env": "3999446886431001499825420036412123432000",
+          "o": 19138
+        },
+        "v7": {
+          "dur": 1935,
+          "env": "7987985159994963398764456446541200079899966453000",
+          "o": 20970
+        },
+        "y1": {
+          "dur": 4741,
+          "env": "99976427755001221098825875883887698557866788983455676789715100564599799827774455200688677899999994768997847899845462000",
+          "o": 23155
+        },
+        "y2": {
+          "dur": 1276,
+          "env": "99959857533310008988599516766100",
+          "o": 28146
+        },
+        "y3": {
+          "dur": 3298,
+          "env": "88313899339941245842298969416643689333320007799996699993349975354118912114956532000",
+          "o": 29672
+        },
+        "y4": {
+          "dur": 1824,
+          "env": "8966559875210088543699965761578565234656532000",
+          "o": 33220
+        },
+        "y5": {
+          "dur": 1254,
+          "env": "57893992899998975567899445552000",
+          "o": 35294
+        },
+        "y6": {
+          "dur": 3110,
+          "env": "889366456776999864002965215635873623599998711100334943399433224553588349811000",
+          "o": 36797
+        },
+        "y7": {
+          "dur": 1398,
+          "env": "39955889998988872961576263432221000",
+          "o": 40157
+        },
+        "w1": {
+          "dur": 1544,
+          "env": "598137535998610005886647753157665122000",
+          "o": 41805
+        },
+        "w2": {
+          "dur": 2455,
+          "env": "44220279521013740037434323124101331488653100155101311121000000",
+          "o": 43600
+        },
+        "w3": {
+          "dur": 2382,
+          "env": "684398962005447515654166766400126974454432001379599851000000",
+          "o": 46304
+        },
+        "w4": {
+          "dur": 689,
+          "env": "896999997520006000",
+          "o": 48936
+        },
+        "w5": {
+          "dur": 1200,
+          "env": "8996476432000574999899622220000",
+          "o": 49875
+        },
+        "w6": {
+          "dur": 1884,
+          "env": "997518939999952566542026275310699534799863011000",
+          "o": 51325
+        },
+        "x1": {
+          "dur": 1909,
+          "env": "698544644354100000000127987745688755646998331000",
+          "o": 53459
+        },
+        "x2": {
+          "dur": 2748,
+          "env": "985673789557849964598457715310086456725944799869776557965743665543000",
+          "o": 55618
+        },
+        "x3": {
+          "dur": 1464,
+          "env": "7999775300005853999300024465544431000",
+          "o": 58617
+        },
+        "x4": {
+          "dur": 1382,
+          "env": "49897113554579986200025220465221000",
+          "o": 60331
+        },
+        "x5": {
+          "dur": 2903,
+          "env": "6644338998742206943542666741277554211137991369645238998412677318762221000",
+          "o": 61963
+        },
+        "x6": {
+          "dur": 2293,
+          "env": "8998642992009984897067644532002776334787410027999985851000",
+          "o": 65116
+        },
+        "o1": {
+          "dur": 1748,
+          "env": "33778647441783687568861351000289759997831000",
+          "o": 67660
+        },
+        "o2": {
+          "dur": 2629,
+          "env": "237984225441365449986545996127741001356618799944445753620269663000",
+          "o": 69658
+        },
+        "o3": {
+          "dur": 1513,
+          "env": "69941201000300047347554225652111000000",
+          "o": 72537
+        },
+        "o4": {
+          "dur": 2152,
+          "env": "597419960251000968675645845996338169987998721899852000",
+          "o": 74299
+        },
+        "n1": {
+          "dur": 2861,
+          "env": "594219999944212100362142255339620036338435546672426952279962353495663000",
+          "o": 76701
+        },
+        "n2": {
+          "dur": 2747,
+          "env": "498624865411103745256994398743683139463096641833352364894675444431000",
+          "o": 79813
+        },
+        "n3": {
+          "dur": 1468,
+          "env": "2379989996079222644727713664011002100",
+          "o": 82809
+        },
+        "n4": {
+          "dur": 2512,
+          "env": "697787777620009797893117879998997996199775996398653496576642000",
+          "o": 84527
+        }
+      },
+      "cold": {
+        "from": [
+          "w3",
+          -400
+        ],
+        "to": [
+          "w5",
+          1500
+        ],
+        "label": "⏪ Einen Tag früher …"
+      },
+      "cameo": [
+        {
+          "sc": "abr",
+          "key": "x2",
+          "d": 1800,
+          "dur": 3200,
+          "x": -40,
+          "x2": 300,
+          "y": 398,
+          "prop": "🧳",
+          "s": 0.8
+        }
+      ],
+      "comedy": {
+        "narrator": {
+          "tempo": 1.28,
+          "pitch": 1.0,
+          "tight": 1
+        },
+        "dajo": {
+          "tempo": 1.42,
+          "pitch": 1.14,
+          "style": "nasal2",
+          "tight": 1
+        }
+      },
+      "cont": "🎬 Ende von Staffel 1",
+      "badge": [
+        "🎬",
+        "Staffelfinale:",
+        "Paraty & Ilha Grande"
+      ]
     }
   },
   "sfx": {
