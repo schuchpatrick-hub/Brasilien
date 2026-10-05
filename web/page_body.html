@@ -26,6 +26,7 @@
 
 
 
+<aside class="news" id="news" hidden aria-live="polite"></aside>
 <nav class="tiles" id="themen" aria-label="Themen"><a href="#kino-tab" class="tile k-kino"><span class="tile-i" aria-hidden="true">🎬</span><b>Kino</b><small data-hint="kino-tab">Samba-Show, Serie &amp; Reise-Film</small></a><a href="#tage-tab" class="tile k-plan"><span class="tile-i" aria-hidden="true">📅</span><b>Tag für Tag</b><small data-hint="tage-tab">Alle Tage &amp; Termine</small></a><a href="#reise" class="tile k-plan"><span class="tile-i" aria-hidden="true">✈️</span><b>Flüge &amp; Kosten</b><small data-hint="reise">Bordkarten &amp; Preise</small></a><a href="#crew-tab" class="tile k-fun"><span class="tile-i" aria-hidden="true">👥</span><b>Crew &amp; Karten</b><small data-hint="crew-tab">Steckbriefe &amp; FIFA-Karten</small></a><a href="#spiele-tab" class="tile k-fun"><span class="tile-i" aria-hidden="true">🎲</span><b>Spiele</b><small data-hint="spiele-tab">Ranglisten &amp; Sprüche</small></a><a href="#kalender" class="tile k-fun"><span class="tile-i" aria-hidden="true">🎁</span><b>Vorfreude</b><small data-hint="kalender">Türchen &amp; Zeitkapsel</small></a><a href="#drinks-tab" class="tile k-go"><span class="tile-i" aria-hidden="true">🍹</span><b>Drinks</b><small data-hint="drinks-tab">Counter &amp; Ranking</small></a><a href="#sprache" class="tile k-go"><span class="tile-i" aria-hidden="true">🗣️</span><b>Sprache</b><small data-hint="sprache">Sätze zum Anhören</small></a><a href="#rechner" class="tile k-go"><span class="tile-i" aria-hidden="true">💸</span><b>Real-Rechner</b><small data-hint="rechner">Euro ↔ Real</small></a><a href="#infos" class="tile k-info"><span class="tile-i" aria-hidden="true">🎒</span><b>Infos &amp; Packen</b><small data-hint="infos">Praktisches &amp; Listen</small></a></nav>
 
 <section id="route" data-kind="start" data-tab="uebersicht">
@@ -266,6 +267,7 @@
     <div class="dr-go"><button type="button" class="btn" id="dr-submit" disabled>Eintragen 🍻</button><span id="dr-status" class="note" role="status"></span></div>
   </details>
 
+  <div class="dr-empty" id="dr-empty" hidden></div>
   <div class="dr-grid">
     <details class="dr-card" data-fold="rank" open>
       <summary class="dr-head"><h3>Ranking</h3></summary>

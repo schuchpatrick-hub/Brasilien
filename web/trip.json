@@ -10083,5 +10083,47 @@
         0.7
       ]
     ]
-  }
+  },
+  "news": [
+    {
+      "id": "n251005a",
+      "d": "2026-10-05",
+      "tab": "reise",
+      "to": "fluege",
+      "e": "✈️",
+      "t": "Flug CGH → SDU am 31.12. gebucht (11:50 → 12:50)"
+    },
+    {
+      "id": "n251005b",
+      "d": "2026-10-05",
+      "tab": "kino-tab",
+      "to": "series",
+      "e": "📺",
+      "t": "Neue Folge: „Das große Finale“ (Folge 5)"
+    },
+    {
+      "id": "n251005c",
+      "d": "2026-10-05",
+      "tab": "crew-tab",
+      "to": "crew",
+      "e": "👥",
+      "t": "Crew-Steckbriefe zum Durchwischen"
+    },
+    {
+      "id": "n251004a",
+      "d": "2026-10-04",
+      "tab": "kino-tab",
+      "to": "series",
+      "e": "🔊",
+      "t": "Serie mit echten Geräuschen, Wetter und neuen Gags"
+    },
+    {
+      "id": "n251004b",
+      "d": "2026-10-04",
+      "tab": "kino-tab",
+      "to": "series",
+      "e": "🐊",
+      "t": "Folge 4 „Ab in den Dschungel“ für alle freigegeben"
+    }
+  ]
 }

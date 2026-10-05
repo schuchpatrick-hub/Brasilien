@@ -493,13 +493,33 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     let h = '<article class="pcard' + (full ? ' full' : '') + '" id="crew-' + esc(p.id) + '"><div class="avatar">' + pic + '</div><div>';
     h += '<h3>' + esc(p.name) + (p.nick ? '<span class="nick">' + esc(p.nick) + '</span>' : '') + '</h3>';
     if (p.role) h += '<span class="role">' + esc(p.role) + '</span>';
-    if (full) h += '<dl>' + p.facts.map(f => '<dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd>').join('') + '</dl>';
+    // kompakt: drei Fakten sichtbar, der Rest klappt auf (im PDF alles)
+    const fact = f => '<dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd>', K = PRINT ? 99 : 3;
+    if (full) h += '<dl>' + p.facts.slice(0, K).map(fact).join('') + '</dl>' + (p.facts.length > K ? '<details class="more"><summary>Alle ' + p.facts.length + ' Fakten ▾</summary><dl>' + p.facts.slice(K).map(fact).join('') + '</dl></details>' : '');
     if (p.quote) h += '<blockquote>„' + esc(p.quote) + '“</blockquote>';
     if (p.card && !PRINT) h += '<div><a class="fc-link" href="#karten" data-card="' + esc(p.id) + '">⚽ Spielerkarte von ' + esc(p.name) + ' ansehen</a></div>';
     if (!full) h += '<div class="team">' + esc(gName(p.team)) + '</div><div class="soon">Steckbrief folgt</div>';
     return h + '</div></article>';
   }).join('');
 
+  // Karussell: eine Person pro Ansicht zum Wischen, Pfeile und Punkte (Mini-Fotos) darunter
+  if (!PRINT) {
+    el.classList.add('crew-car'); const ids = TRIP.crew.map(p => p.id);
+    const nav = document.createElement('div'); nav.className = 'crew-nav';
+    nav.innerHTML = '<button type="button" class="cn-prev" aria-label="Vorherige Person">‹</button><div class="cn-dots">' +
+      TRIP.crew.map(p => '<button type="button" data-id="' + esc(p.id) + '" aria-label="' + esc(p.name) + '">' + (p.photo ? '<img src="' + esc(p.photo) + '" alt="" loading="lazy">' : esc(p.name[0])) + '</button>').join('') +
+      '</div><button type="button" class="cn-next" aria-label="Nächste Person">›</button>';
+    el.after(nav);
+    const cur = () => Math.round(el.scrollLeft / Math.max(1, el.clientWidth));
+    const go = i => { i = (i + ids.length) % ids.length; el.scrollTo({left: i * el.clientWidth, behavior: reduceMotion ? 'auto' : 'smooth'}); };
+    const fit = () => { const c = el.children[cur()]; if (c && c.offsetHeight) el.style.height = c.offsetHeight + 'px'; };   // Höhe = aktuelle Person (keine Lücke unter kurzen Steckbriefen)
+    const mark = () => { const i = cur(); nav.querySelectorAll('.cn-dots button').forEach((b, k) => b.setAttribute('aria-current', k === i ? 'true' : 'false')); fit(); };
+    el.addEventListener('toggle', fit, true); if ('ResizeObserver' in window) new ResizeObserver(fit).observe(el);
+    nav.querySelector('.cn-prev').onclick = () => go(cur() - 1); nav.querySelector('.cn-next').onclick = () => go(cur() + 1);
+    nav.querySelectorAll('.cn-dots button').forEach((b, k) => b.onclick = () => go(k));
+    el.addEventListener('scroll', () => { clearTimeout(el.__t); el.__t = setTimeout(mark, 80); }, {passive: true}); mark();
+    window.crewShow = id => { const k = ids.indexOf(id); if (k >= 0) { jump('crew-list', true); setTimeout(() => go(k), 350); } };
+  }
   const short = r => (r || '').split(/ & |\. /)[0].replace(/\.$/, '');
   document.getElementById('crew-overview').innerHTML = ['a', 'b'].map(g =>
     '<div class="grp ' + g + '"><h3>' + esc(gName(g)) + '</h3><div class="row">' +
@@ -509,6 +529,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       '</span><b>' + esc(p.name) + '</b><small>' + esc(short(p.role)) + '</small>' +
       (p.card && !PRINT ? '<span class="fc-chip" role="button" tabindex="0" data-card="' + esc(p.id) + '" aria-label="Spielerkarte von ' + esc(p.name) + '">⚽ Karte</span>' : '') + '</a>').join('') +
     '</div></div>').join('');
+  // Antippen eines Kopfs in der Übersicht: Karussell auf diese Person drehen (statt ans Ende der Liste zu springen)
+  document.getElementById('crew-overview').addEventListener('click', e => { const a = e.target.closest('a[href^="#crew-"]');
+    if (!a || e.target.closest('.fc-chip') || !window.crewShow) return; e.preventDefault(); e.stopPropagation(); crewShow(a.getAttribute('href').slice(6)); }, true);
 
   const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lightbox-img');
   let lastFocus = null;
@@ -774,7 +797,25 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     const st = stats();
     const today = dayOf(Date.now()), order = CREW.map(p => p.id).sort((a, b) => st[b].count - st[a].count);
     meSet('drinks', Object.fromEntries(CREW.map(p => [p.id, {today: drinks.filter(d => d.who === p.id && dayOf(d.ts) === today).length, total: st[p.id].count, rank: order.indexOf(p.id) + 1}])));
-    renderRank(st); renderBac(); renderDays(); renderDayTable(); renderTotal(st); renderLog();
+    renderRank(st); renderBac(); renderDays(); renderDayTable(); renderTotal(st); renderLog(); renderEmpty();
+  }
+  // Noch nichts eingetragen: statt fünf Bildschirmen voller Nullen ein Kasten mit Witz und Experten-Prognose (aus TRI der Crew-Karten)
+  const DRY = ['Simon hat schon mal Sonnencreme probiert. Zählt nicht.', 'Marco übt noch das Anstoßen, ohne das Glas fallen zu lassen.',
+    'Jonas hat in Splitwise schon eine Kategorie „Caipi“ angelegt.', 'Daijo trainiert für die Rülps-WM, Greisel für den Mittagsschlaf danach.',
+    'Patrick hat seine Leber zur Generalüberholung angemeldet.', 'Die Barkeeper an der Copacabana wurden vorgewarnt.'];
+  function renderEmpty() {
+    const box = $('dr-empty'), empty = !drinks.length; if (!box) return;
+    if (empty && !renderEmpty.done && isoToday() < '2026-12-27') { const add = $('dr-add'); if (add) add.open = false; const bd = document.querySelector('#drinks .dr-body'); if (bd) bd.open = false; }   // vor der Reise: Eingabe eingeklappt
+    renderEmpty.done = true;
+    box.hidden = !empty; document.querySelectorAll('#drinks .dr-grid, #drinks details.dr-card[data-fold]').forEach(e => { e.hidden = empty; });
+    if (!empty) return;
+    const n = Math.round((Date.UTC(2026, 11, 27) - Date.parse(isoToday() + 'T00:00:00Z')) / 864e5);
+    const tri = p => ((p.card || {}).stats || {}).TRI || 50, odds = [...CREW].sort((a, b) => tri(b) - tri(a));
+    box.innerHTML = '<div class="de-top"><span class="de-e" aria-hidden="true">🏜️</span><div><b>' + (n > 0 ? 'Noch ' + n + ' Tage Trockenzeit' : 'Gleich geht’s los: noch kein Drink eingetragen') + '</b>' +
+      '<p>' + esc(DRY[new Date().getDate() % DRY.length]) + ' Ranking, Pegel und Statistik erscheinen mit dem ersten Eintrag.</p></div></div>' +
+      '<h4>🎰 Experten-Prognose „Trinkkönig der Reise“</h4><ol class="de-odds">' +
+      odds.map((p, i) => '<li>' + avatar(p) + '<span>' + esc(p.name) + '</span><b>' + (1.6 + i * i * .9 + (100 - tri(p)) / 40).toFixed(1).replace('.', ',') + ' : 1</b></li>').join('') + '</ol>' +
+      '<p class="note">Quoten berechnet aus der Trinkfestigkeit (TRI) der Crew-Karten. Keine Haftung für Lebern.</p>';
   }
   function setMode(msg, canWriteNow) {
     writable = canWriteNow;
@@ -1333,7 +1374,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       types().map(x => '<button type="button" data-f="' + esc(x.id) + '" aria-pressed="' + (filter === x.id) + '">' + x.emoji + ' ' + esc(x.name) + '</button>').join('') + '</div>' +
       (rows.length ? '<ol class="gm-board">' + rows.map(p => '<li><span class="pl">' + place(p) + '.</span>' + av(p.id) + '<span class="nm"><b>' + esc(p.name) + (place(p) === 1 ? ' 👑' : '') + '</b><span class="bar"><i style="width:' + (st[p.id].w / maxW * 100) + '%"></i></span></span>' +
         '<span class="val">' + st[p.id].w + ' ' + (st[p.id].w === 1 ? 'Sieg' : 'Siege') + '<small>' + st[p.id].g + ' ' + (st[p.id].g === 1 ? 'Spiel' : 'Spiele') + ' · ' + Math.round(st[p.id].w / st[p.id].g * 100) + ' % · ' + st[p.id].l + '× Letzter</small></span></li>').join('') + '</ol>' + lantern(rows, st)
-        : '<p class="gm-empty">Noch keine Partie' + (t ? ' ' + esc(t.name) : '') + ' eingetragen. Die erste Runde entscheidet, wer vorlegt.</p>') +
+        : '<p class="gm-empty">Noch keine Partie' + (t ? ' ' + esc(t.name) : '') + ' eingetragen. Bisher hat also jeder eine weiße Weste – und Greisel ist sogar ungeschlagen im Schlafen. Die erste Runde entscheidet, wer vorlegt.</p>') +
       (lw + ll + ld ? '<div class="gm-vs">⚽ Crew gegen Einheimische: <b>' + lw + (lw === 1 ? ' Sieg' : ' Siege') + ' · ' + ll + (ll === 1 ? ' Niederlage' : ' Niederlagen') + (ld ? ' · ' + ld + ' Unentschieden' : '') + '</b></div>' : '') +
       '<div class="sub">' + list.length + ' ' + (list.length === 1 ? 'Partie' : 'Partien') + ' gewertet' + (filter === 'all' ? ' · Platz nach Siegen, bei Gleichstand zählt die Siegquote' : '') + '</div></div>';
   }
@@ -5838,6 +5879,33 @@ if (!PRINT) {
 /* ---------- Start ---------- */
 setGroup(G);
 
+/* ---------- Was ist neu? Einträge in trip.json → news (id, d, tab, to, e, t); gesehen pro Handy (localStorage br26.newsSeen).
+   Erster Besuch: alles gilt als gesehen, der Kasten zeigt dann nur „Zuletzt neu“. Punkte an Reitern und Kacheln mit Neuem. ---------- */
+(function () {
+  const box = document.getElementById('news'), N = (TRIP.news || []).slice().sort((a, b) => b.d.localeCompare(a.d));
+  if (!box || !N.length || PRINT) return;
+  let seen = null; try { seen = JSON.parse(store.get('newsSeen') || 'null'); } catch (e) {}
+  const first = !Array.isArray(seen); if (first) { seen = N.map(n => n.id); store.set('newsSeen', JSON.stringify(seen)); }
+  const fresh = n => !seen.includes(n.id);
+  const dm = d => d.slice(8, 10) + '.' + d.slice(5, 7) + '.';
+  function save() { store.set('newsSeen', JSON.stringify(seen)); }
+  function mark(ids) { ids.forEach(id => { if (!seen.includes(id)) seen.push(id); }); save(); paint(); }
+  function paint() {
+    const nw = N.filter(fresh), show = (nw.length ? nw : N).slice(0, nw.length ? 8 : 3);
+    document.querySelectorAll('.tabs a[data-tab], .tiles .tile').forEach(a => { const tab = a.dataset.tab || (a.getAttribute('href') || '').slice(1);
+      a.classList.toggle('has-new', nw.some(n => n.tab === tab || n.to === tab)); });
+    box.hidden = false;
+    box.innerHTML = '<div class="news-h"><b>' + (nw.length ? '🆕 ' + nw.length + (nw.length === 1 ? ' Neuigkeit' : ' Neuigkeiten') + ' seit deinem letzten Besuch' : '🆕 Zuletzt neu') + '</b>' +
+      (nw.length ? '<button type="button" id="news-ok">✓ Alles gesehen</button>' : '') + '</div><ul>' +
+      show.map(n => '<li class="' + (fresh(n) ? 'new' : '') + '"><a href="#' + esc(n.to || n.tab) + '" data-id="' + esc(n.id) + '"><span aria-hidden="true">' + esc(n.e || '•') + '</span><span>' + esc(n.t) + '</span><small>' + dm(n.d) + '</small></a></li>').join('') + '</ul>';
+    const ok = document.getElementById('news-ok'); if (ok) ok.onclick = () => mark(N.map(n => n.id));
+    box.querySelectorAll('a[data-id]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); const n = N.find(x => x.id === a.dataset.id); mark([n.id]); jump(n.to || n.tab, true); }));
+  }
+  // Reiter mit Punkt antippen = dessen Neuigkeiten gesehen
+  document.querySelectorAll('.tabs a[data-tab]').forEach(a => a.addEventListener('click', () => { const ids = N.filter(n => fresh(n) && n.tab === a.dataset.tab).map(n => n.id); if (ids.length) mark(ids); }));
+  paint();
+})();
+
 /* ---------- Themen-Kacheln: kurze Live-Hinweise; Kino-Knopf für den Reise-Film ---------- */
 (function () {
   const hint = (id, txt) => { const e = document.querySelector('[data-hint="' + id + '"]'); if (e && txt) { e.textContent = txt; e.classList.add('live'); } };
@@ -5850,7 +5918,8 @@ setGroup(G);
   }
   const hf = document.getElementById('hf-open'), open = hf ? parseInt(hf.textContent, 10) : NaN;
   if (!isNaN(open)) hint('reise', open > 0 ? open + (open === 1 ? ' Flug' : ' Flüge') + ' noch offen' : 'Alle Flüge gebucht ✓');
-  hint('kino-tab', 'Neu: Serie, Folge 3 📺');
+  { const eps = Object.keys(TRIP.series || {}).filter(k => /^ep\d+$/.test(k) && !TRIP.series[k].admin).sort((x, y) => +x.slice(2) - +y.slice(2)), last = eps[eps.length - 1];
+    if (last) hint('kino-tab', 'Neu: Serie, Folge ' + TRIP.series[last].n + ' 📺'); }   // immer die neueste freigegebene Folge
   const kf = document.getElementById('kino-film');
   if (kf) kf.addEventListener('click', () => { jump('route', true); setTimeout(() => { const mp = document.getElementById('map-play'); if (mp && mp.getAttribute('aria-pressed') !== 'true') mp.click(); }, 900); });
 })();

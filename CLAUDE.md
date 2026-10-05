@@ -55,6 +55,13 @@ Tagesprogramm) und Eckdaten (`#hero-facts`, Nächte je Gruppe, offene Flüge liv
 eigene Crew- und FIFA-Karte hervor und zeigt eigene Werte (Drinks heute/gesamt/Platz, Gesamtwertung, Marktwert, Siege,
 Zeitkapsel-Status). Module melden Werte für alle Personen über `meSet()`.
 
+## Was ist neu?
+
+`trip.json` → `news` (`id` eindeutig, `d` Datum, `tab` = Reiter-`data-tab`, `to` = Sprungziel-id, `e` Emoji, `t` Text). Kasten `#news`
+über den Themen-Kacheln, rote Punkte an Reitern/Kacheln mit Ungesehenem; gesehen pro Handy im localStorage `br26.newsSeen`
+(erster Besuch: alles gilt als gesehen, Kasten zeigt dann „Zuletzt neu“). **Bei jeder sichtbaren Neuerung (Buchung, neue Folge,
+neue Funktion) einen Eintrag vorne ergänzen.** Die Kino-Kachel nennt automatisch die neueste freigegebene Folge.
+
 ## Crew-Profile
 
 Steckbriefe stehen in `web/trip.json` → `crew` (ein Eintrag mit `facts`/`quote` wird als große Karte gezeigt).
@@ -62,6 +69,7 @@ Steckbriefe stehen in `web/trip.json` → `crew` (ein Eintrag mit `facts`/`quote
 (`web/crew/` ist gitignored). Beim Neuveröffentlichen `crew/...` nicht in `files` auf `null` setzen, dann bleiben sie
 erhalten; bei Bedarf mit `Artifact` `action: read` + `path: "crew/<id>.jpg"` zurückholen. Im PDF werden keine Fotos gezeigt. Unbeteiligte Personen im Hintergrund werden weichgezeichnet.
 Alle sechs haben der Verwendung ihres Fotos zugestimmt (laut Patrick, 30.09.).
+Steckbriefe als Karussell (`#crew-list.crew-car`, eine Person pro Ansicht, Pfeile + Mini-Fotos `.crew-nav`, Höhe passt sich der aktuellen Karte an; `crewShow(id)` dreht hin, Köpfe in der Übersicht nutzen das). Je Steckbrief 3 Fakten sichtbar, Rest in „Alle n Fakten ▾“ (im PDF alles).
 
 ## Crew-Karten (FIFA-Stil)
 
@@ -108,7 +116,7 @@ Kapitel „Drinks“ (`#drinks`). Daten in der Artifact-Datenbank: Collection `d
 `who` = Crew-`id`, `cat`, `name`, `ml`, `abv`, `ts` = Millisekunden UTC) und `people/<id>` (`kg`, `sex` für die
 Promille-Schätzung, Standardwerte in `trip.json` → `drinks.body`). Getränke-Vorlagen und Kategorien in
 `trip.json` → `drinks`. Auswertung (Ranking, Pegel nach Widmark, Tage, Gesamtstatistik) passiert im Browser.
-Lesen/Korrigieren: `ArtifactData` `list`/`delete` auf `drinks`. Schreiben dürfen nur Owner und per E-Mail
+Ohne Einträge zeigt `#dr-empty` statt der Statistik-Karten einen Witz-Kasten („Noch n Tage Trockenzeit“, Experten-Prognose aus TRI der Crew-Karten); vor dem 27.12. sind Eingabe und Gewichte eingeklappt. Lesen/Korrigieren: `ArtifactData` `list`/`delete` auf `drinks`. Schreiben dürfen nur Owner und per E-Mail
 eingeladene Editoren (nicht, solange ein öffentlicher Link aktiv ist). Ohne Schreibrecht bleibt die
 Eingabemaske sichtbar, aber gesperrt, mit Hinweis „Eintragen nur durch den Admin (Patrick)“.
 
