@@ -1042,6 +1042,38 @@ section[data-kind="plan"],section[data-kind="fun"],section[data-kind="go"],secti
 .tile.k-kino b{font-size:1.15rem}.tile.k-kino small,.tile.k-kino small.live{color:#ffd9ec}
 @media (min-width:900px){.tile.k-kino{grid-column:span 2}}
 @media (prefers-reduced-motion:reduce){.tile{transition:none}}
+/* Sprachführer kompakt: Themen-Chips, ein Thema offen, Aussprache beim Antippen, Satz des Tages, Karteikarten */
+.phrases.compact{display:grid;grid-template-columns:1fr;gap:12px}
+.phrases.compact .pcat{padding:2px 14px 6px}
+.phrases.compact .phr .pt{font-size:1.05rem}
+.phrases.compact .phr .de{font-size:.82rem}
+.phrases.compact .phr .say{display:none}
+.phrases.compact .phr.say-on .say{display:block}
+.phrases.compact .phr .txt{cursor:pointer}
+.phrases.compact .phr .txt:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+@media (min-width:760px){.phrases.compact .pcat{display:grid;grid-template-columns:1fr 1fr;column-gap:22px}.phrases.compact .pcat .phr:nth-last-child(2):nth-child(odd){border-bottom:0}}
+.ph-day{background:var(--sunbg);border-radius:12px;padding:8px 14px 2px}
+.ph-day .phr{border-bottom:0}
+.ph-day .pt{font-size:1.2rem!important}
+.ph-cats{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.ph-cats::-webkit-scrollbar{display:none}
+.ph-cats button{flex:none;font:600 .85rem var(--body);background:var(--surface);color:var(--fg);border:1px solid var(--line);border-radius:999px;padding:7px 12px;cursor:pointer}
+.ph-cats button[aria-selected="true"]{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.ph-cats button.sos{border-color:#d63b2f;color:#d63b2f}
+.ph-cats button.sos[aria-selected="true"]{background:#d63b2f;color:#fff}
+.ph-cats button.learn{border-style:dashed}
+.ph-learn{display:grid;gap:10px}
+.pl-prog{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;font:600 .85rem var(--body);color:var(--muted)}
+.pl-bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.pl-bar i{display:block;height:100%;background:var(--accent)}
+.pl-card{background:var(--hero);color:#f4f7f2;border-radius:16px;padding:20px;display:grid;gap:8px;min-height:180px;align-content:center;text-align:center}
+.pl-card .eyebrow{color:#b9d3c3}
+.pl-de{font:700 1.25rem var(--display)}
+.pl-pt{font:800 1.5rem var(--display);color:var(--amarelo)}
+.pl-card .say{font:500 .85rem var(--mono);color:#cfe3d7}
+.pl-btns{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px}
+.pl-btns .btn.ghost{color:#f4f7f2;border-color:rgba(255,255,255,.5);margin:0}
+.pl-btns .play{border-color:var(--amarelo);color:var(--amarelo)}
 /* Drinks ohne Einträge: Witz statt Nullen */
 .dr-empty{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:16px;display:grid;gap:10px;margin-bottom:16px}
 .de-top{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}
