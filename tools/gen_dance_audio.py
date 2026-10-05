@@ -72,7 +72,7 @@ def sung(v, melody, tmp):
 
 # Serien-Stimmen: Stille an den Enden weg (Mund passt genauer), Rumpeln raus, Präsenz rauf, gleichmäßig laut
 POLISH = ('silenceremove=start_periods=1:start_threshold=-42dB:start_silence=0.02,areverse,'
-          'silenceremove=start_periods=1:start_threshold=-42dB:start_silence=0.06,areverse,'
+          'silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.12,areverse,'
           'highpass=f=85,equalizer=f=220:t=q:w=1:g=-2,equalizer=f=3200:t=q:w=1.2:g=2.5,equalizer=f=7500:t=q:w=1:g=-1.5,'
           'acompressor=threshold=-21dB:ratio=3:attack=4:release=70:makeup=2,loudnorm=I=-16:TP=-1.5:LRA=7,afade=t=in:d=0.012')
 

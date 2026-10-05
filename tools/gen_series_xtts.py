@@ -94,11 +94,14 @@ def main():
         k = ln['key']
         if ln['who'] == 'card' or (only and k not in only) or (not only and k in done): continue
         spk, lang = X[ln.get('voice', ln['who'])]
-        say = ln['say']; score = lambda t: difflib.SequenceMatcher(None, ' '.join(norm(t)), ' '.join(norm(say))).ratio()
+        say = ln['say']; lastw = (norm(say) or [''])[-1]
+        # Verständlichkeit; fehlt das letzte Wort (XTTS verschluckt es gern), deutlich abwerten
+        score = lambda t: difflib.SequenceMatcher(None, ' '.join(norm(t)), ' '.join(norm(say))).ratio() - (0 if any(difflib.SequenceMatcher(None, lastw, x).ratio() > .6 for x in norm(t)[-3:]) else .2)
         best = None
         for i in range(N):
             w = np.array(tts.tts(text=say, speaker=spk, language=lang, temperature=0.4, repetition_penalty=5.0, top_p=0.8, speed=1.05, split_sentences=True), dtype=np.float32)   # Sätze einzeln (sonst verschluckt XTTS den zweiten), Pausen kürzt squeeze()
-            nz = np.where(np.abs(w) > .015)[0]; w = w[max(0, nz[0] - 600):nz[-1] + 2400] if len(nz) else w
+            nz = np.where(np.abs(w) > .015)[0]; nz2 = np.where(np.abs(w) > .003)[0]   # Ende großzügig: leise Endlaute (‚t‘, ‚s‘) nicht abschneiden
+            w = w[max(0, nz[0] - 600):min(len(w), max(nz[-1] + 2400, nz2[-1] + 1200))] if len(nz) else w
             w = squeeze(w, 24000)
             txt = asr(w); opts = [(score(txt), len(w), w, txt)]
             # Gebrabbel am Ende: an Pausen (>= 120 ms, nach dem ersten Drittel) kürzen und die beste Fassung nehmen
@@ -108,7 +111,7 @@ def main():
                     e = j
                     while e < len(q) and q[e]: e += 1
                     if e - j >= 3 and j * fr > len(w) * .35:
-                        y = w[:j * fr + fr + 2400]; t2 = asr(y); opts.append((score(t2), len(y), y, t2))
+                        y = w[:j * fr + fr + 3600]; t2 = asr(y); opts.append((score(t2), len(y), y, t2))
                     j = e
                 else: j += 1
             lim = 24000 * max(1.6, len(say) * .085)   # deutlich zu lang = lange Pausen oder Gebrabbel → abwerten
