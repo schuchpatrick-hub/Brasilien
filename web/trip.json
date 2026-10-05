@@ -4426,7 +4426,7 @@
         {
           "key": "pa1",
           "who": "steward",
-          "say": "Achtung, eine Durchsage. Die Sonnencreme von Passagier Simon wird jetzt an Gate zwölf verteilt. Kostenlos.",
+          "say": "Achtung, eine Durchsage: Die Sonnencreme von Simon, Passagier nach Rio, wird jetzt an Gate zwölf verteilt, kostenlos",
           "text": "📢 Die Sonnencreme von Passagier Simon wird jetzt an Gate 12 verteilt. Kostenlos.",
           "_new": 1,
           "name": "📢 Durchsage",
@@ -4748,7 +4748,7 @@
         {
           "key": "beach1n",
           "who": "narrator",
-          "say": "Marco gilt als Frauenschwarm. … Sagt Marco.",
+          "say": "Marco gilt als Frauenschwarm, sagt Marco",
           "text": "Marco gilt als Frauenschwarm. … Sagt Marco.",
           "_new": 1,
           "laugh": 1,
@@ -5788,7 +5788,7 @@
           "key": "kat1",
           "who": "narrator",
           "at": 89393,
-          "say": "1. Januar, 11 Uhr. Die Jungs wachen auf. Ihre Würde schläft noch.",
+          "say": "Erster Januar, elf Uhr, die Jungs wachen auf, ihre Würde schläft noch",
           "text": "1. Januar, 11 Uhr. Die Jungs wachen auf. Ihre Würde schläft noch. ☀️",
           "_new": 1
         },
@@ -6161,8 +6161,8 @@
           "o": 52601
         },
         "kat1": {
-          "dur": 3677,
-          "env": "99767539888789757886200069896343079876665000232100597778777777615698954178887873699887477420",
+          "dur": 4785,
+          "env": "998686499889997988771000999535309986776300024410009999977677886200049976677988740000976653344420009998697799888749998630",
           "o": 56011
         },
         "kat2": {
@@ -6289,6 +6289,22 @@
           "dur": 4183,
           "env": "999869649346978836975200037978899864699924877799879989981000989779996109978843100089999975983389872276410",
           "o": 124853
+        },
+        "ny8s": {
+          "dur": 1297,
+          "env": "489975425965542695303565421001210"
+        },
+        "ny8p": {
+          "dur": 1063,
+          "env": "999998259667544849827645320"
+        },
+        "ro7": {
+          "dur": 745,
+          "env": "9987899999877797300"
+        },
+        "ro8": {
+          "dur": 773,
+          "env": "89996842103976516830"
         }
       },
       "next": "📺 Folge 3: Daijo & Greisel kommen – bald im Kino",
@@ -6465,8 +6481,8 @@
           "o": 34963
         },
         "b1": {
-          "dur": 4420,
-          "env": "779982499865499689876687566641000978898598875899974798986165200029973875935997785179998787847993209979656887310",
+          "dur": 6327,
+          "env": "789999436998755326972887775876565410009000299998887899849988254000398569784099887772059988626878860678723159769977556200099837789743663100279788721999876320001",
           "o": 39348
         },
         "b2": {
@@ -6673,6 +6689,18 @@
           "dur": 5115,
           "env": "99868686679885875200089501009996999788887764101133204937889988999987788789988776588559576999677789886630007967877736877785650530",
           "o": 169644
+        },
+        "q1d": {
+          "dur": 1513,
+          "env": "69984566541001899786533387999224996420"
+        },
+        "q1g": {
+          "dur": 3458,
+          "env": "799776999876666498755345455321006965998987541047655587775100369872498689969976957652200"
+        },
+        "d1n": {
+          "dur": 6170,
+          "env": "79775202689989777761000398789765456540001879775117510006867529678665433100798999887685000779986421430006879998787620004978620887666530001998888606698778600"
         }
       },
       "next": "📺 Folge 4: Ab in den Dschungel – bald im Kino",
@@ -7054,7 +7082,7 @@
         {
           "key": "q1g",
           "who": "greisel",
-          "say": "Meine Sonnenbrille! … Egal. Ich hab eh die Augen zu.",
+          "say": "Meine Sonnenbrille! Ach, egal, ich hab eh die Augen zu",
           "text": "Meine Sonnenbrille! … Egal. Ich hab eh die Augen zu. 😴",
           "_new": 1,
           "lol": [
@@ -7265,7 +7293,7 @@
         {
           "key": "d1n",
           "who": "narrator",
-          "say": "Shot eins: Daijo trinkt. Shot zwei: Daijo trinkt. Shot drei: Marco sucht den Boden.",
+          "say": "Shot eins, Daijo trinkt, Shot zwei, Daijo trinkt, Shot drei, Marco sucht den Boden",
           "text": "Shot 1: Daijo trinkt. Shot 2: Daijo trinkt. Shot 3: Marco sucht den Boden. 🥃",
           "_new": 1,
           "laugh": 1,
@@ -7574,7 +7602,7 @@
           "key": "h1",
           "who": "narrator",
           "at": 14157,
-          "say": "Manaus, 2 Uhr nachts, 30 Grad. Simon kommt nach Hause. Zumindest der Teil, den man ihm gelassen hat.",
+          "say": "Manaus, zwei Uhr nachts, dreißig Grad, Simon kommt nach Hause, zumindest der Teil, den man ihm gelassen hat",
           "text": "Manaus, 2 Uhr nachts, 30 Grad. Simon kommt nach Hause. Zumindest der Teil, den man ihm gelassen hat.",
           "_new": 1
         },
@@ -7924,8 +7952,8 @@
         {
           "key": "j4g",
           "who": "greisel",
-          "say": "Hicks. … Zehn Punkte für mich.",
-          "text": "Hicks. … 10 Punkte für mich. 🫢",
+          "say": "Hicks! Zehn Punkte für mich!",
+          "text": "Hicks! … 10 Punkte für mich. 🫢",
           "_new": 1,
           "lol": 1,
           "laugh": 1,
@@ -8206,8 +8234,8 @@
           "o": 5215
         },
         "h1": {
-          "dur": 4308,
-          "env": "799997457640004746679620499878820049955310577510037655885876136545541220002876549999500076420399556645653320",
+          "dur": 6186,
+          "env": "99998786750007656775797874552387400087556676776300586763467786732685464451006876688889437642096567766976576000688653253000976545100488799896628616846977640",
           "o": 10406
         },
         "h2": {
@@ -8499,6 +8527,10 @@
           "dur": 4112,
           "env": "7998784643444423310007775774257994436997647777664200037699377329815555537886200178884672899988854436310",
           "o": 186096
+        },
+        "j4g": {
+          "dur": 2092,
+          "env": "69815766764000587885331002676755433654245665555475300"
         }
       },
       "cold": {
