@@ -95,13 +95,23 @@
       "stay": "Tabas – Cena Carioca",
       "items": [
         {
-          "text": "Flug São Paulo-Congonhas (CGH) → Rio-Santos Dumont (SDU), Uhrzeit offen, am besten vormittags",
-          "unsicher": true,
+          "time": "ca. 08:30",
+          "text": "Mit Uber von Guarujá zum Flughafen São Paulo-Congonhas (CGH), ca. 1,5–2 h; am Silvestertag Puffer einplanen",
+          "unsicher": true
+        },
+        {
+          "time": "11:50",
+          "text": "Flug GOL G3 1016 São Paulo-Congonhas (CGH) → Rio-Santos Dumont (SDU), an 12:50 (Boeing 737-800)",
           "ics": {
-            "summary": "✈ CGH → SDU (Uhrzeit offen)",
-            "date": "20261231",
-            "desc": "Inlandsflug São Paulo-Congonhas → Rio-Santos Dumont am Silvestertag. Noch nicht gebucht (Stand 30.09.). Möglichst früh fliegen, abends ist in Rio alles gesperrt."
+            "summary": "✈ G3 1016 CGH 11:50 → SDU 12:50",
+            "start": "20261231T145000Z",
+            "end": "20261231T155000Z",
+            "desc": "GOL G3 1016, São Paulo-Congonhas (CGH) → Rio-Santos Dumont (SDU), Economy, Boeing 737-800. Gebucht am 05.10. über Trip.com für Jonas, Patrick, Simon und Marco. Nicht GRU/GIG! Gepäck-Freimenge in der Buchung prüfen."
           }
+        },
+        {
+          "time": "ca. 13:30",
+          "text": "Mit Uber vom Santos Dumont zur Unterkunft (mitten in der Stadt, kurze Fahrt)"
         },
         {
           "text": "Check-in Tabas – Cena Carioca"
@@ -1780,13 +1790,15 @@
       "to": "SDU",
       "fromCity": "São Paulo (Congonhas)",
       "toCity": "Rio (Santos Dumont)",
-      "time": "vormittags",
-      "dur": "ca. 1 h",
-      "price": "offen",
-      "status": "open",
-      "statusText": "Patrick bucht, braucht die Passdaten",
-      "warn": "Congonhas und Santos Dumont, nicht die internationalen Flughäfen GRU und GIG! Vormittags, damit Silvester sicher klappt.",
-      "from": "CGH"
+      "time": "11:50 → 12:50",
+      "dur": "1 h · GOL G3 1016 (Boeing 737-800)",
+      "price": "121 €",
+      "status": "booked",
+      "statusText": "gebucht am 05.10.",
+      "warn": "Congonhas und Santos Dumont, nicht die internationalen Flughäfen GRU und GIG!",
+      "from": "CGH",
+      "timeUnsure": false,
+      "note": "Gol Linhas Aéreas, Economy, Snacks an Bord. Gebucht über Trip.com für alle vier (483,92 € gesamt). Tickets werden bis 06.10. ausgestellt. Freigepäck in der Buchung prüfen 🟡. Von Guarujá ca. 1,5–2 h Uber, also gegen 8:30 losfahren."
     },
     {
       "date": "2027-01-06",
@@ -1915,7 +1927,8 @@
     {
       "label": "Flug CGH → SDU",
       "a": {
-        "k": "open"
+        "v": 121,
+        "k": "fix"
       },
       "b": null
     },
@@ -2123,7 +2136,7 @@
       "cat": "special",
       "e": "✈️",
       "t": "Pass-Tag: Flüge buchen!",
-      "x": "Diese Woche sollte Daijos neuer Reisepass da sein. Damit können die Inlandsflüge gebucht werden: GIG → IGU, IGU → MAO, MAO → GIG und CGH → SDU. Die Bordkarten mit Suchlinks stehen im Reiter „Flüge & Kosten“.",
+      "x": "Diese Woche sollte Daijos neuer Reisepass da sein. Damit können die Inlandsflüge gebucht werden: GIG → IGU, IGU → MAO, und MAO → GIG (CGH → SDU ist schon gebucht). Die Bordkarten mit Suchlinks stehen im Reiter „Flüge & Kosten“.",
       "link": "#fluege"
     },
     {
@@ -3069,7 +3082,7 @@
             "q": "Tabas Cena Carioca, Rio de Janeiro"
           }
         ],
-        "arrive": "31.12. Flug CGH → SDU (Santos Dumont, mitten in der Stadt), dann Uber. Silvester an der Copacabana, ganz in Weiß.",
+        "arrive": "31.12. Flug GOL G3 1016 CGH 11:50 → SDU 12:50 (Santos Dumont, mitten in der Stadt), dann Uber. Silvester an der Copacabana, ganz in Weiß.",
         "hl": [
           {
             "t": "Christusstatue (vorher buchen)",

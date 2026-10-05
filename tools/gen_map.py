@@ -243,7 +243,7 @@ def build(standalone=False):
     s.append(f'<g class="apg" data-ap="GRU" role="button" tabindex="0" aria-label="Flughafen GRU"><circle class="hit" cx="{gi[0]:.1f}" cy="{gi[1]:.1f}" r="14"/><circle class="dot2" cx="{gi[0]:.1f}" cy="{gi[1]:.1f}" r="5"/><text class="tag" x="{gi[0]-8:.1f}" y="{gi[1]-8:.1f}" text-anchor="end">GRU</text></g>')
     s.append(f'<g class="apg" data-ap="CGH" role="button" tabindex="0" aria-label="Flughafen CGH"><circle class="hit" cx="{ci[0]:.1f}" cy="{ci[1]:.1f}" r="14"/><circle class="dot2" cx="{ci[0]:.1f}" cy="{ci[1]:.1f}" r="5"/><text class="tag" x="{ci[0]-8:.1f}" y="{ci[1]+18:.1f}" text-anchor="end">CGH</text></g>')
 
-    s.append(f'<text class="tag" x="{(ci[0]+sd[0])/2-100:.0f}" y="{IY+24}" text-anchor="middle">31.12. CGH → SDU · ca. 1 h</text>')
+    s.append(f'<text class="tag" x="{(ci[0]+sd[0])/2-110:.0f}" y="{IY+24}" text-anchor="middle">31.12. CGH 11:50 → SDU</text>')
 
     stop(GUA, 1, 'Guarujá', '28.–31.12.', dx=20, dy=6, proj=PI, r_=13, frm='2026-12-28', to='2026-12-30', sid='guaruja')
     stop(RIO, 2, 'Rio de Janeiro', '31.12.–06.01.', dx=40, dy=-40, anchor='end', proj=PI, r_=13, frm='2026-12-31', to='2027-01-05', sid='rio')

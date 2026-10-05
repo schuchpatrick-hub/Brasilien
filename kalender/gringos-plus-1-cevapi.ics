@@ -23,17 +23,18 @@ DESCRIPTION:ITA Airways AZ674\, Abflug 21:50 in Rom\, Ankunft 28.12. um 06:
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20260930T120000Z
-UID:2026-12-31-0-a@brasilien-26-27
-DTSTART;VALUE=DATE:20261231
-DTEND;VALUE=DATE:20270101
-SUMMARY:✈ CGH → SDU (Uhrzeit offen)
-DESCRIPTION:Inlandsflug São Paulo-Congonhas → Rio-Santos Dumont am Silve
- stertag. Noch nicht gebucht (Stand 30.09.). Möglichst früh fliegen\, abe
- nds ist in Rio alles gesperrt. – Brasilien 26/27
+UID:2026-12-31-1-a@brasilien-26-27
+DTSTART:20261231T145000Z
+DTEND:20261231T155000Z
+SUMMARY:✈ G3 1016 CGH 11:50 → SDU 12:50
+DESCRIPTION:GOL G3 1016\, São Paulo-Congonhas (CGH) → Rio-Santos Dumont 
+ (SDU)\, Economy\, Boeing 737-800. Gebucht am 05.10. über Trip.com für Jo
+ nas\, Patrick\, Simon und Marco. Nicht GRU/GIG! Gepäck-Freimenge in der B
+ uchung prüfen. – Brasilien 26/27
 END:VEVENT
 BEGIN:VEVENT
 DTSTAMP:20260930T120000Z
-UID:2026-12-31-3-a@brasilien-26-27
+UID:2026-12-31-5-a@brasilien-26-27
 DTSTART;VALUE=DATE:20261231
 DTEND;VALUE=DATE:20270101
 SUMMARY:🎆 Silvester an der Copacabana (alles in Weiß)
