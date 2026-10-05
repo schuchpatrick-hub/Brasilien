@@ -3105,7 +3105,13 @@
         "stays": [
           {
             "name": "Casa Praiana",
-            "q": "Casa Praiana, Enseada, Guarujá"
+            "q": "Casa Praiana, Enseada, Guarujá",
+            "drv": {
+              "name": "Casa Praiana",
+              "addr": "Rua Iracema, 160",
+              "area": "Enseada · Guarujá – SP",
+              "cep": "11443-400"
+            }
           }
         ],
         "arrive": "Landung GRU 28.12. um 06:25, dann mit Uber ca. 1,5–2 h nach Guarujá.",
@@ -3134,7 +3140,14 @@
         "stays": [
           {
             "name": "Tabas – Cena Carioca",
-            "q": "Tabas Cena Carioca, Rio de Janeiro"
+            "q": "Tabas Cena Carioca, Rio de Janeiro",
+            "drv": {
+              "name": "Tabas – Cena Carioca",
+              "addr": "Praça Floriano, 31",
+              "area": "Centro · Rio de Janeiro – RJ",
+              "cep": "20031-050",
+              "hint": "Perto do Theatro Municipal"
+            }
           }
         ],
         "arrive": "31.12. Flug GOL G3 1016 CGH 11:50 → SDU 12:50 (Santos Dumont, mitten in der Stadt), dann Uber. Silvester an der Copacabana, ganz in Weiß.",
@@ -3184,7 +3197,12 @@
         "stays": [
           {
             "name": "TuCasa Flats (gebucht von Greisel)",
-            "q": "TuCasa Flats, Rua Belarmino de Mendonça 1338, Foz do Iguaçu"
+            "q": "TuCasa Flats, Rua Belarmino de Mendonça 1338, Foz do Iguaçu",
+            "drv": {
+              "name": "TuCasa Flats",
+              "addr": "Rua Belarmino de Mendonça, 1338",
+              "area": "Centro · Foz do Iguaçu – PR"
+            }
           }
         ],
         "arrive": "06.01. Flug GIG → IGU ca. 10:40, alle sechs zusammen.",
@@ -3217,7 +3235,14 @@
         "stays": [
           {
             "name": "Casa 307 (09.–10.01.)",
-            "q": "Casa 307, Manaus"
+            "q": "Casa 307, Manaus",
+            "drv": {
+              "name": "Casa 307",
+              "addr": "Rua 10 de Julho, 307",
+              "area": "Centro · Manaus – AM",
+              "cep": "69010-060",
+              "hint": "Perto do Teatro Amazonas"
+            }
           },
           {
             "name": "Juma Kabanas, Dschungel-Lodge (10.–13.01.)",
@@ -3254,7 +3279,14 @@
         "stays": [
           {
             "name": "Geko Pousada Paraty",
-            "q": "Geko Pousada Paraty"
+            "q": "Geko Pousada Paraty",
+            "drv": {
+              "name": "Geko Pousada Paraty",
+              "addr": "Av. Orlando Carpinelli, 111",
+              "area": "Pontal · Paraty – RJ",
+              "cep": "23970-000",
+              "hint": "Em frente à Praia do Pontal"
+            }
           }
         ],
         "arrive": "14.01. Landung GIG 06:40, dann mit Uber ca. 4 h nach Paraty.",
@@ -3341,7 +3373,8 @@
         "name": "Manaus",
         "q": "Aeroporto Internacional de Manaus"
       }
-    }
+    },
+    "drvNote": "Adressen laut Booking 🟡 mit der Buchungsbestätigung abgleichen"
   },
   "dance": {
     "title": "Samba-Show der Gringos",
@@ -10140,6 +10173,30 @@
     ]
   },
   "news": [
+    {
+      "id": "n251006c",
+      "d": "2026-10-06",
+      "tab": "downloads",
+      "to": "downloads",
+      "e": "📴",
+      "t": "Offline-Hilfe: Seite merkt sich den letzten Stand, Hinweis zur Reise-Mappe (PDF) vor Dschungel und Insel"
+    },
+    {
+      "id": "n251006b",
+      "d": "2026-10-06",
+      "tab": "tage-tab",
+      "to": "tage",
+      "e": "🚕",
+      "t": "Fahrer-Karten: Unterkunft groß auf Portugiesisch zum Zeigen, in Tag für Tag, Karte und Heute"
+    },
+    {
+      "id": "n251006a",
+      "d": "2026-10-06",
+      "tab": "tage-tab",
+      "to": "tage",
+      "e": "📍",
+      "t": "Stationen jetzt direkt in Tag für Tag: Foto, Unterkunft, Links und Tipps über den Tagen"
+    },
     {
       "id": "n251005l",
       "d": "2026-10-05",

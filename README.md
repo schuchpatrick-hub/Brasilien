@@ -1,6 +1,6 @@
 # Brasilien 2026/27: Reiseübersicht
 
-**27.12.2026 – 20./21.01.2027** · Stand: 05.10.2026
+**27.12.2026 – 20./21.01.2027** · Stand: 06.10.2026
 
 ![Reisebild: Route durch Brasilien](reisebild.png)
 
@@ -91,14 +91,16 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 
 | Ort | Unterkunft | Zeitraum | Details | Kosten | Gebucht von |
 |---|---|---|---|---|---|
-| Guarujá | [**Casa Praiana**](https://www.booking.com/Share-q0Nagir) (nahe Praia da Enseada) | 28.–31.12. | 75 m zum Strand, kein Pool, **kein Frühstück**, alle vier Gringos plus 1 Cevapi mitgezählt, bis 31.12. verlängert. Alternative war die Pousada Villa Virgínia | 530 € gesamt (132,50 € p. P.) | Jonas (29.09.) |
-| Rio | [**Tabas – Cena Carioca**](https://www.booking.com/Share-UjjihY) | 31.12.–06.01. | **nicht stornierbar**, Gym vorhanden; Anreise auf 31.12. umgebucht ✅ | 1.100 € gesamt (275 € p. P.) | Jonas (01.09.) |
+| Guarujá | [**Casa Praiana**](https://www.booking.com/Share-q0Nagir) (nahe Praia da Enseada), Rua Iracema 160, Enseada 🟡 | 28.–31.12. | 75 m zum Strand, kein Pool, **kein Frühstück**, alle vier Gringos plus 1 Cevapi mitgezählt, bis 31.12. verlängert. Alternative war die Pousada Villa Virgínia | 530 € gesamt (132,50 € p. P.) | Jonas (29.09.) |
+| Rio | [**Tabas – Cena Carioca**](https://www.booking.com/Share-UjjihY), Praça Floriano 31, Centro 🟡 | 31.12.–06.01. | **nicht stornierbar**, Gym vorhanden; Anreise auf 31.12. umgebucht ✅ | 1.100 € gesamt (275 € p. P.) | Jonas (01.09.) |
 | Foz do Iguaçu | [**TuCasa Flats**](https://www.booking.com/searchresults.html?ss=TuCasa+Flats+Foz+do+Igua%C3%A7u) ([Website](https://tucasaflats.com/)), Rua Belarmino de Mendonça 1338, Centro | 06.–09.01. | Apartments mit Küche, Klimaanlage und WLAN, Pool, im Zentrum (unter 1 km); Check-in ab 14:00, Check-out bis 11:00 | ca. 80 € p. P. 🟡 prüfen | Greisel |
-| Manaus | [**Casa 307**](https://www.booking.com/Share-xSVoEp) | 09.–10.01. | Lage und Bewertung top, 2er-Zimmer für Daijo & Greisel | 14 € p. P. | Jonas (14.09.) |
+| Manaus | [**Casa 307**](https://www.booking.com/Share-xSVoEp), Rua 10 de Julho 307, Centro 🟡 | 09.–10.01. | Lage und Bewertung top, 2er-Zimmer für Daijo & Greisel | 14 € p. P. | Jonas (14.09.) |
 | Amazonas | [**Juma Kabanas: Nature Experience Package**](https://www.jumakabanas.com/package/nature-experience-package-3-nights/) (3 Nächte) | 10.–13.01. | Übernachtung, Essen, Abholung und Rückfahrt zum Hotel inklusive, Bar extra. Rückfahrt 13.01. um 08:00, in Manaus ca. 11:00 | 520 € p. P. | Buchungsnummer liegt bei Marco oder Greisel |
-| Paraty | [**Geko Pousada Paraty**](https://www.booking.com/Share-zfyVPQM) | 14.–16.01. | 3 Zimmer für 6 Personen, **inkl. Frühstück**, Frühstück am Strand, **kostenlos stornierbar** | 526 € gesamt (88 € p. P., über Check24) | Daijo & Greisel (16.09.) |
+| Paraty | [**Geko Pousada Paraty**](https://www.booking.com/Share-zfyVPQM), Av. Orlando Carpinelli 111, Pontal 🟡 | 14.–16.01. | 3 Zimmer für 6 Personen, **inkl. Frühstück**, Frühstück am Strand, **kostenlos stornierbar** | 526 € gesamt (88 € p. P., über Check24) | Daijo & Greisel (16.09.) |
 | Ilha Grande | **offen**, muss in **Vila do Abraão** liegen. Vorschlag: [Balaio Hostel](https://www.booking.com/Share-dnNyRa) | 16.–20.01. (Gringos plus 1 Cevapi) / 21.01. (Daijo & Greisel) | | – | – |
 
+
+Adressen mit 🟡 stammen aus den Booking-Einträgen, bitte mit der Buchungsbestätigung abgleichen. Auf der Webseite gibt es je Unterkunft eine **Fahrer-Karte** (Ziel groß auf Portugiesisch zum Zeigen).
 ---
 
 ## Kosten pro Person (was bisher bekannt ist)
