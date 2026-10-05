@@ -4271,7 +4271,7 @@ function wavB64(buf) {
       const k1 = span(L, 500, 1100), k2 = span(L, 1000, 1500), k3 = span(L, 2200, 2800);
       ti1.setAttribute('transform', `translate(${W / 2},150) scale(${(ease(k1) * (1 + .15 * S(PI * k1))).toFixed(3)}) translate(${-W / 2},-150)`); ti1.setAttribute('opacity', k1 > 0 ? 1 : 0);
       ti2.setAttribute('opacity', k2.toFixed(2)); tiR.setAttribute('opacity', k3.toFixed(2)); tiR.setAttribute('transform', `translate(0,${(20 * (1 - ease(k3))).toFixed(1)})`);
-      const rc = LAT.recap !== undefined ? win(L, LAT.recap - 200, sc.t[1] - 300, 300) : 0; recap.setAttribute('opacity', rc.toFixed(2));
+      const rc = LAT.recap !== undefined ? win(L, LAT.recap - 200, sc.t[1] - 300, 300) : EPID !== 'ep1' ? win(L, 3400, sc.t[1] - 200, 300) : 0; recap.setAttribute('opacity', rc.toFixed(2));   // Rückblick nur noch als Einblendung
       later.setAttribute('opacity', (span(L, 5200, 5700) * (1 - rc)).toFixed(2));
       const cast = (EP.n || 1) >= 3 ? CREW : crew4, XS = cast.length > 4 ? [46, 122, 198, 602, 678, 754] : [90, 200, 600, 710];
       cast.forEach((id, i) => { const d = 3000 + i * 250, k = span(L, d, d + 500); on(id, XS[i], FL + 50 + 140 * (1 - ease(k)), {sc: .62});
@@ -4317,12 +4317,13 @@ function wavB64(buf) {
       cam = {x: L < A('bar2') ? 345 : L < A('bar3') ? 250 : L < A('bar4') ? 560 : L < A('bar5') ? 400 : 345, y: 240, z: L < A('bar1') ? 1 : L < A('bar4') ? 1.25 : L < A('bar5') ? 1.05 : 1.3};
     }
     else if (sc.id === 'fly') {
-      const A = k => (LAT[k] || 0) - sc.t[0];
+      const A = k => (LAT[k] || 0) - sc.t[0], dd = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      const F4 = LAT.fly4 !== undefined ? A('fly4') : A('fly10') + dd('fly10') + 900;   // fly4/fly5 gestrichen (06.10.)
       winSky.forEach((c, k) => c.setAttribute('transform', `translate(${(((-t / 25 + k * 30) % 80) + 40).toFixed(1)},0)`));
       const turb = L > A('fly3') - 700 && L < A('fly9') + 600, sh = turb ? 6 : 0;
       const seatX = {marco: 220, jonas: 330, patrick: 440, simon: 550};
       Object.entries(seatX).forEach(([id, x], i) => { if (!P[id]) return; on(id, x + sh * S(t / 37 + i), FL - 26 - sh * C(t / 41 + i), {sc: .78, floor: FL - 20, noShadow: 1}); sitP(pose[id]); pose[id].tilt = 2 * S(t / 900 + i); });
-      masks.forEach(g => g.setAttribute('opacity', L > A('fly3') - 400 && L < A('fly4') ? 1 : 0));
+      masks.forEach(g => g.setAttribute('opacity', L > A('fly3') - 400 && L < F4 ? 1 : 0));
       const hy = id => FL - 26 - 60 * .78 - 96 * .78;   // Kopfmitte sitzend
       // Marco: Panik, dann kotzt er Jonas voll
       const pk0 = A('fly8') + 1700, pk = (L - pk0) / 900;
@@ -4346,19 +4347,19 @@ function wavB64(buf) {
       meals.forEach((mm, n) => { mm.setAttribute('opacity', n < nMeals && L < A('fly11') ? 1 : 0); mm.setAttribute('x', 482); mm.setAttribute('y', (FL - 66 - n * 17).toFixed(1)); mm.setAttribute('style', 'font-size:20px'); });
       const fart0 = A('fly11') + 1700, fk = (L - fart0) / 1500, smelly = L > fart0;
       if (P.patrick) { pose.patrick.aL = [60, 60]; pose.patrick.aR = [60, 60]; if (nMeals && L < A('fly3') - 700) pose.patrick.mouth = S(t / 90) > 0 ? .7 : 0;
-        P.patrick.prop.textContent = L > A('fly5') - 300 && L < A('fly11') ? '🍷' : nMeals && L < A('fly3') - 700 ? '🍴' : '';
+        P.patrick.prop.textContent = LAT.fly5 !== undefined && L > A('fly5') - 300 && L < A('fly11') ? '🍷' : nMeals && L < A('fly3') - 700 ? '🍴' : '';
         if (L > A('fly11') && L < fart0 + 600) { pose.patrick.tilt = 6 * S(t / 50); pose.patrick.aL = [30, 90]; pose.patrick.aR = [30, 90]; pose.patrick.cry = L > A('fly11') + 800 ? 1 : 0; }
         if (smelly) { pose.patrick.tilt = -4; stain.setAttribute('opacity', 1); stain.setAttribute('cx', 440 + 14); stain.setAttribute('cy', FL - 26 - 60 * .78 + 6); } }
       if (smelly && L < A('fly6')) stinkAt(440, FL - 70, fk, t);
       if (smelly && L < A('fly6')) ['marco', 'jonas', 'simon'].forEach(id => { if (P[id]) { pose[id].aL = [150, 150]; pose[id].aR = [20, 10]; pose[id].look = id === 'simon' ? 1 : -1; pose[id].tilt = id === 'simon' ? 18 : -18; } });
       beltB.setAttribute('opacity', win(L, A('fly11') - 400, A('fly13') + 800, 200).toFixed(2));
       mealBadge.setAttribute('opacity', nMeals && L < A('fly3') - 700 ? 1 : 0); mealT.textContent = `🍗 Essen Nr. ${nMeals}`;
-      if (P.jonas && L > A('fly4') && L < A('fly4') + 3000) { pose.jonas.aR = [100, 40]; pose.jonas.look = 1; }
+      if (P.jonas && LAT.fly4 !== undefined && L > A('fly4') && L < A('fly4') + 3000) { pose.jonas.aR = [100, 40]; pose.jonas.look = 1; }
       if (P.simon && L > A('fly6') - 300 && L < A('fly7')) { pose.simon.aR = [120, 30]; pose.simon.look = 1; pose.simon.aL = [10, 10]; pose.simon.tilt = 0; P.simon.prop.textContent = '😏'; }
       if (P.simon && L > A('fly7') + 900) { pose.simon.tilt = -14; pose.simon.aR = [10, 5]; }
       const ev = win(L, A('fly13') + 600, A('fly13') + 2600, 150), st = win(L, A('fly7') + 1700, A('fly7') + 3400, 150);
       stampT.setAttribute('opacity', Math.max(ev, st).toFixed(2)); stampT.textContent = ev > 0 ? 'EVAKUIERT!' : 'ABGEBLITZT!';
-      cam = {x: L < A('fly1') ? 460 : L < A('fly3') - 700 ? 440 : L < A('fly4') ? 280 : L < A('fly11') ? 390 : L < A('fly6') ? 440 : 560, y: 260 + (turb ? 4 * S(t / 23) : 0), z: L < A('fly1') ? 1 : L > A('fly13') && L < A('fly6') ? 1 : 1.25};
+      cam = {x: L < A('fly1') ? 460 : L < A('fly3') - 700 ? 440 : L < F4 ? 280 : L < A('fly11') ? 390 : L < A('fly6') ? 440 : 560, y: 260 + (turb ? 4 * S(t / 23) : 0), z: L < A('fly1') ? 1 : L > A('fly13') && L < A('fly6') ? 1 : 1.25};
     }
     else if (sc.id === 'uber') {
       const A = k => (LAT[k] || 0) - sc.t[0];
@@ -4383,6 +4384,7 @@ function wavB64(buf) {
     }
     else if (sc.id === 'beach') {
       const A = k => (LAT[k] || 0) - sc.t[0];
+      const B7 = LAT.beach7 !== undefined ? B7 : A('beach6') + ((LINES.find(l => l.key === 'beach6') || {}).dur || 0) + 500;
       const lap0 = A('beach10') + 3000, lap1 = A('beach5') - 300, lk = span(L, lap0, lap1);
       bSun.setAttribute('cx', (150 + 520 * lk).toFixed(1)); bSun.setAttribute('cy', (70 - 30 * S(PI * lk)).toFixed(1));
       bWaves.setAttribute('transform', `translate(${(10 * S(t / 600)).toFixed(1)},0)`);
@@ -4418,8 +4420,8 @@ function wavB64(buf) {
         else { on('simon', 640, FL, {sc: .78, burn: .62, shirt: '#e86a5a'}); idle(t, 5, pose.simon); Object.assign(pose.simon, {aL: [20, 10], aR: [20, 10]});
           steam.forEach((e, k) => { const ph = (t / 900 + k / 3) % 1; e.setAttribute('opacity', (1 - ph).toFixed(2)); e.setAttribute('x', (630 + (k - 1) * 22).toFixed(1)); e.setAttribute('y', (FL - 190 - 40 * ph).toFixed(1)); }); }
         if (L > A('beach6') + 800) { lob.setAttribute('opacity', 1); lob.setAttribute('x', 700); lob.setAttribute('y', (FL - 30 - 10 * Math.abs(S(t / 200))).toFixed(1)); } }
-      dayB.setAttribute('opacity', L > A('beach7') - 200 ? 1 : 0);
-      cam = L < A('beach2') - 400 ? {x: 200, y: 250, z: 1.15} : L < flee0 ? {x: 470, y: 250, z: 1.3} : L < A('beach8') - 1500 ? {x: 450, y: 240, z: 1.05} : L < A('beach10') - 1400 ? {x: 400, y: 245, z: 1.35} : L < lap0 ? {x: 330, y: 245, z: 1.15} : L < lap1 ? {x: 680, y: 300, z: 1.4} : L < A('beach7') ? {x: 520, y: 250, z: 1.2} : {x: 400, y: 225, z: 1};
+      dayB.setAttribute('opacity', L > B7 - 200 ? 1 : 0);
+      cam = L < A('beach2') - 400 ? {x: 200, y: 250, z: 1.15} : L < flee0 ? {x: 470, y: 250, z: 1.3} : L < A('beach8') - 1500 ? {x: 450, y: 240, z: 1.05} : L < A('beach10') - 1400 ? {x: 400, y: 245, z: 1.35} : L < lap0 ? {x: 330, y: 245, z: 1.15} : L < lap1 ? {x: 680, y: 300, z: 1.4} : L < B7 ? {x: 520, y: 250, z: 1.2} : {x: 400, y: 225, z: 1};
     }
     else if (sc.id === 'night') {
       const A = k => (LAT[k] || 0) - sc.t[0];
@@ -4482,7 +4484,7 @@ function wavB64(buf) {
       if (P.jonas && L > A('ny2') - 200 && L < A('ny4')) { phone.setAttribute('opacity', 1); phone.setAttribute('x', X.jonas + 4); phone.setAttribute('y', FL - 52); lockE.setAttribute('opacity', 1); lockE.setAttribute('x', X.jonas + 22); lockE.setAttribute('y', FL - 66); pose.jonas.aL = [20, -20]; }
       if (P.patrick && L > A('ny3') && L < A('ny3') + d('ny3')) { pose.patrick.aR = [80, 40]; pose.patrick.look = -1; }
       // Mitternachtskuss: Simon will die Brasilianerin küssen, Marco steht plötzlich dazwischen
-      if (L > A('ny1') && L < A('ny8')) { on('girl2', 600, FL, {sc: .78, flip: -1}); idle(t, 7, pose.girl2); if (L > A('ny6')) pose.girl2.x = 600 + 60 * ease(span(L, A('ny6'), kissT)); }
+      if (L > (LAT.ny1 !== undefined ? A('ny1') : A('ny2') - 2500) && L < A('ny8')) { on('girl2', 600, FL, {sc: .78, flip: -1}); idle(t, 7, pose.girl2); if (L > A('ny6')) pose.girl2.x = 600 + 60 * ease(span(L, A('ny6'), kissT)); }
       if (P.simon && L > A('ny6') - 400 && L < A('ny8')) { const k = span(L, A('ny6') - 400, kissT); pose.simon.x = X.simon + (548 - X.simon) * ease(k); pose.simon.rot = 12 * k; pose.simon.aL = [70, 50]; pose.simon.aR = [70, 50]; if (k < 1) walkP(t, pose.simon); }
       if (P.marco && L > A('ny6') && L < A('ny8')) { const k = span(L, A('ny6') + 400, kissT - 200); pose.marco.x = X.marco + (575 - X.marco) * ease(k); pose.marco.flip = -1; if (L > kissT) { pose.marco.rot = -6; pose.marco.cry = L > kissT + 800 ? 1 : 0; } }
       if (L > kissT && L < A('ny8')) { kissM.setAttribute('opacity', win(L, kissT, kissT + 1300, 150).toFixed(2)); kissM.setAttribute('x', 562); kissM.setAttribute('y', FL - 165);
@@ -4519,7 +4521,8 @@ function wavB64(buf) {
     }
     else if (sc.id === 'cristo') {
       const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
-      const clr = span(L, A('cr3'), A('cr3') + 2200); clouds.setAttribute('opacity', (1 - clr).toFixed(2)); clouds.setAttribute('transform', `translate(${(260 * clr).toFixed(1)},0)`);
+      const C3 = LAT.cr3 !== undefined ? C3 : A('cr2') + d('cr2') + 400;   // Nebel reißt auf
+      const clr = span(L, C3, C3 + 2200); clouds.setAttribute('opacity', (1 - clr).toFixed(2)); clouds.setAttribute('transform', `translate(${(260 * clr).toFixed(1)},0)`);
       halo.setAttribute('opacity', (clr * (.6 + .4 * S(t / 300))).toFixed(2));
       if (P.jonas) { on('jonas', 440, FL - 34, {sc: .72}); idle(t, 0, pose.jonas); if (L > A('cr1') && L < A('cr2')) pose.jonas.aR = [140, 30]; }
       if (P.patrick) { const k = span(L, 0, A('cr2')); const px = 40 + 200 * k; on('patrick', px, FL - 5 - 85 * k, {sc: .72, tumble: L > A('cr2') ? 80 : 30, cry: 1}); walkP(t * .5, pose.patrick); pose.patrick.mouth = S(t / 150) > 0 ? .6 : .2; if (L > A('cr2')) { pose.patrick.x = 250; pose.patrick.y = FL - 74; } }
@@ -4530,7 +4533,7 @@ function wavB64(buf) {
       const hyM = FL - 46 - 60 * .72 - 96 * .72;
       if (L > drop - 500 && L < drop) { const k = span(L, drop - 500, drop); poop.setAttribute('opacity', 1); poop.setAttribute('x', mx); poop.setAttribute('y', (120 + (hyM - 30 - 120) * k * k).toFixed(1)); }
       if (L > drop) { splat.setAttribute('opacity', 1); splat.setAttribute('cx', mx + 4); splat.setAttribute('cy', hyM - 34); if (P.marco) { pose.marco.cry = 1; pose.marco.aL = [10, 5]; pose.marco.aR = [10, 5]; } }
-      cam = L < A('cr2') ? {x: 260, y: 270, z: 1.25} : L < A('cr3') ? {x: 300, y: 280, z: 1.4} : L < A('cr4') - 300 ? {x: 560, y: 150, z: 1.15} : {x: 560, y: 240, z: 1.2};
+      cam = L < A('cr2') ? {x: 260, y: 270, z: 1.25} : L < C3 ? {x: 300, y: 280, z: 1.4} : L < A('cr4') - 300 ? {x: 560, y: 150, z: 1.15} : {x: 560, y: 240, z: 1.2};
     }
     else if (sc.id === 'rod') {
       const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
@@ -4553,11 +4556,11 @@ function wavB64(buf) {
     }
     else if (sc.id === 'zucker') {
       const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
-      const st0 = A('zu1') + d('zu1') + 500, st1 = A('zu5') - 1400;
+      const st0 = LAT.zu1 !== undefined ? A('zu1') + d('zu1') + 500 : 1800, st1 = A('zu5') - 1400;
       const u = L < st0 ? .1 + .3 * span(L, 0, st0) : L < st1 ? .4 : .4 + .4 * span(L, st1, sc.t[1] - sc.t[0]);
       const gx = -100 + 1000 * u, gy = 150 - 80 * u + 60, sw = L > st0 && L < st1 ? 6 * S(t / 380) * Math.max(.3, 1 - span(L, st0, st0 + 6000)) + (L < st0 + 600 ? 10 * S((L - st0) / 60) * (1 - span(L, st0, st0 + 600)) : 0) : 1.5 * S(t / 500);
       [gonB, gonF].forEach(g => g.setAttribute('transform', `translate(${gx.toFixed(1)},${gy.toFixed(1)}) rotate(${sw.toFixed(2)},0,-60)`));
-      hgtB.setAttribute('opacity', L > A('zu1') ? 1 : 0); hgtT.textContent = L > st0 && L < st1 ? '⛔ STILLSTAND · 396 m' : '📏 396 m'; hgtB.firstChild.setAttribute('width', L > st0 && L < st1 ? 280 : 170);
+      hgtB.setAttribute('opacity', L > (LAT.zu1 !== undefined ? A('zu1') : 400) ? 1 : 0); hgtT.textContent = L > st0 && L < st1 ? '⛔ STILLSTAND · 396 m' : '📏 396 m'; hgtB.firstChild.setAttribute('width', L > st0 && L < st1 ? 280 : 170);
       const ids4 = ['marco', 'simon', 'patrick', 'jonas'];
       ids4.forEach((id, i) => { if (!P[id]) return; const rx = -75 + i * 50, ry = 32; const cs = C(sw * PI / 180), sn = S(sw * PI / 180);
         headAt(id, gx + rx * cs - (ry + 60) * sn, gy + rx * sn + (ry + 60) * cs - 60, .32); idle(t, i, pose[id]);
@@ -4846,7 +4849,7 @@ function wavB64(buf) {
       if (P.dajo && L > A('r8') - 200 && L < pk0 + 900) Object.assign(pose.dajo, {aL: [150, 20 * S(t / 70)], aR: [150, 20 * C(t / 70)]});
       if (pk > 0) { const gx = bx + REL.greisel + 22, gy = hyOf(by + 12, .66) + 8, dx = bx + REL.dajo - 4, dy = hyOf(by + 12, .66) + 6; pukeAt(gx, gy, dx, dy, pk, 34);
         if (P.dajo && pk > .9) { Object.assign(pose.dajo, {shirt: '#8fbf3a', face: 'dizzy', cry: 1, aL: [20, 10], aR: [20, 10], tilt: -8}); drip([[dx, dy], [dx - 12, dy + 4], [dx + 10, dy + 2]], t); } }
-      therapy.setAttribute('opacity', win(L, A('r9') + 300, len - 200, 300).toFixed(2));
+      therapy.setAttribute('opacity', win(L, (LAT.r9 !== undefined ? A('r9') : A('r8') + d('r8') + 2400) + 300, len - 200, 300).toFixed(2));
       cam = L < A('r2') - 300 ? {x: 400, y: 225, z: 1} : L < A('r3') - 200 ? {x: bx + 180, y: 270, z: 1.3} : L < A('r4') - 200 ? {x: 640, y: 250, z: 1.15} : L < A('r5') - 1400 ? {x: bx, y: 275, z: 1.3} : L < A('r6') - 800 ? {x: bx + 60, y: 280, z: 1.35} : L < A('r7') - 300 ? {x: bx + 290, y: 270, z: 1.4} : L < pk0 - 200 ? {x: bx - 150, y: 275, z: 1.3} : L < pk0 + 2600 ? {x: bx - 160, y: 270, z: 1.4} : {x: bx - 60, y: 250, z: 1.12};
     }
     else if (sc.id === 'cab') {
@@ -4885,6 +4888,7 @@ function wavB64(buf) {
     }
     else if (sc.id === 'pir') {
       const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      const P8 = LAT.p8 !== undefined ? P8 : A('p7') + d('p7') + 500;   // Piranha beißt zurück (ohne Erzähler)
       pWaves.setAttribute('transform', `translate(${(-(t / 40) % 110).toFixed(1)},0)`);
       const bx = 450, by = 352 + 3 * S(t / 500), br = .8 * S(t / 700);
       canoe.setAttribute('transform', `translate(${bx},${by.toFixed(1)}) rotate(${br.toFixed(2)})`); bucket.setAttribute('transform', `translate(${bx - 160},${(by - 30).toFixed(1)})`);
@@ -4914,12 +4918,12 @@ function wavB64(buf) {
         if (L > A('p6') - 400 && L < A('p7') - 900) { P2.aR = [100, 20 + 15 * S(t / 60)]; P2.aL = [90, 30]; P2.tilt = -10 + 6 * S(t / 80); }
         const lk = span(L, A('p7') - 900, A('p7') - 200);
         if (L > A('p7') - 900) { const fx2 = hx + 110 - 80 * ease(lk), fy2 = by + 40 - (by + 40 - (hy + 10)) * ease(lk); let fr = -60 * (1 - lk) + 8 * S(t / 120);
-          let px = fx2, py = fy2; const kk = span(L, A('p8') - 200, A('p8') + 600), bite = L > A('p8') + 600;
+          let px = fx2, py = fy2; const kk = span(L, P8 - 200, P8 + 600), bite = L > P8 + 600;
           if (kk > 0) { px = fx2 - 60 * ease(kk); py = fy2 - 6; } if (bite) { px = hx + 30 + 6 * S(t / 70); py = hy + 14 + 4 * C(t / 60); fr = 70 + 25 * S(t / 90); }
           pirP.setAttribute('opacity', 1); pirP.prop.textContent = bite ? '' : '🦷'; at4(pirP, px, py, fr, .9);
           lines4[4].setAttribute('opacity', 1); lines4[4].setAttribute('d', `M${(hx + 70).toFixed(1)},${(hy - 70).toFixed(1)} L${(px + 20).toFixed(1)},${(py - 8).toFixed(1)}`);
           P2.aR = [130, 40]; P2.aL = [120, 40]; if (kk > 0 && !bite) P2.tilt = 12; if (bite) Object.assign(P2, {aL: [160, 30 * S(t / 50)], aR: [160, 30 * C(t / 50)], cry: 1, tilt: 10 * S(t / 60), mouth: 1}); }
-        if (L > A('p7') + 200 && L < A('p8') + 600) hearts3(hx, hy - 50, t); }
+        if (L > A('p7') + 200 && L < P8 + 600) hearts3(hx, hy - 50, t); }
       cam = L < A('p2') - 1700 ? {x: 400, y: 225, z: 1} : L < A('p3') ? {x: 280, y: 280, z: 1.3} : L < A('p4') + 600 ? {x: 250, y: 280, z: 1.2} : L < A('p6') - 400 ? {x: 120, y: 320, z: 1.5} : L < A('p7') - 900 ? {x: 560, y: 270, z: 1.3} : {x: 590, y: 270, z: 1.35};
     }
     else if (sc.id === 'jbar') {
@@ -5004,6 +5008,7 @@ function wavB64(buf) {
     }
     else if (sc.id === 'ham') {
       const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      const E6 = LAT.e7 !== undefined ? A('e7') + d('e7') : E6;   // Bilanz-Tafel nach Simons Antwort
       const onHam = (h, u) => { const [a2, b2, y, lo] = HAM[h], xc = (a2 + b2) / 2, yc = 2 * lo - y; return [(1 - u) * (1 - u) * (a2 + 14) + 2 * (1 - u) * u * xc + u * u * (b2 - 14), (1 - u) * (1 - u) * y + 2 * (1 - u) * u * yc + u * u * y]; };
       const SP = {jonas: [0, .3], simon: [0, .52], patrick: [0, .74], marco: [1, .28], dajo: [1, .5], greisel: [1, .72]};
       const gf0 = A('e3') - 2300, gfk = span(L, gf0, gf0 + 700);
@@ -5020,7 +5025,7 @@ function wavB64(buf) {
       // Affe auf dem Ast mit Marcos Zahnbürste
       monk4.setAttribute('opacity', 1); monk4.setAttribute('x', 610); monk4.setAttribute('y', (92 + 2 * S(t / 300)).toFixed(1));
       const scrub = L > A('e1') - 1600; brush4.setAttribute('opacity', 1); brush4.setAttribute('x', (scrub ? 630 + 9 * S(t / 45) : 640).toFixed(1)); brush4.setAttribute('y', scrub ? 112 : 106); brush4.setAttribute('transform', scrub ? `rotate(${(30 + 20 * S(t / 45)).toFixed(0)},630,112)` : '');
-      bil4.setAttribute('opacity', win(L, A('e6') + 200, len - 200, 300).toFixed(2)); bil4.rows.forEach((r, k) => r.setAttribute('opacity', L > A('e6') + 600 + k * 1300 ? 1 : 0));
+      bil4.setAttribute('opacity', win(L, E6 + 200, len - 200, 300).toFixed(2)); bil4.rows.forEach((r, k) => r.setAttribute('opacity', L > E6 + 600 + k * 1300 ? 1 : 0));
       cam = L < A('e1') - 1600 ? {x: 400, y: 225, z: 1} : L < A('e2') - 300 ? {x: 560, y: 200, z: 1.3} : L < gf0 - 200 ? {x: 300, y: 230, z: 1.25} : L < A('e5') + d('e5') + 300 ? {x: 620, y: 290, z: 1.3} : {x: 400, y: 225, z: 1};
     }
     else if (sc.id === 'buf') {
@@ -5208,9 +5213,9 @@ function wavB64(buf) {
       ['uber1', -800, 'car'], ['uber6', -300, 'fart'], ['uber2', 1500, 'car'], ['uber5', -100, 'gong'],
       ['beach2', -300, 'whistle'], ['beach3', 1300, 'kick'], ['beach3', 1800, 'kick'], ['beach3', 2200, 'boing'], ['beach9', 1500, 'kiss'], ['beach9', 1700, 'whoo'], ['beach10', 2400, 'scratch'], ['beach5', -300, 'ding'],
       ['land1', 200, 'plane'], ['land2', 900, 'thud'], ['land2', 1400, 'scratch'], ['land3', -1500, 'splash'], ['land3', 300, 'boing'],
-      ['ny1', 0, 'cheer'], ['ny2', 1500, 'ding'], ['ny5', 0, 'boom'], ['ny5', 0, 'cheer'], ['ny5', 500, 'boom'], ['ny5', 1100, 'boom'], ['ny7', -900, 'kiss'], ['ny7', 300, 'scratch'], ['ny9', -1500, 'crash'], ['ny9', -1200, 'splash'],
+      ['ny1', 0, 'cheer'], ['ny2', -2000, 'cheer'], ['ny2', 1500, 'ding'], ['ny5', 0, 'boom'], ['ny5', 0, 'cheer'], ['ny5', 500, 'boom'], ['ny5', 1100, 'boom'], ['ny7', -900, 'kiss'], ['ny7', 300, 'scratch'], ['ny9', -1500, 'crash'], ['ny9', -1200, 'splash'],
       ['kat1', 0, 'gong'], ['kat5', -200, 'ding'],
-      ['cr2', 0, 'whistle'], ['cr3', 0, 'gong'], ['cr5', -700, 'splash'],
+      ['cr2', 0, 'whistle'], ['cr3', 0, 'gong'], ['cr2', 3100, 'gong'], ['cr5', -700, 'splash'],
       ['ro2', 1600, 'ding'], ['ro4', -300, 'scratch'], ['ro6', 600, 'boing'],
       ['zu2', -1700, 'crash'], ['zu2', -1400, 'scratch'], ['zu5', -1400, 'ding'],
       ['call2', 0, 'puke'],
@@ -5219,13 +5224,13 @@ function wavB64(buf) {
       ['f3', 300, 'boing'], ['f5', -1000, 'squeak'], ['f6', 0, 'gong'],
       ['q1', 200, 'squeak'], ['q3', -800, 'squeak'], ['q3', -500, 'scratch'], ['q4', 0, 'cheer'], ['q6', 0, 'whistle'],
       ['a2', 1400, 'ding'], ['a4', -300, 'scratch'],
-      ['m1', 0, 'boat'], ['m3', 400, 'boat'], ['m4', -600, 'boing'],
+      ['m1', 0, 'boat'], ['m2', -600, 'boat'], ['m3', 400, 'boat'], ['m4', -600, 'boing'],
       ['d1', 0, 'cheer'], ['d3', 900, 'ding'], ['d6', -1700, 'splash'], ['d7', 1200, 'ding'],
       ['h2', -2700, 'squeak'], ['h2', 0, 'kiss'], ['h2', 400, 'whoo'], ['h4', 0, 'scratch'], ['h6', -200, 'boing'],
       ['r3', -300, 'splash'], ['r3', 800, 'splash'], ['r3', 1700, 'splash'], ['r5', -1400, 'fart'], ['r5', -1000, 'bubble'], ['r6', 700, 'kiss'],
       ['l3', 1000, 'scratch'], ['l9', -400, 'boing'], ['p1', 500, 'splash'], ['p4', 700, 'chomp'], ['p4', 1300, 'chomp'], ['p5', 500, 'chomp'], ['p6', -300, 'squeak'], ['p7', -900, 'splash'],
       ['j2', 0, 'cheer'], ['j6', 500, 'cheer'], ['j7', 0, 'click'], ['j9', -150, 'click'], ['j9', 0, 'scratch'],
-      ['k2', -300, 'click'], ['k3', 0, 'scratch'], ['k6', 300, 'ding'], ['e1', -1600, 'monkey'], ['e1', 600, 'monkey'], ['e6', 0, 'gong'],
+      ['k2', -300, 'click'], ['k3', 0, 'scratch'], ['k6', 300, 'ding'], ['e1', -1600, 'monkey'], ['e1', 600, 'monkey'], ['e6', -200, 'ding'],
       ['night1', 0, 'cheer'], ['night3', 3500, 'puke'], ['night5', -400, 'whistle'], ['night4', 2400, 'applause'], ['end', -400, 'applause']];
     fx.forEach(([k, d, n]) => { if (LAT[k] !== undefined) m.sfx(n, A(k, d)); });
     if (LAT.fly2 !== undefined) for (let n = 0; n < 4; n++) m.sfx('munch', A('fly2', 1000 + n * 1300));
@@ -5243,7 +5248,7 @@ function wavB64(buf) {
     if (has('r8')) { const pk0 = LAT.r8 + dl('r8') + 100; m.sfx('puke', at(pk0)); m.sfx('scratch', at(pk0 + 900)); }
     if (has('l4')) { const r0 = LAT.l3 + dl('l3') + 150, q0 = LAT.l4 + dl('l4') + 300; m.sfx('fart', at(r0 + 500)); m.sfx('fart', at(q0)); m.sfx('rumble', at(q0 + 150)); m.sfx('monkey', at(q0 + 700)); m.sfx('crash', at(q0 + 1300)); m.sfx('fart', at(q0 + 2200));
       const f0 = LAT.l9 + dl('l9') + 100; m.sfx('whoo', at(f0)); m.sfx('scratch', at(f0 + 200)); m.sfx('splash', at(f0 + 1600)); }
-    if (has('p2')) { const c0 = LAT.p2 - 1600; m.sfx('splash', at(c0)); m.sfx('ding', at(c0 + 900)); m.sfx('chomp', A('p8', 600)); m.sfx('chomp', A('p8', 900)); }
+    if (has('p2')) { const c0 = LAT.p2 - 1600; m.sfx('splash', at(c0)); m.sfx('ding', at(c0 + 900)); const p8 = has('p8') ? LAT.p8 : LAT.p7 + dl('p7') + 500; m.sfx('chomp', at(p8 + 600)); m.sfx('chomp', at(p8 + 900)); }
     if (has('j3')) { const mB = LAT.j3 - 2200, dB = LAT.j4 - 3300; m.sfx('burp', at(mB)); m.sfx('burpbig', at(dB)); m.sfx('crash', at(dB + 300)); m.sfx('thud', at(dB + 650)); m.sfx('applause', at(dB + 1900));
       for (let k = 0; k < 4; k++) m.sfx('kiss', A('j7', dl('j7') + 200 + k * 650)); }
     if (has('k5')) { const fall = LAT.k5 - 1300; m.sfx('chomp', at(fall - 350)); m.sfx('scratch', at(fall - 300)); m.sfx('splash', at(fall + 300)); m.sfx('whoo', at(fall + 100)); }
