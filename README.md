@@ -107,8 +107,10 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 |---|---:|---:|
 | **✈️ Flüge** | **1.941 €** | **ca. 2.000 €** |
 | Langstrecke Europa ⇄ Brasilien | 1.120 € | 1.300 € |
-| Inlandsflüge Rio → Iguaçu → Manaus → Rio (Richtpreis, noch nicht gebucht) | ca. 700 € | ca. 700 € |
-| São Paulo CGH → Rio SDU (31.12., gebucht) | 121 € | – |
+| 31.12. São Paulo CGH → Rio SDU (gebucht) | 121 € | – |
+| 06.01. Rio GIG → Foz do Iguaçu IGU (Richtpreis) | ca. 140 € | ca. 140 € |
+| 09.01. Foz do Iguaçu IGU → Manaus MAO (Richtpreis) | ca. 370 € | ca. 370 € |
+| 14.01. Manaus MAO → Rio GIG (Richtpreis) | ca. 190 € | ca. 190 € |
 | **🛏️ Unterkünfte** | **1.109,50 €** + Ilha Grande | **702 €** + offene Posten |
 | Guarujá, Casa Praiana (3 Nächte, 530 € für 4) | 132,50 € | – |
 | Rio, Tabas – Cena Carioca (6 Nächte, 1.100 € für 4) | 275 € | – |
