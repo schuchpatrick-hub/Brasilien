@@ -22,7 +22,7 @@
   </section>
 </header>
 
-<nav class="tabs" aria-label="Bereiche"><div class="tabs-in"><a href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht"><span aria-hidden="true">🏠</span> Übersicht</a><a href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab"><span aria-hidden="true">📅</span> Tage</a><a href="#reise" id="tab-reise" data-tab="reise"><span aria-hidden="true">✈️</span> Flüge &amp; Kosten</a><a href="#unterwegs-tab" id="tab-unterwegs-tab" data-tab="unterwegs-tab"><span aria-hidden="true">🧭</span> Unterwegs</a><a href="#infos" id="tab-infos" data-tab="infos"><span aria-hidden="true">🎒</span> Infos</a><a href="#crew-tab" id="tab-crew-tab" data-tab="crew-tab"><span aria-hidden="true">👥</span> Crew &amp; Karten</a><a href="#kino-tab" id="tab-kino-tab" data-tab="kino-tab"><span aria-hidden="true">🎬</span> Kino</a><a href="#vorfreude-tab" id="tab-vorfreude-tab" data-tab="vorfreude-tab"><span aria-hidden="true">🎁</span> Vorfreude</a><a href="#spiele-tab" id="tab-spiele-tab" data-tab="spiele-tab"><span aria-hidden="true">🎲</span> Spiele</a><a href="#drinks-tab" id="tab-drinks-tab" data-tab="drinks-tab"><span aria-hidden="true">🍹</span> Drinks</a></div></nav>
+<nav class="tabs" aria-label="Bereiche"><div class="tabs-in"><a href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht"><span aria-hidden="true">🏠</span> Übersicht</a><a href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab"><span aria-hidden="true">📅</span> Tage</a><a href="#reise" id="tab-reise" data-tab="reise"><span aria-hidden="true">✈️</span> Flüge &amp; Kosten</a><a href="#unterwegs-tab" id="tab-unterwegs-tab" data-tab="unterwegs-tab"><span aria-hidden="true">🧭</span> Unterwegs</a><a href="#infos" id="tab-infos" data-tab="infos"><span aria-hidden="true">🎒</span> Infos</a><a href="#crew-tab" id="tab-crew-tab" data-tab="crew-tab"><span aria-hidden="true">👥</span> Crew &amp; Karten</a><a href="#kino-tab" id="tab-kino-tab" data-tab="kino-tab"><span aria-hidden="true">🎬</span> Kino</a><a href="#vorfreude-tab" id="tab-vorfreude-tab" data-tab="vorfreude-tab"><span aria-hidden="true">🎁</span> Vorfreude</a><a href="#spiele-tab" id="tab-spiele-tab" data-tab="spiele-tab"><span aria-hidden="true">🎲</span> Spiele</a><a href="#drinks-tab" id="tab-drinks-tab" data-tab="drinks-tab"><span aria-hidden="true">🍹</span> Drinks</a><a href="#downloads" id="tab-downloads" data-tab="downloads"><span aria-hidden="true">⬇️</span> Downloads</a></div></nav>
 
 
 
@@ -240,31 +240,6 @@
   </div>
 </section>
 
-<section id="downloads" data-kind="info" data-tab="infos">
-  <h2><span class="ico">⬇️</span>Downloads &amp; Kalender</h2>
-  <div class="cols">
-    <div class="dl">
-      <h3>Offline-Version</h3>
-      <p>Die ganze Übersicht als PDF, für die Lodge ohne Netz. Die Webseite selbst braucht Internet, also <b>vor dem Abflug</b> PDF und Kalender aufs Handy laden.</p>
-      <button type="button" id="pdf-btn" class="btn">PDF speichern</button>
-      <p class="note">Falls der Button nicht geht: <a href="https://github.com/schuchpatrick-hub/Brasilien/blob/main/brasilien-reise.pdf" target="_blank" rel="noopener">PDF auf GitHub</a></p>
-    </div>
-    <div class="dl" id="guest-box" hidden>
-      <h3>Gast-Ansicht</h3>
-      <p>Nur für dich sichtbar: Zeigt die Seite so, wie die anderen sie sehen (ohne Eintragen, Löschen und Bearbeiten). Gilt nur auf diesem Gerät.</p>
-      <button type="button" id="guest-btn" class="btn">👁 Als Gast ansehen</button>
-    </div>
-    <div class="dl">
-      <h3>Kalender fürs Handy</h3>
-      <p>Alle Flüge, Unterkünfte und Termine als Kalenderdatei. Auf GitHub „Download raw file“ tippen und die Datei öffnen.</p>
-      <p><a class="btn ghost" href="https://github.com/schuchpatrick-hub/Brasilien/blob/main/kalender/gringos-plus-1-cevapi.ics" target="_blank" rel="noopener">Kalender Gringos plus 1 Cevapi</a>
-         <a class="btn ghost" href="https://github.com/schuchpatrick-hub/Brasilien/blob/main/kalender/daijo-greisel.ics" target="_blank" rel="noopener">Kalender Daijo &amp; Greisel</a></p>
-      <p class="note">Einzelne Flüge direkt in Google Kalender:</p>
-      <ul id="gcal" class="gcal"></ul>
-    </div>
-  </div>
-</section>
-
 <div class="divider-scene part">%%SCENE:ilha%%<div class="part-t"><span class="part-i" aria-hidden="true">🎉</span><span><b>Crew &amp; Spaß</b><small>Steckbriefe, FIFA-Karten, Kino, Vorfreude, Spiele und Drinks</small></span></div></div>
 
 <section id="crew" data-kind="fun" data-tab="crew-tab">
@@ -406,6 +381,31 @@
     <div id="dr-bodyform" class="dr-bodyform"></div>
   </details>
   <div id="dr-tip" class="dr-tip" role="tooltip" hidden></div>
+</section>
+
+<section id="downloads" data-kind="info" data-tab="downloads">
+  <h2><span class="ico">⬇️</span>Downloads &amp; Kalender</h2>
+  <div class="cols">
+    <div class="dl">
+      <h3>Offline-Version</h3>
+      <p>Die ganze Übersicht als PDF, für die Lodge ohne Netz. Die Webseite selbst braucht Internet, also <b>vor dem Abflug</b> PDF und Kalender aufs Handy laden.</p>
+      <button type="button" id="pdf-btn" class="btn">PDF speichern</button>
+      <p class="note">Falls der Button nicht geht: <a href="https://github.com/schuchpatrick-hub/Brasilien/blob/main/brasilien-reise.pdf" target="_blank" rel="noopener">PDF auf GitHub</a></p>
+    </div>
+    <div class="dl" id="guest-box" hidden>
+      <h3>Gast-Ansicht</h3>
+      <p>Nur für dich sichtbar: Zeigt die Seite so, wie die anderen sie sehen (ohne Eintragen, Löschen und Bearbeiten). Gilt nur auf diesem Gerät.</p>
+      <button type="button" id="guest-btn" class="btn">👁 Als Gast ansehen</button>
+    </div>
+    <div class="dl">
+      <h3>Kalender fürs Handy</h3>
+      <p>Alle Flüge, Unterkünfte und Termine als Kalenderdatei. Auf GitHub „Download raw file“ tippen und die Datei öffnen.</p>
+      <p><a class="btn ghost" href="https://github.com/schuchpatrick-hub/Brasilien/blob/main/kalender/gringos-plus-1-cevapi.ics" target="_blank" rel="noopener">Kalender Gringos plus 1 Cevapi</a>
+         <a class="btn ghost" href="https://github.com/schuchpatrick-hub/Brasilien/blob/main/kalender/daijo-greisel.ics" target="_blank" rel="noopener">Kalender Daijo &amp; Greisel</a></p>
+      <p class="note">Einzelne Flüge direkt in Google Kalender:</p>
+      <ul id="gcal" class="gcal"></ul>
+    </div>
+  </div>
 </section>
 
 <footer><span class="boa">Boa viagem! 🇧🇷</span></footer>
