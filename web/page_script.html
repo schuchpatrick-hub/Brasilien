@@ -352,7 +352,7 @@ function renderFlights() {
 /* ---------- Kosten ---------- */
 function renderCosts() {
   // Kosten nach Art getrennt: Flüge und Unterkünfte je mit Zwischensumme, Balken zeigt den Anteil (hell = geschätzt)
-  const eur = v => v.toLocaleString('de-DE') + ' €';
+  const eur = v => v.toLocaleString('de-DE', Number.isInteger(v) ? {} : {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' €';
   const CAT = [['flug', '✈️', 'Flüge'], ['stay', '🛏️', 'Unterkünfte']];
   const sum = rows => rows.filter(r => r.k === 'fix' || r.k === 'ca').reduce((s, r) => s + r.v, 0);
   const val = r => r.k === 'open' ? 'offen' : r.k === 'split' ? 'noch offen' : (r.k === 'ca' ? 'ca. ' : '') + eur(r.v);
