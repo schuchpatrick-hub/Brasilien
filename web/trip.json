@@ -1917,20 +1917,7 @@
       "cat": "flug"
     },
     {
-      "label": "Inlandsflüge Rio → Iguaçu → Manaus → Rio",
-      "a": {
-        "v": 700,
-        "k": "ca"
-      },
-      "b": {
-        "v": 700,
-        "k": "ca"
-      },
-      "cat": "flug",
-      "sub": "3 Flüge, noch nicht gebucht (Richtpreis)"
-    },
-    {
-      "label": "São Paulo → Rio (31.12.)",
+      "label": "31.12. São Paulo CGH → Rio SDU",
       "a": {
         "v": 121,
         "k": "fix"
@@ -1938,6 +1925,45 @@
       "b": null,
       "cat": "flug",
       "sub": "GOL G3 1016, gebucht"
+    },
+    {
+      "label": "06.01. Rio GIG → Foz do Iguaçu IGU",
+      "cat": "flug",
+      "sub": "ca. 10:40, alle sechs · noch nicht gebucht (Richtpreis)",
+      "a": {
+        "v": 140,
+        "k": "ca"
+      },
+      "b": {
+        "v": 140,
+        "k": "ca"
+      }
+    },
+    {
+      "label": "09.01. Foz do Iguaçu IGU → Manaus MAO",
+      "cat": "flug",
+      "sub": "mit Umstieg · noch nicht gebucht (Richtpreis)",
+      "a": {
+        "v": 370,
+        "k": "ca"
+      },
+      "b": {
+        "v": 370,
+        "k": "ca"
+      }
+    },
+    {
+      "label": "14.01. Manaus MAO → Rio GIG",
+      "cat": "flug",
+      "sub": "01:45 Nachtflug · noch nicht gebucht (Richtpreis)",
+      "a": {
+        "v": 190,
+        "k": "ca"
+      },
+      "b": {
+        "v": 190,
+        "k": "ca"
+      }
     },
     {
       "label": "Guarujá",
