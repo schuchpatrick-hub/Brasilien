@@ -57,6 +57,19 @@ Ungesehenem; Themen-Kacheln schmal (5 Spalten, Hinweise unter 900 px ausgeblende
 wie die Karte, Kopf aus `mapinfo.stops`), Zeilen unverändert; Chips + Wischen über den Helfer `slider(track, chips, opt)` (Start =
 heutige bzw. nächste Station). Flüge ebenso als Karussell (Start = nächster Flug). Im PDF bleibt alles untereinander. `track.__go(i)`
 und `track.__idx(el)` springen von außen (Suche).
+Der Abschnitt `#stationen` bleibt in `page_body.html` (fürs PDF), wird auf der Webseite aber versteckt: `stationNodes()` hängt jede
+`.stop` (Bild, Unterkunft, Links, Tipps als `<details class="st-tips">`, Status-Pill in den Tafel-Kopf) oben in die passende Tafel
+(Zuordnung über den Namen aus `mapinfo.stops`), „Heimreise“ ans Ende der Ilha-Tafel.
+
+**Fahrer-Karten** (`DRV`, `drvShow(key)`, Knopf `drvBtn`): Ziel groß auf Portugiesisch („Por favor, me leve para …“) mit Adresse,
+Kopieren, Maps, Uber. Daten in `trip.json` → `mapinfo.stops[].stays[].drv` (`name`, `addr`, `area`, `cep`, `hint`; Adressen aus
+Booking 🟡, Hinweis `mapinfo.drvNote`), Flughäfen automatisch aus `mapinfo.airports`. Knöpfe in den Stations-Tafeln, in der
+Karten-Infokarte („Zeigen“) und im Heute-Kasten bei „Schlafen“. Im PDF stehen alle Karten am Ende der Stationen.
+
+**Offline:** Der claude.ai-Viewer braucht Netz, echtes Offline geht nicht. `wrapCol()` speichert jeden Datenbank-Stand im
+localStorage (`br26.cache.<collection>`) und zeigt ihn beim nächsten Laden sofort, bis die Live-Daten kommen. `#off-hint` im
+Heute-Kasten: bei fehlendem Netz bzw. vor Abflug (20.–27.12.), Dschungel (08.–10.01.) und Ilha Grande (14.–16.01.) mit
+„PDF speichern“ (Reise-Mappe), pro Tag ausblendbar (`br26.offHide`).
 
 **Schnellsuche** (`#q-open` 🔍 rechts in der Reiterleiste): Overlay `.q-box`, Index wird bei jedem Öffnen aus der Seite gebaut (Tage, Flüge,
 Stationen, Kosten, Sprachführer, Praktisches, Gesundheit, Packlisten, Crew, Kapitelüberschriften; Liste `SRC`), Akzente egal, alle

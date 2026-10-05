@@ -103,15 +103,28 @@ function wrapRef(r) {
     delete: () => guarded('del', r.path, null, () => r.delete()),
     get: (...a) => r.get(...a), onSnapshot: (...a) => r.onSnapshot(...a)};
 }
-function wrapCol(c) {
-  return {doc: id => wrapRef(id === undefined ? c.doc() : c.doc(id)), onSnapshot: (...a) => c.onSnapshot(...a), get: (...a) => c.get(...a)};
+// Letzter Stand jeder Collection im localStorage: Seite zeigt sofort (und bei schlechtem Netz) die zuletzt gesehenen Daten
+const CACHE_PRE = 'br26.cache.';
+function cachedSnap(name) {
+  try { const c = JSON.parse(localStorage.getItem(CACHE_PRE + name) || 'null'); if (!c || !Array.isArray(c.d)) return null;
+    return {docs: c.d.map(x => ({id: x.id, exists: true, data: () => JSON.parse(JSON.stringify(x.v))})), cached: c.ts}; } catch (e) { return null; }
+}
+function wrapCol(c, name) {
+  return {doc: id => wrapRef(id === undefined ? c.doc() : c.doc(id)), get: (...a) => c.get(...a),
+    onSnapshot: (cb, err) => {
+      let live = false; const old = name && cachedSnap(name);
+      if (old) setTimeout(() => { if (!live) cb(old); }, 0);
+      return c.onSnapshot(snap => { live = true;
+        if (name) try { localStorage.setItem(CACHE_PRE + name, JSON.stringify({ts: Date.now(), d: snap.docs.filter(d => d.exists).map(d => ({id: d.id, v: d.data()}))})); } catch (e) {}
+        cb(snap); }, err);
+    }};
 }
 function getDb() {
   if (!DBP) DBP = (async () => {
     if (!window.claude || !window.claude.use) return null;
     rawDb = await window.claude.use('db'); if (!rawDb) return null;
     setTimeout(flush, 500); netPaint();
-    return {collection: name => wrapCol(rawDb.collection(name)), doc: path => wrapRef(rawDb.doc(path))};
+    return {collection: name => wrapCol(rawDb.collection(name), name), doc: path => wrapRef(rawDb.doc(path))};
   })();
   return DBP;
 }
@@ -281,7 +294,7 @@ function renderToday() {
       const d = today[0];
       html += '<div class="big">' + esc(d.place) + '<small>' + esc(d.title) + '</small></div>' +
         itemsHtml(today.flatMap(x => x.items)) +
-        '<div class="stay">Schlafen: <b>' + esc(d.stay) + '</b></div>';
+        '<div class="stay">Schlafen: <b>' + esc(d.stay) + '</b>' + (drvForStay(d.stay) ? ' ' + drvBtn(drvForStay(d.stay)) : '') + '</div>';
     }
     if (tomorrow.length) {
       const n = tomorrow[0], nf = fmtDay(n.date);
@@ -315,6 +328,65 @@ function slider(track, chips, opt) {
   requestAnimationFrame(() => { go(opt.start || 0, true); mark(); });
   return {go, cur};
 }
+/* ---------- Fahrer-Karte: Ziel groß auf Portugiesisch zum Zeigen (trip.json → mapinfo.stops[].stays[].drv, Flughäfen) ---------- */
+const DRV = {};
+(TRIP.mapinfo.stops || []).forEach(s => s.stays.forEach(x => { if (x.drv) DRV[s.id + ':' + x.drv.name] = Object.assign({q: x.q, stop: s.id}, x.drv); }));
+Object.entries(TRIP.mapinfo.airports || {}).forEach(([c, a]) => { DRV['ap:' + c] = {name: a.q + ' (' + c + ')', area: a.name, q: a.q, ap: 1}; });
+const drvBtn = (key, label) => DRV[key] ? '<button type="button" class="drv-btn" data-drv="' + esc(key) + '">🚕 ' + esc(label || 'Fahrer-Karte') + '</button>' : '';
+const drvKeys = stopId => Object.keys(DRV).filter(k => DRV[k].stop === stopId);
+const drvForStay = txt => Object.keys(DRV).find(k => !DRV[k].ap && (txt || '').includes(DRV[k].name.split(' ').slice(0, 2).join(' ')));
+const drvFull = d => [d.addr, d.area.replace(' · ', ', '), d.cep].filter(Boolean).join(', ');
+function drvCard(d, print) {
+  return '<div class="drv-card"' + (print ? '' : ' role="dialog" aria-modal="true" aria-label="Fahrer-Karte"') + '>' + (print ? '' : '<button type="button" class="drv-x" data-drv-x aria-label="Schließen">×</button>') +
+    '<div class="drv-k">🚕 Para o motorista</div><p class="drv-hi">Olá! Por favor, me leve para:</p><div class="drv-name">' + esc(d.name) + '</div>' +
+    (d.addr ? '<div class="drv-addr">' + esc(d.addr) + '</div>' : '') + '<div class="drv-area">' + esc(d.area) + (d.cep ? ' · <span class="nw">CEP ' + esc(d.cep) + '</span>' : '') + '</div>' +
+    (d.hint ? '<div class="drv-hint">' + esc(d.hint) + '</div>' : '') + '<p class="drv-ty">Muito obrigado! 🙏</p>' +
+    (print ? '' : '<div class="drv-act"><button type="button" data-drv-copy>📋 Adresse kopieren</button><a href="https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(d.addr ? d.name + ', ' + drvFull(d) : d.q) + '" target="_blank" rel="noopener">📍 Maps</a>' +
+      '<a href="https://m.uber.com/ul/?action=setPickup&pickup=my_location&dropoff%5Bformatted_address%5D=' + encodeURIComponent(d.addr ? drvFull(d) : d.q) + '" target="_blank" rel="noopener">🚗 Uber</a></div>') +
+    '<p class="drv-de">' + (print ? '' : 'Handy einfach dem Fahrer zeigen. ') + (d.ap ? '' : esc(TRIP.mapinfo.drvNote || '')) + '</p></div>';
+}
+function drvShow(key) {
+  const d = DRV[key]; if (!d) return;
+  let box = document.getElementById('drv');
+  if (!box) {
+    box = document.createElement('div'); box.id = 'drv'; box.className = 'drv'; document.body.appendChild(box);
+    box.addEventListener('click', async e => {
+      if (e.target === box || e.target.closest('[data-drv-x]')) { box.hidden = true; return; }
+      const cp = e.target.closest('[data-drv-copy]'); if (!cp) return;
+      const dd = DRV[box.dataset.key], txt = dd.name + ', ' + (dd.addr ? drvFull(dd) : dd.area);
+      try { await navigator.clipboard.writeText(txt); cp.textContent = '✓ Kopiert'; } catch (err) { cp.textContent = txt; }
+    });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') box.hidden = true; });
+  }
+  box.dataset.key = key; box.innerHTML = drvCard(d); box.hidden = false;
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-drv]'); if (b) { e.preventDefault(); drvShow(b.dataset.drv); } });
+if (PRINT) {   // PDF: alle Fahrer-Karten am Ende der Stationen
+  const st = document.getElementById('stationen');
+  if (st) st.insertAdjacentHTML('beforeend', '<h3 class="drv-ph">🚕 Fahrer-Karten (dem Fahrer zeigen)</h3><div class="drv-print">' + Object.values(DRV).filter(d => !d.ap).map(d => drvCard(d, true)).join('') + '</div>');
+}
+
+// Stations-Infos (Bild, Unterkunft, Links, Tipps) aus #stationen einmal herauslösen und oben in die Tafeln von Tag für Tag hängen
+const STNODES = {};
+function stationNodes() {
+  if (STNODES.done) return STNODES; STNODES.done = true;
+  const byName = Object.fromEntries(TRIP.mapinfo.stops.map(s => [s.name, s.id]));
+  document.querySelectorAll('#stationen .stop').forEach(el => {
+    const h = el.querySelector('.top h3'), id = h && (byName[h.textContent.trim()] || (/Heimreise/.test(h.textContent) ? 'heim' : null)); if (!id) return;
+    el.classList.add('st-info'); if (id === 'heim') el.classList.add('st-heim');
+    const pill = el.querySelector('.top .pill'); if (pill && id !== 'heim') STNODES['pill:' + id] = pill.outerHTML;
+    const ul = el.querySelector(':scope > ul');
+    if (ul && id !== 'heim') { const det = document.createElement('details'); det.className = 'st-tips';
+      det.innerHTML = '<summary>⭐ Tipps &amp; Infos (' + ul.children.length + ')</summary>'; ul.replaceWith(det); det.appendChild(ul); }
+    const links = el.querySelector('.links'), ks = drvKeys(id);
+    if (ks.length) { const btns = ks.map(k => drvBtn(k, ks.length > 1 ? DRV[k].name : 'Fahrer-Karte')).join('');
+      if (links) links.insertAdjacentHTML('beforeend', btns); else el.insertAdjacentHTML('beforeend', '<p class="links">' + btns + '</p>'); }
+    STNODES[id] = el;
+  });
+  const sec = document.getElementById('stationen'); if (sec) sec.hidden = true;
+  return STNODES;
+}
+
 // Tage den Stationen der Karte zuordnen (Anreise zählt zur ersten Station der Gruppe)
 function stopOfDay(d) {
   const S = [['rio', '2026-12-31'], ['iguacu', '2027-01-06'], ['manaus', '2027-01-09'], ['paraty', '2027-01-14'], ['ilha', '2027-01-16']];
@@ -333,9 +405,12 @@ function renderDays() {
   // nach Stationen der Karte: Chips oben, je Station eine Karte mit den Tageszeilen (unverändert)
   const stops = TRIP.mapinfo.stops.filter(s => days.some(d => stopOfDay(d) === s.id));
   box.className = 'days-st';
+  const SN = stationNodes();
   box.innerHTML = stops.map(s => { const ds = days.filter(d => stopOfDay(d) === s.id);
-    return '<div class="st-panel" data-stop="' + s.id + '"><div class="st-head"><span class="st-n">' + s.n + '</span><div><b>' + esc(s.name) + '</b><small>' + esc(s.dates) + ' · ' + s.nights + (s.nights === 1 ? ' Nacht' : ' Nächte') + ' · ' + ds.length + ' Tage</small></div></div>' +
+    return '<div class="st-panel" data-stop="' + s.id + '"><div class="st-head"><span class="st-n">' + s.n + '</span><div><b>' + esc(s.name) + '</b><small>' + esc(s.dates) + ' · ' + s.nights + (s.nights === 1 ? ' Nacht' : ' Nächte') + ' · ' + ds.length + ' Tage</small></div>' + (SN['pill:' + s.id] || '') + '</div>' +
       '<div class="days2">' + ds.map(row).join('') + '</div></div>'; }).join('');
+  box.querySelectorAll('.st-panel').forEach(p => { const n = SN[p.dataset.stop]; if (n) p.querySelector('.st-head').after(n);
+    if (p.dataset.stop === 'ilha' && SN.heim) p.appendChild(SN.heim); });
   let start = stops.findIndex(s => days.some(d => stopOfDay(d) === s.id && d.date >= t)); if (start < 0) start = 0;
   if (t >= '2026-12-27') { const k = stops.findIndex(s => days.some(d => d.date === t && stopOfDay(d) === s.id)); if (k >= 0) start = k; }
   slider(box, stops.map(s => '<b>' + s.n + '</b> ' + esc(s.name.replace(' & Amazonas', ''))), {top: true, start});
@@ -453,20 +528,43 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   return '<li><a href="' + esc(gcalLink(i.ics, d.date)) + '" target="_blank" rel="noopener">' + f.dm + ' ' + esc(i.ics.summary.replace(/^\S+\s/, '')) + '</a></li>';
 })).join('');
 
-/* ---------- PDF ---------- */
+/* ---------- PDF (Reise-Mappe für unterwegs ohne Netz) ---------- */
 (async () => {
   const btn = document.getElementById('pdf-btn');
-  const dl = window.claude && window.claude.use ? await window.claude.use('downloads') : null;
-  if (!dl) { btn.hidden = true; return; }
-  btn.addEventListener('click', async () => {
+  const dl = window.claude && window.claude.use ? await window.claude.use('downloads').catch(() => null) : null;
+  async function save(b) {
     try {
       const res = await fetch('brasilien-reise.pdf');
       if (!res.ok) throw new Error('fetch');
       await dl.save({filename: 'Brasilien-26-27.pdf', data: await res.blob()});
+      try { localStorage.setItem('br26.pdfSaved', isoToday()); } catch (e) {}
+      return true;
     } catch (e) {
-      if (!(e && e.code === 'declined')) btn.insertAdjacentHTML('afterend', ' <span class="note">Ging nicht, bitte den GitHub-Link nehmen.</span>');
+      if (!(e && e.code === 'declined')) b.insertAdjacentHTML('afterend', ' <span class="note">Ging nicht, bitte den <a href="https://github.com/schuchpatrick-hub/Brasilien/blob/main/brasilien-reise.pdf" target="_blank" rel="noopener">GitHub-Link</a> nehmen.</span>');
+      return false;
     }
+  }
+  if (!dl) btn.hidden = true; else btn.addEventListener('click', () => save(btn));
+  // Hinweis im Kopf vor Strecken ohne (gutes) Netz, sonst nur wenn das Handy offline ist
+  if (PRINT) return;
+  const W = [['2026-12-20', '2026-12-27', '✈️ Vor dem Abflug: die Reise-Mappe (PDF mit Tagen, Flügen, Fahrer-Karten und Sprachführer) aufs Handy laden. Die Webseite braucht Netz.'],
+    ['2027-01-08', '2027-01-10', '🌴 Ab 10.01. im Dschungel gibt es kaum Netz: jetzt die Reise-Mappe (PDF) aufs Handy laden.'],
+    ['2027-01-14', '2027-01-16', '⛵ Auf Ilha Grande ist das Netz wackelig: Reise-Mappe (PDF) aufs Handy laden.']];
+  const box = document.getElementById('heute'); if (!box) return;
+  function show() {
+    const t = isoToday(), w = W.find(x => t >= x[0] && t <= x[1]), off = navigator.onLine === false;
+    let hide = ''; try { hide = localStorage.getItem('br26.offHide') || ''; } catch (e) {}
+    let el = document.getElementById('off-hint');
+    if ((!w && !off) || (!off && hide === t)) { if (el) el.remove(); return; }
+    if (!el) { el = document.createElement('div'); el.id = 'off-hint'; el.className = 'off-hint'; box.appendChild(el); }
+    el.innerHTML = '<span>' + (off ? '📴 Gerade offline: Du siehst den zuletzt geladenen Stand. Einträge werden nachgeschickt, sobald wieder Netz da ist.' : esc(w[2])) + '</span>' +
+      (!off && dl ? '<button type="button" class="btn" data-off-pdf>📄 PDF speichern</button>' : '') + (!off ? '<button type="button" class="off-x" data-off-x aria-label="Heute ausblenden">×</button>' : '');
+  }
+  box.addEventListener('click', async e => {
+    if (e.target.closest('[data-off-x]')) { try { localStorage.setItem('br26.offHide', isoToday()); } catch (err) {} show(); }
+    const b = e.target.closest('[data-off-pdf]'); if (b && await save(b)) { b.textContent = '✓ Gespeichert'; b.disabled = true; }
   });
+  addEventListener('online', show); addEventListener('offline', show); show();
 })();
 
 /* ---------- Sprachfuehrer mit Sprachausgabe ---------- */
@@ -1894,7 +1992,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   }
   function apBlock(code, big) {
     const a = MI.airports[code]; if (!a) return '';
-    return '<div class="mi-sec"><h4>✈ Flughafen ' + esc(code) + '</h4><div class="mi-row"><span>' + esc(a.name) + '</span>' + btns(a.q) + '</div>' + flightsAt(code) + '</div>';
+    return '<div class="mi-sec"><h4>✈ Flughafen ' + esc(code) + '</h4><div class="mi-row"><span>' + esc(a.name) + '</span>' + btns(a.q) + drvBtn('ap:' + code, 'Zeigen') + '</div>' + flightsAt(code) + '</div>';
   }
   function select(kind, id) {
     svg.querySelectorAll('.sel').forEach(e => e.classList.remove('sel'));
@@ -1908,7 +2006,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       const st = MI.stops.find(x => x.id === id); if (!st) return;
       h = '<div class="mi-head"><span class="no">' + st.n + '</span><h3>' + esc(st.name) + '</h3><span class="d">' + esc(st.dates) + ' · ' + esc(String(st.nights)) + ' Nächte</span><span class="gtag">' + esc(who(st.g)) + '</span></div>' +
         (st.warn ? '<div class="mi-warn">⚠️ ' + esc(st.warn) + '</div>' : '') +
-        '<div class="mi-sec"><h4>🏠 Unterkunft</h4>' + st.stays.map(x => '<div class="mi-row"><span>' + esc(x.name) + '</span>' + btns(x.q) + '</div>').join('') + '</div>' +
+        '<div class="mi-sec"><h4>🏠 Unterkunft</h4>' + st.stays.map(x => '<div class="mi-row"><span>' + esc(x.name) + '</span>' + btns(x.q) + (x.drv ? drvBtn(st.id + ':' + x.drv.name, 'Zeigen') : '') + '</div>').join('') + '</div>' +
         (st.arrive ? '<div class="mi-sec"><h4>🧭 Anreise</h4><p>' + esc(st.arrive) + '</p></div>' : '') +
         (st.hl && st.hl.length ? '<div class="mi-sec"><h4>⭐ Highlights (antippen = Google Maps)</h4><div class="mi-hl">' + st.hl.map(x => '<a href="' + maps(x.q) + '" target="_blank" rel="noopener">' + esc(x.t) + '</a>').join('') + '</div></div>' : '') +
         (st.ap || []).map(c => apBlock(c)).join('');
@@ -6000,7 +6098,7 @@ setGroup(G);
   const txt = el => { if (!el) return ''; const out = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); while (w.nextNode()) out.push(w.currentNode.nodeValue);
     return out.join(' ').replace(/\s+/g, ' ').replace(/ ([.,:;!?)])/g, '$1').trim(); };
   const SRC = [['.day', 'Tag für Tag', e => { const t = e.querySelector('.ttl'); return txt(e.querySelector('.dt')) + ' · ' + (t && t.firstChild ? t.firstChild.textContent.trim() : ''); }], ['.fl-item', 'Flüge', e => txt(e.querySelector('.pass-top span')) + ' · ' + txt(e.querySelector('.ap .code')) + ' → ' + txt(e.querySelector('.ap.to .code'))],
-    ['#stationen .stop', 'Stationen', e => txt(e.querySelector('h3'))], ['.co-list li', 'Kosten', e => txt(e.querySelector('.co-l b'))], ['#phrases .pcat .phr', 'Sprachführer', e => txt(e.querySelector('.pt'))],
+    ['.stop', 'Stationen', e => txt(e.querySelector('h3'))], ['.co-list li', 'Kosten', e => txt(e.querySelector('.co-l b'))], ['#phrases .pcat .phr', 'Sprachführer', e => txt(e.querySelector('.pt'))],
     ['#praktisch li, #praktisch p, #praktisch h3', 'Praktisches', e => ''], ['#gesundheit li', 'Gesundheit', e => ''], ['#packen li', 'Packlisten', e => ''], ['#crew-list .pcard', 'Crew', e => txt(e.querySelector('h3'))],
     ['#rechner', 'Real-Rechner', e => 'Real-Rechner'], ['section > h2', 'Kapitel', e => txt(e)]];
   let IDX = [];
@@ -6017,6 +6115,7 @@ setGroup(G);
   function reveal(el) {
     close(); document.body.classList.add('cv-all');
     let d = el.closest('details'); while (d) { d.open = true; d = d.parentElement && d.parentElement.closest('details'); }
+    const w0 = norm(inp.value).trim().split(' ')[0]; if (w0) el.querySelectorAll('details').forEach(x => { if (norm(x.textContent).includes(w0)) x.open = true; });
     const pc = el.closest('#phrases .pcat[data-ci]'); if (pc && pc.hidden) { const b = document.querySelector('.ph-cats button[data-ci="' + pc.dataset.ci + '"]'); if (b) b.click(); }
     const car = el.closest('.car'); if (car && car.__go) car.__go(car.__idx(el), true);
     const cc = el.closest('#crew-list .pcard'); if (cc && window.crewShow) { crewShow(cc.id.replace('crew-', '')); }
