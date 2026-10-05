@@ -67,10 +67,10 @@ def cut(x, mode, L):
 
 # Raumklänge (Serie, META.amb): je Art ein Schleifen-Ausschnitt, nahtlos überblendet: Name: (Lautstärke, Split, Clip-ID, Start s, Länge s)
 AMB = {
-    'sea': (.5, 'eval', 418356, 4.0, 8), 'crowd': (.45, 'dev', 424866, 0.0, 8), 'bar': (.4, 'eval', 347537, 4.0, 8),
-    'traffic': (.4, 'dev', 319360, 4.0, 8), 'wind': (.4, 'eval', 135447, 0.0, 8), 'rain': (.5, 'dev', 50058, 4.0, 8),
-    'night': (.35, 'eval', 424871, 0.0, 8), 'falls': (.5, 'eval', 352903, 0.0, 8), 'forest': (.45, 'dev', 222635, 4.0, 8),
-    'cabin': (.4, 'dev', 320786, 16.0, 8),
+    'sea': (0.35, 'eval', 418356, 4.0, 8), 'crowd': (0.32, 'dev', 424866, 0.0, 8), 'bar': (0.28, 'eval', 347537, 4.0, 8),
+    'traffic': (0.28, 'dev', 319360, 4.0, 8), 'wind': (0.28, 'eval', 135447, 0.0, 8), 'rain': (0.35, 'dev', 50058, 4.0, 8),
+    'night': (0.24, 'eval', 424871, 0.0, 8), 'falls': (0.35, 'eval', 352903, 0.0, 8), 'forest': (0.32, 'dev', 222635, 4.0, 8),
+    'cabin': (0.28, 'dev', 320786, 16.0, 8),
 }
 
 def loop(x, a, L, F=1.2):

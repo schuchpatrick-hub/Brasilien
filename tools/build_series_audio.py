@@ -30,6 +30,7 @@ def main():
     for ep in eps:
         data = series[ep]; parts = []; pos = int(GAP * SR); gap = np.zeros(int(GAP * SR), dtype='<i2'); parts.append(gap)
         for ln in data['lines']:
+            if ln['who'] == 'card': continue   # Zwischentitel ohne Ton
             x = pcm(os.path.join(AUD, f"{ep}-{ln['key']}.mp3"))
             data['voice'][ln['key']]['o'] = round(pos * 1000 / SR)
             parts += [x, gap]; pos += len(x) + len(gap)

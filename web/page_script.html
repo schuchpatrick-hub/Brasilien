@@ -4162,7 +4162,7 @@ function wavB64(buf) {
   WXE.waves = Array.from({length: 5}, (_, k) => mk('path', {d: `M-40,0 ${Array.from({length: 18}, (_, j) => `q25,${j % 2 ? 6 : -6} 50,0`).join(' ')}`, fill: 'none', stroke: '#fff', 'stroke-width': 3, opacity: .1}, WXE.heat));
   WXE.dusk = mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: 'url(#se-dusk)', opacity: 0}, wxG);
   WXE.dawn = mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: 'url(#se-dawn)', opacity: 0}, wxG);
-  WXE.mist = mk('g', {opacity: 0}, wxG); WXE.fog = [0, 1, 2, 3].map(k => mk('ellipse', {rx: 330, ry: 80, fill: 'url(#se-mist)', opacity: .7}, WXE.mist));
+  WXE.mist = mk('g', {opacity: 0}, wxG); WXE.fog = [0, 1, 2, 3].map(k => mk('ellipse', {rx: 330, ry: 80, fill: 'url(#se-mist)', opacity: .55}, WXE.mist));
   WXE.rays = mk('g', {opacity: 0}, wxG); WXE.beams = [0, 1, 2, 3].map(k => mk('path', {d: `M${80 + k * 150},-20 l70,0 l${180 + k * 30},${H + 40} l-${150 + k * 20},0Z`, fill: 'url(#se-ray)'}, WXE.rays));
   function weather(sc, L, t) {
     const w = sc.wx || '', len = sc.t[1] - sc.t[0], k = win(L, 0, len, 600); wxG.setAttribute('opacity', w ? k.toFixed(2) : 0);
