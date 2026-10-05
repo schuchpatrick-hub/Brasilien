@@ -1042,6 +1042,51 @@ section[data-kind="plan"],section[data-kind="fun"],section[data-kind="go"],secti
 .tile.k-kino b{font-size:1.15rem}.tile.k-kino small,.tile.k-kino small.live{color:#ffd9ec}
 @media (min-width:900px){.tile.k-kino{grid-column:span 2}}
 @media (prefers-reduced-motion:reduce){.tile{transition:none}}
+/* Drinks ohne Einträge: Witz statt Nullen */
+.dr-empty{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:16px;display:grid;gap:10px;margin-bottom:16px}
+.de-top{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center}
+.de-e{font-size:2.6rem;line-height:1}
+.de-top b{font:800 1.25rem var(--display)}
+.de-top p{margin:4px 0 0;color:var(--muted);font-size:.92rem}
+.dr-empty h4{margin:4px 0 0;font:700 .95rem var(--display)}
+.de-odds{list-style:none;margin:0;padding:0;display:grid;gap:4px;counter-reset:o}
+.de-odds li{display:grid;grid-template-columns:1.4rem 32px 1fr auto;gap:10px;align-items:center;counter-increment:o;font-size:.92rem}
+.de-odds li::before{content:counter(o) ".";font:800 .9rem var(--display);color:var(--muted);text-align:right}
+.de-odds .av{width:32px;height:32px;border-radius:50%;overflow:hidden;background:var(--accent);color:var(--bg);display:grid;place-items:center;font:800 .8rem var(--display)}
+.de-odds .av img{width:100%;height:100%;object-fit:cover}
+.de-odds b{font:700 .9rem var(--mono)}
+/* Crew als Karussell (eine Person pro Ansicht), Fakten teils eingeklappt */
+.crew-car{display:flex;overflow-y:hidden;transition:height .25s;gap:0;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;align-items:flex-start}
+.crew-car::-webkit-scrollbar{display:none}
+.crew-car>.pcard{flex:0 0 100%;box-sizing:border-box;scroll-snap-align:start;scroll-snap-stop:always}
+.pcard details.more{margin-top:6px;grid-column:2}
+.pcard details.more summary{cursor:pointer;font:600 .85rem var(--body);color:var(--accent);list-style:none}
+.pcard details.more summary::-webkit-details-marker{display:none}
+.pcard details.more[open] summary{margin-bottom:4px}
+.crew-nav{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px}
+.crew-nav>button{width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:var(--surface);color:var(--fg);font:700 1.4rem/1 var(--body);cursor:pointer}
+.cn-dots{display:flex;gap:6px}
+.cn-dots button{all:unset;cursor:pointer;width:34px;height:34px;border-radius:50%;overflow:hidden;background:var(--accent);color:#fff;display:grid;place-items:center;font:800 .8rem var(--display);opacity:.55;transition:opacity .15s,box-shadow .15s}
+.cn-dots button img{width:100%;height:100%;object-fit:cover}
+.cn-dots button[aria-current="true"]{opacity:1;box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--amarelo)}
+@media (max-width:620px){.pcard details.more{grid-column:auto;text-align:left;justify-self:stretch}}
+@media (prefers-reduced-motion:reduce){.cn-dots button{transition:none}}
+/* Was ist neu? (trip.json → news, gesehen pro Handy im localStorage br26.newsSeen) */
+.news{background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--amarelo);border-radius:14px;padding:10px 12px;margin-top:-30px;display:grid;gap:6px}
+.news+.tiles{margin-top:-30px}
+.news-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.news-h b{font:700 .95rem var(--display);margin-right:auto}
+.news-h button{font:600 .75rem var(--body);background:none;border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:3px 10px;cursor:pointer}
+.news ul{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.news li a{display:grid;grid-template-columns:1.6rem 1fr auto;gap:8px;align-items:center;text-decoration:none;color:var(--fg);font-size:.88rem;padding:5px 4px;border-radius:8px}
+.news li a:hover,.news li a:focus-visible{background:var(--bg)}
+.news li small{font:500 .72rem var(--mono);color:var(--muted)}
+.news li.new a{font-weight:700}
+.news li.new small{color:#e0262b;font-weight:700}
+.tabs a.has-new,.tile.has-new{position:relative}
+.tabs a.has-new::after,.tile.has-new::after{content:"";position:absolute;top:8px;right:4px;width:9px;height:9px;border-radius:50%;background:#e0262b;box-shadow:0 0 0 2px var(--bg)}
+.tile.has-new::after{top:8px;right:8px;width:11px;height:11px}
+@media print{.news{display:none}}
 .divider-scene.part{height:clamp(130px,24vw,180px)}
 .part-t{position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:12px;padding:34px 16px 14px;background:linear-gradient(180deg,rgba(4,16,10,0),rgba(4,16,10,.8));color:#fff;line-height:1.2}
 .part-i{flex:none;width:50px;height:50px;border-radius:14px;display:grid;place-items:center;font-size:1.7rem;background:rgba(255,255,255,.2);box-shadow:inset 0 0 0 1px rgba(255,255,255,.35)}
