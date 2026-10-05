@@ -65,6 +65,7 @@ def recomedy(eps):
     trip = json.load(open(G.TRIP, encoding='utf-8')); se = trip['series']
     for ep in eps:
         for ln in se[ep]['lines']:
+            if ln['who'] == 'card': continue
             k = ln['key']; dur, env = comedy(os.path.join(CLEAN, f'{ep}-{k}.mp3'), os.path.join(G.OUT, f'{ep}-{k}.mp3'), cfg(se, ep, ln))
             se[ep]['voice'][k].update(dur=dur, env=env)
         print(ep, 'ok', flush=True)
@@ -88,7 +89,7 @@ def main():
     new = {}
     for ln in se[ep]['lines']:
         k = ln['key']
-        if (only and k not in only) or (not only and k in done): continue
+        if ln['who'] == 'card' or (only and k not in only) or (not only and k in done): continue
         spk, lang = X[ln.get('voice', ln['who'])]
         say = ln['say']; score = lambda t: difflib.SequenceMatcher(None, ' '.join(norm(t)), ' '.join(norm(say))).ratio()
         best = None

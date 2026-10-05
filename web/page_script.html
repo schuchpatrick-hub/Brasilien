@@ -1961,12 +1961,13 @@ function wavB64(buf) {
   function Music(ctx, opt) {
     opt = opt || {};
     if (!opt.bake) try { loadSfx(ctx); } catch (e) {}
-    const E = {ctx, mode: 'none', night: false, step: 0, next: 0, drums: [], on: {travel: false, stay: false, show: false}, till: {travel: 0, stay: 0, show: 0}};
+    const MODES = ['travel', 'stay', 'show', 'bossa', 'jungle', 'lounge'];
+    const E = {ctx, mode: 'none', night: false, step: 0, next: 0, drums: [], on: Object.fromEntries(MODES.map(k => [k, false])), till: Object.fromEntries(MODES.map(k => [k, 0]))};
     const master = ctx.createGain(); master.gain.value = .7;
     const comp = ctx.createDynamicsCompressor(); master.connect(comp); comp.connect(ctx.destination);
     const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 16000; lp.connect(master);
     const music = ctx.createGain(); music.gain.value = 1; music.connect(lp);
-    const bus = {travel: ctx.createGain(), stay: ctx.createGain(), show: ctx.createGain()};
+    const bus = Object.fromEntries(MODES.map(k => [k, ctx.createGain()]));
     Object.values(bus).forEach(b => { b.gain.value = 0; b.connect(music); });
     const sfxOut = ctx.createGain(); sfxOut.gain.value = .9; sfxOut.connect(opt.bake ? ctx.destination : master);
     const ambOut = ctx.createGain(); ambOut.gain.value = 1; ambOut.connect(master);
@@ -2071,6 +2072,44 @@ function wavB64(buf) {
       if ([0, 3, 6, 10, 12].includes(s)) SH.chords[bar].forEach((m, k) => tone(out, 'triangle', mf(m - 12), t + k * .01, .22, .06, {lp: 2200}));
       SH.horn[bar].forEach(([st, m, len]) => { if (st === s) brass(out, mf(m), t, sd * len * .85, .2); });
     }
+    // Musik je Ort (Serie): Bossa Nova (Rio), Dschungel-Trommeln (Amazonas, Iguaçu), Fahrstuhlmusik (Flieger)
+    const BO = {chords: [[62, 65, 69, 72, 76], [55, 65, 69, 71, 76], [60, 64, 67, 71, 74], [57, 61, 64, 67, 70]], bass: [38, 43, 36, 45],
+      mel: [[[0, 81, 3], [4, 79, 2], [6, 77, 4], [12, 76, 3]], [[2, 77, 2], [4, 79, 2], [6, 81, 6]], [[0, 79, 3], [4, 76, 2], [6, 74, 4], [12, 72, 3]], [[2, 73, 2], [4, 76, 2], [6, 79, 3], [10, 76, 4]]]};
+    const nylon = (out, f, t, v) => { tone(out, 'triangle', f, t, .5, v, {lp: 2400}); tone(out, 'sine', f * 2, t, .12, v * .25); };
+    const flute = (out, f, t, d, v) => { tone(out, 'sine', f, t, d, v, {a: .06, hold: d * .7, vib: 5, depth: .006}); noise(out, t, Math.min(.12, d), v * .15, 'bandpass', f * 2, 6); };
+    function bossaStep(i, t, sd) {
+      const out = bus.bossa, bar = Math.floor(i / 16) % 4, s = i % 16, r = BO.bass[bar];
+      if (s === 0) tone(out, 'sine', mf(r), t, sd * 5, .38, {a: .01});
+      if (s === 6) tone(out, 'sine', mf(r + 7), t, sd * 2, .3);
+      if (s === 8) tone(out, 'sine', mf(r + 7), t, sd * 5, .34);
+      if (s === 14) tone(out, 'sine', mf(r), t, sd * 2, .26);
+      if ([0, 3, 6, 10, 13].includes(s)) noise(out, t, .03, .07, 'bandpass', 1800, 4);                     // Rimshot-Clave
+      noise(out, t, .04, s % 2 ? .018 : .03, 'highpass', 8000, .7);                                         // Besen/Shaker
+      if ([0, 3, 6, 8, 11, 14].includes(s)) BO.chords[bar].forEach((m, k) => k && nylon(out, mf(m - 12), t + k * .008, s === 0 ? .045 : .035));
+      BO.mel[bar].forEach(([st, m, len]) => { if (st === s && Math.floor(i / 64) % 2) flute(out, mf(m), t, sd * len, .07); });
+    }
+    const PEN = [60, 62, 64, 67, 69, 72, 74, 76];
+    function jungleStep(i, t, sd) {
+      const out = bus.jungle, bar = Math.floor(i / 16) % 4, s = i % 16;
+      if ([0, 6, 8, 12].includes(s)) tone(out, 'sine', 62, t, .38, .55, {from: 120, glide: .1});                // tiefe Trommel
+      if ([3, 10, 14].includes(s)) tone(out, 'sine', 180, t, .14, .22, {from: 260, glide: .05});               // Conga
+      if (s === 11) tone(out, 'sine', 140, t, .14, .2, {from: 220, glide: .05});
+      noise(out, t, .05, s % 2 ? .03 : .06, 'highpass', 6000, .8);                                              // Shaker
+      if (s % 4 === 2) noise(out, t, .03, .05, 'bandpass', 3000, 5);                                            // Holzblock
+      if (s === 0) tone(out, 'sawtooth', mf(bar === 3 ? 31 : 36), t, sd * 15, .05, {lp: 260, a: .3, hold: sd * 12});   // Brummen
+      const st = (i * 7 + bar * 3) % 16; if ([0, 3, 5, 8, 10, 13].includes(s)) marimba(out, mf(PEN[(st + s) % PEN.length]), t, .09);
+      if (bar === 3 && s === 8 && Math.floor(i / 64) % 2) tone(out, 'sine', 2400, t, .5, .03, {from: 1500, glide: .25, vib: 9, depth: .04});   // Vogelruf
+    }
+    const LO = {chords: [[60, 64, 67, 71], [57, 60, 64, 67], [62, 65, 69, 72], [55, 59, 62, 65]], bass: [36, 33, 38, 31],
+      mel: [[[0, 76, 4], [4, 79, 4], [8, 83, 6]], [[0, 81, 4], [4, 79, 2], [6, 76, 8]], [[0, 77, 4], [4, 81, 4], [8, 84, 6]], [[0, 83, 4], [4, 81, 4], [8, 79, 8]]]};
+    const rhodes = (out, f, t, d, v) => { tone(out, 'sine', f, t, d, v, {a: .02, hold: d * .5}); tone(out, 'triangle', f * 2, t, d * .4, v * .18, {lp: 3000}); };
+    function loungeStep(i, t, sd) {   // Fahrstuhlmusik: Rhodes-Akkorde, gemütlicher Bass, Besen, Vibraphon-Melodie
+      const out = bus.lounge, bar = Math.floor(i / 16) % 4, s = i % 16;
+      if (s === 0) LO.chords[bar].forEach((m, k) => rhodes(out, mf(m), t + k * .02, sd * 14, .05));
+      if (s % 4 === 0) tone(out, 'sine', mf(LO.bass[bar] + [0, 7, 12, 7][s / 4]), t, sd * 3.5, .3, {a: .01});
+      if (s === 4 || s === 12) noise(out, t, .18, .05, 'bandpass', 3500, .6, {a: .04});
+      LO.mel[bar].forEach(([st, m, len]) => { if (st === s) tone(out, 'sine', mf(m), t, sd * len, .06, {a: .01, hold: sd * len * .3, vib: 5.5, depth: .01}); });
+    }
     const sdur = () => 60 / BPM / 4 * (E.night ? 1.2 : 1) * (E.mode === 'show' ? E.slow || 1 : 1);   // E.slow: Samba-Show etwas gemächlicher
     const audible = (m, t) => E.on[m] || t < E.till[m];
     E.schedule = until => {
@@ -2078,6 +2117,9 @@ function wavB64(buf) {
         if (audible('travel', E.next)) travelStep(E.step, E.next, sdur());
         if (audible('stay', E.next)) stayStep(E.step, E.next, sdur());
         if (audible('show', E.next)) showStep(E.step, E.next, sdur());
+        if (audible('bossa', E.next)) bossaStep(E.step, E.next, sdur());
+        if (audible('jungle', E.next)) jungleStep(E.step, E.next, sdur());
+        if (audible('lounge', E.next)) loungeStep(E.step, E.next, sdur());
         E.next += sdur(); E.step++;
       }
     };
@@ -2102,8 +2144,18 @@ function wavB64(buf) {
     // Atmo je Szene (Serie): gefiltertes Rauschen mit Bewegung, ein paar typische Einzelgeräusche
     E.amb = (kind, t0, t1) => {
       const C2 = {hall: ['bandpass', 650, .7, .05], cabin: ['lowpass', 240, .7, .13], sea: ['lowpass', 900, .5, .08], crowd: ['bandpass', 850, .6, .07], traffic: ['lowpass', 380, .7, .09],
-        restaurant: ['bandpass', 1300, .9, .035], wind: ['bandpass', 650, 1.4, .07], room: ['lowpass', 320, .5, .025], night: ['bandpass', 500, .5, .02], bar: ['bandpass', 900, .8, .045], falls: ['lowpass', 1500, .4, .11], forest: ['bandpass', 2600, .5, .012]}[kind];
+        restaurant: ['bandpass', 1300, .9, .035], wind: ['bandpass', 650, 1.4, .07], room: ['lowpass', 320, .5, .025], night: ['bandpass', 500, .5, .02], bar: ['bandpass', 900, .8, .045], falls: ['lowpass', 1500, .4, .11], forest: ['bandpass', 2600, .5, .012], rain: ['highpass', 1800, .5, .05]}[kind];
       if (!C2 || t1 - t0 < 1) return;
+      // echte Aufnahme als Schleife (TRIP.sfx['amb_' + Art], Restaurant nimmt die Bar), sonst gefiltertes Rauschen
+      const sk = 'amb_' + (kind === 'restaurant' ? 'bar' : kind), smp = !opt.bake && TRIP.sfx && TRIP.sfx[sk];
+      if (smp && !SFXLIB.buf && SFXLIB.p && !(window.OfflineAudioContext && ctx instanceof window.OfflineAudioContext)) { SFXLIB.p.then(b => { if (b) E.amb(kind, Math.max(t0, ctx.currentTime + .05), t1); }); return; }
+      if (smp && SFXLIB.buf) { const [a, d, v] = smp[0], src = ctx.createBufferSource(), g = ctx.createGain(), lv = (v || 1) * (kind === 'restaurant' ? .6 : 1);
+        src.buffer = SFXLIB.buf; src.loop = true; src.loopStart = a; src.loopEnd = a + d; src.connect(g); g.connect(ambOut);
+        g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(lv, t0 + 1); g.gain.setValueAtTime(lv, Math.max(t0 + 1, t1 - 1)); g.gain.linearRampToValueAtTime(0, t1);
+        src.start(t0, a + rnd() * d * .8); src.stop(t1 + .05);
+        if (kind === 'restaurant' || kind === 'bar') for (let x = t0 + 1; x < t1 - .5; x += 1.6 + rnd() * 2.5) tone(ambOut, 'sine', 2600 + rnd() * 900, x, .25, .012);
+        if (kind === 'hall') for (let x = t0 + 2; x < t1 - 1; x += 6 + rnd() * 4) [0, .35].forEach((o, k) => tone(ambOut, 'sine', [784, 659][k], x + o, .5, .02));
+        return; }
       const src = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain(), lv = C2[3];
       src.buffer = nb; src.loop = true; f.type = C2[0]; f.frequency.value = C2[1]; f.Q.value = C2[2]; g.gain.value = 0;
       src.connect(f); f.connect(g); g.connect(ambOut);
@@ -2125,7 +2177,23 @@ function wavB64(buf) {
       music.gain.cancelScheduledValues(w); music.gain.setTargetAtTime(on ? .75 : 1, w, .4);
     };
     const sfx0 = (name, t) => {
-      if (name === 'boom') {
+      if (name === 'tusch') { tusch(t); [60, 64, 67, 72].forEach(m => tone(sfxOut, 'sawtooth', mf(m), t + .26, .7, .03, {lp: 2200, a: .01})); }
+      else if (name === 'drama') {   // „Dun dun duuun“: tiefe Bläser, Pauke, Streicher-Tremolo
+        [[55, 0, .22], [58, .3, .22], [54, .62, 1.5]].forEach(([m, o, d]) => [1, 1.5, 2].forEach((h, k) => tone(sfxOut, 'sawtooth', mf(m - 12) * h, t + o, d, k ? .04 : .09, {lp: 900, a: .015, hold: d * .8})));
+        [0, .3].forEach(o => tone(sfxOut, 'sine', 70, t + o, .4, .5, {from: 110, glide: .08}));
+        for (let k = 0; k < 14; k++) tone(sfxOut, 'sine', 66, t + .62 + k * .06, .08, .35 * (1 - k / 16), {from: 95, glide: .03});
+        tone(sfxOut, 'sawtooth', mf(66), t + .62, 1.5, .03, {lp: 2400, vib: 11, depth: .02, a: .05, hold: 1.1});
+      } else if (name === 'slowmo') {   // Zeitlupe: alles sackt nach unten, dumpfer Herzschlag
+        noise(sfxOut, t, 1.4, .18, 'lowpass', 3500, .8, {to: 160, a: .05});
+        tone(sfxOut, 'sine', 40, t, 1.4, .45, {from: 160, glide: 1.2});
+        [0, .7].forEach(o => [0, .16].forEach(o2 => tone(sfxOut, 'sine', 50, t + .3 + o + o2, .2, .5, {from: 80, glide: .06})));
+      } else if (name === 'reel') {     // Stummfilm-Projektor rattert
+        for (let k = 0; k < 40; k++) noise(sfxOut, t + k / 18, .025, .14, 'bandpass', 1400, 2);
+      } else if (name === 'piano') {    // kurzes Ragtime-Klavier zum Zwischentitel
+        [[72, 0], [76, .14], [79, .28], [84, .42], [83, .7], [79, .84], [76, .98], [77, 1.12]].forEach(([m, o]) => { tone(sfxOut, 'triangle', mf(m), t + o, .3, .07, {lp: 3500}); tone(sfxOut, 'sine', mf(m - 24), t + o, .25, .05); });
+      } else if (name === 'gate') {     // Flughafen-Gong vor der Durchsage
+        [[72, 0], [76, .32], [79, .64]].forEach(([m, o]) => { tone(sfxOut, 'sine', mf(m), t + o, 1.1, .09, {a: .005}); tone(sfxOut, 'sine', mf(m) * 2.01, t + o, .5, .02); });
+      } else if (name === 'boom') {
         tone(sfxOut, 'sine', 1900, t, .45, .05, {from: 700, glide: .42});
         noise(sfxOut, t + .45, 1.1, .5, 'lowpass', 1400, .7, {to: 200});
         for (let k = 0; k < 8; k++) noise(sfxOut, t + .6 + k * .07 + rnd() * .05, .03, .12, 'highpass', 4000, 1);
@@ -2191,7 +2259,7 @@ function wavB64(buf) {
         s.buffer = SFXLIB.buf; g.gain.value = v[2] || 1; s.connect(g); g.connect(sfxOut); s.start(Math.max(t, ctx.currentTime), v[0], v[1]); return; }
       if (b && b.length) { const s = ctx.createBufferSource(); s.buffer = b[Math.floor(rnd() * b.length) % b.length]; s.connect(sfxOut); s.start(Math.max(t, ctx.currentTime)); return; }
       sfx0(name, t); };
-    E.end = w => { master.gain.cancelScheduledValues(w); master.gain.setTargetAtTime(0, w, .4); E.on = {travel: false, stay: false, show: false}; E.till = {travel: w + 2, stay: w + 2, show: w + 2}; E.mode = 'none'; };
+    E.end = w => { master.gain.cancelScheduledValues(w); master.gain.setTargetAtTime(0, w, .4); E.on = Object.fromEntries(MODES.map(k => [k, false])); E.till = Object.fromEntries(MODES.map(k => [k, w + 2])); E.mode = 'none'; };
     return E;
   }
   const tlog = []; let tlog0 = 0, live = null, liveTimer = 0, vo = null;
@@ -3137,16 +3205,16 @@ function wavB64(buf) {
   // ---------- Szenen-Zeitplan (ms) ----------
   // Szenen-Zeiten kommen aus trip.json (series.ep1.scenes), Musik/Ort-Einblendung je Szene hier
   const META = {intro: {mus: 'show'},
-    land: {amb: 'cabin', mus: 'travel', cap: '✈️ Landung in Rio-Santos Dumont · 31.12.'}, kat: {amb: 'room', mus: 'stay', cap: '🏨 Hotel in Rio · 1. Januar'}, cristo: {amb: 'wind', mus: 'travel', cap: '⛰️ Corcovado · Christusstatue'},
-    rod: {amb: 'restaurant', mus: 'stay', night: 1, cap: '🥩 Rodízio · so viel Fleisch, wie man will'}, zucker: {amb: 'wind', mus: 'travel', cap: '🚡 Zuckerhut-Seilbahn'}, call: {amb: 'night', mus: 'stay', night: 1, cap: '📱 Videocall nach München'}, sec: {amb: 'hall', mus: 'travel', cap: '📍 München, Flughafen · 27.12.'}, bar: {amb: 'bar', mus: 'stay', night: 1, cap: '🍺 Flughafen-Bar · 16:30 Uhr'},
-    fly: {amb: 'cabin', mus: 'travel', night: 1, cap: '✈️ Über dem Atlantik · Nachtflug'}, uber: {amb: 'traffic', mus: 'travel', cap: '🚕 São Paulo → Guarujá · 28.12., 6:40 Uhr'},
-    beach: {amb: 'sea', mus: 'show', cap: '🏖️ Guarujá · Praia da Enseada'}, night: {amb: 'night', mus: 'stay', night: 1, cap: '🍹 Guarujá · abends'}, end: {mus: 'show'},
-    gig: {amb: 'hall', mus: 'travel', cap: '🛬 Rio-Galeão · 06.01., 6:10 Uhr'}, boe: {amb: 'cabin', mus: 'travel', cap: '✈️ Rio → Foz do Iguaçu'}, falls: {amb: 'falls', mus: 'show', cap: '🌊 Iguaçu · Garganta do Diabo'},
-    quati: {amb: 'forest', mus: 'stay', cap: '🦝 Iguaçu · Nasenbären-Revier'}, grenze: {amb: 'wind', mus: 'travel', cap: '🇦🇷 Grenze nach Argentinien'}, boot: {amb: 'falls', mus: 'travel', cap: '🚤 Bootstour unter die Fälle'},
+    land: {amb: 'cabin', mus: 'lounge', tr: 'plane', cap: '✈️ Landung in Rio-Santos Dumont · 31.12.'}, kat: {amb: 'room', mus: 'bossa', wx: 'rays', cap: '🏨 Hotel in Rio · 1. Januar'}, cristo: {amb: 'wind', mus: 'bossa', tr: 'leaf', wx: 'mist', cap: '⛰️ Corcovado · Christusstatue'},
+    rod: {amb: 'restaurant', mus: 'stay', night: 1, cap: '🥩 Rodízio · so viel Fleisch, wie man will'}, zucker: {amb: 'wind', mus: 'bossa', wx: 'dusk', cap: '🚡 Zuckerhut-Seilbahn'}, call: {amb: 'night', mus: 'stay', night: 1, cap: '📱 Videocall nach München'}, sec: {amb: 'hall', mus: 'travel', cap: '📍 München, Flughafen · 27.12.'}, bar: {amb: 'bar', mus: 'stay', night: 1, cap: '🍺 Flughafen-Bar · 16:30 Uhr'},
+    fly: {amb: 'cabin', mus: 'lounge', tr: 'plane', night: 1, cap: '✈️ Über dem Atlantik · Nachtflug'}, uber: {amb: 'traffic', mus: 'travel', wx: 'dawn', cap: '🚕 São Paulo → Guarujá · 28.12., 6:40 Uhr'},
+    beach: {amb: 'sea', mus: 'show', tr: 'leaf', wx: 'heat', cap: '🏖️ Guarujá · Praia da Enseada'}, night: {amb: 'night', mus: 'stay', night: 1, cap: '🍹 Guarujá · abends'}, end: {mus: 'show'},
+    gig: {amb: 'hall', mus: 'bossa', tr: 'plane', cap: '🛬 Rio-Galeão · 06.01., 6:10 Uhr'}, boe: {amb: 'cabin', mus: 'lounge', tr: 'plane', cap: '✈️ Rio → Foz do Iguaçu'}, falls: {amb: 'falls', mus: 'show', tr: 'splash', wx: 'mist', cap: '🌊 Iguaçu · Garganta do Diabo'},
+    quati: {amb: 'forest', mus: 'jungle', tr: 'leaf', wx: 'rays', cap: '🦝 Iguaçu · Nasenbären-Revier'}, grenze: {amb: 'wind', mus: 'travel', wx: 'heat', cap: '🇦🇷 Grenze nach Argentinien'}, boot: {amb: 'falls', mus: 'travel', tr: 'splash', wx: 'mist', cap: '🚤 Bootstour unter die Fälle'},
     duel: {amb: 'bar', mus: 'stay', night: 1, cap: '🍹 Foz do Iguaçu · abends · Trinkduell'},
-    hos: {amb: 'room', mus: 'stay', night: 1, cap: '🏨 Manaus · Casa 307 · 09.01., 2 Uhr nachts'}, rio: {amb: 'forest', mus: 'travel', cap: '🚤 Encontro das Águas · 10.01.'},
-    cab: {amb: 'forest', mus: 'stay', cap: '🛖 Juma Lodge · Kabine 3'}, pir: {amb: 'forest', mus: 'travel', cap: '🎣 Piranha-Angeln · Rio Juma'},
-    jbar: {amb: 'bar', mus: 'stay', night: 1, cap: '🍹 Lodge-Bar · abends'}, kai: {amb: 'night', mus: 'stay', night: 1, cap: '🐊 Kaiman-Safari · nachts'}, ham: {amb: 'forest', mus: 'travel', cap: '🌅 Juma Lodge · letzter Morgen'},
+    hos: {amb: 'room', mus: 'stay', night: 1, cap: '🏨 Manaus · Casa 307 · 09.01., 2 Uhr nachts'}, rio: {amb: 'forest', mus: 'jungle', tr: 'splash', wx: 'rain', cap: '🚤 Encontro das Águas · 10.01.'},
+    cab: {amb: 'forest', mus: 'jungle', tr: 'leaf', cap: '🛖 Juma Lodge · Kabine 3'}, pir: {amb: 'forest', mus: 'jungle', tr: 'splash', wx: 'dusk', cap: '🎣 Piranha-Angeln · Rio Juma'},
+    jbar: {amb: 'bar', mus: 'stay', night: 1, cap: '🍹 Lodge-Bar · abends'}, kai: {amb: 'night', mus: 'jungle', night: 1, cap: '🐊 Kaiman-Safari · nachts'}, ham: {amb: 'forest', mus: 'jungle', tr: 'leaf', wx: 'morning', cap: '🌅 Juma Lodge · letzter Morgen'},
     // fertig gebaute Szenen für spätere Folgen (trip.json → series.parked)
     ny: {amb: 'crowd', mus: 'show', cap: '🎆 Copacabana · Silvester 2026/27'}, buf: {mus: 'stay', cap: '🦜 Foz do Iguaçu · 06.01.'}, jg: {mus: 'stay', cap: '🌴 Amazonas · Juma Lodge'}, fv: {mus: 'show', cap: '⚽ Footvolley gegen Einheimische'}};
   const ALLSC = Object.keys(META).map(id => ({id}));
@@ -3154,7 +3222,7 @@ function wavB64(buf) {
   const EPALL = Object.keys(TRIP.series).filter(k => /^ep\d+$/.test(k)).sort((x, y) => +x.slice(2) - +y.slice(2)), EPS = EPALL.filter(k => !TRIP.series[k].admin);
   function setEp(id) {   // Folge laden: Zeilen, Zeiten, Szenen (Texte im Bild setzt epTexts weiter unten)
     EPID = EPS.includes(id) ? id : EPS[EPS.length - 1]; EP = TRIP.series[EPID];
-    LINES = EP.lines.map(l => Object.assign({}, l, (EP.voice || {})[l.key] || {dur: 1500, env: ''}));
+    LINES = EP.lines.map(l => Object.assign({}, l, l.who === 'card' ? {dur: l.cdur || 2600, env: ''} : (EP.voice || {})[l.key] || {dur: 1500, env: ''}));
     LAT = Object.fromEntries(LINES.map(l => [l.key, l.at]));
     SC = (EP.scenes || []).map(s => Object.assign({id: s.id, t: s.t}, META[s.id] || {}));
     END = SC.length ? SC[SC.length - 1].t[1] : 160000;
@@ -3163,7 +3231,7 @@ function wavB64(buf) {
     if (c && LAT[c.from[0]] !== undefined && lb) { COLDA = LAT[c.from[0]] + (c.from[1] || 0); COLDB = lb.at + lb.dur + (c.to[1] || 0); COLD = COLDB - COLDA + FRZ; }
     TOTAL = END + COLD;
     PLAY = [];   // alles, was an Stimmen abgespielt wird: {key, at (Gesamtzeit), dur}
-    LINES.forEach(l => { PLAY.push({key: l.key, at: l.at + COLD, dur: l.dur});
+    LINES.forEach(l => { if (l.who === 'card') return; PLAY.push({key: l.key, at: l.at + COLD, dur: l.dur});
       if (COLD && l.at >= COLDA - 50 && l.at < COLDB - 200) PLAY.push({key: l.key, at: l.at - COLDA, dur: Math.min(l.dur, COLDB - l.at)}); });
     const first = sc => (sc.cap || sc.id).split(' · ')[0], dup = sc => SC.filter(x => x.cap && first(x) === first(sc)).length > 1;
     CHAPS = (COLD ? [{n: 'Vorab', t: 0}] : []).concat(SC.map(sc => ({n: sc.id === 'intro' ? '🎬 Intro' : sc.id === 'end' ? '🎞️ Abspann' : dup(sc) ? first(sc).split(' ')[0] + ' ' + sc.cap.split(' · ')[1] : first(sc), t: sc.t[0] + COLD})));
@@ -3540,6 +3608,7 @@ function wavB64(buf) {
   // Licht aus: alles dunkel, nur Simons Sonnenbrand leuchtet (Verlauf in Weltkoordinaten, Mitte = Simons Kopf)
   const sglow = mk('radialGradient', {id: 'se-sglow', gradientUnits: 'userSpaceOnUse', cx: 545, cy: 257, r: 170}, defs);
   [[0, '#ff7a2a', .18], [.32, '#ff5a1a', .12], [.55, '#05040c', .86], [1, '#05040c', .93]].forEach(([o2, c, a]) => mk('stop', {offset: o2, 'stop-color': c, 'stop-opacity': a}, sglow));
+  const shadesG = mk('path', {d: 'M-26,-6 L26,-6 L24,6 Q14,12 4,6 L0,0 L-4,6 Q-14,12 -24,6Z', fill: '#111', stroke: '#444', 'stroke-width': 1.5, opacity: 0}, fxG);
   const nightOff = mk('rect', {x: -400, y: -300, width: W + 800, height: H + 600, fill: 'url(#se-sglow)', opacity: 0}, fxG);
   const sHalo = mk('circle', {r: 46, fill: 'none', stroke: '#ffb347', 'stroke-width': 10, opacity: 0, style: 'filter:blur(6px)'}, fxG);
 
@@ -3633,7 +3702,7 @@ function wavB64(buf) {
 
   // ======== Folge 3: Daijo & Greisel kommen ========
   const E3 = [], e3 = el => { E3.push(el); return el; };   // Effekte der Folge 3, jedes Bild erst einmal aus
-  [nightOff, sHalo].forEach(e3);
+  [nightOff, sHalo, shadesG].forEach(e3);
   const hyOf = (y, s) => y - 156 * s;   // Kopfmitte einer Figur (Fußpunkt y, Größe s)
   defs.insertAdjacentHTML('beforeend', '<pattern id="se-bon" width="26" height="9" patternUnits="userSpaceOnUse"><rect width="26" height="9" fill="#fffdf5"/><line x1="3" y1="5" x2="23" y2="5" stroke="#a9a9a9" stroke-width="1.6"/></pattern>' +
     '<clipPath id="se-ppclip"><rect x="292" y="122" width="96" height="112" rx="6"/></clipPath>' +
@@ -4080,6 +4149,30 @@ function wavB64(buf) {
   }
 
   // HUD: Ort, Untertitel, Abblende
+  // Wetter und Tageszeit über dem Bild (META.wx): Regen, Hitzeflimmern, Abendlicht, Morgenrot, Nebel, Sonnenstrahlen
+  const wxG = mk('g', {opacity: 0}, hud), WXE = {};
+  defs.insertAdjacentHTML('beforeend', '<linearGradient id="se-dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a3c"/><stop offset=".55" stop-color="#ff5f6d" stop-opacity=".5"/><stop offset="1" stop-color="#3a1f6b"/></linearGradient>' +
+    '<linearGradient id="se-dawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb3c7"/><stop offset=".6" stop-color="#ffd59a" stop-opacity=".3"/><stop offset="1" stop-color="#ffd59a" stop-opacity="0"/></linearGradient>' +
+    '<radialGradient id="se-mist"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>' +
+    '<linearGradient id="se-ray" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6c8" stop-opacity=".9"/><stop offset="1" stop-color="#fff6c8" stop-opacity="0"/></linearGradient>' +
+    '<linearGradient id="se-water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fd3ff"/><stop offset=".25" stop-color="#1d8aa8"/><stop offset="1" stop-color="#0b4f6c"/></linearGradient>');
+  WXE.rain = mk('g', {opacity: 0}, wxG); mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: '#1c2a44', opacity: .22}, WXE.rain);
+  WXE.drops = mk('path', {d: Array.from({length: 90}, (_, k) => { const x = hash(k, 91) * (W + 120) - 60, y = hash(k, 92) * H * 2 - H; return `M${x.toFixed(0)},${y.toFixed(0)} l-7,24`; }).join(''), stroke: '#cfe6ff', 'stroke-width': 1.6, opacity: .55, 'stroke-linecap': 'round'}, WXE.rain);
+  WXE.heat = mk('g', {opacity: 0}, wxG); mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: '#ffb14a', opacity: .12}, WXE.heat);
+  WXE.waves = Array.from({length: 5}, (_, k) => mk('path', {d: `M-40,0 ${Array.from({length: 18}, (_, j) => `q25,${j % 2 ? 6 : -6} 50,0`).join(' ')}`, fill: 'none', stroke: '#fff', 'stroke-width': 3, opacity: .1}, WXE.heat));
+  WXE.dusk = mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: 'url(#se-dusk)', opacity: 0}, wxG);
+  WXE.dawn = mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: 'url(#se-dawn)', opacity: 0}, wxG);
+  WXE.mist = mk('g', {opacity: 0}, wxG); WXE.fog = [0, 1, 2, 3].map(k => mk('ellipse', {rx: 330, ry: 80, fill: 'url(#se-mist)', opacity: .55}, WXE.mist));
+  WXE.rays = mk('g', {opacity: 0}, wxG); WXE.beams = [0, 1, 2, 3].map(k => mk('path', {d: `M${80 + k * 150},-20 l70,0 l${180 + k * 30},${H + 40} l-${150 + k * 20},0Z`, fill: 'url(#se-ray)'}, WXE.rays));
+  function weather(sc, L, t) {
+    const w = sc.wx || '', len = sc.t[1] - sc.t[0], k = win(L, 0, len, 600); wxG.setAttribute('opacity', w ? k.toFixed(2) : 0);
+    const on = n => w === n || (w === 'morning' && (n === 'mist' || n === 'rays'));
+    WXE.rain.setAttribute('opacity', on('rain') ? 1 : 0); if (on('rain')) WXE.drops.setAttribute('transform', `translate(${(-(t / 9) % 60).toFixed(1)},${((t / 1.9) % H).toFixed(1)})`);
+    WXE.heat.setAttribute('opacity', on('heat') ? 1 : 0); if (on('heat')) WXE.waves.forEach((e, j) => { const y = H - ((t / 22 + j * 95) % (H + 60)); e.setAttribute('transform', `translate(${(10 * S(t / 700 + j)).toFixed(1)},${y.toFixed(1)})`); e.setAttribute('opacity', (.22 * S(PI * clamp(y / H, 0, 1))).toFixed(3)); });
+    WXE.dusk.setAttribute('opacity', on('dusk') ? .3 : 0); WXE.dawn.setAttribute('opacity', on('dawn') ? .3 : 0);
+    WXE.mist.setAttribute('opacity', on('mist') ? 1 : 0); if (on('mist')) WXE.fog.forEach((e, j) => { e.setAttribute('cx', ((((t / (40 + j * 9)) + j * 260) % (W + 700)) - 350).toFixed(1)); e.setAttribute('cy', (110 + j * 90 + 12 * S(t / 1500 + j)).toFixed(1)); });
+    WXE.rays.setAttribute('opacity', on('rays') ? 1 : 0); if (on('rays')) WXE.beams.forEach((e, j) => e.setAttribute('opacity', (.24 + .1 * S(t / 900 + j * 1.7)).toFixed(3)));
+  }
   const capG = mk('g', {opacity: 0}, hud); const capR = mk('rect', {x: 20, y: 18, height: 36, rx: 18, fill: '#10231d', opacity: .9}, capG);
   const capT = mk('text', {x: 38, y: 42, class: 'se-cap'}, capG);
   const subG = mk('g', {opacity: 0}, hud); const subR = mk('rect', {y: H - 52, height: 38, rx: 10, fill: '#000', opacity: .62}, subG);
@@ -4089,6 +4182,48 @@ function wavB64(buf) {
   const rewBar = mk('rect', {x: 0, width: W, height: 26, fill: '#fff', opacity: .14}, rew);
   const rewT = mk('text', {x: W / 2, y: H / 2 + 10, 'text-anchor': 'middle', class: 'se-count', style: 'font-size:52px'}, rew);
   const rewI = mk('text', {x: 40, y: 60, class: 'se-badge', style: 'font-size:28px'}, rew); rewI.textContent = '◀◀ REW';
+  // Stummfilm-Zwischentitel (Zeilen mit who: 'card'): schwarze Tafel mit Zierrahmen, Kratzer, Flackern
+  const cardG = mk('g', {opacity: 0}, hud); mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: '#0b0906'}, cardG);
+  mk('rect', {x: 70, y: 70, width: W - 140, height: H - 140, rx: 6, fill: 'none', stroke: '#e9e1c8', 'stroke-width': 3}, cardG);
+  mk('rect', {x: 82, y: 82, width: W - 164, height: H - 164, rx: 4, fill: 'none', stroke: '#e9e1c8', 'stroke-width': 1}, cardG);
+  [[70, 70, 1, 1], [W - 70, 70, -1, 1], [70, H - 70, 1, -1], [W - 70, H - 70, -1, -1]].forEach(([x, y, a, b]) => mk('path', {d: `M${x + a * 4},${y + b * 40} q${a * 32},${-b * 6} ${a * 36},${-b * 36} q${a * 6},${b * 30} ${a * 36},${b * 36}`, fill: 'none', stroke: '#e9e1c8', 'stroke-width': 2}, cardG));
+  const cardT = mk('text', {x: W / 2, y: H / 2 - 6, 'text-anchor': 'middle', style: 'font:italic 700 36px Georgia,"Times New Roman",serif;fill:#f3ecd6;letter-spacing:1px'}, cardG);
+  const cardT2 = mk('text', {x: W / 2, y: H / 2 + 40, 'text-anchor': 'middle', style: 'font:italic 700 36px Georgia,"Times New Roman",serif;fill:#f3ecd6;letter-spacing:1px'}, cardG);
+  const cardScr = mk('path', {stroke: '#fff', 'stroke-width': 1.2, opacity: .35}, cardG), cardDust = mk('path', {fill: '#fff', opacity: .3}, cardG);
+  function silentCard(t) {
+    const c = LINES.find(l => l.who === 'card' && t >= l.at && t <= l.at + l.dur);
+    if (!c) { cardG.setAttribute('opacity', 0); return false; }
+    const k = win(t, c.at, c.at + c.dur, 220), fl = .86 + .14 * S(t / 37) * S(t / 53); cardG.setAttribute('opacity', k.toFixed(2)); [cardT, cardT2].forEach(e => e.setAttribute('opacity', fl.toFixed(2)));
+    const parts = c.text.split(' | '); cardT.textContent = parts[0]; cardT2.textContent = parts[1] || ''; cardT.setAttribute('y', parts[1] ? H / 2 - 18 : H / 2 + 12);
+    const fr = Math.floor(t / 70); cardT.setAttribute('transform', `translate(${(hash(fr, 5) - .5) * 2},${(hash(fr, 6) - .5) * 2})`);
+    cardScr.setAttribute('d', [0, 1].map(j => { const x = hash(fr + j * 7, 11) * W; return `M${x.toFixed(0)},0 L${(x + 6).toFixed(0)},${H}`; }).join(''));
+    cardDust.setAttribute('d', [0, 1, 2, 3, 4].map(j => `M${(hash(fr, 20 + j) * W).toFixed(0)},${(hash(fr, 30 + j) * H).toFixed(0)} h2 v2 h-2Z`).join(''));
+    return true;
+  }
+  // Szenenübergänge (META.tr der neuen Szene): Palmenblatt wischt, Wasserwand, Flugzeug mit Wolkenband; sonst Kreisblende
+  const wipeG = mk('g', {opacity: 0}, hud), WP = {};
+  WP.leaf = mk('g', {}, wipeG); { const g = mk('g', {transform: `rotate(-14,${W / 2},${H / 2})`}, WP.leaf);
+    mk('path', {d: `M${W / 2 - 760},${H / 2} Q${W / 2 - 300},${H / 2 - 520} ${W / 2 + 760},${H / 2 - 30} Q${W / 2 - 250},${H / 2 + 520} ${W / 2 - 760},${H / 2}Z`, fill: '#2f8f3e', stroke: '#1b5a26', 'stroke-width': 6}, g);
+    mk('path', {d: `M${W / 2 - 740},${H / 2} Q${W / 2},${H / 2 - 40} ${W / 2 + 740},${H / 2 - 30}`, fill: 'none', stroke: '#b9d77a', 'stroke-width': 10}, g);
+    for (let j = 0; j < 22; j++) { const x = W / 2 - 640 + j * 62; mk('path', {d: `M${x},${H / 2 - 12 - j} q40,-150 110,-260 M${x},${H / 2 + 10 - j} q40,150 110,250`, fill: 'none', stroke: '#1f6b2e', 'stroke-width': 4, opacity: .7}, g); } }
+  WP.splash = mk('g', {}, wipeG); { const wv = (y, up) => Array.from({length: 12}, (_, j) => `q${40},${up ? -34 : 34} 80,0`).join(' ');
+    mk('path', {d: `M-60,0 ${wv(0, 1)} V${H + 80} ${Array.from({length: 12}, () => 'q-40,30 -80,0').join(' ')} Z`, fill: 'url(#se-water)'}, WP.splash);
+    mk('path', {d: `M-60,0 ${wv(0, 1)}`, fill: 'none', stroke: '#e8fbff', 'stroke-width': 8, 'stroke-linecap': 'round'}, WP.splash);
+    for (let j = 0; j < 26; j++) mk('circle', {cx: hash(j, 71) * W, cy: -20 - hash(j, 72) * 120, r: 5 + hash(j, 73) * 12, fill: '#bdefff', opacity: .9}, WP.splash); }
+  WP.plane = mk('g', {}, wipeG); { mk('rect', {x: -700, y: -40, width: 1300, height: H + 80, fill: '#f4f8fc'}, WP.plane);
+    for (let j = 0; j < 14; j++) { mk('circle', {cx: 600 + hash(j, 81) * 70, cy: j * 36, r: 50 + hash(j, 82) * 30, fill: '#f4f8fc'}, WP.plane); mk('circle', {cx: -700 - hash(j, 83) * 60, cy: j * 36, r: 50 + hash(j, 84) * 30, fill: '#f4f8fc'}, WP.plane); }
+    const pl = mk('g', {transform: `translate(520,${H / 2}) scale(1.6)`}, WP.plane);
+    mk('path', {d: 'M-90,-10 Q-60,-20 60,-16 Q100,-14 110,0 Q100,14 60,16 L-90,12 Q-100,0 -90,-10Z', fill: '#fff', stroke: INK, 'stroke-width': 3}, pl);
+    mk('path', {d: 'M-10,-14 L-40,-70 L-20,-70 L30,-14Z M-10,14 L-40,70 L-20,70 L30,14Z M-80,-10 L-100,-46 L-86,-46 L-60,-12Z', fill: '#00843d', stroke: INK, 'stroke-width': 2.5}, pl);
+    mk('path', {d: 'M-70,0 H90', stroke: '#ffcf1f', 'stroke-width': 4}, pl); [-40, -20, 0, 20, 40].forEach(x => mk('circle', {cx: x, cy: -5, r: 3.5, fill: '#5fb7ff', stroke: INK, 'stroke-width': 1}, pl)); }
+  function wipe(tr, v) {   // v: −1 (noch weg) … 0 (Bild ganz bedeckt) … 1 (wieder weg)
+    if (!tr || v <= -1 || v >= 1) { wipeG.setAttribute('opacity', 0); return; }
+    wipeG.setAttribute('opacity', 1); ['leaf', 'splash', 'plane'].forEach(n => WP[n].setAttribute('opacity', n === tr ? 1 : 0));
+    const e = v < 0 ? -1 + ease(1 + v) : ease(v);
+    if (tr === 'leaf') WP.leaf.setAttribute('transform', `translate(${(e * (W + 760)).toFixed(1)},${(30 * e * e).toFixed(1)}) rotate(${(8 * e).toFixed(1)},${W / 2},${H / 2})`);
+    if (tr === 'splash') WP.splash.setAttribute('transform', `translate(0,${(-e * (H + 220) + (e < 0 ? 0 : 0)).toFixed(1)})`);
+    if (tr === 'plane') WP.plane.setAttribute('transform', `translate(${(e * (W + 900) + 100).toFixed(1)},0)`);
+  }
   const fade = mk('rect', {x: 0, y: 0, width: W, height: H, fill: '#000', opacity: 1}, hud), iris = mk('path', {fill: '#000', 'fill-rule': 'evenodd', opacity: 0}, hud);
 
   // ---------- Bild für Zeit t ----------
@@ -4112,7 +4247,10 @@ function wavB64(buf) {
     if (sc !== lastScene) { snapCam = true; ALLSC.forEach(s => { const on = s.id === sc.id ? 1 : 0; sceneG[s.id].setAttribute('opacity', on); front[s.id].setAttribute('opacity', on); }); lastScene = sc; sceneChanged(sc); }
     // Abblende zwischen den Szenen
     // Übergang: Kreisblende wie im Zeichentrick (zu am Szenenende, auf am Anfang), nur ganz am Anfang Schwarz
-    const ik = Math.min(sc === SC[0] ? 1 : span(L, 0, 650), sc.id === 'end' ? 1 : 1 - span(L, len - 650, len - 40)), ir = 520 * ease(ik);
+    const nx = SC[SC.indexOf(sc) + 1], pIn = sc === SC[0] ? 1 : span(L, 0, 650), pOut = sc.id === 'end' ? 0 : span(L, len - 650, len - 40);
+    const trIn = sc !== SC[0] && sc.tr, trOut = nx && nx.tr && sc.id !== 'end';
+    wipe(trIn && pIn < 1 ? sc.tr : trOut && pOut > 0 ? nx.tr : '', trIn && pIn < 1 ? pIn : pOut - 1);
+    const ik = Math.min(trIn ? 1 : pIn, trOut ? 1 : 1 - pOut), ir = 520 * ease(ik);
     if (sc === SC[SC.length - 1] || ik >= 1) iris.setAttribute('opacity', 0);
     else { iris.setAttribute('opacity', 1); const icx = W / 2 + 60 * S(sc.t[0]), icy = H * .45;
       iris.setAttribute('d', `M-20,-20H${W + 20}V${H + 20}H-20Z M${(icx - ir).toFixed(1)},${icy} a${ir.toFixed(1)},${ir.toFixed(1)} 0 1,0 ${(2 * ir).toFixed(1)},0 a${ir.toFixed(1)},${ir.toFixed(1)} 0 1,0 ${(-2 * ir).toFixed(1)},0Z`); }
@@ -4545,9 +4683,17 @@ function wavB64(buf) {
       if (P.greisel) { pose.greisel.tilt = 10; pose.greisel.mouth = S(t / 1600) > .8 ? .9 : 0; }
       if (P.dajo) pose.dajo.flip = -1;
       // Nasenbär 1 schleicht sich an, schnappt das Handy, Rauferei mit Jonas
-      const G = A('q3') - 800, c1in = span(L, 300, A('q2'));
+      const G = A('q3') - 800, g1 = A('q1d') - 250, g2 = A('q1g') - 250, q2a = A('q2');
+      // Dreierregel: erst Daijos Sandwich, dann Greisels Sonnenbrille, dann Jonas' Handy
       if (P.jonas) { pose.jonas.flip = -1; if (L > A('q2') - 300 && L < G) { pose.jonas.aR = [70, 90]; P.jonas.prop.textContent = '📱'; } }
-      let c1x = 790 - 360 * ease(c1in), c1y = FL + 6, run1 = c1in > 0 && c1in < 1;
+      const seg = (a, b, x0, x1) => x0 + (x1 - x0) * ease(span(L, a, b));
+      let c1x = L < g1 ? seg(300, g1, 800, 700) : L < g1 + 450 ? 700 : L < g2 ? seg(g1 + 450, g2, 700, 628) : L < g2 + 450 ? 628 : seg(g2 + 450, q2a, 628, 430), c1y = FL + 6;
+      let run1 = (L > 300 && L < g1) || (L > g1 + 450 && L < g2) || (L > g2 + 450 && L < q2a);
+      if (L > g1 && L < g1 + 450) c1y = FL + 6 - 26 * S(PI * span(L, g1, g1 + 450)); if (L > g2 && L < g2 + 450) c1y = FL + 6 - 46 * S(PI * span(L, g2, g2 + 450));
+      C1.prop.textContent = L > g1 + 200 && L < G ? '🥪' : '';
+      if (P.dajo && L > g1 && L < g1 + 2200) Object.assign(pose.dajo, {aR: [150, 20 * S(t / 80)], aL: [60, 90], tilt: 6 * S(t / 60)});
+      if (P.greisel && L > g2 - 200 && L < g2 + 3200) { pose.greisel.tilt = 4; if (L < g2 + 200) pose.greisel.face = 'shock'; }
+      if (L < g2 + 150 && P.greisel && pose.greisel.on) { shadesG.setAttribute('opacity', 1); shadesG.setAttribute('transform', `translate(${pose.greisel.x},${(FL - 60 * .78 - 96 * .78 - 4).toFixed(1)})`); }
       if (L > G) { const k = span(L, G, G + 300); c1x = 430 - 60 * k; c1y = FL + 6 - 60 * S(PI * k); C1.prop.textContent = '📱'; }
       if (L > G + 300) { const k = span(L, G + 300, G + 1000); c1x = 370 + 140 * k; c1y = FL + 6; run1 = true; }
       const f0 = G + 1100, f1 = G + 2700;
@@ -4565,7 +4711,7 @@ function wavB64(buf) {
       if (P.marco && L > A('q4') - 200 && L < A('q5') + 600) cheerP(t, pose.marco, 0);
       // Nasenbär 1 setzt sich mit Sonnenbrille und Geldsack nach Argentinien ab
       if (L > A('q6') - 400) { const k = span(L, A('q6') - 400, len - 300); const x = 120 + 640 * k; C1.shades.setAttribute('opacity', 1); C1.prop.textContent = '📱'; coatiAt(C1, x, FL - 36, 1, t, true, {sc: .8});
-        money.setAttribute('opacity', 1); money.setAttribute('x', (x - 10).toFixed(1)); money.setAttribute('y', (FL - 90 + 3 * S(t / 70)).toFixed(1)); } else C1.shades.setAttribute('opacity', 0);
+        money.setAttribute('opacity', 1); money.setAttribute('x', (x - 10).toFixed(1)); money.setAttribute('y', (FL - 90 + 3 * S(t / 70)).toFixed(1)); } else C1.shades.setAttribute('opacity', L > g2 + 200 && L < G + 300 || L > f1 ? 1 : 0);
       cam = L < A('q2') - 300 ? {x: 420, y: 225, z: 1} : L < G ? {x: 400, y: 245, z: 1.3} : L < f1 + 800 ? {x: 470, y: 250, z: 1.15} : L < A('q6') - 400 ? {x: 230, y: 250, z: 1.3} : {x: 440, y: 230, z: 1.05};
     }
     else if (sc.id === 'grenze') {
@@ -4998,7 +5144,8 @@ function wavB64(buf) {
     // Ort-Einblendung und Untertitel
     const ck = sc.cap ? win(L, 600, 4300, 450) : 0; capG.setAttribute('opacity', ck.toFixed(2)); capG.setAttribute('transform', `translate(${(-24 * (1 - ease(ck))).toFixed(1)},0)`);
     if (sc.cap) { capT.textContent = sc.cap; capT.setAttribute('style', `font-size:${(17 * UI).toFixed(1)}px`); capR.setAttribute('height', (36 * UI).toFixed(1)); capT.setAttribute('y', (18 + 24 * UI).toFixed(1)); capR.setAttribute('width', (capT.textContent.length * 9.2 * UI + 40).toFixed(0)); }
-    const cur = LINES.find(l => t >= l.at && t <= l.at + l.dur + 500);
+    weather(sc, L, t); const card = silentCard(t);
+    const cur = !card && LINES.find(l => l.who !== 'card' && t >= l.at && t <= l.at + l.dur + 500);
     subG.setAttribute('opacity', cur && subsOn ? win(t, cur.at - 120, cur.at + cur.dur + 500, 160).toFixed(2) : 0);
     if (cur) { const txt = (cur.who === 'narrator' ? '' : (cur.name || nameOf(cur.who)) + ': ') + cur.text, fs = 17 * UI, cw = fs * .53;
       // zu lang für eine Zeile: an der Lücke nahe der Mitte umbrechen
@@ -5048,7 +5195,12 @@ function wavB64(buf) {
     // Ducking: während jemand spricht, geht die Musik weich runter
     LINES.slice().sort((x, y) => x.at - y.at).forEach(l => { m.duck(.24, at(l.at - 120), .07); m.duck(.5, at(l.at + l.dur + 120), .35);
       if (l.laugh) m.sfx('laugh', at(l.at + l.dur + 120)); else if (l.lol && !l.nolaugh) m.sfx('laugh', at(l.at + l.dur + (l.rxd || 250))); });
-    SC.forEach((sc, k) => { if (sc.amb && m.amb) m.amb(sc.amb, at(sc.t[0]), at(sc.t[1])); if (k) m.sfx('swish', at(sc.t[0] - 380)); });
+    SC.forEach((sc, k) => { if (sc.amb && m.amb) m.amb(sc.amb, at(sc.t[0]), at(sc.t[1])); if (sc.wx === 'rain' && m.amb) m.amb('rain', at(sc.t[0]), at(sc.t[1]));
+      if (k) m.sfx(sc.tr === 'splash' ? 'splash' : 'swish', at(sc.t[0] - (sc.tr === 'splash' ? 300 : 380))); if (k && sc.tr === 'plane') m.sfx('plane', at(sc.t[0] - 900)); });
+    // Musik-Stiche an Pointen (sting: tusch/drama/slowmo, stingAt: 'start' = am Zeilenanfang) und Zwischentitel (Projektor + Klavier, Musik leiser)
+    LINES.forEach(l => { if (l.sting) m.sfx(l.sting, at(l.stingAt === 'start' ? l.at - 120 : l.at + l.dur + (l.stingD || 80)));
+      if (l.who === 'card') { m.sfx('reel', at(l.at)); m.sfx('piano', at(l.at + 150)); m.duck(.12, at(l.at - 100), .1); m.duck(.5, at(l.at + l.dur), .3); }
+      if (l.chime) m.sfx('gate', at(l.at - 1100)); });
     const fx = [['sec2', -300, 'whistle'], ['sec2', 400, 'ding'],
       ['bar1', 1500, 'ding'], ['bar3', 600, 'gong'], ['bar4', 2600, 'ding'], ['bar4', 2700, 'cheer'], ['bar5', 400, 'boing'],
       ['fly3', -700, 'thud'], ['fly3', -400, 'boing'], ['fly3', 300, 'thud'], ['fly3', 1300, 'thud'], ['fly8', 1700, 'puke'], ['fly9', -200, 'splash'],

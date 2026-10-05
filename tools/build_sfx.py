@@ -65,8 +65,28 @@ def cut(x, mode, L):
     rms, pk = np.sqrt((y ** 2).mean()) + 1e-9, np.abs(y).max() + 1e-9
     return y * min(.13 / rms, .89 / pk)   # gleiche Lautheit (RMS), Spitze höchstens −1 dBFS
 
+# Raumklänge (Serie, META.amb): je Art ein Schleifen-Ausschnitt, nahtlos überblendet: Name: (Lautstärke, Split, Clip-ID, Start s, Länge s)
+AMB = {
+    'sea': (0.35, 'eval', 418356, 4.0, 8), 'crowd': (0.32, 'dev', 424866, 0.0, 8), 'bar': (0.28, 'eval', 347537, 4.0, 8),
+    'traffic': (0.28, 'dev', 319360, 4.0, 8), 'wind': (0.28, 'eval', 135447, 0.0, 8), 'rain': (0.35, 'dev', 50058, 4.0, 8),
+    'night': (0.24, 'eval', 424871, 0.0, 8), 'falls': (0.35, 'eval', 352903, 0.0, 8), 'forest': (0.32, 'dev', 222635, 4.0, 8),
+    'cabin': (0.28, 'dev', 320786, 16.0, 8),
+}
+
+def loop(x, a, L, F=1.2):
+    n, f = int(L * SR), int(F * SR); s = x[int(a * SR):int(a * SR) + n + f].copy()
+    if len(s) < n + f: s = np.concatenate([s, x[:n + f - len(s)]])
+    w = np.sin(np.linspace(0, np.pi / 2, f)) ** 2
+    y = s[:n].copy(); y[:f] = s[:f] * w + s[n:n + f] * (1 - w)   # Ende läuft in den Anfang über
+    rms = np.sqrt((y ** 2).mean()) + 1e-9
+    return y * min(.1 / rms, .8 / (np.abs(y).max() + 1e-9))
+
 def main():
     parts, sfx, pos, gap = [], {}, 0, int(.08 * SR)
+    for name, (vol, split, cid, a, L) in AMB.items():
+        y = loop(load(split, cid), a, L)
+        sfx['amb_' + name] = [[round(pos / SR, 3), round(len(y) / SR, 3), vol]]
+        parts += [y, np.zeros(gap, np.float32)]; pos += len(y) + gap
     for name, (vol, clips) in PICK.items():
         for split, cid, mode, L in clips:
             y = cut(load(split, cid), mode, L)
