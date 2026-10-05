@@ -3197,7 +3197,7 @@ function wavB64(buf) {
   const hash = (a, b) => { const x = S(a * 127.1 + b * 311.7) * 43758.5453; return x - Math.floor(x); };
   const tnow = () => window.__serT !== undefined ? window.__serT : performance.now();
   const soundOn = () => store.get('sound') !== '0';
-  const NAMES = {narrator: 'Sprecher', officer: 'Kontrolleur', steward: 'Flugbegleiterin', local: 'Einheimischer', girl: 'Strandschönheit', girl2: 'Brasilianerin', capo: 'Ihr Freund', driver: 'Fahrer', pilot: 'Kapitän', waiter: 'Kellner', maid: 'Zimmermädchen', guide: 'Guide'};
+  const NAMES = {narrator: 'Sprecher', officer: 'Kontrolleur', steward: 'Flugbegleiterin', local: 'Einheimischer', girl: 'Strandschönheit', girl2: 'Brasilianerin', capo: 'Ihr Freund', driver: 'Fahrer', pilot: 'Kapitän', waiter: 'Kellner', maid: 'Zimmermädchen', guide: 'Guide', dona: 'Dona Rosa'};
   const nameOf = w => NAMES[w] || (byId[w] ? byId[w].name : w);
   let LINES = [], LAT = {}, SC = [], END = 1, TOTAL = 1, COLD = 0, COLDA = 0, COLDB = 0, PLAY = [], CHAPS = [];
   const FRZ = 2000;   // Standbild + Zurückspulen nach dem Cold Open
@@ -3215,6 +3215,10 @@ function wavB64(buf) {
     hos: {amb: 'room', mus: 'stay', night: 1, cap: '🏨 Manaus · Casa 307 · 09.01., 2 Uhr nachts'}, rio: {amb: 'forest', mus: 'jungle', tr: 'splash', wx: 'rain', cap: '🚤 Encontro das Águas · 10.01.'},
     cab: {amb: 'forest', mus: 'jungle', tr: 'leaf', cap: '🛖 Juma Lodge · Kabine 3'}, pir: {amb: 'forest', mus: 'jungle', tr: 'splash', wx: 'dusk', cap: '🎣 Piranha-Angeln · Rio Juma'},
     jbar: {amb: 'bar', mus: 'stay', night: 1, cap: '🍹 Lodge-Bar · abends'}, kai: {amb: 'night', mus: 'jungle', night: 1, cap: '🐊 Kaiman-Safari · nachts'}, ham: {amb: 'forest', mus: 'jungle', tr: 'leaf', wx: 'morning', cap: '🌅 Juma Lodge · letzter Morgen'},
+    van: {amb: 'traffic', mus: 'travel', wx: 'dawn', cap: '🚗 Rio → Paraty · 14.01. · 4 Stunden Uber'}, pty: {amb: 'crowd', mus: 'bossa', tr: 'leaf', wx: 'heat', cap: '🏘️ Paraty · Altstadt'},
+    schoon: {amb: 'sea', mus: 'show', tr: 'splash', cap: '⛵ Bootstour · Bucht von Paraty · 15.01.'}, abr: {amb: 'sea', mus: 'bossa', wx: 'rays', cap: '🏝️ Ilha Grande · Vila do Abraão · 16.01.'},
+    lopes: {amb: 'sea', mus: 'show', tr: 'leaf', wx: 'heat', cap: '⚽ Lopes Mendes · Footvolley gegen Einheimische'}, fest: {amb: 'bar', mus: 'stay', night: 1, cap: '🌙 Ilha Grande · letzter Abend · 19.01.'},
+    pier: {amb: 'sea', mus: 'bossa', wx: 'dawn', cap: '⛴️ Vila do Abraão · 20.01., 6 Uhr · Abschied'},
     // fertig gebaute Szenen für spätere Folgen (trip.json → series.parked)
     ny: {amb: 'crowd', mus: 'show', cap: '🎆 Copacabana · Silvester 2026/27'}, buf: {mus: 'stay', cap: '🦜 Foz do Iguaçu · 06.01.'}, jg: {mus: 'stay', cap: '🌴 Amazonas · Juma Lodge'}, fv: {mus: 'show', cap: '⚽ Footvolley gegen Einheimische'}};
   const ALLSC = Object.keys(META).map(id => ({id}));
@@ -3342,6 +3346,7 @@ function wavB64(buf) {
   rig('steward', {shirt: '#c0392b', pants: '#1c2c48', skin: '#f3d0b5', hair: 'M-40,4 Q-44,-40 0,-44 Q44,-40 40,4 Q34,-22 0,-26 Q-34,-22 -40,4Z', hairC: '#c98a2b', cap: 'M-18,-36 L18,-36 L14,-46 L-14,-46Z', capC: '#c0392b'});
   ['local', 'local2', 'local3'].forEach((id, k) => rig(id, {shirt: ['#ffcf1f', '#00a651', '#ffffff'][k], pants: ['#1f3f8f', '#ffcf1f', '#00a651'][k], skin: ['#b07a4f', '#8a5a36', '#c99266'][k], shades: k !== 1,
     hair: k === 1 ? 'M-38,-10 Q-36,-46 0,-46 Q36,-46 38,-10 Q24,-30 0,-30 Q-24,-30 -38,-10Z' : 'M-36,-16 Q-30,-40 0,-42 Q30,-40 36,-16 Q20,-30 0,-30 Q-20,-30 -36,-16Z', hairC: '#1b120b'}));
+  rig('dona', {shirt: '#e85f9a', pants: '#7a3a8a', skin: '#a8714a', hair: 'M-38,-4 Q-42,-44 0,-46 Q42,-44 38,-4 Q30,-28 0,-30 Q-30,-28 -38,-4Z M-16,-46 a16,13 0 1,1 32,0 a16,13 0 1,1 -32,0Z', hairC: '#d9d9d9'});
   rig('girl', {shirt: '#ff5fa2', pants: '#ffcf1f', skin: '#c99266', hair: 'M-42,24 Q-50,-44 0,-46 Q50,-44 42,24 Q36,-20 0,-26 Q-36,-20 -42,24Z', hairC: '#2b160b'});
   rig('maid', {shirt: '#5f7fbf', pants: '#ffffff', skin: '#a8714a', hair: 'M-40,16 Q-46,-44 0,-46 Q46,-44 40,16 Q34,-22 0,-28 Q-34,-22 -40,16Z', hairC: '#1b120b', cap: 'M-26,-38 L26,-38 L22,-48 L-22,-48Z', capC: '#fff'});
   rig('waiter', {shirt: '#ffffff', pants: '#1b1b1b', tie: '#c0392b', skin: '#b07a4f', hair: 'M-36,-16 Q-30,-42 0,-44 Q30,-42 36,-16 Q20,-30 0,-30 Q-20,-30 -36,-16Z', hairC: '#120a05'});
@@ -4074,6 +4079,160 @@ function wavB64(buf) {
   const monk4 = e3(emo('🐒', {'font-size': 50, opacity: 0}, fxG)), brush4 = e3(emo('🪥', {'font-size': 26, opacity: 0}, fxG));
   const bil4 = card4(470, 64, 310, 178, '📒 BILANZ AMAZONAS', ['📱 Handy: weg', '👒 Fischerhut: Kaiman', '💋 Kuss: Patrick 😬', '🍑 Hintern: 🔥🔥🔥'], '#8a5a2b');
 
+  // ======== Folge 5: Das große Finale (Paraty & Ilha Grande) ========
+  // Roter Faden: die sieben Silvester-Wünsche aus Folge 2 (Liste im HUD, Häkchen/Kreuz je Szene)
+  const WISH5 = ['☀️ Kein Sonnenbrand (Simon)', '🥩 Unendlich Rodízio (Patrick)', '📱 Handy bleibt sicher (Jonas)', '👩 Eine Frau (Marco)', '👵 Irgendeine Frau (Marco)', '🤫 Keiner erfährt vom Kuss (Simon)', '🏊 Nicht ertrinken (Marco)'];
+  const wish5 = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 476, y: 60, width: 306, height: 252, rx: 12, fill: '#fffdf5', stroke: '#1f3f8f', 'stroke-width': 3}, wish5);
+  mk('rect', {x: 476, y: 60, width: 306, height: 34, rx: 12, fill: '#1f3f8f'}, wish5); const wish5T = mk('text', {x: 490, y: 84, class: 'se-small'}, wish5);
+  const wish5R = WISH5.map((w, k) => { const tx = mk('text', {x: 490, y: 120 + k * 27, class: 'se-kiosk', style: 'font-size:14px'}, wish5); return tx; });
+  function wishList(st, title) { wish5T.textContent = title || '📋 SILVESTER-WÜNSCHE'; wish5R.forEach((r, k) => { r.textContent = ({ok: '✅ ', no: '❌ '}[st[k]] || '⬜ ') + WISH5[k]; r.setAttribute('style', `font-size:14px;fill:${st[k] === 'no' ? '#a33' : st[k] === 'ok' ? '#1b7a3a' : INK}`); }); }
+  const wishPop = e3(mk('g', {opacity: 0}, hud)); const wishPopR = mk('rect', {y: 64, height: 46, rx: 23, fill: '#1b7a3a', stroke: '#fff', 'stroke-width': 3}, wishPop);
+  const wishPopT = mk('text', {x: W / 2, y: 95, 'text-anchor': 'middle', class: 'se-badge', style: 'font-size:20px'}, wishPop);
+  function popWish(L, a, n, ok) {   // kurze Einblendung „✅ Wunsch 7: …“ ab a (ms in der Szene)
+    const k = win(L, a, a + 2600, 220); if (k <= 0) return; wishPop.setAttribute('opacity', k.toFixed(2));
+    wishPopT.textContent = `${ok ? '✅' : '❌'} Wunsch ${n}: ${WISH5[n - 1].slice(3).replace(/ \(.*\)/, '')}`; const w = wishPopT.textContent.length * 10.5 + 50;
+    wishPopR.setAttribute('x', (W / 2 - w / 2).toFixed(0)); wishPopR.setAttribute('width', w.toFixed(0)); wishPopR.setAttribute('fill', ok ? '#1b7a3a' : '#a33');
+    const s = 1 + .25 * (1 - ease(span(L, a, a + 260))); wishPop.setAttribute('transform', `translate(${W / 2},87) scale(${s.toFixed(3)}) translate(${-W / 2},-87)`);
+  }
+  // Foto-Kopf (rund) für Handy-Bildschirme im HUD
+  function photoHead(parent, id, cx, cy, r) {
+    const p = byId[id], f = (D.look[id] || {}).face || {x: .5, y: .5, z: 1}, Dd = 2 * r * f.z, g = mk('g', {transform: `translate(${cx},${cy})`}, parent);
+    const cid = 'se-ph5-' + id + '-' + Math.round(cx); mk('circle', {r}, mk('clipPath', {id: cid}, defs));
+    if (p && p.photo) mk('image', {href: p.photo, x: -f.x * Dd, y: -f.y * Dd, width: Dd, height: Dd, preserveAspectRatio: 'xMidYMid slice', 'clip-path': `url(#${cid})`}, g);
+    else mk('circle', {r, fill: '#00843d'}, g);
+    mk('circle', {r, fill: 'none', stroke: INK, 'stroke-width': 2}, g); return g;
+  }
+  const C6 = coati(fxG, .78);
+
+  // Uber Rio → Paraty: Fiat Uno, sechs Leute, Koffer-Turm auf dem Dach, Greisel im Kofferraum; Costa Verde
+  defs.insertAdjacentHTML('beforeend', '<linearGradient id="se-morn5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7ec8f2"/><stop offset=".7" stop-color="#ffe1b0"/><stop offset="1" stop-color="#ffd27a"/></linearGradient>');
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-morn5)'}, B.van);
+  const vanHills = mk('g', {}, B.van), VW = 1600;
+  for (let k = 0; k < 2; k++) { mk('path', {d: `M${k * VW},250 C${k * VW + 160},120 ${k * VW + 330},150 ${k * VW + 480},175 C${k * VW + 640},110 ${k * VW + 860},140 ${k * VW + 1020},190 C${k * VW + 1200},120 ${k * VW + 1420},160 ${(k + 1) * VW},250Z`, fill: '#2f7a46'}, vanHills);
+    for (let h = 0; h < 16; h++) mk('circle', {cx: k * VW + 50 + h * 100, cy: 205 + 14 * hash(h, 51), r: 26 + 10 * hash(h, 52), fill: ['#24603a', '#1d4d2a'][h % 2]}, vanHills); }
+  mk('rect', {x: -100, y: 238, width: W + 200, height: 50, fill: '#2aa3c4'}, B.van);
+  const vanSea = mk('path', {d: Array.from({length: 30}, (_, k) => `M${k * 40 - 100},${256 + (k % 2) * 12} q10,-5 20,0`).join(' '), stroke: '#e8f6ff', 'stroke-width': 2.5, fill: 'none'}, B.van);
+  mk('rect', {x: -100, y: 286, width: W + 200, height: 200, fill: '#5b5b63'}, B.van);
+  const vanLanes = mk('path', {d: Array.from({length: 30}, (_, k) => `M${k * 60 - 100},372 l30,0`).join(' '), stroke: '#fff', 'stroke-width': 5}, B.van);
+  const vanSign = mk('g', {}, B.van); sign(vanSign, 0, 0, [['PARATY 236 km', 12, '#fff'], ['Gringos: 4 h', 9, '#ffcf1f']], {w: 104, bg: '#1b7a3a', post: 70});
+  const uno = mk('g', {}, F.van);
+  // Dach als offener Rahmen (Köpfe sichtbar), Koffer-Turm darauf
+  mk('path', {d: 'M-150,-74 L-110,-122 Q-102,-130 -86,-130 L76,-130 Q94,-130 104,-118 L150,-74', fill: 'none', stroke: INK, 'stroke-width': 5}, uno);
+  [[-134, -112, 7, 36], [94, -128, 5, 50]].forEach(([x, y, w, h]) => mk('rect', {x, y, width: w, height: h, fill: '#d23b3b', stroke: INK, 'stroke-width': 2}, uno));
+  mk('path', {d: 'M-200,0 L-204,-46 Q-198,-66 -170,-72 L150,-76 L196,-62 Q214,-56 216,-36 L216,0Z', fill: '#d23b3b', stroke: INK, 'stroke-width': 3}, uno);
+  mk('rect', {x: -200, y: -78, width: 416, height: 78, fill: '#d23b3b'}, uno); mk('path', {d: 'M-200,-78 L216,-78', stroke: INK, 'stroke-width': 3}, uno);
+  const unoT = mk('text', {x: 10, y: -36, 'text-anchor': 'middle', class: 'se-uber', style: 'fill:#fff;font-size:22px'}, uno); unoT.textContent = 'UNO · UBER';
+  const trunk5 = mk('g', {transform: 'translate(-200,-70)'}, uno); mk('path', {d: 'M0,0 L-40,-56 L-30,-62 L8,-8Z', fill: '#b52f2f', stroke: INK, 'stroke-width': 2.5}, trunk5);   // Kofferraumklappe offen
+  const unoW = [-130, 140].map(x => { const w = mk('g', {transform: `translate(${x},0)`}, uno); mk('circle', {r: 24, fill: '#222', stroke: INK, 'stroke-width': 3}, w);
+    mk('path', {d: 'M-13,0 L13,0 M0,-13 L0,13', stroke: '#aaa', 'stroke-width': 4}, w); return w; });
+  const bags5 = mk('g', {}, F.van); [[-80, 0, 120, 30, '#2f6b9a'], [-60, -30, 90, 30, '#e8a33a'], [-46, -58, 70, 28, '#7a3a8a'], [-30, -84, 46, 26, '#3ccf7f'], [-14, -104, 20, 20, '#c0392b']].forEach(([x, y, w, h, c]) => {
+    mk('rect', {x, y: y - h, width: w, height: h, rx: 5, fill: c, stroke: INK, 'stroke-width': 2}, bags5); mk('rect', {x: x + w / 2 - 8, y: y - h - 5, width: 16, height: 6, rx: 3, fill: 'none', stroke: INK, 'stroke-width': 2}, bags5); });
+  const feet5 = e3(emo('🦶', {'font-size': 26, opacity: 0}, fxG)), drink5 = e3(emo('🍹', {'font-size': 22, opacity: 0}, fxG));
+
+  // Paraty: Kolonialhäuser, Kopfsteinpflaster, Flut läuft in die Gassen
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-day)'}, B.pty);
+  mk('path', {d: 'M-100,190 C60,120 180,150 300,135 C440,118 560,160 900,130 L900,220 L-100,220Z', fill: '#2f7a46'}, B.pty);
+  const church5 = mk('g', {transform: 'translate(400,120)'}, B.pty); mk('rect', {x: -50, y: 0, width: 100, height: 120, fill: '#fffaf0', stroke: INK, 'stroke-width': 2}, church5);
+  mk('path', {d: 'M-56,0 L0,-40 L56,0Z', fill: '#fffaf0', stroke: INK, 'stroke-width': 2}, church5); mk('rect', {x: -14, y: 66, width: 28, height: 54, rx: 14, fill: '#2f6b9a', stroke: INK, 'stroke-width': 2}, church5);
+  mk('rect', {x: -6, y: -62, width: 12, height: 26, fill: '#fffaf0', stroke: INK, 'stroke-width': 2}, church5); mk('path', {d: 'M-10,-56 L10,-56 M0,-66 L0,-46', stroke: INK, 'stroke-width': 3}, church5);
+  [[-60, '#2f6b9a'], [110, '#e8a33a'], [520, '#3ca06b'], [680, '#c0392b']].forEach(([x, c], k) => { const g = mk('g', {transform: `translate(${x},${150 + 10 * (k % 2)})`}, B.pty);
+    mk('rect', {x: 0, y: 0, width: 170, height: FL - 150, fill: '#fffaf0', stroke: INK, 'stroke-width': 2.5}, g); mk('path', {d: 'M-10,0 L85,-36 L180,0Z', fill: '#b5532f', stroke: INK, 'stroke-width': 2.5}, g);
+    [24, 104].forEach(wx => { mk('rect', {x: wx, y: 30, width: 40, height: 50, fill: c, stroke: INK, 'stroke-width': 2}, g); mk('rect', {x: wx - 4, y: 26, width: 48, height: 6, fill: c}, g); });
+    mk('rect', {x: 64, y: FL - 150 - 90, width: 42, height: 90, fill: c, stroke: INK, 'stroke-width': 2}, g); mk('rect', {x: 0, y: FL - 150 - 14, width: 170, height: 14, fill: c, opacity: .8}, g); });
+  mk('rect', {x: -100, y: FL - 10, width: W + 200, height: 120, fill: '#8a7f72'}, B.pty);
+  mk('path', {d: Array.from({length: 70}, (_, k) => { const x = (k % 18) * 52 - 100 + (Math.floor(k / 18) % 2) * 26, y = FL + 2 + Math.floor(k / 18) * 16; return `M${x},${y} a22,7 0 1,0 44,0 a22,7 0 1,0 -44,0`; }).join(' '), fill: '#a39888', stroke: '#5a5248', 'stroke-width': 2}, B.pty);
+  const flood5 = mk('g', {opacity: 0}, F.pty); const floodR = mk('rect', {x: -100, y: 0, width: W + 200, height: 200, fill: '#3aa6c9', opacity: .72}, flood5);
+  const floodW = mk('path', {d: Array.from({length: 26}, (_, k) => `M${k * 40 - 100},0 q10,-5 20,0 q10,5 20,0`).join(' '), stroke: '#e8f6ff', 'stroke-width': 3, fill: 'none'}, flood5);
+  const tide5 = card4(20, 64, 230, 96, '🌊 GEZEITEN PARATY', ['Plan Daijo: Ebbe 📋'], '#2f6b9a');
+
+  // Bootstour: Schoner mit Open Bar, grüne Inseln, türkises Wasser
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-day)'}, B.schoon);
+  [[120, 210, 160], [520, 200, 120], [760, 214, 140]].forEach(([x, y, r]) => { mk('ellipse', {cx: x, cy: y + 10, rx: r, ry: 70, fill: '#2f7a46'}, B.schoon); mk('ellipse', {cx: x - 20, cy: y - 10, rx: r * .55, ry: 50, fill: '#24603a'}, B.schoon); });
+  mk('rect', {x: -100, y: 220, width: W + 200, height: H, fill: '#1fb5c9'}, B.schoon);
+  const sWaves = mk('path', {d: Array.from({length: 36}, (_, k) => `M${(k % 12) * 80 - 100},${250 + Math.floor(k / 12) * 55 + (k % 3) * 10} q12,-5 24,0`).join(' '), stroke: '#e8fbff', 'stroke-width': 2.5, fill: 'none', opacity: .7}, B.schoon);
+  const schooner = mk('g', {}, F.schoon);
+  mk('path', {d: 'M-60,326 L420,326 Q470,328 486,300 L470,410 Q440,450 380,450 L-60,450Z', fill: '#8a5a2b', stroke: INK, 'stroke-width': 3}, schooner);
+  mk('path', {d: 'M-60,340 L478,340', stroke: '#ffcf1f', 'stroke-width': 7}, schooner); mk('path', {d: 'M-60,354 L475,354', stroke: '#2f9e5a', 'stroke-width': 5}, schooner);
+  const schT = mk('text', {x: 200, y: 392, 'text-anchor': 'middle', class: 'se-uber', style: 'fill:#fff;font-size:20px'}, schooner); schT.textContent = 'SAVEIRO DA ALEGRIA 🍹';
+  const mast5 = mk('g', {}, B.schoon); mk('rect', {x: 186, y: 60, width: 10, height: 300, fill: '#6b4422', stroke: INK, 'stroke-width': 2}, mast5);
+  mk('path', {d: 'M196,70 L196,250 L330,250Z', fill: '#fffaf0', stroke: INK, 'stroke-width': 2}, mast5);
+  const flags5 = mk('path', {d: 'M196,64 L420,200', stroke: '#555', 'stroke-width': 1.5}, mast5); for (let k = 0; k < 8; k++) mk('path', {d: `M${210 + k * 26},${72 + k * 15.5} l12,7 l-14,6Z`, fill: ['#ffcf1f', '#2f9e5a', '#1f3f8f', '#c0392b'][k % 4]}, mast5);
+  const seaF5 = mk('rect', {x: 470, y: 352, width: 440, height: 120, fill: '#1fb5c9', opacity: .9}, F.schoon);
+  mk('path', {d: Array.from({length: 12}, (_, k) => `M${470 + k * 36},354 q9,-5 18,0 q9,5 18,0`).join(' '), stroke: '#e8fbff', 'stroke-width': 3, fill: 'none'}, F.schoon);
+  const snork = e3(emo('🤿', {'font-size': 26, opacity: 0}, fxG)), cape5 = e3(mk('path', {d: 'M-14,-48 Q-40,-10 -30,30 L14,-40Z', fill: '#c0392b', stroke: INK, 'stroke-width': 2, opacity: 0}, fxG));
+  const splash5 = [0, 1].map(() => e3(emo('💦', {'font-size': 48, opacity: 0}, fxG))), arms5 = [0, 1].map(() => e3(emo('🙌', {'font-size': 26, opacity: 0}, fxG)));
+  const pouch5 = e3(emo('📱', {'font-size': 16, opacity: 0}, fxG));
+
+  // Ilha Grande, Vila do Abraão: Kirche, Pico do Papagaio, Steg, Gepäck-Karren statt Autos
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-day)'}, B.abr);
+  mk('path', {d: 'M-100,240 C40,200 120,160 210,150 C260,90 280,60 300,64 Q318,58 322,80 L330,96 C380,140 520,150 620,190 C700,170 800,190 900,200 L900,260 L-100,260Z', fill: '#2f7a46'}, B.abr);   // Pico do Papagaio
+  for (let k = 0; k < 12; k++) mk('circle', {cx: -60 + k * 84, cy: 236 + 8 * hash(k, 61), r: 22 + 10 * hash(k, 62), fill: ['#24603a', '#1d4d2a', '#2f7a46'][k % 3]}, B.abr);
+  const ch5 = mk('g', {transform: 'translate(640,170)'}, B.abr); mk('rect', {x: -36, y: 0, width: 72, height: 80, fill: '#fffaf0', stroke: INK, 'stroke-width': 2}, ch5);
+  mk('path', {d: 'M-40,0 L0,-28 L40,0Z', fill: '#fffaf0', stroke: INK, 'stroke-width': 2}, ch5); mk('rect', {x: -10, y: 44, width: 20, height: 36, rx: 10, fill: '#2f6b9a'}, ch5); mk('path', {d: 'M-6,-38 L6,-38 M0,-46 L0,-30', stroke: INK, 'stroke-width': 2.5}, ch5);
+  mk('rect', {x: -100, y: 256, width: W + 200, height: 50, fill: '#2aa3c4'}, B.abr);
+  const aWaves = mk('path', {d: Array.from({length: 24}, (_, k) => `M${k * 40 - 100},${272 + (k % 2) * 10} q10,-5 20,0`).join(' '), stroke: '#e8f6ff', 'stroke-width': 2.5, fill: 'none'}, B.abr);
+  mk('rect', {x: -100, y: 300, width: W + 200, height: 160, fill: '#f1d9a4'}, B.abr);
+  const ferry5 = mk('g', {transform: 'translate(120,262)'}, B.abr); mk('path', {d: 'M-80,0 L80,0 Q90,0 86,10 L76,22 L-74,22 L-86,10Z', fill: '#fff', stroke: INK, 'stroke-width': 2}, ferry5);
+  mk('rect', {x: -50, y: -20, width: 90, height: 20, fill: '#1f3f8f', stroke: INK, 'stroke-width': 2}, ferry5);
+  const cart5 = mk('g', {}, fxG); e3(cart5); mk('path', {d: 'M-46,-40 L46,-40 L40,-6 L-40,-6Z', fill: '#8a939c', stroke: INK, 'stroke-width': 2.5}, cart5);
+  mk('circle', {cx: -26, cy: 2, r: 9, fill: '#333', stroke: INK, 'stroke-width': 2}, cart5); mk('circle', {cx: 26, cy: 2, r: 9, fill: '#333', stroke: INK, 'stroke-width': 2}, cart5);
+  mk('path', {d: 'M46,-38 L76,-58', stroke: '#6b4422', 'stroke-width': 5, 'stroke-linecap': 'round'}, cart5);
+  cart5.bags = [['#2f6b9a', -34], ['#e8a33a', 2]].map(([c, x]) => mk('rect', {x, y: -66, width: 32, height: 28, rx: 5, fill: c, stroke: INK, 'stroke-width': 2}, cart5));
+  const fly5 = e3(mk('rect', {width: 32, height: 28, rx: 5, fill: '#2f6b9a', stroke: INK, 'stroke-width': 2, opacity: 0}, fxG));
+  const pinch5 = e3(emo('🤏', {'font-size': 24, opacity: 0}, fxG));
+
+  // Lopes Mendes: weißer Sand, türkises Meer, Footvolley-Netz
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-day)'}, B.lopes);
+  mk('path', {d: 'M-100,230 C60,190 200,205 360,192 C520,180 660,206 900,190 L900,250 L-100,250Z', fill: '#2f7a46'}, B.lopes);
+  mk('rect', {x: -100, y: 244, width: W + 200, height: 56, fill: '#34d1d1'}, B.lopes);
+  const loWaves = mk('path', {d: Array.from({length: 24}, (_, k) => `M${k * 40 - 100},${262 + (k % 2) * 12} q10,-6 20,0`).join(' '), stroke: '#fff', 'stroke-width': 3, fill: 'none'}, B.lopes);
+  mk('rect', {x: -100, y: 296, width: W + 200, height: 170, fill: '#fbf1d8'}, B.lopes);
+  const net5 = mk('g', {}, B.lopes); mk('line', {x1: 420, y1: FL + 4, x2: 420, y2: 228, stroke: '#555', 'stroke-width': 5}, net5);
+  mk('rect', {x: 416, y: 230, width: 8, height: 64, fill: 'none', stroke: '#fff', 'stroke-width': 1.5}, net5); for (let k = 0; k < 7; k++) mk('line', {x1: 410, y1: 236 + k * 9, x2: 430, y2: 236 + k * 9, stroke: '#fff', 'stroke-width': 1.5}, net5);
+  const towels5 = mk('g', {}, B.lopes); [['#ff5fa2', 20], ['#5fd3ff', 74]].forEach(([c, x]) => mk('rect', {x, y: FL + 6, width: 52, height: 14, rx: 3, fill: c, stroke: INK, 'stroke-width': 2}, towels5));
+  const ball5 = e3(emo('⚽', {'font-size': 26, opacity: 0}, fxG)), score5 = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 250, y: 60, width: 300, height: 48, rx: 12, fill: '#10231d'}, score5);
+  const score5T = mk('text', {x: 400, y: 93, 'text-anchor': 'middle', class: 'se-score'}, score5);
+  const ff5 = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 20, y: 64, width: 170, height: 40, rx: 20, fill: '#c0392b'}, ff5); const ff5T = mk('text', {x: 105, y: 91, 'text-anchor': 'middle', class: 'se-badge'}, ff5); ff5T.textContent = '⏩ Zeitraffer';
+  const stars5 = Array.from({length: 5}, () => e3(emo('⭐', {'font-size': 18, opacity: 0}, fxG)));
+
+  // Letzter Abend: Strandbar mit Lichterkette, Palme (Versteck des Nasenbären), Meer im Mondlicht
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-night)'}, B.fest);
+  for (let k = 0; k < 36; k++) mk('circle', {cx: hash(k, 131) * W, cy: hash(k, 132) * 140, r: hash(k, 133) * 1.4 + .4, fill: '#fff', opacity: .7}, B.fest);
+  mk('circle', {cx: 120, cy: 70, r: 24, fill: '#fff6c8'}, B.fest);
+  mk('rect', {x: -100, y: 236, width: W + 200, height: 70, fill: '#14305a'}, B.fest);
+  const nWaves = mk('path', {d: Array.from({length: 24}, (_, k) => `M${k * 40 - 100},${256 + (k % 2) * 14} q10,-5 20,0`).join(' '), stroke: '#8fb3e8', 'stroke-width': 2, fill: 'none', opacity: .6}, B.fest);
+  mk('path', {d: 'M120,236 L100,300 L140,300Z', fill: '#fff6c8', opacity: .14}, B.fest);
+  mk('rect', {x: -100, y: 300, width: W + 200, height: 170, fill: '#c9b48a'}, B.fest);
+  const palm5 = mk('g', {transform: 'translate(700,0)'}, B.fest); mk('path', {d: 'M-6,' + FL + ' Q-18,240 10,110 L22,112 Q0,240 10,' + FL + 'Z', fill: '#6b4a2b', stroke: INK, 'stroke-width': 2}, palm5);
+  [-160, -120, -70, -20, 30, 70].forEach(a => mk('path', {d: 'M16,110 Q60,80 120,104 Q66,98 16,118Z', fill: '#1f6b2e', stroke: INK, 'stroke-width': 1.5, transform: `rotate(${a + 40},16,110)`}, palm5));
+  const lights5 = mk('g', {}, B.fest); mk('path', {d: 'M-20,120 Q200,170 400,130 Q600,90 700,118', fill: 'none', stroke: '#222', 'stroke-width': 2}, lights5);
+  const bulbs5 = Array.from({length: 15}, (_, i) => { const x = -20 + i * 51, y = x < 400 ? 120 + 46 * S(PI * (x + 20) / 420) - 6 : 130 - 30 * S(PI * (x - 400) / 600); return mk('circle', {cx: x, cy: y + 6, r: 6, fill: ['#ffcf1f', '#3ccf7f', '#ff5fa2', '#5fd3ff'][i % 4]}, lights5); });
+  const bar5 = mk('g', {}, B.fest); mk('rect', {x: 30, y: FL - 90, width: 150, height: 90, fill: '#8a5a2b', stroke: INK, 'stroke-width': 2.5}, bar5); mk('path', {d: 'M16,' + (FL - 90) + ' L96,' + (FL - 140) + ' L194,' + (FL - 90) + 'Z', fill: '#d8b46a', stroke: INK, 'stroke-width': 2.5}, bar5);
+  const barT5 = mk('text', {x: 105, y: FL - 54, 'text-anchor': 'middle', class: 'se-kiosk', style: 'fill:#ffcf1f'}, bar5); barT5.textContent = 'BAR DO ABRAÃO';
+  const kissPh = e3(mk('g', {opacity: 0}, hud)); mk('rect', {x: 270, y: 40, width: 260, height: 330, rx: 30, fill: '#111', stroke: '#444', 'stroke-width': 4}, kissPh);
+  mk('rect', {x: 284, y: 60, width: 232, height: 290, rx: 12, fill: '#2b1a10'}, kissPh); mk('rect', {x: 284, y: 60, width: 232, height: 290, rx: 12, fill: '#fff', opacity: .12}, kissPh);
+  const kissHeads = mk('g', {}, kissPh); [['simon', 360, 190, -12], ['patrick', 440, 194, 12]].forEach(([id, x, y, r]) => { const h = photoHead(kissHeads, id, x, y, 46); h.setAttribute('transform', `translate(${x},${y}) rotate(${r})`); });
+  emo('💋', {x: 400, y: 186, 'font-size': 30}, kissPh); const kissPT = mk('text', {x: 400, y: 290, 'text-anchor': 'middle', class: 'se-small'}, kissPh); kissPT.textContent = '⚡ Lodge-Bar, Stromausfall';
+  const kissT2 = mk('text', {x: 400, y: 318, 'text-anchor': 'middle', class: 'se-small2', style: 'fill:#ffcf1f'}, kissPh); kissT2.textContent = '📸 Foto: Greisel · ❤️ 247';
+  const phone5 = e3(emo('📱', {'font-size': 22, opacity: 0}, fxG)), flash5 = e3(mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: '#fff', opacity: 0}, hud));
+  const ring5 = Array.from({length: 4}, () => e3(mk('circle', {fill: 'none', stroke: '#c79bf0', opacity: 0}, fxG)));
+  const burp5 = e3(mk('text', {'text-anchor': 'middle', class: 'se-logo', style: 'font-size:46px;fill:#9acd32;stroke:#1d3b0a;stroke-width:3px;paint-order:stroke', opacity: 0}, fxG));
+
+  // Abschied am Steg, 6 Uhr morgens: Fähre legt ab, Daijo & Greisel bleiben
+  defs.insertAdjacentHTML('beforeend', '<linearGradient id="se-dawn5" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a5fb0"/><stop offset=".5" stop-color="#ff9a76"/><stop offset="1" stop-color="#ffd9a0"/></linearGradient>');
+  mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-dawn5)'}, B.pier);
+  mk('circle', {cx: 600, cy: 220, r: 40, fill: '#ffe7a8'}, B.pier);
+  mk('path', {d: 'M-100,230 C40,170 120,150 210,140 C260,84 280,56 300,60 Q318,54 322,76 L330,92 C380,136 520,146 620,186 L620,240 L-100,240Z', fill: '#3a4a6a'}, B.pier);
+  mk('rect', {x: -100, y: 232, width: W + 200, height: H, fill: '#2b6f9a'}, B.pier);
+  const pWaves5 = mk('path', {d: Array.from({length: 30}, (_, k) => `M${(k % 10) * 90 - 80},${260 + Math.floor(k / 10) * 60 + (k % 3) * 9} q12,-5 24,0`).join(' '), stroke: '#ffd9a0', 'stroke-width': 2, fill: 'none', opacity: .6}, B.pier);
+  const sunGl = mk('path', {d: 'M560,236 L640,236 L700,450 L500,450Z', fill: '#ffe7a8', opacity: .25}, B.pier);
+  const dock5 = mk('g', {}, B.pier); mk('rect', {x: -100, y: FL - 6, width: 520, height: 18, fill: '#8a5a2b', stroke: INK, 'stroke-width': 2.5}, dock5);
+  for (let k = 0; k < 7; k++) mk('rect', {x: -80 + k * 76, y: FL + 10, width: 12, height: 70, fill: '#5a3e22'}, dock5);
+  const barca = mk('g', {}, F.pier); mk('path', {d: 'M-140,0 L150,0 Q190,0 196,-24 L180,30 Q170,48 130,48 L-120,48 Q-150,44 -150,20Z', fill: '#fff', stroke: INK, 'stroke-width': 3}, barca);
+  mk('path', {d: 'M-150,12 L192,12', stroke: '#1f3f8f', 'stroke-width': 7}, barca); const barcaT = mk('text', {x: 20, y: 38, 'text-anchor': 'middle', class: 'se-small', style: 'fill:#1f3f8f'}, barca); barcaT.textContent = 'BARCA → CONTINENTE';
+  // Abspann Folge 5: Nasenbär mit Koffer auf dem Weg zum Flughafen
+  const endPlane = e3(mk('g', {opacity: 0}, B.end)); emo('✈️', {x: 0, y: 0, 'font-size': 40}, endPlane); const endPlaneT = mk('text', {x: 34, y: 6, class: 'se-small2', style: 'fill:#ffcf1f'}, endPlane); endPlaneT.textContent = 'GIG → MUC 🦝';
+
   // Versteckte Gags im Hintergrund: Schilder, Plakate und ein Nasenbär, der sich in jeder Szene irgendwo versteckt
   function sign(g, x, y, rows, o) {   // Schild: rows = [[Text, Größe, Farbe?]], o = {w, bg, rot, post}
     o = o || {}; const w = o.w || 120, h = 10 + rows.reduce((a, r) => a + (r[1] || 12) + 4, 0), gg = mk('g', {transform: `translate(${x},${y}) rotate(${o.rot || 0})`}, g);
@@ -4110,6 +4269,13 @@ function wavB64(buf) {
   if (B.pir) { sign(B.pir, 80, FL - 150, [['BADEN AUF EIGENE', 8], ['GEFAHR 🐟', 9, '#c0392b'], ['Fußpflege gratis', 8]], {w: 100, post: 60, rot: -4}); }
   if (B.jbar) { sign(B.jbar, 630, 190, [['Rülpsen ab 22 Uhr', 10, '#ffcf1f'], ['nur mit Genehmigung', 9, '#fff']], {w: 134, bg: '#2b2b2b', rot: 2}); }
   if (B.kai) { sign(B.kai, 120, FL - 175, [['KAIMANE NICHT FÜTTERN', 8], ['(Jonas zählt nicht)', 8, '#c0392b']], {w: 128, post: 110, rot: -3}); }
+  // Folge 5
+  if (B.pty) { sign(B.pty, 620, 262, [['MARÉ ALTA 🌊', 11, '#2f6b9a'], ['Füße bitte', 9], ['einziehen', 9]], {w: 92, rot: -2}); peek(B.pty, 564, 226, .7); }
+  if (B.schoon) { sign(B.schoon, 120, 150, [['OPEN BAR', 11, '#c0392b'], ['Splitwise verboten', 8]], {w: 98}); }
+  if (B.abr) { sign(B.abr, 60, FL - 74, [['🚫🚗 PROIBIDO CARROS', 9], ['Rollstühle: Verhandlungssache', 7]], {w: 132, post: 56, rot: -3}); peek(B.abr, 712, 246, .6); }
+  if (B.lopes) { sign(B.lopes, 750, FL - 84, [['FOOTVOLLEY', 10], ['Gringos: 0 Siege', 9, '#c0392b'], ['seit 1500', 8]], {w: 98, post: 60, rot: 3}); }
+  if (B.fest) { sign(B.fest, 660, 300, [['🦝 Handys bitte', 9], ['festhalten!', 9, '#c0392b']], {w: 92, rot: 3}); }
+  if (B.pier) { sign(B.pier, 470, FL - 70, [['Abfahrt 6:00', 10], ['Daijo & Greisel:', 8], ['morgen 😎', 8]], {w: 96, post: 46, rot: 2}); peek(B.pier, 520, FL + 30, .6); }
   if (B.ham) { sign(B.ham, 735, FL - 80, [['max. 100 kg', 10], ['pro Hängematte', 8], ['(Greisel?)', 8, '#c0392b']], {w: 92, post: 50, rot: 3}); peek(B.ham, 60, FL - 10, .8); }
 
   // Derbe Effekte: Kotz-Bogen, Stinkwolke, Herzen, Fleck
@@ -4140,7 +4306,7 @@ function wavB64(buf) {
   const credG = mk('g', {}, B.end), credEls = Array.from({length: 7}, () => { const g = mk('g', {}, credG);
     g.l = mk('text', {x: W / 2 - 12, 'text-anchor': 'end', class: 'se-cred'}, g); g.r = mk('text', {class: 'se-cred b'}, g); return g; });
   function epTexts() {   // Titel, Abspann und Vorschau der gewählten Folge
-    ti3.textContent = `Folge ${EP.n || 1}: ${EP.title}`; nxt.textContent = EP.next || '📺 Fortsetzung folgt';
+    ti3.textContent = `Folge ${EP.n || 1}: ${EP.title}`; cont.textContent = EP.cont || 'Fortsetzung folgt …'; nxt.textContent = EP.next || '📺 Fortsetzung folgt';
     const cr = EP.credits || [];
     credEls.forEach((g, k) => { const [a2, b2] = cr[k] || ['', '']; g.l.textContent = a2; g.r.textContent = b2;
       g.r.setAttribute('x', a2 ? W / 2 + 12 : W / 2); g.r.setAttribute('text-anchor', a2 ? 'start' : 'middle'); g.hidden2 = !b2; });
@@ -5028,6 +5194,194 @@ function wavB64(buf) {
       bil4.setAttribute('opacity', win(L, E6 + 200, len - 200, 300).toFixed(2)); bil4.rows.forEach((r, k) => r.setAttribute('opacity', L > E6 + 600 + k * 1300 ? 1 : 0));
       cam = L < A('e1') - 1600 ? {x: 400, y: 225, z: 1} : L < A('e2') - 300 ? {x: 560, y: 200, z: 1.3} : L < gf0 - 200 ? {x: 300, y: 230, z: 1.25} : L < A('e5') + d('e5') + 300 ? {x: 620, y: 290, z: 1.3} : {x: 400, y: 225, z: 1};
     }
+    else if (sc.id === 'van') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      const v = t / 2.2; vanHills.setAttribute('transform', `translate(${(-(v * .2) % VW).toFixed(1)},0)`); vanLanes.setAttribute('transform', `translate(${(-(v * 1.6) % 60).toFixed(1)},0)`);
+      vanSea.setAttribute('transform', `translate(${(-(v * .5) % 40).toFixed(1)},0)`); vanSign.setAttribute('transform', `translate(${(900 - ((v * .9) % 1500)).toFixed(1)},230)`);
+      unoW.forEach((w, i) => w.setAttribute('transform', `translate(${i ? 140 : -130},0) rotate(${(t * 1.5) % 360})`));
+      const bump = 3 * S(t / 45) + 2 * S(t / 73), cx = 430, cy = 392, rk = 1.2 * S(t / 120);
+      uno.setAttribute('transform', `translate(${cx},${(cy + bump).toFixed(1)}) rotate(${rk.toFixed(2)})`);
+      bags5.setAttribute('transform', `translate(${cx},${(cy + bump - 130).toFixed(1)}) rotate(${(rk + 4 * S(t / 260)).toFixed(2)})`);
+      // sechs Köpfe im Uno (eng!), Fahrer vorne rechts, Greisel hinten im Kofferraum
+      const yH = cy + bump - 104, seat = {local: [120, 0, 0], patrick: [72, 2, -4], dajo: [26, -6, 8], jonas: [-20, 2, -6], simon: [-62, -2, 7], marco: [-100, 3, -10]};
+      Object.entries(seat).forEach(([id, [dx, dy, tl]], i) => { if (!P[id]) return; headAt(id, cx + dx, yH + dy, .5, {tilt: tl + 4 * S(t / 110 + i), flip: id === 'local' ? 1 : 1}); });
+      if (P.greisel) { headAt('greisel', cx - 214, cy + bump - 80, .46, {tilt: -38}); const relax = L > A('v7') - 600;
+        feet5.setAttribute('opacity', 1); feet5.setAttribute('x', cx - 250); feet5.setAttribute('y', (cy + bump - 40).toFixed(1));
+        if (relax) { pose.greisel.tilt = -24 + 3 * S(t / 500); drink5.setAttribute('opacity', 1); drink5.setAttribute('x', cx - 252); drink5.setAttribute('y', (cy + bump - 112).toFixed(1)); } }
+      if (P.local && L > A('v1') - 200 && L < A('v1') + d('v1') + 400) pose.local.look = -1;   // Fahrer dreht sich um: sechs Leute?!
+      // Silvester-Wunschliste (roter Faden der Folge)
+      const wk = win(L, A('v3') + d('v3') * .6, A('v6') + d('v6') + 200, 300); wish5.setAttribute('opacity', wk.toFixed(2));
+      if (wk > 0) wishList([], '📋 SILVESTER-WÜNSCHE · 0 / 7');
+      cam = L < A('v1') - 300 ? {x: 400, y: 270, z: 1.05} : L < A('v2') - 200 ? {x: cx + 110, y: 300, z: 1.55} : L < A('v3') - 200 ? {x: cx - 190, y: 300, z: 1.5} : L < A('v7') - 200 ? {x: cx - 60, y: 300, z: 1.25} : {x: cx - 170, y: 300, z: 1.45};
+      if (L > A('v4') - 200 && L < A('v6')) cam = {x: cx - 40, y: 300, z: 1.4};
+    }
+    else if (sc.id === 'pty') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      const X = {jonas: 200, patrick: 290, simon: 380, marco: 470, dajo: 560}, wk = span(L, 300, A('y1') + d('y1') - 400);
+      Object.entries(X).forEach(([id, x], i) => { if (!P[id]) return; on(id, x - 230 * (1 - ease(wk)), FL, {sc: .72}); idle(t, i, pose[id]); if (wk < 1) walkP(t + i * 90, pose[id]); });
+      if (P.simon) pose.simon.burn = .5;
+      // Dreierregel: drei stolpern übers Pflaster, Greisel läuft mit geschlossenen Augen unfallfrei
+      const tr0 = A('y2') - 4000;
+      [['jonas', tr0], ['patrick', tr0 + 1200], ['simon', tr0 + 2400]].forEach(([id, a]) => { const kk = span(L, a, a + 900); if (!P[id] || kk <= 0 || kk >= 1) return;
+        Object.assign(pose[id], {tumble: 70 * S(PI * kk), y: FL - 14 * S(PI * Math.min(1, kk * 1.6)), aL: [110, 20], aR: [110, 20], face: 'shock'}); });
+      if (P.greisel) { const gk = span(L, tr0 - 800, A('y2') + 200); on('greisel', -50 + 160 * gk, FL, {sc: .72, eyesShut: 1}); idle(t, 6, pose.greisel);
+        if (gk > 0 && gk < 1) { const w = S(t / 260); Object.assign(pose.greisel, {lL: [16 * w, 0], lR: [-16 * w, 0], aL: [80, 10], aR: [80, 10]}); } }
+      // Flut steigt (Daijos Plan sagt Ebbe)
+      const fl = 34 * ease(span(L, A('y3') + d('y3') - 300, A('y4') - 200)); flood5.setAttribute('opacity', fl > .5 ? 1 : 0);
+      if (fl > .5) { floodR.setAttribute('y', (FL + 4 - fl).toFixed(1)); floodW.setAttribute('transform', `translate(${(-(t / 30) % 40).toFixed(1)},${(FL + 4 - fl).toFixed(1)})`); }
+      tide5.setAttribute('opacity', win(L, A('y3') - 200, A('y4') + d('y4') + 300, 250).toFixed(2)); tide5.rows[0].textContent = fl > 12 ? 'Realität: Flut 🌊 (+34 cm)' : 'Plan Daijo: Ebbe 📋';
+      if (P.dajo && L > A('y3') - 200 && L < A('y4') + d('y4')) { pose.dajo.aR = [100, 30]; P.dajo.prop.textContent = '📋'; }
+      if (fl > 12 && L < A('y5')) ['jonas', 'patrick', 'simon', 'marco'].forEach(id => { if (pose[id] && pose[id].on) { pose[id].look = 0; pose[id].tilt = 14; } });
+      // Kellner watet mit der „Gabriela“ heran, Marco hält sie für eine Frau
+      const wa = span(L, A('y5') - 1700, A('y5') - 150);
+      if (L > A('y5') - 1700) { on('waiter', 860 - 200 * ease(wa), FL, {sc: .74, flip: -1}); idle(t, 7, pose.waiter); if (wa < 1) walkP(t, pose.waiter); Object.assign(pose.waiter, {aR: [100, 70]}); P.waiter.prop.textContent = L < A('y7') + d('y7') * .5 ? '🍹' : ''; }
+      if (P.marco && L > A('y6') - 100) { const mk2 = span(L, A('y6'), A('y6') + 900); pose.marco.x = 470 + 120 * ease(mk2); if (mk2 > 0 && mk2 < 1) walkP(t, pose.marco); if (L < A('y7')) Object.assign(pose.marco, {aL: [120, 10], aR: [120, 10]});
+        if (L > A('y7') + d('y7') * .5) { P.marco.prop.textContent = '🍹'; Object.assign(pose.marco, {aR: [60, 50], tilt: -10}); } }
+      cam = L < A('y1') + d('y1') - 400 ? {x: 400, y: 240, z: 1} : L < A('y2') - 300 ? {x: 300, y: 270, z: 1.2} : L < A('y3') - 200 ? {x: 140, y: 270, z: 1.4} : L < A('y5') - 1700 ? {x: 400, y: 250, z: 1.05} : {x: 580, y: 265, z: 1.3};
+    }
+    else if (sc.id === 'schoon') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      sWaves.setAttribute('transform', `translate(${(-(t / 45) % 80).toFixed(1)},0)`);
+      const by = 2.5 * S(t / 600), deck = 352 + by; schooner.setAttribute('transform', `translate(0,${by.toFixed(1)})`); mast5.setAttribute('transform', `translate(0,${by.toFixed(1)})`);
+      const X = {local: 20, dajo: 82, patrick: 142, simon: 234, jonas: 296, greisel: 356, marco: 418};
+      Object.entries(X).forEach(([id, x], i) => { if (!P[id]) return; on(id, x, deck, {sc: .7, noShadow: 1}); idle(t, i, pose[id]); });
+      if (P.simon) pose.simon.burn = .55;
+      if (P.local) { P.local.prop.textContent = '🍾'; if (L > A('w1') - 200 && L < A('w1') + d('w1') + 300) pose.local.aR = [160, 10]; }
+      if (L > A('w1') + d('w1') && L < A('w2')) ['dajo', 'patrick', 'simon', 'greisel', 'marco'].forEach((id, i) => { if (pose[id]) cheerP(t, pose[id], i); });
+      if (P.jonas) { if (L > A('w2') - 200 && L < A('w2') + d('w2') + 300) { pose.jonas.aR = [90, 90]; P.jonas.prop.textContent = '📱'; }
+        else { pouch5.setAttribute('opacity', 1); pouch5.setAttribute('x', X.jonas + 2); pouch5.setAttribute('y', (deck - 74).toFixed(1)); } }
+      // Marco springt mit Schnorchel rein und „ertrinkt“ – im hüfthohen Wasser
+      const j0 = A('w3') - 2600, jk = span(L, j0, j0 + 900), st = A('w5') + d('w5') + 200, sk = span(L, st, st + 700);
+      if (P.marco && L > j0) { const p = pose.marco;
+        if (jk < 1) Object.assign(p, {x: 418 + 190 * jk, y: deck + (444 - deck) * jk - 140 * S(PI * jk), tumble: 80 * jk});
+        else Object.assign(p, {x: 608, y: 444 - 44 * ease(sk) + (sk < 1 ? 5 * S(t / 120) : 0), tumble: 0});
+        if (jk >= 1 && sk <= 0) { Object.assign(p, {aL: [128 + 22 * S(t / 70), 40 + 30 * S(t / 70)], aR: [128 + 22 * C(t / 70), 40 + 30 * C(t / 70)], tilt: 12 * S(t / 90)}); splash5[0].setAttribute('opacity', .9); splash5[0].setAttribute('x', 608 + 14 * S(t / 100)); splash5[0].setAttribute('y', (338 + 6 * S(t / 80)).toFixed(1)); }
+        if (sk > 0) Object.assign(p, {aL: [20, 10], aR: [20, 10], tilt: -8}); }
+      if (P.marco && pose.marco.on) { const p = pose.marco; snork.setAttribute('opacity', 1); snork.setAttribute('x', (p.x + 6).toFixed(1)); snork.setAttribute('y', (hyOf(p.y, .7) - 20).toFixed(1)); }
+      // Greisel, der Held: Superman-Sprung in Zeitlupe
+      const gj = A('w4') + d('w4') + 100, gk = span(L, gj, gj + 1800);
+      if (P.greisel && L > gj) { const p = pose.greisel;
+        if (gk < 1) { Object.assign(p, {x: 356 + 320 * gk, y: deck + (444 - deck) * gk - 170 * S(PI * gk), tumble: 70 * gk, aL: [175, 0], aR: [175, 0], lL: [10, 0], lR: [-10, 0]});
+          cape5.setAttribute('opacity', 1); cape5.setAttribute('transform', `translate(${(p.x - 10).toFixed(1)},${(p.y - 70).toFixed(1)}) rotate(${(70 * gk - 20 + 8 * S(t / 90)).toFixed(1)})`); }
+        else Object.assign(p, {x: 676, y: 444 - 44 * ease(sk) + (sk < 1 ? 4 * S(t / 140) : 0), tumble: 0, aL: [40, 20], aR: [40, 20]}); }
+      if (P.greisel && L > A('w4') - 100 && L < gj) Object.assign(pose.greisel, {aR: [170, 0], aL: [30, 30]});
+      const sp = span(L, gj + 1700, gj + 2400); if (sp > 0 && sp < 1) { splash5[1].setAttribute('opacity', (1 - sp).toFixed(2)); splash5[1].setAttribute('x', 676); splash5[1].setAttribute('y', (330 - 30 * sp).toFixed(1)); }
+      if (P.marco && L > A('w6') - 100) { Object.assign(pose.marco, {x: 628, rot: 12, aL: [100, 60], aR: [100, 60]}); hearts3(640, 250, t); }
+      popWish(L, A('w6') + d('w6') + 200, 7, true);
+      cam = L < A('w1') + d('w1') + 300 ? {x: 220, y: 250, z: 1.15} : L < j0 ? {x: 300, y: 250, z: 1.3} : L < A('w4') - 100 ? {x: 560, y: 300, z: 1.3} : L < gj ? {x: 380, y: 260, z: 1.45} : L < gj + 1900 ? {x: 520, y: 290, z: 1.1} : {x: 640, y: 300, z: 1.4};
+    }
+    else if (sc.id === 'abr') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      aWaves.setAttribute('transform', `translate(${(-(t / 50) % 40).toFixed(1)},0)`); ferry5.setAttribute('transform', `translate(120,${(262 + 2 * S(t / 500)).toFixed(1)})`);
+      const X = {jonas: 150, simon: 230, dajo: 310, marco: 390, greisel: 490, patrick: 570};
+      Object.entries(X).forEach(([id, x], i) => { if (!P[id]) return; on(id, x, FL, {sc: .74}); idle(t, i, pose[id]); });
+      if (P.simon) pose.simon.burn = .55;
+      // Gepäckträger: Koffer, Koffer … Patrick
+      const l0 = A('x2') - 2000, hop = span(L, A('x2') + d('x2') + 100, A('x2') + d('x2') + 700), dep = span(L, A('x2') + d('x2') + 900, A('x5'));
+      const cX = 650 + 360 * ease(dep), cY = FL - 6;
+      cart5.setAttribute('opacity', 1); cart5.setAttribute('transform', `translate(${cX.toFixed(1)},${cY})`);
+      cart5.bags.forEach((b, i) => b.setAttribute('opacity', L > l0 + i * 700 + 500 ? 1 : 0));
+      [0, 1].forEach(i => { const k = span(L, l0 + i * 700, l0 + i * 700 + 500); if (k <= 0 || k >= 1) return; fly5.setAttribute('opacity', 1); fly5.setAttribute('fill', i ? '#e8a33a' : '#2f6b9a');
+        const x = 600 + (cX - 34 + i * 36 - 600) * k, y = FL - 40 - (FL - 40 - cY + 66) * k - 80 * S(PI * k); fly5.setAttribute('x', x.toFixed(1)); fly5.setAttribute('y', y.toFixed(1)); });
+      on('local', cX + 98, FL, {sc: .74, flip: -1}); idle(t, 8, pose.local); pose.local.aL = [70, 20];
+      if (L > A('x1') - 200 && L < A('x1') + d('x1')) pose.local.aR = [150, 20];
+      if (dep > 0 && dep < 1) walkP(t, pose.local);
+      if (P.patrick && hop > 0) { Object.assign(pose.patrick, {x: 580 + (cX - 10 - 580) * ease(hop), y: FL - (FL - (cY - 34)) * ease(hop) - 40 * S(PI * hop), noShadow: 1}); sitP(pose.patrick);
+        if (hop >= 1) Object.assign(pose.patrick, {aR: [160, 20 * S(t / 120)], tilt: 6}); }
+      // Dona Rosa: „Que gatinho!“ – Wange kneifen, Kuss
+      const dn = span(L, A('x3') - 1900, A('x3') - 250);
+      if (L > A('x3') - 1900) { on('dona', 880 - 438 * ease(dn), FL, {sc: .64, flip: -1}); idle(t, 9, pose.dona); if (dn < 1) walkP(t, pose.dona, 200);
+        if (L > A('x3') - 200 && L < A('x4')) { pose.dona.aR = [120, 30]; pinch5.setAttribute('opacity', 1); pinch5.setAttribute('x', (X.marco + 24).toFixed(1)); pinch5.setAttribute('y', (hyOf(FL, .74) + 10).toFixed(1)); }
+        const kk = win(L, A('x3') + d('x3') * .6, A('x3') + d('x3') + 900, 150); if (kk > 0) { kissM.setAttribute('opacity', kk.toFixed(2)); kissM.setAttribute('x', X.marco + 14); kissM.setAttribute('y', hyOf(FL, .74) + 4); } }
+      if (P.marco && L > A('x3') + d('x3') * .6 && L < A('x5')) { pose.marco.face = 'heart'; pose.marco.tilt = -8; hearts3(X.marco, hyOf(FL, .74) - 40, t); }
+      if (P.simon && L > A('x4') - 200 && L < A('x4') + d('x4') + 400) { pose.simon.aR = [100, 70]; P.simon.prop.textContent = '📱'; }
+      popWish(L, A('x6') + d('x6') + 250, 5, true);
+      cam = L < A('x1') - 400 ? {x: 400, y: 240, z: 1} : L < A('x2') + d('x2') + 800 ? {x: 640, y: 265, z: 1.3} : L < A('x3') - 1900 ? {x: 720, y: 250, z: 1.1} : L < A('x4') - 200 ? {x: 390, y: 270, z: 1.45} : L < A('x5') - 200 ? {x: 300, y: 265, z: 1.3} : {x: 370, y: 255, z: 1.2};
+    }
+    else if (sc.id === 'lopes') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      loWaves.setAttribute('transform', `translate(${(-(t / 40) % 40).toFixed(1)},0)`);
+      const TX = {jonas: 200, simon: 285, marco: 365}, locs = ['local', 'local2', 'local3'], LX = [520, 610, 700];
+      Object.entries(TX).forEach(([id, x], i) => { if (!P[id]) return; on(id, x, FL, {sc: .72}); idle(t, i, pose[id]); });
+      locs.forEach((id, i) => { on(id, LX[i], FL, {sc: .74, flip: -1}); idle(t, i + 6, pose[id]); pose[id].hip = 3 * S(t / 260 + i); });
+      [['patrick', 46], ['dajo', 100], ['greisel', 150]].forEach(([id, x], i) => { if (!P[id]) return; on(id, x, FL + 14, {sc: .55}); sitP(pose[id]); pose[id].tilt = 3 * S(t / 700 + i); });
+      if (P.patrick) P.patrick.prop.textContent = '🍹';
+      if (P.simon) pose.simon.burn = .85;
+      // Zeitraffer: 20 Punkte für die Einheimischen; Dreierregel: Ball an Jonas’ Kopf, Marcos Bauch, Patricks Caipi
+      const P0 = A('o1') + d('o1') + 300, PD = (A('o2') - 500 - P0) / 20, n = Math.floor((L - P0) / PD), pts = clamp(n + 1, 0, 20), s0 = A('o3') - 2200, pt1 = L > s0 + 1700 ? 1 : 0;
+      score5.setAttribute('opacity', L > A('o1') - 300 ? 1 : 0); score5T.textContent = `Gringos ${pt1} : ${L > P0 ? pts : 0} Locais`;
+      ff5.setAttribute('opacity', win(L, P0, P0 + 20 * PD, 200).toFixed(2));
+      if (L > P0 && n < 20) { const k = ((L - P0) % PD) / PD, lx = LX[n % 3], hit = n === 4 ? 'jonas' : n === 9 ? 'marco' : n === 15 ? 'patrick' : '';
+        const tg = hit ? pose[hit] : pose[['jonas', 'simon', 'marco'][n % 3]], tx = hit ? tg.x : tg.x + (n % 2 ? 40 : -40), ty = hit === 'jonas' ? hyOf(FL, .72) - 20 : hit === 'marco' ? FL - 60 : hit === 'patrick' ? FL - 50 : FL - 10;
+        ball5.setAttribute('opacity', 1); ball5.setAttribute('x', (lx + (tx - lx) * k).toFixed(1)); ball5.setAttribute('y', (FL - 120 + (ty - FL + 120) * k - 140 * S(PI * k)).toFixed(1));
+        pose[locs[n % 3]].lR = [-60 * (1 - k), 0];
+        if (!hit && k > .6 && tg) { tg.tumble = (n % 2 ? -1 : 1) * 70 * span(k, .6, 1); }
+        if (hit && k > .8) { Object.assign(tg, {cry: 1, face: 'dizzy', tilt: -20}); if (hit === 'patrick') P.patrick.prop.textContent = ''; } }
+      [4, 9, 15].forEach(m2 => { const a = P0 + (m2 + .85) * PD; if (L > a && L < a + 1400) { const id = m2 === 4 ? 'jonas' : m2 === 9 ? 'marco' : 'patrick'; if (pose[id]) Object.assign(pose[id], {face: 'dizzy', cry: 1}); } });
+      if (L > P0 + 20 * PD && L < A('o3')) Object.keys(TX).forEach(id => { if (pose[id]) { pose[id].tilt = -10; pose[id].aL = [10, 5]; pose[id].aR = [10, 5]; } });
+      // Matchball: der Ball prallt von Simons knallrotem Gesicht übers Netz
+      if (L > s0 && L < s0 + 1700) { const k1 = span(L, s0, s0 + 900), k2 = span(L, s0 + 900, s0 + 1700), sy = hyOf(FL, .72);
+        let x, y; if (k1 < 1) { x = 700 + (TX.simon + 10 - 700) * k1; y = FL - 120 + (sy - FL + 120) * k1 - 150 * S(PI * k1); } else { x = TX.simon + 10 + (650 - TX.simon - 10) * k2; y = sy + (FL - 14 - sy) * k2 - 170 * S(PI * k2); }
+        ball5.setAttribute('opacity', 1); ball5.setAttribute('x', x.toFixed(1)); ball5.setAttribute('y', y.toFixed(1));
+        if (k2 > .7) { pose.local2.tumble = 70 * span(k2, .7, 1); pose.local2.y += 8; } }
+      if (P.simon && L > s0 + 850 && L < s0 + 1900) { Object.assign(pose.simon, {tilt: -25, face: 'dizzy'}); stars5.forEach((e, k) => { const a2 = t / 200 + k * 1.26; e.setAttribute('opacity', 1); e.setAttribute('x', (TX.simon + 30 * C(a2)).toFixed(1)); e.setAttribute('y', (hyOf(FL, .72) - 40 + 8 * S(a2)).toFixed(1)); }); }
+      if (P.simon && L > A('o3') - 100 && L < A('o4')) cheerP(t, pose.simon, 0);
+      if (L > A('o4') - 100 && L < A('o4') + d('o4')) pose.local.aR = [100, 20];
+      popWish(L, A('o4') + d('o4') + 500, 1, false);
+      cam = L < A('o1') - 300 ? {x: 400, y: 240, z: 1} : L < P0 ? {x: 610, y: 260, z: 1.3} : L < A('o2') - 300 ? {x: 420, y: 240, z: 1} : L < s0 ? {x: 330, y: 260, z: 1.3} : L < A('o3') - 100 ? {x: 420, y: 250, z: 1.05} : L < A('o4') - 100 ? {x: TX.simon, y: 255, z: 1.45} : {x: 560, y: 255, z: 1.3};
+    }
+    else if (sc.id === 'fest') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      nWaves.setAttribute('transform', `translate(${(-(t / 60) % 40).toFixed(1)},0)`); bulbs5.forEach((b, i) => b.setAttribute('opacity', (Math.floor(t / 500) + i) % 3 ? 1 : .45));
+      const X = {greisel: 230, marco: 300, patrick: 370, jonas: 440, simon: 510, dajo: 590};
+      Object.entries(X).forEach(([id, x], i) => { if (!P[id]) return; on(id, x, FL, {sc: .74}); idle(t, i, pose[id]); });
+      if (P.simon) pose.simon.burn = .55;
+      const g0 = A('n6') - 900, b0 = A('n7') - 3300, jx = X.jonas, hand = [jx + 52, hyOf(FL, .74) - 30];
+      const selfie = (L > A('n1') - 200 && L < A('n2')) || (L > A('n5') - 200 && L < g0);
+      if (P.jonas && selfie) { pose.jonas.aR = [128, 24]; P.jonas.prop.textContent = '📱'; }
+      // Patricks bestes Foto der Reise: der Stromausfall-Kuss (Folge 4)
+      if (P.patrick && L > A('n2') - 200 && L < A('n4') + d('n4')) { pose.patrick.aR = [110, 40]; P.patrick.prop.textContent = '📱'; }
+      const ph = win(L, A('n2') + d('n2') - 300, A('n4') + d('n4') + 150, 220); kissPh.setAttribute('opacity', ph.toFixed(2));
+      if (ph > 0) kissPh.setAttribute('transform', `translate(400,205) scale(${(.85 + .15 * ease(span(L, A('n2') + d('n2') - 300, A('n2') + d('n2') + 100))).toFixed(3)}) translate(-400,-205)`);
+      popWish(L, A('n4') + d('n4') + 300, 6, false);
+      // Der Nasenbär springt von der Palme und klaut das Handy – Daijo rülpst ihn an – Handy fliegt ins Meer
+      const jk = span(L, g0 - 600, g0), run = span(L, g0, g0 + 1300), dk = span(L, b0, b0 + 1600), pf = span(L, b0 + 450, b0 + 1650);
+      if (L > g0 - 600 && L < b0 + 1600) { let x, y, fl2 = -1, rot = 0, runA = false;
+        if (jk < 1) { x = 720 + (hand[0] - 720) * jk; y = 140 + (hand[1] - 140) * jk - 60 * S(PI * jk); rot = -40 * jk; }
+        else if (L < b0 + 450) { x = hand[0] + (130 - hand[0]) * ease(run); y = hand[1] + (FL + 6 - hand[1]) * Math.min(1, run * 3); runA = run < 1; }
+        else { x = 130 - 200 * span(L, b0 + 450, b0 + 1600); y = FL + 6; runA = true; rot = -30 * (1 - span(L, b0 + 450, b0 + 900)); }
+        C6.prop.textContent = L > g0 && L < b0 + 450 ? '📱' : ''; C6.shades.setAttribute('opacity', 1); coatiAt(C6, x, y, fl2, t, runA, {rot}); }
+      if (P.jonas && L > g0 && L < A('n8')) Object.assign(pose.jonas, {aL: [130, 30], aR: [130, 30], cry: 1});
+      if (P.dajo && L > b0 - 400 && L < b0 + 1400) { Object.assign(pose.dajo, {rot: 10, mouth: L > b0 ? 1 : 0, aL: [30, 40], aR: [30, 40], tilt: L > b0 ? 6 * S(t / 30) : 0, flip: -1}); }
+      if (dk > 0 && dk < 1) { const ox = X.dajo - 20, oy = hyOf(FL, .74) + 14; rings(ring5, ox, oy, dk, 1); burp5.setAttribute('opacity', (1 - dk * dk).toFixed(2)); burp5.textContent = 'BRRROOOAAARP!!'; burp5.setAttribute('x', 400); burp5.setAttribute('y', (150 - 20 * dk).toFixed(1));
+        burp5.setAttribute('style', `font-size:${(54 + 26 * dk).toFixed(0)}px;fill:#9acd32;stroke:#1d3b0a;stroke-width:4px;paint-order:stroke`); flash5.setAttribute('opacity', (dk < .15 ? .5 * (1 - dk / .15) : 0).toFixed(2)); }
+      if (pf > 0 && pf < 1) { phone5.setAttribute('opacity', 1); const px = 130 + 520 * pf, py = FL - 20 - (FL - 20 - 262) * pf - 230 * S(PI * pf); phone5.setAttribute('x', px.toFixed(1)); phone5.setAttribute('y', py.toFixed(1)); phone5.setAttribute('transform', `rotate(${(pf * 900).toFixed(0)},${px.toFixed(1)},${py.toFixed(1)})`); }
+      const sp = span(L, b0 + 1600, b0 + 2500); if (sp > 0 && sp < 1) { splash5[0].setAttribute('opacity', (1 - sp).toFixed(2)); splash5[0].setAttribute('x', 650); splash5[0].setAttribute('y', (250 - 24 * sp).toFixed(1)); }
+      if (L > b0 + 1600 && L < A('n9')) ['greisel', 'marco', 'patrick', 'simon'].forEach(id => { if (pose[id] && pose[id].on) { pose[id].look = -.6; pose[id].face = 'shock'; } });
+      if (P.dajo && L > A('n7') - 100 && L < A('n7') + d('n7') + 400) { pose.dajo.aR = [150, 140]; pose.dajo.flip = 1; }
+      popWish(L, A('n8') + 300, 3, false);
+      if (P.jonas && L > A('n9') - 200 && L < A('n9') + d('n9') + 300) { pose.jonas.aR = [90, 90]; P.jonas.prop.textContent = '📱'; }   // mit Patricks Handy
+      // Bilanz der Silvester-Wünsche
+      const bk = win(L, A('n9') + d('n9') + 300, len + 400, 300); wish5.setAttribute('opacity', bk.toFixed(2));
+      if (bk > 0) wishList(['no', 'no', 'no', 'no', 'ok', 'no', 'ok'], '📋 BILANZ: 2 von 7 ✅');
+      cam = L < A('n1') - 300 ? {x: 400, y: 240, z: 1} : L < A('n2') - 200 ? {x: 440, y: 250, z: 1.25} : L < A('n5') - 200 ? {x: 420, y: 245, z: 1.05} : L < g0 - 600 ? {x: 440, y: 250, z: 1.25} : L < b0 - 400 ? {x: 400, y: 240, z: 1} : L < A('n8') ? {x: 330, y: 250, z: 1.05} : L < A('n9') + d('n9') ? {x: 400, y: 240, z: 1} : {x: 300, y: 240, z: 1.05};
+    }
+    else if (sc.id === 'pier') {
+      const A = k => (LAT[k] || 0) - sc.t[0], d = k => ((LINES.find(l => l.key === k) || {}).dur || 0);
+      pWaves5.setAttribute('transform', `translate(${(-(t / 60) % 90).toFixed(1)},0)`); sunGl.setAttribute('opacity', (.22 + .06 * S(t / 400)).toFixed(2));
+      const dep = A('i6') + d('i6') + 300, bk = ease(span(L, dep + 1100, len + 2000)), bX = 600 + 520 * bk, bY = FL + 2 + 3 * S(t / 500);
+      barca.setAttribute('transform', `translate(${bX.toFixed(1)},${bY.toFixed(1)})`);
+      const X = {greisel: 50, dajo: 170, simon: 235, marco: 295, patrick: 355, jonas: 415}, go = ['simon', 'marco', 'patrick', 'jonas'];
+      Object.entries(X).forEach(([id, x], i) => { if (!P[id]) return; on(id, x, FL - 6, {sc: .72, floor: FL - 6}); idle(t, i, pose[id]); });
+      if (P.simon) pose.simon.burn = .6;
+      go.forEach((id, i) => { if (!P[id] || L < dep) return; const wk = span(L, dep + i * 120, dep + 900 + i * 120), bx = bX - 110 + i * 56;
+        Object.assign(pose[id], {x: X[id] + (bx - X[id]) * ease(wk), y: FL - 6 + (bY - 4 - FL + 6) * wk, floor: bY}); if (wk < 1) walkP(t + i * 70, pose[id]); else cheerP(t, pose[id], i); });
+      if (P.jonas && L > A('i5') - 100 && L < A('i5') + d('i5') + 300) pose.jonas.aR = [40, 80];
+      // Greisel legt sich hin und schläft sofort, Daijo winkt mit Tränen
+      if (P.greisel) { const lk = span(L, dep + 300, dep + 1100); if (lk > 0) Object.assign(pose.greisel, {tumble: -84 * ease(lk), y: FL - 6 + 20 * lk, x: 50 + 70 * lk, eyesShut: lk >= 1 ? 1 : 0}); if (lk >= 1) snore(40, FL - 40, t); }
+      if (P.dajo && L > dep + 600) { Object.assign(pose.dajo, {aR: [160, 25 * S(t / 160)]}); if (L > A('i7') - 300) pose.dajo.cry = 1; }
+      cam = L < A('i1') - 300 ? {x: 330, y: 250, z: 1.05} : L < A('i6') - 200 ? {x: 270, y: 265, z: 1.3} : L < dep ? {x: 90, y: 265, z: 1.4} : L < A('i7') - 300 ? {x: 430, y: 240, z: 1} : L < A('i7') + d('i7') ? {x: 150, y: 265, z: 1.45} : {x: 450, y: 235, z: 1};
+    }
     else if (sc.id === 'buf') {
       fallsF.forEach((f, k) => f.setAttribute('stroke-dashoffset', (-(t / 8 + k * 7) % 20).toFixed(1)));
       ban.setAttribute('opacity', win(L, 300, 4200, 400).toFixed(2));
@@ -5097,6 +5451,9 @@ function wavB64(buf) {
       cont.setAttribute('opacity', span(L, 200, 900).toFixed(2)); nxt.setAttribute('opacity', span(L, 1200, 1800).toFixed(2));
       const cast = (EP.n || 1) >= 3 ? CREW : crew4, gap = cast.length > 4 ? 100 : 130, x0 = 400 - gap * (cast.length - 1) / 2;
       cast.forEach((id, i) => { on(id, x0 + i * gap, FL + 52, {sc: .4}); idle(t, i, pose[id]); const bow = win(L, 3000 + i * 150, 6000, 400); pose[id].rot = 25 * bow; });
+      if (EPID === 'ep5') {   // Teaser Staffel 2: der Nasenbär mit Koffer und Sonnenbrille auf dem Weg nach München
+        const k = span(L, 6500, len - 300); C6.prop.textContent = '🧳'; C6.shades.setAttribute('opacity', 1); if (k > 0 && k < 1) coatiAt(C6, -60 + 920 * k, 430, 1, t, true, {sc: 1.1});
+        const pk = span(L, 7500, len); if (pk > 0 && pk < 1) { endPlane.setAttribute('opacity', 1); endPlane.setAttribute('transform', `translate(${(-80 + 960 * pk).toFixed(1)},${(70 - 30 * pk).toFixed(1)}) rotate(-8)`); } }
     }
     // Running Gag: der Nasenbär taucht in jeder Folge irgendwo auf (EP.cameo: Szene, Zeile, Versatz, Weg, Beute)
     (EP.cameo || []).forEach(c => { if (c.sc !== sc.id) return; const a2 = (LAT[c.key] || 0) - sc.t[0] + (c.d || 0), k = span(L, a2, a2 + (c.dur || 4000));
@@ -5124,7 +5481,7 @@ function wavB64(buf) {
     // Leben: blinzeln, Zuhörer schauen zum Sprecher, Gesten beim Sprechen (nur wenn die Szene die Arme nicht selbst steuert)
     const spk = LINES.find(l => t >= l.at && t <= l.at + l.dur && P[l.who] && pose[l.who] && pose[l.who].on);
     Object.keys(P).forEach(id => { const p = pose[id]; if (!p || !p.on) return;
-      const h = HASH(id), per = 2700 + h % 1900, ph = (t + h * 37) % per; p.blink = ph < 110 || (h % 3 === 0 && ph > 240 && ph < 340);
+      const h = HASH(id), per = 2700 + h % 1900, ph = (t + h * 37) % per; p.blink = !!p.eyesShut || ph < 110 || (h % 3 === 0 && ph > 240 && ph < 340);
       if (p.headOnly || p.still) return;
       if (spk && spk.who !== id && !p.look) { const q = pose[spk.who]; p.look = clamp((q.x - p.x) / 160, -1, 1) * .6 * (p.flip < 0 ? -1 : 1); }
       if (spk && spk.who === id && armsFree(p)) { const k = (t - spk.at) / spk.dur, txt = (spk.text || spk.say || '').replace(/[^\p{L}\p{N}\p{P}\s]/gu, '').trim();
@@ -5253,6 +5610,18 @@ function wavB64(buf) {
       for (let k = 0; k < 4; k++) m.sfx('kiss', A('j7', dl('j7') + 200 + k * 650)); }
     if (has('k5')) { const fall = LAT.k5 - 1300; m.sfx('chomp', at(fall - 350)); m.sfx('scratch', at(fall - 300)); m.sfx('splash', at(fall + 300)); m.sfx('whoo', at(fall + 100)); }
     if (has('e3')) { const g0 = LAT.e3 - 2300; m.sfx('whoo', at(g0)); m.sfx('thud', at(g0 + 700)); m.sfx('crash', at(g0 + 750)); }
+    // Folge 5
+    if (has('v1')) { m.sfx('car', A('v1', -1200)); m.sfx('boing', A('v2', -300)); }
+    if (has('y2')) { const tr0 = LAT.y2 - 4000; [0, 1200, 2400].forEach(o => m.sfx('thud', at(tr0 + o + 450))); m.sfx('bubble', A('y4', -1500)); m.sfx('splash', A('y4', -1000)); m.sfx('splash', A('y5', -900)); m.sfx('clink', A('y7', dl('y7') * .5)); }
+    if (has('w3')) { const j0 = LAT.w3 - 2600, gj = LAT.w4 + dl('w4') + 100, st = LAT.w5 + dl('w5') + 200; m.sfx('cheer', A('w1', dl('w1'))); m.sfx('whoo', at(j0)); m.sfx('splash', at(j0 + 850)); m.sfx('bubble', at(j0 + 1300));
+      m.sfx('whoo', at(gj + 200)); m.sfx('splash', at(gj + 1750)); m.sfx('splash', at(st + 150)); m.sfx('ding', A('w6', dl('w6') + 200)); }
+    if (has('x2')) { const l0 = LAT.x2 - 2000; m.sfx('squeak', A('x1', -600)); m.sfx('thud', at(l0 + 500)); m.sfx('thud', at(l0 + 1200)); m.sfx('boing', A('x2', dl('x2') + 400)); m.sfx('squeak', A('x2', dl('x2') + 1000)); m.sfx('kiss', A('x3', dl('x3') * .6)); m.sfx('ding', A('x6', dl('x6') + 250)); }
+    if (has('o2')) { const P0 = LAT.o1 + dl('o1') + 300, PD = (LAT.o2 - 500 - P0) / 20, s0 = LAT.o3 - 2200; m.sfx('whistle', A('o1', -300));
+      for (let k = 0; k < 20; k++) m.sfx(k === 4 || k === 9 || k === 15 ? 'boing' : 'kick', at(P0 + (k + (k === 4 || k === 9 || k === 15 ? .82 : .02)) * PD));
+      m.sfx('kick', at(s0)); m.sfx('boing', at(s0 + 900)); m.sfx('whistle', at(s0 + 1750)); m.sfx('cheer', at(s0 + 1800)); m.sfx('thud', A('o4', dl('o4') + 500)); }
+    if (has('n6')) { const g0 = LAT.n6 - 900, b0 = LAT.n7 - 3300; m.sfx('shutter', A('n2', dl('n2') - 300)); m.sfx('thud', A('n4', dl('n4') + 300)); m.sfx('shutter', A('n5', dl('n5')));
+      m.sfx('squeak', at(g0 - 600)); m.sfx('scratch', at(g0)); m.sfx('burpbig', at(b0)); m.sfx('crash', at(b0 + 300)); m.sfx('whoo', at(b0 + 500)); m.sfx('splash', at(b0 + 1650)); m.sfx('thud', A('n8', 300)); }
+    if (has('i6')) m.sfx('boat', A('i6', dl('i6') + 1200));
     if (has('d1')) { for (let k = 0; k < 12; k++) m.sfx('clink', at(LAT.d1 + 1500 + k * (LAT.d2 - 200 - LAT.d1 - 1500) / 13)); m.sfx('crash', A('d4', dl('d4') + 650)); m.sfx('thud', A('d4', dl('d4') + 750)); m.sfx('chalk', A('d5', -100)); m.sfx('chalk', A('d5', 900)); }
   }
   function sceneChanged(sc) {

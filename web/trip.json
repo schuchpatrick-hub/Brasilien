@@ -7721,6 +7721,10 @@
       "guide": [
         "Marcos Rudaski",
         "de"
+      ],
+      "dona": [
+        "Brenda Stern",
+        "pt"
       ]
     },
     "comedy": {
@@ -7797,6 +7801,11 @@
         "tempo": 1.14,
         "pitch": 1.12,
         "style": "nasal2"
+      },
+      "dona": {
+        "tempo": 1.12,
+        "pitch": 1.12,
+        "style": "opa"
       }
     },
     "ep4": {
@@ -8878,6 +8887,668 @@
           "x2": 900,
           "y": 398,
           "prop": "🧻",
+          "s": 0.8
+        }
+      ],
+      "comedy": {
+        "narrator": {
+          "tempo": 1.28,
+          "pitch": 1.0,
+          "tight": 1
+        },
+        "dajo": {
+          "tempo": 1.42,
+          "pitch": 1.14,
+          "style": "nasal2",
+          "tight": 1
+        }
+      }
+    },
+    "ep5": {
+      "title": "Das große Finale",
+      "n": 5,
+      "admin": true,
+      "next": "📺 Staffel 2: Der Nasenbär kommt nach München",
+      "recapBadge": "⏪ Bisher: 🎆📋  💋⚡  🦝💸",
+      "thumb": "🏝️🦝📱",
+      "color": "#1f8fa8",
+      "credits": [
+        [
+          "Kofferraum",
+          "Greisel (freiwillig)"
+        ],
+        [
+          "Rettungsschwimmer",
+          "Greisel 🦸"
+        ],
+        [
+          "Gabriela",
+          "ein Getränk 🍹"
+        ],
+        [
+          "Irgendeine Frau",
+          "Dona Rosa 👵"
+        ],
+        [
+          "Ball",
+          "Simons Gesicht 🔴"
+        ],
+        [
+          "Fotograf",
+          "Greisel (Augen kurz offen)"
+        ],
+        [
+          "Handy",
+          "der Atlantik 🌊"
+        ],
+        [
+          "",
+          "Obrigado fürs Zuschauen! 🇧🇷"
+        ]
+      ],
+      "lines": [
+        {
+          "key": "intro",
+          "who": "narrator",
+          "at": 1500,
+          "sc": "intro",
+          "gap": 1500,
+          "say": "Gringos! Die Serie, Folge fünf: Das große Finale!",
+          "text": "📺 Gringos – Die Serie · Folge 5: Das große Finale!"
+        },
+        {
+          "key": "v1",
+          "who": "local",
+          "at": 8138,
+          "sc": "van",
+          "gap": 1600,
+          "say": "Seis pessoas? Num Uno?",
+          "text": "Seis pessoas? Num Uno? (Sechs Leute? In einem Fiat Uno?) 🚗",
+          "name": "Fahrer"
+        },
+        {
+          "key": "v2",
+          "who": "greisel",
+          "at": 10502,
+          "sc": "van",
+          "gap": 600,
+          "say": "Ich fahr im Kofferraum, da ist es wenigstens ruhig",
+          "text": "Ich fahr im Kofferraum. Da ist es wenigstens ruhig. 🧳"
+        },
+        {
+          "key": "v3",
+          "who": "jonas",
+          "at": 15502,
+          "sc": "van",
+          "gap": 1500,
+          "say": "Leute, noch sechs Tage, und von unseren sieben Silvester-Wünschen ist noch keiner erfüllt",
+          "text": "Leute, noch 6 Tage. Und von unseren 7 Silvester-Wünschen ist noch keiner erfüllt! 📋"
+        },
+        {
+          "key": "v4",
+          "who": "dajo",
+          "at": 22020,
+          "sc": "van",
+          "gap": 600,
+          "say": "Zeig mal her, unendlich Rodízio? Patrick, du hast doch Hausverbot",
+          "text": "Zeig mal her … „Unendlich Rodízio“? Patrick, du hast doch Hausverbot. 🥩🚫",
+          "lol": [
+            "jonas",
+            "simon",
+            "marco"
+          ],
+          "roll": "patrick"
+        },
+        {
+          "key": "v5",
+          "who": "marco",
+          "at": 27150,
+          "sc": "van",
+          "gap": 700,
+          "say": "Wenigstens Nummer sieben klappt, nicht ertrinken",
+          "text": "Wenigstens Nummer 7 klappt: Nicht ertrinken. 🏊"
+        },
+        {
+          "key": "v6",
+          "who": "simon",
+          "at": 31026,
+          "sc": "van",
+          "gap": 500,
+          "say": "Marco, morgen ist Bootstour",
+          "text": "Marco … morgen ist Bootstour. 🚤",
+          "rshot": "marco",
+          "react": {
+            "marco": "shock"
+          }
+        },
+        {
+          "key": "c6",
+          "who": "card",
+          "at": 34400,
+          "sc": "van",
+          "gap": 1300,
+          "text": "Stunde 3 von 4 … | Aus dem Kofferraum: Stille.",
+          "cdur": 2600
+        },
+        {
+          "key": "v7",
+          "who": "greisel",
+          "at": 37500,
+          "sc": "van",
+          "gap": 500,
+          "say": "Hier hinten hab ich Beinfreiheit, ihr nicht",
+          "text": "Hier hinten hab ich Beinfreiheit. Ihr nicht. 😎",
+          "roll": "jonas",
+          "mad": "patrick"
+        },
+        {
+          "key": "y1",
+          "who": "narrator",
+          "at": 43666,
+          "sc": "pty",
+          "gap": 1300,
+          "say": "Paraty, das Pflaster ist dreihundert Jahre alt, seitdem ist hier keiner mehr gerade gelaufen",
+          "text": "Paraty. Das Pflaster ist 300 Jahre alt. Seitdem ist hier keiner mehr gerade gelaufen."
+        },
+        {
+          "key": "y2",
+          "who": "greisel",
+          "at": 53970,
+          "sc": "pty",
+          "gap": 4200,
+          "say": "Augen zu, dann geht's",
+          "text": "Augen zu. Dann geht’s. 😌"
+        },
+        {
+          "key": "y3",
+          "who": "dajo",
+          "at": 56572,
+          "sc": "pty",
+          "gap": 900,
+          "say": "Bei Flut läuft hier das Meer durch die Straßen, aber laut meinem Plan ist jetzt Ebbe",
+          "text": "Bei Flut läuft hier das Meer durch die Straßen. Aber laut meinem Plan ist jetzt Ebbe. 📋"
+        },
+        {
+          "key": "y4",
+          "who": "patrick",
+          "at": 63880,
+          "sc": "pty",
+          "gap": 1700,
+          "say": "Daijo, dein Plan hat nasse Füße",
+          "text": "Daijo … dein Plan hat nasse Füße. 🌊",
+          "lol": [
+            "jonas",
+            "simon",
+            "marco"
+          ],
+          "palm": "dajo"
+        },
+        {
+          "key": "y5",
+          "who": "waiter",
+          "at": 67102,
+          "sc": "pty",
+          "gap": 900,
+          "say": "Uma Gabriela, senhores?",
+          "text": "Uma Gabriela, senhores? (Der Drink von Paraty) 🍹",
+          "name": "Kellner"
+        },
+        {
+          "key": "y6",
+          "who": "marco",
+          "at": 69428,
+          "sc": "pty",
+          "gap": 500,
+          "say": "Gabriela! Endlich eine Frau, die von selbst zu mir kommt",
+          "text": "Gabriela! Endlich eine Frau, die von selbst zu mir kommt! 😍",
+          "face": "heart"
+        },
+        {
+          "key": "y7",
+          "who": "waiter",
+          "at": 73900,
+          "sc": "pty",
+          "gap": 600,
+          "say": "Gabriela é a bebida, senhor",
+          "text": "Gabriela é a bebida, senhor. (Gabriela ist das Getränk.) 🍹",
+          "name": "Kellner",
+          "lol": 1,
+          "mad": "marco"
+        },
+        {
+          "key": "w1",
+          "who": "local",
+          "at": 79274,
+          "sc": "schoon",
+          "gap": 1500,
+          "say": "Open bar! Tudo incluído!",
+          "text": "Open Bar! Tudo incluído! (Alles inklusive!) 🍹",
+          "name": "Bootsmann"
+        },
+        {
+          "key": "w2",
+          "who": "jonas",
+          "at": 81862,
+          "sc": "schoon",
+          "gap": 700,
+          "say": "Ich trag's trotzdem in Splitwise ein, aus Prinzip",
+          "text": "Ich trag’s trotzdem in Splitwise ein. Aus Prinzip. 📱",
+          "lol": [
+            "patrick",
+            "simon"
+          ],
+          "roll": "dajo"
+        },
+        {
+          "key": "w3",
+          "who": "marco",
+          "at": 88300,
+          "sc": "schoon",
+          "gap": 3000,
+          "say": "Hilfe! Ich ertrinke! Wunsch Nummer sieben!",
+          "text": "Hilfe!! Ich ertrinke!! Wunsch Nummer 7!! 😱",
+          "face": "shock"
+        },
+        {
+          "key": "w4",
+          "who": "greisel",
+          "at": 91804,
+          "sc": "schoon",
+          "gap": 500,
+          "say": "Ich komme!",
+          "text": "Ich komme!! 🦸",
+          "sting": "slowmo",
+          "stingAt": "start"
+        },
+        {
+          "key": "w5",
+          "who": "greisel",
+          "at": 95424,
+          "sc": "schoon",
+          "gap": 2600,
+          "say": "Marco, steh auf",
+          "text": "Marco … steh auf.",
+          "laugh": 1,
+          "lol": 1,
+          "mad": "marco",
+          "rxd": 900
+        },
+        {
+          "key": "w6",
+          "who": "marco",
+          "at": 98054,
+          "sc": "schoon",
+          "gap": 1300,
+          "say": "Danke, Greisel, du bist mein Held",
+          "text": "Danke, Greisel. Du bist mein Held. 🥲",
+          "face": "heart"
+        },
+        {
+          "key": "x1",
+          "who": "local",
+          "at": 104500,
+          "sc": "abr",
+          "gap": 1600,
+          "say": "Carrinho! Dez reais a mala!",
+          "text": "Carrinho! Dez reais a mala! (Zehn Reais pro Koffer!) 🛒",
+          "name": "Gepäckträger"
+        },
+        {
+          "key": "x2",
+          "who": "patrick",
+          "at": 108774,
+          "sc": "abr",
+          "gap": 2200,
+          "say": "Und für zwanzig nimmst du mich mit, ich hab Erfahrung mit Rollstühlen",
+          "text": "Und für zwanzig nimmst du mich mit. Ich hab Erfahrung mit Rollstühlen. ♿",
+          "lol": [
+            "jonas",
+            "simon"
+          ],
+          "roll": "dajo"
+        },
+        {
+          "key": "x3",
+          "who": "dona",
+          "at": 115852,
+          "sc": "abr",
+          "gap": 2400,
+          "say": "Ai, que gatinho!",
+          "text": "Ai, que gatinho! (Was für ein Kätzchen!) 😘"
+        },
+        {
+          "key": "x4",
+          "who": "simon",
+          "at": 117844,
+          "sc": "abr",
+          "gap": 600,
+          "say": "Gatinha?! Bist du's?",
+          "text": "Gatinha?! Bist du’s?! 📱💔",
+          "face": "shock",
+          "lol": [
+            "jonas",
+            "dajo"
+          ]
+        },
+        {
+          "key": "x5",
+          "who": "marco",
+          "at": 120384,
+          "sc": "abr",
+          "gap": 900,
+          "say": "Daijo, Wunsch Nummer fünf, irgendeine Frau, zählt das?",
+          "text": "Daijo! Wunsch 5: „Irgendeine Frau“. Zählt das?"
+        },
+        {
+          "key": "x6",
+          "who": "dajo",
+          "at": 124732,
+          "sc": "abr",
+          "gap": 600,
+          "say": "Da steht irgendeine, also ja",
+          "text": "Da steht „irgendeine“. Also: ja. ✅",
+          "laugh": 1,
+          "lol": 1
+        },
+        {
+          "key": "o1",
+          "who": "local",
+          "at": 130068,
+          "sc": "lopes",
+          "gap": 1400,
+          "say": "Gringos contra a gente? Valeu!",
+          "text": "Gringos contra a gente? Valeu! (Gringos gegen uns? Gerne!) 😎"
+        },
+        {
+          "key": "o2",
+          "who": "marco",
+          "at": 138828,
+          "sc": "lopes",
+          "gap": 6500,
+          "say": "Zwanzig zu null, Leute, wir brauchen einen Plan",
+          "text": "20 zu 0. Leute, wir brauchen einen Plan! 😩"
+        },
+        {
+          "key": "o3",
+          "who": "simon",
+          "at": 144742,
+          "sc": "lopes",
+          "gap": 2600,
+          "say": "Punkt! Mit dem Gesicht!",
+          "text": "PUNKT!! Mit dem Gesicht!! 🔴⚽",
+          "sting": "tusch"
+        },
+        {
+          "key": "o4",
+          "who": "local",
+          "at": 147268,
+          "sc": "lopes",
+          "gap": 700,
+          "say": "Desculpa, achamos que o rosto dele era a bola",
+          "text": "Desculpa … (Sorry, wir dachten, sein Gesicht ist der Ball.) 🔴",
+          "lol": 1,
+          "mad": "simon"
+        },
+        {
+          "key": "n1",
+          "who": "jonas",
+          "at": 153858,
+          "sc": "fest",
+          "gap": 1400,
+          "say": "Letzter Abend, Gruppenfoto, und mein Handy hat die ganze Reise überlebt",
+          "text": "Letzter Abend! Gruppenfoto! Und mein Handy hat die ganze Reise überlebt. 📱✨"
+        },
+        {
+          "key": "n2",
+          "who": "patrick",
+          "at": 159260,
+          "sc": "fest",
+          "gap": 600,
+          "say": "Warte, ich zeig euch noch das beste Foto der Reise",
+          "text": "Wartet, ich zeig euch noch das beste Foto der Reise. 📸"
+        },
+        {
+          "key": "n3",
+          "who": "simon",
+          "at": 164160,
+          "sc": "fest",
+          "gap": 1400,
+          "say": "Wer hat das fotografiert?!",
+          "text": "Wer hat das fotografiert?! 😱",
+          "face": "shock"
+        },
+        {
+          "key": "n4",
+          "who": "greisel",
+          "at": 166672,
+          "sc": "fest",
+          "gap": 500,
+          "say": "Ich, ich hab ein Mal die Augen aufgemacht",
+          "text": "Ich. Ich hab ein Mal die Augen aufgemacht. 😴📸",
+          "lol": 1,
+          "mad": "simon"
+        },
+        {
+          "key": "n5",
+          "who": "jonas",
+          "at": 170814,
+          "sc": "fest",
+          "gap": 1200,
+          "say": "So, jetzt alle! Sagt Caipirinha!",
+          "text": "So, jetzt alle! Sagt „Caipirinha“! 📸"
+        },
+        {
+          "key": "n6",
+          "who": "jonas",
+          "at": 174698,
+          "sc": "fest",
+          "gap": 1500,
+          "say": "Der Nasenbär! Nicht schon wieder!",
+          "text": "DER NASENBÄR!! Nicht schon wieder!! 🦝📱",
+          "face": "shock",
+          "close": 1,
+          "sting": "drama",
+          "stingAt": "start"
+        },
+        {
+          "key": "n7",
+          "who": "dajo",
+          "at": 181044,
+          "sc": "fest",
+          "gap": 3900,
+          "say": "Ups",
+          "text": "Ups. 🫢"
+        },
+        {
+          "key": "n8",
+          "who": "narrator",
+          "at": 182330,
+          "sc": "fest",
+          "gap": 700,
+          "say": "Wunsch Nummer drei, mein Handy bleibt sicher, neunzehn Tage erfüllt, dann drei Sekunden nicht mehr",
+          "text": "Wunsch Nr. 3 – „Mein Handy bleibt sicher“: 19 Tage erfüllt. Dann 3 Sekunden nicht mehr.",
+          "laugh": 1
+        },
+        {
+          "key": "n9",
+          "who": "jonas",
+          "at": 189706,
+          "sc": "fest",
+          "gap": 900,
+          "say": "Das trag ich in Splitwise ein, an den Nasenbären",
+          "text": "Das trag ich in Splitwise ein. An den Nasenbären. 🦝💸",
+          "lol": 1
+        },
+        {
+          "key": "i1",
+          "who": "dajo",
+          "at": 200182,
+          "sc": "pier",
+          "gap": 1500,
+          "say": "Und, was nehmt ihr mit nach Hause?",
+          "text": "Und? Was nehmt ihr mit nach Hause? 🧳"
+        },
+        {
+          "key": "i2",
+          "who": "simon",
+          "at": 203190,
+          "sc": "pier",
+          "gap": 500,
+          "say": "Sonnenbrand",
+          "text": "Sonnenbrand. 🦞"
+        },
+        {
+          "key": "i3",
+          "who": "marco",
+          "at": 204672,
+          "sc": "pier",
+          "gap": 400,
+          "say": "Eine Frau, irgendeine",
+          "text": "Eine Frau. Irgendeine. 👵"
+        },
+        {
+          "key": "i4",
+          "who": "patrick",
+          "at": 206774,
+          "sc": "pier",
+          "gap": 400,
+          "say": "Ein Tattoo, Pastel de Frango",
+          "text": "Ein Tattoo. Pastel de Frango. 🥟"
+        },
+        {
+          "key": "i5",
+          "who": "jonas",
+          "at": 209310,
+          "sc": "pier",
+          "gap": 400,
+          "say": "Splitwise, minus dreitausend Euro",
+          "text": "Splitwise. Minus 3.000 €. 📉",
+          "lol": 1
+        },
+        {
+          "key": "i6",
+          "who": "greisel",
+          "at": 212656,
+          "sc": "pier",
+          "gap": 900,
+          "say": "Und wir bleiben noch einen Tag, ohne euch, endlich Ruhe",
+          "text": "Und wir bleiben noch einen Tag. Ohne euch. Endlich Ruhe. 😌"
+        },
+        {
+          "key": "i7",
+          "who": "dajo",
+          "at": 218666,
+          "sc": "pier",
+          "gap": 2200,
+          "say": "Ihr fehlt mir jetzt schon, ein bisschen",
+          "text": "Ihr fehlt mir jetzt schon. … Ein bisschen. 🥲"
+        },
+        {
+          "key": "end",
+          "who": "narrator",
+          "at": 226384,
+          "sc": "end",
+          "gap": 1500,
+          "say": "Das war Staffel eins, der Nasenbär hat übrigens einen Flug nach München gebucht",
+          "text": "Das war Staffel 1. Der Nasenbär hat übrigens einen Flug nach München gebucht. 🦝✈️"
+        }
+      ],
+      "scenes": [
+        {
+          "id": "intro",
+          "t": [
+            0,
+            6538
+          ],
+          "tail": 1600
+        },
+        {
+          "id": "van",
+          "t": [
+            6538,
+            42366
+          ],
+          "tail": 1800
+        },
+        {
+          "id": "pty",
+          "t": [
+            42366,
+            77774
+          ],
+          "tail": 1800
+        },
+        {
+          "id": "schoon",
+          "t": [
+            77774,
+            102900
+          ],
+          "tail": 2400
+        },
+        {
+          "id": "abr",
+          "t": [
+            102900,
+            128668
+          ],
+          "tail": 1800
+        },
+        {
+          "id": "lopes",
+          "t": [
+            128668,
+            152458
+          ],
+          "tail": 2000
+        },
+        {
+          "id": "fest",
+          "t": [
+            152458,
+            198682
+          ],
+          "tail": 5600
+        },
+        {
+          "id": "pier",
+          "t": [
+            198682,
+            224884
+          ],
+          "tail": 3400
+        },
+        {
+          "id": "end",
+          "t": [
+            224884,
+            243182
+          ],
+          "tail": 11500
+        }
+      ],
+      "voice": {},
+      "cold": {
+        "from": [
+          "w3",
+          -400
+        ],
+        "to": [
+          "w5",
+          1500
+        ],
+        "label": "⏪ Einen Tag früher …"
+      },
+      "cameo": [
+        {
+          "sc": "abr",
+          "key": "x2",
+          "d": 1800,
+          "dur": 3200,
+          "x": -40,
+          "x2": 300,
+          "y": 398,
+          "prop": "🧳",
           "s": 0.8
         }
       ],
