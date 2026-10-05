@@ -351,16 +351,25 @@ function renderFlights() {
 
 /* ---------- Kosten ---------- */
 function renderCosts() {
+  // Kosten nach Art getrennt: Flüge und Unterkünfte je mit Zwischensumme, Balken zeigt den Anteil (hell = geschätzt)
   const eur = v => v.toLocaleString('de-DE') + ' €';
+  const CAT = [['flug', '✈️', 'Flüge'], ['stay', '🛏️', 'Unterkünfte']];
+  const sum = rows => rows.filter(r => r.k === 'fix' || r.k === 'ca').reduce((s, r) => s + r.v, 0);
+  const val = r => r.k === 'open' ? 'offen' : r.k === 'split' ? 'noch offen' : (r.k === 'ca' ? 'ca. ' : '') + eur(r.v);
+  const tag = r => ({fix: '<i class="st ok">✓ fest</i>', ca: '<i class="st ca">≈ Richtwert</i>', open: '<i class="st op">⏳ offen</i>', split: '<i class="st sp">÷ Splitwise</i>'})[r.k] || '';
   const box = g => {
-    const rows = TRIP.costs.filter(c => c[g]).map(c => ({label: c.label, ...c[g]}));
-    const fix = rows.filter(r => r.k === 'fix').reduce((s, r) => s + r.v, 0), ca = rows.filter(r => r.k === 'ca').reduce((s, r) => s + r.v, 0);
-    const open = rows.filter(r => r.k === 'open' || r.k === 'split').length, tot = fix + ca;
-    return '<div class="co"><div class="co-sum"><span class="grp">' + esc(gName(g)) + ' · bekannte Posten</span><b>ca. ' + eur(Math.round(tot / 10) * 10) + '</b></div>' +
-      '<div class="co-bar" role="img" aria-label="' + eur(fix) + ' fest, ' + eur(ca) + ' geschätzt"><i class="fix" style="width:' + (fix / tot * 100) + '%"></i><i class="ca" style="width:' + (ca / tot * 100) + '%"></i></div>' +
-      '<div class="co-leg"><span><i style="background:var(--ok)"></i>fest ' + eur(fix) + '</span><span><i style="background:var(--amarelo)"></i>geschätzt ' + eur(ca) + '</span>' + (open ? '<span>+ ' + open + ' Posten noch offen</span>' : '') + '</div>' +
-      '<ul class="co-list">' + rows.map(r => '<li><span>' + esc(r.label) + '</span><span class="v ' + r.k + '">' +
-        (r.k === 'open' ? 'offen' : r.k === 'split' ? esc(r.t) : (r.k === 'ca' ? 'ca. ' : '') + eur(r.v)) + '</span></li>').join('') + '</ul></div>';
+    const rows = TRIP.costs.filter(c => c[g]).map(c => ({label: c.label, cat: c.cat, sub: c[g].sub || c.sub, ...c[g]}));
+    const tot = sum(rows), open = rows.filter(r => r.k === 'open' || r.k === 'split').length;
+    const bar = CAT.map(([k]) => { const rs = rows.filter(r => r.cat === k);
+      return ['fix', 'ca'].map(kk => { const v = sum(rs.filter(r => r.k === kk)); return v ? '<i class="c-' + k + (kk === 'ca' ? ' est' : '') + '" style="width:' + (v / tot * 100) + '%"></i>' : ''; }).join(''); }).join('');
+    return '<div class="co"><div class="co-sum"><span class="grp">' + esc(gName(g)) + ' · pro Person, bekannte Posten</span><b>ca. ' + eur(Math.round(tot / 10) * 10) + '</b></div>' +
+      '<div class="co-bar" role="img" aria-label="Aufteilung Flüge und Unterkünfte">' + bar + '</div>' +
+      '<div class="co-leg">' + CAT.map(([k, e, n]) => '<span><i class="c-' + k + '"></i>' + e + ' ' + n + ' ' + eur(sum(rows.filter(r => r.cat === k))) + '</span>').join('') +
+      '<span><i class="est-key"></i>hell = Richtwert</span>' + (open ? '<span>+ ' + open + ' Posten offen</span>' : '') + '</div>' +
+      CAT.map(([k, e, n]) => { const rs = rows.filter(r => r.cat === k); if (!rs.length) return '';
+        return '<div class="co-grp c-' + k + '"><div class="co-gh"><span>' + e + ' ' + n + '</span><b>' + eur(sum(rs)) + (rs.some(r => r.k === 'open' || r.k === 'split') ? ' <small>+ offen</small>' : '') + '</b></div><ul class="co-list">' +
+          rs.map(r => '<li><span class="co-l"><b>' + esc(r.label) + '</b>' + (r.sub ? '<small>' + esc(r.sub) + '</small>' : '') + '</span><span class="co-r"><span class="v c-' + r.k + '">' + val(r) + '</span>' + tag(r) + '</span></li>').join('') + '</ul></div>'; }).join('') +
+      '</div>';
   };
   document.getElementById('co-box').innerHTML = G === 'all' ? box('a') + box('b') : box(G);
 }

@@ -1903,18 +1903,21 @@
   },
   "costs": [
     {
-      "label": "Langstreckenflug",
+      "label": "Langstrecke Europa ⇄ Brasilien",
       "a": {
         "v": 1120,
-        "k": "fix"
+        "k": "fix",
+        "sub": "MUC → Rom → São Paulo, zurück Rio → Rom → MUC"
       },
       "b": {
         "v": 1300,
-        "k": "fix"
-      }
+        "k": "fix",
+        "sub": "MUC → Frankfurt → Rio, zurück über São Paulo"
+      },
+      "cat": "flug"
     },
     {
-      "label": "Inlandsflüge GIG–IGU–MAO–GIG",
+      "label": "Inlandsflüge Rio → Iguaçu → Manaus → Rio",
       "a": {
         "v": 700,
         "k": "ca"
@@ -1922,15 +1925,19 @@
       "b": {
         "v": 700,
         "k": "ca"
-      }
+      },
+      "cat": "flug",
+      "sub": "3 Flüge, noch nicht gebucht (Richtpreis)"
     },
     {
-      "label": "Flug CGH → SDU",
+      "label": "São Paulo → Rio (31.12.)",
       "a": {
         "v": 121,
         "k": "fix"
       },
-      "b": null
+      "b": null,
+      "cat": "flug",
+      "sub": "GOL G3 1016, gebucht"
     },
     {
       "label": "Guarujá + Rio",
@@ -1938,7 +1945,9 @@
         "k": "split",
         "t": "über Splitwise"
       },
-      "b": null
+      "b": null,
+      "cat": "stay",
+      "sub": "28.12.–06.01. · Casa Praiana & Tabas · 9 Nächte"
     },
     {
       "label": "Foz do Iguaçu",
@@ -1949,10 +1958,12 @@
       "b": {
         "v": 80,
         "k": "ca"
-      }
+      },
+      "cat": "stay",
+      "sub": "TuCasa Flats · 3 Nächte"
     },
     {
-      "label": "Manaus, Casa 307",
+      "label": "Manaus",
       "a": {
         "v": 14,
         "k": "fix"
@@ -1960,10 +1971,12 @@
       "b": {
         "v": 14,
         "k": "fix"
-      }
+      },
+      "cat": "stay",
+      "sub": "Casa 307 · 1 Nacht"
     },
     {
-      "label": "Juma Lodge",
+      "label": "Juma Lodge (Amazonas)",
       "a": {
         "v": 520,
         "k": "fix"
@@ -1971,7 +1984,9 @@
       "b": {
         "v": 520,
         "k": "fix"
-      }
+      },
+      "cat": "stay",
+      "sub": "3 Nächte, alles inklusive außer Bar"
     },
     {
       "label": "Paraty",
@@ -1982,7 +1997,9 @@
       "b": {
         "v": 88,
         "k": "fix"
-      }
+      },
+      "cat": "stay",
+      "sub": "Geko Pousada · 2 Nächte mit Frühstück"
     },
     {
       "label": "Ilha Grande",
@@ -1991,7 +2008,9 @@
       },
       "b": {
         "k": "open"
-      }
+      },
+      "cat": "stay",
+      "sub": "Vila do Abraão · 4/5 Nächte, noch nicht gebucht"
     }
   ],
   "advent": [
@@ -10085,6 +10104,14 @@
     ]
   },
   "news": [
+    {
+      "id": "n251005e",
+      "d": "2026-10-05",
+      "tab": "reise",
+      "to": "kosten",
+      "e": "💶",
+      "t": "Kosten übersichtlich: Flüge und Unterkünfte getrennt"
+    },
     {
       "id": "n251005d",
       "d": "2026-10-05",

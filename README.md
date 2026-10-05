@@ -105,16 +105,17 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 
 | Posten | Gringos plus 1 Cevapi | Daijo & Greisel |
 |---|---:|---:|
-| Langstreckenflug | 1.120 € | 1.300 € |
-| Inlandsflüge 2–4 (Richtpreis) | ca. 700 € | ca. 700 € |
-| Inlandsflug CGH → SDU | 121 € | – |
-| Guarujá | offen (Splitwise) | – |
-| Rio | offen (Splitwise) | – |
-| Foz do Iguaçu | ca. 80 € | ca. 80 € |
-| Manaus Casa 307 | 14 € | 14 € |
-| Juma Lodge | 520 € | 520 € |
-| Paraty | 88 € | 88 € |
-| Ilha Grande | offen | offen |
+| **✈️ Flüge** | **1.941 €** | **ca. 2.000 €** |
+| Langstrecke Europa ⇄ Brasilien | 1.120 € | 1.300 € |
+| Inlandsflüge Rio → Iguaçu → Manaus → Rio (Richtpreis, noch nicht gebucht) | ca. 700 € | ca. 700 € |
+| São Paulo CGH → Rio SDU (31.12., gebucht) | 121 € | – |
+| **🛏️ Unterkünfte** | **702 €** + offene Posten | **702 €** + offene Posten |
+| Guarujá + Rio (28.12.–06.01.) | offen (Splitwise) | – |
+| Foz do Iguaçu, TuCasa Flats (3 Nächte) | ca. 80 € | ca. 80 € |
+| Manaus, Casa 307 (1 Nacht) | 14 € | 14 € |
+| Juma Lodge (3 Nächte, alles inklusive außer Bar) | 520 € | 520 € |
+| Paraty, Geko Pousada (2 Nächte) | 88 € | 88 € |
+| Ilha Grande (4/5 Nächte) | offen | offen |
 | **Summe bekannt** | **ca. 2.640 €** + offene Posten | **ca. 2.700 €** + offene Posten |
 
 Abgerechnet wird über **Splitwise**, mit zwei Gruppen: eine für die Gringos plus 1 Cevapi (Guarujá, Rio), eine für alle sechs.
