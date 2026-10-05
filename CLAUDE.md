@@ -49,9 +49,20 @@ Die Webseite erst nach dem Merge neu veröffentlichen.
 
 Kopfbild, Titel, Reisedaten, Gruppen-Umschalter (zeigt auch die Namen), Heute-Karte (`#heute`/`#today`, Countdown bzw.
 Tagesprogramm) und Eckdaten (`#hero-facts`, Nächte je Gruppe, offene Flüge live aus `flights`) stecken zusammen im
-`<header>`. Unterwegs zeigt das Kopfbild automatisch das Foto der heutigen Station (`setHero`).
+`<header>`. Unterwegs zeigt das Kopfbild automatisch das Foto der heutigen Station (`setHero`). Den Gruppen-Umschalter gibt es nur noch
+im Kopf; Tage und Flüge zeigen per `[data-g-note]` nur, welche Ansicht gilt. Der Kasten „Was ist neu?“ erscheint nur bei
+Ungesehenem; Themen-Kacheln schmal (5 Spalten, Hinweise unter 900 px ausgeblendet).
 
-**„Ich bin …“** (`#me-box` im Kopf): Person wird pro Gerät gemerkt (localStorage `br26.me`), stellt die Gruppe ein, hebt
+**Tag für Tag nach Stationen** (seit 05.10.): `renderDays()` packt die Tage in Stations-Tafeln (`.st-panel`, Zuordnung `stopOfDay(d)`
+wie die Karte, Kopf aus `mapinfo.stops`), Zeilen unverändert; Chips + Wischen über den Helfer `slider(track, chips, opt)` (Start =
+heutige bzw. nächste Station). Flüge ebenso als Karussell (Start = nächster Flug). Im PDF bleibt alles untereinander. `track.__go(i)`
+und `track.__idx(el)` springen von außen (Suche).
+
+**Schnellsuche** (`#q-open` 🔍 rechts in der Reiterleiste): Overlay `.q-box`, Index wird bei jedem Öffnen aus der Seite gebaut (Tage, Flüge,
+Stationen, Kosten, Sprachführer, Praktisches, Gesundheit, Packlisten, Crew, Kapitelüberschriften; Liste `SRC`), Akzente egal, alle
+Wörter müssen passen. Treffer öffnen `<details>`, das Sprachführer-Thema, die Karussell-Seite bzw. den Crew-Steckbrief und blinken (`.q-flash`).
+
+**„Ich bin …“** (`#me-box` im Kopf, nach der Wahl nur ein kleiner Chip `.me-mini`, aufklappbar, localStorage `br26.meOpen`): Person wird pro Gerät gemerkt (localStorage `br26.me`), stellt die Gruppe ein, hebt
 eigene Crew- und FIFA-Karte hervor und zeigt eigene Werte (Drinks heute/gesamt/Platz, Gesamtwertung, Marktwert, Siege,
 Zeitkapsel-Status). Module melden Werte für alle Personen über `meSet()`.
 
@@ -128,6 +139,8 @@ Reiter „Vorfreude“ (`vorfreude-tab`). **Kalender** (`#kalender`): 88 Türche
 Portugiesisch mit Aussprache, `link` Spotify-Suche oder `#anker`). Datum nach Berliner Zeit, geöffnete Türchen pro Handy im
 localStorage. **Zeitkapsel** (`#kapsel`): Fragen in `trip.json` → `kapsel.questions` (Typen crew, number, choice, yesno, text).
 Abgabe für alle sechs bis 27.12.; alle Fragen zählen über die ganze Reise (optional `from` = Frage zählt erst ab Datum).
+Eingabe Schritt für Schritt (eine Frage pro Karte, Punkte-Leiste `.ka-dots` zum Springen, Ja/Nein und Auswahl springen
+automatisch weiter, am Ende Übersicht `.ka-sum` mit „Versiegeln“; Formular nach dem Versiegeln zugeklappt, ohne Schreibrecht zu).
 Tipps in db-Collection `kapsel` (Dokument-ID = Crew-`id`, `a` = {Frage-id: Antwort}, `ts`), eintragen nur Admin; bis
 `revealAt` (19.01.2027 20 Uhr Rio) zeigt die Seite nur, wer getippt hat. Danach Antworten, Auflösung durch den Admin in
 `kapselres/solution` (`s`). Auswertung: Punkte nach `kapsel.points` (Treffer 3; Zahlen genau 5, am nächsten 3,

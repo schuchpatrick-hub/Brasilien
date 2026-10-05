@@ -42,11 +42,13 @@ function renderMe() {
     if (c.w || c.l) chips.push('🏆 <b>' + c.w + '</b> Siege · ' + c.l + '× Letzter');
   }
   if (k !== undefined) chips.push(k ? '⏳ Zeitkapsel: getippt ✅' : '⏳ Zeitkapsel: <b>noch offen</b>');
-  box.innerHTML = '<div class="me-card"><div class="me-head">' + av(p) + '<b>Hallo ' + esc(p.name) + '!</b>' +
+  if (store.get('meOpen') !== '1') { box.innerHTML = '<button type="button" class="me-mini" data-me-tog aria-expanded="false">' + av(p) + '<span>' + esc(p.name) + '</span>' + (chips.length ? '<small>' + chips[0].replace(/<[^>]+>/g, '') + '</small>' : '') + '<i aria-hidden="true">▾</i></button>'; return; }
+  box.innerHTML = '<div class="me-card"><div class="me-head">' + av(p) + '<b>Hallo ' + esc(p.name) + '!</b><button type="button" class="me-link" data-me-tog aria-expanded="true">▴ Zuklappen</button>' +
     (p.card ? '<a class="me-link" href="#karten" data-card="' + esc(p.id) + '">Meine Karte</a>' : '') + '<button type="button" class="me-link" data-me-open>Ändern</button></div>' +
     (chips.length ? '<div class="me-chips">' + chips.map(x => '<span>' + x + '</span>').join('') + '</div>' : '') + '</div>';
 }
 document.addEventListener('click', e => {
+  const tg = e.target.closest('[data-me-tog]'); if (tg && tg.closest('#me-box')) { store.set('meOpen', store.get('meOpen') === '1' ? '0' : '1'); renderMe(); return; }
   const b = e.target.closest('[data-me],[data-me-skip],[data-me-open]'); if (!b || !b.closest('#me-box')) return;
   if (b.dataset.me) {
     ME = b.dataset.me; store.set('me', ME);
@@ -295,17 +297,48 @@ function renderToday() {
 }
 
 /* ---------- Tag fuer Tag ---------- */
+/* ---------- Karussell (Tage nach Stationen, Flüge): eine Karte pro Ansicht zum Wischen, Chips/Pfeile, Höhe = aktuelle Karte ---------- */
+function slider(track, chips, opt) {
+  opt = opt || {}; track.classList.add('car'); const kids = () => [...track.children];
+  let nav = track.__nav; if (!nav) { nav = document.createElement('div'); nav.className = 'car-nav' + (opt.top ? ' top' : ''); opt.top ? track.before(nav) : track.after(nav); track.__nav = nav; }
+  nav.innerHTML = '<button type="button" class="car-prev" aria-label="Zurück">‹</button><div class="car-chips">' + chips.map((c, i) => '<button type="button" data-i="' + i + '">' + c + '</button>').join('') + '</div><button type="button" class="car-next" aria-label="Weiter">›</button>';
+  const cur = () => { const x = track.scrollLeft; let best = 0, d = 1e9; kids().forEach((k, i) => { const dd = Math.abs(k.offsetLeft - track.offsetLeft - x); if (dd < d) { d = dd; best = i; } }); return best; };
+  const fit = () => { const c = kids()[cur()]; if (c && c.offsetHeight) track.style.height = c.offsetHeight + 'px'; };
+  const mark = () => { const i = cur(); nav.querySelectorAll('.car-chips button').forEach((b, k) => { b.setAttribute('aria-current', k === i ? 'true' : 'false'); if (k === i && b.scrollIntoView && nav.__seen) b.parentElement.scrollTo({left: b.offsetLeft - b.parentElement.clientWidth / 2 + b.offsetWidth / 2, behavior: 'smooth'}); });
+    nav.__seen = true; fit(); };
+  const go = (i, instant) => { const k = kids(); i = Math.max(0, Math.min(k.length - 1, i)); track.scrollTo({left: k[i].offsetLeft - track.offsetLeft, behavior: instant || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth'}); setTimeout(mark, instant ? 0 : 350); };
+  nav.querySelector('.car-prev').onclick = () => go(cur() - 1); nav.querySelector('.car-next').onclick = () => go(cur() + 1);
+  nav.querySelectorAll('.car-chips button').forEach(b => b.onclick = () => go(+b.dataset.i));
+  if (!track.__bound) { track.__bound = 1; track.addEventListener('scroll', () => { clearTimeout(track.__t); track.__t = setTimeout(mark, 90); }, {passive: true});
+    track.addEventListener('toggle', fit, true); if ('ResizeObserver' in window) new ResizeObserver(fit).observe(track); }
+  track.__go = go; track.__idx = el => kids().findIndex(k => k.contains(el));
+  requestAnimationFrame(() => { go(opt.start || 0, true); mark(); });
+  return {go, cur};
+}
+// Tage den Stationen der Karte zuordnen (Anreise zählt zur ersten Station der Gruppe)
+function stopOfDay(d) {
+  const S = [['rio', '2026-12-31'], ['iguacu', '2027-01-06'], ['manaus', '2027-01-09'], ['paraty', '2027-01-14'], ['ilha', '2027-01-16']];
+  if (d.g === 'b' && d.date < '2027-01-06') return 'iguacu';
+  let id = 'guaruja'; S.forEach(([k, a]) => { if (d.date >= a) id = k; }); return id;
+}
 function renderDays() {
-  const t = isoToday();
-  document.getElementById('days').innerHTML = forGroup(G).map(d => {
-    const f = fmtDay(d.date);
-    const tag = d.g === 'all' ? '' : '<span class="gtag">' + esc(gName(d.g)) + '</span>';
+  const t = isoToday(), box = document.getElementById('days');
+  const row = d => { const f = fmtDay(d.date), tag = d.g === 'all' ? '' : '<span class="gtag">' + esc(gName(d.g)) + '</span>';
     return '<div class="day' + (d.date === t ? ' is-today' : '') + '"><div class="dt"><b>' + f.wd + ' ' + f.dm + '</b></div>' +
       '<div class="bd"><div class="ttl">' + esc(d.title) + tag + '</div><div class="plc">' + esc(d.place) + ' · ' + esc(d.stay) + '</div><ul>' +
       d.items.map(it => '<li>' + (it.time ? '<span class="tm">' + esc(it.time) + '</span> ' : '') + esc(it.text) +
-        (it.unsicher ? ' <span class="unsure">(offen)</span>' : '') + '</li>').join('') +
-      '</ul></div></div>';
-  }).join('');
+        (it.unsicher ? ' <span class="unsure">(offen)</span>' : '') + '</li>').join('') + '</ul></div></div>'; };
+  const days = forGroup(G);
+  if (PRINT) { box.innerHTML = days.map(row).join(''); return; }
+  // nach Stationen der Karte: Chips oben, je Station eine Karte mit den Tageszeilen (unverändert)
+  const stops = TRIP.mapinfo.stops.filter(s => days.some(d => stopOfDay(d) === s.id));
+  box.className = 'days-st';
+  box.innerHTML = stops.map(s => { const ds = days.filter(d => stopOfDay(d) === s.id);
+    return '<div class="st-panel" data-stop="' + s.id + '"><div class="st-head"><span class="st-n">' + s.n + '</span><div><b>' + esc(s.name) + '</b><small>' + esc(s.dates) + ' · ' + s.nights + (s.nights === 1 ? ' Nacht' : ' Nächte') + ' · ' + ds.length + ' Tage</small></div></div>' +
+      '<div class="days2">' + ds.map(row).join('') + '</div></div>'; }).join('');
+  let start = stops.findIndex(s => days.some(d => stopOfDay(d) === s.id && d.date >= t)); if (start < 0) start = 0;
+  if (t >= '2026-12-27') { const k = stops.findIndex(s => days.some(d => d.date === t && stopOfDay(d) === s.id)); if (k >= 0) start = k; }
+  slider(box, stops.map(s => '<b>' + s.n + '</b> ' + esc(s.name.replace(' & Amazonas', ''))), {top: true, start});
 }
 
 /* ---------- Flüge als Bordkarten ---------- */
@@ -347,6 +380,8 @@ function renderFlights() {
       (f.note ? '<p class="pass-note">' + esc(f.note) + '</p>' : '') + links + '</article></li>';
   }).join('');
   document.getElementById('fl-note').textContent = TRIP.flightsNote.text;
+  if (!PRINT) { const tdy2 = isoToday(); let st = list.findIndex(f => f.date >= tdy2); if (st < 0) st = list.length - 1;
+    slider(document.getElementById('fl-list'), list.map(f => { const d = fmtDay(f.date); return '<i class="dot st-' + f.status + '"></i>' + d.dm.replace(/\.$/, '') + ' ' + esc(f.from) + '→' + esc(f.to); }), {start: st, top: true}); }
 }
 
 /* ---------- Kosten ---------- */
@@ -376,6 +411,7 @@ function renderCosts() {
 
 function setGroup(g) {
   G = g; if (!PRINT) store.set('group', g);
+  document.querySelectorAll('[data-g-note]').forEach(e => { e.innerHTML = '👥 Ansicht: <b>' + esc(gName(g)) + '</b> (<a href="#uebersicht">oben umschalten</a>).'; });
   document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.g === g)));
   renderToday(); renderDays(); renderFlights(); renderCosts();
 }
@@ -1193,7 +1229,8 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   const Q = K.questions, CREW = TRIP.crew;
   const byId = Object.fromEntries(CREW.map(c => [c.id, c]));
   const reveal = Date.parse(K.revealAt);
-  let dbK = null, writable = false, tips = {}, sol = {}, who = null, draft = {}, msg = '', justSealed = null;
+  let dbK = null, writable = false, tips = {}, sol = {}, who = null, draft = {}, msg = '', justSealed = null, step = 0, formOpen = null;
+  const has = v => v !== undefined && v !== '' && v !== null;
   const av = (p, cls) => '<span class="' + (cls || 'av') + '">' + (p.photo ? '<img src="' + esc(p.photo) + '" alt="" loading="lazy" decoding="async">' : esc(p.name[0])) + '</span>';
   const isOpen = () => Date.now() >= reveal;
   const fmtAns = (q, v) => v === undefined || v === '' || v === null ? '–' : q.type === 'crew' ? (byId[v] ? byId[v].name : v) : q.type === 'yesno' ? (v ? 'Ja' : 'Nein') : q.type === 'number' ? v + ' ' + (q.unit || '') : String(v);
@@ -1227,12 +1264,20 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     let h = '<div class="ka-seal"><div class="big">🔒 Versiegelt bis zum ' + esc(K.revealText) + '</div>' + countdown() +
       '<div class="when">' + n + ' von ' + CREW.length + ' haben schon getippt · ' + esc(K.closeText) + '</div>' + whoRow() + '</div>';
     if (justSealed) h += '<div class="ka-sealed" id="ka-done">🔒 Tipps von ' + esc(byId[justSealed].name) + ' versiegelt!<small>Niemand sieht sie bis zum ' + esc(K.revealText) + '.</small></div>';
-    h += '<details class="ka-form' + (writable ? '' : ' locked') + '" open><summary>✍️ Tipps eintragen</summary>' +
+    if (formOpen === null || !writable) formOpen = writable;
+    const N = Q.length, i = Math.min(step, N), done = Q.filter(q => has(draft[q.id])).length;
+    // Schritt für Schritt: eine Frage pro Karte, am Ende Zusammenfassung zum Versiegeln
+    const prog = '<div class="ka-prog"><div class="ka-dots">' + Q.map((q, j) => '<button type="button" data-ka-step="' + j + '" class="' + (j === i ? 'cur' : has(draft[q.id]) ? 'ok' : '') + '" aria-label="Frage ' + (j + 1) + '"></button>').join('') +
+      '<button type="button" data-ka-step="' + N + '" class="end' + (i === N ? ' cur' : '') + '" aria-label="Übersicht">🔒</button></div><span>' + (i < N ? 'Frage <b>' + (i + 1) + '</b> von ' + N : 'Übersicht') + ' · ' + done + ' beantwortet</span></div>';
+    const nav = '<div class="ka-nav"><button type="button" class="btn ghost" data-ka-step="' + Math.max(0, i - 1) + '"' + (i ? '' : ' disabled') + '>◀ Zurück</button>' +
+      (i < N ? '<button type="button" class="btn" data-ka-step="' + (i + 1) + '">' + (i === N - 1 ? 'Zur Übersicht ▶' : has(draft[Q[i].id]) ? 'Weiter ▶' : 'Überspringen ▶') + '</button>' : '') + '</div>';
+    const sum = '<ol class="ka-sum">' + Q.map((q, j) => '<li><button type="button" data-ka-step="' + j + '"><span>' + q.emoji + ' ' + esc(q.q) + '</span><b class="' + (has(draft[q.id]) ? '' : 'miss') + '">' + esc(has(draft[q.id]) ? fmtAns(q, draft[q.id]) : 'offen') + '</b></button></li>').join('') + '</ol>';
+    h += '<details class="ka-form' + (writable ? '' : ' locked') + '"' + (formOpen ? ' open' : '') + '><summary>✍️ Tipps eintragen</summary>' +
       (writable ? '' : '<p class="ka-lock">Eintragen nur durch den Admin (Patrick). Schick ihm deine Tipps per WhatsApp, die Fragen kannst du unten kopieren.</p>') +
       '<div><div class="eyebrow" style="margin-bottom:8px">1. Wer tippt?</div><div class="ka-pick" role="radiogroup">' + CREW.map(p => '<button type="button" role="radio" data-p="' + p.id + '" aria-checked="' + (who === p.id) + '"' + (writable ? '' : ' disabled') + '>' + av(p) + esc(p.name) + (tips[p.id] ? ' 🔒' : '') + '</button>').join('') + '</div></div>' +
       (who && tips[who] ? '<p class="ka-lock">⚠️ ' + esc(byId[who].name) + ' hat schon am ' + new Date(tips[who].ts).toLocaleDateString('de-DE') + ' getippt. Neu versiegeln überschreibt die alten Tipps (die bleiben geheim).</p>' : '') +
-      '<div class="eyebrow">2. Die Prognosen</div><div class="ka-qs">' + Q.map(input).join('') + '</div>' +
-      '<div class="ka-go"><button type="button" class="btn" id="ka-save"' + (writable && who ? '' : ' disabled') + '>🔒 Versiegeln</button><span class="ka-msg" id="ka-msg">' + esc(msg) + '</span></div></details>' +
+      '<div class="eyebrow">2. Die Prognosen</div>' + prog + '<div class="ka-qs">' + (i < N ? input(Q[i]) : sum) + '</div>' + nav +
+      (i === N ? '<div class="ka-go"><button type="button" class="btn" id="ka-save"' + (writable && who ? '' : ' disabled') + '>🔒 Versiegeln</button><span class="ka-msg" id="ka-msg">' + esc(msg) + '</span></div>' : '') + '</details>' +
       '<div class="ka-go"><button type="button" class="btn ghost" id="ka-wa">📋 Fragen für WhatsApp kopieren</button><span class="ka-msg" id="ka-wa-msg"></span></div>';
     box.innerHTML = h;
     if (justSealed) { const el = document.getElementById('ka-done'); confettiIn(el); justSealed = null; }
@@ -1319,10 +1364,11 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   }
   function render() { (isOpen() ? renderOpen : renderSealed)(); }
   box.addEventListener('click', async e => {
-    const p = e.target.closest('[data-p]'); if (p && writable) { who = p.dataset.p; draft = {}; msg = ''; render(); return; }
+    const p = e.target.closest('[data-p]'); if (p && writable) { who = p.dataset.p; draft = {}; msg = ''; step = 0; render(); return; }
+    const sb = e.target.closest('[data-ka-step]'); if (sb && !sb.disabled) { step = +sb.dataset.kaStep; render(); const f = box.querySelector('.ka-prog'); if (f && f.getBoundingClientRect().top < 60) f.scrollIntoView({block: 'start'}); return; }
     const st = e.target.closest('.ka-step button'); if (st && writable) { const sp = st.parentElement, qid = sp.dataset.q;
       draft[qid] = Math.max(0, (typeof draft[qid] === 'number' ? draft[qid] : 0) + Number(st.dataset.d)); sp.querySelector('output').textContent = draft[qid]; return; }
-    const yn = e.target.closest('.ka-yn button'); if (yn && writable) { const qid = yn.parentElement.dataset.q; draft[qid] = yn.dataset.v === '1'; yn.parentElement.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b === yn)); return; }
+    const yn = e.target.closest('.ka-yn button'); if (yn && writable) { const qid = yn.parentElement.dataset.q; draft[qid] = yn.dataset.v === '1'; yn.parentElement.querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', b === yn)); advance(); return; }
     if (e.target.id === 'ka-wa') {
       const txt = waText(), out = document.getElementById('ka-wa-msg');
       try { await navigator.clipboard.writeText(txt); out.textContent = 'Kopiert, jetzt in WhatsApp einfügen.'; }
@@ -1334,7 +1380,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       const cnt = Object.keys(a).length;
       if (!cnt) { msg = 'Noch keine Antwort ausgefüllt.'; document.getElementById('ka-msg').textContent = msg; return; }
       e.target.disabled = true; document.getElementById('ka-msg').textContent = 'Versiegle …';
-      try { await dbK.doc('kapsel/' + who).set({a, ts: Date.now()}); justSealed = who; who = null; draft = {}; msg = ''; }
+      try { await dbK.doc('kapsel/' + who).set({a, ts: Date.now()}); justSealed = who; who = null; draft = {}; msg = ''; step = 0; formOpen = false; }
       catch (err) { msg = err && err.code === 'not_granted' ? 'Keine Schreibrechte.' : 'Konnte nicht speichern, bitte nochmal.'; e.target.disabled = false; }
       render();
     }
@@ -1342,7 +1388,11 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   box.addEventListener('input', e => {
     const q = e.target.dataset.q; if (q) { const def = Q.find(x => x.id === q); draft[q] = def.type === 'number' ? (e.target.value === '' ? '' : Number(e.target.value)) : e.target.value; }
   });
+  // Nach Ja/Nein oder Auswahl kurz zeigen, dann automatisch zur nächsten Frage
+  function advance() { const at = step; setTimeout(() => { if (step === at && step < Q.length) { step++; render(); } }, 380); }
+  box.addEventListener('toggle', e => { if (e.target.classList && e.target.classList.contains('ka-form')) formOpen = e.target.open; }, true);
   box.addEventListener('change', async e => {
+    if (e.target.tagName === 'SELECT' && e.target.dataset.q && e.target.value) { advance(); return; }
     const q = e.target.dataset.s; if (!q || !writable || !dbK) return;
     const def = Q.find(x => x.id === q); let v = e.target.value;
     if (v === '') { delete sol[q]; } else sol[q] = def.type === 'number' ? Number(v) : def.type === 'yesno' ? v === '1' : v;
@@ -1354,7 +1404,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   (async () => {
     if (!window.claude || !window.claude.use) return;
     dbK = await getDb(); if (!dbK) return;
-    const w = await canWrite(); writable = w !== false; render();
+    const w = await canWrite(); writable = w !== false; formOpen = null; render();
     dbK.collection('kapsel').onSnapshot(snap => {
       tips = {}; snap.docs.forEach(d => { if (d.exists && byId[d.id]) { const x = d.data(); if (x && x.a) tips[d.id] = x; } });
       meSet('kapsel', Object.fromEntries(CREW.map(p => [p.id, !!tips[p.id]])));
@@ -5938,6 +5988,52 @@ if (!PRINT) {
 /* ---------- Start ---------- */
 setGroup(G);
 
+/* ---------- Schnellsuche (🔍 in der Reiterleiste): durchsucht Tage, Flüge, Stationen, Kosten, Sprachführer, Infos, Packlisten, Crew ---------- */
+(function () {
+  const open = document.getElementById('q-open'); if (!open || PRINT) return;
+  const box = document.createElement('div'); box.className = 'q-box'; box.hidden = true;
+  box.innerHTML = '<div class="q-panel" role="dialog" aria-modal="true" aria-label="Suchen"><div class="q-in"><input type="search" id="q-inp" placeholder="Suchen: Hotel, Flug, Satz, Packliste …" autocomplete="off" enterkeyhint="search"><button type="button" id="q-x" aria-label="Schließen">×</button></div>' +
+    '<div class="q-sug">' + ['Tabas', 'G3 1016', 'Juma', 'Notfall', 'Pass', 'Uber', 'Caipirinha'].map(w => '<button type="button">' + esc(w) + '</button>').join('') + '</div><ol class="q-res" id="q-res"></ol></div>';
+  document.body.appendChild(box);
+  const inp = box.querySelector('#q-inp'), res = box.querySelector('#q-res');
+  const norm = t => (t || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ');
+  const txt = el => { if (!el) return ''; const out = [], w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); while (w.nextNode()) out.push(w.currentNode.nodeValue);
+    return out.join(' ').replace(/\s+/g, ' ').replace(/ ([.,:;!?)])/g, '$1').trim(); };
+  const SRC = [['.day', 'Tag für Tag', e => { const t = e.querySelector('.ttl'); return txt(e.querySelector('.dt')) + ' · ' + (t && t.firstChild ? t.firstChild.textContent.trim() : ''); }], ['.fl-item', 'Flüge', e => txt(e.querySelector('.pass-top span')) + ' · ' + txt(e.querySelector('.ap .code')) + ' → ' + txt(e.querySelector('.ap.to .code'))],
+    ['#stationen .stop', 'Stationen', e => txt(e.querySelector('h3'))], ['.co-list li', 'Kosten', e => txt(e.querySelector('.co-l b'))], ['#phrases .pcat .phr', 'Sprachführer', e => txt(e.querySelector('.pt'))],
+    ['#praktisch li, #praktisch p, #praktisch h3', 'Praktisches', e => ''], ['#gesundheit li', 'Gesundheit', e => ''], ['#packen li', 'Packlisten', e => ''], ['#crew-list .pcard', 'Crew', e => txt(e.querySelector('h3'))],
+    ['#rechner', 'Real-Rechner', e => 'Real-Rechner'], ['section > h2', 'Kapitel', e => txt(e)]];
+  let IDX = [];
+  function build() { document.body.classList.add('cv-all'); IDX = []; const seen = new Set();
+    SRC.forEach(([sel, sec, title]) => document.querySelectorAll(sel).forEach(el => { if (seen.has(el)) return; seen.add(el); const t = txt(el); if (t.length < 3) return; IDX.push({el, sec, title: title(el) || t.slice(0, 80), t, n: norm(t)}); })); }
+  const hl = (t, ws) => { let h = esc(t); ws.forEach(w => { if (w.length < 2) return; h = h.replace(new RegExp('(' + w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig'), '<mark>$1</mark>'); }); return h; };
+  function search() {
+    const q = norm(inp.value).trim(), ws = q.split(' ').filter(Boolean); if (!ws.length) { res.innerHTML = ''; return; }
+    const hits = IDX.filter(x => ws.every(w => x.n.includes(w))).slice(0, 25);
+    res.innerHTML = hits.length ? hits.map((x, i) => { const k = x.n.indexOf(ws[0]), a = Math.max(0, k - 40), snip = (a ? '… ' : '') + x.t.slice(a, a + 130) + (x.t.length > a + 130 ? ' …' : '');
+      return '<li><button type="button" data-i="' + IDX.indexOf(x) + '"><span class="q-s">' + esc(x.sec) + '</span><span class="q-t">' + hl(x.title, inp.value.trim().split(/\s+/)) + '</span><span class="q-x">' + hl(snip, inp.value.trim().split(/\s+/)) + '</span></button></li>'; }).join('')
+      : '<li class="q-none">Nichts gefunden. Anderes Wort probieren?</li>';
+  }
+  function reveal(el) {
+    close(); document.body.classList.add('cv-all');
+    let d = el.closest('details'); while (d) { d.open = true; d = d.parentElement && d.parentElement.closest('details'); }
+    const pc = el.closest('#phrases .pcat[data-ci]'); if (pc && pc.hidden) { const b = document.querySelector('.ph-cats button[data-ci="' + pc.dataset.ci + '"]'); if (b) b.click(); }
+    const car = el.closest('.car'); if (car && car.__go) car.__go(car.__idx(el), true);
+    const cc = el.closest('#crew-list .pcard'); if (cc && window.crewShow) { crewShow(cc.id.replace('crew-', '')); }
+    setTimeout(() => { const y = el.getBoundingClientRect().top + scrollY - barHeight() - 14; scrollTo({top: Math.max(0, y), behavior: 'auto'});
+      el.classList.remove('q-flash'); void el.offsetWidth; el.classList.add('q-flash'); }, cc ? 700 : 120);
+  }
+  function show() { build(); box.hidden = false; inp.value = ''; res.innerHTML = ''; setTimeout(() => inp.focus(), 30); }
+  function close() { box.hidden = true; }
+  open.addEventListener('click', show);
+  box.querySelector('#q-x').addEventListener('click', close);
+  box.addEventListener('click', e => { if (e.target === box) close(); const s2 = e.target.closest('.q-sug button'); if (s2) { inp.value = s2.textContent; search(); }
+    const r = e.target.closest('.q-res button'); if (r) reveal(IDX[+r.dataset.i].el); });
+  inp.addEventListener('input', search);
+  inp.addEventListener('keydown', e => { if (e.key === 'Escape') close(); if (e.key === 'Enter') { const r = res.querySelector('button'); if (r) r.click(); } });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !box.hidden) close(); });
+})();
+
 /* ---------- Was ist neu? Einträge in trip.json → news (id, d, tab, to, e, t); gesehen pro Handy (localStorage br26.newsSeen).
    Erster Besuch: alles gilt als gesehen, der Kasten zeigt dann nur „Zuletzt neu“. Punkte an Reitern und Kacheln mit Neuem. ---------- */
 (function () {
@@ -5953,7 +6049,7 @@ setGroup(G);
     const nw = N.filter(fresh), show = (nw.length ? nw : N).slice(0, nw.length ? 8 : 3);
     document.querySelectorAll('.tabs a[data-tab], .tiles .tile').forEach(a => { const tab = a.dataset.tab || (a.getAttribute('href') || '').slice(1);
       a.classList.toggle('has-new', nw.some(n => n.tab === tab || n.to === tab)); });
-    box.hidden = false;
+    box.hidden = !nw.length; if (!nw.length) return;   // nur zeigen, wenn es wirklich Neues gibt
     box.innerHTML = '<div class="news-h"><b>' + (nw.length ? '🆕 ' + nw.length + (nw.length === 1 ? ' Neuigkeit' : ' Neuigkeiten') + ' seit deinem letzten Besuch' : '🆕 Zuletzt neu') + '</b>' +
       (nw.length ? '<button type="button" id="news-ok">✓ Alles gesehen</button>' : '') + '</div><ul>' +
       show.map(n => '<li class="' + (fresh(n) ? 'new' : '') + '"><a href="#' + esc(n.to || n.tab) + '" data-id="' + esc(n.id) + '"><span aria-hidden="true">' + esc(n.e || '•') + '</span><span>' + esc(n.t) + '</span><small>' + dm(n.d) + '</small></a></li>').join('') + '</ul>';
