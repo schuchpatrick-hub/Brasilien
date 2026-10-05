@@ -1952,10 +1952,10 @@
     {
       "label": "Rio",
       "cat": "stay",
-      "sub": "Tabas – Cena Carioca · 6 Nächte",
+      "sub": "Tabas – Cena Carioca · 6 Nächte · 1.100 € für 4",
       "a": {
-        "k": "split",
-        "t": "über Splitwise"
+        "v": 275,
+        "k": "fix"
       },
       "b": null
     },
@@ -10114,6 +10114,14 @@
     ]
   },
   "news": [
+    {
+      "id": "n251005g",
+      "d": "2026-10-05",
+      "tab": "reise",
+      "to": "kosten",
+      "e": "🌴",
+      "t": "Unterkunft Rio: 275 € pro Person"
+    },
     {
       "id": "n251005f",
       "d": "2026-10-05",

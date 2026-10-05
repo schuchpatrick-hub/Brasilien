@@ -92,7 +92,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | Ort | Unterkunft | Zeitraum | Details | Kosten | Gebucht von |
 |---|---|---|---|---|---|
 | Guarujá | [**Casa Praiana**](https://www.booking.com/Share-q0Nagir) (nahe Praia da Enseada) | 28.–31.12. | 75 m zum Strand, kein Pool, **kein Frühstück**, alle vier Gringos plus 1 Cevapi mitgezählt, bis 31.12. verlängert. Alternative war die Pousada Villa Virgínia | 530 € gesamt (132,50 € p. P.) | Jonas (29.09.) |
-| Rio | [**Tabas – Cena Carioca**](https://www.booking.com/Share-UjjihY) | 31.12.–06.01. | **nicht stornierbar**, Gym vorhanden; Anreise auf 31.12. umgebucht ✅ | – | Jonas (01.09.) |
+| Rio | [**Tabas – Cena Carioca**](https://www.booking.com/Share-UjjihY) | 31.12.–06.01. | **nicht stornierbar**, Gym vorhanden; Anreise auf 31.12. umgebucht ✅ | 1.100 € gesamt (275 € p. P.) | Jonas (01.09.) |
 | Foz do Iguaçu | [**TuCasa Flats**](https://www.booking.com/searchresults.html?ss=TuCasa+Flats+Foz+do+Igua%C3%A7u) ([Website](https://tucasaflats.com/)), Rua Belarmino de Mendonça 1338, Centro | 06.–09.01. | Apartments mit Küche, Klimaanlage und WLAN, Pool, im Zentrum (unter 1 km); Check-in ab 14:00, Check-out bis 11:00 | ca. 80 € p. P. 🟡 prüfen | Greisel |
 | Manaus | [**Casa 307**](https://www.booking.com/Share-xSVoEp) | 09.–10.01. | Lage und Bewertung top, 2er-Zimmer für Daijo & Greisel | 14 € p. P. | Jonas (14.09.) |
 | Amazonas | [**Juma Kabanas: Nature Experience Package**](https://www.jumakabanas.com/package/nature-experience-package-3-nights/) (3 Nächte) | 10.–13.01. | Übernachtung, Essen, Abholung und Rückfahrt zum Hotel inklusive, Bar extra. Rückfahrt 13.01. um 08:00, in Manaus ca. 11:00 | 520 € p. P. | Buchungsnummer liegt bei Marco oder Greisel |
@@ -109,15 +109,15 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | Langstrecke Europa ⇄ Brasilien | 1.120 € | 1.300 € |
 | Inlandsflüge Rio → Iguaçu → Manaus → Rio (Richtpreis, noch nicht gebucht) | ca. 700 € | ca. 700 € |
 | São Paulo CGH → Rio SDU (31.12., gebucht) | 121 € | – |
-| **🛏️ Unterkünfte** | **834,50 €** + offene Posten | **702 €** + offene Posten |
+| **🛏️ Unterkünfte** | **1.109,50 €** + Ilha Grande | **702 €** + offene Posten |
 | Guarujá, Casa Praiana (3 Nächte, 530 € für 4) | 132,50 € | – |
-| Rio, Tabas – Cena Carioca (6 Nächte) | offen (Splitwise) | – |
+| Rio, Tabas – Cena Carioca (6 Nächte, 1.100 € für 4) | 275 € | – |
 | Foz do Iguaçu, TuCasa Flats (3 Nächte) | ca. 80 € | ca. 80 € |
 | Manaus, Casa 307 (1 Nacht) | 14 € | 14 € |
 | Juma Lodge (3 Nächte, alles inklusive außer Bar) | 520 € | 520 € |
 | Paraty, Geko Pousada (2 Nächte) | 88 € | 88 € |
 | Ilha Grande (4/5 Nächte) | offen | offen |
-| **Summe bekannt** | **ca. 2.780 €** + offene Posten | **ca. 2.700 €** + offene Posten |
+| **Summe bekannt** | **ca. 3.050 €** + offene Posten | **ca. 2.700 €** + offene Posten |
 
 Abgerechnet wird über **Splitwise**, mit zwei Gruppen: eine für die Gringos plus 1 Cevapi (Guarujá, Rio), eine für alle sechs.
 
