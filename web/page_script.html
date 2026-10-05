@@ -2168,7 +2168,6 @@ function wavB64(buf) {
       else if (name === 'chomp') { kick(sfxOut, t, .8); [0, .09].forEach(o => noise(sfxOut, t + o, .07, .5, 'bandpass', 1800, 2)); tone(sfxOut, 'square', 180, t, .12, .1, {from: 400, glide: .08, lp: 1500}); }
       else if (name === 'click') { noise(sfxOut, t, .03, .5, 'highpass', 4000, 1); tone(sfxOut, 'sine', 1800, t, .05, .08); }
       else if (name === 'bubble') for (let k = 0; k < 7; k++) tone(sfxOut, 'sine', 500 + rnd() * 500, t + k * .11 + rnd() * .05, .09, .07, {from: 220, glide: .07});
-      else if (name === 'wah') [62, 61, 60, 59].forEach((m, k) => tone(sfxOut, 'sawtooth', mf(m), t + k * .38, k === 3 ? 1.1 : .36, .13, {lp: 900, a: .04, hold: k === 3 ? .8 : .25, vib: k === 3 ? 5 : 0, depth: .025}));
     };
     // Schwere Geräusche (Lacher vom Band: ~500 Klangbausteine, Applaus: ~270) einmal vorab offline rendern, danach nur noch
     // als fertigen Klang abspielen (1 Baustein) – sonst ruckelt das Bild, solange sie erzeugt werden. 3 Varianten je Geräusch.
@@ -2336,10 +2335,10 @@ function wavB64(buf) {
       await move(v, 'plane', legs.heim, 3900, my, {km: 9900}); fade(v, 350, my); });
     await step(async () => { day = 26; caption('Tchau, Brasil! 🇧🇷 Daijo & Greisel bleiben noch ein bisschen'); await night(false, 700, my); mus('mode', 'stay'); await camTo(INSET, 2400, my); say(parkB, 'Mehr Caipi für uns! 🍹', 2200, {}); await wait(2300, my); await camTo(FULL, 2200, my); await wait(800, my); });
     if (my === run) await fade(parkB, 500, my);
-    // Pannen vom Dreh: Filmklappe, Panne, „CUT!“ mit Plattenkratzer und Posaunen-Wah-wah
+    // Pannen vom Dreh: Filmklappe, Panne, „CUT!“ mit Plattenkratzer und Lacher
     const stamp = (txt, o) => { const t = mk('text', Object.assign({x: W / 2, y: H / 2, 'text-anchor': 'middle', 'dominant-baseline': 'central', class: 'trip-stamp'}, o || {})); t.textContent = txt; gFront.appendChild(t); return t; };
     const klappe = async (n, txt) => { caption('🎬 Klappe, die ' + n + '. – ' + txt); mus('sfx', 'clap'); const k = stamp('🎬', {'font-size': 110}); await wait(900, my); k.remove(); };
-    const cut = async () => { mus('sfx', 'scratch'); mus('sfx', 'wah', 250); const c = stamp('CUT!', {transform: `rotate(-10 ${W / 2} ${H / 2})`}); await wait(1900, my); c.remove(); };
+    const cut = async () => { mus('sfx', 'scratch'); mus('sfx', 'laugh', 250); const c = stamp('CUT!', {transform: `rotate(-10 ${W / 2} ${H / 2})`}); await wait(1900, my); c.remove(); };
     await step(async () => { mus('mode', 'stay'); caption('🎬 Pannen vom Dreh'); const t = stamp('Pannen vom Dreh', {class: 'trip-stamp t'}); await wait(1800, my); t.remove(); });
     await step(async () => { await klappe(2, 'Abflug München');
       const L = legs.hin.getTotalLength(), a = legs.hin.getPointAtLength(L * .62), b = {x: a.x - 330, y: a.y - 170};
@@ -2963,8 +2962,8 @@ function wavB64(buf) {
     m.sfx('applause', at(T.solo[1] - 200)); m.sfx('applause', at(T.duelS[1] - 300)); m.sfx('applause', at(T.duelG[1] - 300)); m.sfx('whoo', at(T.verdict[0])); m.sfx('applause', at(T.verdict[0] + 200));
     m.sfx('whoo', at(T.spin[0] + 300)); m.sfx('boing', at(T.fruit[1]));
     m.sfx('boom', at(T.confetti - 400)); m.sfx('boom', at(T.confetti + 400)); m.sfx('applause', at(T.confetti)); m.sfx('whoo', at(T.confetti + 200)); m.sfx('applause', at(T.pyr[1] - 1500));
-    // Pannen: Musik leise, Klappe, Effekt, Plattenkratzer + Wah-wah beim CUT
-    [[T.b1, 2600], [T.b2, 2400], [T.b3, 2200]].forEach(([w, c]) => { m.sfx('clap', at(w[0] + 100)); m.sfx('scratch', at(w[0] + c)); m.sfx('wah', at(w[0] + c + 250)); });
+    // Pannen: Musik leise, Klappe, Effekt, Plattenkratzer + Lacher beim CUT
+    [[T.b1, 2600], [T.b2, 2400], [T.b3, 2200]].forEach(([w, c]) => { m.sfx('clap', at(w[0] + 100)); m.sfx('scratch', at(w[0] + c)); m.sfx('laugh', at(w[0] + c + 250)); });
     m.sfx('thud', at(T.b1[0] + 2200)); m.sfx('crash', at(T.b1[0] + 2250)); m.sfx('feedback', at(T.b2[0] + 1100)); m.sfx('crash', at(T.b3[0] + 1300));
     const st0 = T.moves[0] + 4900 + 5 * 380 + 700; m.sfx('thud', at(st0)); m.sfx('boing', at(st0 + 150)); m.sfx('whoo', at(T.moves[0] + 300)); m.sfx('boing', at(T.moves[1] - 800));
     m.sfx('applause', at(T.credits[0])); m.end(at(T.credits[1]));
@@ -3219,6 +3218,11 @@ function wavB64(buf) {
       [['heart', '❤️', 20], ['dizzy', '💫', 20], ['cash', '💲', 20]].forEach(([k2, e2, fs]) => { o.fx[k2] = mk('g', {opacity: 0}, fg); [-1, 1].forEach(k => emo(e2, {x: cF + k * eyX, y: eyY, 'font-size': fs}, o.fx[k2])); });
       o.fx.angry = mk('g', {opacity: 0}, fg); [-1, 1].forEach(k => mk('path', {d: `M${cF + k * (eyX + 14)},${eyY - 22} L${cF + k * (eyX - 10)},${eyY - 11}`, stroke: INK, 'stroke-width': 6, 'stroke-linecap': 'round'}, o.fx.angry));
       emo('💢', {x: R * .62, y: -R * .62, 'font-size': 18}, o.fx.angry);
+      // Lachen: zugekniffene Lach-Augen, Lachtränen, „HAHA“ über dem Kopf
+      o.fx.lol = mk('g', {opacity: 0}, fg); [-1, 1].forEach(k => { const ex = cF + k * eyX;
+        mk('path', {d: `M${ex - 11},${eyY + 4} Q${ex},${eyY - 10} ${ex + 11},${eyY + 4}`, fill: 'none', stroke: INK, 'stroke-width': 5, 'stroke-linecap': 'round'}, o.fx.lol);
+        mk('path', {d: `M${ex + k * 13},${eyY + 6} q${k * 4},7 0,11 q${-k * 4},-4 0,-11Z`, fill: '#7fd3ff', stroke: '#2a6f99', 'stroke-width': 1.2}, o.fx.lol); });
+      emo('HAHA', {x: R * .15, y: -R * 1.18, 'font-size': 17, 'font-weight': 900, fill: '#ffd23f', stroke: INK, 'stroke-width': 3, 'paint-order': 'stroke', transform: 'rotate(-8)'}, o.fx.lol);
     } else {   // gezeichnete Nebenfigur
       o.npc = true; o.mY = 14; o.c = 30;
       o.upper = mk('g', {}, o.head); o.lower = mk('g', {}, o.head);
@@ -4870,6 +4874,13 @@ function wavB64(buf) {
     for (const l of LINES) { if (t < l.at - 100 || t > l.at + l.dur + 700) continue;
       if (l.face && pose[l.who] && pose[l.who].on) pose[l.who].face = l.face;
       if (l.react) for (const id in l.react) if (pose[id] && pose[id].on) pose[id].face = l.react[id]; }
+    // Reaktionen nach einer Pointe/Panne: lol = die anderen lachen sich kaputt (1 = alle außer Sprecher und mad), mad = regt sich auf
+    for (const l of LINES) { if (!l.lol && !l.mad) continue; const r0 = l.at + l.dur + (l.rxd || 250), r1 = r0 + (l.rxl || 1900); if (t < r0 || t > r1) continue;
+      const k = win(t, r0, r1, 200), mad = [].concat(l.mad || []), busy = id => LINES.some(m2 => m2.who === id && t >= m2.at - 150 && t <= m2.at + m2.dur);
+      const lol = l.lol === 1 ? CREW.filter(id => id !== l.who && !mad.includes(id)) : [].concat(l.lol || []);
+      lol.forEach((id, i) => { const p = pose[id]; if (!p || !p.on || p.hush || busy(id)) return; p.face = 'lol';
+        p.mouth = Math.max(p.mouth || 0, k * (.45 + .4 * Math.abs(S(t / 95 + i)))); p.tilt = (p.tilt || 0) + k * (-7 + 6 * S(t / 120 + i * 1.7)); });
+      mad.forEach(id => { const p = pose[id]; if (!p || !p.on || busy(id)) return; p.face = 'angry'; p.tilt = (p.tilt || 0) + k * 7 * S(t / 45); }); }
     Object.keys(P).forEach(id => apply(P[id], pose[id], t));
     // Schnitte: close = Großaufnahme des Sprechers, rshot = danach kurz das Gesicht von jemand anderem (harter Schnitt)
     let shot = null;
@@ -4938,33 +4949,33 @@ function wavB64(buf) {
     const at = ms => t0 + ms / 1000, A = (k, d) => at((LAT[k] || 0) + (d || 0)), sAt = id => (SC.find(s => s.id === id) || {t: [0]}).t[0];
     // Ducking: während jemand spricht, geht die Musik weich runter
     LINES.slice().sort((x, y) => x.at - y.at).forEach(l => { m.duck(.24, at(l.at - 120), .07); m.duck(.5, at(l.at + l.dur + 120), .35);
-      if (l.laugh) m.sfx('laugh', at(l.at + l.dur + 120)); });
+      if (l.laugh) m.sfx('laugh', at(l.at + l.dur + 120)); else if (l.lol) m.sfx('laugh', at(l.at + l.dur + (l.rxd || 250))); });
     SC.forEach((sc, k) => { if (sc.amb && m.amb) m.amb(sc.amb, at(sc.t[0]), at(sc.t[1])); if (k) m.sfx('swish', at(sc.t[0] - 380)); });
-    const fx = [['sec2', -300, 'whistle'], ['sec2', 400, 'ding'], ['sec4', 1500, 'wah'], ['sec6', 0, 'wah'],
+    const fx = [['sec2', -300, 'whistle'], ['sec2', 400, 'ding'],
       ['bar1', 1500, 'ding'], ['bar3', 600, 'gong'], ['bar4', 2600, 'ding'], ['bar4', 2700, 'cheer'], ['bar5', 400, 'boing'],
-      ['fly3', -700, 'thud'], ['fly3', -400, 'boing'], ['fly3', 300, 'thud'], ['fly3', 1300, 'thud'], ['fly8', 1700, 'puke'], ['fly9', -200, 'splash'], ['fly10', 1400, 'wah'],
-      ['fly11', 1700, 'fart'], ['fly11', 2300, 'whistle'], ['fly13', 600, 'scratch'], ['fly7', 1700, 'scratch'], ['fly7', 1900, 'wah'],
+      ['fly3', -700, 'thud'], ['fly3', -400, 'boing'], ['fly3', 300, 'thud'], ['fly3', 1300, 'thud'], ['fly8', 1700, 'puke'], ['fly9', -200, 'splash'],
+      ['fly11', 1700, 'fart'], ['fly11', 2300, 'whistle'], ['fly13', 600, 'scratch'], ['fly7', 1700, 'scratch'],
       ['uber1', -800, 'car'], ['uber6', -300, 'fart'], ['uber2', 1500, 'car'], ['uber5', -100, 'gong'],
-      ['beach2', -300, 'whistle'], ['beach3', 1300, 'kick'], ['beach3', 1800, 'kick'], ['beach3', 2200, 'boing'], ['beach9', 1500, 'kiss'], ['beach9', 1700, 'whoo'], ['beach10', 2400, 'scratch'], ['beach5', -300, 'ding'], ['beach6', 800, 'wah'],
+      ['beach2', -300, 'whistle'], ['beach3', 1300, 'kick'], ['beach3', 1800, 'kick'], ['beach3', 2200, 'boing'], ['beach9', 1500, 'kiss'], ['beach9', 1700, 'whoo'], ['beach10', 2400, 'scratch'], ['beach5', -300, 'ding'],
       ['land1', 200, 'plane'], ['land2', 900, 'thud'], ['land2', 1400, 'scratch'], ['land3', -1500, 'splash'], ['land3', 300, 'boing'],
-      ['ny1', 0, 'cheer'], ['ny2', 1500, 'ding'], ['ny3', 1800, 'wah'], ['ny5', 0, 'boom'], ['ny5', 0, 'cheer'], ['ny5', 500, 'boom'], ['ny5', 1100, 'boom'], ['ny7', -900, 'kiss'], ['ny7', 300, 'scratch'], ['ny9', -1500, 'crash'], ['ny9', -1200, 'splash'],
-      ['kat1', 0, 'gong'], ['kat3', 800, 'wah'], ['kat5', -200, 'ding'], ['kat6', 1400, 'wah'],
-      ['cr2', 0, 'whistle'], ['cr3', 0, 'gong'], ['cr5', -700, 'splash'], ['cr5', -500, 'wah'],
+      ['ny1', 0, 'cheer'], ['ny2', 1500, 'ding'], ['ny5', 0, 'boom'], ['ny5', 0, 'cheer'], ['ny5', 500, 'boom'], ['ny5', 1100, 'boom'], ['ny7', -900, 'kiss'], ['ny7', 300, 'scratch'], ['ny9', -1500, 'crash'], ['ny9', -1200, 'splash'],
+      ['kat1', 0, 'gong'], ['kat5', -200, 'ding'],
+      ['cr2', 0, 'whistle'], ['cr3', 0, 'gong'], ['cr5', -700, 'splash'],
       ['ro2', 1600, 'ding'], ['ro4', -300, 'scratch'], ['ro6', 600, 'boing'],
-      ['zu2', -1700, 'crash'], ['zu2', -1400, 'scratch'], ['zu5', -1400, 'ding'], ['zu6', 200, 'wah'],
+      ['zu2', -1700, 'crash'], ['zu2', -1400, 'scratch'], ['zu5', -1400, 'ding'],
       ['call2', 0, 'puke'],
-      ['g2', -2900, 'ding'], ['g2', -2500, 'squeak'], ['g3', -200, 'scratch'], ['g8', 0, 'wah'], ['g7', 600, 'ding'],
-      ['b2', -2000, 'squeak'], ['b3', 0, 'scratch'], ['b4', 2400, 'ding'], ['b5', 0, 'scratch'], ['b6', 1200, 'tape'], ['b6', 1700, 'thud'], ['b6', 2600, 'thud'], ['b7', 0, 'gong'], ['b8', 700, 'wah'],
+      ['g2', -2900, 'ding'], ['g2', -2500, 'squeak'], ['g3', -200, 'scratch'], ['g7', 600, 'ding'],
+      ['b2', -2000, 'squeak'], ['b3', 0, 'scratch'], ['b4', 2400, 'ding'], ['b5', 0, 'scratch'], ['b6', 1200, 'tape'], ['b6', 1700, 'thud'], ['b6', 2600, 'thud'], ['b7', 0, 'gong'],
       ['f3', 300, 'boing'], ['f5', -1000, 'squeak'], ['f6', 0, 'gong'],
       ['q1', 200, 'squeak'], ['q3', -800, 'squeak'], ['q3', -500, 'scratch'], ['q4', 0, 'cheer'], ['q6', 0, 'whistle'],
-      ['a2', 1400, 'ding'], ['a4', -300, 'scratch'], ['a6', 300, 'wah'],
-      ['m1', 0, 'boat'], ['m3', 400, 'boat'], ['m4', -600, 'boing'], ['m7', 1200, 'wah'],
+      ['a2', 1400, 'ding'], ['a4', -300, 'scratch'],
+      ['m1', 0, 'boat'], ['m3', 400, 'boat'], ['m4', -600, 'boing'],
       ['d1', 0, 'cheer'], ['d3', 900, 'ding'], ['d6', -1700, 'splash'], ['d7', 1200, 'ding'],
-      ['h2', -2700, 'squeak'], ['h2', 0, 'kiss'], ['h2', 400, 'whoo'], ['h4', 0, 'scratch'], ['h6', -200, 'boing'], ['h6', 900, 'wah'],
+      ['h2', -2700, 'squeak'], ['h2', 0, 'kiss'], ['h2', 400, 'whoo'], ['h4', 0, 'scratch'], ['h6', -200, 'boing'],
       ['r3', -300, 'splash'], ['r3', 800, 'splash'], ['r3', 1700, 'splash'], ['r5', -1400, 'fart'], ['r5', -1000, 'bubble'], ['r6', 700, 'kiss'],
       ['l3', 1000, 'scratch'], ['l9', -400, 'boing'], ['p1', 500, 'splash'], ['p4', 700, 'chomp'], ['p4', 1300, 'chomp'], ['p5', 500, 'chomp'], ['p6', -300, 'squeak'], ['p7', -900, 'splash'],
       ['j2', 0, 'cheer'], ['j6', 500, 'cheer'], ['j7', 0, 'click'], ['j9', -150, 'click'], ['j9', 0, 'scratch'],
-      ['k2', -300, 'click'], ['k3', 0, 'scratch'], ['k6', 300, 'ding'], ['k7', 0, 'wah'], ['e1', -1600, 'monkey'], ['e1', 600, 'monkey'], ['e2', 1300, 'wah'], ['e6', 0, 'gong'],
+      ['k2', -300, 'click'], ['k3', 0, 'scratch'], ['k6', 300, 'ding'], ['e1', -1600, 'monkey'], ['e1', 600, 'monkey'], ['e6', 0, 'gong'],
       ['night1', 0, 'cheer'], ['night3', 3500, 'puke'], ['night5', -400, 'whistle'], ['night4', 2400, 'applause'], ['end', -400, 'applause']];
     fx.forEach(([k, d, n]) => { if (LAT[k] !== undefined) m.sfx(n, A(k, d)); });
     if (LAT.fly2 !== undefined) for (let n = 0; n < 4; n++) m.sfx('munch', A('fly2', 1000 + n * 1300));
@@ -4974,12 +4985,12 @@ function wavB64(buf) {
     // Folge 3: Zeitpunkte, die von Sprechlängen abhängen
     const dl = k => ((LINES.find(l => l.key === k) || {}).dur || 0), has = k => LAT[k] !== undefined;
     if (has('g5')) { m.sfx('pill', A('g5', dl('g5') - 100)); m.sfx('boing', A('g5', dl('g5') + 600)); m.sfx('paper', A('g6', 600)); m.sfx('paper', A('g6', 1500)); }
-    if (has('f4')) { const s1 = LAT.f4 + dl('f4') + 250, f0 = LAT.f5 + dl('f5') + 150; m.sfx('shutter', at(s1)); m.sfx('wah', at(f0)); m.sfx('whoo', at(f0 + 100)); m.sfx('shutter', at(f0 + 560)); m.sfx('splash', at(f0 + 1300)); m.sfx('shutter', at(LAT.f7 - 150)); }
+    if (has('f4')) { const s1 = LAT.f4 + dl('f4') + 250, f0 = LAT.f5 + dl('f5') + 150; m.sfx('shutter', at(s1)); m.sfx('whoo', at(f0 + 100)); m.sfx('shutter', at(f0 + 560)); m.sfx('splash', at(f0 + 1300)); m.sfx('shutter', at(LAT.f7 - 150)); }
     if (has('q3')) { const G = LAT.q3 - 800; [1100, 1350, 1600, 1900, 2150, 2400].forEach((o, k) => m.sfx(k % 2 ? 'thud' : 'crash', at(G + o))); m.sfx('kiss', A('q5', dl('q5'))); }
     if (has('a3')) { m.sfx('thud', A('a3', dl('a3'))); m.sfx('clank', A('a6', dl('a6') - 100)); m.sfx('clank', A('a6', dl('a6') + 500)); m.sfx('squeak', A('a6', dl('a6') + 900)); }
     if (has('m4')) { const H0 = LAT.m4 - 2700; m.sfx('splash', at(H0)); m.sfx('crash', at(H0 + 200)); m.sfx('splash', at(H0 + 700)); m.sfx('splash', at(H0 + 1400)); m.sfx('splash', A('m5', -1700)); m.sfx('ding', A('m5', -900)); }
     // Folge 4
-    if (has('r8')) { const pk0 = LAT.r8 + dl('r8') + 100; m.sfx('puke', at(pk0)); m.sfx('scratch', at(pk0 + 900)); m.sfx('wah', at(pk0 + 1400)); }
+    if (has('r8')) { const pk0 = LAT.r8 + dl('r8') + 100; m.sfx('puke', at(pk0)); m.sfx('scratch', at(pk0 + 900)); }
     if (has('l4')) { const r0 = LAT.l3 + dl('l3') + 150, q0 = LAT.l4 + dl('l4') + 300; m.sfx('fart', at(r0 + 500)); m.sfx('fart', at(q0)); m.sfx('rumble', at(q0 + 150)); m.sfx('monkey', at(q0 + 700)); m.sfx('crash', at(q0 + 1300)); m.sfx('fart', at(q0 + 2200));
       const f0 = LAT.l9 + dl('l9') + 100; m.sfx('whoo', at(f0)); m.sfx('scratch', at(f0 + 200)); m.sfx('splash', at(f0 + 1600)); }
     if (has('p2')) { const c0 = LAT.p2 - 1600; m.sfx('splash', at(c0)); m.sfx('ding', at(c0 + 900)); m.sfx('chomp', A('p8', 600)); m.sfx('chomp', A('p8', 900)); }

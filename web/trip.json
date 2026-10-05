@@ -4395,7 +4395,9 @@
           "who": "jonas",
           "at": 22330,
           "say": "Simon, ohne Creme bist du in drei Tagen ein Brathähnchen. Und Patrick hat Hunger.",
-          "text": "Simon, ohne Creme bist du in drei Tagen ein Brathähnchen. Und Patrick hat Hunger. 🍗"
+          "text": "Simon, ohne Creme bist du in drei Tagen ein Brathähnchen. Und Patrick hat Hunger. 🍗",
+          "lol": 1,
+          "mad": "simon"
         },
         {
           "key": "sec5",
@@ -4412,7 +4414,8 @@
           "say": "Neiiin! Meine Babys!",
           "text": "Neiiin! Meine Babys! 😭",
           "close": 1,
-          "laugh": 1
+          "laugh": 1,
+          "lol": 1
         },
         {
           "key": "bar1",
@@ -4522,7 +4525,9 @@
           "laugh": 1,
           "react": {
             "jonas": "angry"
-          }
+          },
+          "lol": 1,
+          "mad": "jonas"
         },
         {
           "key": "fly4",
@@ -4584,7 +4589,9 @@
           "say": "Klar. Die vom Notausgang. Ganz hinten links.",
           "text": "Klar. Die vom Notausgang. Ganz hinten links. 🚪",
           "laugh": 1,
-          "rshot": "simon"
+          "rshot": "simon",
+          "lol": 1,
+          "mad": "simon"
         },
         {
           "key": "uber1",
@@ -4720,7 +4727,9 @@
           "say": "Du siehst aus wie ein Hummer, der schlechte Nachrichten bekommen hat.",
           "text": "Du siehst aus wie ein Hummer, der schlechte Nachrichten bekommen hat. 🦞",
           "laugh": 1,
-          "rshot": "simon"
+          "rshot": "simon",
+          "lol": 1,
+          "mad": "simon"
         },
         {
           "key": "beach7",
@@ -5520,7 +5529,9 @@
           "laugh": 1,
           "react": {
             "jonas": "angry"
-          }
+          },
+          "lol": 1,
+          "mad": "jonas"
         },
         {
           "key": "ny4",
@@ -5609,7 +5620,9 @@
             "pitch": 1.15,
             "speed": 0.95
           },
-          "laugh": 1
+          "laugh": 1,
+          "lol": 1,
+          "mad": "jonas"
         },
         {
           "key": "kat4",
@@ -5640,7 +5653,9 @@
             "pitch": 1.1,
             "speed": 0.92
           },
-          "laugh": 1
+          "laugh": 1,
+          "lol": 1,
+          "mad": "patrick"
         },
         {
           "key": "cr1",
@@ -5688,7 +5703,8 @@
             "pitch": 1.1,
             "speed": 0.92
           },
-          "laugh": 1
+          "laugh": 1,
+          "lol": 1
         },
         {
           "key": "ro1",
@@ -5797,7 +5813,9 @@
           "say": "Ich weiß.",
           "text": "Ich weiß. 😇",
           "close": 1,
-          "laugh": 1
+          "laugh": 1,
+          "lol": 1,
+          "mad": "marco"
         },
         {
           "key": "call1",
@@ -6589,7 +6607,9 @@
           "at": 45461,
           "say": "Zum ersten Mal in seinem Leben schuldet Jonas jemandem Geld.",
           "text": "Zum ersten Mal in seinem Leben schuldet Jonas jemandem Geld. 💸",
-          "laugh": 1
+          "laugh": 1,
+          "lol": 1,
+          "mad": "jonas"
         },
         {
           "key": "b1",
@@ -6662,7 +6682,9 @@
           "vo": {
             "speed": 0.85
           },
-          "laugh": 1
+          "laugh": 1,
+          "lol": 1,
+          "mad": "dajo"
         },
         {
           "key": "f1",
@@ -6711,7 +6733,9 @@
           "vo": {
             "pitch": 1.1,
             "speed": 0.92
-          }
+          },
+          "lol": 1,
+          "rxd": 1500
         },
         {
           "key": "f6",
@@ -6836,7 +6860,9 @@
           "text": "Zelle drei. 🔒",
           "name": "Grenzbeamter",
           "laugh": 1,
-          "rshot": "jonas"
+          "rshot": "jonas",
+          "lol": 1,
+          "mad": "jonas"
         },
         {
           "key": "m1",
@@ -6901,7 +6927,9 @@
             "speed": 0.9
           },
           "laugh": 1,
-          "close": 1
+          "close": 1,
+          "lol": 1,
+          "mad": "dajo"
         },
         {
           "key": "d1",
@@ -7237,7 +7265,8 @@
           "react": {
             "jonas": "shock",
             "patrick": "shock"
-          }
+          },
+          "lol": 1
         },
         {
           "key": "h7",
@@ -7311,7 +7340,15 @@
           "at": 71484,
           "say": "Nicht in den Fluss! Das ist ein Naturschutzgebiet!",
           "text": "Nicht in den Fluss! Das ist ein Naturschutzgebiet!",
-          "face": "shock"
+          "face": "shock",
+          "lol": [
+            "jonas",
+            "patrick",
+            "simon",
+            "marco"
+          ],
+          "mad": "dajo",
+          "rxd": 1300
         },
         {
           "key": "r9",
@@ -7599,7 +7636,8 @@
           "who": "dajo",
           "at": 231641,
           "say": "Er hat den Bootsschlüssel.",
-          "text": "Er hat den Bootsschlüssel. 🔑"
+          "text": "Er hat den Bootsschlüssel. 🔑",
+          "lol": 1
         },
         {
           "key": "k8",
@@ -7626,7 +7664,9 @@
           "laugh": 1,
           "react": {
             "marco": "shock"
-          }
+          },
+          "lol": 1,
+          "mad": "marco"
         },
         {
           "key": "e3",
