@@ -66,7 +66,12 @@ def cut(x, mode, L):
     return y * min(.13 / rms, .89 / pk)   # gleiche Lautheit (RMS), Spitze höchstens −1 dBFS
 
 # Raumklänge (Serie, META.amb): je Art ein Schleifen-Ausschnitt, nahtlos überblendet: Name: (Lautstärke, Split, Clip-ID, Start s, Länge s)
-AMB = {}
+AMB = {
+    'sea': (.5, 'eval', 418356, 4.0, 8), 'crowd': (.45, 'dev', 424866, 0.0, 8), 'bar': (.4, 'eval', 347537, 4.0, 8),
+    'traffic': (.4, 'dev', 319360, 4.0, 8), 'wind': (.4, 'eval', 135447, 0.0, 8), 'rain': (.5, 'dev', 50058, 4.0, 8),
+    'night': (.35, 'eval', 424871, 0.0, 8), 'falls': (.5, 'eval', 352903, 0.0, 8), 'forest': (.45, 'dev', 222635, 4.0, 8),
+    'cabin': (.4, 'dev', 320786, 16.0, 8),
+}
 
 def loop(x, a, L, F=1.2):
     n, f = int(L * SR), int(F * SR); s = x[int(a * SR):int(a * SR) + n + f].copy()
