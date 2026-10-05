@@ -4490,7 +4490,7 @@ function wavB64(buf) {
       if (L > kissT && L < A('ny8')) { kissM.setAttribute('opacity', win(L, kissT, kissT + 1300, 150).toFixed(2)); kissM.setAttribute('x', 562); kissM.setAttribute('y', FL - 165);
         broken.setAttribute('opacity', win(L, kissT + 1200, A('ny8'), 200).toFixed(2)); broken.setAttribute('x', 562); broken.setAttribute('y', (FL - 200 - 10 * Math.abs(S(t / 200))).toFixed(1)); }
       // sieben Wellen, sieben Wünsche
-      const WISH = ['Kein Sonnenbrand mehr (Simon)', 'Unendlich Rodízio (Patrick)', 'Eine Frau (Marco)', 'Irgendeine Frau (Marco)', 'Weniger Kater (alle)', 'Dass keiner vom Kuss erfährt (Marco)', 'Nicht ertrinken (Marco)'];
+      const WISH = ['Kein Sonnenbrand mehr (Simon)', 'Unendlich Rodízio (Patrick)', 'Mein Handy bleibt sicher (Jonas)', 'Eine Frau (Marco)', 'Irgendeine Frau (Marco)', 'Keiner erfährt vom Kuss (Simon)', 'Nicht ertrinken (Marco)'];
       let wk = -1; for (let k = 0; k < 7; k++) if (L > W0 + k * WD - 300) wk = k;
       wishB.setAttribute('opacity', wk >= 0 && L < A('ny9') ? 1 : 0); wishT.textContent = `🌊 Welle ${wk + 1}/7: ${WISH[Math.max(0, wk)]}`;
       const WXp = {jonas: 300, patrick: 370, simon: 440, marco: 520};

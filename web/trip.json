@@ -4737,7 +4737,7 @@
           "key": "uber4",
           "who": "simon",
           "at": 132008,
-          "say": "Kein Problem. Ich hab am Flughafen neue gekauft. Faktor zehn.",
+          "say": "Kein Problem. Ich hab am Flughafen neue gekauft. Faktor zehn!",
           "text": "Kein Problem. Ich hab am Flughafen neue gekauft. Faktor 10.",
           "vo": {
             "pitch": 1.1,
@@ -5848,6 +5848,46 @@
           "anchor": [
             "ny8",
             5566
+          ]
+        },
+        {
+          "key": "ny8j",
+          "who": "jonas",
+          "say": "Dass mein Handy sicher bleibt!",
+          "text": "Wunsch 3: Dass mein Handy sicher bleibt! 📱",
+          "anchor": [
+            "ny8",
+            7466
+          ]
+        },
+        {
+          "key": "ny8m",
+          "who": "marco",
+          "say": "Eine Frau!",
+          "text": "Wunsch 4: Eine Frau! 💃",
+          "anchor": [
+            "ny8",
+            9366
+          ]
+        },
+        {
+          "key": "ny8m2",
+          "who": "marco",
+          "say": "Irgendeine Frau!",
+          "text": "Wunsch 5: Irgendeine Frau! 🙏",
+          "anchor": [
+            "ny8",
+            11266
+          ]
+        },
+        {
+          "key": "ny8s2",
+          "who": "simon",
+          "say": "Dass keiner vom Kuss erfährt!",
+          "text": "Wunsch 6: Dass keiner vom Kuss erfährt! 🤫",
+          "anchor": [
+            "ny8",
+            13166
           ]
         },
         {
