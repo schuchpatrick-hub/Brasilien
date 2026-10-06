@@ -258,7 +258,7 @@ Hysterische Zeilen per Zeilen-`comedy` (höher, schneller).
 Alle persönlichen Texte im Bild kommen aus den privaten Daten: `tx` (Bandenwerbung, Schilder, Banner, Stärken/Schwächen …) und `caps` (Ort-Einblendung je Szene); im öffentlichen Code nur neutrale Platzhalter.
 Keine Kachel im Kino: Start über „🎬 Spielerporträt ansehen“ (`.port-btn[data-port]`) im Steckbrief und auf der Kartenrückseite,
 `window.serPortrait(id)` lädt das Porträt im Vollbild und kehrt danach zur vorherigen Folge und zur Karte zurück. Knöpfe sind per CSS-Klasse
-`port-p<id>` am `<html>` sichtbar (nur freigegebene bzw. für den Admin). Zeilen-Keys `pj1…` (eindeutig gegenüber den Folgen).
+`port-p<id>` am `<html>` sichtbar (Jonas, Simon, Patrick seit 06.10. für alle freigegeben). Zeilen-Keys `pj1…` (eindeutig gegenüber den Folgen).
 **Privat:** Porträts enthalten echte Geschichten, deshalb nicht im öffentlichen Repo: `web/private/series.json` und `web/audio/p*.mp3` sind
 gitignored, `build.py` mischt die Datei beim Bauen ein. Für die Werkzeuge `python3 tools/private.py in` (nach trip.json holen), danach
 `gen_series_xtts.py pjonas`, `relayout.py pjonas`, `build_series_audio.py pjonas`, dann **`python3 tools/private.py out`** vor jedem Commit.
@@ -313,6 +313,7 @@ GIG/SDU im Ausschnitt leicht versetzt neben Rio.
 
 - **Repo ist öffentlich:** keine Roh-Chats, Telefonnummern, IBANs, Nachnamen, Passdaten,
   Buchungsnummern oder Splitwise-Einladungslinks einchecken. Nur Vornamen/Spitznamen.
+- **Neue Videos, Folgen, Porträts und Funktionen sofort für alle freigeben** (kein `admin: true`), außer Patrick sagt ausdrücklich etwas anderes (Wunsch 06.10.).
 - Unsichere Angaben kennzeichnen (🟡 prüfen / ❓ unklar) statt raten.
 - Personen: Gringos plus 1 Cevapi = Jonas, Patrick, Simon, Marco (ab 27.12.); Daijo & Greisel stoßen am 06.01. in Rio dazu.
   Schreibweise **Daijo** (nicht „Dajo“); die interne Crew-`id` bleibt `dajo` (Datenbank, Foto `crew/dajo.jpg`).
