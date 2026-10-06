@@ -6142,8 +6142,7 @@ function wavB64(buf) {
       jcap.setAttribute('opacity', glare || (cf > 0 && L < capBack) ? 0 : 1);
       PJ.glare.setAttribute('opacity', glare ? (.6 + .4 * S(t / 120)).toFixed(2) : 0); PJ.glare.setAttribute('transform', `translate(${hx - 4},${hy - 38})`);
       if (P.marco) { on('marco', 620, FL, {sc: .86, flip: -1, shirt: '#5b2a86'}); idle(t, 1, pose.marco); if (L > A('pj4') && L < A('pj4') + d('pj4') + 400) { pose.marco.aR = [95, 10]; pose.marco.look = -1; } }
-      if (P.greisel) { const up = L > A('pj5') - 300 && L < A('pj5') + d('pj5') + 300;
-        on('greisel', 92, FL - 46, {sc: .72, tumble: up ? -50 : -84, eyesShut: up ? 0 : 1, noShadow: 1, shirt: '#5b2a86'}); idle(t, 2, pose.greisel); if (!up) snore(70, FL - 100, t); }
+      if (P.greisel) { on('greisel', 96, FL + 12, {sc: .72, floor: FL + 20, noShadow: 1, shirt: '#5b2a86'}); idle(t, 2, pose.greisel); sitP(pose.greisel); P.greisel.prop.textContent = '🍺'; pose.greisel.aR = [60, 70 + 6 * S(t / 900)]; }
       cam = L < h0 ? {x: 400, y: 250, z: 1.05} : L < A('pj4') - 200 ? {x: 430, y: 220, z: 1.3} : L < A('pj5') - 200 ? {x: 590, y: 245, z: 1.45} : L < A('pj6') - 200 ? {x: 140, y: 290, z: 1.55} : {x: 400, y: 225, z: 1.5};
     }
     else if (sc.id === 'paw1') {
@@ -6416,7 +6415,7 @@ function wavB64(buf) {
       PJ.ballL.setAttribute('x', bxx.toFixed(1)); PJ.ballL.setAttribute('y', by.toFixed(1)); PJ.ballL.setAttribute('transform', `rotate(${(L < sh + 3600 && L > sh ? (L / 2) % 360 : 0).toFixed(0)},${bxx.toFixed(1)},${by.toFixed(1)})`);
       if (P.jonas) { on('jonas', 410, FL, {sc: .82, flip: -1, shirt: TX('shirt', '#c0392b')}); idle(t, 1, pose.jonas); if (L > sh) pose.jonas.flip = 1;
         if (L > PL(2) - 200 && L < PL(2) + PD(2) + 400) { pose.jonas.aL = [150, 120]; pose.jonas.aR = [150, 120]; pose.jonas.face = 'shock'; pose.jonas.flip = -1; } }
-      if (P.greisel) { const up = L > PL(4) - 300; on('greisel', 92, FL - 46, {sc: .72, tumble: up ? -50 : -84, eyesShut: up ? 0 : 1, noShadow: 1, shirt: TX('shirt', '#c0392b')}); idle(t, 3, pose.greisel); if (!up) snore(70, FL - 100, t); }
+      if (P.greisel) { on('greisel', 96, FL + 12, {sc: .72, floor: FL + 20, noShadow: 1, shirt: TX('shirt', '#5b2a86')}); idle(t, 2, pose.greisel); sitP(pose.greisel); P.greisel.prop.textContent = '🍺'; pose.greisel.aR = [60, 70 + 6 * S(t / 900)]; if (L > PL(4) - 300) pose.greisel.look = 1; }
       const n = (L > sh + 800 ? 1 : 0) + (L > sh + 1400 ? 1 : 0);
       PJ.bc.g.setAttribute('opacity', span(L, sh - 300, sh).toFixed(2)); PJ.bc.a.textContent = TX('bL', 'AUFSETZER'); PJ.bc.b.textContent = String(n);
       PJ.bc.g.setAttribute('transform', (L > sh + 800 && L < sh + 1000) || (L > sh + 1400 && L < sh + 1600) ? 'translate(0,-4)' : '');
