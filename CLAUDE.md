@@ -252,6 +252,9 @@ Zweites Porträt Simon (`psimon`, Keys `ps…`): Szenen `plost` (Fundbüro mit Z
 `pshoe` (Marktstand, Verkäufer = Rolle `local` mit englischer Stimme per `psimon.xtts`), `pfest`/`pmorn` (Abend und Morgen danach, Nebenrollen `aw2`/`aw3`,
 Zwischentitel als `card`-Zeile). Die gemeinsamen Szenen `pintro`/`pcard`/`pint` greifen über `PL(i)`/`PD(i)` auf die i-te Sprechzeile der Szene zu
 (kein fester Key), Kartenwerte über `tx.stats`/`tx.hi`. Je Porträt eigener Key-Präfix (`pj`, `ps` …), Geräusche in `story()` je Präfix.
+Drittes Porträt Patrick (`ppatrick`, Keys `pp…`): Szenen `pmatch` (Spiel mit Mitspieler `local2`, Lautstärke-Zähler), `pzerr` (Zerrung mit Röntgen-Einblendung),
+`pabroad` (Strandbar, Nebenrollen `aw1`/`girl2`/`aw2`), `pdisc` (Kneipe mit Diskussions-Pegel); Fußballplatz als `pitchBg()` geteilt mit `ppitch`.
+Hysterische Zeilen per Zeilen-`comedy` (höher, schneller).
 Alle persönlichen Texte im Bild kommen aus den privaten Daten: `tx` (Bandenwerbung, Schilder, Banner, Stärken/Schwächen …) und `caps` (Ort-Einblendung je Szene); im öffentlichen Code nur neutrale Platzhalter.
 Keine Kachel im Kino: Start über „🎬 Spielerporträt ansehen“ (`.port-btn[data-port]`) im Steckbrief und auf der Kartenrückseite,
 `window.serPortrait(id)` lädt das Porträt im Vollbild und kehrt danach zur vorherigen Folge und zur Karte zurück. Knöpfe sind per CSS-Klasse

@@ -5331,6 +5331,8 @@ function wavB64(buf) {
     paw1: {amb: 'sea', mus: 'stay', night: 1, tr: 'plane', cap: '✈️ Auslandsstation'}, paw2: {amb: 'traffic', mus: 'travel', tr: 'plane', wx: 'dawn', cap: '✈️ Auslandsstation'},
     plost: {amb: 'traffic', mus: 'travel', tr: 'leaf', cap: '🔎 Die Spezialität'}, pphone: {amb: 'sea', mus: 'stay', night: 1, tr: 'plane', cap: '✈️ Auslandsstation'},
     pshoe: {amb: 'crowd', mus: 'travel', wx: 'heat', cap: '✈️ Auslandsstation'}, pfest: {amb: 'crowd', mus: 'show', night: 1, tr: 'leaf', cap: '🍺 Volksfest'}, pmorn: {amb: 'traffic', mus: 'travel', wx: 'dawn', cap: '🌅 Am Morgen danach'},
+    pmatch: {amb: 'crowd', mus: 'travel', tr: 'leaf', cap: '⚽ Der Verein'}, pzerr: {amb: 'crowd', mus: 'travel', cap: '🩻 Die Krankenakte'},
+    pabroad: {amb: 'sea', mus: 'stay', night: 1, tr: 'plane', cap: '✈️ Im Urlaub'}, pdisc: {amb: 'bar', mus: 'stay', night: 1, cap: '🍺 Nach dem fünften Bier'},
     pcard: {amb: 'crowd', mus: 'show', cap: '📊 Die Werte'}, pint: {amb: 'room', mus: 'stay', cap: '🎤 Das Interview'},
     // fertig gebaute Szenen für spätere Folgen (trip.json → series.parked)
     ny: {amb: 'crowd', mus: 'show', cap: '🎆 Copacabana · Silvester 2026/27'}, buf: {mus: 'stay', cap: '🦜 Foz do Iguaçu · 06.01.'}, jg: {mus: 'stay', cap: '🌴 Amazonas · Juma Lodge'}, fv: {mus: 'show', cap: '⚽ Footvolley gegen Einheimische'}};
@@ -6456,11 +6458,10 @@ function wavB64(buf) {
     PJ.ti1 = mk('text', {x: W / 2, y: 128, 'text-anchor': 'middle', style: 'font:900 76px var(--display,sans-serif);fill:#fff;stroke:#5b2a86;stroke-width:6px;paint-order:stroke;letter-spacing:3px'}, PJ.ti);
     PJ.ti2 = mk('text', {x: W / 2, y: 160, 'text-anchor': 'middle', style: 'font:700 17px var(--body,sans-serif);fill:#dfe6ff'}, PJ.ti);
   }
-  if (B.ppitch) {
-    const g = B.ppitch;
+  function pitchBg(g) {   // Fußballplatz mit Bandenwerbung und Ersatzbank (Porträts)
     mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: 'url(#se-day)'}, g);
     for (let i = 0; i < 14; i++) mk('ellipse', {cx: i * 70 - 40, cy: 214 + (i % 3) * 6, rx: 52, ry: 34, fill: ['#2f7a46', '#3a8a52', '#2a6b3e'][i % 3]}, g);
-    PJ.ads = [['#5b2a86', '#fff'], ['#fff', '#1f3f8f'], ['#3ccf7f', '#10231d'], ['#ffcf1f', '#10231d'], ['#5b2a86', '#fff']].map(([bg, fg], k) => { mk('rect', {x: -100 + k * 210, y: 232, width: 206, height: 30, fill: bg, stroke: INK, 'stroke-width': 1.5}, g);
+    const ads = [['#5b2a86', '#fff'], ['#fff', '#1f3f8f'], ['#3ccf7f', '#10231d'], ['#ffcf1f', '#10231d'], ['#5b2a86', '#fff']].map(([bg, fg], k) => { mk('rect', {x: -100 + k * 210, y: 232, width: 206, height: 30, fill: bg, stroke: INK, 'stroke-width': 1.5}, g);
       return mk('text', {x: 3 + k * 210, y: 252, 'text-anchor': 'middle', style: `font:800 12px var(--body,sans-serif);fill:${fg}`}, g); });
     mk('rect', {x: -100, y: 262, width: W + 200, height: 260, fill: '#2f8f4a'}, g);
     for (let i = 0; i < 7; i++) mk('rect', {x: -100 + i * 160, y: 262, width: 80, height: 260, fill: '#36a053'}, g);
@@ -6471,6 +6472,10 @@ function wavB64(buf) {
     mk('path', {d: `M8,${FL - 96} Q90,${FL - 126} 176,${FL - 96} L176,${FL - 88} Q90,${FL - 116} 8,${FL - 88}Z`, fill: '#cfd8e3', stroke: INK, 'stroke-width': 2, opacity: .9}, g);
     mk('rect', {x: 14, y: FL - 34, width: 156, height: 12, rx: 3, fill: '#5b2a86', stroke: INK, 'stroke-width': 2}, g);
     [24, 160].forEach(x => mk('rect', {x, y: FL - 22, width: 6, height: 22, fill: '#555'}, g));
+    return ads;
+  }
+  if (B.ppitch) {
+    PJ.ads = pitchBg(B.ppitch);
     PJ.ball = emo('⚽', {'font-size': 30}, F.ppitch);
     PJ.capFly = mk('g', {opacity: 0}, F.ppitch); capShape(PJ.capFly, '#5b2a86', '#4a1f70');
     PJ.glare = mk('g', {opacity: 0}, F.ppitch); mk('path', {d: 'M0,0 L-220,-160 L-150,-190Z', fill: '#fff8c0', opacity: .55}, PJ.glare); emo('✨', {'font-size': 38}, PJ.glare);
@@ -6637,6 +6642,35 @@ function wavB64(buf) {
     mk('path', {d: 'M40,140 Q36,60 95,46 Q154,60 150,140Z M80,46 Q95,18 110,46', fill: '#e8b48f', stroke: INK, 'stroke-width': 2, transform: 'rotate(-4)'}, PJ.ins);
     for (let k = 0; k < 9; k++) mk('path', {d: `M${56 + k * 10},${58 + (k % 3) * 6} l${14 - (k % 2) * 6},${60 + (k % 4) * 8}`, stroke: '#d0283a', 'stroke-width': 2.5, 'stroke-linecap': 'round', transform: 'rotate(-4)'}, PJ.ins);
     { const tx = mk('text', {x: 95, y: 160, 'text-anchor': 'middle', style: 'font:800 13px var(--body,sans-serif);fill:#10231d', transform: 'rotate(-4)'}, PJ.ins); tx.textContent = '📸 Beweisfoto: Rücken'; }
+  }
+  // Patrick-Porträt: Spiel, Zerrung, Urlaub, Kneipe
+  const pitchAds = (k) => (TX('ads') || ['GRINGOS FC', '', '', '', 'GRINGOS FC']).forEach((x, i) => { if (k[i]) k[i].textContent = x; });
+  if (B.pmatch) { PJ.adsM = pitchBg(B.pmatch); PJ.ballM = emo('⚽', {'font-size': 28}, F.pmatch); PJ.mates = mk('g', {}, F.pmatch);
+    PJ.rage = emo('💢', {'font-size': 34, opacity: 0}, F.pmatch); PJ.db = cnt2(F.pmatch, 400, 96); PJ.yell = mk('g', {opacity: 0}, F.pmatch);
+    [0, 1, 2].forEach(k => mk('path', {d: `M${k * 14},0 l26,${-14 + k * 14}`, stroke: '#e0262b', 'stroke-width': 4, 'stroke-linecap': 'round'}, PJ.yell)); }
+  if (B.pzerr) { PJ.adsZ = pitchBg(B.pzerr); PJ.zc = cnt2(F.pzerr, 500, 116);
+    PJ.zap = mk('g', {opacity: 0}, F.pzerr); mk('path', {d: 'M0,-30 L12,-6 L2,-6 L14,22 L-8,-4 L2,-4Z', fill: '#ffcf1f', stroke: '#e0262b', 'stroke-width': 3}, PJ.zap);
+    PJ.zT = mk('text', {opacity: 0, 'text-anchor': 'middle', style: 'font:900 44px var(--display,sans-serif);fill:#e0262b;stroke:#fff;stroke-width:5px;paint-order:stroke'}, F.pzerr); PJ.zT.textContent = 'ZERR!';
+    PJ.xr = mk('g', {opacity: 0}, F.pzerr); mk('rect', {x: 0, y: 0, width: 170, height: 190, rx: 10, fill: 'url(#se-xray)', stroke: '#fff', 'stroke-width': 3}, PJ.xr);
+    mk('path', {d: 'M70,20 Q62,70 70,110 Q74,150 66,176 M100,20 Q108,70 100,110 Q96,150 104,176', fill: 'none', stroke: '#cfe6ff', 'stroke-width': 6, 'stroke-linecap': 'round', opacity: .8}, PJ.xr);
+    mk('path', {d: 'M88,52 L80,70 L92,70 L82,92', fill: 'none', stroke: '#ff3b30', 'stroke-width': 5, 'stroke-linejoin': 'round'}, PJ.xr);
+    { const tx = mk('text', {x: 85, y: 16, 'text-anchor': 'middle', style: 'font:800 12px var(--mono,monospace);fill:#fff'}, PJ.xr); tx.textContent = '🩻 HAMSTRING'; } }
+  if (B.pabroad) { PJ.bb3 = beachBar(B.pabroad); PJ.flags = [0, 1, 2, 3].map(() => emo('', {'font-size': 26, opacity: 0}, F.pabroad)); PJ.aw = cnt2(F.pabroad, 30, 74); }
+  if (B.pdisc) {
+    const g = B.pdisc;
+    mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: '#2a1a12'}, g);
+    for (let k = 0; k < 12; k++) mk('rect', {x: -60 + k * 80, y: 0, width: 78, height: FL, fill: k % 2 ? '#3a2416' : '#33200f'}, g);
+    mk('rect', {x: 120, y: 80, width: 560, height: 120, fill: '#1a0f08', stroke: '#6b4a22', 'stroke-width': 4}, g);
+    for (let k = 0; k < 22; k++) mk('rect', {x: 132 + k * 24, y: 96 + (k % 3) * 34, width: 12, height: 28, rx: 3, fill: ['#3ccf7f', '#c0392b', '#ffcf1f', '#5fb7ff'][k % 4], opacity: .85}, g);
+    mk('text', {x: 400, y: 60, 'text-anchor': 'middle', style: 'font:900 30px var(--display,sans-serif);fill:#ff5fa2;filter:drop-shadow(0 0 6px #ff5fa2)'}, g).textContent = 'BAR';
+    mk('rect', {x: -100, y: FL - 80, width: W + 200, height: 24, fill: '#8a5a2b', stroke: INK, 'stroke-width': 2}, g);
+    mk('rect', {x: -100, y: FL - 56, width: W + 200, height: 200, fill: '#5a3a1e'}, g);
+    for (let k = 0; k < 6; k++) emo('🍺', {x: 210 + k * 70, y: FL - 94, 'font-size': 22}, g);
+    PJ.clk = mk('text', {x: 700, y: 60, 'text-anchor': 'middle', style: 'font:800 22px var(--mono,monospace);fill:#ffcf1f'}, g);
+    PJ.meter = mk('g', {opacity: 0}, F.pdisc); mk('rect', {x: 0, y: 0, width: 220, height: 64, rx: 10, fill: '#10231d', stroke: '#ffcf1f', 'stroke-width': 3}, PJ.meter);
+    { const tx = mk('text', {x: 110, y: 22, 'text-anchor': 'middle', style: 'font:700 12px var(--mono,monospace);letter-spacing:2px;fill:#ffcf1f'}, PJ.meter); tx.textContent = 'DISKUSSIONS-PEGEL'; }
+    mk('rect', {x: 14, y: 34, width: 192, height: 18, rx: 9, fill: '#333'}, PJ.meter); PJ.mBar = mk('rect', {x: 14, y: 34, width: 0, height: 18, rx: 9, fill: '#e0262b'}, PJ.meter);
+    PJ.finger = emo('☝️', {'font-size': 30, opacity: 0}, F.pdisc);
   }
   const portId = () => EP && EP.portrait, portP = () => byId[portId()] || {};
   const mio = v => v >= 1e6 ? (v / 1e6).toLocaleString('de-DE', {maximumFractionDigits: 1}) + ' Mio. €' : Math.round(v / 1000) + ' Tsd. €';
@@ -7942,6 +7976,63 @@ function wavB64(buf) {
       [['aw3', -40], ['patrick', 36]].forEach(([k, dx], i) => { if (P[k] && cIn > 0) { headAt(k, cx + dx + 340 * leave, FL - 62, .3); idle(t, 5 + i, pose[k]); } });
       cam = L < PL(1) - 400 ? {x: 330, y: 230, z: 1.2} : L < PL(2) + PD(2) ? {x: 470, y: 250, z: 1.25} : {x: 450, y: 240, z: 1};
     }
+    else if (sc.id === 'pmatch') {
+      const id = portId(); pitchAds(PJ.adsM);
+      const pass = PL(1) - 1500, miss = span(L, pass, pass + 900), roll = span(L, pass + 900, pass + 2600), yell = L > PL(2) - 150 && L < PL(2) + PD(2) + 200;
+      if (P[id]) { const run = span(L, 200, pass); on(id, 120 + 140 * ease(run), FL, {sc: .86, shirt: TX('shirt', '#c0392b')}); idle(t, 0, pose[id]); if (run > 0 && run < 1) walkP(t, pose[id], 120);
+        if (yell) Object.assign(pose[id], {aL: [150 + 25 * S(t / 70), 20 * S(t / 60)], aR: [150 + 25 * S(t / 75 + 1), 20 * S(t / 65)], bob: -10 * Math.abs(S(t / 90)), burn: .55, mouth: .8, tilt: 6 * S(t / 80)}); }
+      if (P.local2) { on('local2', 520, FL, {sc: .8, flip: -1, shirt: TX('shirt', '#c0392b')}); idle(t, 1, pose.local2);
+        if (miss > .5) { pose.local2.tumble = 70 * Math.min(1, (miss - .5) * 2); pose.local2.y = FL + 10 * Math.min(1, (miss - .5) * 2); }
+        if (yell) { pose.local2.aL = [150, 120]; pose.local2.aR = [150, 120]; pose.local2.tumble = 30; } }
+      const bx = L < pass ? 120 + 140 * ease(span(L, 200, pass)) + 30 : L < pass + 900 ? 290 + 240 * miss : 530 + 400 * ease(roll), by = L < pass + 900 ? FL - 14 - 40 * S(PI * miss) : FL - 14;
+      PJ.ballM.setAttribute('x', bx.toFixed(1)); PJ.ballM.setAttribute('y', by.toFixed(1)); PJ.ballM.setAttribute('transform', `rotate(${((t / 3) % 360).toFixed(0)},${bx.toFixed(1)},${by.toFixed(1)})`);
+      PJ.rage.setAttribute('opacity', yell ? 1 : 0); PJ.yell.setAttribute('opacity', yell && Math.floor(t / 120) % 2 ? 1 : 0);
+      if (P[id]) { PJ.rage.setAttribute('x', pose[id].x + 46); PJ.rage.setAttribute('y', FL - 200); PJ.yell.setAttribute('transform', `translate(${pose[id].x + 40},${FL - 150})`); }
+      const dB = yell ? Math.round(85 + 40 * span(L, PL(2), PL(2) + PD(2) * .6)) : L > PL(2) ? 125 : 0;
+      PJ.db.g.setAttribute('opacity', span(L, PL(2) - 300, PL(2)).toFixed(2)); PJ.db.a.textContent = TX('dbL', 'LAUTSTÄRKE'); PJ.db.b.textContent = dB + ' dB';
+      cam = L < pass ? {x: 300, y: 250, z: 1.1} : L < PL(2) - 200 ? {x: 480, y: 250, z: 1.15} : {x: 330, y: 230, z: 1.45};
+    }
+    else if (sc.id === 'pzerr') {
+      const id = portId(); pitchAds(PJ.adsZ);
+      const hit = PL(0) + PD(0) + 200, run = span(L, 300, hit), down = span(L, hit, hit + 700);
+      if (P[id]) { on(id, 100 + 330 * ease(run), FL, {sc: .86, shirt: TX('shirt', '#c0392b')}); idle(t, 0, pose[id]);
+        if (run < 1) walkP(t, pose[id], 90);
+        else Object.assign(pose[id], {tumble: -70 * ease(down), y: FL + 18 * down, aL: [120, 140], aR: [60, 150], lR: [70, -100], face: L < PL(2) ? 'shock' : pose[id].face, cry: L > PL(1) ? 1 : 0}); }
+      const px = P[id] ? pose[id].x : 430;
+      PJ.zap.setAttribute('opacity', win(L, hit, hit + 1600, 100).toFixed(2)); PJ.zap.setAttribute('transform', `translate(${(px - 20).toFixed(1)},${FL - 50}) scale(${(1.2 + .3 * S(t / 60)).toFixed(2)})`);
+      PJ.zT.setAttribute('opacity', win(L, hit, hit + 1500, 100).toFixed(2)); PJ.zT.setAttribute('x', px); PJ.zT.setAttribute('y', FL - 210);
+      PJ.xr.setAttribute('opacity', win(L, hit + 600, len, 300).toFixed(2)); PJ.xr.setAttribute('transform', 'translate(30,74)');
+      const n = L < hit ? 13 : 14; PJ.zc.g.setAttribute('opacity', span(L, 300, 700).toFixed(2)); PJ.zc.a.textContent = TX('zL', 'ZERRUNGEN'); PJ.zc.b.textContent = String(n);
+      if (L > hit && L < hit + 600) PJ.zc.g.setAttribute('transform', `translate(0,${(4 * S(t / 30)).toFixed(1)})`); else PJ.zc.g.setAttribute('transform', '');
+      cam = L < hit - 200 ? {x: clamp(100 + 330 * ease(run), 300, 500), y: 250, z: 1.15} : L < PL(2) - 200 ? {x: 450, y: 270, z: 1.3} : {x: 400, y: 240, z: 1.1};
+    }
+    else if (sc.id === 'pabroad') {
+      const id = portId(), bb = PJ.bb3; bb.phW.setAttribute('transform', `translate(${(-(t / 50) % 40).toFixed(1)},0)`); bb.bar1.textContent = TX('bar1'); bb.bar2.textContent = TX('bar2');
+      const W3 = [['aw1', 400], ['girl2', 500], ['aw2', 600]], g0 = PL(1), gd = PD(1) || 3000, step = k => g0 + gd * (k / 4);
+      W3.forEach(([k, x], i) => { if (!P[k]) return; on(k, x, FL, {sc: .78, flip: -1}); idle(t, i + 1, pose[k]); pose[k].hip = 4 * S(t / 300 + i);
+        if (k === 'aw2' && L > PL(2) - 200 && L < PL(2) + PD(2) + 600) { pose[k].aL = [100, 120]; pose[k].face = 'roll'; } });
+      const tgt = L < g0 ? 0 : Math.min(3, Math.floor((L - g0) / (gd / 4))), gx = [300, 330, 430, 530][tgt];
+      if (P[id]) { const cur = L < g0 ? 120 + 180 * ease(span(L, 300, g0)) : gx; on(id, cur, FL, {sc: .86}); idle(t, 0, pose[id]);
+        if (L < g0 && L > 300) walkP(t, pose[id]); if (L > g0 && L < g0 + gd) { pose[id].aR = [120, 20]; pose[id].hip = 6 * S(t / 150); }
+        if (L > PL(2) && L < PL(2) + PD(2) + 900) { pose[id].face = 'shock'; pose[id].aR = [20, 10]; } }
+      const fl = TX('flags') || ['🇪🇸', '🇫🇷', '🇮🇹', '🇧🇷'];
+      PJ.flags.forEach((e, k) => { const on2b = L > step(k) && L < len - 400; e.textContent = fl[k] || ''; e.setAttribute('opacity', on2b ? 1 : 0); e.setAttribute('x', 110 + k * 40); e.setAttribute('y', 180); });
+      PJ.aw.g.setAttribute('opacity', span(L, g0 - 300, g0).toFixed(2)); PJ.aw.a.textContent = TX('awL', 'LÄNDERSPIELE'); PJ.aw.b.textContent = String(Math.min(4, Math.max(0, Math.floor((L - g0) / (gd / 4)) + 1)));
+      cam = L < g0 ? {x: 330, y: 240, z: 1.05} : L < PL(2) - 200 ? {x: clamp(gx + 60, 300, 520), y: 250, z: 1.3} : {x: 560, y: 245, z: 1.4};
+    }
+    else if (sc.id === 'pdisc') {
+      const id = portId(), hr = 23 + 5 * span(L, 600, len - 300), hh = Math.floor(hr) % 24, mm = Math.floor((hr % 1) * 60);
+      PJ.clk.textContent = `🕐 ${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}`;
+      if (P[id]) { on(id, 330, FL - 20, {sc: .86, noShadow: 1}); idle(t, 0, pose[id]); P[id].prop.textContent = '🍺'; pose[id].aR = [50, 70];
+        pose[id].tilt = 8 * S(t / 500); pose[id].rot = 4 * S(t / 700); pose[id].burn = .35;
+        if (L > PL(2) - 200 && L < PL(2) + PD(2) + 300) { pose[id].aL = [160, 10 * S(t / 90)]; pose[id].mouth = .7; pose[id].bob = -6 * Math.abs(S(t / 120)); } }
+      if (P.jonas) { on('jonas', 500, FL - 20, {sc: .84, flip: -1, noShadow: 1}); idle(t, 1, pose.jonas); P.jonas.prop.textContent = '🌭'; pose.jonas.aR = [60, 60];
+        if (L > PL(2)) { pose.jonas.face = 'roll'; pose.jonas.tilt = -8; } }
+      const pk = clamp(span(L, PL(1), PL(3)) * 1.1, 0, 1); PJ.meter.setAttribute('opacity', span(L, PL(1) - 300, PL(1)).toFixed(2)); PJ.meter.setAttribute('transform', 'translate(30,74)');
+      PJ.mBar.setAttribute('width', (192 * pk).toFixed(1)); PJ.mBar.setAttribute('fill', pk > .8 ? '#e0262b' : pk > .5 ? '#ff9a3c' : '#3ccf7f');
+      PJ.finger.setAttribute('opacity', L > PL(2) - 200 && L < PL(2) + PD(2) + 300 ? 1 : 0); PJ.finger.setAttribute('x', 300); PJ.finger.setAttribute('y', FL - 210);
+      cam = L < PL(1) - 300 ? {x: 410, y: 240, z: 1.05} : L < PL(2) - 300 ? {x: 480, y: 240, z: 1.3} : L < PL(3) - 200 ? {x: 330, y: 230, z: 1.45} : {x: 410, y: 230, z: 1};
+    }
     else if (sc.id === 'end') {
       credEls.forEach((g, k) => { if (g.hidden2) { g.setAttribute('opacity', 0); return; } const y = 202 + k * 28; g.setAttribute('transform', `translate(0,${y.toFixed(1)})`); g.setAttribute('opacity', (span(L, 1500 + k * 400, 2100 + k * 400) * (1 - span(L, 10800, 11800))).toFixed(2)); });
       cont.setAttribute('opacity', span(L, 200, 900).toFixed(2)); nxt.setAttribute('opacity', span(L, 1200, 1800).toFixed(2));
@@ -8096,6 +8187,10 @@ function wavB64(buf) {
     if (has('pj3')) { const h0 = LAT.pj3 - 300, h1 = LAT.pj3 + dl('pj3') + 700; for (let x = h0; x < h1; x += 340) m.sfx('kick', at(x + 170)); m.sfx('boing', at(h0 + 300)); m.sfx('cheer', at(h1)); }
     [['pj1', 200, 'applause'], ['pj2', 600, 'cheer'], ['pj6', dl('pj6') * .55, 'ding'], ['pj8', -1400, 'whoo'], ['pj10', -150, 'ding'], ['pj10', 600, 'kiss'], ['pj11', -300, 'kiss'],
       ['pj13', 0, 'scratch'], ['pj13', 150, 'thud'], ['pj14', -1800, 'car'], ['pj15', dl('pj15') + 300, 'car'], ['pj16', -400, 'swish'], ['pj17', -300, 'click'], ['pj18', dl('pj18') + 1600, 'applause']]
+      .forEach(([k, d2, n]) => { if (has(k)) m.sfx(n, A(k, d2)); });
+    [['pp1', 200, 'applause'], ['pp2', 900, 'cheer'], ['pp3', 600, 'whistle'], ['pp5', -1400, 'kick'], ['pp5', -500, 'thud'], ['pp5', 0, 'feedback'], ['pp6', 400, 'scratch'], ['pp6', 450, 'thud'],
+      ['pp7', -200, 'whistle'], ['pp9', 0, 'ding'], ['pp10', -300, 'whoo'], ['pp11', -200, 'kiss'], ['pp12', dl('pp12') + 100, 'scratch'], ['pp14', 0, 'cheer'], ['pp16', -200, 'gong'],
+      ['pp18', -400, 'swish'], ['pp19', -300, 'click'], ['pp20', dl('pp20') + 1600, 'applause']]
       .forEach(([k, d2, n]) => { if (has(k)) m.sfx(n, A(k, d2)); });
     [['ps1', 200, 'applause'], ['ps2', 900, 'cheer'], ['ps3', 1300, 'thud'], ['ps3', 2300, 'thud'], ['ps3', 3300, 'thud'], ['ps4', -200, 'ding'], ['ps6', 1100, 'crash'], ['ps6', 1200, 'scratch'],
       ['ps8', -300, 'whoo'], ['ps10', -100, 'boing'], ['ps11', dl('ps11') + 100, 'scratch'], ['ps13', 0, 'cheer'], ['ps14', -400, 'kiss'], ['ps15', dl('ps15') + 300, 'whoo'],
