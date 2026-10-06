@@ -255,10 +255,12 @@ Zwischentitel als `card`-Zeile). Die gemeinsamen Szenen `pintro`/`pcard`/`pint` 
 Drittes Porträt Patrick (`ppatrick`, Keys `pp…`): Szenen `pmatch` (Spiel mit Mitspieler `local2`, Lautstärke-Zähler), `pzerr` (Zerrung mit Röntgen-Einblendung),
 `pabroad` (Strandbar, Nebenrollen `aw1`/`girl2`/`aw2`), `pdisc` (Kneipe mit Diskussions-Pegel); Fußballplatz als `pitchBg()` geteilt mit `ppitch`.
 Hysterische Zeilen per Zeilen-`comedy` (höher, schneller).
+Viertes Porträt Marco (`pmarco`, Keys `pm…`): Szenen `plong` (Fernschuss mit Aufsetzer-Zähler, Mitspieler Jonas, Greisel auf der Bank, Torwart `local3`), `pital` (drei Lokale, Crew-Köpfe im Fenster, Telefonat),
+`plis` (Auslandsstation bei Nacht mit Straßenbahn, Zähler „Geteilt“), `pcouch` (Hotel-Lobby, Strohhalm-Losen, Couch, Rezeptionistin `aw1` portugiesisch).
 Alle persönlichen Texte im Bild kommen aus den privaten Daten: `tx` (Bandenwerbung, Schilder, Banner, Stärken/Schwächen …) und `caps` (Ort-Einblendung je Szene); im öffentlichen Code nur neutrale Platzhalter.
 Keine Kachel im Kino: Start über „🎬 Spielerporträt ansehen“ (`.port-btn[data-port]`) im Steckbrief und auf der Kartenrückseite,
 `window.serPortrait(id)` lädt das Porträt im Vollbild und kehrt danach zur vorherigen Folge und zur Karte zurück. Knöpfe sind per CSS-Klasse
-`port-p<id>` am `<html>` sichtbar (Jonas, Simon, Patrick seit 06.10. für alle freigegeben). Zeilen-Keys `pj1…` (eindeutig gegenüber den Folgen).
+`port-p<id>` am `<html>` sichtbar (Jonas, Simon, Patrick, Marco seit 06.10. für alle freigegeben). Zeilen-Keys `pj1…` (eindeutig gegenüber den Folgen).
 **Privat:** Porträts enthalten echte Geschichten, deshalb nicht im öffentlichen Repo: `web/private/series.json` und `web/audio/p*.mp3` sind
 gitignored, `build.py` mischt die Datei beim Bauen ein. Für die Werkzeuge `python3 tools/private.py in` (nach trip.json holen), danach
 `gen_series_xtts.py pjonas`, `relayout.py pjonas`, `build_series_audio.py pjonas`, dann **`python3 tools/private.py out`** vor jedem Commit.
