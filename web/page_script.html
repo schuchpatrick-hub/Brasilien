@@ -506,11 +506,18 @@ document.querySelectorAll('ul.pack2').forEach(ul => {
     const id = 'pk-' + ul.dataset.list + '-' + i;
     li.innerHTML = '<label for="' + id + '"><input type="checkbox" id="' + id + '"' + (saved[i] ? ' checked' : '') + '><span>' + li.innerHTML + '</span></label>';
   });
+  // Fortschritt im Kasten-Titel („5/16 gepackt“)
+  const cnt = document.querySelector('.pk-n[data-for="' + ul.dataset.list + '"]');
+  const paint = () => { if (!cnt) return; const n = ul.querySelectorAll('input:checked').length, m = ul.children.length; cnt.textContent = n === m ? '✓ alles gepackt' : n + '/' + m + ' gepackt'; cnt.classList.toggle('done', n === m); };
   ul.addEventListener('change', e => {
     const i = [...ul.querySelectorAll('input')].indexOf(e.target);
-    saved[i] = e.target.checked; store.set(key, JSON.stringify(saved));
+    saved[i] = e.target.checked; store.set(key, JSON.stringify(saved)); paint();
   });
+  paint();
+  if (PRINT) { const d = ul.closest('details'); if (d) d.open = true; }
 });
+
+document.addEventListener('click', e => { const a2 = e.target.closest('a[href="#pack-dschungel"]'); if (a2) { const d = document.getElementById('pack-dschungel'); if (d) d.open = true; } }, true);
 
 /* ---------- Google-Kalender-Links ---------- */
 function gcalLink(ev, fallbackDate) {
@@ -585,9 +592,11 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     box.innerHTML = '<div class="ph-day"><span class="eyebrow">💬 Satz des Tages</span>' + row(dp.p, dp.ci, dp.pi) + '</div>' +
       '<div class="ph-cats" role="tablist" aria-label="Themen">' + TRIP.phrases.map((c, ci) => '<button type="button" role="tab" data-ci="' + ci + '"' + (/Notfall/.test(c.cat) ? ' class="sos"' : '') + '>' + ico(c) + ' ' + esc(short(c)) + '</button>').join('') +
       '<button type="button" role="tab" data-ci="learn" class="learn">🎴 Üben</button></div>' +
-      TRIP.phrases.map((c, ci) => '<div class="pcat" data-ci="' + ci + '" hidden>' + c.items.map((p, pi) => row(p, ci, pi)).join('') + '</div>').join('') +
+      TRIP.phrases.map((c, ci) => '<div class="pcat' + (c.items.length > 7 ? ' short' : '') + '" data-ci="' + ci + '" hidden>' + c.items.map((p, pi) => row(p, ci, pi)).join('') +
+        (c.items.length > 7 ? '<button type="button" class="ph-more">＋ ' + (c.items.length - 6) + ' weitere Sätze</button>' : '') + '</div>').join('') +
       '<div class="ph-learn" hidden></div>';
     const tabs = [...box.querySelectorAll('.ph-cats button')], learnBox = box.querySelector('.ph-learn');
+    box.addEventListener('click', e => { const m = e.target.closest('.ph-more'); if (m) { m.closest('.pcat').classList.remove('short'); m.remove(); } });
     const catOf = re => TRIP.phrases.findIndex(c => re.test(c.cat));
     function show(ci, save) {
       tabs.forEach(b => b.setAttribute('aria-selected', String(b.dataset.ci === String(ci))));
@@ -6371,6 +6380,7 @@ setGroup(G);
     close(); document.body.classList.add('cv-all');
     let d = el.closest('details'); while (d) { d.open = true; d = d.parentElement && d.parentElement.closest('details'); }
     const w0 = norm(inp.value).trim().split(' ')[0]; if (w0) el.querySelectorAll('details').forEach(x => { if (norm(x.textContent).includes(w0)) x.open = true; });
+    const sh = el.closest('.pcat.short'); if (sh) { sh.classList.remove('short'); const mb = sh.querySelector('.ph-more'); if (mb) mb.remove(); }
     const pc = el.closest('#phrases .pcat[data-ci]'); if (pc && pc.hidden) { const b = document.querySelector('.ph-cats button[data-ci="' + pc.dataset.ci + '"]'); if (b) b.click(); }
     const car = el.closest('.car'); if (car && car.__go) car.__go(car.__idx(el), true);
     const cc = el.closest('#crew-list .pcard'); if (cc && window.crewShow) { crewShow(cc.id.replace('crew-', '')); }
