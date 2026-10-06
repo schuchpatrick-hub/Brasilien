@@ -39,7 +39,8 @@ Die Webseite erst nach dem Merge neu veröffentlichen.
 2. `pip install playwright` (einmalig, für das PNG; Chromium liegt in `/opt/pw-browsers`), dann
    `python3 tools/build.py`. Die Natural-Earth-Daten werden beim ersten Lauf nach `tools/data/` geladen (gitignored).
 3. Karte nach Änderungen einmal ansehen (`reisebild.png`), auf überlappende Beschriftungen achten.
-4. Webseite neu veröffentlichen: Artifact-Publish von `web/brasilien-reise.html` mit
+4. Webseite neu veröffentlichen: Artifact-Publish von `web/private/brasilien-reise.html` (vollständige Fassung mit den privaten
+   Porträts; nur wenn es sie nicht gibt, `web/brasilien-reise.html`) mit
    `url: https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE` (vorher `action: read`), damit der Link gleich bleibt,
    und `files`: `brasilien-reise.pdf`, `audio/sfx.mp3`, alle `fotos/<name>.jpg` → `web/fotos/<name>.jpg`, plus alle `audio/<name>.mp3` → `web/audio/<name>.mp3` (Sprachführer). `capabilities` weglassen, dann bleiben
    `db`, `user`, `downloads` erhalten.
