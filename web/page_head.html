@@ -1067,6 +1067,26 @@ section[data-kind="plan"],section[data-kind="fun"],section[data-kind="go"],secti
 .tile.k-kino b{font-size:1.15rem}.tile.k-kino small,.tile.k-kino small.live{color:#ffd9ec}
 @media (min-width:900px){.tile.k-kino{grid-column:span 2}}
 @media (prefers-reduced-motion:reduce){.tile{transition:none}}
+/* Kompakter: Packlisten als Kästen, Rechner enger, Faustregeln eingeklappt */
+.pk-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;align-items:start}
+details.pk{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px}
+details.pk>summary{cursor:pointer;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline;list-style:none}
+details.pk>summary::-webkit-details-marker{display:none}
+details.pk>summary::after{content:"▾";margin-left:6px;color:var(--muted);transition:transform .2s}
+details.pk[open]>summary::after{transform:rotate(180deg)}
+.pk-n{margin-left:auto;font:600 .8rem var(--mono);color:var(--muted)}.pk-n.done{color:var(--ok)}
+details.pk ul.pack2{margin-top:8px;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));column-gap:14px}
+.pack2 label{padding:3px 0;font-size:.93rem}
+details.more-note{margin-top:10px}details.more-note>summary{cursor:pointer;font-weight:600;font-size:.9rem;color:var(--accent)}
+details.more-note .note{margin-top:6px}
+.fx{gap:9px;padding:12px 14px;align-items:start}
+.pcat.short .phr:nth-of-type(n+7){display:none}
+.ph-more{display:block;width:100%;margin-top:6px;font:600 .88rem var(--body);background:var(--bg);color:var(--accent);border:1px dashed var(--line);border-radius:10px;padding:8px;cursor:pointer}
+.phrases.compact .phr{padding:6px 0}
+.fx-in{padding:2px 12px}.fx-in input{font-size:1.6rem;padding:2px 0}
+.fx-pad{gap:5px}.fx-pad button{height:38px;font-size:1.05rem}.fx-pad button.c{height:30px}
+.fx-out{padding:10px 14px}
+@media print{details.pk>summary::after{display:none}}
 /* Spielerporträt-Knopf (nur sichtbar, wenn das Porträt freigegeben ist: Klasse port-<id> am <html>) */
 .port-btn{display:none;font:700 .85rem var(--body);background:#5b2a86;color:#fff;border:2px solid var(--amarelo);border-radius:999px;padding:6px 14px;cursor:pointer;margin-top:8px}
 .port-pjonas [data-port="pjonas"],.port-ppatrick [data-port="ppatrick"],.port-psimon [data-port="psimon"],.port-pmarco [data-port="pmarco"],.port-pgreisel [data-port="pgreisel"],.port-pdajo [data-port="pdajo"]{display:inline-flex}
