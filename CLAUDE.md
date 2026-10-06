@@ -248,6 +248,10 @@ Folge 5 „Das große Finale“ (14.–21.01., Staffelfinale): roter Faden = die
 **Spielerporträts** (seit 06.10., Test mit Jonas): Fußball-Doku pro Person (~1:45 min), Drehbuch `series.p<id>` mit `portrait: <crew-id>`
 (Szenen `pintro` Stadion + Titel, `ppitch` Vereinsplatz mit Kopfball-Zähler und Mitspieler-Interviews, `paw1`/`paw2` zwei
 Auslandsstationen mit Nebenrollen `aw1`/`aw2`, `pcard` FIFA-Karte mit Live-Werten aus `MEHUB.card`, `pint` Interview vor Sponsorenwand, dann `end`).
+Zweites Porträt Simon (`psimon`, Keys `ps…`): Szenen `plost` (Fundbüro mit Zähler), `pphone` (Strandbar, `beachBar()` geteilt mit `paw1`),
+`pshoe` (Marktstand, Verkäufer = Rolle `local` mit englischer Stimme per `psimon.xtts`), `pfest`/`pmorn` (Abend und Morgen danach, Nebenrollen `aw2`/`aw3`,
+Zwischentitel als `card`-Zeile). Die gemeinsamen Szenen `pintro`/`pcard`/`pint` greifen über `PL(i)`/`PD(i)` auf die i-te Sprechzeile der Szene zu
+(kein fester Key), Kartenwerte über `tx.stats`/`tx.hi`. Je Porträt eigener Key-Präfix (`pj`, `ps` …), Geräusche in `story()` je Präfix.
 Alle persönlichen Texte im Bild kommen aus den privaten Daten: `tx` (Bandenwerbung, Schilder, Banner, Stärken/Schwächen …) und `caps` (Ort-Einblendung je Szene); im öffentlichen Code nur neutrale Platzhalter.
 Keine Kachel im Kino: Start über „🎬 Spielerporträt ansehen“ (`.port-btn[data-port]`) im Steckbrief und auf der Kartenrückseite,
 `window.serPortrait(id)` lädt das Porträt im Vollbild und kehrt danach zur vorherigen Folge und zur Karte zurück. Knöpfe sind per CSS-Klasse
