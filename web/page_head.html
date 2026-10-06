@@ -1067,6 +1067,11 @@ section[data-kind="plan"],section[data-kind="fun"],section[data-kind="go"],secti
 .tile.k-kino b{font-size:1.15rem}.tile.k-kino small,.tile.k-kino small.live{color:#ffd9ec}
 @media (min-width:900px){.tile.k-kino{grid-column:span 2}}
 @media (prefers-reduced-motion:reduce){.tile{transition:none}}
+/* Spielerporträt-Knopf (nur sichtbar, wenn das Porträt freigegeben ist: Klasse port-<id> am <html>) */
+.port-btn{display:none;font:700 .85rem var(--body);background:#5b2a86;color:#fff;border:2px solid var(--amarelo);border-radius:999px;padding:6px 14px;cursor:pointer;margin-top:8px}
+.port-pjonas [data-port="pjonas"],.port-ppatrick [data-port="ppatrick"],.port-psimon [data-port="psimon"],.port-pmarco [data-port="pmarco"],.port-pgreisel [data-port="pgreisel"],.port-pdajo [data-port="pdajo"]{display:inline-flex}
+.fc-back .port-btn{margin:0 0 8px}
+@media print{.port-btn{display:none!important}}
 /* Fahrer-Karte */
 .drv-btn{font:700 .8rem var(--body);border:0;background:var(--amarelo);color:#1a1a1a;border-radius:999px;padding:4px 11px;cursor:pointer;white-space:nowrap}
 .drv{position:fixed;inset:0;z-index:320;background:rgba(8,14,12,.7);display:grid;place-items:center;padding:calc(env(safe-area-inset-top,0px) + 12px) 12px 12px}

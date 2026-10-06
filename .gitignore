@@ -3,3 +3,10 @@ tools/__pycache__/
 web/_poster.html
 web/crew/
 web/_t.html
+web/private/
+web/audio/pjonas*.mp3
+web/audio/ppatrick*.mp3
+web/audio/psimon*.mp3
+web/audio/pmarco*.mp3
+web/audio/pgreisel*.mp3
+web/audio/pdajo*.mp3

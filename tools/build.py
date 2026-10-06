@@ -128,6 +128,10 @@ def render_pdf(sp, html_path, pdf_path):
 
 def main():
     trip = json.loads(read('web', 'trip.json'))
+    # private Porträts (gitignored, siehe tools/private.py): nie in die öffentliche Seite im Repo, nur in web/private/brasilien-reise.html (zum Veröffentlichen)
+    for k in [k for k, v in trip['series'].items() if isinstance(v, dict) and v.get('portrait')]: trip['series'].pop(k)
+    priv = os.path.join(ROOT, 'web', 'private', 'series.json')
+    private = json.load(open(priv, encoding='utf-8')) if os.path.exists(priv) else {}
     for c in trip.get('phrases', []):
         for ph in c['items']:
             ph['audio'] = 'audio/' + audio_name(ph['pt'], ph['de'])
@@ -137,7 +141,8 @@ def main():
     inline = gen_map.build(standalone=False)
     write(standalone, 'reisebild.svg')
 
-    script = read('web', 'page_script.html').replace('%%TRIP%%', json.dumps(trip, ensure_ascii=False).replace('</', '<\\/'))
+    script_of = lambda tr: read('web', 'page_script.html').replace('%%TRIP%%', json.dumps(tr, ensure_ascii=False).replace('</', '<\\/'))
+    script = script_of(trip)
     scenes = gen_scenes.render_all()
     PHOTO_POS = {'rio': ('30% 38%', '30% 24%'), 'iguacu': ('50% 38%', '50% 30%'), 'manaus': ('46% 70%', '46% 76%'), 'juma': ('58% 45%', '58% 48%'), 'paraty': ('50% 60%', '50% 62%'), 'ilha': ('50% 45%', '50% 50%')}  # Bildausschnitt je Foto: Station/Heute, breiter Trenner
     counter = [0]
@@ -162,6 +167,9 @@ def main():
     body = body.replace('%%STAND%%', stand)
     page = read('web', 'page_head.html') + body.replace('%%MAP%%', inline) + '\n' + script
     write(page, 'web', 'brasilien-reise.html')
+    if private:   # vollständige Fassung mit den privaten Porträts: diese Datei veröffentlichen
+        full = json.loads(json.dumps(trip)); full['series'].update(private)
+        write(read('web', 'page_head.html') + body.replace('%%MAP%%', inline) + '\n' + script_of(full), 'web', 'private', 'brasilien-reise.html')
 
     write(build_ics(trip, 'a'), 'kalender', 'gringos-plus-1-cevapi.ics')
     write(build_ics(trip, 'b'), 'kalender', 'daijo-greisel.ics')
