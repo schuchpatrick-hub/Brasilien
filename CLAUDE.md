@@ -258,7 +258,7 @@ Hysterische Zeilen per Zeilen-`comedy` (höher, schneller).
 Viertes Porträt Marco (`pmarco`, Keys `pm…`): Szenen `plong` (Fernschuss mit Aufsetzer-Zähler, Mitspieler Jonas, Greisel auf der Bank, Torwart `local3`), `pital` (drei Lokale, Crew-Köpfe im Fenster, Telefonat),
 `plis` (Auslandsstation bei Nacht mit Straßenbahn, Zähler „Geteilt“), `pcouch` (Hotel-Lobby, Strohhalm-Losen, Couch, Rezeptionistin `aw1` portugiesisch).
 Fünftes Porträt Greisel (`pgreisel`, Keys `pg…`): Szenen `pcome` (Einwechslung 90. Minute, Spielstand-Zähler), `pcut` (Kopfballduell bei Flutlicht), `pfair` (Volksfest mit Riesenrad, Dosenwerfen, Sani-Zelt `aw3`),
-`pzelt` (Bierzelt mit Uhr, Heimreise), `pjga` (Tafel „unter den Ball“, Flugball-Höhe). Pflaster/Cut am Kopf: `gband`/`gblood` (in `P.greisel.acc`, jedes Bild erst aus). Vereinstrikots lila (`#5b2a86`).
+`pzelt` (Bierzelt mit „Promille-Lukas“ `PJ.luk`, Glocke `PJ.lbell` fliegt, Uhr, Heimreise, Morgen danach mit `PJ.dawn`), `pjga` (Tafel „unter den Ball“, Flugball-Höhe). Pflaster/Cut am Kopf: `gband`/`gblood` (in `P.greisel.acc`, jedes Bild erst aus). Vereinstrikots lila (`#5b2a86`).
 Alle persönlichen Texte im Bild kommen aus den privaten Daten: `tx` (Bandenwerbung, Schilder, Banner, Stärken/Schwächen …) und `caps` (Ort-Einblendung je Szene); im öffentlichen Code nur neutrale Platzhalter.
 Keine Kachel im Kino: Start über „🎬 Spielerporträt ansehen“ (`.port-btn[data-port]`) im Steckbrief und auf der Kartenrückseite,
 `window.serPortrait(id)` lädt das Porträt im Vollbild und kehrt danach zur vorherigen Folge und zur Karte zurück. Knöpfe sind per CSS-Klasse
