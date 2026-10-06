@@ -3,3 +3,5 @@ tools/__pycache__/
 web/_poster.html
 web/crew/
 web/_t.html
+web/private/
+web/audio/p[a-z]*.mp3

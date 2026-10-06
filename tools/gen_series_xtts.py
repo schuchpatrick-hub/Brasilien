@@ -86,7 +86,7 @@ def main():
     norm = lambda s: re.sub(r'[^a-zäöüßãõçéêáíóú0-9 ]', '', s.lower().replace('ß', 'ss')).split()
     tts = TTS('tts_models/multilingual/multi-dataset/xtts_v2').to('cpu')
     ep = sys.argv[1]; only = set(sys.argv[2:])
-    trip = json.load(open(G.TRIP, encoding='utf-8')); se = trip['series']; X = se['xtts']; VO = se.get('voices', {})
+    trip = json.load(open(G.TRIP, encoding='utf-8')); se = trip['series']; X = dict(se['xtts'], **se[ep].get('xtts', {})); VO = se.get('voices', {})
     os.makedirs(os.path.join(G.ROOT, 'tools', 'data'), exist_ok=True)   # Zwischenstand (gitignored)
     side = os.path.join(G.ROOT, 'tools', 'data', f'{ep}-xtts.json'); done = json.load(open(side)) if os.path.exists(side) else {}
     new = {}
