@@ -4858,17 +4858,17 @@ function wavB64(buf) {
     mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: '#dfe7ee'}, g);
     for (let k = 0; k < 8; k++) mk('rect', {x: -40 + k * 120, y: 40, width: 100, height: 60, fill: '#c9d6e2', stroke: '#b0c0d0', 'stroke-width': 2}, g);
     mk('rect', {x: -100, y: FL - 6, width: W + 200, height: 130, fill: '#7a8a9a'}, g);
-    mk('rect', {x: 250, y: 140, width: 240, height: 150, rx: 8, fill: '#10231d', stroke: '#333', 'stroke-width': 6}, g);
-    mk('rect', {x: 260, y: 150, width: 220, height: 130, fill: '#fff'}, g); mk('rect', {x: 260, y: 150, width: 220, height: 18, fill: '#1d7a4f'}, g);
-    PJ.xlsT = mk('text', {x: 266, y: 163, style: 'font:700 10px var(--mono,monospace);fill:#fff'}, g);
-    for (let r = 0; r < 6; r++) for (let c = 0; c < 5; c++) mk('rect', {x: 262 + c * 43, y: 172 + r * 17, width: 42, height: 16, fill: (r + c) % 3 ? '#f4f8f4' : ['#c9f0d6', '#fff3b0', '#ffd6d6'][c % 3], stroke: '#d0d8d0', 'stroke-width': .8}, g);
-    mk('rect', {x: 360, y: 290, width: 20, height: 26, fill: '#333'}, g);
+    mk('rect', {x: 30, y: 120, width: 240, height: 150, rx: 8, fill: '#10231d', stroke: '#333', 'stroke-width': 6}, g);
+    mk('rect', {x: 40, y: 130, width: 220, height: 130, fill: '#fff'}, g); mk('rect', {x: 40, y: 130, width: 220, height: 18, fill: '#1d7a4f'}, g);
+    PJ.xlsT = mk('text', {x: 46, y: 143, style: 'font:700 10px var(--mono,monospace);fill:#fff'}, g);
+    for (let r = 0; r < 6; r++) for (let c = 0; c < 5; c++) mk('rect', {x: 42 + c * 43, y: 152 + r * 17, width: 42, height: 16, fill: (r + c) % 3 ? '#f4f8f4' : ['#c9f0d6', '#fff3b0', '#ffd6d6'][c % 3], stroke: '#d0d8d0', 'stroke-width': .8}, g);
+    mk('rect', {x: 140, y: 270, width: 20, height: 26, fill: '#333'}, g);
     mk('rect', {x: 200, y: FL - 120, width: 380, height: 18, fill: '#8a5a2b', stroke: INK, 'stroke-width': 2}, F.pbuy);
     mk('rect', {x: 214, y: FL - 102, width: 352, height: 102, fill: '#a0703f', stroke: INK, 'stroke-width': 2}, F.pbuy);
     { const tx = mk('text', {x: 390, y: FL - 50, 'text-anchor': 'middle', style: 'font:900 16px var(--display,sans-serif);fill:#fff3d6;letter-spacing:3px'}, F.pbuy); tx.textContent = 'EINKAUF'; }
-    PJ.call = mk('g', {opacity: 0}, F.pbuy); mk('rect', {x: 600, y: 120, width: 170, height: 150, rx: 16, fill: '#10231d', stroke: '#ffcf1f', 'stroke-width': 3}, PJ.call);
+    PJ.call = mk('g', {opacity: 0}, g); mk('rect', {x: 600, y: 120, width: 170, height: 150, rx: 16, fill: '#10231d', stroke: '#ffcf1f', 'stroke-width': 3}, PJ.call);
     { const tx = mk('text', {x: 685, y: 142, 'text-anchor': 'middle', style: 'font:800 13px var(--body,sans-serif);fill:#ffcf1f'}, PJ.call); tx.textContent = '📞 Lieferant'; }
-    PJ.rc = cnt2(F.pbuy, 30, 74);
+    PJ.rc = cnt2(F.pbuy, 300, 60);
     PJ.tick = mk('g', {opacity: 0}, F.pbuy); mk('rect', {x: -110, y: -40, width: 220, height: 80, rx: 10, fill: '#fff', stroke: INK, 'stroke-width': 3}, PJ.tick);
     PJ.tickT = mk('text', {y: 10, 'text-anchor': 'middle', style: 'font:900 22px var(--display,sans-serif);fill:#10231d'}, PJ.tick);
     PJ.psst = mk('text', {x: 40, y: 40, 'text-anchor': 'middle', transform: 'rotate(-14)', style: 'font:900 30px var(--display,sans-serif);fill:#e0262b;stroke:#fff;stroke-width:4px;paint-order:stroke'}, PJ.tick);
@@ -6412,8 +6412,8 @@ function wavB64(buf) {
       if (P[id]) { on(id, 390, FL - 40, {sc: .84, noShadow: 1}); idle(t, 0, pose[id]); sitP(pose[id]);
         if (call) { P[id].prop.textContent = '📞'; pose[id].aR = [150, 130]; if (L < PL(1) + PD(1)) { pose[id].aL = [120, 20 * S(t / 120)]; } } else P[id].prop.textContent = '';
         if (L > PL(3) - 200) { pose[id].face = 'shock'; pose[id].look = 1; } }
-      PJ.call.setAttribute('opacity', call ? 1 : 0); if (P.local2 && call) { headAt('local2', 685, 205, .34); idle(t, 3, pose.local2); if (L > PL(2) - 200) pose.local2.cry = 1; }
-      const rab = Math.round(37 * ease(span(L, PL(1) + PD(1) * .3, PL(2)))); PJ.rc.g.setAttribute('opacity', span(L, PL(1), PL(1) + 300).toFixed(2)); PJ.rc.a.textContent = TX('rabL', 'RABATT'); PJ.rc.b.textContent = `−${rab} %`;
+      PJ.call.setAttribute('opacity', call ? 1 : 0); if (P.local2 && call) { headAt('local2', 685, 210, .95); idle(t, 3, pose.local2); if (L > PL(2) - 200) pose.local2.cry = 1; }
+      const rab = Math.round(37 * ease(span(L, PL(1) + PD(1) * .3, PL(2)))); PJ.rc.g.setAttribute('opacity', span(L, PL(1), PL(1) + 300).toFixed(2)); PJ.rc.a.textContent = TX('rabL', 'RABATT'); PJ.rc.b.textContent = rab ? `−${rab} %` : '0 %';
       const tk = span(L, PL(3) + PD(3) * .35, PL(3) + PD(3) * .35 + 400); PJ.tick.setAttribute('opacity', L > PL(3) + PD(3) * .35 ? 1 : 0);
       PJ.tick.setAttribute('transform', `translate(400,90) scale(${(.6 + .4 * ease(tk)).toFixed(3)}) rotate(-4)`); PJ.tickT.textContent = TX('ticket', '🎫'); PJ.psst.textContent = L > PL(3) + PD(3) * .75 ? TX('psst', '') : '';
       cam = L < PL(1) - 200 ? {x: 400, y: 220, z: 1} : L < PL(3) - 200 ? {x: 520, y: 220, z: 1.15} : {x: 400, y: 200, z: 1.1};
