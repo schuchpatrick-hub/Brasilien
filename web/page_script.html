@@ -6391,7 +6391,8 @@ function wavB64(buf) {
       const id = portId(); pitchAds(PJ.adsJ); PJ.jgaT.textContent = TX('jga', 'JGA');
       PJ.board.setAttribute('opacity', win(L, PL(1) - 200, PL(2) + PD(2) + 300, 250).toFixed(2)); PJ.board.setAttribute('transform', 'translate(80,90)');
       const kick = PL(3) - 900, kk = span(L, kick, kick + 1600);
-      if (P.patrick) { on('patrick', 300, FL, {sc: .84}); idle(t, 1, pose.patrick); if (L > PL(1) - 200 && L < PL(1) + PD(1) + 200) { pose.patrick.aR = [150, 10]; pose.patrick.aL = [40, 60]; } if (kk > .3) pose.patrick.face = 'shock'; }
+      const coach = (LINES.find(l => l.sc === 'pjga' && l.who !== 'narrator' && l.who !== portId()) || {}).who || 'jonas';
+      if (P[coach]) { on(coach, 300, FL, {sc: .84}); idle(t, 1, pose[coach]); if (L > PL(1) - 200 && L < PL(1) + PD(1) + 200) { pose[coach].aR = [150, 10]; pose[coach].aL = [40, 60]; } if (kk > .3) pose[coach].face = 'shock'; }
       if (P[id]) { on(id, 450, FL, {sc: .84, flip: -1}); idle(t, 0, pose[id]); if (L > PL(2) - 100 && L < PL(2) + PD(2) + 200) { pose[id].face = 'shock'; pose[id].aL = [100, 20]; pose[id].aR = [100, 20]; }
         if (L > kick - 400 && L < kick + 200) { pose[id].flip = 1; const q = span(L, kick - 400, kick); pose[id].lR = [-40 + 140 * q, -30 + 30 * q]; } }
       const bx = kk <= 0 ? 490 : 490 + 160 * kk, by = kk <= 0 ? FL - 12 : FL - 12 - 360 * S(PI * Math.min(1, kk * .9));
