@@ -4877,6 +4877,15 @@ function wavB64(buf) {
     [60, 640].forEach(x => mk('rect', {x, y: FL - 66, width: 10, height: 66, fill: '#6b4a22'}, F.pzelt));
     for (let k = 0; k < 9; k++) emo('🍺', {x: 70 + k * 66, y: FL - 96, 'font-size': 22}, F.pzelt);
     PJ.clk3 = mk('text', {x: 770, y: 40, 'text-anchor': 'end', style: 'font:800 22px var(--mono,monospace);fill:#1f3f8f'}, F.pzelt);
+    PJ.luk = mk('g', {}, B.pzelt);   // Promille-Lukas (Hau den Lukas)
+    mk('rect', {x: 118, y: 104, width: 24, height: FL - 110, rx: 6, fill: '#fff', stroke: INK, 'stroke-width': 3}, PJ.luk);
+    [['#3ccf7f', 0], ['#ffcf1f', 1], ['#ff9a3c', 2], ['#e0262b', 3]].forEach(([c, k]) => mk('rect', {x: 121, y: 110 + (3 - k) * (FL - 124) / 4, width: 18, height: (FL - 124) / 4 - 2, fill: c, opacity: .55}, PJ.luk));
+    PJ.lukT = [0, 1, 2, 3].map(k => mk('text', {x: 112, y: 110 + (3 - k + .6) * (FL - 124) / 4, 'text-anchor': 'end', style: 'font:900 12px var(--body,sans-serif);fill:#10231d'}, PJ.luk));
+    PJ.lukH = mk('text', {x: 130, y: 96, 'text-anchor': 'middle', style: 'font:800 11px var(--mono,monospace);fill:#1f3f8f'}, PJ.luk);
+    PJ.puck = mk('rect', {x: 112, width: 36, height: 12, rx: 4, fill: '#10231d'}, F.pzelt);
+    PJ.lbell = emo('🔔', {'font-size': 26}, F.pzelt); PJ.bang = emo('💥', {'font-size': 46, opacity: 0}, F.pzelt);
+    PJ.dawn = mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: '#ffcf8a', opacity: 0, style: 'mix-blend-mode:multiply'}, F.pzelt);
+    PJ.flex = emo('💪', {'font-size': 30, opacity: 0}, F.pzelt); PJ.sun2 = emo('☀️', {x: 60, y: 40, 'font-size': 34, opacity: 0}, F.pzelt);
   }
   if (B.pjga) { PJ.adsJ = pitchBg(B.pjga);
     mk('rect', {x: 200, y: 40, width: 400, height: 50, rx: 8, fill: '#ff5fa2', stroke: INK, 'stroke-width': 3}, B.pjga);
@@ -6376,15 +6385,32 @@ function wavB64(buf) {
     }
     else if (sc.id === 'pzelt') {
       const id = portId(); PJ.zeltT.textContent = TX('zelt', 'BIERZELT');
-      const hr = 18 + 3 * span(L, PL(1) + PD(1), PL(2) + PD(2) * .5), out = span(L, PL(2) + PD(2) * .55, len);
-      PJ.clk3.textContent = `🕐 ${String(Math.floor(hr)).padStart(2, '0')}:${String(Math.floor((hr % 1) * 60)).padStart(2, '0')}`;
-      [['jonas', 140], ['patrick', 230], [id, 330], ['marco', 430], ['dajo', 540]].forEach(([k, x], i) => { if (!P[k]) return;
-        const leave = (k === id || k === 'dajo') && out > 0; on(k, x + (leave ? 420 * ease(out) : 0), FL, {sc: .8, flip: k === 'dajo' ? -1 : 1}); idle(t, i, pose[k]);
-        pose[k].tilt = 10 * S(t / 400 + i); pose[k].rot = 4 * S(t / 600 + i); pose[k].burn = .3; if (!leave) { P[k].prop.textContent = '🍺'; pose[k].aR = [60, 60]; } else { P[k].prop.textContent = ''; walkP(t + i * 90, pose[k]); pose[k].flip = 1; }
-        if (k === id) gband.setAttribute('opacity', 1);
-        if (k === 'dajo') { pose[k].rot = 14 * S(t / 300); pose[k].tilt = 18 * S(t / 260); if (L > PL(1) - 200 && !leave) { pose[k].face = 'dizzy'; pose[k].aR = [160, 20]; } }
-        if (k === 'patrick' && L < PL(1)) pose[k].look = 1; });
-      cam = L < PL(0) + PD(0) * .6 ? {x: 340, y: 230, z: 1.05} : L < PL(2) - 200 ? {x: 520, y: 240, z: 1.45} : {x: clamp(330 + 420 * ease(out), 400, 640), y: 235, z: 1.1};
+      const lk = TX('luk') || ['1', '2', '3', '4']; PJ.lukT.forEach((e, k) => { e.textContent = lk[k]; }); PJ.lukH.textContent = TX('lukL', '');
+      const dIn = span(L, PL(1) + PD(1) * .4, PL(2) - 100), blow = PL(2) + PD(2) * .55, out = span(L, PL(5) - 200, PL(5) + PD(5) + 600), morn = L > PL(6) - 400;
+      const hr = L < PL(3) - 300 ? 18 : 21; PJ.clk3.textContent = morn ? '🕗 08:00' : `🕐 ${hr}:00`;
+      // Promille-Lukas: Crew bis „hinüber“, Daijo schießt die Glocke ab
+      const top = 110, h = FL - 124, lvl = L < blow ? .62 * ease(span(L, 300, PL(0) + PD(0))) : Math.min(1.25, .62 + 2 * span(L, blow, blow + 400));
+      PJ.puck.setAttribute('y', (top + h * (1 - Math.min(1, lvl)) - 6).toFixed(1)); PJ.puck.setAttribute('x', 112);
+      const fly = span(L, blow + 250, blow + 1600); PJ.lbell.setAttribute('x', (130 + 120 * fly).toFixed(1)); PJ.lbell.setAttribute('y', (94 - 300 * fly + 260 * fly * fly).toFixed(1));
+      PJ.lbell.setAttribute('transform', `rotate(${(720 * fly).toFixed(0)},${(130 + 120 * fly).toFixed(1)},${(94 - 300 * fly + 260 * fly * fly).toFixed(1)})`); PJ.lbell.setAttribute('opacity', fly >= 1 ? 0 : 1);
+      PJ.bang.setAttribute('opacity', win(L, blow + 200, blow + 900, 80).toFixed(2)); PJ.bang.setAttribute('x', 130); PJ.bang.setAttribute('y', 96);
+      [['jonas', 200], ['patrick', 280], [id, 360], ['marco', 440]].forEach(([k, x], i) => { if (!P[k]) return;
+        const leave = k === id && out > 0 && !morn; if (k === id && morn) return;
+        on(k, x + (leave ? 400 * ease(out) : 0), FL, {sc: .8}); idle(t, i, pose[k]);
+        pose[k].tilt = 10 * S(t / 400 + i); pose[k].rot = 4 * S(t / 600 + i); pose[k].burn = .3;
+        if (!leave) { P[k].prop.textContent = morn ? '' : '🍺'; pose[k].aR = [60, 60]; } else { P[k].prop.textContent = ''; walkP(t, pose[k]); pose[k].flip = 1; }
+        if (k === id) { gband.setAttribute('opacity', 1); pose[k].tilt = 3 * S(t / 600); pose[k].rot = 0; pose[k].burn = .1; if (L > PL(4) - 100 && !leave) { pose[k].face = 'shock'; pose[k].aL = [100, 20]; } }
+        if (L > PL(2) && L < PL(3) && k !== id) pose[k].face = 'shock';
+        if (morn) Object.assign(pose[k], {tilt: 55, rot: 18, face: 'dizzy', aL: [100, 90], aR: [100, 90]}); });
+      if (P.dajo && L > PL(1) && !morn) { const x = 760 - 240 * ease(dIn) + 400 * ease(out), dx = out > 0 ? x : x + 30 * S(t / 250);
+        on('dajo', dx, FL, {sc: .8, flip: out > 0 ? 1 : -1}); idle(t, 5, pose.dajo); pose.dajo.rot = 16 * S(t / 280); pose.dajo.tilt = 20 * S(t / 230); pose.dajo.face = 'dizzy'; pose.dajo.burn = .55;
+        P.dajo.prop.textContent = out > 0 ? '' : '🍺'; pose.dajo.aR = [150, 30]; if ((dIn > 0 && dIn < 1) || out > 0) walkP(t, pose.dajo, 150); }
+      // Morgen danach: alle hängen über dem Tisch, Greisel joggt topfit vorbei
+      PJ.dawn.setAttribute('opacity', morn ? .35 : 0); PJ.sun2.setAttribute('opacity', morn ? 1 : 0);
+      const jog = span(L, PL(6) - 200, PL(6) + PD(6) + 900);
+      if (morn && P[id]) { on(id, -60 + 900 * jog, FL + 30, {sc: .84, shirt: TX('shirt', '#5b2a86')}); idle(t, 0, pose[id]); walkP(t, pose[id], 90); pose[id].bob = -8 * Math.abs(S(t / 90)); P[id].prop.textContent = ''; gband.setAttribute('opacity', 1);
+        PJ.flex.setAttribute('opacity', 1); PJ.flex.setAttribute('x', (-60 + 900 * jog + 40).toFixed(1)); PJ.flex.setAttribute('y', FL - 150); } else PJ.flex.setAttribute('opacity', 0);
+      cam = L < PL(1) + PD(1) * .4 ? {x: 300, y: 230, z: 1.05} : L < blow + 1200 ? {x: 420, y: 220, z: 1.05} : L < PL(3) - 200 ? {x: 520, y: 240, z: 1.4} : L < PL(5) - 200 ? {x: 440, y: 240, z: 1.3} : morn ? {x: 400, y: 235, z: 1} : {x: 520, y: 235, z: 1.1};
     }
     else if (sc.id === 'pjga') {
       const id = portId(); pitchAds(PJ.adsJ); PJ.jgaT.textContent = TX('jga', 'JGA');
@@ -6629,7 +6655,7 @@ function wavB64(buf) {
       .forEach(([k, d2, n]) => { if (has(k)) m.sfx(n, A(k, d2)); });
     [['pg1', 200, 'applause'], ['pg2', 900, 'cheer'], ['pg3', 600, 'whistle'], ['pg3', dl('pg3') + 1400, 'cheer'], ['pg3', dl('pg3') + 2400, 'cheer'], ['pg5', -300, 'whistle'],
       ['pg6', dl('pg6') * .62, 'thud'], ['pg6', dl('pg6') * .62 + 80, 'crash'], ['pg8', -300, 'whoo'], ['pg9', dl('pg9') + 100, 'swish'], ['pg9', dl('pg9') + 1000, 'thud'], ['pg11', -200, 'ding'],
-      ['pg13', 0, 'cheer'], ['pg15', dl('pg15') * .6, 'clank'], ['pg18', dl('pg18') + 1200, 'kick'], ['pg19', 400, 'boing'], ['pg20', -400, 'swish'], ['pg21', -300, 'click'], ['pg22', dl('pg22') + 1600, 'applause']]
+      ['pg13', 0, 'cheer'], ['pg14', dl('pg14') * .55, 'boom'], ['pg14', dl('pg14') * .55 + 250, 'ding'], ['pg15', -200, 'clank'], ['pg15b', -300, 'whoo'], ['pg18', dl('pg18') + 1200, 'kick'], ['pg19', 400, 'boing'], ['pg20', -400, 'swish'], ['pg21', -300, 'click'], ['pg22', dl('pg22') + 1600, 'applause']]
       .forEach(([k, d2, n]) => { if (has(k)) m.sfx(n, A(k, d2)); });
     [['pm1', 200, 'applause'], ['pm2', 900, 'cheer'], ['pm3', 600, 'whistle'], ['pm4', dl('pm4') + 150, 'kick'], ['pm4', dl('pm4') + 950, 'thud'], ['pm4', dl('pm4') + 1550, 'thud'],
       ['pm6', dl('pm6') * .7, 'cheer'], ['pm9', -400, 'ding'], ['pm11', dl('pm11') * .6, 'scratch'], ['pm12', -300, 'whoo'], ['pm13', dl('pm13') * .5, 'kiss'], ['pm13', dl('pm13') * .85, 'kiss'],
