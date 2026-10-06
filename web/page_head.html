@@ -651,6 +651,11 @@ a{color:var(--accent)}
 .fc-link:hover{filter:brightness(1.05)}
 .crew-ov .fc-chip{display:inline-block;margin-top:2px;font:700 .68rem var(--body);background:var(--amarelo);color:#1a1a1a;border-radius:999px;padding:3px 9px;cursor:pointer}
 .crew-ov .fc-chip:hover{filter:brightness(1.08)}
+.crew-ov .ov-links{display:flex;flex-wrap:wrap;justify-content:center;gap:4px;margin-top:2px}
+.crew-ov .ov-links .fc-chip{margin:0}
+.crew-ov .fc-chip.ov-steck{background:#fff;color:#10231d}
+.crew-ov .fc-chip.ov-film{display:none;background:#5b2a86;color:#fff}
+.port-pjonas .crew-ov .ov-film[data-port="pjonas"],.port-ppatrick .crew-ov .ov-film[data-port="ppatrick"],.port-psimon .crew-ov .ov-film[data-port="psimon"],.port-pmarco .crew-ov .ov-film[data-port="pmarco"],.port-pgreisel .crew-ov .ov-film[data-port="pgreisel"],.port-pdajo .crew-ov .ov-film[data-port="pdajo"]{display:inline-block}
 @media (prefers-reduced-motion:reduce){.fc-in{transition:none}}
 .fc-ed{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:grid;gap:12px;margin-top:6px;max-width:800px}
 .fc-ed>summary{cursor:pointer;font:800 1.05rem var(--display)}

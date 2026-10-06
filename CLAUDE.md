@@ -94,7 +94,7 @@ Steckbriefe stehen in `web/trip.json` → `crew` (ein Eintrag mit `facts`/`quote
 (`web/crew/` ist gitignored). Beim Neuveröffentlichen `crew/...` nicht in `files` auf `null` setzen, dann bleiben sie
 erhalten; bei Bedarf mit `Artifact` `action: read` + `path: "crew/<id>.jpg"` zurückholen. Im PDF werden keine Fotos gezeigt. Unbeteiligte Personen im Hintergrund werden weichgezeichnet.
 Alle sechs haben der Verwendung ihres Fotos zugestimmt (laut Patrick, 30.09.).
-Steckbriefe als Karussell (`#crew-list.crew-car`, eine Person pro Ansicht, Pfeile + Mini-Fotos `.crew-nav`, Höhe passt sich der aktuellen Karte an; `crewShow(id)` dreht hin, Köpfe in der Übersicht nutzen das). Je Steckbrief 3 Fakten sichtbar, Rest in „Alle n Fakten ▾“ (im PDF alles).
+Steckbriefe als Karussell (`#crew-list.crew-car`, eine Person pro Ansicht, Pfeile + Mini-Fotos `.crew-nav`, Höhe passt sich der aktuellen Karte an; `crewShow(id)` dreht hin, Köpfe in der Übersicht nutzen das; darunter Chips `.ov-links`: „📋 Profil“ = Steckbrief, „⚽ Karte“, „🎬 Film“ = Spielerporträt, nur mit `port-p<id>` sichtbar). Je Steckbrief 3 Fakten sichtbar, Rest in „Alle n Fakten ▾“ (im PDF alles).
 
 ## Crew-Karten (FIFA-Stil)
 

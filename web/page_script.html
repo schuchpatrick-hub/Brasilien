@@ -730,11 +730,13 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       '<a href="#crew-' + esc(p.id) + '"><span class="av">' +
       (p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="" loading="lazy">' : esc(p.name[0])) +
       '</span><b>' + esc(p.name) + '</b><small>' + esc(short(p.role)) + '</small>' +
-      (p.card && !PRINT ? '<span class="fc-chip" role="button" tabindex="0" data-card="' + esc(p.id) + '" aria-label="Spielerkarte von ' + esc(p.name) + '">⚽ Karte</span>' : '') + '</a>').join('') +
+      (PRINT ? '' : '<span class="ov-links"><span class="fc-chip ov-steck" role="button" tabindex="0" data-steck="' + esc(p.id) + '" aria-label="Steckbrief von ' + esc(p.name) + '">📋 Profil</span>' +
+        (p.card ? '<span class="fc-chip" role="button" tabindex="0" data-card="' + esc(p.id) + '" aria-label="Spielerkarte von ' + esc(p.name) + '">⚽ Karte</span>' : '') +
+        ((TRIP.series || {})['p' + p.id] ? '<span class="fc-chip ov-film" role="button" tabindex="0" data-port="p' + esc(p.id) + '" aria-label="Spielerporträt von ' + esc(p.name) + '">🎬 Film</span>' : '') + '</span>') + '</a>').join('') +
     '</div></div>').join('');
   // Antippen eines Kopfs in der Übersicht: Karussell auf diese Person drehen (statt ans Ende der Liste zu springen)
   document.getElementById('crew-overview').addEventListener('click', e => { const a = e.target.closest('a[href^="#crew-"]');
-    if (!a || e.target.closest('.fc-chip') || !window.crewShow) return; e.preventDefault(); e.stopPropagation(); crewShow(a.getAttribute('href').slice(6)); }, true);
+    if (!a || e.target.closest('.fc-chip:not(.ov-steck)') || !window.crewShow) return; e.preventDefault(); e.stopPropagation(); crewShow(a.getAttribute('href').slice(6)); }, true);
 
   const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lightbox-img');
   let lastFocus = null;
