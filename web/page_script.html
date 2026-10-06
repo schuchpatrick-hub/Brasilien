@@ -3486,6 +3486,8 @@ function wavB64(buf) {
     pshoe: {amb: 'crowd', mus: 'travel', wx: 'heat', cap: '✈️ Auslandsstation'}, pfest: {amb: 'crowd', mus: 'show', night: 1, tr: 'leaf', cap: '🍺 Volksfest'}, pmorn: {amb: 'traffic', mus: 'travel', wx: 'dawn', cap: '🌅 Am Morgen danach'},
     pmatch: {amb: 'crowd', mus: 'travel', tr: 'leaf', cap: '⚽ Der Verein'}, pzerr: {amb: 'crowd', mus: 'travel', cap: '🩻 Die Krankenakte'},
     pabroad: {amb: 'sea', mus: 'stay', night: 1, tr: 'plane', cap: '✈️ Im Urlaub'}, pdisc: {amb: 'bar', mus: 'stay', night: 1, cap: '🍺 Nach dem fünften Bier'},
+    phost: {amb: 'room', mus: 'bossa', tr: 'leaf', cap: '🍿 Die Gastgeberin'}, pbuy: {amb: 'room', mus: 'lounge', cap: '🛒 Im Büro'},
+    pczech: {amb: 'crowd', mus: 'show', tr: 'leaf', cap: '🌍 Die Herkunftsfrage'}, pparty: {amb: 'bar', mus: 'show', night: 1, cap: '🎉 Partynacht'},
     pcome: {amb: 'crowd', mus: 'travel', tr: 'leaf', cap: '⚽ Das Comeback'}, pcut: {amb: 'crowd', mus: 'travel', night: 1, cap: '⚽ Freitagabend'},
     pfair: {amb: 'crowd', mus: 'show', wx: 'dusk', tr: 'leaf', cap: '🎡 Volksfest'}, pzelt: {amb: 'bar', mus: 'stay', night: 1, cap: '🍺 Im Bierzelt'}, pjga: {amb: 'crowd', mus: 'travel', tr: 'leaf', cap: '🎉 Junggesellenabschied'},
     plong: {amb: 'crowd', mus: 'travel', tr: 'leaf', cap: '⚽ Der Verein'}, pital: {amb: 'traffic', mus: 'bossa', night: 1, cap: '🍝 Der Italiener-Abend'},
@@ -4833,6 +4835,62 @@ function wavB64(buf) {
     { const tx = mk('text', {x: 110, y: 22, 'text-anchor': 'middle', style: 'font:700 12px var(--mono,monospace);letter-spacing:2px;fill:#ffcf1f'}, PJ.meter); tx.textContent = 'DISKUSSIONS-PEGEL'; }
     mk('rect', {x: 14, y: 34, width: 192, height: 18, rx: 9, fill: '#333'}, PJ.meter); PJ.mBar = mk('rect', {x: 14, y: 34, width: 0, height: 18, rx: 9, fill: '#e0262b'}, PJ.meter);
     PJ.finger = emo('☝️', {'font-size': 30, opacity: 0}, F.pdisc);
+  }
+  // Daijo-Porträt: Gastgeberin, Einkauf, Herkunft, Party
+  if (B.phost) {
+    const g = B.phost;
+    mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: '#f6e7d2'}, g);
+    for (let k = 0; k < 14; k++) mk('rect', {x: -60 + k * 70, y: 0, width: 35, height: FL - 6, fill: '#efdcc2'}, g);
+    mk('rect', {x: 470, y: 70, width: 130, height: 110, fill: '#bfe3ff', stroke: INK, 'stroke-width': 3}, g); mk('path', {d: 'M535,70 V180 M470,125 H600', stroke: '#fff', 'stroke-width': 4}, g);
+    mk('rect', {x: 680, y: FL - 220, width: 90, height: 220, fill: '#a8783a', stroke: INK, 'stroke-width': 3}, g);
+    { const tx = mk('text', {x: 725, y: FL - 230, 'text-anchor': 'middle', style: 'font:900 13px var(--body,sans-serif);fill:#7a4f2a'}, g); tx.textContent = '🍽️ KÜCHE'; }
+    [[60, 90], [300, 80]].forEach(([x, y]) => { mk('rect', {x, y, width: 90, height: 70, fill: '#fff', stroke: '#a8783a', 'stroke-width': 6}, g); emo(x < 100 ? '🖼️' : '🌴', {x: x + 45, y: y + 35, 'font-size': 30}, g); });
+    mk('rect', {x: 20, y: FL - 120, width: 330, height: 74, rx: 22, fill: '#c0392b', stroke: INK, 'stroke-width': 3}, g);
+    mk('rect', {x: 10, y: FL - 54, width: 350, height: 40, rx: 14, fill: '#d9534f', stroke: INK, 'stroke-width': 3}, g);
+    mk('rect', {x: -100, y: FL - 6, width: W + 200, height: 130, fill: '#9a6a3e'}, g);
+    mk('rect', {x: 380, y: FL - 64, width: 200, height: 14, rx: 4, fill: '#7a4f2a', stroke: INK, 'stroke-width': 2}, F.phost);
+    [392, 560].forEach(x => mk('rect', {x, y: FL - 50, width: 8, height: 50, fill: '#5a3a1e'}, F.phost));
+    PJ.bowls = ['🍿', '🥨', '🥜', '🍫'].map((e, k) => emo(e, {x: 405 + k * 50, y: FL - 76, 'font-size': 24}, F.phost));
+    PJ.spark = emo('✨', {'font-size': 26, opacity: 0}, F.phost); PJ.hc = cnt2(F.phost, 30, 74);
+  }
+  if (B.pbuy) {
+    const g = B.pbuy;
+    mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: '#dfe7ee'}, g);
+    for (let k = 0; k < 8; k++) mk('rect', {x: -40 + k * 120, y: 40, width: 100, height: 60, fill: '#c9d6e2', stroke: '#b0c0d0', 'stroke-width': 2}, g);
+    mk('rect', {x: -100, y: FL - 6, width: W + 200, height: 130, fill: '#7a8a9a'}, g);
+    mk('rect', {x: 30, y: 120, width: 240, height: 150, rx: 8, fill: '#10231d', stroke: '#333', 'stroke-width': 6}, g);
+    mk('rect', {x: 40, y: 130, width: 220, height: 130, fill: '#fff'}, g); mk('rect', {x: 40, y: 130, width: 220, height: 18, fill: '#1d7a4f'}, g);
+    PJ.xlsT = mk('text', {x: 46, y: 143, style: 'font:700 10px var(--mono,monospace);fill:#fff'}, g);
+    for (let r = 0; r < 6; r++) for (let c = 0; c < 5; c++) mk('rect', {x: 42 + c * 43, y: 152 + r * 17, width: 42, height: 16, fill: (r + c) % 3 ? '#f4f8f4' : ['#c9f0d6', '#fff3b0', '#ffd6d6'][c % 3], stroke: '#d0d8d0', 'stroke-width': .8}, g);
+    mk('rect', {x: 140, y: 270, width: 20, height: 26, fill: '#333'}, g);
+    mk('rect', {x: 200, y: FL - 120, width: 380, height: 18, fill: '#8a5a2b', stroke: INK, 'stroke-width': 2}, F.pbuy);
+    mk('rect', {x: 214, y: FL - 102, width: 352, height: 102, fill: '#a0703f', stroke: INK, 'stroke-width': 2}, F.pbuy);
+    { const tx = mk('text', {x: 390, y: FL - 50, 'text-anchor': 'middle', style: 'font:900 16px var(--display,sans-serif);fill:#fff3d6;letter-spacing:3px'}, F.pbuy); tx.textContent = 'EINKAUF'; }
+    PJ.call = mk('g', {opacity: 0}, g); mk('rect', {x: 600, y: 120, width: 170, height: 150, rx: 16, fill: '#10231d', stroke: '#ffcf1f', 'stroke-width': 3}, PJ.call);
+    { const tx = mk('text', {x: 685, y: 142, 'text-anchor': 'middle', style: 'font:800 13px var(--body,sans-serif);fill:#ffcf1f'}, PJ.call); tx.textContent = '📞 Lieferant'; }
+    PJ.rc = cnt2(F.pbuy, 300, 60);
+    PJ.tick = mk('g', {opacity: 0}, F.pbuy); mk('rect', {x: -110, y: -40, width: 220, height: 80, rx: 10, fill: '#fff', stroke: INK, 'stroke-width': 3}, PJ.tick);
+    PJ.tickT = mk('text', {y: 10, 'text-anchor': 'middle', style: 'font:900 22px var(--display,sans-serif);fill:#10231d'}, PJ.tick);
+    PJ.psst = mk('text', {x: 40, y: 40, 'text-anchor': 'middle', transform: 'rotate(-14)', style: 'font:900 30px var(--display,sans-serif);fill:#e0262b;stroke:#fff;stroke-width:4px;paint-order:stroke'}, PJ.tick);
+  }
+  if (B.pczech) {
+    const g = B.pczech;
+    mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: '#2a1458'}, g);
+    for (let k = 0; k < 16; k++) mk('path', {d: `M400,-40 L${-200 + k * 80},${FL}`, stroke: '#ffcf1f', 'stroke-width': 2, opacity: .12}, g);
+    mk('rect', {x: 290, y: 50, width: 220, height: 150, rx: 14, fill: '#10231d', stroke: '#ffcf1f', 'stroke-width': 5}, g);
+    PJ.flag = emo('🇭🇷', {x: 400, y: 125, 'font-size': 92}, g);
+    mk('rect', {x: -100, y: FL - 6, width: W + 200, height: 130, fill: '#3a1f6b'}, g);
+    for (let k = 0; k < 10; k++) mk('rect', {x: -40 + k * 90, y: FL - 6, width: 88, height: 14, fill: ['#ff5fa2', '#3ccf7f', '#5fb7ff', '#ffcf1f'][k % 4], opacity: .7}, g);
+    PJ.cz = cnt2(F.pczech, 560, 74); PJ.ang = emo('💢', {'font-size': 34, opacity: 0}, F.pczech);
+  }
+  if (B.pparty) {
+    const g = B.pparty;
+    mk('rect', {x: -100, y: -100, width: W + 200, height: H + 200, fill: '#0b0620'}, g);
+    PJ.beams = [0, 1, 2, 3, 4].map(k => mk('path', {fill: ['#ff5fa2', '#5fb7ff', '#3ccf7f', '#ffcf1f', '#c79bf0'][k], opacity: .18, style: 'mix-blend-mode:screen'}, g));
+    mk('path', {d: 'M400,0 V40', stroke: '#888', 'stroke-width': 2}, g); mk('circle', {cx: 400, cy: 66, r: 28, fill: '#ccd', stroke: '#fff', 'stroke-width': 2}, g);
+    for (let k = 0; k < 5; k++) mk('path', {d: `M372,${50 + k * 8} H428 M${380 + k * 10},40 V92`, stroke: '#889', 'stroke-width': 1}, g);
+    PJ.tiles = Array.from({length: 24}, (_, k) => mk('rect', {x: -60 + (k % 12) * 80, y: FL - 6 + Math.floor(k / 12) * 40, width: 78, height: 38, fill: '#333'}, g));
+    PJ.djT = mk('text', {x: 400, y: 140, 'text-anchor': 'middle', style: 'font:900 34px var(--display,sans-serif);fill:#ff5fa2;filter:drop-shadow(0 0 8px #ff5fa2);letter-spacing:6px'}, g);
   }
   // Greisel-Porträt: Comeback, Cut, Volksfest, Bierzelt, JGA
   if (B.pcome) { PJ.adsC = pitchBg(B.pcome); PJ.ballC = emo('⚽', {'font-size': 26, opacity: 0}, F.pcome); PJ.sb = cnt2(F.pcome, 30, 74);
@@ -6207,6 +6265,7 @@ function wavB64(buf) {
       if (P[id]) { on(id, 440, FL, {sc: 1}); idle(t, 0, pose[id]); pose[id].aL = [20, 30]; pose[id].aR = [20, 30];
         if (L > PL(1) + PD(1) + 200) { pose[id].mouth = .2; pose[id].tilt = 6 * S(t / 300); } }
       PJ.mic.setAttribute('x', (368 + 4 * S(t / 700)).toFixed(1)); PJ.mic.setAttribute('y', (FL - 118 + 3 * S(t / 500)).toFixed(1)); PJ.mic.setAttribute('transform', `rotate(-38,368,${FL - 118})`);
+      if (TX('runOff') && P[id] && L > PL(1) + PD(1) + 300) { const k = span(L, PL(1) + PD(1) + 300, PL(1) + PD(1) + 1800); pose[id].x = 440 + 520 * ease(k); if (k < 1) walkP(t, pose[id], 70); }
       PJ.ltT.textContent = `${(p.name || '').toUpperCase()} · ${TX('lt')}`; PJ.lt.setAttribute('opacity', span(L, PL(1) + PD(1) + 300, PL(1) + PD(1) + 700).toFixed(2));
       cam = L < PL(1) - 200 ? {x: 400, y: 240, z: 1.15} : {x: 440, y: 205, z: 1.55};
     }
@@ -6334,6 +6393,52 @@ function wavB64(buf) {
       PJ.mBar.setAttribute('width', (192 * pk).toFixed(1)); PJ.mBar.setAttribute('fill', pk > .8 ? '#e0262b' : pk > .5 ? '#ff9a3c' : '#3ccf7f');
       PJ.finger.setAttribute('opacity', L > PL(2) - 200 && L < PL(2) + PD(2) + 300 ? 1 : 0); PJ.finger.setAttribute('x', 300); PJ.finger.setAttribute('y', FL - 210);
       cam = L < PL(1) - 300 ? {x: 410, y: 240, z: 1.05} : L < PL(2) - 300 ? {x: 480, y: 240, z: 1.3} : L < PL(3) - 200 ? {x: 330, y: 230, z: 1.45} : {x: 410, y: 230, z: 1};
+    }
+    else if (sc.id === 'phost') {
+      const id = portId(), talk = k => L > PL(k) - 200 && L < PL(k) + PD(k) + 200, stay = talk(1) || talk(3), per = 1700;
+      [['greisel', 110], ['patrick', 200], ['jonas', 290]].forEach(([k, x], i) => { if (!P[k]) return; on(k, x, FL - 26, {sc: .78, floor: FL - 20, noShadow: 1}); idle(t, i + 1, pose[k]); sitP(pose[k]); pose[k].look = 1;
+        if (k === 'patrick') { P[k].prop.textContent = '🍿'; pose[k].aR = [80 + 50 * Math.max(0, S(t / 260)), 60]; if (talk(4)) { pose[k].face = 'heart'; } } });
+      const ph = ((L + 400) % per) / per, run = Math.abs(2 * ph - 1), dx = stay ? 470 : 470 + 230 * (1 - run);
+      if (P[id]) { on(id, dx, FL, {sc: .84, flip: !stay && ph < .5 ? 1 : -1}); idle(t, 0, pose[id]); if (!stay && L > 500) { walkP(t, pose[id], 70); pose[id].bob = -6 * Math.abs(S(t / 70)); }
+        P[id].prop.textContent = !stay && ph > .25 && ph < .75 ? '🍿' : ''; pose[id].aR = [70, 40]; if (talk(3)) { pose[id].face = 'shock'; pose[id].aL = [100, 20]; pose[id].aR = [100, 20]; } }
+      const n = Math.floor((L + 400) / per) * 3 + 2;
+      PJ.spark.setAttribute('opacity', !stay && run > .9 ? 1 : 0); PJ.spark.setAttribute('x', 480); PJ.spark.setAttribute('y', FL - 110);
+      PJ.hc.g.setAttribute('opacity', span(L, 600, 900).toFixed(2));
+      if (L < PL(5) - 200) { PJ.hc.a.textContent = TX('refL', 'NACHGEFÜLLT'); PJ.hc.b.textContent = `${n}×`; } else { PJ.hc.a.textContent = TX('sitL', 'SITZDAUER'); PJ.hc.b.textContent = '0,4 s'; }
+      cam = L < PL(1) - 200 ? {x: 400, y: 230, z: 1} : talk(1) || talk(3) ? {x: 430, y: 240, z: 1.35} : talk(2) ? {x: 150, y: 250, z: 1.4} : talk(4) ? {x: 210, y: 250, z: 1.45} : {x: 400, y: 230, z: 1};
+    }
+    else if (sc.id === 'pbuy') {
+      const id = portId(), call = L > PL(1) - 300 && L < PL(2) + PD(2) + 300; PJ.xlsT.textContent = TX('xls', 'TABELLE.xlsx');
+      if (P[id]) { on(id, 390, FL - 40, {sc: .84, noShadow: 1}); idle(t, 0, pose[id]); sitP(pose[id]);
+        if (call) { P[id].prop.textContent = '📞'; pose[id].aR = [150, 130]; if (L < PL(1) + PD(1)) { pose[id].aL = [120, 20 * S(t / 120)]; } } else P[id].prop.textContent = '';
+        if (L > PL(3) - 200) { pose[id].face = 'shock'; pose[id].look = 1; } }
+      PJ.call.setAttribute('opacity', call ? 1 : 0); if (P.local2 && call) { headAt('local2', 685, 210, .95); idle(t, 3, pose.local2); if (L > PL(2) - 200) pose.local2.cry = 1; }
+      const rab = Math.round(37 * ease(span(L, PL(1) + PD(1) * .3, PL(2)))); PJ.rc.g.setAttribute('opacity', span(L, PL(1), PL(1) + 300).toFixed(2)); PJ.rc.a.textContent = TX('rabL', 'RABATT'); PJ.rc.b.textContent = rab ? `−${rab} %` : '0 %';
+      const tk = span(L, PL(3) + PD(3) * .35, PL(3) + PD(3) * .35 + 400); PJ.tick.setAttribute('opacity', L > PL(3) + PD(3) * .35 ? 1 : 0);
+      PJ.tick.setAttribute('transform', `translate(400,90) scale(${(.6 + .4 * ease(tk)).toFixed(3)}) rotate(-4)`); PJ.tickT.textContent = TX('ticket', '🎫'); PJ.psst.textContent = L > PL(3) + PD(3) * .75 ? TX('psst', '') : '';
+      cam = L < PL(1) - 200 ? {x: 400, y: 220, z: 1} : L < PL(3) - 200 ? {x: 520, y: 220, z: 1.15} : {x: 400, y: 200, z: 1.1};
+    }
+    else if (sc.id === 'pczech') {
+      const id = portId(), talk = k => L > PL(k) - 200 && L < PL(k) + PD(k) + 200;
+      PJ.flag.textContent = L > PL(0) && L < PL(1) && Math.floor(L / 600) % 2 ? '🇨🇿' : L > PL(3) - 200 && L < PL(4) ? '🇨🇿' : '🇭🇷';
+      if (P.jonas) { on('jonas', 230, FL, {sc: .82}); idle(t, 1, pose.jonas); if (talk(1)) pose.jonas.aR = [130, 20]; if (talk(4)) pose.jonas.face = 'heart'; }
+      if (P[id]) { on(id, 400, FL, {sc: .86}); idle(t, 0, pose[id]); if (talk(2)) { pose[id].face = 'angry'; pose[id].aL = [160, 20 * S(t / 90)]; pose[id].aR = [160, 20 * S(t / 95 + 1)]; pose[id].bob = -6 * Math.abs(S(t / 100)); }
+        if (L > PL(3) + PD(3) + 100) { pose[id].face = 'angry'; pose[id].aL = [40, 90]; pose[id].aR = [40, 90]; } }
+      if (P.patrick) { on('patrick', 570, FL, {sc: .84, flip: -1}); idle(t, 2, pose.patrick); if (talk(3)) { pose.patrick.aR = [160, 20 * S(t / 100)]; } }
+      PJ.ang.setAttribute('opacity', talk(2) || L > PL(3) + PD(3) + 100 ? 1 : 0); PJ.ang.setAttribute('x', 446); PJ.ang.setAttribute('y', FL - 200);
+      const n = L < PL(2) + PD(2) * .5 ? 99 : L < PL(4) ? 100 : 101; PJ.cz.g.setAttribute('opacity', span(L, PL(1) - 300, PL(1)).toFixed(2)); PJ.cz.a.textContent = TX('czL', 'ZUM … MAL'); PJ.cz.b.textContent = String(n);
+      cam = L < PL(1) - 200 ? {x: 400, y: 200, z: 1} : talk(1) ? {x: 300, y: 240, z: 1.3} : talk(2) ? {x: 400, y: 230, z: 1.45} : talk(3) ? {x: 520, y: 240, z: 1.35} : {x: 400, y: 220, z: 1};
+    }
+    else if (sc.id === 'pparty') {
+      const id = portId(); PJ.djT.textContent = TX('dj', 'PARTY'); const beat = Math.floor(t / 250);
+      PJ.beams.forEach((b, k) => { const a = (t / 900 + k * 1.3) % (2 * PI), x2 = 400 + 600 * S(a); b.setAttribute('d', `M400,66 L${(x2 - 60).toFixed(0)},${FL} L${(x2 + 60).toFixed(0)},${FL}Z`); });
+      PJ.tiles.forEach((r, k) => r.setAttribute('fill', (k + beat) % 3 === 0 ? ['#ff5fa2', '#5fb7ff', '#3ccf7f'][(k + beat) % 3 === 0 ? k % 3 : 0] : '#222'));
+      [['jonas', 200], ['simon', 300], ['marco', 560], ['greisel', 650]].forEach(([k, x], i) => { if (!P[k]) return; on(k, x, FL, {sc: .78, flip: x > 400 ? -1 : 1}); idle(t, i + 1, pose[k]);
+        pose[k].hip = 10 * S(t / 250 + i); pose[k].aL = [100 + 40 * S(t / 250 + i), 20]; pose[k].aR = [100 - 40 * S(t / 250 + i), 20];
+        if (k === 'jonas' && L > PL(2) - 300) { P.jonas.prop.textContent = '📱'; pose.jonas.aR = [60, 80]; pose.jonas.hip = 0; pose.jonas.face = 'cash'; } });
+      if (P[id]) { on(id, 420, FL - 20, {sc: .9}); idle(t, 0, pose[id]); P[id].prop.textContent = '🍹'; pose[id].hip = 14 * S(t / 220); pose[id].aL = [160, 30 * S(t / 220)]; pose[id].aR = [140, 40]; pose[id].bob = -10 * Math.abs(S(t / 250));
+        if (L > PL(1) - 200 && L < PL(1) + PD(1) + 200) { pose[id].aR = [170, 10]; pose[id].face = 'heart'; } }
+      cam = L < PL(1) - 200 ? {x: 420, y: 220, z: 1} : L < PL(2) - 200 ? {x: 420, y: 230, z: 1.3} : {x: 260, y: 240, z: 1.4};
     }
     else if (sc.id === 'pcome') {
       const id = portId(); pitchAds(PJ.adsC); const sh = TX('shirt', '#5b2a86');
@@ -6652,6 +6757,10 @@ function wavB64(buf) {
     [['pp1', 200, 'applause'], ['pp2', 900, 'cheer'], ['pp3', 600, 'whistle'], ['pp5', -1400, 'kick'], ['pp5', -500, 'thud'], ['pp5', 0, 'feedback'], ['pp6', 400, 'scratch'], ['pp6', 450, 'thud'],
       ['pp7', -200, 'whistle'], ['pp9', 0, 'ding'], ['pp10', -300, 'whoo'], ['pp11', -200, 'kiss'], ['pp12', dl('pp12') + 100, 'scratch'], ['pp14', 0, 'cheer'], ['pp16', -200, 'gong'],
       ['pp18', -400, 'swish'], ['pp19', -300, 'click'], ['pp20', dl('pp20') + 1600, 'applause']]
+      .forEach(([k, d2, n]) => { if (has(k)) m.sfx(n, A(k, d2)); });
+    [['pd1', 200, 'applause'], ['pd2', 900, 'cheer'], ['pd4', dl('pd4') + 100, 'swish'], ['pd6', 0, 'crash'], ['pd8', -300, 'ding'], ['pd10', -400, 'click'], ['pd10', dl('pd10') + 100, 'ding'],
+      ['pd12', dl('pd12') * .35, 'paper'], ['pd12', dl('pd12') * .75, 'thud'], ['pd13', 0, 'whoo'], ['pd15', 0, 'feedback'], ['pd17', -200, 'ding'], ['pd18', -300, 'cheer'], ['pd19', dl('pd19') + 100, 'clink'],
+      ['pd21', -400, 'swish'], ['pd22', -300, 'click'], ['pd23', dl('pd23') + 300, 'swish'], ['pd23', dl('pd23') + 1600, 'applause']]
       .forEach(([k, d2, n]) => { if (has(k)) m.sfx(n, A(k, d2)); });
     [['pg1', 200, 'applause'], ['pg2', 900, 'cheer'], ['pg3', 600, 'whistle'], ['pg3', dl('pg3') + 1400, 'cheer'], ['pg3', dl('pg3') + 2400, 'cheer'], ['pg5', -300, 'whistle'],
       ['pg6', dl('pg6') * .62, 'thud'], ['pg6', dl('pg6') * .62 + 80, 'crash'], ['pg8', -300, 'whoo'], ['pg9', dl('pg9') + 100, 'swish'], ['pg9', dl('pg9') + 1000, 'thud'], ['pg11', -200, 'ding'],

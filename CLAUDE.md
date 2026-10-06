@@ -259,10 +259,12 @@ Viertes Porträt Marco (`pmarco`, Keys `pm…`): Szenen `plong` (Fernschuss mit 
 `plis` (Auslandsstation bei Nacht mit Straßenbahn, Zähler „Geteilt“), `pcouch` (Hotel-Lobby, Strohhalm-Losen, Couch, Rezeptionistin `aw1` portugiesisch).
 Fünftes Porträt Greisel (`pgreisel`, Keys `pg…`): Szenen `pcome` (Einwechslung 90. Minute, Spielstand-Zähler), `pcut` (Kopfballduell bei Flutlicht), `pfair` (Volksfest mit Riesenrad, Dosenwerfen, Sani-Zelt `aw3`),
 `pzelt` (Bierzelt mit „Promille-Lukas“ `PJ.luk`, Glocke `PJ.lbell` fliegt, Uhr, Heimreise, Morgen danach mit `PJ.dawn`), `pjga` (Tafel „unter den Ball“, Flugball-Höhe). Pflaster/Cut am Kopf: `gband`/`gblood` (in `P.greisel.acc`, jedes Bild erst aus). Vereinstrikots lila (`#5b2a86`).
+Sechstes Porträt Daijo (`pdajo`, Keys `pd…`): Szenen `phost` (Wohnzimmer, Daijo pendelt Küche ↔ Tisch, Zähler „Nachgefüllt“/„Sitzdauer“), `pbuy` (Büro mit Excel, Telefonat, Lieferant `local2` im Anruf-Kasten, Rabatt-Zähler, Ticket),
+`pczech` (Flaggen-Tafel, Zähler „Zum … Mal“), `pparty` (Disco mit Lichtkegeln). `tx.runOff`: Porträtierte läuft nach der Interview-Antwort aus dem Bild.
 Alle persönlichen Texte im Bild kommen aus den privaten Daten: `tx` (Bandenwerbung, Schilder, Banner, Stärken/Schwächen …) und `caps` (Ort-Einblendung je Szene); im öffentlichen Code nur neutrale Platzhalter.
 Keine Kachel im Kino: Start über „🎬 Spielerporträt ansehen“ (`.port-btn[data-port]`) im Steckbrief und auf der Kartenrückseite,
 `window.serPortrait(id)` lädt das Porträt im Vollbild und kehrt danach zur vorherigen Folge und zur Karte zurück. Knöpfe sind per CSS-Klasse
-`port-p<id>` am `<html>` sichtbar (Jonas, Simon, Patrick, Marco, Greisel seit 06.10. für alle freigegeben). Zeilen-Keys `pj1…` (eindeutig gegenüber den Folgen).
+`port-p<id>` am `<html>` sichtbar (alle sechs seit 06.10. für alle freigegeben). Zeilen-Keys `pj1…` (eindeutig gegenüber den Folgen).
 **Privat:** Porträts enthalten echte Geschichten, deshalb nicht im öffentlichen Repo: `web/private/series.json` und `web/audio/p*.mp3` sind
 gitignored, `build.py` mischt die Datei beim Bauen ein. Für die Werkzeuge `python3 tools/private.py in` (nach trip.json holen), danach
 `gen_series_xtts.py pjonas`, `relayout.py pjonas`, `build_series_audio.py pjonas`, dann **`python3 tools/private.py out`** vor jedem Commit.
