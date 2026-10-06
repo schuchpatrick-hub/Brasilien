@@ -1988,12 +1988,12 @@
     {
       "label": "Foz do Iguaçu",
       "a": {
-        "v": 80,
-        "k": "ca"
+        "v": 75,
+        "k": "fix"
       },
       "b": {
-        "v": 80,
-        "k": "ca"
+        "v": 75,
+        "k": "fix"
       },
       "cat": "stay",
       "sub": "TuCasa Flats · 3 Nächte"
@@ -10173,6 +10173,14 @@
     ]
   },
   "news": [
+    {
+      "id": "n251006d",
+      "d": "2026-10-06",
+      "tab": "reise",
+      "to": "kosten",
+      "e": "💶",
+      "t": "Unterkunft Foz do Iguaçu steht fest: 75 € pro Person"
+    },
     {
       "id": "n251006c",
       "d": "2026-10-06",
