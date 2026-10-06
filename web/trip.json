@@ -10174,6 +10174,14 @@
   },
   "news": [
     {
+      "id": "n251006f",
+      "d": "2026-10-06",
+      "tab": "crew-tab",
+      "to": "crew",
+      "e": "📋",
+      "t": "Crew-Übersicht: unter jedem Kopf jetzt direkt Profil und Spielerkarte"
+    },
+    {
       "id": "n251006e",
       "d": "2026-10-06",
       "tab": "infos",
