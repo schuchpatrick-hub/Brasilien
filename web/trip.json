@@ -10216,6 +10216,14 @@
   },
   "news": [
     {
+      "id": "n251007h",
+      "d": "2026-10-07",
+      "tab": "spiele-tab",
+      "to": "spiele",
+      "e": "🏆",
+      "t": "Gringo Kart: 6 Strecken der Reise (Guarujá bis Ilha Grande, Bootsrennen am Amazonas) und Grand Prix mit Siegerehrung"
+    },
+    {
       "id": "n251007g",
       "d": "2026-10-07",
       "tab": "spiele-tab",
@@ -10578,6 +10586,71 @@
     "trick": {
       "o": 42933,
       "dur": 1201
+    },
+    "t_guaruja": {
+      "o": 250,
+      "dur": 2803,
+      "f": 2
+    },
+    "t_copa": {
+      "o": 3303,
+      "dur": 1837,
+      "f": 2
+    },
+    "t_iguacu": {
+      "o": 5390,
+      "dur": 3819,
+      "f": 2
+    },
+    "t_amazon": {
+      "o": 9460,
+      "dur": 3046,
+      "f": 2
+    },
+    "t_paraty": {
+      "o": 12756,
+      "dur": 3081,
+      "f": 2
+    },
+    "t_ilha": {
+      "o": 16087,
+      "dur": 4865,
+      "f": 2
+    },
+    "caiman": {
+      "o": 21202,
+      "dur": 1103,
+      "f": 2
+    },
+    "dolphin": {
+      "o": 22555,
+      "dur": 1070,
+      "f": 2
+    },
+    "flood": {
+      "o": 23875,
+      "dur": 1121,
+      "f": 2
+    },
+    "coatis": {
+      "o": 25247,
+      "dur": 1785,
+      "f": 2
+    },
+    "cupnext": {
+      "o": 27282,
+      "dur": 1677,
+      "f": 2
+    },
+    "cupwin": {
+      "o": 29209,
+      "dur": 2395,
+      "f": 2
+    },
+    "cupend": {
+      "o": 31854,
+      "dur": 2559,
+      "f": 2
     }
   }
 }
