@@ -7635,6 +7635,8 @@ setGroup(G);
   const vib = ms => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} };
   let S = null, raf = 0, last = 0, me = ME || 'patrick', W = 0, H = 0, DPR = 1, MODE = ['cup', 'daily'].includes(store.get('kartMode')) ? store.get('kartMode') : 'single', TRK = TBY[store.get('kartTrack')] ? store.get('kartTrack') : 'copa', CUP = null;
   const loadJ = k => { try { return JSON.parse(store.get(k) || '{}'); } catch (e) { return {}; } };
+  // Zurücksetzen aller Zeiten (Stichtag in trip.json → kartReset): lokale Bestzeiten, Rundenzeiten und eigene Geister einmalig löschen
+  if (TRIP.kartReset && store.get('kartResetSeen') !== TRIP.kartReset) { try { Object.keys(localStorage).filter(k => /^br26\.(kart(Best$|Lap\.|Ghost\.|RecSeen$)|cache\.kart(best|ghost|daily)$)/.test(k)).forEach(k => localStorage.removeItem(k)); } catch (e) {} store.set('kartResetSeen', TRIP.kartReset); }
   const best = () => loadJ('kartBest');
   // Einstellungen: Steuerung (Halten/Analog), Grafik (Sparsam/Normal/Hoch), Kamera (Nah/Normal/Weit)
   const SET = Object.assign({ctl: 'hold', q: 1, cam: 1, tod: 'real'}, loadJ('kartSet')), saveSet = () => store.set('kartSet', JSON.stringify(SET));
