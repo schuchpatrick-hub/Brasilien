@@ -51,8 +51,7 @@ Die Webseite erst nach dem Merge neu veröffentlichen.
 Kopfbild, Titel, Reisedaten, Gruppen-Umschalter (zeigt auch die Namen), Heute-Karte (`#heute`/`#today`, Countdown bzw.
 Tagesprogramm) und Eckdaten (`#hero-facts`, Nächte je Gruppe, offene Flüge live aus `flights`) stecken zusammen im
 `<header>`. Unterwegs zeigt das Kopfbild automatisch das Foto der heutigen Station (`setHero`). Den Gruppen-Umschalter gibt es nur noch
-im Kopf; Tage und Flüge zeigen per `[data-g-note]` nur, welche Ansicht gilt. Der Kasten „Was ist neu?“ erscheint nur bei
-Ungesehenem; Themen-Kacheln schmal (5 Spalten, Hinweise unter 900 px ausgeblendet).
+im Kopf; Tage und Flüge zeigen per `[data-g-note]` nur, welche Ansicht gilt. Themen-Kacheln schmal (5 Spalten, Hinweise unter 900 px ausgeblendet).
 
 **Tag für Tag nach Stationen** (seit 05.10.): `renderDays()` packt die Tage in Stations-Tafeln (`.st-panel`, Zuordnung `stopOfDay(d)`
 wie die Karte, Kopf aus `mapinfo.stops`), Zeilen unverändert; Chips + Wischen über den Helfer `slider(track, chips, opt)` (Start =
@@ -88,9 +87,9 @@ Zeitkapsel-Status). Module melden Werte für alle Personen über `meSet()`.
 
 ## Was ist neu?
 
-`trip.json` → `news` (`id` eindeutig, `d` Datum, `tab` = Reiter-`data-tab`, `to` = Sprungziel-id, `e` Emoji, `t` Text). Kasten `#news`
-über den Themen-Kacheln, rote Punkte an Reitern/Kacheln mit Ungesehenem; gesehen pro Handy im localStorage `br26.newsSeen`
-(erster Besuch: alles gilt als gesehen, Kasten zeigt dann „Zuletzt neu“). **Bei jeder sichtbaren Neuerung (Buchung, neue Folge,
+`trip.json` → `news` (`id` eindeutig, `d` Datum, `tab` = Reiter-`data-tab`, `to` = Sprungziel-id, `e` Emoji, `t` Text). Seit 07.10. **kein Kasten mehr**
+(Wunsch Patrick: zu groß), nur rote Punkte an Reitern/Kacheln mit Ungesehenem; Reiter/Kachel antippen = gesehen, gemerkt pro Handy im localStorage
+`br26.newsSeen` (erster Besuch: alles gilt als gesehen). **Bei jeder sichtbaren Neuerung (Buchung, neue Folge,
 neue Funktion) einen Eintrag vorne ergänzen.** Die Kino-Kachel nennt automatisch die neueste freigegebene Folge.
 
 ## Crew-Profile

@@ -7081,29 +7081,18 @@ setGroup(G);
 })();
 
 /* ---------- Was ist neu? Einträge in trip.json → news (id, d, tab, to, e, t); gesehen pro Handy (localStorage br26.newsSeen).
-   Erster Besuch: alles gilt als gesehen, der Kasten zeigt dann nur „Zuletzt neu“. Punkte an Reitern und Kacheln mit Neuem. ---------- */
+   Kein eigener Kasten mehr (Wunsch Patrick 07.10.): nur rote Punkte an Reitern und Kacheln mit Neuem; Reiter antippen = gesehen.
+   Erster Besuch: alles gilt als gesehen. ---------- */
 (function () {
-  const box = document.getElementById('news'), N = (TRIP.news || []).slice().sort((a, b) => b.d.localeCompare(a.d));
-  if (!box || !N.length || PRINT) return;
+  const N = TRIP.news || []; if (!N.length || PRINT) return;
   let seen = null; try { seen = JSON.parse(store.get('newsSeen') || 'null'); } catch (e) {}
-  const first = !Array.isArray(seen); if (first) { seen = N.map(n => n.id); store.set('newsSeen', JSON.stringify(seen)); }
+  if (!Array.isArray(seen)) { seen = N.map(n => n.id); store.set('newsSeen', JSON.stringify(seen)); }
   const fresh = n => !seen.includes(n.id);
-  const dm = d => d.slice(8, 10) + '.' + d.slice(5, 7) + '.';
-  function save() { store.set('newsSeen', JSON.stringify(seen)); }
-  function mark(ids) { ids.forEach(id => { if (!seen.includes(id)) seen.push(id); }); save(); paint(); }
-  function paint() {
-    const nw = N.filter(fresh), show = (nw.length ? nw : N).slice(0, nw.length ? 8 : 3);
+  function paint() { const nw = N.filter(fresh);
     document.querySelectorAll('.tabs a[data-tab], .tiles .tile').forEach(a => { const tab = a.dataset.tab || (a.getAttribute('href') || '').slice(1);
-      a.classList.toggle('has-new', nw.some(n => n.tab === tab || n.to === tab)); });
-    box.hidden = !nw.length; if (!nw.length) return;   // nur zeigen, wenn es wirklich Neues gibt
-    box.innerHTML = '<div class="news-h"><b>' + (nw.length ? '🆕 ' + nw.length + (nw.length === 1 ? ' Neuigkeit' : ' Neuigkeiten') + ' seit deinem letzten Besuch' : '🆕 Zuletzt neu') + '</b>' +
-      (nw.length ? '<button type="button" id="news-ok">✓ Alles gesehen</button>' : '') + '</div><ul>' +
-      show.map(n => '<li class="' + (fresh(n) ? 'new' : '') + '"><a href="#' + esc(n.to || n.tab) + '" data-id="' + esc(n.id) + '"><span aria-hidden="true">' + esc(n.e || '•') + '</span><span>' + esc(n.t) + '</span><small>' + dm(n.d) + '</small></a></li>').join('') + '</ul>';
-    const ok = document.getElementById('news-ok'); if (ok) ok.onclick = () => mark(N.map(n => n.id));
-    box.querySelectorAll('a[data-id]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); const n = N.find(x => x.id === a.dataset.id); mark([n.id]); jump(n.to || n.tab, true); }));
-  }
-  // Reiter mit Punkt antippen = dessen Neuigkeiten gesehen
-  document.querySelectorAll('.tabs a[data-tab]').forEach(a => a.addEventListener('click', () => { const ids = N.filter(n => fresh(n) && n.tab === a.dataset.tab).map(n => n.id); if (ids.length) mark(ids); }));
+      a.classList.toggle('has-new', nw.some(n => n.tab === tab || n.to === tab)); }); }
+  document.querySelectorAll('.tabs a[data-tab], .tiles .tile').forEach(a => a.addEventListener('click', () => { const tab = a.dataset.tab || (a.getAttribute('href') || '').slice(1);
+    const ids = N.filter(n => fresh(n) && (n.tab === tab || n.to === tab)).map(n => n.id); if (ids.length) { seen.push(...ids); store.set('newsSeen', JSON.stringify(seen)); paint(); } }));
   paint();
 })();
 
