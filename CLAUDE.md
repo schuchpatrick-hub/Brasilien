@@ -300,15 +300,22 @@ Kein Titelsong (auf Wunsch wieder entfernt, 03.10.).
 Nur-Kopf-Figuren (`headOnly`, Hilfsfunktion `headAt`) für Fenster, Gondel und Handy-Bildschirm. Lange Untertitel brechen in zwei Zeilen um.
 Neue Folge: Zeilen in `series.epN` (mit `scenes`, `credits`, `next`), Stimmen per `--series epN`, Szenen-Code in `frame()` ergänzen, `META` erweitern.
 
-## Gringo Kart (Prototyp, seit 07.10.)
+## Gringo Kart (seit 07.10., Ausbau in Stufen: 1 Fahrgefühl ✅, 2 sechs Strecken + Pokal, 3 Persönlichkeit/Items je Person, 4 Bestenliste/Geister)
 
 Rennspiel im Kapitel Spiele: Knopf `#kart-open` (`.kart-teaser`) öffnet `#kart` als Vollbild-Overlay (wird beim Öffnen unter `<body>` gehängt, Kapitel hat content-visibility).
-Eigenes Modul „Gringo Kart“ am Ende von `page_script.html`, Canvas von oben, Kamera dreht mit (Fahrtrichtung oben). Strecke Copacabana: Kontrollpunkte `CP` → Catmull-Rom,
-alle 6 px abgetastet (`P`, Normalen `NX`/`NY`), Breite `TW`; Hintergrund (Sand, Meer `shore()`, Stadt, Calçadão-Wellen als Muster, Palmen, Schirme) einmal in `BG` vorgezeichnet.
-6 Fahrer = Crew (Kart in Shirt-Farbe aus `dance.look`, Foto-Kopf mit `face`-Ausschnitt als Sprite `HEAD`), 3 Runden, Gas automatisch, Daumen links/rechts lenkt,
-`.kr-item` zündet das Item (🍹 Turbo, 🧴 Öl-Pfütze, 🦝 Nasenbär jagt den Vordermann); Kokosnüsse/Sand bremsen; KI fährt Ideallinie mit Spur-Wechsel, weicht aus, Gummiband.
-Lenkung des Spielers weich (Einschlag baut sich auf), Stärke wählbar Sanft/Mittel/Stark (`STEERS`, localStorage `br26.kartSteer`); Pause-Knopf `.kr-pbtn` oben links (nur im Rennen, Klasse `.racing`) öffnet `.kr-pm`: Weiter, Neustart, Fahrer wechseln, Lenkung, Ton, Beenden (auch Esc/P, App-Wechsel pausiert). Sprüche beim Treffer je Person (`LINES`), Ton per Web Audio (Motor, Piepsen), Bestzeit im localStorage `br26.kartBest`. Klassen mit Präfix `kr-` (`k-` ist schon belegt).
-Test: `window.__kart` (`open`, `state`, `step(dt)`, `draw`, `finish`). Ausbau-Ideen: weitere Strecken entlang der Route, Bestenliste in db, Geister-Fahrten, FIFA-Karten-Werte.
+Eigenes Modul „Gringo Kart“ am Ende von `page_script.html`, Canvas von oben, Kamera dreht mit (Fahrtrichtung oben), zoomt bei hohem Tempo leicht raus. Strecke Copacabana: Kontrollpunkte `CP` → Catmull-Rom,
+alle 6 px abgetastet (`P`, Normalen `NX`/`NY`, Index-Helfer `at(i, lat)`/`nearest`), Breite `TW`; Hintergrund (Sand, Meer `shore()`, Stadt, Calçadão-Wellen, Palmen, Schirme, Boost-Pfeile `PADS`, Schanze `RAMP`) einmal in `BG` vorgezeichnet; außerhalb der Karte Sand/Meer.
+6 Fahrer = Crew (Kart in Shirt-Farbe aus `dance.look`, Foto-Kopf mit `face`-Ausschnitt als Sprite `HEAD`), 3 Runden, Gas automatisch, Daumen links/rechts lenkt (weich, Stärke Sanft/Mittel/Stark `STEERS`, localStorage `br26.kartSteer`).
+**Fahrgefühl (Stufe 1):** lange in eine Richtung halten (> 0,38 s, Tempo > 190) = Drift (`k.dr`, Rutschen, Funken weiß → blau → orange, Anzeige unten), Loslassen = Mini-Turbo (> 0,75 s) bzw. Super-Turbo (> 1,5 s); auch die KI driftet.
+Raketenstart: erster Tipper während der „1“ (`S.press` zwischen −0,62 und −0,04 s) = Boost, Tipper schon bei der „3“ = abgewürgt. Boost-Pfeile, Schanze (Flug `k.air`, in der Luft tippen = Trick, Landung mit Boost).
+Leben: Zuschauer `SPECT` (winken, hüpfen beim Vorbeifahren), Caipi-Verkäufer `S.ven` läuft quer (Zusammenstoß = Dreher), Tauben fliegen auf, Welle `S.wave` schwappt alle 12–18 s über die Uferstraße (`WAVE`, bremst, Warnung 2 s vorher).
+Effekte: Reifenspuren `S.marks`, Funken `S.sp`, Staub, Wackel-Kamera, schwebende Texte (`floatTxt`), Zeitlupe im Ziel (`S.slow`), Feuerwerk (`fireworks`, Bildschirm-Teilchen `S.fw`).
+Items aus ?-Kisten nach Platz gewichtet (`rollItem`): 🍹 Turbo, 🧴 Öl-Pfütze, 🦝 Nasenbär jagt den Vordermann; Kokosnüsse/Sand bremsen; KI fährt Ideallinie mit Spur-Wechsel, nimmt Pfeile/Kisten, weicht aus, Gummiband.
+**Ton:** Samba-Rennmusik per Web Audio (`MUS`, `musNote`: Surdo, Tamborim, Ganzá, Agogô, Bass; letzte Runde schneller), echte Geräusche aus `audio/sfx.mp3` (`real(name)`, sonst Synth), Motor.
+**Ansager** (`say(key, text)`): rote Zeile im Bild + Stimme aus `audio/kart.mp3` (XTTS-Sprecher, Ausschnitte in `TRIP.kartvo` {key: {o, dur}}; erzeugt über eine vorübergehende Folge `series.kart` mit `gen_series_xtts.py kart` + `build_series_audio.py kart`, danach nach `kartvo` verschoben). Musik duckt, Schalter im Pause-Menü (`br26.kartAnn`).
+Pause-Knopf `.kr-pbtn` oben links (nur im Rennen, Klasse `.racing`) öffnet `.kr-pm`: Weiter, Neustart, Fahrer wechseln, Lenkung, Ansager, Ton, Beenden (auch Esc/P; App-Wechsel pausiert, AudioContext wird angehalten).
+Sprüche beim Treffer je Person (`LINES`), Bestzeit im localStorage `br26.kartBest`. Klassen mit Präfix `kr-` (`k-` ist schon belegt). Beim Veröffentlichen `audio/kart.mp3` (und `audio/sfx.mp3`) in `files`.
+Test: `window.__kart` (`open`, `pause`, `resume`, `state`, `step(dt)`, `draw`, `finish`, `say`).
 
 ## Karte: Infokarten
 

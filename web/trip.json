@@ -9950,6 +9950,149 @@
         "Staffelfinale:",
         "Paraty & Ilha Grande"
       ]
+    },
+    "kart": {
+      "lines": [
+        {
+          "key": "lead_jonas",
+          "who": "narrator",
+          "say": "Jonas übernimmt die Führung!",
+          "text": "Jonas übernimmt die Führung!"
+        },
+        {
+          "key": "lead_simon",
+          "who": "narrator",
+          "say": "Simon übernimmt die Führung!",
+          "text": "Simon übernimmt die Führung!"
+        },
+        {
+          "key": "lead_patrick",
+          "who": "narrator",
+          "say": "Patrick übernimmt die Führung!",
+          "text": "Patrick übernimmt die Führung!"
+        },
+        {
+          "key": "lead_marco",
+          "who": "narrator",
+          "say": "Marco übernimmt die Führung!",
+          "text": "Marco übernimmt die Führung!"
+        },
+        {
+          "key": "lead_greisel",
+          "who": "narrator",
+          "say": "Greisel übernimmt die Führung!",
+          "text": "Greisel übernimmt die Führung!"
+        },
+        {
+          "key": "lead_dajo",
+          "who": "narrator",
+          "say": "Daijo übernimmt die Führung!",
+          "text": "Daijo übernimmt die Führung!"
+        },
+        {
+          "key": "go",
+          "who": "narrator",
+          "say": "Und los geht's!",
+          "text": "Und los geht's!"
+        },
+        {
+          "key": "rocket",
+          "who": "narrator",
+          "say": "Was für ein Raketenstart!",
+          "text": "Was für ein Raketenstart!"
+        },
+        {
+          "key": "last",
+          "who": "narrator",
+          "say": "Letzte Runde!",
+          "text": "Letzte Runde!"
+        },
+        {
+          "key": "super",
+          "who": "narrator",
+          "say": "Super-Turbo!",
+          "text": "Super-Turbo!"
+        },
+        {
+          "key": "coati",
+          "who": "narrator",
+          "say": "Nasenbär-Alarm!",
+          "text": "Nasenbär-Alarm!"
+        },
+        {
+          "key": "wave",
+          "who": "narrator",
+          "say": "Achtung, die Welle!",
+          "text": "Achtung, die Welle!"
+        },
+        {
+          "key": "jump",
+          "who": "narrator",
+          "say": "Abflug!",
+          "text": "Abflug!"
+        },
+        {
+          "key": "hit",
+          "who": "narrator",
+          "say": "Autsch, das tat weh!",
+          "text": "Autsch, das tat weh!"
+        },
+        {
+          "key": "vendor",
+          "who": "narrator",
+          "say": "Der Caipi-Verkäufer! Mitten auf der Strecke!",
+          "text": "Der Caipi-Verkäufer! Mitten auf der Strecke!"
+        },
+        {
+          "key": "win",
+          "who": "narrator",
+          "say": "Sieg! Der Pokal geht nach Hause!",
+          "text": "Sieg! Der Pokal geht nach Hause!"
+        },
+        {
+          "key": "podium",
+          "who": "narrator",
+          "say": "Aufs Podest! Stark gefahren!",
+          "text": "Aufs Podest! Stark gefahren!"
+        },
+        {
+          "key": "lose",
+          "who": "narrator",
+          "say": "Naja. Dabei sein ist alles.",
+          "text": "Naja. Dabei sein ist alles."
+        },
+        {
+          "key": "over",
+          "who": "narrator",
+          "say": "Überholt!",
+          "text": "Überholt!"
+        },
+        {
+          "key": "finish",
+          "who": "narrator",
+          "say": "Zielflagge!",
+          "text": "Zielflagge!"
+        },
+        {
+          "key": "stall",
+          "who": "narrator",
+          "say": "Abgewürgt! Zu früh gestartet!",
+          "text": "Abgewürgt! Zu früh gestartet!"
+        },
+        {
+          "key": "trick",
+          "who": "narrator",
+          "say": "Was für ein Trick!",
+          "text": "Was für ein Trick!"
+        }
+      ],
+      "voice": {},
+      "comedy": {
+        "narrator": {
+          "tempo": 1.14,
+          "pitch": 1.03
+        }
+      }
     }
   },
   "sfx": {
@@ -10215,6 +10358,14 @@
     ]
   },
   "news": [
+    {
+      "id": "n251007g",
+      "d": "2026-10-07",
+      "tab": "spiele-tab",
+      "to": "spiele",
+      "e": "🏎️",
+      "t": "Gringo Kart: Driften mit Turbo, Raketenstart, Schanze, Welle, Samba-Musik und Ansager"
+    },
     {
       "id": "n251007f",
       "d": "2026-10-07",
