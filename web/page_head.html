@@ -1480,6 +1480,9 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
 .kart .kr-pick canvas{width:46px;height:46px;border-radius:50%;box-shadow:0 0 0 2px rgba(255,255,255,.18);transition:transform .15s,box-shadow .15s}
 .kart .kr-pick button[aria-pressed="true"]{background:transparent;color:#ffd23f}
 .kart .kr-pick button[aria-pressed="true"] canvas{transform:scale(1.1);box-shadow:0 0 0 3px #ffd23f,0 0 18px rgba(255,210,63,.55)}
+.kr-bars .kr-bk{position:relative;display:grid;grid-template-columns:74px 1fr;align-items:center;gap:6px;background:none;border:0;padding:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.kr-bk::before{content:"";position:absolute;inset:-3px -4px}.kr-bk u{text-decoration:none;opacity:.55;font-size:.62rem}.kr-bk[aria-pressed="true"]{color:#ffd23f}.kr-bk[aria-pressed="true"] u{opacity:1}
+.kart .kr-bx{font-size:.7rem!important;line-height:1.35;color:#cfe3f5;margin:6px 0 0!important}.kr-bx b{color:#fff}
 .kr-dc{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;text-align:left;background:linear-gradient(120deg,var(--dc,#00a651) -40%,rgba(255,255,255,.04) 55%);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:10px 12px}
 .kr-dc canvas{width:70px;height:70px;border-radius:50%;box-shadow:0 0 0 3px rgba(255,255,255,.85),0 6px 14px rgba(0,0,0,.4)}
 .kr-dn{font:italic 900 1.2rem system-ui,sans-serif;text-transform:uppercase;margin:0 0 5px;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
