@@ -7573,6 +7573,8 @@ setGroup(G);
     if (DB !== null) return; DB = false;
     getDb().then(db => { if (!db) return; DB = db;
       db.collection('kartbest').onSnapshot(sn => { LB = {}; sn.docs.forEach(d => { if (d.exists) LB[d.id] = d.data(); }); board(); if (!box.hidden && !menu.hidden) renderMenu(); }, () => {});
+      try { window.claude.use('user').then(u => u && u.id ? u.id().then(id => { UID = id || null; ACC = u; accSync(); }) : null).catch(() => {}); } catch (e) {}
+      db.collection('kartusers').onSnapshot(sn => { USERS = {}; sn.docs.forEach(d => { if (d.exists) USERS[d.id] = d.data().who; }); accSync(); board(); }, () => {});
       db.collection('kartdaily').onSnapshot(sn => { LBD = {}; sn.docs.forEach(d => { if (d.exists) LBD[d.id] = d.data(); }); if (!box.hidden && !menu.hidden) renderMenu(); }, () => {});
     }).catch(() => {});
     canWrite().then(w => { WR = w !== false && w !== null; if (!box.hidden && !menu.hidden) renderMenu(); }).catch(() => {});
@@ -7581,18 +7583,31 @@ setGroup(G);
   function lbHtml(list, title) {
     if (!list.length) return '<p class="kr-lb-t">' + title + '</p><p class="kr-lb-e">Noch keine Zeit eingetragen. Sei der Erste!</p>';
     return '<p class="kr-lb-t">' + title + '</p><ol class="kr-lb-l">' + list.slice(0, 6).map((v, i) => '<li' + (v.who === player() ? ' class="me"' : '') + '>' +
-      '<span>' + (['🥇', '🥈', '🥉'][i] || (i + 1) + '.') + ' ' + esc(NAME(v.who)) + (v.drv && v.drv !== v.who ? ' <small>als ' + esc(NAME(v.drv)) + '</small>' : '') + '</span><i>' + fmt(v.ms) + '</i></li>').join('') + '</ol>';
+      '<span>' + (['🥇', '🥈', '🥉'][i] || (i + 1) + '.') + ' ' + esc(NAME(v.who)) + '<small class="kr-by">' + esc(byline(v)) + '</small></span><i>' + fmt(v.ms) + '</i></li>').join('') + '</ol>';
   }
   // Bestenliste: nur unter der echten Person speichern („Ich bin …“); ohne Wahl wird nach dem Rennen gefragt
-  let PEND = null;
+  let PEND = null, UID = null, ACC = null, USERS = {}, PNAME = {};
+  const devName = () => { const u = navigator.userAgent || ''; return /iPhone/.test(u) ? 'iPhone' : /iPad/.test(u) ? 'iPad' : /Android/.test(u) ? 'Android' : /Mac/.test(u) ? 'Mac' : /Windows/.test(u) ? 'Windows' : 'Gerät'; };
+  // Konto ↔ Person: Ein Konto gehört fest zu einer Person (gilt auf jedem Handy, auf dem man angemeldet ist)
+  function accSync() { if (!UID || !DB) return; const mapped = USERS[UID];
+    if (mapped && mapped !== ME && !ME) setMe(mapped);
+    else if (ME && mapped !== ME && WR) { USERS[UID] = ME; DB.doc('kartusers/' + UID).set({who: ME, ts: Date.now()}).catch(() => {}); }
+    const ids = Object.values(LB).map(v => v.uid).filter(x => x && !(x in PNAME)); if (ACC && ACC.profiles && ids.length) { ids.forEach(x => { PNAME[x] = ''; });
+      ACC.profiles(ids).then(ps => { ids.forEach(x => { const n = ps && ps[x] && ps[x].name; PNAME[x] = n ? n.split(' ')[0] : ''; }); board(); if (!box.hidden && !menu.hidden) renderMenu(); }).catch(() => {}); } }
+  // „Wer hat es gefahren?“: Person, gefahrene Figur, Konto, Gerät, Zeitpunkt
+  const when = ts => { if (!ts) return ''; const d = new Date(ts); return d.getDate() + '.' + (d.getMonth() + 1) + '. ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+  function byline(v) { const p = [];
+    if (v.drv && v.drv !== v.who) p.push('als ' + NAME(v.drv));
+    if (v.uid) p.push('✓ Konto' + (PNAME[v.uid] ? ' ' + PNAME[v.uid] : '') + (USERS[v.uid] && USERS[v.uid] !== v.who ? ' (gehört ' + NAME(USERS[v.uid]) + ')' : '')); else p.push('❓ ohne Konto-Zuordnung');
+    if (v.dev) p.push(v.dev); if (v.ts) p.push(when(v.ts)); return p.join(' · '); }
   function saveLB(pd) { const who = ME; if (!who || !DB) return;
-    if (pd.kind === 'best') { const id = pd.track + '__' + who, old = LB[id]; if (old && old.ms <= pd.ms) return; const doc = {track: pd.track, who, drv: pd.drv, veh: pd.veh, ms: pd.ms, ts: Date.now()};
+    if (pd.kind === 'best') { const id = pd.track + '__' + who, old = LB[id]; if (old && old.ms <= pd.ms) return; const doc = {track: pd.track, who, drv: pd.drv, veh: pd.veh, ms: pd.ms, ts: Date.now(), uid: UID, dev: devName()};
       DB.doc('kartbest/' + id).set(doc).catch(() => {}); DB.doc('kartghost/' + id).set({g: pd.g, ms: pd.ms}).catch(() => {}); LB[id] = doc; }
-    else { const id = pd.d + '__' + who, old = LBD[id]; if (old && old.ms <= pd.ms) return; const doc = {d: pd.d, who, drv: pd.drv, ms: pd.ms, ts: Date.now()}; DB.doc('kartdaily/' + id).set(doc).catch(() => {}); LBD[id] = doc; } }
-  function setMe(id) { ME = id; store.set('me', id);
+    else { const id = pd.d + '__' + who, old = LBD[id]; if (old && old.ms <= pd.ms) return; const doc = {d: pd.d, who, drv: pd.drv, ms: pd.ms, ts: Date.now(), uid: UID, dev: devName()}; DB.doc('kartdaily/' + id).set(doc).catch(() => {}); LBD[id] = doc; } }
+  function setMe(id) { ME = id; store.set('me', id); setTimeout(accSync, 0);
     try { const g = Object.keys(GROUP_IDS).find(k => GROUP_IDS[k].includes(id)); if (g && typeof setGroup === 'function') setGroup(g); meMark(); renderMe(); } catch (e) {}
     if (PEND) { saveLB(PEND); PEND = null; const w = res.querySelector('.kr-who'); if (w) { w.innerHTML = '<p>✅ Gespeichert als <b>' + esc(NAME(id)) + '</b>. Ab jetzt merkt sich dieses Handy, wer spielt.</p>'; } }
-    if (!menu.hidden) renderMenu(); }
+    if (!box.hidden && !menu.hidden) renderMenu(); }
   const whoHtml = txt => '<div class="kr-who"><p>' + txt + '</p><div class="kr-pick kr-whop">' + CREW.map(p => '<button type="button" data-who="' + p.id + '" aria-label="' + esc(p.name) + '"><span class="kr-wh" data-h="' + p.id + '"></span><span>' + esc(p.name) + '</span></button>').join('') + '</div></div>';
   const whoHeads = el => el.querySelectorAll('.kr-wh').forEach(x => x.replaceWith(headCv(x.dataset.h, 92)));
   // Crew-Rekorde aller Strecken
@@ -8154,7 +8169,7 @@ setGroup(G);
     el.innerHTML = '<div class="kb-h"><b>🏆 Crew-Rekorde</b><span>' + Object.entries(cnt).sort((x, y) => y[1] - x[1]).map(([id, n]) => '👑 ' + esc(NAME(id)) + ' ' + n).join(' · ') + '</span></div>' +
       lost.map(r => '<p class="kb-lost">😱 <b>' + esc(NAME(r.list[0].who)) + '</b> hat deinen Rekord auf ' + esc(r.tr.name) + ' geknackt! Hol ihn dir zurück.</p>').join('') +
       '<div class="kb-l">' + rows.map(r => { const top = r.list[0], me2 = r.list.find(v => v.who === ME), pos = me2 ? r.list.indexOf(me2) + 1 : 0;
-        return '<button type="button" data-t="' + r.tr.id + '"><i>' + r.tr.e + '</i><span><b>' + esc(r.tr.name) + '</b><small>' + (top.who === ME ? 'Dein Rekord, verteidige ihn!' : pos ? 'Du: ' + pos + '. · ' + fmt(me2.ms) : r.list.length + (r.list.length === 1 ? ' Zeit' : ' Zeiten')) + '</small></span><em>' + esc(NAME(top.who)) + '<br><b>' + fmt(top.ms) + '</b></em><u>⚔️</u></button>'; }).join('') + '</div>' +
+        return '<button type="button" data-t="' + r.tr.id + '"><i>' + r.tr.e + '</i><span><b>' + esc(r.tr.name) + '</b><small>' + esc(byline(top)) + '</small><small class="kb-me">' + (top.who === ME ? '🛡 Dein Rekord, verteidige ihn!' : pos ? 'Du: ' + pos + '. · ' + fmt(me2.ms) : r.list.length + (r.list.length === 1 ? ' Zeit' : ' Zeiten')) + '</small></span><em>' + esc(NAME(top.who)) + '<br><b>' + fmt(top.ms) + '</b></em><u>⚔️</u></button>'; }).join('') + '</div>' +
       '<p class="kb-n">⚔️ antippen = Strecke mit dem Geist des Rekordhalters fahren. ' + (TRACKS.length - rows.length) + ' Strecken noch ohne Rekord.</p>'; }
   document.addEventListener('click', e => { const b = e.target.closest('#kt-board button[data-t]'); if (!b) return; TRK = b.dataset.t; store.set('kartTrack', TRK);
     MODE = 'single'; store.set('kartMode', MODE); GHOST.mode = 'crew'; store.set('kartGhost', 'crew'); open(); });
