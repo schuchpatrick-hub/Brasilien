@@ -417,6 +417,7 @@ function renderDays() {
   if (t >= '2026-12-27') { const k = stops.findIndex(s => days.some(d => d.date === t && stopOfDay(d) === s.id)); if (k >= 0) start = k; }
   slider(box, stops.map(s => '<b>' + s.n + '</b> ' + esc(s.name.replace(' & Amazonas', ''))), {top: true, start});
   if (window.photoDecorate) photoDecorate();
+  if (window.glossApply) glossApply(box);
 }
 
 /* ---------- Flüge als Bordkarten ---------- */
@@ -7208,5 +7209,35 @@ setGroup(G);
   const close = () => { box.remove(); };
   box.addEventListener('click', e => { if (e.target === box || e.target.closest('.wc-go')) close(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); }, {once: true});
+})();
+
+/* ---------- Begriffe erklären: Insider-Wörter gepunktet unterstrichen, Antippen zeigt eine Sprechblase (trip.json → glossary) ----------
+   Je Kapitel nur das erste Vorkommen, nicht in Knöpfen, Links, Filmen, Karten und Überschriften. */
+(function () {
+  const GL = TRIP.glossary || []; if (PRINT || !GL.length) return;
+  const SKIP = 'script,style,svg,button,a,input,textarea,select,h1,h2,h3,.tabs,.gl,.samba,#series,.fc,.q-box,.welcome,.lightbox,.me-box,.fab-wrap,.mi,figure,label,summary';
+  const rx = new RegExp('(?<![\\wÄÖÜäöüß-])(' + GL.map(g => g.t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/&/g, '(?:&|und)')).join('|') + ')(?![\\wÄÖÜäöüß-])');
+  const find = w => GL.findIndex(g => new RegExp('^' + g.t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/&/g, '(?:&|und)') + '$').test(w));
+  function apply(root) {
+    const sec = root.closest ? (root.closest('section') || root) : root, seen = new Set([...sec.querySelectorAll('.gl')].map(e => e.dataset.gl));
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {acceptNode: n => n.parentElement && !n.parentElement.closest(SKIP) && rx.test(n.nodeValue) ? 1 : 2});
+    const nodes = []; while (w.nextNode()) nodes.push(w.currentNode);
+    nodes.forEach(n => { const m = n.nodeValue.match(rx); if (!m) return; const i = find(m[1]); if (i < 0 || seen.has(String(i))) return; seen.add(String(i));
+      const pre = n.nodeValue.slice(0, m.index), post = n.nodeValue.slice(m.index + m[1].length), sp = document.createElement('span');
+      sp.className = 'gl'; sp.tabIndex = 0; sp.dataset.gl = i; sp.setAttribute('role', 'button'); sp.setAttribute('aria-label', m[1] + ': Erklärung'); sp.textContent = m[1];
+      const p = n.parentNode; p.insertBefore(document.createTextNode(pre), n); p.insertBefore(sp, n); n.nodeValue = post; });
+  }
+  window.glossApply = el => { try { apply(el); } catch (e) {} };
+  const pop = document.createElement('div'); pop.className = 'gl-pop'; pop.hidden = true; document.body.appendChild(pop);
+  const hide = () => { pop.hidden = true; };
+  document.addEventListener('click', e => { const g = e.target.closest('.gl'); if (!g) { if (!e.target.closest('.gl-pop')) hide(); return; }
+    e.preventDefault(); e.stopPropagation(); const it = GL[+g.dataset.gl]; if (!it) return;
+    pop.innerHTML = '<b>' + esc(it.t) + '</b>' + esc(it.x); pop.hidden = false;
+    const r = g.getBoundingClientRect(), pw = Math.min(280, innerWidth - 24); pop.style.width = pw + 'px';
+    pop.style.left = Math.max(12, Math.min(innerWidth - pw - 12, r.left + r.width / 2 - pw / 2)) + 'px';
+    const below = r.bottom + 8 + pop.offsetHeight < innerHeight; pop.style.top = (below ? r.bottom + 8 : r.top - pop.offsetHeight - 8) + 'px'; }, true);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && e.target.classList.contains('gl')) { e.preventDefault(); e.target.click(); } });
+  addEventListener('scroll', hide, {passive: true});
+  setTimeout(() => document.querySelectorAll('.wrap > section, header').forEach(apply), 1200);
 })();
 </script>

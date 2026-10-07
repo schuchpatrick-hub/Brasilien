@@ -79,6 +79,7 @@ Wörter müssen passen. Treffer öffnen `<details>`, das Sprachführer-Thema, di
 **Foto des Tages** (seit 07.10.): ein Bild pro Tag, Upload nur mit Schreibrecht über „📷“ in der Tageszeile (nur heute und vergangene Tage, sonst unsichtbar),
 im Browser verkleinert (max. 1280 px, ~170 KB; Vorschau 220 px). db: `photos/<Datum>` = {`th`, `cap`, `ts`} (klein, zwischengespeichert), `photofull/<Datum>` = {`img`}
 (erst beim Antippen geladen). Vorschau klein rechts in der Tageszeile (`.ph-th`, `.has-ph`), groß in der Crew-Lightbox (wird dafür unter `<body>` gehängt), Löschen mit zweimal Tippen.
+**Begriffe erklären** (seit 07.10.): `trip.json` → `glossary` [{`t`, `x`}]; `glossApply()` unterstreicht je Kapitel das erste Vorkommen gepunktet (`.gl`, nicht in Knöpfen, Links, Überschriften, Filmen, Karten), Antippen zeigt `.gl-pop`; `renderDays()` ruft es nach jedem Neuaufbau.
 **Willkommen** (seit 07.10.): einmaliger Kasten `.welcome` nur beim allerersten Besuch auf einem Gerät (`FIRST_VISIT` = noch kein `br26.*`-Eintrag im localStorage).
 
 **„Ich bin …“** (`#me-box` im Kopf, nach der Wahl nur ein kleiner Chip `.me-mini`, aufklappbar, localStorage `br26.meOpen`): Person wird pro Gerät gemerkt (localStorage `br26.me`), stellt die Gruppe ein, hebt
