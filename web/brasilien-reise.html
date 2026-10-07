@@ -1389,7 +1389,6 @@ details.more-note .note{margin-top:6px}
 
 <nav class="tabs" aria-label="Bereiche"><div class="tabs-in"><a href="#uebersicht" id="tab-uebersicht" data-tab="uebersicht"><span aria-hidden="true">🏠</span> Übersicht</a><a href="#tage-tab" id="tab-tage-tab" data-tab="tage-tab"><span aria-hidden="true">📅</span> Tage</a><a href="#reise" id="tab-reise" data-tab="reise"><span aria-hidden="true">✈️</span> Flüge &amp; Kosten</a><a href="#infos" id="tab-infos" data-tab="infos"><span aria-hidden="true">ℹ️</span> Infos</a><a href="#unterwegs-tab" id="tab-unterwegs-tab" data-tab="unterwegs-tab"><span aria-hidden="true">🧭</span> Unterwegs &amp; Packen</a><a href="#crew-tab" id="tab-crew-tab" data-tab="crew-tab"><span aria-hidden="true">👥</span> Crew &amp; Karten</a><a href="#kino-tab" id="tab-kino-tab" data-tab="kino-tab"><span aria-hidden="true">🎬</span> Kino</a><a href="#vorfreude-tab" id="tab-vorfreude-tab" data-tab="vorfreude-tab"><span aria-hidden="true">🎁</span> Vorfreude</a><a href="#spiele-tab" id="tab-spiele-tab" data-tab="spiele-tab"><span aria-hidden="true">🎲</span> Spiele</a><a href="#drinks-tab" id="tab-drinks-tab" data-tab="drinks-tab"><span aria-hidden="true">🍹</span> Drinks</a><a href="#downloads" id="tab-downloads" data-tab="downloads"><span aria-hidden="true">⬇️</span> Downloads</a></div><button type="button" class="tab-search" id="q-open" aria-label="Suchen" title="Suchen">🔍</button></nav>
 
-<aside class="news" id="news" hidden aria-live="polite"></aside>
 <nav class="tiles" id="themen" aria-label="Themen"><a href="#tage-tab" class="tile k-plan"><span class="tile-i" aria-hidden="true">📅</span><b>Tag für Tag</b><small data-hint="tage-tab">Alle Tage &amp; Termine</small></a><a href="#reise" class="tile k-plan"><span class="tile-i" aria-hidden="true">✈️</span><b>Flüge &amp; Kosten</b><small data-hint="reise">Bordkarten &amp; Preise</small></a><a href="#infos" class="tile k-info"><span class="tile-i" aria-hidden="true">ℹ️</span><b>Infos</b><small data-hint="infos">Praktisches, Gesundheit</small></a><a href="#sprache" class="tile k-go"><span class="tile-i" aria-hidden="true">🗣️</span><b>Sprache</b><small data-hint="sprache">Sätze zum Anhören</small></a><a href="#rechner" class="tile k-go"><span class="tile-i" aria-hidden="true">💸</span><b>Real-Rechner</b><small data-hint="rechner">Euro ↔ Real</small></a><a href="#crew-tab" class="tile k-fun"><span class="tile-i" aria-hidden="true">👥</span><b>Crew &amp; Karten</b><small data-hint="crew-tab">Steckbriefe &amp; FIFA-Karten</small></a><a href="#kino-tab" class="tile k-kino"><span class="tile-i" aria-hidden="true">🎬</span><b>Kino</b><small data-hint="kino-tab">Samba-Show, Serie &amp; Reise-Film</small></a><a href="#kalender" class="tile k-fun"><span class="tile-i" aria-hidden="true">🎁</span><b>Vor&shy;freude</b><small data-hint="kalender">Türchen &amp; Zeitkapsel</small></a><a href="#spiele-tab" class="tile k-fun"><span class="tile-i" aria-hidden="true">🎲</span><b>Spiele</b><small data-hint="spiele-tab">Ranglisten &amp; Sprüche</small></a><a href="#drinks-tab" class="tile k-go"><span class="tile-i" aria-hidden="true">🍹</span><b>Drinks</b><small data-hint="drinks-tab">Counter &amp; Ranking</small></a></nav>
 
 <section id="route" data-kind="start" data-tab="uebersicht">
@@ -8961,29 +8960,18 @@ setGroup(G);
 })();
 
 /* ---------- Was ist neu? Einträge in trip.json → news (id, d, tab, to, e, t); gesehen pro Handy (localStorage br26.newsSeen).
-   Erster Besuch: alles gilt als gesehen, der Kasten zeigt dann nur „Zuletzt neu“. Punkte an Reitern und Kacheln mit Neuem. ---------- */
+   Kein eigener Kasten mehr (Wunsch Patrick 07.10.): nur rote Punkte an Reitern und Kacheln mit Neuem; Reiter antippen = gesehen.
+   Erster Besuch: alles gilt als gesehen. ---------- */
 (function () {
-  const box = document.getElementById('news'), N = (TRIP.news || []).slice().sort((a, b) => b.d.localeCompare(a.d));
-  if (!box || !N.length || PRINT) return;
+  const N = TRIP.news || []; if (!N.length || PRINT) return;
   let seen = null; try { seen = JSON.parse(store.get('newsSeen') || 'null'); } catch (e) {}
-  const first = !Array.isArray(seen); if (first) { seen = N.map(n => n.id); store.set('newsSeen', JSON.stringify(seen)); }
+  if (!Array.isArray(seen)) { seen = N.map(n => n.id); store.set('newsSeen', JSON.stringify(seen)); }
   const fresh = n => !seen.includes(n.id);
-  const dm = d => d.slice(8, 10) + '.' + d.slice(5, 7) + '.';
-  function save() { store.set('newsSeen', JSON.stringify(seen)); }
-  function mark(ids) { ids.forEach(id => { if (!seen.includes(id)) seen.push(id); }); save(); paint(); }
-  function paint() {
-    const nw = N.filter(fresh), show = (nw.length ? nw : N).slice(0, nw.length ? 8 : 3);
+  function paint() { const nw = N.filter(fresh);
     document.querySelectorAll('.tabs a[data-tab], .tiles .tile').forEach(a => { const tab = a.dataset.tab || (a.getAttribute('href') || '').slice(1);
-      a.classList.toggle('has-new', nw.some(n => n.tab === tab || n.to === tab)); });
-    box.hidden = !nw.length; if (!nw.length) return;   // nur zeigen, wenn es wirklich Neues gibt
-    box.innerHTML = '<div class="news-h"><b>' + (nw.length ? '🆕 ' + nw.length + (nw.length === 1 ? ' Neuigkeit' : ' Neuigkeiten') + ' seit deinem letzten Besuch' : '🆕 Zuletzt neu') + '</b>' +
-      (nw.length ? '<button type="button" id="news-ok">✓ Alles gesehen</button>' : '') + '</div><ul>' +
-      show.map(n => '<li class="' + (fresh(n) ? 'new' : '') + '"><a href="#' + esc(n.to || n.tab) + '" data-id="' + esc(n.id) + '"><span aria-hidden="true">' + esc(n.e || '•') + '</span><span>' + esc(n.t) + '</span><small>' + dm(n.d) + '</small></a></li>').join('') + '</ul>';
-    const ok = document.getElementById('news-ok'); if (ok) ok.onclick = () => mark(N.map(n => n.id));
-    box.querySelectorAll('a[data-id]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); const n = N.find(x => x.id === a.dataset.id); mark([n.id]); jump(n.to || n.tab, true); }));
-  }
-  // Reiter mit Punkt antippen = dessen Neuigkeiten gesehen
-  document.querySelectorAll('.tabs a[data-tab]').forEach(a => a.addEventListener('click', () => { const ids = N.filter(n => fresh(n) && n.tab === a.dataset.tab).map(n => n.id); if (ids.length) mark(ids); }));
+      a.classList.toggle('has-new', nw.some(n => n.tab === tab || n.to === tab)); }); }
+  document.querySelectorAll('.tabs a[data-tab], .tiles .tile').forEach(a => a.addEventListener('click', () => { const tab = a.dataset.tab || (a.getAttribute('href') || '').slice(1);
+    const ids = N.filter(n => fresh(n) && (n.tab === tab || n.to === tab)).map(n => n.id); if (ids.length) { seen.push(...ids); store.set('newsSeen', JSON.stringify(seen)); paint(); } }));
   paint();
 })();
 
