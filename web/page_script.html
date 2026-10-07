@@ -8167,6 +8167,7 @@ setGroup(G);
     const lost = ME ? rows.filter(r => seen[r.tr.id] === ME && r.list[0].who !== ME) : [];
     if (!Object.keys(seen).length) { const s0 = {}; rows.forEach(r => { s0[r.tr.id] = r.list[0].who; }); store.set('kartRecSeen', JSON.stringify(s0)); }
     const cnt = {}; rows.forEach(r => { cnt[r.list[0].who] = (cnt[r.list[0].who] || 0) + 1; });
+    { const h = document.querySelector('[data-hint="kart-tab"]'), k0 = Object.entries(cnt).sort((x, y) => y[1] - x[1])[0]; if (h && k0) { h.textContent = '👑 ' + NAME(k0[0]) + ' · ' + rows.length + '/' + TRACKS.length + ' Rekorde'; h.classList.add('live'); } }
     el.hidden = false;
     el.innerHTML = '<div class="kb-h"><b>🏆 Crew-Rekorde</b><span>' + Object.entries(cnt).sort((x, y) => y[1] - x[1]).map(([id, n]) => '👑 ' + esc(NAME(id)) + ' ' + n).join(' · ') + '</span></div>' +
       lost.map(r => '<p class="kb-lost">😱 <b>' + esc(NAME(r.list[0].who)) + '</b> hat deinen Rekord auf ' + esc(r.tr.name) + ' geknackt! Hol ihn dir zurück.</p>').join('') +
