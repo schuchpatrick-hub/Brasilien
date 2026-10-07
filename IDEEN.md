@@ -48,6 +48,37 @@ nach „Umgesetzt“ verschieben.
      im Vorfreude-Kalender und als Video für WhatsApp.
   5. **Lebendige Heute-Szene** unterwegs: kleine Endlos-Animation der aktuellen Station im Heute-Kasten.
 
+## 🚀 Große Projekte (Ideenliste 07.10., Patrick: „alle super“, wählt eins zum Umsetzen)
+
+**Film & Serie**
+- **Kinofilm „Gringos – Der Film“** (ca. 15 min): Nasenbär klaut am ersten Tag Jonas' Pass, Jagd quer durch Brasilien, Showdown auf der Ilha Grande; Kinoplakat, Trailer (auch 9:16), Premiere mit Countdown am Abflugtag, Popcorn-Knopf.
+- **Musical „Caipirinha – Das Musical“**: 3–4 gesungene Nummern, Solo-Lied je Person über ihre Macke, Finale als Chor an der Copacabana.
+- **Telenovela „Amor em Paraty“**: Seifenoper auf Portugiesisch mit Untertiteln, dramatische Zooms, Simon als tragischer Liebhaber, Dona Rosa kehrt zurück.
+- **Doku „Planet Gringo“** (Attenborough-Stil): Tierfilm-Sprecher beobachtet die Crew wie Wildtiere, eine Folge pro Station, Nasenbär und Kaiman als Gegenspieler.
+- **Heist-Film „Ocean's Six“**: Coup auf das letzte Picanha-Stück im Rodízio, Spezialrollen (Daijo Planer, Greisel Muskeln, Marco Ablenkung), Lageplan, Split-Screens, Wendung.
+- **Parodie-Reihe**: je 1 min im Stil Simpsons-Couch-Gag, Stummfilm, Anime, 8-Bit, Nachrichten, Wetterbericht.
+- **Reality-Show „Big Gringo Brasil“**: abends Nominierung per Abstimmung, Auszugs-Animation, am Ende „Gringo des Jahres“.
+
+**Spiele**
+- **„Wähle dein Abenteuer“** (interaktiver Cartoon, 6–8 Enden, Sammlung der Enden).
+- **„Gringo Run“** (siehe Cartoon-Animationen Nr. 3; Nasenbär als Boss, Rekord = +1 auf der FIFA-Karte).
+- **„Gringo Kart“**: Rennspiel von oben über die Reiseroute, Uber/Fiat Uno/Boot/Gepäckkarren, Items Caipi-Turbo, Sonnencreme-Öl, Nasenbär-Blitz, Bestenliste je Strecke.
+- **„Gringos – Das Brettspiel“**: digital auf einem Handy (2–6), Felder = Stationen, Ereigniskarten aus echten Geschichten, Splitwise-Schulden als Währung, plus Druck-PDF.
+- **Escape-Room „Gefangen in der Juma Lodge“**: Hinweise in Fotos, Portugiesisch-Sätzen, Steckbriefen; Codes; Lösungszeit mit Rangliste.
+- **„Wer wird Millionär – Gringo-Edition“**: 15 Fragen, Moderator-Stimme, Joker 50:50, Publikum (Crew live), Telefonjoker (Crew-Stimme antwortet frech).
+- **„Fußball-Manager Gringos FC“**: Team aus den FIFA-Karten, Taktik, simulierte Spiele mit Live-Kommentar, Werte ändern sich mit Drinks/Siegen.
+
+**Erinnerung & Mitmachen**
+- **Interaktives Comic-Heft** (Asterix-Stil, unterwegs täglich eine Seite, am Ende PDF).
+- **„Gringo-Radio“**: 24/7-Sender mit Morgenshow, Nachrichten aus Live-Daten, Werbespots (Splitwise, Sonnencreme), mischt sich neu.
+- **3D-Globus-Reise**: Route abfliegen, Fotos, Check-ins, Kilometer, zum Drehen/Zoomen.
+- **Reise-Tagebuch mit Erzähler**: Sprecher fasst jeden Tag aus den Live-Daten zusammen, ergibt ein Hörbuch der Reise.
+
+**Kleinere aus derselben Liste**
+- „Wer war's?“-Quiz (Zitate/Geschichten raten), Nasenbär-Jagd (10 versteckte Nasenbären auf der Seite → Bonus-Clip), Cevapi-Coins-Wettbüro (Quoten aus den Karten),
+  Crew-Aktienmarkt (Marktwert als Börsenticker), Brasilien-Bingo (eigene Karte je Person), Soundboard (beste Sprüche), „O Diário dos Gringos“ (tägliche Boulevard-Titelseite aus Live-Daten),
+  Tagesheld & Tagesdepp mit Urkunde, Wanted-Plakate aus Ereignissen, Footvolley-Live-Ticker, Sprüche-Wand, „Brasilien Wrapped“ (Swipe-Statistik), Brasilien-Oscars als Cartoon-Verleihung.
+
 ## 💡 Vorgeschlagen, noch nicht beauftragt
 
 - Silvester-Special „Réveillon“ (Countdown, Bräuche, Ablauf, Treffpunkt, Sicherheit)
