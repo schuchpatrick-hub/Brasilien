@@ -9,7 +9,7 @@ nach „Umgesetzt“ verschieben.
   (Crew inkl. Glitzer-Wappen und Mannschaftsfoto als 4-Teile-Puzzle · Stationen als 2-Teile-Panoramen · Nebendarsteller (Taxifahrer, Kontrolleur,
   Dona Rosa, Rezeptionistin, Kaiman, rosa Delfin …) · eigene Nasenbär-Seite · Legendäre Momente als Standbilder aus Serie/Porträts · seltene Specials
   (Sonnenbrand-Simon, Silvester-Held, Promille-Lukas, TOTS, Rote Laterne) · ~16 nur unterwegs freischaltbar aus Live-Daten (Check-ins, erster Caipi,
-  Trinkkönig, Footvolley-Sieg, Foto des Tages wird Sticker)). Täglich 1 Tüte à 5 (Aufreißen, Walkout bei Glitzer), Einkleben per Antippen, leere Plätze mit
+  Trinkkönig, Footvolley-Sieg)). Täglich 1 Tüte à 5 (Aufreißen, Walkout bei Glitzer), Einkleben per Antippen, leere Plätze mit
   Nummer/Umriss, Doppelte, Album-Bestenliste; bis Abflug ca. 85 %, Rest nur in Brasilien. Auf der Seite nur eine Zeile im Kapitel Vorfreude, Album als Vollbild,
   Sticker-Bilder als Artifact-Dateien (nicht im Repo, Gesichter), lazy geladen.
   **Profi-Stufe:** einheitlicher Panini-Rahmen (Nummer, Namensband, Wappen, Flagge) und Farbfilter für alle Motive; Seltenheiten Normal/Glitzer (Holo, Neigen

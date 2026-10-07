@@ -416,7 +416,6 @@ function renderDays() {
   let start = stops.findIndex(s => days.some(d => stopOfDay(d) === s.id && d.date >= t)); if (start < 0) start = 0;
   if (t >= '2026-12-27') { const k = stops.findIndex(s => days.some(d => d.date === t && stopOfDay(d) === s.id)); if (k >= 0) start = k; }
   slider(box, stops.map(s => '<b>' + s.n + '</b> ' + esc(s.name.replace(' & Amazonas', ''))), {top: true, start});
-  if (window.photoDecorate) photoDecorate();
   if (window.glossApply) glossApply(box);
 }
 
@@ -7112,74 +7111,6 @@ setGroup(G);
     if (last) hint('kino-tab', 'Neu: Serie, Folge ' + TRIP.series[last].n + ' 📺'); }   // immer die neueste freigegebene Folge
   const kf = document.getElementById('kino-film');
   if (kf) kf.addEventListener('click', () => { jump('route', true); setTimeout(() => { const mp = document.getElementById('map-play'); if (mp && mp.getAttribute('aria-pressed') !== 'true') mp.click(); }, 900); });
-})();
-
-/* ---------- Foto des Tages ----------
-   Ein Foto pro Tag, hochladen nur mit Schreibrecht (📷 in der Tageszeile, nur heute und vergangene Tage). Vorschau klein in der Tageszeile,
-   Antippen öffnet groß. db: photos/<Datum> = {th (Vorschau), cap, ts} (klein, wird zwischengespeichert), photofull/<Datum> = {img}. */
-(function () {
-  if (PRINT) return;
-  let PH = {}, WR = false, col = null, full = null;
-  const today = () => isoToday();
-  function deco() {
-    document.querySelectorAll('#days .day[data-date]').forEach(row => {
-      const d = row.dataset.date, dt = row.querySelector('.dt'); if (!dt) return;
-      dt.querySelectorAll('.ph-th,.ph-add').forEach(x => x.remove()); row.classList.toggle('has-ph', !!(PH[d] && PH[d].th));
-      const p = PH[d];
-      if (p && p.th) { const b = document.createElement('button'); b.type = 'button'; b.className = 'ph-th'; b.dataset.date = d; b.setAttribute('aria-label', 'Foto des Tages ansehen');
-        b.innerHTML = '<img alt="" src="' + p.th + '">'; dt.appendChild(b); }
-      else if (WR && d <= today()) { const b = document.createElement('button'); b.type = 'button'; b.className = 'ph-add'; b.dataset.date = d; b.title = 'Foto des Tages hochladen'; b.textContent = '📷'; dt.appendChild(b); }
-    });
-  }
-  window.photoDecorate = deco;
-  // Bild verkleinern (lange Seite max. px), JPEG so lange nachkomprimieren, bis es klein genug ist
-  async function shrink(file, max, kb) {
-    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(file); });
-    let w = img.naturalWidth, h = img.naturalHeight; const k = Math.min(1, max / Math.max(w, h)); w = Math.round(w * k); h = Math.round(h * k);
-    const c = document.createElement('canvas'); c.width = w; c.height = h; c.getContext('2d').drawImage(img, 0, 0, w, h); URL.revokeObjectURL(img.src);
-    let q = .82, out = c.toDataURL('image/jpeg', q); while (out.length > kb * 1024 && q > .35) { q -= .08; out = c.toDataURL('image/jpeg', q); }
-    return out;
-  }
-  const pick = document.createElement('input'); pick.type = 'file'; pick.accept = 'image/*'; pick.hidden = true; document.body.appendChild(pick);
-  let pickDate = null;
-  document.addEventListener('click', async e => {
-    const add = e.target.closest('.ph-add'); if (add) { pickDate = add.dataset.date; pick.value = ''; pick.click(); return; }
-    const th = e.target.closest('.ph-th'); if (th) { e.preventDefault(); show(th.dataset.date); return; }
-    const sv = e.target.closest('.ph-save'); if (sv) save(sv.closest('.ph-form')); const ca = e.target.closest('.ph-cancel'); if (ca) ca.closest('.ph-form').remove();
-  });
-  pick.addEventListener('change', async () => {
-    const f = pick.files && pick.files[0]; if (!f || !pickDate) return;
-    const row = document.querySelector('#days .day[data-date="' + pickDate + '"]'); if (!row) return;
-    row.querySelectorAll('.ph-form').forEach(x => x.remove());
-    const form = document.createElement('div'); form.className = 'ph-form'; form.dataset.date = pickDate; form.innerHTML = '<span class="ph-busy">⏳ Bild wird verkleinert …</span>'; row.querySelector('.bd').appendChild(form);
-    try { const img = await shrink(f, 1280, 190), th = await shrink(f, 220, 16); form._img = img; form._th = th;
-      form.innerHTML = '<img class="ph-prev" alt="" src="' + th + '"><input type="text" maxlength="80" placeholder="Bildunterschrift (optional)"><button type="button" class="btn ph-save">Speichern</button><button type="button" class="btn ghost ph-cancel">Abbrechen</button>'; }
-    catch (err) { form.innerHTML = '⚠️ Das Bild ließ sich nicht lesen.'; }
-  });
-  async function save(form) {
-    if (!form || !form._img) return; const d = form.dataset.date, cap = (form.querySelector('input') || {}).value || '';
-    form.querySelectorAll('button').forEach(b => { b.disabled = true; });
-    try { await full.doc(d).set({img: form._img}); await col.doc(d).set({th: form._th, cap: cap.trim().slice(0, 80), ts: Date.now()}); form.remove(); }
-    catch (err) { form.insertAdjacentHTML('beforeend', '<span class="ph-busy">⚠️ Speichern ging nicht (' + esc(String(err && (err.code || err.message) || '')) + ')</span>'); form.querySelectorAll('button').forEach(b => { b.disabled = false; }); }
-  }
-  // Groß anzeigen (eigene Lightbox der Crew-Fotos mitbenutzen)
-  async function show(d) {
-    const lb = document.getElementById('lightbox'), im = document.getElementById('lightbox-img'), cp = document.getElementById('lightbox-cap'); if (!lb) return;
-    if (lb.parentElement !== document.body) document.body.appendChild(lb);   // sonst unsichtbar, wenn das Crew-Kapitel gerade nicht gezeichnet wird
-    const p = PH[d] || {}, f = fmtDay(d); im.src = p.th || ''; im.alt = 'Foto des Tages ' + f.wd + ' ' + f.dm;
-    cp.textContent = '📸 ' + f.wd + ' ' + f.dm + (p.cap ? ' · ' + p.cap : '');
-    let del = lb.querySelector('.ph-del'); if (del) del.remove();
-    if (WR) { del = document.createElement('button'); del.type = 'button'; del.className = 'btn ghost ph-del'; del.textContent = '🗑 Foto löschen'; lb.querySelector('figure').appendChild(del);
-      del.addEventListener('click', async ev => { ev.stopPropagation(); if (!del.dataset.sure) { del.dataset.sure = 1; del.textContent = 'Nochmal tippen zum Löschen'; return; }
-        await col.doc(d).delete(); await full.doc(d).delete(); lb.click(); }); }
-    lb.hidden = false; document.body.style.overflow = 'hidden';
-    try { const s = await full.doc(d).get(); const v = s && s.exists ? s.data() : null; if (v && v.img && !lb.hidden) im.src = v.img; } catch (e) {}
-  }
-  document.addEventListener('click', e => { const lb = document.getElementById('lightbox'); if (lb && lb.hidden) { const x = lb.querySelector('.ph-del'); if (x) x.remove(); } }, true);
-  getDb().then(db => { if (!db) return; col = db.collection('photos'); full = {doc: id => db.doc('photofull/' + id)};
-    col.onSnapshot(snap => { PH = {}; snap.docs.forEach(x => { if (x.exists) PH[x.id] = x.data(); }); deco(); }, () => {});
-    canWrite().then(w => { WR = w !== false && w !== null; deco(); }).catch(() => {});
-  }).catch(() => {});
 })();
 
 /* ---------- Willkommen: einmalig beim allerersten Besuch ---------- */
