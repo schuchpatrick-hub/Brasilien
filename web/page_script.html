@@ -7277,7 +7277,8 @@ setGroup(G);
 
   /* ---- Rennen ---- */
   const box = document.getElementById('kart'), cv = box.querySelector('canvas'), ctx = cv.getContext('2d');
-  const menu = box.querySelector('.kr-menu'), res = box.querySelector('.kr-res'), itemBtn = box.querySelector('.kr-item'), sndBtn = box.querySelector('.kr-snd');
+  const menu = box.querySelector('.kr-menu'), res = box.querySelector('.kr-res'), itemBtn = box.querySelector('.kr-item'), sndBtn = box.querySelector('.kr-snd'), pm = box.querySelector('.kr-pm'), steerBtn = box.querySelector('.kr-steer');
+  const STEERS = [['Sanft', 1.25], ['Mittel', 1.65], ['Stark', 2.2]]; let STEER = +(store.get('kartSteer') || 1); if (!STEERS[STEER]) STEER = 1;
   let S = null, raf = 0, last = 0, me = ME || 'patrick', W = 0, H = 0, DPR = 1;
   const best = () => { try { return JSON.parse(store.get('kartBest') || '{}'); } catch (e) { return {}; } };
   const fmt = ms => { const s = ms / 1000; return Math.floor(s / 60) + ':' + (s % 60).toFixed(1).padStart(4, '0'); };
@@ -7322,7 +7323,8 @@ setGroup(G);
         const bx = S.boxes.find(b => !b.off && !k.item && Math.abs(b.i - k.idx) < 40 && b.i > k.idx); if (bx && !nut) lane = bx.l;
         const [tx, ty] = at(k.idx + la, clamp(lane, -55, 55)); let d = Math.atan2(ty - k.y, tx - k.x) - k.a; d = Math.atan2(Math.sin(d), Math.cos(d)); target = clamp(d * 2.6, -1, 1);
         if (k.item && k.roll <= 0) { k.useAt -= dt; if (k.useAt < 0) useItem(k); } }
-      k.steer += clamp(target - k.steer, -7 * dt, 7 * dt);
+      const rate = k.me ? (target ? 3.2 : 6) : 7;   // Spieler: Lenkeinschlag baut sich weich auf, Loslassen geht schnell zurück
+      k.steer += clamp(target - k.steer, -rate * dt, rate * dt);
       // Tempo
       const sand = Math.abs(k.lat) > TW / 2 - 4, me1 = ks[0];
       let vmax = VMAX * k.skill * (sand ? .55 : 1) * (k.boost > 0 ? 1.55 : 1) * (k.done ? .6 : 1);
@@ -7330,7 +7332,7 @@ setGroup(G);
       if (k.spin > 0) { k.spin -= dt; k.rot += dt * 14; vmax *= .25; } else k.rot *= Math.max(0, 1 - dt * 10);
       k.v += (vmax - k.v) * Math.min(1, dt * (k.v < vmax ? 1.6 : 4));
       k.boost = Math.max(0, k.boost - dt);
-      k.a += k.steer * 2.7 * dt * Math.min(1, k.v / 120);
+      k.a += k.steer * (k.me ? STEERS[STEER][1] : 2.7) * dt * Math.min(1, k.v / 120);
       k.x = clamp(k.x + Math.cos(k.a) * k.v * dt, 20, WW - 20); k.y = clamp(k.y + Math.sin(k.a) * k.v * dt, 210, shore(k.x) - 10);
       if (sand && k.v > 120) { k.dust -= dt; if (k.dust < 0) { k.dust = .06; S.fx.push({x: k.x - Math.cos(k.a) * 18, y: k.y - Math.sin(k.a) * 18, dust: 1, t: 0}); } }
       // Fortschritt und Runden
@@ -7434,7 +7436,7 @@ setGroup(G);
     const ol = res.querySelector('ol'); ol.innerHTML = '';
     order.forEach((k, i) => { const li = document.createElement('li'); if (k.me) li.className = 'me'; const c = document.createElement('canvas'); c.width = c.height = 64; c.getContext('2d').drawImage(HEAD[k.id], 0, 0, 64, 64);
       li.innerHTML = '<b>' + (i + 1) + '.</b>'; li.appendChild(c); li.insertAdjacentHTML('beforeend', '<span>' + esc(name(k.id)) + '</span><small>' + (k.done ? fmt(k.done * 1000) : '+ ' + (k.est - mine.done).toFixed(1) + ' s') + '</small>'); ol.appendChild(li); });
-    res.hidden = false; S.paused = true;
+    res.hidden = false; S.paused = true; racing(false);
   }
   function renderMenu() {
     const pick = menu.querySelector('.kr-pick'); pick.innerHTML = '';
@@ -7442,13 +7444,13 @@ setGroup(G);
       b.appendChild(c); b.insertAdjacentHTML('beforeend', '<span>' + esc(p.name) + '</span>'); pick.appendChild(b); });
     const b = best().copa; menu.querySelector('.kr-best').textContent = b ? 'Deine Bestzeit Copacabana: ' + fmt(b) : 'Noch keine Bestzeit auf diesem Handy.';
   }
-  function startRace() { menu.hidden = true; res.hidden = true; newRace(); audio(); last = 0; }
+  function startRace() { menu.hidden = true; res.hidden = true; pm.hidden = true; racing(true); newRace(); audio(); last = 0; }
   function open() {
     if (!BG) { drawBG(); makeSprites(); }
     if (box.parentElement !== document.body) document.body.appendChild(box);   // Kapitel hat content-visibility, sonst unsichtbar
     box.hidden = false; document.body.style.overflow = 'hidden'; document.documentElement.classList.add('kart-on'); resize();
     try { const r = box.requestFullscreen || box.webkitRequestFullscreen; if (r) { const pr = r.call(box); if (pr && pr.catch) pr.catch(() => {}); } } catch (e) {}
-    S = null; renderMenu(); setTimeout(renderMenu, 900); menu.hidden = false; res.hidden = true;
+    S = null; renderMenu(); setTimeout(renderMenu, 900); menu.hidden = false; res.hidden = true; pm.hidden = true; racing(false);
     newRace(); S.paused = true; S.t = -3.2; cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
   }
   function close() {
@@ -7456,11 +7458,23 @@ setGroup(G);
     if (eng && AC) eng.g.gain.setTargetAtTime(0, AC.currentTime, .05); try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {}
   }
   openBtn.addEventListener('click', open);
-  box.querySelector('.kr-close').addEventListener('click', close);
-  sndBtn.textContent = SOUND ? '🔊' : '🔇';
-  sndBtn.addEventListener('click', () => { SOUND = !SOUND; store.set('kartSound', SOUND ? '1' : '0'); sndBtn.textContent = SOUND ? '🔊' : '🔇'; if (!SOUND && eng && AC) eng.g.gain.value = 0; if (SOUND) audio(); });
+  const racing = on => box.classList.toggle('racing', on);
+  function pause() { if (!S || !box.classList.contains('racing') || !res.hidden) return; S.paused = true; ptr.clear(); upd(); pm.hidden = false; if (eng && AC) eng.g.gain.setTargetAtTime(0, AC.currentTime, .05); }
+  function resume() { pm.hidden = true; if (S) S.paused = false; last = 0; audio(); }
+  const sndTxt = () => { sndBtn.textContent = (SOUND ? '🔊 Ton: an' : '🔇 Ton: aus'); }, steerTxt = () => { steerBtn.textContent = '🎮 Lenkung: ' + STEERS[STEER][0]; };
+  sndTxt(); steerTxt();
+  box.querySelector('.kr-pbtn').addEventListener('click', pause);
+  pm.addEventListener('click', e => {
+    if (e.target.closest('.kr-resume')) resume();
+    if (e.target.closest('.kr-restart')) { pm.hidden = true; startRace(); }
+    if (e.target.closest('.kr-back')) { pm.hidden = true; racing(false); menu.hidden = false; renderMenu(); newRace(); S.paused = true; }
+    if (e.target.closest('.kr-steer')) { STEER = (STEER + 1) % STEERS.length; store.set('kartSteer', STEER); steerTxt(); }
+    if (e.target.closest('.kr-snd')) { SOUND = !SOUND; store.set('kartSound', SOUND ? '1' : '0'); sndTxt(); if (!SOUND && eng && AC) eng.g.gain.value = 0; }
+    if (e.target.closest('.kr-quit')) { pm.hidden = true; close(); }
+  });
+  box.addEventListener('click', e => { if (e.target.closest('.kr-menu .kr-quit, .kr-res .kr-quit')) close(); });
   menu.addEventListener('click', e => { const b = e.target.closest('.kr-pick button'); if (b) { me = b.dataset.id; renderMenu(); newRace(); S.paused = true; } if (e.target.closest('.kr-go')) startRace(); });
-  res.addEventListener('click', e => { if (e.target.closest('.kr-again')) startRace(); if (e.target.closest('.kr-back')) { res.hidden = true; menu.hidden = false; renderMenu(); newRace(); S.paused = true; } });
+  res.addEventListener('click', e => { if (e.target.closest('.kr-again')) startRace(); if (e.target.closest('.kr-res .kr-back')) { res.hidden = true; menu.hidden = false; renderMenu(); newRace(); S.paused = true; } });
   // Steuerung: Daumen links/rechts, Item-Knopf; Tastatur
   const ptr = new Map();
   const upd = () => { INPUT.L = [...ptr.values()].includes('L'); INPUT.R = [...ptr.values()].includes('R'); };
@@ -7470,11 +7484,10 @@ setGroup(G);
   itemBtn.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); if (S) useItem(S.karts[0]); });
   box.addEventListener('touchmove', e => e.preventDefault(), {passive: false});
   box.addEventListener('contextmenu', e => e.preventDefault());
-  addEventListener('keydown', e => { if (box.hidden) return; if (e.key === 'Escape') { close(); return; } INPUT.keys[e.key] = true; if (e.key === ' ') { e.preventDefault(); if (S) useItem(S.karts[0]); } if (e.key.startsWith('Arrow')) e.preventDefault(); });
+  addEventListener('keydown', e => { if (box.hidden) return; if (e.key === 'Escape' || e.key === 'p') { if (!pm.hidden) resume(); else if (box.classList.contains('racing')) pause(); else close(); return; } INPUT.keys[e.key] = true; if (e.key === ' ') { e.preventDefault(); if (S) useItem(S.karts[0]); } if (e.key.startsWith('Arrow')) e.preventDefault(); });
   addEventListener('keyup', e => { INPUT.keys[e.key] = false; });
   addEventListener('resize', () => { if (!box.hidden) resize(); });
-  document.addEventListener('visibilitychange', () => { if (document.hidden && S && !box.hidden && S.t > 0 && res.hidden) { S.paused = true; menu.hidden = true; res.hidden = true; box.querySelector('.kr-pause').hidden = false; } });
-  box.querySelector('.kr-pause').addEventListener('click', e => { e.currentTarget.hidden = true; if (S) S.paused = false; last = 0; audio(); });
-  window.__kart = {open, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish()};
+  document.addEventListener('visibilitychange', () => { if (document.hidden && !box.hidden) pause(); });
+  window.__kart = {open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish()};
 })();
 </script>

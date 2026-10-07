@@ -1359,8 +1359,13 @@ details.more-note .note{margin-top:6px}
 .kart{position:fixed;inset:0;z-index:9999;background:#0b5d8f;touch-action:none;-webkit-user-select:none;user-select:none;overscroll-behavior:contain}
 .kart[hidden]{display:none}
 .kart > canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
-.kr-bar{position:absolute;top:calc(8px + env(safe-area-inset-top));left:8px;display:flex;gap:6px;z-index:2}
-.kr-bar button,.kr-pause{border:0;border-radius:50%;width:40px;height:40px;background:rgba(0,0,0,.45);color:#fff;font-size:1rem;cursor:pointer}
+.kr-pbtn{position:absolute;top:calc(8px + env(safe-area-inset-top));left:8px;z-index:2;border:2px solid rgba(255,255,255,.8);border-radius:50%;width:44px;height:44px;background:rgba(0,0,0,.5);color:#fff;font-size:1.3rem;line-height:1;cursor:pointer;display:none}
+.kart.racing .kr-pbtn{display:block}
+.kart:not(.racing) .kr-item{display:none}
+.kr-pm{position:absolute;inset:0;display:grid;place-items:center;padding:16px;background:rgba(5,30,45,.6);z-index:4}
+.kr-pm[hidden]{display:none}
+.kr-pml{display:grid;gap:8px;margin-top:8px}.kr-pml .btn{margin:0;width:100%}
+.kr-link{border:0;background:none;color:#5b6660;font:600 .88rem system-ui,sans-serif;text-decoration:underline;margin-top:10px;cursor:pointer;display:block;margin-left:auto;margin-right:auto}
 .kr-item{position:absolute;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);width:84px;height:84px;border-radius:50%;border:4px solid #fff;background:radial-gradient(circle at 35% 30%,#ffe27a,#f5a400);color:#6b3a00;font:900 .95rem system-ui,sans-serif;letter-spacing:.04em;box-shadow:0 6px 16px rgba(0,0,0,.35);z-index:2;touch-action:none;cursor:pointer}
 .kr-menu,.kr-res{position:absolute;inset:0;display:grid;place-items:center;padding:16px;background:rgba(5,30,45,.55);z-index:3;overflow:auto}
 .kr-menu[hidden],.kr-res[hidden]{display:none}
@@ -1377,8 +1382,6 @@ details.more-note .note{margin-top:6px}
 .kr-res li canvas{width:34px;height:34px}.kr-res li small{color:#5b6660;font-variant-numeric:tabular-nums}
 .kr-res li.me{background:#fff3cc;font-weight:700}
 .kr-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.kr-pause{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);width:auto;height:auto;border-radius:30px;padding:14px 26px;font:800 1.1rem system-ui,sans-serif;z-index:4}
-.kr-pause[hidden]{display:none}
 html.kart-on .fab,html.kart-on #net{display:none!important}
 @media (orientation:landscape) and (max-height:520px){.kr-item{width:66px;height:66px;font-size:.8rem;left:auto;right:18px;transform:none}}
 @media print{.kart-teaser,.kart{display:none!important}}
