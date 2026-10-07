@@ -300,7 +300,7 @@ Kein Titelsong (auf Wunsch wieder entfernt, 03.10.).
 Nur-Kopf-Figuren (`headOnly`, Hilfsfunktion `headAt`) für Fenster, Gondel und Handy-Bildschirm. Lange Untertitel brechen in zwei Zeilen um.
 Neue Folge: Zeilen in `series.epN` (mit `scenes`, `credits`, `next`), Stimmen per `--series epN`, Szenen-Code in `frame()` ergänzen, `META` erweitern.
 
-## Gringo Kart (seit 07.10., Ausbau in Stufen: 1 Fahrgefühl ✅, 2 sechs Strecken + Grand Prix ✅, 3 Persönlichkeit/Items je Person ✅, 4 Bestenliste/Geister)
+## Gringo Kart (seit 07.10., Ausbau in Stufen: 1 Fahrgefühl ✅, 2 sechs Strecken + Grand Prix ✅, 3 Persönlichkeit/Items je Person ✅, 4 Bestenliste/Geister/Tages-Challenge ✅)
 
 Rennspiel im Kapitel Spiele: Knopf `#kart-open` (`.kart-teaser`) öffnet `#kart` als Vollbild-Overlay (wird beim Öffnen unter `<body>` gehängt, Kapitel hat content-visibility).
 Eigenes Modul „Gringo Kart“ am Ende von `page_script.html`, Canvas von oben, Kamera dreht mit (Fahrtrichtung oben), zoomt bei hohem Tempo leicht raus. Strecke Copacabana: Kontrollpunkte `CP` → Catmull-Rom,
@@ -327,7 +327,11 @@ Simon ☀️ Sonnenbrand-Blitz (blendet Nahe `blind`, Bildschirm-Blitz), Patrick
 Daijo 🥟 Snack-Runde (alle knapp hinter ihr halten an, sie bekommt Turbo). Persönliche Sprüche mit den Serien-Stimmen (`voice(k, over|hit|sp)`, Texte `VTXT`, Ton `audio/kart3.mp3`, `kartvo[v_<id>_<art>].f = 3`): beim Überholen, Treffer, Spezial-Item.
 Fahrzeuge `VEHS` (Gringo-Kart, Uber nach 3 Rennen, Fiat Uno nach 1 Sieg, Gepäckkarren nach Ilha Grande, Rollstuhl nach 5 Super-Turbos, Goldenes Kart nach Grand-Prix-Sieg), Wahl `br26.kartVeh`, Statistik `br26.kartStats` {races, wins, ilha, supers, cups},
 Feinwerte `VTUNE` (Tempo, Lenkung, Beschleunigung, ±2–20 %), Freischalt-Hinweis `.kr-unlock` in der Siegerliste; auf Amazonas (Boote) und Ilha Grande (Gepäckkarren) fahren alle das Strecken-Fahrzeug.
-Test: `window.__kart` (`open`, `pause`, `resume`, `state`, `step(dt)`, `draw`, `finish`, `say`, `load(id)`, `cup()`); `S.hl` zählt Treffer je Ursache. Beim Veröffentlichen `audio/kart3.mp3` mitgeben.
+**Gemeinsam (Stufe 4, Weg „Einladen“, Wunsch Patrick 07.10.):** Crew-Bestenliste in db `kartbest/<strecke>__<person>` {track, who, drv, veh, ms, ts}, Geister-Fahrt dazu in `kartghost/<…>` {g: [[x, y, a·100] alle 0,1 s], ms}; Tageswertung `kartdaily/<datum>__<person>`.
+Schreiben nur mit Schreibrecht (`canWrite()`, also Patrick und per E-Mail eingeladene Bearbeiter), sonst bleiben die Zeiten lokal (Hinweis `.kr-wr`). Person = „Ich bin …“ (`ME`), sonst gewählter Fahrer (`player()`); `drv` = gefahrene Figur.
+Geist (`GHOST.mode` off/mine/crew, localStorage `br26.kartGhost`, eigene Bestfahrt `br26.kartGhost.<strecke>`): halbdurchsichtig mit 👻, ohne Zusammenstoß, auch auf der Minikarte. Ergebniszeile `.kr-crew` (neuer Crew-Rekord bzw. aktueller Rekord).
+Tages-Challenge (Modus `daily`): `daily()` wählt aus dem Datum (Berlin) Strecke + Regel aus `RULES` (night = Scheinwerfer, rev = Strecke rückwärts `loadTrack(id, true)`, slip, turbo = nur Turbos, coati = Nasenbär-Chaos, mirror = Lenkung vertauscht); aktive Regel `RULE`, Bestzeit lokal unter `<strecke>@<regel>`.
+Test: `window.__kart` (`open`, `pause`, `resume`, `state`, `step(dt)`, `draw`, `finish`, `say`, `load(id)`, `cup()`, `lb()`, `daily()`); `S.hl` zählt Treffer je Ursache. Beim Veröffentlichen `audio/kart3.mp3` mitgeben.
 
 ## Karte: Infokarten
 

@@ -7258,8 +7258,8 @@ setGroup(G);
     P.pop(); N = P.length;
     for (let i = 0; i < N; i++) { const a = P[(i - 1 + N) % N], b = P[(i + 1) % N]; const tx = b[0] - a[0], ty = b[1] - a[1], l = Math.hypot(tx, ty) || 1; NX.push(-ty / l); NY.push(tx / l); }
   }
-  function loadTrack(id) {
-    T = TBY[id] || TRACKS[1]; LAPS = T.laps || 3; TW = T.tw; WW = T.ww; WH = T.wh; buildPath(T.cp);
+  function loadTrack(id, rev) {
+    T = TBY[id] || TRACKS[1]; LAPS = T.laps || 3; TW = T.tw; WW = T.ww; WH = T.wh; buildPath(rev ? T.cp.slice().reverse() : T.cp);
     PADS = (T.pads || []).map(([f, l]) => ({i: wrap(f * N), l})); RAMP = T.ramp ? wrap(T.ramp * N) : -1;
     SPECT = [];
     (T.spect || []).forEach(([f, s]) => { for (let j = 0; j < 9; j++) { const [x, y] = at(f * N + j * 4, s * (TW / 2 + 34 + (j % 2) * 16));
@@ -7460,11 +7460,44 @@ setGroup(G);
     if (v && BUF.ann3 && AC && SOUND) { playBuf(BUF.ann3, v.o / 1000, v.dur / 1000, 1.05); if (MG) { MG.gain.setTargetAtTime(.25, AC.currentTime, .05); MG.gain.setTargetAtTime(.5, AC.currentTime + v.dur / 1000, .3); } }
   }
 
+  /* ---- Tages-Challenge (Stufe 4): jeden Tag eine Strecke mit Sonderregel, gleich für alle ---- */
+  const RULES = [{k: 'night', e: '🌙', n: 'Nachtfahrt', x: 'nur dein Scheinwerfer leuchtet'}, {k: 'rev', e: '🔄', n: 'Rückwärts', x: 'Strecke in Gegenrichtung'},
+    {k: 'slip', e: '🧊', n: 'Rutschpartie', x: 'alles rutschig wie Iguaçu im Regen'}, {k: 'turbo', e: '🍹', n: 'Caipi-Wahnsinn', x: 'aus jeder Kiste ein Turbo'},
+    {k: 'coati', e: '🦝', n: 'Nasenbär-Chaos', x: 'Nasenbären überall, alle Items sind Nasenbären'}, {k: 'mirror', e: '🪞', n: 'Spiegelverkehrt', x: 'links ist rechts'}];
+  const dayKey = () => new Intl.DateTimeFormat('en-CA', {timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
+  function daily() { const d = dayKey(); let h = 7; for (const c of d) h = (h * 31 + c.charCodeAt(0)) % 100003; return {d, track: TRACKS[h % TRACKS.length], rule: RULES[(h >> 3) % RULES.length]}; }
+  let RULE = null;   // aktive Sonderregel (nur in der Tages-Challenge)
+  /* ---- Crew-Bestenliste und Geister (db: kartbest/<strecke>__<person>, kartghost/<…>, kartdaily/<datum>__<person>; schreiben nur mit Schreibrecht) ---- */
+  let LB = {}, LBD = {}, WR = false, DB = null;
+  const player = () => ME || me;   // wer am Handy spielt („Ich bin …“), sonst der gewählte Fahrer
+  function lbInit() {
+    if (DB !== null) return; DB = false;
+    getDb().then(db => { if (!db) return; DB = db;
+      db.collection('kartbest').onSnapshot(sn => { LB = {}; sn.docs.forEach(d => { if (d.exists) LB[d.id] = d.data(); }); if (!menu.hidden) renderMenu(); }, () => {});
+      db.collection('kartdaily').onSnapshot(sn => { LBD = {}; sn.docs.forEach(d => { if (d.exists) LBD[d.id] = d.data(); }); if (!menu.hidden) renderMenu(); }, () => {});
+    }).catch(() => {});
+    canWrite().then(w => { WR = w !== false && w !== null; if (!menu.hidden) renderMenu(); }).catch(() => {});
+  }
+  const lbList = (src, pre) => Object.entries(src).filter(([id]) => id.indexOf(pre + '__') === 0).map(([, v]) => v).filter(v => v && v.ms).sort((a, b) => a.ms - b.ms);
+  function lbHtml(list, title) {
+    if (!list.length) return '<p class="kr-lb-t">' + title + '</p><p class="kr-lb-e">Noch keine Zeit eingetragen. Sei der Erste!</p>';
+    return '<p class="kr-lb-t">' + title + '</p><ol class="kr-lb-l">' + list.slice(0, 6).map((v, i) => '<li' + (v.who === player() ? ' class="me"' : '') + '>' +
+      '<span>' + (['🥇', '🥈', '🥉'][i] || (i + 1) + '.') + ' ' + esc(NAME(v.who)) + (v.drv && v.drv !== v.who ? ' <small>als ' + esc(NAME(v.drv)) + '</small>' : '') + '</span><i>' + fmt(v.ms) + '</i></li>').join('') + '</ol>';
+  }
+  const GHOST = {mode: store.get('kartGhost') || 'off'};   // off | mine | crew
+  function ghostLocal(tid) { try { return JSON.parse(localStorage.getItem('br26.kartGhost.' + tid) || 'null'); } catch (e) { return null; } }
+  async function ghostFor(tid) {
+    if (GHOST.mode === 'mine') { const g = ghostLocal(tid); return g ? {g: g.g, who: player(), drv: g.drv || me, ms: g.ms} : null; }
+    if (GHOST.mode === 'crew') { const top = lbList(LB, tid)[0]; if (!top || !DB) return null;
+      try { const sn = await DB.doc('kartghost/' + tid + '__' + top.who).get(); const v = sn && sn.exists ? sn.data() : null; return v && v.g ? {g: v.g, who: top.who, drv: top.drv || top.who, ms: top.ms} : null; } catch (e) { return null; } }
+    return null;
+  }
+
   /* ---- Rennen ---- */
   const box = document.getElementById('kart'), cv = box.querySelector('canvas'), ctx = cv.getContext('2d');
   const menu = box.querySelector('.kr-menu'), res = box.querySelector('.kr-res'), itemBtn = box.querySelector('.kr-item'), sndBtn = box.querySelector('.kr-snd'), pm = box.querySelector('.kr-pm'), steerBtn = box.querySelector('.kr-steer'), annBtn = box.querySelector('.kr-ann');
   const STEERS = [['Sanft', 1.25], ['Mittel', 1.65], ['Stark', 2.2]]; let STEER = +(store.get('kartSteer') || 1); if (!STEERS[STEER]) STEER = 1;
-  let S = null, raf = 0, last = 0, me = ME || 'patrick', W = 0, H = 0, DPR = 1, MODE = store.get('kartMode') === 'cup' ? 'cup' : 'single', TRK = TBY[store.get('kartTrack')] ? store.get('kartTrack') : 'copa', CUP = null;
+  let S = null, raf = 0, last = 0, me = ME || 'patrick', W = 0, H = 0, DPR = 1, MODE = ['cup', 'daily'].includes(store.get('kartMode')) ? store.get('kartMode') : 'single', TRK = TBY[store.get('kartTrack')] ? store.get('kartTrack') : 'copa', CUP = null;
   const loadJ = k => { try { return JSON.parse(store.get(k) || '{}'); } catch (e) { return {}; } };
   const best = () => loadJ('kartBest');
   const stats = () => Object.assign({races: 0, wins: 0, ilha: 0, supers: 0, cups: 0}, loadJ('kartStats'));
@@ -7482,11 +7515,11 @@ setGroup(G);
     const boxes = []; (T.boxes || []).forEach(f => [-42, 0, 42].forEach(l => { const i = Math.round(f * N); boxes.push({i, l, x: at(i, l)[0], y: at(i, l)[1], off: 0}); }));
     const obst = (T.obst || []).map(([f, l, kind]) => { const [x, y] = at(f * N, l); return {x, y, kind, r: {umbrella: 24, log: 26, suitcase: 20, stone: 18, nut: 20}[kind] || 20}; });
     const birds = []; (T.birds || []).forEach(f => { const l0 = rnd(-40, 40); for (let j = 0; j < 5; j++) { const [x, y] = at(f * N + rnd(-4, 4), l0 + rnd(-22, 22)); birds.push({x0: x, y0: y, x, y, f: 0, vx: 0, vy: 0, a: rnd(0, TAU)}); } });
-    const movers = []; (T.movers || []).forEach(m => { for (let j = 0; j < (m.n || 1); j++) movers.push({i: wrap(m.f * N + j * 14), l: rnd(-m.range, m.range), dir: Math.random() < .5 ? 1 : -1, range: m.range, speed: m.speed * rnd(.85, 1.15), kind: m.kind, say: 0, x: 0, y: 0}); });
+    const movers = []; (T.movers || []).concat(RULE && RULE.k === 'coati' ? [{f: .2, range: TW * .6, speed: 60, kind: 'coati', n: 2}, {f: .55, range: TW * .6, speed: 70, kind: 'coati', n: 2}, {f: .85, range: TW * .6, speed: 55, kind: 'coati'}] : []).forEach(m => { for (let j = 0; j < (m.n || 1); j++) movers.push({i: wrap(m.f * N + j * 14), l: rnd(-m.range, m.range), dir: Math.random() < .5 ? 1 : -1, range: m.range, speed: m.speed * rnd(.85, 1.15), kind: m.kind, say: 0, x: 0, y: 0}); });
     const puddles = (T.puddles || []).map(([f, l, r]) => { const [x, y] = at(f * N, l); return {x, y, r, r0: r}; });
     const dolphins = (T.dolphins || []).map(f => { const l = rnd(-40, 40), [x, y] = at(f * N, l); return {x, y, i: wrap(f * N), t: rnd(0, 3), cd: 0}; });
     S = {karts, boxes, obst, birds, movers, puddles, dolphins, oils: [], coatis: [], fx: [], sp: [], marks: [], fw: [], drops: [], t: -4.1, cd: 4, over: 0, slow: 0, press: null, leader: null, lastPlace: 6,
-      wave: {next: rnd(9, 13), on: 0, warn: 0, h: 0}, flood: 0, hl: {}, flash: 0, supers: 0, camA: karts[0].a, camX: karts[0].x, camY: karts[0].y, shake: 0};
+      wave: {next: rnd(9, 13), on: 0, warn: 0, h: 0}, flood: 0, hl: {}, flash: 0, supers: 0, rec: [], ghost: null, camA: karts[0].a, camX: karts[0].x, camY: karts[0].y, shake: 0};
   }
   function progress(k) { return k.lap * N + k.idx; }
   function place(k) { return S.karts.filter(o => o !== k && (o.done ? (!k.done || o.done < k.done) : !k.done && progress(o) > progress(k))).length + 1; }
@@ -7497,7 +7530,7 @@ setGroup(G);
     const l = LINES[k.id]; k.say = (HITSAY[why] && Math.random() < .55) ? HITSAY[why] : l ? pick(l) : 'Aua!'; k.sayT = 1.6;
     if (k.me) { S.shake = .35; if (why === 'caiman') say('caiman', 'Vorsicht, Kaiman!'); else if (Math.random() < .5) voice(k, 'hit'); else if (Math.random() < .4) say('hit', 'Autsch, das tat weh!'); }
   }
-  function rollItem(k) { if (SPECIAL[k.id] && Math.random() < .22) return SPECIAL[k.id]; const pl = place(k), w = pl === 1 ? [.25, .55, .2] : pl <= 3 ? [.35, .3, .35] : [.5, .1, .4]; const r = Math.random(); return r < w[0] ? ITEMS.turbo : r < w[0] + w[1] ? ITEMS.oil : ITEMS.coati; }
+  function rollItem(k) { if (RULE && RULE.k === 'turbo') return ITEMS.turbo; if (RULE && RULE.k === 'coati') return ITEMS.coati; if (SPECIAL[k.id] && Math.random() < .22) return SPECIAL[k.id]; const pl = place(k), w = pl === 1 ? [.25, .55, .2] : pl <= 3 ? [.35, .3, .35] : [.5, .1, .4]; const r = Math.random(); return r < w[0] ? ITEMS.turbo : r < w[0] + w[1] ? ITEMS.oil : ITEMS.coati; }
   function useItem(k) {
     if (!k.item || k.roll > 0 || S.t < 0) return; const it = k.item; k.item = null;
     if (it.k === 'turbo') { k.boost = Math.max(k.boost, 1.6); if (k.me) SFX.turbo(); floatTxt(k, '🍹 Turbo!'); }
@@ -7526,11 +7559,12 @@ setGroup(G);
         else if (k.me && pr !== null && pr < -2) { k.stall = .9; SFX.stall(); floatTxt(k, '💨 Abgewürgt!', '#ff8a8a'); say('stall', 'Abgewürgt! Zu früh gestartet!', 1); } });
       if (!S.karts[0].stall && S.karts[0].boost <= 0) say('go', 'Und los geht\'s!', 1); }
     const ks = S.karts;
+    { const k0 = ks[0], gi = Math.floor(S.t / .1); if (!k0.done && S.rec.length <= gi) S.rec.push([Math.round(k0.x), Math.round(k0.y), Math.round(k0.a * 100)]); }
     ks.forEach(k => {
       // Lenken
       let target = 0;
       if (k.done) target = 0;
-      else if (k.me) target = (INPUT.L || INPUT.keys.ArrowLeft || INPUT.keys.a ? -1 : 0) + (INPUT.R || INPUT.keys.ArrowRight || INPUT.keys.d ? 1 : 0);
+      else if (k.me) { target = (INPUT.L || INPUT.keys.ArrowLeft || INPUT.keys.a ? -1 : 0) + (INPUT.R || INPUT.keys.ArrowRight || INPUT.keys.d ? 1 : 0); if (RULE && RULE.k === 'mirror') target = -target; }
       else { k.laneT -= dt; if (k.laneT < 0) { k.laneT = rnd(1.5, 4); k.lane = rnd(-TW * .25, TW * .25); }
         const la = 14 + k.v / 30; let lane = k.lane, haz = null, hd = 170;
         S.obst.concat(S.oils, S.puddles).forEach(o => { const dx = o.x - k.x, dy = o.y - k.y, d = Math.hypot(dx, dy); if (d < hd && dx * Math.cos(k.a) + dy * Math.sin(k.a) > 0) { hd = d; haz = o; } });
@@ -7567,7 +7601,7 @@ setGroup(G);
       const turn = k.dr ? clamp(k.dr * .7 + k.steer * .55, -1.25, 1.25) : k.steer;
       k.a += turn * (k.me ? STEERS[STEER][1] : 2.7) * (.94 + k.cs.hdl * .12) * k.vt[1] * (k.dr ? 1.12 : 1) * dt * Math.min(1, k.v / 120);
       // Haftung: Bewegungsrichtung folgt der Nase (rutschig = träge), im Drift leicht nach außen
-      const want = k.a - k.dr * .16; k.mv += angd(want, k.mv) * Math.min(1, dt * (k.air ? 1 : T.grip));
+      const want = k.a - k.dr * .16; k.mv += angd(want, k.mv) * Math.min(1, dt * (k.air ? 1 : RULE && RULE.k === 'slip' ? Math.min(T.grip, 3.2) : T.grip));
       k.x = clamp(k.x + Math.cos(k.mv) * k.v * dt, 20, WW - 20); k.y = clamp(k.y + Math.sin(k.mv) * k.v * dt, 20, Math.min(WH - 20, shore(k.x) - 10));
       if (offT && k.v > 120) { k.dust -= dt; if (k.dust < 0) { k.dust = .06; S.fx.push({x: k.x - Math.cos(k.a) * 18, y: k.y - Math.sin(k.a) * 18, dust: 1, t: 0, c: T.veh === 'boat' ? '120,150,90' : T.id === 'iguacu' ? '150,70,40' : '200,160,100'}); } }
       // Kielwasser (Boot) bzw. Reifenspuren
@@ -7721,12 +7755,18 @@ setGroup(G);
       if (k.item && !k.me && k.roll <= 0) up(k.x, k.y, E(k.item.e, 20), .7);
     });
     S.coatis.forEach(c => up(c.x, c.y, E(c.ball ? '⚽' : '🦝', c.ball ? 26 : 34), 1));
+    // Geist: halbdurchsichtig, ohne Zusammenstoß
+    const G = S.ghost; if (G && G.g && S.t >= 0) { const f = S.t / .1, i = Math.min(G.g.length - 2, Math.floor(f)), r = clamp(f - i, 0, 1), a0 = G.g[Math.max(0, i)], a1 = G.g[Math.max(0, i + 1)];
+      if (a0 && a1) { const gx = a0[0] + (a1[0] - a0[0]) * r, gy = a0[1] + (a1[1] - a0[1]) * r, ga = (a0[2] + angd(a1[2] / 100, a0[2] / 100) * 100 * r) / 100; G.x = gx; G.y = gy;
+        ctx.save(); ctx.globalAlpha = .45; ctx.translate(gx, gy); ctx.rotate(ga + Math.PI / 2); ctx.drawImage(VEH[G.drv] || VEH[me], -22, -30); ctx.restore();
+        ctx.save(); ctx.globalAlpha = .55; up(gx, gy, HEAD[G.drv] || HEAD[me], .5); ctx.restore(); ctx.save(); ctx.globalAlpha = .8; up(gx, gy - 30, E('👻', 18), .8); ctx.restore(); } }
     ctx.restore();
     // Wetter im Bild: Regen (Iguaçu), Gischt-Nebel am Wasserfall
     if (T.rain) { ctx.save(); ctx.strokeStyle = 'rgba(200,225,255,.45)'; ctx.lineWidth = 1.5; ctx.beginPath(); for (let j = 0; j < 90; j++) { const x = (j * 97 + tt * 420) % (W + 60) - 30, y = (j * 53 + tt * 900) % (H + 40) - 20; ctx.moveTo(x, y); ctx.lineTo(x - 6, y + 16); } ctx.stroke();
       ctx.fillStyle = 'rgba(30,60,80,.12)'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
     if (T.mist) { const dm = Math.hypot(k0.x - T.mist.x, k0.y - T.mist.y), f = clamp(1 - (dm - T.mist.r * .4) / T.mist.r, 0, 1) * .6;
       if (f > .02) { const g = ctx.createRadialGradient(W / 2, camY(), 60, W / 2, camY(), Math.max(W, H) * .8); g.addColorStop(0, `rgba(240,250,255,${f * .25})`); g.addColorStop(1, `rgba(240,250,255,${f})`); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); } }
+    if (RULE && RULE.k === 'night') { const g = ctx.createRadialGradient(W / 2, camY() - 60, 40, W / 2, camY() - 60, Math.max(W, H) * .55); g.addColorStop(0, 'rgba(5,10,35,0)'); g.addColorStop(.45, 'rgba(5,10,35,.55)'); g.addColorStop(1, 'rgba(5,10,35,.93)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); }
     if (S.flash > 0) { ctx.fillStyle = `rgba(255,170,120,${Math.min(.85, S.flash)})`; ctx.fillRect(0, 0, W, H); }
     if (k0.peg > .3 && !k0.done) { ctx.fillStyle = `rgba(255,120,200,${k0.peg * .08})`; ctx.fillRect(0, 0, W, H); }
     // Bildschirm: schwebende Texte, Sprechblasen
@@ -7746,6 +7786,8 @@ setGroup(G);
     ctx.fillStyle = pl === 1 ? '#ffd23f' : '#fff'; ctx.font = '900 44px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText(pl + '.', W / 2, top + 30);
     ctx.font = '700 14px system-ui,sans-serif'; ctx.fillStyle = '#fff'; ctx.fillText('Runde ' + clamp(k.lap + 1, 1, LAPS) + '/' + LAPS + ' · ' + fmt(Math.max(0, (k.done || S.t)) * 1000), W / 2, top + 78);
     if (CUP) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fillText('🏆 Grand Prix · Rennen ' + (CUP.i + 1) + '/' + TRACKS.length + ' · ' + T.e + ' ' + T.name, W / 2, top + 98); }
+    else if (RULE) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fillText('🎯 Tages-Challenge · ' + RULE.e + ' ' + RULE.n, W / 2, top + 98); }
+    else if (S.ghost) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fillText('👻 Geist: ' + NAME(S.ghost.who) + ' · ' + fmt(S.ghost.ms), W / 2, top + 98); }
     // Ansager-Zeile
     if (banner && now < banner.until) { ctx.globalAlpha = clamp((banner.until - now) / 300, 0, 1); ctx.font = '800 16px system-ui,sans-serif'; const t = '🎙 ' + banner.t, w = Math.min(W - 20, ctx.measureText(t).width + 24);
       ctx.shadowBlur = 0; ctx.fillStyle = 'rgba(200,20,40,.88)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(W / 2 - w / 2, top + 142, w, 28, 14) : ctx.rect(W / 2 - w / 2, top + 142, w, 28); ctx.fill();
@@ -7762,6 +7804,7 @@ setGroup(G);
     const mw = 92, mh = Math.round(92 * WH / WW);
     if (!MINI) { MINI = new Path2D(); P.forEach((p, i) => { const x = p[0] / WW * mw, y = p[1] / WH * mh; i ? MINI.lineTo(x, y) : MINI.moveTo(x, y); }); MINI.closePath(); }
     ctx.save(); ctx.translate(12, top + 50); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fillRect(-4, -4, mw + 8, mh + 8); ctx.strokeStyle = 'rgba(255,255,255,.8)'; ctx.lineWidth = 3; ctx.stroke(MINI);
+    if (S.ghost && S.ghost.x) { ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.beginPath(); ctx.arc(S.ghost.x / WW * mw, S.ghost.y / WH * mh, 4, 0, TAU); ctx.fill(); }
     S.karts.slice().reverse().forEach(o => { ctx.fillStyle = (LOOK[o.id] || {}).shirt || '#0a5'; ctx.strokeStyle = o.me ? '#ff2a2a' : '#000'; ctx.lineWidth = o.me ? 2.5 : 1; ctx.beginPath(); ctx.arc(o.x / WW * mw, o.y / WH * mh, o.me ? 5 : 3.5, 0, TAU); ctx.fill(); ctx.stroke(); });
     ctx.restore(); ctx.restore();
     // Countdown / Ziel
@@ -7786,8 +7829,16 @@ setGroup(G);
   const headCv = (id, n) => { const c = document.createElement('canvas'); c.width = c.height = n || 64; c.getContext('2d').drawImage(HEAD[id], 0, 0, c.width, c.height); return c; };
   function finish() {
     const ks = S.karts; ks.forEach(k => { if (!k.done) k.est = S.t + (LAPS * N - progress(k)) * 6 / (VMAX * .9); });
-    const order = ks.slice().sort((a, b) => (a.done || a.est) - (b.done || b.est)), mine = ks[0], b = best(), prev = b[T.id], rec = !prev || mine.done * 1000 < prev;
-    if (rec) { b[T.id] = Math.round(mine.done * 1000); store.set('kartBest', JSON.stringify(b)); }
+    const order = ks.slice().sort((a, b) => (a.done || a.est) - (b.done || b.est)), mine = ks[0], bkey = T.id + (RULE ? '@' + RULE.k : ''), b = best(), prev = b[bkey], rec = !prev || mine.done * 1000 < prev, ms = Math.round(mine.done * 1000);
+    if (rec) { b[bkey] = ms; store.set('kartBest', JSON.stringify(b)); if (!RULE) try { localStorage.setItem('br26.kartGhost.' + T.id, JSON.stringify({ms, drv: me, g: S.rec})); } catch (e) {} }
+    // Crew-Bestenliste / Tages-Challenge (nur mit Schreibrecht)
+    let crewMsg = '';
+    if (!RULE) { const top = lbList(LB, T.id)[0], mineLB = LB[T.id + '__' + player()];
+      if (WR && DB && (!mineLB || ms < mineLB.ms)) { const doc = {track: T.id, who: player(), drv: me, veh: vehOf(me), ms, ts: Date.now()}; DB.doc('kartbest/' + T.id + '__' + player()).set(doc).catch(() => {}); DB.doc('kartghost/' + T.id + '__' + player()).set({g: S.rec, ms}).catch(() => {}); LB[T.id + '__' + player()] = doc; }
+      crewMsg = !top || ms < top.ms ? (WR ? '👑 Neuer Crew-Rekord auf ' + T.name + '!' : '👑 Schneller als der Crew-Rekord, aber nur eingeladene Bearbeiter kommen in die Bestenliste.') : '🏆 Crew-Rekord: ' + NAME(top.who) + ' ' + fmt(top.ms); }
+    else { const dk = daily().d + '__' + player(), mineD = LBD[dk];
+      if (WR && DB && (!mineD || ms < mineD.ms)) { const doc = {d: daily().d, who: player(), drv: me, ms, ts: Date.now()}; DB.doc('kartdaily/' + dk).set(doc).catch(() => {}); LBD[dk] = doc; }
+      const day = lbList(LBD, daily().d); crewMsg = day.length ? '🎯 Heute vorne: ' + NAME(day[0].who) + ' ' + fmt(day[0].ms) : ''; }
     const pl = order.indexOf(mine) + 1;
     let msg = pl === 1 ? ['Campeão! 🏆', 'Der Pokal geht nach Hause!'] : pl === 6 ? ['Rote Laterne 🏮', 'Immerhin heil angekommen.'] : pl <= 3 ? ['Podium! 🥉', 'Stark gefahren.'] : ['Mittelfeld', 'Nächstes Mal mehr Caipi-Turbo.'];
     if (CUP) { order.forEach((k, i) => { CUP.pts[k.id] = (CUP.pts[k.id] || 0) + PTS[i]; }); CUP.races.push(order.map(k => k.id)); }
@@ -7801,6 +7852,7 @@ setGroup(G);
     const ol = res.querySelector('ol'); ol.innerHTML = '';
     order.forEach((k, i) => { const li = document.createElement('li'); if (k.me) li.className = 'me'; li.innerHTML = '<b>' + (i + 1) + '.</b>'; li.appendChild(headCv(k.id));
       li.insertAdjacentHTML('beforeend', '<span>' + esc(NAME(k.id)) + '</span><small>' + (k.done ? fmt(k.done * 1000) : '+ ' + (k.est - mine.done).toFixed(1) + ' s') + (CUP ? ' · +' + PTS[i] : '') + '</small>'); ol.appendChild(li); });
+    res.querySelector('.kr-crew').textContent = crewMsg; res.querySelector('.kr-crew').hidden = !crewMsg || !!CUP;
     const ul = res.querySelector('.kr-unlock'); ul.hidden = !newV.length; ul.innerHTML = newV.map(v => '🔓 Neues Fahrzeug: <b>' + v.e + ' ' + esc(v.n) + '</b>').join('<br>'); if (newV.length) setTimeout(() => SFX.fanfare(), 600);
     const st = res.querySelector('.kr-stand'); st.innerHTML = ''; st.hidden = !CUP;
     if (CUP) { const tbl = Object.entries(CUP.pts).sort((a, b) => b[1] - a[1]); st.innerHTML = '<p class="kr-lbl">Gesamtwertung nach ' + (CUP.i + 1) + ' von ' + TRACKS.length + ' Rennen</p>' +
@@ -7833,33 +7885,43 @@ setGroup(G);
     menu.querySelector('.kr-drv').innerHTML = '<div class="kr-bars"><span>Tempo' + bar(cs.spd) + '</span><span>Lenkung' + bar(cs.hdl) + '</span><span>Start' + bar(cs.acc) + '</span><span>Nehmer' + bar(cs.tgh) + '</span></div>' +
       '<p class="kr-sp">' + sp.e + ' <b>' + esc(sp.n) + '</b>: ' + esc(sp.x) + '</p>' + (pg > 0 ? '<p class="kr-sp">🍹 Heute schon ' + ((MEHUB.drinks || {})[me] || {}).today + ' Drinks: Lenkung wackelt!</p>' : '');
     const mv = myVeh(); menu.querySelector('.kr-vehs').innerHTML = VEHS.map(v => { const ok = unlocked(v); return '<button type="button" data-v="' + v.id + '" aria-pressed="' + (v.id === mv) + '"' + (ok ? '' : ' disabled') + ' title="' + esc(ok ? v.n : v.t) + '"><i>' + (ok ? v.e : '🔒') + '</i><small>' + esc(ok ? v.n : v.t) + '</small></button>'; }).join('');
-    const bt = best(), tr = menu.querySelector('.kr-tracks'); tr.hidden = MODE === 'cup';
+    const bt = best(), tr = menu.querySelector('.kr-tracks'); tr.hidden = MODE !== 'single'; lbInit();
     tr.innerHTML = TRACKS.map(t => '<button type="button" data-t="' + t.id + '" aria-pressed="' + (t.id === TRK) + '"><i>' + t.e + '</i><b>' + esc(t.name) + '</b><small>' + (bt[t.id] ? '⏱ ' + fmt(bt[t.id]) : esc(t.sub)) + '</small></button>').join('');
     const cups = loadJ('kartCups'), cw = cups[me] || 0;
     menu.querySelector('.kr-best').textContent = MODE === 'cup' ? 'Alle 6 Strecken hintereinander, Punkte 10-8-6-5-4-3, am Ende Siegerehrung.' + (cw ? ' Deine Grand-Prix-Siege: ' + cw + ' 🏆' : '')
       : (bt[TRK] ? 'Deine Bestzeit ' + TBY[TRK].name + ': ' + fmt(bt[TRK]) : 'Noch keine Bestzeit auf dieser Strecke.');
-    menu.querySelector('.kr-go').textContent = MODE === 'cup' ? '🏆 Grand Prix starten' : 'Los geht’s!';
+    menu.querySelector('.kr-go').textContent = MODE === 'cup' ? '🏆 Grand Prix starten' : MODE === 'daily' ? '🎯 Challenge fahren' : 'Los geht’s!';
+    const dy = daily(), lb = menu.querySelector('.kr-lb'), gh = menu.querySelector('.kr-ghost');
+    gh.hidden = MODE !== 'single'; gh.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x.dataset.g === GHOST.mode));
+    if (MODE === 'daily') { const bd = bt[dy.track.id + '@' + dy.rule.k];
+      menu.querySelector('.kr-best').innerHTML = '<b>Heute (' + dy.d.split('-').reverse().slice(0, 2).join('.') + '.): ' + dy.track.e + ' ' + esc(dy.track.name) + ' · ' + dy.rule.e + ' ' + esc(dy.rule.n) + '</b><br>' + esc(dy.rule.x) + (bd ? ' · deine Bestzeit heute: ' + fmt(bd) : '');
+      lb.innerHTML = lbHtml(lbList(LBD, dy.d), '🎯 Tageswertung'); }
+    else if (MODE === 'single') lb.innerHTML = lbHtml(lbList(LB, TRK), '🏆 Crew-Bestenliste ' + TBY[TRK].name);
+    else lb.innerHTML = '';
+    lb.hidden = MODE === 'cup';
+    menu.querySelector('.kr-wr').textContent = WR ? 'Deine Zeiten landen als ' + NAME(player()) + ' in der Crew-Bestenliste' + (ME ? '' : ' (wähle oben auf der Seite „Ich bin …“)') + '.' : 'Bestenliste nur ansehen: Eintragen können nur eingeladene Bearbeiter, deine Zeiten bleiben auf diesem Handy.';
+    menu.querySelector('.kr-wr').hidden = MODE === 'cup';
   }
-  function preview(id) { loadTrack(id); newRace(); S.paused = true; }
+  function preview(id) { loadTrack(id, RULE && RULE.k === 'rev'); newRace(); S.paused = true; }
   function startRace() {
     menu.hidden = true; res.hidden = true; pm.hidden = true; racing(true);
-    if (CUP && T.id !== TRACKS[CUP.i].id) loadTrack(TRACKS[CUP.i].id); else if (!CUP && T.id !== TRK) loadTrack(TRK);
-    makeVehicles(); newRace(); audio(); MUS.on = false; MUS.fast = false; MUS.step = 0; MUS.next = 0; banner = null; last = 0; if (MG && AC) MG.gain.value = .5;
-    setTimeout(() => { if (S && S.t < 0) say('t_' + T.id, 'Willkommen in ' + T.name + '!', 1); }, 150);
+    if (CUP) { RULE = null; loadTrack(TRACKS[CUP.i].id); } else if (RULE) loadTrack(daily().track.id, RULE.k === 'rev'); else loadTrack(TRK);
+    makeVehicles(); newRace(); if (!CUP && !RULE && GHOST.mode !== 'off') { const tid = T.id, s0 = S; ghostFor(tid).then(g => { if (S === s0 && g) S.ghost = g; }); } audio(); MUS.on = false; MUS.fast = false; MUS.step = 0; MUS.next = 0; banner = null; last = 0; if (MG && AC) MG.gain.value = .5;
+    setTimeout(() => { if (S && S.t < 0) say('t_' + T.id, RULE ? 'Tages-Challenge: ' + RULE.n + '!' : 'Willkommen in ' + T.name + '!', 1); }, 150);
   }
   function open() {
     if (!Object.keys(HEAD).length) makeHeads();
     if (box.parentElement !== document.body) document.body.appendChild(box);   // Kapitel hat content-visibility, sonst unsichtbar
     box.hidden = false; document.body.style.overflow = 'hidden'; document.documentElement.classList.add('kart-on'); resize();
     try { const r = box.requestFullscreen || box.webkitRequestFullscreen; if (r) { const pr = r.call(box); if (pr && pr.catch) pr.catch(() => {}); } } catch (e) {}
-    CUP = null; S = null; preview(MODE === 'cup' ? TRACKS[0].id : TRK); renderMenu(); setTimeout(renderMenu, 900); menu.hidden = false; res.hidden = true; pm.hidden = true; racing(false);
+    CUP = null; S = null; RULE = MODE === 'daily' ? daily().rule : null; lbInit(); preview(MODE === 'cup' ? TRACKS[0].id : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); setTimeout(renderMenu, 900); menu.hidden = false; res.hidden = true; pm.hidden = true; racing(false);
     cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
   }
   function close() {
     cancelAnimationFrame(raf); S = null; MUS.on = false; box.hidden = true; document.body.style.overflow = ''; document.documentElement.classList.remove('kart-on');
     if (eng && AC) eng.g.gain.setTargetAtTime(0, AC.currentTime, .05); try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {}
   }
-  function toMenu() { CUP = null; res.hidden = true; pm.hidden = true; racing(false); MUS.on = false; menu.hidden = false; preview(MODE === 'cup' ? TRACKS[0].id : TRK); renderMenu(); }
+  function toMenu() { CUP = null; RULE = MODE === 'daily' ? daily().rule : null; res.hidden = true; pm.hidden = true; racing(false); MUS.on = false; menu.hidden = false; preview(MODE === 'cup' ? TRACKS[0].id : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); }
   openBtn.addEventListener('click', open);
   const racing = on => box.classList.toggle('racing', on);
   function pause() { if (!S || !box.classList.contains('racing') || !res.hidden) return; S.paused = true; ptr.clear(); upd(); pm.hidden = false; if (AC) try { AC.suspend(); } catch (e) {} }
@@ -7879,10 +7941,11 @@ setGroup(G);
   box.addEventListener('click', e => { if (e.target.closest('.kr-menu .kr-quit, .kr-res .kr-quit')) close(); });
   menu.addEventListener('click', e => {
     const b = e.target.closest('.kr-pick button'); if (b) { me = b.dataset.id; makeVehicles(); renderMenu(); newRace(); S.paused = true; }
-    const m = e.target.closest('.kr-mode button'); if (m) { MODE = m.dataset.mode; store.set('kartMode', MODE); preview(MODE === 'cup' ? TRACKS[0].id : TRK); renderMenu(); }
+    const m = e.target.closest('.kr-mode button'); if (m) { MODE = m.dataset.mode; store.set('kartMode', MODE); RULE = MODE === 'daily' ? daily().rule : null; preview(MODE === 'cup' ? TRACKS[0].id : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); }
+    const gb = e.target.closest('.kr-ghost button'); if (gb) { GHOST.mode = gb.dataset.g; store.set('kartGhost', GHOST.mode); renderMenu(); }
     const t = e.target.closest('.kr-tracks button'); if (t) { TRK = t.dataset.t; store.set('kartTrack', TRK); preview(TRK); renderMenu(); }
     const vb = e.target.closest('.kr-vehs button'); if (vb && !vb.disabled) { store.set('kartVeh', vb.dataset.v); makeVehicles(); newRace(); S.paused = true; renderMenu(); }
-    if (e.target.closest('.kr-go')) { CUP = MODE === 'cup' ? {i: 0, pts: {}, races: []} : null; startRace(); }
+    if (e.target.closest('.kr-go')) { CUP = MODE === 'cup' ? {i: 0, pts: {}, races: []} : null; RULE = MODE === 'daily' ? daily().rule : null; startRace(); }
   });
   res.addEventListener('click', e => {
     if (e.target.closest('.kr-again')) {
@@ -7907,6 +7970,6 @@ setGroup(G);
   addEventListener('keyup', e => { INPUT.keys[e.key] = false; });
   addEventListener('resize', () => { if (!box.hidden) resize(); });
   document.addEventListener('visibilitychange', () => { if (document.hidden && !box.hidden) pause(); });
-  window.__kart = {open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, tracks: TRACKS.map(t => t.id)};
+  window.__kart = {open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
 })();
 </script>

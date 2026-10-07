@@ -1384,8 +1384,8 @@ details.more-note .note{margin-top:6px}
 .kr-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
 html.kart-on .fab,html.kart-on #net{display:none!important}
 @media (orientation:landscape) and (max-height:520px){.kr-item{width:66px;height:66px;font-size:.8rem;left:auto;right:18px;transform:none}}
-.kr-mode{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0 8px}
-.kr-mode button{border:2px solid #d8d2c4;border-radius:12px;background:#fff;padding:8px 4px;font:700 .88rem system-ui,sans-serif;color:#1d2a24;cursor:pointer}
+.kr-mode{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:10px 0 8px}
+.kr-mode button{border:2px solid #d8d2c4;border-radius:12px;background:#fff;padding:8px 3px;font:700 .78rem system-ui,sans-serif;color:#1d2a24;cursor:pointer}
 .kr-mode button[aria-pressed="true"]{border-color:#f5a400;background:#fff3cc}
 .kr-tracks{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px}
 .kr-tracks[hidden]{display:none}
@@ -1406,5 +1406,14 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
 .kr-vehs button i{font-style:normal;font-size:1.2rem}.kr-vehs button small{font-size:.52rem;line-height:1.1;color:#5b6660}
 .kr-vehs button[aria-pressed="true"]{border-color:#f5a400;background:#fff3cc}.kr-vehs button:disabled{opacity:.55;cursor:default}
 .kr-unlock{background:#e9f8ee;border-radius:10px;padding:6px 8px;color:#145c2e;font-size:.88rem!important}.kr-unlock[hidden]{display:none}
+.kr-ghost{display:flex;gap:4px;align-items:center;justify-content:center;flex-wrap:wrap;margin:6px 0;font:700 .78rem system-ui,sans-serif}
+.kr-ghost[hidden]{display:none}.kr-ghost button{border:1.5px solid #d8d2c4;border-radius:999px;background:#fff;padding:4px 9px;font:600 .74rem system-ui,sans-serif;color:#1d2a24;cursor:pointer}
+.kr-ghost button[aria-pressed="true"]{border-color:#f5a400;background:#fff3cc}
+.kr-lb{background:#f6f2e9;border-radius:12px;padding:6px 10px;margin:6px 0;text-align:left}.kr-lb[hidden]{display:none}
+.kr-lb-t{font:800 .8rem system-ui,sans-serif!important;margin:2px 0 4px!important}.kr-lb-e{font-size:.78rem!important;color:#5b6660}
+.kr-lb-l{list-style:none;margin:0;padding:0;display:grid;gap:2px}.kr-lb-l li{display:flex;justify-content:space-between;gap:8px;font-size:.82rem}
+.kr-lb-l li.me{font-weight:800}.kr-lb-l small{color:#5b6660;font-size:.7rem}.kr-lb-l i{font-style:normal;font-variant-numeric:tabular-nums}
+.kr-wr{font-size:.72rem!important;color:#5b6660}.kr-wr[hidden]{display:none}
+.kr-crew{background:#fff3cc;border-radius:10px;padding:6px 8px;font-size:.86rem!important;font-weight:700}.kr-crew[hidden]{display:none}
 @media print{.kart-teaser,.kart{display:none!important}}
 </style>
