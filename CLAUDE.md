@@ -76,6 +76,11 @@ Heute-Kasten: bei fehlendem Netz bzw. vor Abflug (20.–27.12.), Dschungel (08.�
 Stationen, Kosten, Sprachführer, Praktisches, Gesundheit, Packlisten, Crew, Kapitelüberschriften; Liste `SRC`), Akzente egal, alle
 Wörter müssen passen. Treffer öffnen `<details>`, das Sprachführer-Thema, die Karussell-Seite bzw. den Crew-Steckbrief und blinken (`.q-flash`).
 
+**Foto des Tages** (seit 07.10.): ein Bild pro Tag, Upload nur mit Schreibrecht über „📷“ in der Tageszeile (nur heute und vergangene Tage, sonst unsichtbar),
+im Browser verkleinert (max. 1280 px, ~170 KB; Vorschau 220 px). db: `photos/<Datum>` = {`th`, `cap`, `ts`} (klein, zwischengespeichert), `photofull/<Datum>` = {`img`}
+(erst beim Antippen geladen). Vorschau klein rechts in der Tageszeile (`.ph-th`, `.has-ph`), groß in der Crew-Lightbox (wird dafür unter `<body>` gehängt), Löschen mit zweimal Tippen.
+**Willkommen** (seit 07.10.): einmaliger Kasten `.welcome` nur beim allerersten Besuch auf einem Gerät (`FIRST_VISIT` = noch kein `br26.*`-Eintrag im localStorage).
+
 **„Ich bin …“** (`#me-box` im Kopf, nach der Wahl nur ein kleiner Chip `.me-mini`, aufklappbar, localStorage `br26.meOpen`): Person wird pro Gerät gemerkt (localStorage `br26.me`), stellt die Gruppe ein, hebt
 eigene Crew- und FIFA-Karte hervor und zeigt eigene Werte (Drinks heute/gesamt/Platz, Gesamtwertung, Marktwert, Siege,
 Zeitkapsel-Status). Module melden Werte für alle Personen über `meSet()`.

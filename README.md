@@ -1,6 +1,6 @@
 # Brasilien 2026/27: Reiseübersicht
 
-**27.12.2026 – 20./21.01.2027** · Stand: 06.10.2026
+**27.12.2026 – 20./21.01.2027** · Stand: 07.10.2026
 
 ![Reisebild: Route durch Brasilien](reisebild.png)
 
