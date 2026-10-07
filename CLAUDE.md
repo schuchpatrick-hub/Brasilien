@@ -115,6 +115,10 @@ Liste „📰 Transfer-News“ mit Löschen (zweimal tippen).
 Ereignisse wirken auf **Gesamtwertung** (Summe „gut“ / 3, max ±8; bei GRI/SCH/MEK zählt + als schlecht; Grundwert aus den
 unveränderten Basiswerten) und **Marktwert** (am Tag des Ereignisses dauerhaft ±0,8 % je Punkt, max ±15 % pro Tag).
 
+## Schreibrechte
+
+Patrick lädt die Crew per E-Mail als Bearbeiter ein (Wunsch 07.10.): alle Eingeladenen dürfen dasselbe wie der Admin (Drinks, Spiele, Check-ins, Kartenwerte, Zeitkapsel, Kart-Bestenliste). Sperr-Hinweise lauten daher „nur für Eingeladene (Patrick lädt ein)“, nicht mehr „nur Admin“.
+
 ## Gast-Ansicht
 
 Alle Schreibrecht-Prüfungen laufen über `canWrite()` in `page_script.html`. Wer Schreibrechte hat, sieht unter
