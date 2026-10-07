@@ -5,6 +5,21 @@ nach „Umgesetzt“ verschieben.
 
 ## ⭐ Vorgemerkt (Patrick will das)
 
+- **Panini-Sticker-Album „Panini Gringos – Brasil 26/27“** (vorgemerkt 07.10., „die nächsten Tage umsetzen“): ca. 120 Sticker auf Album-Seiten
+  (Crew inkl. Glitzer-Wappen und Mannschaftsfoto als 4-Teile-Puzzle · Stationen als 2-Teile-Panoramen · Nebendarsteller (Taxifahrer, Kontrolleur,
+  Dona Rosa, Rezeptionistin, Kaiman, rosa Delfin …) · eigene Nasenbär-Seite · Legendäre Momente als Standbilder aus Serie/Porträts · seltene Specials
+  (Sonnenbrand-Simon, Silvester-Held, Promille-Lukas, TOTS, Rote Laterne) · ~16 nur unterwegs freischaltbar aus Live-Daten (Check-ins, erster Caipi,
+  Trinkkönig, Footvolley-Sieg, Foto des Tages wird Sticker)). Täglich 1 Tüte à 5 (Aufreißen, Walkout bei Glitzer), Einkleben per Antippen, leere Plätze mit
+  Nummer/Umriss, Doppelte, Album-Bestenliste; bis Abflug ca. 85 %, Rest nur in Brasilien. Auf der Seite nur eine Zeile im Kapitel Vorfreude, Album als Vollbild,
+  Sticker-Bilder als Artifact-Dateien (nicht im Repo, Gesichter), lazy geladen.
+  **Profi-Stufe:** einheitlicher Panini-Rahmen (Nummer, Namensband, Wappen, Flagge) und Farbfilter für alle Motive; Seltenheiten Normal/Glitzer (Holo, Neigen
+  bzw. Wischen)/Gold/Retro 1970; Witz-Fehldrucke („Smion“); neu gezeichnete Motive für Nebendarsteller/Nasenbär/Specials; optional echte Fotos von Patrick im
+  Comic-/Rasterdruck-Look (Foto-Quartett-Idee mitnutzen); Rückseiten mit Steckbrief/Zitat/Geschichte; Album-Cover, Seiten-Hintergründe, Seite komplett =
+  Animation + Bonus-Tüte, Sounds; Druck-PDF (Stickerpapier/Fotodienst) als Erinnerungsheft.
+  **Start mit Probe:** 8 Sticker in allen Stufen + 1 Tüte + 1 Album-Seite + Rückseiten.
+  **Offen (Patrick entscheidet):** Tauschen a) Crew per E-Mail als Bearbeiter einladen (db: Alben, Tauschbörse, Bestenliste) oder b) Tausch-Codes per WhatsApp
+  (Alben nur im localStorage je Handy).
+
 - **Strafen-Glücksrad für Verlierer** (vorgemerkt 01.10.): In der Verlierer-Ecke der Spiele ein Knopf „Strafe ziehen“,
   ein Rad mit Strafen dreht sich (z. B. „Caipi exen“, „Einem Fremden auf Portugiesisch ein Kompliment machen“,
   „Nächste Runde zahlen“, „10 Minuten Jonas’ Fischerhut tragen“). Strafen in `trip.json`, eigene über die Seite
