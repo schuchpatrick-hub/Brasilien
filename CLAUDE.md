@@ -118,6 +118,7 @@ unveränderten Basiswerten) und **Marktwert** (am Tag des Ereignisses dauerhaft 
 ## Schreibrechte
 
 Patrick lädt die Crew per E-Mail als Bearbeiter ein (Wunsch 07.10.): alle Eingeladenen dürfen dasselbe wie der Admin (Drinks, Spiele, Check-ins, Kartenwerte, Zeitkapsel, Kart-Bestenliste). Sperr-Hinweise lauten daher „nur für Eingeladene (Patrick lädt ein)“, nicht mehr „nur Admin“.
+**Wichtig (geprüft 07.10.):** Solange beim Teilen „Allgemeiner Zugriff: Alle mit dem Link“ aktiv ist, behandelt claude.ai auch eingeladene Bearbeiter als Betrachter (oben rechts „Kann anzeigen“, Schreiben wird mit `invalid_argument` abgelehnt). Deshalb steht das Artifact auf **„Nur eingeladene Personen“**; alle sechs werden per E-Mail als **Bearbeiter** eingeladen. Erkennen: Rolle oben rechts in der claude.ai-Leiste.
 
 ## Gast-Ansicht
 
