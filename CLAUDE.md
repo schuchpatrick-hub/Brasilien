@@ -300,7 +300,7 @@ Kein Titelsong (auf Wunsch wieder entfernt, 03.10.).
 Nur-Kopf-Figuren (`headOnly`, Hilfsfunktion `headAt`) für Fenster, Gondel und Handy-Bildschirm. Lange Untertitel brechen in zwei Zeilen um.
 Neue Folge: Zeilen in `series.epN` (mit `scenes`, `credits`, `next`), Stimmen per `--series epN`, Szenen-Code in `frame()` ergänzen, `META` erweitern.
 
-## Gringo Kart (seit 07.10., Ausbau in Stufen: 1 Fahrgefühl ✅, 2 sechs Strecken + Pokal, 3 Persönlichkeit/Items je Person, 4 Bestenliste/Geister)
+## Gringo Kart (seit 07.10., Ausbau in Stufen: 1 Fahrgefühl ✅, 2 sechs Strecken + Grand Prix ✅, 3 Persönlichkeit/Items je Person, 4 Bestenliste/Geister)
 
 Rennspiel im Kapitel Spiele: Knopf `#kart-open` (`.kart-teaser`) öffnet `#kart` als Vollbild-Overlay (wird beim Öffnen unter `<body>` gehängt, Kapitel hat content-visibility).
 Eigenes Modul „Gringo Kart“ am Ende von `page_script.html`, Canvas von oben, Kamera dreht mit (Fahrtrichtung oben), zoomt bei hohem Tempo leicht raus. Strecke Copacabana: Kontrollpunkte `CP` → Catmull-Rom,
@@ -315,7 +315,13 @@ Items aus ?-Kisten nach Platz gewichtet (`rollItem`): 🍹 Turbo, 🧴 Öl-Pfüt
 **Ansager** (`say(key, text)`): rote Zeile im Bild + Stimme aus `audio/kart.mp3` (XTTS-Sprecher, Ausschnitte in `TRIP.kartvo` {key: {o, dur}}; erzeugt über eine vorübergehende Folge `series.kart` mit `gen_series_xtts.py kart` + `build_series_audio.py kart`, danach nach `kartvo` verschoben). Musik duckt, Schalter im Pause-Menü (`br26.kartAnn`).
 Pause-Knopf `.kr-pbtn` oben links (nur im Rennen, Klasse `.racing`) öffnet `.kr-pm`: Weiter, Neustart, Fahrer wechseln, Lenkung, Ansager, Ton, Beenden (auch Esc/P; App-Wechsel pausiert, AudioContext wird angehalten).
 Sprüche beim Treffer je Person (`LINES`), Bestzeit im localStorage `br26.kartBest`. Klassen mit Präfix `kr-` (`k-` ist schon belegt). Beim Veröffentlichen `audio/kart.mp3` (und `audio/sfx.mp3`) in `files`.
-Test: `window.__kart` (`open`, `pause`, `resume`, `state`, `step(dt)`, `draw`, `finish`, `say`).
+**Strecken (Stufe 2):** `TRACKS` (Daten je Strecke: `cp`, `tw`, `ww`/`wh`, `sea` = Uferlinie oder null, `off` = Tempo neben der Strecke, `grip` = Haftung (klein = rutschig, Bewegungsrichtung `k.mv` folgt der Nase träge), `veh` kart/boat/cart, `laps`,
+`pads`, `ramp`, `boxes`, `obst` [Anteil, Versatz, Art] = feste Hindernisse (Anprall `k.bump`: zurückschieben, bremsen, wackeln, kein Dreher), `movers` = Querläufer (vendor, corn, coati, caiman, horse, dog → Dreher), `puddles`, `music` {bpm, root}, Extras `wave`, `rain`, `mist`/`falls`, `dolphins` (Turbo), `flood` (Pfützen wachsen/schrumpfen)).
+`loadTrack(id)` setzt `T`, `P`, `N`, `TW`, `WW`, `WH`, `PADS`, `RAMP`, `SPECT`, zeichnet `BG` je Strecke neu (`drawBG`: Strand/Stadt, Dschungel-Kronen, Kolonialhäuser, Fluss in zwei Farben, Wasserfall) und die Fahrzeuge `VEH` (Kart, Boot, Gepäckkarren).
+Guarujá (Einsteiger, Sonnenschirme, Maisverkäufer), Copacabana (Welle, Caipi-Verkäufer), Iguaçu (Regen, rutschig, Wasserfall-Gischt, Nasenbären, 2 Runden), Amazonas (Bootsrennen, Kaimane, Baumstämme, Delfin-Turbo, 2 Runden), Paraty (Kopfsteinpflaster, Flut, Pferdekutsche, 2 Runden), Ilha Grande (Gepäckkarren, Koffer, Hund).
+Menü: Einzelrennen (Strecke wählen, `br26.kartTrack`, Bestzeit je Strecke) oder Grand Prix (`br26.kartMode`, `CUP` {i, pts, races}, Punkte `PTS` 10-8-6-5-4-3, Zwischenstand `.kr-stand`, `ceremony()` mit Podest `.kr-podium`, Siege im localStorage `br26.kartCups`).
+Ansager Stufe 2 (Begrüßung je Strecke `t_<id>`, caiman, dolphin, flood, coatis, cupnext, cupwin, cupend) in `audio/kart2.mp3` (`kartvo[key].f = 2`); beim Veröffentlichen `audio/kart2.mp3` mitgeben. Neue Sätze: vorübergehende `series.kart`, danach `build_series_audio.py kart` schreibt `kart.mp3` → als `kartN.mp3` umbenennen und alte `kart.mp3` zurücklegen.
+Test: `window.__kart` (`open`, `pause`, `resume`, `state`, `step(dt)`, `draw`, `finish`, `say`, `load(id)`, `cup()`); `S.hl` zählt Treffer je Ursache.
 
 ## Karte: Infokarten
 
