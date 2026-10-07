@@ -9317,7 +9317,7 @@ setGroup(G);
       else { k.laneT -= dt; if (k.laneT < 0) { k.laneT = rnd(1.5, 4); k.lane = rnd(-38, 38); }
         const la = 14 + k.v / 30; const nut = S.nuts.concat(S.oils).find(o => Math.hypot(o.x - k.x, o.y - k.y) < 120); let lane = k.lane;
         if (nut) { const nl = nearest(nut.x, nut.y, k.idx)[1]; lane = nl > 0 ? nl - 55 : nl + 55; }
-        else { const bx = S.boxes.find(b => !b.off && !k.item && b.i > k.idx && b.i - k.idx < 40); if (bx) lane = bx.l;
+        else { const bx = S.boxes.find(b => b.off <= 0 && !k.item && k.roll <= 0 && b.i > k.idx && b.i - k.idx < 40); if (bx) lane = bx.l;
           const pd = PADS.find(p => p.i > k.idx && p.i - k.idx < 35); if (pd && k.skill > .93) lane = pd.l; }
         if (Math.abs(S.ven.i - k.idx) < 30 && S.ven.i > k.idx) lane = S.ven.l > 0 ? -45 : 45;
         const [tx, ty] = at(k.idx + la, clamp(lane, -55, 55)); let d = Math.atan2(ty - k.y, tx - k.x) - k.a; d = Math.atan2(Math.sin(d), Math.cos(d)); target = clamp(d * 2.6, -1, 1);
@@ -9375,7 +9375,7 @@ setGroup(G);
       if (d < 30 && d > .01) { const p = (30 - d) / 2, nx = dx / d, ny = dy / d; a.x -= nx * p; a.y -= ny * p; b.x += nx * p; b.y += ny * p; a.v *= .97; b.v *= .97; } }
     const ground = k => !k.air;
     // Kisten, Kokosnüsse, Öl, Nasenbären
-    S.boxes.forEach(b => { if (b.off > 0) { b.off -= dt; return; } ks.forEach(k => { if (!b.off && Math.hypot(k.x - b.x, k.y - b.y) < 26) { b.off = 3; for (let j = 0; j < 8; j++) S.sp.push({x: b.x, y: b.y, vx: rnd(-120, 120), vy: rnd(-120, 120), t: 0, c: '#ffd23f'}); if (!k.item && k.roll <= 0) { k.roll = .9; if (k.me) beep(660, .06, 'square', .05); } } }); });
+    S.boxes.forEach(b => { if (b.off > 0) { b.off = Math.max(0, b.off - dt); return; } ks.forEach(k => { if (b.off <= 0 && Math.hypot(k.x - b.x, k.y - b.y) < 28) { b.off = 3; for (let j = 0; j < 8; j++) S.sp.push({x: b.x, y: b.y, vx: rnd(-120, 120), vy: rnd(-120, 120), t: 0, c: '#ffd23f'}); if (!k.item && k.roll <= 0) { k.roll = .9; if (k.me) beep(660, .06, 'square', .05); } } }); });
     S.nuts.forEach(n => ks.forEach(k => { if (ground(k) && Math.hypot(k.x - n.x, k.y - n.y) < 22) hit(k, 'nut'); }));
     S.oils = S.oils.filter(o => { o.t -= dt; ks.forEach(k => { if (ground(k) && Math.hypot(k.x - o.x, k.y - o.y) < 24 && !(o.by === k && o.t > 11)) { hit(k, 'oil'); o.t = 0; } }); return o.t > 0; });
     S.coatis = S.coatis.filter(c => { c.t -= dt; c.i += 560 / 6 * dt; const tl = c.tgt ? c.tgt.lat : c.l; c.l += clamp(tl - c.l, -90 * dt, 90 * dt);
@@ -9578,7 +9578,9 @@ setGroup(G);
   // Steuerung: Daumen links/rechts, Item-Knopf; Tastatur
   const ptr = new Map();
   const upd = () => { INPUT.L = [...ptr.values()].includes('L'); INPUT.R = [...ptr.values()].includes('R'); };
-  cv.addEventListener('pointerdown', e => { e.preventDefault(); try { cv.setPointerCapture(e.pointerId); } catch (x) {} ptr.set(e.pointerId, e.clientX < W / 2 ? 'L' : 'R'); upd(); });
+  cv.addEventListener('pointerdown', e => { e.preventDefault();
+    const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top; if (px > W - 80 && py > 46 && py < 124) { if (S) useItem(S.karts[0]); return; }   // Item-Fenster oben rechts antippen = Item benutzen
+    try { cv.setPointerCapture(e.pointerId); } catch (x) {} ptr.set(e.pointerId, e.clientX < W / 2 ? 'L' : 'R'); upd(); });
   cv.addEventListener('pointermove', e => { if (ptr.has(e.pointerId)) { ptr.set(e.pointerId, e.clientX < W / 2 ? 'L' : 'R'); upd(); } });
   ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(t => cv.addEventListener(t, e => { ptr.delete(e.pointerId); upd(); }));
   itemBtn.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); if (S) useItem(S.karts[0]); });
