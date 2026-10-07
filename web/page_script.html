@@ -7572,10 +7572,10 @@ setGroup(G);
   function lbInit() {
     if (DB !== null) return; DB = false;
     getDb().then(db => { if (!db) return; DB = db;
-      db.collection('kartbest').onSnapshot(sn => { LB = {}; sn.docs.forEach(d => { if (d.exists) LB[d.id] = d.data(); }); if (!menu.hidden) renderMenu(); }, () => {});
-      db.collection('kartdaily').onSnapshot(sn => { LBD = {}; sn.docs.forEach(d => { if (d.exists) LBD[d.id] = d.data(); }); if (!menu.hidden) renderMenu(); }, () => {});
+      db.collection('kartbest').onSnapshot(sn => { LB = {}; sn.docs.forEach(d => { if (d.exists) LB[d.id] = d.data(); }); board(); if (!box.hidden && !menu.hidden) renderMenu(); }, () => {});
+      db.collection('kartdaily').onSnapshot(sn => { LBD = {}; sn.docs.forEach(d => { if (d.exists) LBD[d.id] = d.data(); }); if (!box.hidden && !menu.hidden) renderMenu(); }, () => {});
     }).catch(() => {});
-    canWrite().then(w => { WR = w !== false && w !== null; if (!menu.hidden) renderMenu(); }).catch(() => {});
+    canWrite().then(w => { WR = w !== false && w !== null; if (!box.hidden && !menu.hidden) renderMenu(); }).catch(() => {});
   }
   const lbList = (src, pre) => Object.entries(src).filter(([id]) => id.indexOf(pre + '__') === 0).map(([, v]) => v).filter(v => v && v.ms).sort((a, b) => a.ms - b.ms);
   function lbHtml(list, title) {
@@ -8143,6 +8143,21 @@ setGroup(G);
   function teaser() { const hd = openBtn.querySelector('.kt-heads'), stt = openBtn.querySelector('.kt-stats'); if (!hd) return;
     if (!hd.childElementCount) CREW.forEach(p0 => { if (!p0.photo) return; const im = document.createElement('img'); im.src = p0.photo; im.alt = ''; im.loading = 'lazy'; im.style.setProperty('--c', (LOOK[p0.id] || {}).shirt || '#ffd23f'); hd.appendChild(im); });
     const st = stats(), ah = Object.keys(loadJ('kartAch')).length, bt = Object.values(best()).length; stt.innerHTML = st.races ? '<span>🪙 ' + coins() + '</span><span>🏁 ' + st.races + ' Rennen</span>' + (st.wins ? '<span>🥇 ' + st.wins + ' Siege</span>' : '') + '<span>🏅 ' + ah + '/' + ACH.length + '</span>' : ''; }
+  // Crew-Rekorde auf der Seite: für alle sichtbar, Zeile antippen = Strecke mit dem Geist des Rekordhalters fahren
+  function board() { const el = document.getElementById('kt-board'); if (!el) return;
+    const rows = TRACKS.map(tr => ({tr, list: lbList(LB, tr.id)})).filter(r => r.list.length), seen = loadJ('kartRecSeen');
+    if (!rows.length) { el.hidden = true; return; }
+    const lost = ME ? rows.filter(r => seen[r.tr.id] === ME && r.list[0].who !== ME) : [];
+    if (!Object.keys(seen).length) { const s0 = {}; rows.forEach(r => { s0[r.tr.id] = r.list[0].who; }); store.set('kartRecSeen', JSON.stringify(s0)); }
+    const cnt = {}; rows.forEach(r => { cnt[r.list[0].who] = (cnt[r.list[0].who] || 0) + 1; });
+    el.hidden = false;
+    el.innerHTML = '<div class="kb-h"><b>🏆 Crew-Rekorde</b><span>' + Object.entries(cnt).sort((x, y) => y[1] - x[1]).map(([id, n]) => '👑 ' + esc(NAME(id)) + ' ' + n).join(' · ') + '</span></div>' +
+      lost.map(r => '<p class="kb-lost">😱 <b>' + esc(NAME(r.list[0].who)) + '</b> hat deinen Rekord auf ' + esc(r.tr.name) + ' geknackt! Hol ihn dir zurück.</p>').join('') +
+      '<div class="kb-l">' + rows.map(r => { const top = r.list[0], me2 = r.list.find(v => v.who === ME), pos = me2 ? r.list.indexOf(me2) + 1 : 0;
+        return '<button type="button" data-t="' + r.tr.id + '"><i>' + r.tr.e + '</i><span><b>' + esc(r.tr.name) + '</b><small>' + (top.who === ME ? 'Dein Rekord, verteidige ihn!' : pos ? 'Du: ' + pos + '. · ' + fmt(me2.ms) : r.list.length + (r.list.length === 1 ? ' Zeit' : ' Zeiten')) + '</small></span><em>' + esc(NAME(top.who)) + '<br><b>' + fmt(top.ms) + '</b></em><u>⚔️</u></button>'; }).join('') + '</div>' +
+      '<p class="kb-n">⚔️ antippen = Strecke mit dem Geist des Rekordhalters fahren. ' + (TRACKS.length - rows.length) + ' Strecken noch ohne Rekord.</p>'; }
+  document.addEventListener('click', e => { const b = e.target.closest('#kt-board button[data-t]'); if (!b) return; TRK = b.dataset.t; store.set('kartTrack', TRK);
+    MODE = 'single'; store.set('kartMode', MODE); GHOST.mode = 'crew'; store.set('kartGhost', 'crew'); open(); });
   // Erklärtexte zu den Fahrer-Werten (Antippen im Menü)
   const BXK = ['spd', 'hdl', 'acc', 'tgh'], BXT = {spd: ['Tempo', '🏎️ Höchstgeschwindigkeit auf der Geraden (bis ±3 %). Kommt vom Trinktempo (TTP) der FIFA-Karte.'],
     hdl: ['Lenkung', '🎯 Wie scharf das Kart einlenkt, enge Kurven gehen leichter (bis ±6 %). Kommt von der Orientierung (ORI).'],
@@ -8209,11 +8224,11 @@ setGroup(G);
     if (box.parentElement !== document.body) document.body.appendChild(box);   // Kapitel hat content-visibility, sonst unsichtbar
     box.hidden = false; document.body.style.overflow = 'hidden'; document.documentElement.classList.add('kart-on'); resize();
     try { const r = box.requestFullscreen || box.webkitRequestFullscreen; if (r) { const pr = r.call(box); if (pr && pr.catch) pr.catch(() => {}); } } catch (e) {}
-    CUP = null; S = null; RULE = MODE === 'daily' ? daily().rule : null; lbInit(); preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); setTimeout(renderMenu, 900); menu.hidden = false; res.hidden = true; pm.hidden = true; racing(false);
+    CUP = null; S = null; RULE = MODE === 'daily' ? daily().rule : null; lbInit(); { const s0 = {}; TRACKS.forEach(tr => { const top = lbList(LB, tr.id)[0]; if (top) s0[tr.id] = top.who; }); if (Object.keys(s0).length) store.set('kartRecSeen', JSON.stringify(s0)); } preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); setTimeout(renderMenu, 900); menu.hidden = false; res.hidden = true; pm.hidden = true; racing(false);
     cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
   }
   function close() {
-    cancelAnimationFrame(raf); S = null; MUS.on = false; box.hidden = true; teaser(); document.body.style.overflow = ''; document.documentElement.classList.remove('kart-on');
+    cancelAnimationFrame(raf); S = null; MUS.on = false; box.hidden = true; teaser(); board(); document.body.style.overflow = ''; document.documentElement.classList.remove('kart-on');
     engOff(); try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {}
   }
   function toMenu() { CUP = null; RULE = MODE === 'daily' ? daily().rule : null; res.hidden = true; pm.hidden = true; racing(false); MUS.on = false; menu.hidden = false; preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); }
@@ -8293,6 +8308,7 @@ setGroup(G);
   addEventListener('resize', () => { if (!box.hidden) resize(); });
   document.addEventListener('visibilitychange', () => { if (document.hidden && !box.hidden) pause(); });
   try { teaser(); } catch (e) {}
+  setTimeout(() => { try { lbInit(); } catch (e) {} }, 1500);
   box.addEventListener('click', e => { const w = e.target.closest('.kr-whop button'); if (w) setMe(w.dataset.who); });
   window.__kartAt = (i, l) => at(i, l); window.__kartTW = () => TW;
   window.__kart = {open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
