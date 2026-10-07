@@ -2972,8 +2972,8 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     $('dr-submit').disabled = true;
     try { const refs = await writeDrinks(who, sel.preset, q, ts); done(who, sel.preset, refs, q); }
     catch (e) {
-      if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) { setMode('Nur ansehen: Eintragen können Patrick und alle, die er eingeladen hat.', false); return; }
-      $('dr-status').textContent = e && e.code === 'quota_exceeded' ? 'Speicher voll.' : 'Hat nicht geklappt, bitte im Verlauf prüfen und nochmal.';
+      if (e && (e.code === 'invalid_argument' || e.code === 'not_granted')) { setMode('Nur ansehen: Eintragen können Patrick und alle, die er eingeladen hat. (Code: ' + e.code + ') Tipp: Link in der Claude-App oder im Browser öffnen, in dem du bei claude.ai mit der eingeladenen E-Mail angemeldet bist (nicht im WhatsApp-Browser).', false); return; }
+      $('dr-status').textContent = e && e.code === 'quota_exceeded' ? 'Speicher voll.' : 'Hat nicht geklappt, bitte im Verlauf prüfen und nochmal. (Code: ' + String((e && (e.code || e.message)) || '?').slice(0, 60) + ')';
     }
     paintSel();
   });
@@ -3132,9 +3132,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   (async () => {
     if (!window.claude || !window.claude.use) { setMode('Offline-Ansicht: Eintragen geht nur auf claude.ai (Patrick und Eingeladene).', false); return; }
     dbRef = await getDb();
-    if (!dbRef) { setMode('Nur ansehen: Eintragen können Patrick und alle, die er eingeladen hat. Das Live-Ranking sehen angemeldete claude.ai-Nutzer.', false); return; }
+    if (!dbRef) { setMode('Nur ansehen: Eintragen können Patrick und alle, die er eingeladen hat. Das Live-Ranking sehen angemeldete claude.ai-Nutzer. (Code: keine Datenbank, nicht angemeldet?) Tipp: Link in der Claude-App oder im Browser öffnen, in dem du bei claude.ai mit der eingeladenen E-Mail angemeldet bist (nicht im WhatsApp-Browser).', false); return; }
     const w = await canWrite();
-    setMode(w === false ? 'Nur ansehen: Eintragen können Patrick und alle, die er eingeladen hat.' : 'Person antippen, Getränk wählen, eintragen. Das Ranking aktualisiert sich live für alle.', w !== false);
+    setMode(w === false ? 'Nur ansehen: Eintragen können Patrick und alle, die er eingeladen hat. (Code: kein Schreibrecht für dieses Konto) Tipp: Link in der Claude-App oder im Browser öffnen, in dem du bei claude.ai mit der eingeladenen E-Mail angemeldet bist (nicht im WhatsApp-Browser).' : 'Person antippen, Getränk wählen, eintragen. Das Ranking aktualisiert sich live für alle.', w !== false);
     dbRef.collection('drinks').onSnapshot(snap => {
       drinks = snap.docs.filter(d => d.exists).map(d => Object.assign({id: d.id}, d.data()))
         .filter(d => byId[d.who] && d.ml > 0 && typeof d.ts === 'number');
