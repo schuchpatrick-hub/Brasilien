@@ -10216,6 +10216,14 @@
   },
   "news": [
     {
+      "id": "n251008a",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🏁",
+      "t": "Gringo Kart: 4 neue Strecken (Flughafen GRU, Ponte Rio–Niterói, Hafen Manaus, Lopes Mendes), neue Items, Gewitter, Siegerposen mit Stimme, neue Sprüche, Reise-Kostüme, Zwischenzeiten, Fahrzeuge fahren sich unterschiedlich, Gegner mit Persönlichkeit"
+    },
+    {
       "id": "n251007t",
       "d": "2026-10-07",
       "tab": "kart-tab",
@@ -10882,6 +10890,126 @@
       "o": 20043,
       "dur": 1706,
       "f": 4
+    },
+    "v_jonas_win": {
+      "o": 250,
+      "dur": 2503,
+      "f": 5
+    },
+    "v_jonas_drift": {
+      "o": 3003,
+      "dur": 1450,
+      "f": 5
+    },
+    "v_jonas_item": {
+      "o": 4702,
+      "dur": 2594,
+      "f": 5
+    },
+    "v_jonas_pass": {
+      "o": 7546,
+      "dur": 1242,
+      "f": 5
+    },
+    "v_simon_win": {
+      "o": 9039,
+      "dur": 1918,
+      "f": 5
+    },
+    "v_simon_drift": {
+      "o": 11207,
+      "dur": 2410,
+      "f": 5
+    },
+    "v_simon_item": {
+      "o": 13866,
+      "dur": 675,
+      "f": 5
+    },
+    "v_simon_pass": {
+      "o": 14791,
+      "dur": 910,
+      "f": 5
+    },
+    "v_patrick_win": {
+      "o": 15951,
+      "dur": 2365,
+      "f": 5
+    },
+    "v_patrick_drift": {
+      "o": 18566,
+      "dur": 1097,
+      "f": 5
+    },
+    "v_patrick_item": {
+      "o": 19915,
+      "dur": 1423,
+      "f": 5
+    },
+    "v_patrick_pass": {
+      "o": 21587,
+      "dur": 1814,
+      "f": 5
+    },
+    "v_marco_win": {
+      "o": 23651,
+      "dur": 2178,
+      "f": 5
+    },
+    "v_marco_drift": {
+      "o": 26079,
+      "dur": 1588,
+      "f": 5
+    },
+    "v_marco_item": {
+      "o": 27916,
+      "dur": 2139,
+      "f": 5
+    },
+    "v_marco_pass": {
+      "o": 30305,
+      "dur": 1020,
+      "f": 5
+    },
+    "v_greisel_win": {
+      "o": 31575,
+      "dur": 1975,
+      "f": 5
+    },
+    "v_greisel_drift": {
+      "o": 33800,
+      "dur": 1587,
+      "f": 5
+    },
+    "v_greisel_item": {
+      "o": 35637,
+      "dur": 2048,
+      "f": 5
+    },
+    "v_greisel_pass": {
+      "o": 37935,
+      "dur": 1275,
+      "f": 5
+    },
+    "v_dajo_win": {
+      "o": 39460,
+      "dur": 2771,
+      "f": 5
+    },
+    "v_dajo_drift": {
+      "o": 42480,
+      "dur": 1352,
+      "f": 5
+    },
+    "v_dajo_item": {
+      "o": 44083,
+      "dur": 1735,
+      "f": 5
+    },
+    "v_dajo_pass": {
+      "o": 46068,
+      "dur": 1905,
+      "f": 5
     }
   },
   "kartReset": "2026-10-07a"
