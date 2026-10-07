@@ -3179,6 +3179,22 @@
           {
             "t": "Praia da Joatinga",
             "q": "Praia da Joatinga"
+          },
+          {
+            "t": "Dois Irmãos (Sonnenaufgang)",
+            "q": "Trilha Morro Dois Irmãos Vidigal"
+          },
+          {
+            "t": "Hippie-Markt (So)",
+            "q": "Feira Hippie de Ipanema"
+          },
+          {
+            "t": "Santa Teresa",
+            "q": "Bondinho de Santa Teresa"
+          },
+          {
+            "t": "Prainha",
+            "q": "Prainha, Rio de Janeiro"
           }
         ],
         "warn": "Centro nur tagsüber, nachts gefährlich.",
@@ -10173,6 +10189,14 @@
     ]
   },
   "news": [
+    {
+      "id": "n251007c",
+      "d": "2026-10-07",
+      "tab": "tage-tab",
+      "to": "tage",
+      "e": "🌴",
+      "t": "Neue Rio-Tipps: Dois Irmãos zum Sonnenaufgang, Hippie-Markt am Sonntag, Santa Teresa, Prainha, Steakhäuser"
+    },
     {
       "id": "n251007b",
       "d": "2026-10-07",
