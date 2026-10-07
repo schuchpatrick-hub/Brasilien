@@ -7174,7 +7174,7 @@ setGroup(G);
   const TAU = Math.PI * 2, clamp = (v, a, b) => v < a ? a : v > b ? b : v, rnd = (a, b) => a + Math.random() * (b - a), pick = a => a[Math.random() * a.length | 0];
   const angd = (a, b) => Math.atan2(Math.sin(a - b), Math.cos(a - b));
   const LOOK = (TRIP.dance && TRIP.dance.look) || {}, CREW = TRIP.crew, NAME = id => (CREW.find(c => c.id === id) || {}).name || id;
-  let LAPS = 3; const VMAX = 300, PTS = [10, 8, 6, 5, 4, 3];
+  let LAPS = 3; const VMAX = 272, PTS = [10, 8, 6, 5, 4, 3];
   const LINES = {jonas: ['Das kommt auf Splitwise!', 'Mein Fischerhut!'], simon: ['Schon wieder ich?!', 'Aua, mein Sonnenbrand!'], patrick: ['Mein Rücken!', 'Ich hab Vorfahrt!'],
     marco: ['Wer war das?!', 'Fernschuss!'], greisel: ['Passt scho.', 'Kitzelt bloß.'], dajo: ['Das war Absicht!', 'Ich will nachfüllen!']};
   const ITEMS = {turbo: {k: 'turbo', e: '🍹', n: 'Caipi-Turbo'}, oil: {k: 'oil', e: '🧴', n: 'Sonnencreme-Öl'}, coati: {k: 'coati', e: '🦝', n: 'Nasenbär'}}, ILIST = Object.values(ITEMS);
@@ -7208,19 +7208,19 @@ setGroup(G);
       pads: [[.07, -32], [.07, 32], [.39, 0], [.69, -38], [.93, 30]], ramp: .215, boxes: [.17, .47, .76], music: {bpm: 128, root: 1},
       obst: [[.3, 30, 'nut'], [.58, -35, 'nut'], [.66, 40, 'nut'], [.9, -20, 'nut']], movers: [{f: .62, range: 105, speed: 38, kind: 'vendor'}],
       wave: {x0: 620, x1: 1180}, birds: [.27, .55, .82], spect: [[.03, 1], [.12, 1], [.33, -1], [.5, 1], [.6, -1], [.84, -1], [.96, 1]]},
-    {id: 'iguacu', name: 'Iguaçu', sub: 'Garganta do Diabo', e: '🌊', laps: 2, tw: 150, ww: 2600, wh: 2000, sea: null, off: .5, grip: 3.6, veh: 'kart',
-      cp: [[400, 1700], [1000, 1780], [1600, 1700], [2100, 1750], [2400, 1500], [2350, 1100], [2000, 950], [1700, 1150], [1350, 1050], [1400, 700], [1900, 500], [2200, 350], [1700, 200], [1000, 250], [500, 400], [300, 800], [500, 1150], [300, 1450]],
+    {id: 'iguacu', name: 'Iguaçu', sub: 'Garganta do Diabo', e: '🌊', laps: 2, tw: 165, ww: 3000, wh: 2300, sea: null, off: .5, grip: 3.6, veh: 'kart',
+      cp: [[700, 2020], [1350, 2080], [2000, 2010], [2580, 1900], [2830, 1450], [2760, 950], [2620, 520], [2200, 300], [1650, 330], [1150, 450], [700, 380], [400, 660], [330, 1150], [430, 1650]],
       pads: [[.1, 0], [.47, -30], [.72, 30]], ramp: .36, boxes: [.18, .52, .8], music: {bpm: 124, root: .89},
       obst: [[.6, 0, 'log'], [.85, -40, 'log']], movers: [{f: .66, range: 100, speed: 70, kind: 'coati', n: 3}],
-      puddles: [[.05, 30, 38], [.27, -35, 40], [.92, 20, 42]], rain: 1, mist: {x: 900, y: 860, r: 430}, falls: {x: 880, y: 860},
+      puddles: [[.05, 30, 38], [.27, -35, 40], [.92, 20, 42]], rain: 1, mist: {x: 1500, y: 1250, r: 460}, falls: {x: 1500, y: 1250},
       birds: [], spect: [[.02, 1], [.4, -1]]},
-    {id: 'amazon', name: 'Amazonas', sub: 'Encontro das Águas', e: '🛶', laps: 2, tw: 175, ww: 2600, wh: 1950, sea: null, off: .45, grip: 4.2, veh: 'boat',
-      cp: [[300, 1600], [900, 1720], [1500, 1560], [2000, 1660], [2400, 1400], [2300, 950], [1900, 800], [2200, 500], [1800, 250], [1200, 350], [1300, 750], [900, 1000], [520, 800], [300, 420], [150, 820], [200, 1220]],
+    {id: 'amazon', name: 'Amazonas', sub: 'Encontro das Águas', e: '🛶', laps: 2, tw: 180, ww: 3000, wh: 2300, sea: null, off: .45, grip: 4.2, veh: 'boat',
+      cp: [[700, 2000], [1350, 2080], [2000, 1990], [2550, 1950], [2830, 1560], [2620, 1170], [2080, 1150], [1550, 1260], [1050, 1170], [920, 860], [1100, 600], [1550, 560], [2050, 610], [2520, 600], [2730, 520], [2810, 340], [2730, 160], [2520, 80], [2100, 80], [1600, 110], [1100, 160], [600, 330], [300, 800], [300, 1350], [420, 1800]],
       pads: [[.33, 0], [.64, -30]], ramp: null, boxes: [.15, .45, .75], music: {bpm: 116, root: .84},
       obst: [[.22, 40, 'log'], [.4, -45, 'log'], [.58, 30, 'log'], [.88, -30, 'log']], movers: [{f: .29, range: 80, speed: 26, kind: 'caiman'}, {f: .78, range: 80, speed: 22, kind: 'caiman'}],
       dolphins: [.1, .52, .7, .95], birds: [], spect: []},
-    {id: 'paraty', name: 'Paraty', sub: 'Centro Histórico bei Flut', e: '⛵', laps: 2, tw: 136, ww: 2550, wh: 1850, sea: x => 1690 + 20 * Math.sin(x / 150), off: .42, grip: 9, veh: 'kart',
-      cp: [[400, 1500], [1100, 1550], [1150, 1150], [1700, 1100], [1750, 1500], [2250, 1450], [2300, 900], [1850, 700], [1900, 350], [1300, 300], [1250, 700], [800, 750], [750, 350], [300, 400], [250, 1000]],
+    {id: 'paraty', name: 'Paraty', sub: 'Centro Histórico bei Flut', e: '⛵', laps: 2, tw: 165, ww: 3150, wh: 2100, sea: x => 1900 + 20 * Math.sin(x / 150), off: .42, grip: 9, veh: 'kart',
+      cp: [[700, 1740], [1250, 1700], [1650, 1460], [2150, 1400], [2620, 1430], [2900, 1130], [2780, 700], [2250, 570], [1700, 680], [1200, 520], [750, 380], [380, 560], [280, 1050], [400, 1500]],
       pads: [[.2, 0], [.52, 0], [.86, 0]], ramp: .44, boxes: [.12, .4, .7], music: {bpm: 132, root: 1.12},
       obst: [[.6, 35, 'stone'], [.77, -30, 'stone']], movers: [{f: .3, range: 80, speed: 30, kind: 'horse'}],
       puddles: [[.08, 0, 50], [.34, -25, 45], [.63, 20, 48], [.95, -15, 46]], flood: 1, birds: [.15, .68], spect: [[.02, 1], [.45, 1], [.82, -1]]},
@@ -7309,7 +7309,7 @@ setGroup(G);
         x.fillStyle = '#b9b1a3'; x.fillRect(0, 0, WW, WH); noise(4000, 'rgba(90,80,70,.25)', 'rgba(255,255,255,.2)');
         sea(x, '#4fb5b0', '#1b6f86');
         // Kolonialhäuser (weiß, bunte Türen, rote Dächer) in Blöcken
-        for (let X = 20; X < WW; X += 120) for (let Y = 20; Y < 1640; Y += 120) { if (!free(X + 50, Y + 50, 60)) continue;
+        for (let X = 20; X < WW; X += 120) for (let Y = 20; Y < shore(X) - 210; Y += 120) { if (!free(X + 50, Y + 50, 60)) continue;
           x.fillStyle = 'rgba(0,0,0,.18)'; x.fillRect(X + 6, Y + 6, 96, 96); x.fillStyle = '#c4553a'; x.fillRect(X, Y, 96, 96); x.fillStyle = 'rgba(0,0,0,.15)'; x.fillRect(X + 48, Y, 48, 96);
           x.fillStyle = '#f7f2e8'; x.fillRect(X, Y + 82, 96, 14); const dc = pick(['#2f6fd6', '#1d9a5b', '#e3a21a', '#c0392b']); x.fillStyle = dc; for (let d = 0; d < 3; d++) x.fillRect(X + 10 + d * 30, Y + 84, 14, 12); }
       }
@@ -7608,7 +7608,7 @@ setGroup(G);
       const edge = Math.abs(k.lat) - TW / 2, offT = edge > -4 && !k.air, me1 = ks[0], deep = clamp((edge + 4) / 45, 0, 1);
       // Randsteine: rütteln, leicht bremsen
       if (!k.air && T.veh !== 'boat' && edge > -16 && edge < 8 && k.v > 80) { k.rumble -= dt; if (k.rumble <= 0) { k.rumble = .07; if (k.me) { S.shake = Math.max(S.shake, .06); noise(.04, .05, 0, 0, 0, 180); } } }
-      let vmax = VMAX * k.skill * (.97 + k.cs.spd * .06) * k.vt[0] * (k.slowT > 0 ? .55 : 1) * (k.blind > 0 ? .8 : 1) * (offT ? 1 - (1 - T.off) * deep : 1) * (edge > -16 && edge < 8 && !k.air ? .985 : 1) * (k.wet > 0 ? .68 : 1) * (k.boost > 0 ? 1.55 : 1) * (k.done ? .6 : 1) * (k.dr ? .97 : 1);
+      let vmax = VMAX * k.skill * (.97 + k.cs.spd * .06) * k.vt[0] * (k.slowT > 0 ? .55 : 1) * (k.blind > 0 ? .8 : 1) * (offT ? 1 - (1 - T.off) * deep : 1) * (edge > -16 && edge < 8 && !k.air ? .985 : 1) * (k.wet > 0 ? .68 : 1) * (k.boost > 0 ? 1.45 : 1) * (k.done ? .6 : 1) * (k.dr ? .97 : 1 - Math.abs(k.steer) * .1);   // starkes Einlenken kostet Tempo (Reifenabrieb)
       if (!k.me && !k.done) { const gap = (progress(me1) - progress(k)) / N; vmax *= clamp(1 + gap * DIFFS[DIFF].rb, .9, 1.12);   // Gummiband: knapp bleibt spannend
         let ca = 0; for (let j = 10; j < 60; j += 6) ca = Math.max(ca, Math.abs(CURV[wrap(k.idx + j)])); vmax *= 1 - clamp((ca - .003) * 55, 0, .2); }   // vor engen Kurven bremsen
       if (k.spin > 0) { k.spin -= dt; k.rot += dt * 14; vmax *= .25; } else k.rot *= Math.max(0, 1 - dt * 10);
@@ -7630,6 +7630,10 @@ setGroup(G);
       k.mv = Math.atan2(sa * k.v + ca * k.vr, ca * k.v - sa * k.vr);
       // Reifenqualm beim Rutschen
       if (!k.air && T.veh !== 'boat' && (Math.abs(k.vr) > 70 || k.dr) && Math.random() < dt * 14) S.fx.push({x: k.x - ca * 16 + rnd(-6, 6), y: k.y - sa * 16 + rnd(-6, 6), dust: 1, t: 0, c: '235,235,235'});
+      // weiche Bande: weit neben der Strecke ist Schluss (Dschungel/Häuser/Absperrung), Kart gleitet an ihr entlang
+      { const lim = TW / 2 + (T.veh === 'boat' ? 55 : T.id === 'paraty' ? 60 : 85), [ni, nl] = nearest(k.x, k.y, k.idx);
+        if (Math.abs(nl) > lim && !k.air) { const sg = Math.sign(nl), [bx, by] = at(ni, sg * lim); k.x = bx; k.y = by; k.v *= .93; k.vr *= -.25; k.dr = 0;
+          if (k.me && !S.wallT) { S.wallT = .3; noise(.07, .09, 0, 0, 0, 500); vib(12); S.shake = Math.max(S.shake, .12); for (let q = 0; q < 5; q++) S.sp.push({x: bx, y: by, vx: rnd(-90, 90), vy: rnd(-90, 90), t: 0, c: '#ffe08a'}); } } }
       // weit weg oder festgefahren: zurück auf die Strecke
       if (!k.done && !k.air && (edge > 230 || (edge > 10 && k.v < 30) || (T.sea && k.y >= shore(k.x) - 11))) k.lost += dt; else k.lost = Math.max(0, k.lost - dt * 2);
       if (k.lost > 2.2) { const i = wrap(k.idx - 8), [x, y] = at(i, 0); k.x = x; k.y = y; k.a = k.mv = Math.atan2(P[wrap(i + 1)][1] - P[i][1], P[wrap(i + 1)][0] - P[i][0]); k.v = 60; k.vr = 0; k.lost = 0; k.dr = 0; k.spin = 0;
@@ -7666,7 +7670,7 @@ setGroup(G);
       if (d < 30 && d > .01) { const p = (30 - d) / 2, nx = dx / d, ny = dy / d; a.x -= nx * p; a.y -= ny * p; b.x += nx * p; b.y += ny * p; a.v *= .97; b.v *= .97;
         const push = p * 9; a.vr -= (nx * -Math.sin(a.a) + ny * Math.cos(a.a)) * push; b.vr += (nx * -Math.sin(b.a) + ny * Math.cos(b.a)) * push;
         if (p > 3 && (a.me || b.me) && !S.bumpT) { S.bumpT = .25; noise(.08, .1, 0, 0, 0, 900); vib(15); for (let q = 0; q < 6; q++) S.sp.push({x: a.x + nx * 15, y: a.y + ny * 15, vx: rnd(-140, 140), vy: rnd(-140, 140), t: 0, c: '#ffe08a'}); } } }
-    S.bumpT = Math.max(0, (S.bumpT || 0) - dt); S.fade = Math.max(0, (S.fade || 0) - dt);
+    S.bumpT = Math.max(0, (S.bumpT || 0) - dt); S.wallT = Math.max(0, (S.wallT || 0) - dt); S.fade = Math.max(0, (S.fade || 0) - dt);
     const ground = k => !k.air;
     // Kisten, Hindernisse, Öl, Nasenbären
     S.boxes.forEach(b => { if (b.off > 0) { b.off = Math.max(0, b.off - dt); return; } ks.forEach(k => { if (b.off <= 0 && Math.hypot(k.x - b.x, k.y - b.y) < 28) { b.off = 3; for (let j = 0; j < 8; j++) S.sp.push({x: b.x, y: b.y, vx: rnd(-120, 120), vy: rnd(-120, 120), t: 0, c: '#ffd23f'}); if (!k.item && k.roll <= 0) { k.roll = .9; if (k.me) beep(660, .06, 'square', .05); } } }); });
@@ -8035,6 +8039,7 @@ setGroup(G);
   addEventListener('keyup', e => { INPUT.keys[e.key] = false; });
   addEventListener('resize', () => { if (!box.hidden) resize(); });
   document.addEventListener('visibilitychange', () => { if (document.hidden && !box.hidden) pause(); });
+  window.__kartAt = (i, l) => at(i, l); window.__kartTW = () => TW;
   window.__kart = {open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
 })();
 </script>
