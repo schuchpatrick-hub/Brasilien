@@ -10216,6 +10216,14 @@
   },
   "news": [
     {
+      "id": "n251007g",
+      "d": "2026-10-07",
+      "tab": "spiele-tab",
+      "to": "spiele",
+      "e": "🏎️",
+      "t": "Gringo Kart: Driften mit Turbo, Raketenstart, Schanze, Welle, Samba-Musik und Ansager"
+    },
+    {
       "id": "n251007f",
       "d": "2026-10-07",
       "tab": "spiele-tab",
@@ -10481,5 +10489,95 @@
       "t": "Real",
       "x": "Brasilianische Währung (R$). Umrechnen geht im Real-Rechner."
     }
-  ]
+  ],
+  "kartvo": {
+    "lead_jonas": {
+      "o": 250,
+      "dur": 2059
+    },
+    "lead_simon": {
+      "o": 2559,
+      "dur": 1965
+    },
+    "lead_patrick": {
+      "o": 4774,
+      "dur": 1992
+    },
+    "lead_marco": {
+      "o": 7016,
+      "dur": 2166
+    },
+    "lead_greisel": {
+      "o": 9433,
+      "dur": 2255
+    },
+    "lead_dajo": {
+      "o": 11937,
+      "dur": 2131
+    },
+    "go": {
+      "o": 14319,
+      "dur": 1316
+    },
+    "rocket": {
+      "o": 15885,
+      "dur": 1728
+    },
+    "last": {
+      "o": 17863,
+      "dur": 1282
+    },
+    "super": {
+      "o": 19396,
+      "dur": 1153
+    },
+    "coati": {
+      "o": 20798,
+      "dur": 1243
+    },
+    "wave": {
+      "o": 22291,
+      "dur": 1433
+    },
+    "jump": {
+      "o": 23974,
+      "dur": 1006
+    },
+    "hit": {
+      "o": 25230,
+      "dur": 1891
+    },
+    "vendor": {
+      "o": 27372,
+      "dur": 3331
+    },
+    "win": {
+      "o": 30953,
+      "dur": 2312
+    },
+    "podium": {
+      "o": 33515,
+      "dur": 2016
+    },
+    "lose": {
+      "o": 35781,
+      "dur": 2099
+    },
+    "over": {
+      "o": 38130,
+      "dur": 1002
+    },
+    "finish": {
+      "o": 39382,
+      "dur": 983
+    },
+    "stall": {
+      "o": 40615,
+      "dur": 2068
+    },
+    "trick": {
+      "o": 42933,
+      "dur": 1201
+    }
+  }
 }
