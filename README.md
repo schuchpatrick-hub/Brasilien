@@ -49,9 +49,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | **Do 31.12.** | Ca. 08:30 mit **Uber** von Guarujá nach São Paulo-**Congonhas (CGH)** (ca. 1,5–2 h). **11:50 Flug GOL G3 1016 → Rio-Santos Dumont (SDU), an 12:50**. Achtung: nicht die internationalen Flughäfen GRU/GIG. Check-in Tabas – Cena Carioca. Abends **Silvester an der Copacabana, Dresscode ganz in Weiß** |
 | 01.–05.01. | Rio: Copacabana/Ipanema, Christusstatue, Zuckerhut, Rodízio, Maracanã, Vidigal, Santa Teresa & Lapa, lokale Strände (Details unten) |
 | **Mi 06.01.** | Daijo & Greisel landen ca. **06:10 in Rio-Galeão (GIG)**. Treffpunkt GIG, gemeinsamer Flug GIG → Foz do Iguaçu (IGU) ca. **10:40** |
-| Mi 06.01. abends | 🟡 Vorschlag (statt 09.01., da Flug nach Manaus): 17:00 Sonnenuntergang am Dreiländereck (Marco das Três Fronteiras), 20:30 Icebar Iguazú (Argentinien, Pass!), 00:30 Casanova Night Club |
-| **Do 07.01.** | **Argentinische Fälle & Steak-Nacht:** 09:00 mit zwei Ubers/Großraumtaxi über die Grenze (Pässe!), mittags Öko-Zug zum Teufelsschlund (Garganta del Diablo), nachmittags Gran Aventura Speedboot unter die Fälle (Wechselkleidung!), 19:30 Steaks im La Cabrera Iguazú (reservieren), nachts Craft-Beer auf der Avenida Brasil (Patagonia, Holy Iguazú) |
-| **Fr 08.01.** | **Brasilianische Fälle & Live-Musik:** 10:00 brasilianischer Park (Panorama), 13:30 Parque das Aves, abends Churrascaria do Gaúcho, nachts Zeppelin Old Bar (Live-Bands, Billard) |
+| 07.–08.01. | Iguaçu-Fälle: brasilianische und argentinische Seite (Reisepass mitnehmen!), Ideen siehe Tipps vor Ort |
 | **Sa 09.01.** | Flug IGU → Manaus (MAO), mit Umstieg. 1 Nacht in der Casa 307 |
 | **So 10.01.** | Abholung am Hotel zur **Juma Lodge** (3 Nächte, alles inklusive außer Bar) |
 | 11.–12.01. | Dschungel: Bootstouren, rosa Flussdelfine, Kaimansafari, Regenwald-Wanderungen, „Meeting of the Waters“ |
@@ -157,11 +155,12 @@ Transfers laufen per **Uber** (GRU → Guarujá, Rio → Paraty, zum Flughafen a
 - Kostenlose Outdoor-Gyms am Strand: Academia do Arpoador, YoPRO 🟡 Lage prüfen
 - Lokale Strände ohne Hochhäuser: **Prainha** (weit im Westen); **Praia da Joatinga**; **Praia dos Amores** (um hinzukommen, unter einer Brücke durchs Wasser); **Praia da Barca** 🟡 Name prüfen (auch Fußball möglich)
 
-### Foz do Iguaçu
-- Steakhäuser in Puerto Iguazú: **La Cabrera** (Top-Tipp, gigantische Steaks mit Mini-Beilagen), **Aqva** (Rumpsteak, Ausgehviertel, Weinkarte), **El Quincho del Tío Querido** (Asado, Live-Musik oder Tango-Show)
-- Extra: **Helisul**-Hubschrauberflug über die Fälle oder **Itaipú-Staudamm**
-- Grenze: zwei Ubers oder Großraumtaxi (Fahrer warten kurz am Zoll), immer Reisepässe mit
-- Zwei Währungen (Real & Pesos): alles in Splitwise
+### Foz do Iguaçu (Ideen, keine feste Planung)
+- **Argentinische Seite:** zwei Ubers/Großraumtaxi über die Grenze, Öko-Zug zum Teufelsschlund (Garganta del Diablo), Gran-Aventura-Speedboot unter die Fälle (Wechselkleidung!), abends Steak, danach Craft-Beer auf der Avenida Brasil (Patagonia, Holy Iguazú)
+- **Brasilianische Seite:** Panorama-Weg im Nationalpark, Parque das Aves, abends Churrascaria do Gaúcho, nachts Zeppelin Old Bar (Live-Bands, Billard)
+- **Extras:** Helisul-Hubschrauberflug oder Itaipú-Staudamm, Sonnenuntergang am Dreiländereck (Marco das Três Fronteiras), Icebar Iguazú (−10 °C, Argentinien), Casanova Night Club
+- Steakhäuser in Puerto Iguazú: **La Cabrera** (gigantische Steaks mit Mini-Beilagen, reservieren), **Aqva** (Rumpsteak, Ausgehviertel, Weinkarte), **El Quincho del Tío Querido** (Asado, Live-Musik oder Tango-Show)
+- Grenze: zwei Ubers oder Großraumtaxi (Fahrer warten kurz am Zoll), immer Reisepässe mit; zwei Währungen (Real & Pesos): alles in Splitwise
 
 ### Paraty
 - **Bootstouren** mit Taxiboot oder Privatboot zu Inseln und Schnorchelspots, an Bord meist Drinks und Musik
