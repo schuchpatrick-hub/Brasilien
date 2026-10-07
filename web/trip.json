@@ -10216,6 +10216,14 @@
   },
   "news": [
     {
+      "id": "n251007m",
+      "d": "2026-10-07",
+      "tab": "spiele-tab",
+      "to": "spiele",
+      "e": "🏎️",
+      "t": "Gringo Kart: 3 neue Strecken (São Paulo, Réveillon bei Nacht, Cristo im Nebel), Pokale, Abkürzungen, Schranken, Münzen + Garage mit Tuning und Kostümen, Erfolge, Rivalen, Bremse, Drift-Knopf, analoge Lenkung, Musik je Strecke, Tageszeit wie in Rio"
+    },
+    {
       "id": "n251007l",
       "d": "2026-10-07",
       "tab": "spiele-tab",
@@ -10773,6 +10781,51 @@
       "o": 25484,
       "dur": 1513,
       "f": 3
+    },
+    "t_reveillon": {
+      "o": 250,
+      "dur": 2867,
+      "f": 4
+    },
+    "t_sp": {
+      "o": 3367,
+      "dur": 2861,
+      "f": 4
+    },
+    "t_cristo": {
+      "o": 6478,
+      "dur": 3697,
+      "f": 4
+    },
+    "cut": {
+      "o": 10425,
+      "dur": 1402,
+      "f": 4
+    },
+    "ach": {
+      "o": 12077,
+      "dur": 1461,
+      "f": 4
+    },
+    "rival": {
+      "o": 13788,
+      "dur": 1561,
+      "f": 4
+    },
+    "rivalwin": {
+      "o": 15599,
+      "dur": 2511,
+      "f": 4
+    },
+    "gate": {
+      "o": 18360,
+      "dur": 1433,
+      "f": 4
+    },
+    "night": {
+      "o": 20043,
+      "dur": 1706,
+      "f": 4
     }
   }
 }

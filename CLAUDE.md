@@ -304,7 +304,7 @@ Kein Titelsong (auf Wunsch wieder entfernt, 03.10.).
 Nur-Kopf-Figuren (`headOnly`, Hilfsfunktion `headAt`) für Fenster, Gondel und Handy-Bildschirm. Lange Untertitel brechen in zwei Zeilen um.
 Neue Folge: Zeilen in `series.epN` (mit `scenes`, `credits`, `next`), Stimmen per `--series epN`, Szenen-Code in `frame()` ergänzen, `META` erweitern.
 
-## Gringo Kart (seit 07.10., Ausbau in Stufen: 1 Fahrgefühl ✅, 2 sechs Strecken + Grand Prix ✅, 3 Persönlichkeit/Items je Person ✅, 4 Bestenliste/Geister/Tages-Challenge ✅)
+## Gringo Kart (seit 07.10., Ausbau in Stufen: 1 Fahrgefühl ✅, 2 Strecken + Grand Prix ✅, 3 Persönlichkeit/Items je Person ✅, 4 Bestenliste/Geister/Tages-Challenge ✅, großes Paket mit 9 Strecken ✅)
 
 Rennspiel im Kapitel Spiele: Knopf `#kart-open` (`.kart-teaser`) öffnet `#kart` als Vollbild-Overlay (wird beim Öffnen unter `<body>` gehängt, Kapitel hat content-visibility).
 Eigenes Modul „Gringo Kart“ am Ende von `page_script.html`, Canvas von oben, Kamera dreht mit (Fahrtrichtung oben), zoomt bei hohem Tempo leicht raus. Strecke Copacabana: Kontrollpunkte `CP` → Catmull-Rom,
@@ -343,6 +343,15 @@ Schreiben nur mit Schreibrecht (`canWrite()`, also Patrick und per E-Mail eingel
 Geist (`GHOST.mode` off/mine/crew, localStorage `br26.kartGhost`, eigene Bestfahrt `br26.kartGhost.<strecke>`): halbdurchsichtig mit 👻, ohne Zusammenstoß, auch auf der Minikarte. Ergebniszeile `.kr-crew` (neuer Crew-Rekord bzw. aktueller Rekord).
 Tages-Challenge (Modus `daily`): `daily()` wählt aus dem Datum (Berlin) Strecke + Regel aus `RULES` (night = Scheinwerfer, rev = Strecke rückwärts `loadTrack(id, true)`, slip, turbo = nur Turbos, coati = Nasenbär-Chaos, mirror = Lenkung vertauscht); aktive Regel `RULE`, Bestzeit lokal unter `<strecke>@<regel>`.
 Test: `window.__kart` (`open`, `pause`, `resume`, `state`, `step(dt)`, `draw`, `finish`, `say`, `load(id)`, `cup()`, `lb()`, `daily()`); `S.hl` zählt Treffer je Ursache. Beim Veröffentlichen `audio/kart3.mp3` mitgeben.
+**Großes Paket (07.10., Wunschliste Patrick):**
+- Steuerung `SET` (localStorage `br26.kartSet` {ctl hold/analog, q Grafik 0–2, cam Kamera 0–2, tod real/day}), Knöpfe in `.kr-set` (Menü) und im Pause-Menü, ein Klick-Handler auf `box` + `setTxt()`. Halten: Doppeltipp = sofort Drift (`INPUT.dtap`), beide Seiten = Bremse (`k.brk`, Bremslichter). Analog: Daumen-x = Lenkwert `INPUT.ax`, Knopf `.kr-drift`, zweiter Finger = Bremse.
+- Kurven-Warnung im HUD (aus `SCURV`), Kurven-Schilder am Rand im `BG`. HD-Fahrzeuge (Sprite doppelte Auflösung, Vorderräder `FW` lenken mit). Grafik: `BGS` (Auflösung Hintergrund), DPR-Grenze, Regenmenge.
+- Strecken skaliert (`B.k`, Standard 1,15 = länger). Neu: São Paulo (`sp`, Funk, Mautschranke, Straßenbahn, Motoboy, Hütchen), Réveillon (`reveillon` = Copacabana bei Nacht, Feuerwerk `S.fwT`, weiße Zuschauer, Sektflaschen, Welle alle 5–8 s), Cristo (`cristo`, Serpentinen, Nebel `T.fog`, Zahnradbahn-Schranke, Affen klauen das Item, Statue `T.statue`, 2 Runden). Pokale `CUPS` (Rio, Wildnis, Grand Prix do Brasil; Wahl `.kr-cups`, `CUPSEL`, `br26.kartCup`; `CUP.list`).
+- Schranken `T.gates` {f, period, closed, kind toll/train} → `S.gates`, `gateShut(g)`: zu = anhalten, KI wartet. Abkürzung `CUT` wird je Strecke automatisch gesucht (kürzeste sichere Sehne durchs Innere), `onCut()`: keine Bande/Sand-Bremse, ×0,86, Turbo-Pfeil in der Mitte.
+- Tageszeit nach Rio-Uhr (`S.tod` night/dusk/dawn/day, Schalter „immer Tag“). Musikstil je Strecke `T.music.style` (samba, bossa, forro, axe, funk, epic, forest) in `musNote`. Ladebildschirm `.kr-load` mit Tipps `TIPS` (`showLoad`, `startRace` → `startRace0`).
+- Münzen auf der Strecke (`S.coins`, 4 Reihen à 5, kommen nach 9 s wieder; je Münze +0,4 % Tempo bis 10, Treffer kostet 2), nach dem Rennen + Platz-Bonus (10-6-4-2-1-1) + 5 für den geschlagenen Rivalen, Kasse `br26.kartCoins`. Garage `.kr-garage`: Tuning `TUNE` Motor/Reifen/Turbo Stufe 0–5 (`br26.kartTune`, Preise `TCOST`, wirkt nur auf den Spieler `S.tu`), Kostüme `COS` je Fahrer (`br26.kartCos`, gekaufte `br26.kartCosOwn`, manche nur über Erfolge), Kopf mit Kostüm `headImg()`.
+- Erfolge `ACH` (`br26.kartAch`, `ach(id)`: Toast `.kr-toast`, Ansager, +10 Münzen). Rivale je Fahrer (`br26.kartRival`, ⚔️ am Kopf und im HUD, etwas schneller, nach einem Sieg über ihn wird der nächste Nachbar in der Wertung zum Rivalen).
+- Ansager-Sätze dazu in `audio/kart4.mp3` (`kartvo[key].f = 4`: t_reveillon, t_sp, t_cristo, cut, ach, rival, rivalwin, gate, night); beim Veröffentlichen mitgeben.
 
 ## Karte: Infokarten
 
