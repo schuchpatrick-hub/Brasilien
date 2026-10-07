@@ -1419,5 +1419,9 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
 .kart.racing.ana .kr-drift{display:block}
 .kr-set{margin:6px 0;text-align:left}.kr-set summary{cursor:pointer;font:700 .85rem system-ui,sans-serif;color:#1d2a24;padding:4px 0}
 .kr-set .kr-pml{grid-template-columns:1fr 1fr}.kr-set .btn{font-size:.72rem;padding:7px 6px}
+.kr-load{position:absolute;inset:0;z-index:6;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#1694b8,#08304a);color:#fff;text-align:center;padding:20px}
+.kr-load[hidden]{display:none}.kr-load-t{font:900 1.9rem system-ui,sans-serif}.kr-load-s{opacity:.85;margin-top:4px}
+.kr-load-bar{width:200px;height:6px;border-radius:3px;background:rgba(255,255,255,.2);margin:18px auto;overflow:hidden}.kr-load-bar i{display:block;height:100%;width:40%;background:#ffd23f;border-radius:3px;animation:krl 1s ease-in-out infinite}
+@keyframes krl{0%{transform:translateX(-100%)}100%{transform:translateX(250%)}}.kr-load-tip{max-width:320px;margin:0 auto;font-size:.92rem;opacity:.95}
 @media print{.kart-teaser,.kart{display:none!important}}
 </style>

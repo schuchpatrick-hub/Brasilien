@@ -9950,108 +9950,6 @@
         "Staffelfinale:",
         "Paraty & Ilha Grande"
       ]
-    },
-    "kart": {
-      "lines": [
-        {
-          "key": "t_reveillon",
-          "who": "narrator",
-          "say": "Willkommen zur Silvesternacht an der Copacabana!",
-          "text": "Willkommen zur Silvesternacht an der Copacabana!"
-        },
-        {
-          "key": "t_sp",
-          "who": "narrator",
-          "say": "Willkommen in São Paulo! Achtung, Stau!",
-          "text": "Willkommen in São Paulo! Achtung, Stau!"
-        },
-        {
-          "key": "t_cristo",
-          "who": "narrator",
-          "say": "Willkommen am Cristo Redentor! Nebel und Serpentinen!",
-          "text": "Willkommen am Cristo Redentor! Nebel und Serpentinen!"
-        },
-        {
-          "key": "cut",
-          "who": "narrator",
-          "say": "Abkürzung!",
-          "text": "Abkürzung!"
-        },
-        {
-          "key": "ach",
-          "who": "narrator",
-          "say": "Erfolg freigeschaltet!",
-          "text": "Erfolg freigeschaltet!"
-        },
-        {
-          "key": "rival",
-          "who": "narrator",
-          "say": "Der Rivale ist überholt!",
-          "text": "Der Rivale ist überholt!"
-        },
-        {
-          "key": "rivalwin",
-          "who": "narrator",
-          "say": "Rivalen-Duell gewonnen!",
-          "text": "Rivalen-Duell gewonnen!"
-        },
-        {
-          "key": "gate",
-          "who": "narrator",
-          "say": "Achtung, Schranke!",
-          "text": "Achtung, Schranke!"
-        },
-        {
-          "key": "night",
-          "who": "narrator",
-          "say": "Es wird Nacht! Licht an!",
-          "text": "Es wird Nacht! Licht an!"
-        }
-      ],
-      "voice": {
-        "t_reveillon": {
-          "dur": 2867,
-          "env": "996569889575677985787757989764159798356739618756876365553000244321008000"
-        },
-        "t_sp": {
-          "dur": 2861,
-          "env": "599982587899999797556745998776884000940019876469987882988899654300077000"
-        },
-        "t_cristo": {
-          "dur": 3697,
-          "env": "999716877898797566777549886998597365656640002220017000899865997761004997767259926677698551000"
-        },
-        "cut": {
-          "dur": 1402,
-          "env": "998147988649856985100000000000000000"
-        },
-        "ach": {
-          "dur": 1461,
-          "env": "9967876533776766599967763893541012000"
-        },
-        "rival": {
-          "dur": 1561,
-          "env": "9998995777758755849688768555203200053000"
-        },
-        "rivalwin": {
-          "dur": 1588,
-          "env": "9996777777688778767847874652100122224000"
-        },
-        "gate": {
-          "dur": 1433,
-          "env": "998655339899876667675479786631008300"
-        },
-        "night": {
-          "dur": 1706,
-          "env": "9986653099965543730009998751398999740002100"
-        }
-      },
-      "comedy": {
-        "narrator": {
-          "tempo": 1.14,
-          "pitch": 1.03
-        }
-      }
     }
   },
   "sfx": {
@@ -10875,6 +10773,51 @@
       "o": 25484,
       "dur": 1513,
       "f": 3
+    },
+    "t_reveillon": {
+      "o": 250,
+      "dur": 2867,
+      "f": 4
+    },
+    "t_sp": {
+      "o": 3367,
+      "dur": 2861,
+      "f": 4
+    },
+    "t_cristo": {
+      "o": 6478,
+      "dur": 3697,
+      "f": 4
+    },
+    "cut": {
+      "o": 10425,
+      "dur": 1402,
+      "f": 4
+    },
+    "ach": {
+      "o": 12077,
+      "dur": 1461,
+      "f": 4
+    },
+    "rival": {
+      "o": 13788,
+      "dur": 1561,
+      "f": 4
+    },
+    "rivalwin": {
+      "o": 15599,
+      "dur": 2511,
+      "f": 4
+    },
+    "gate": {
+      "o": 18360,
+      "dur": 1433,
+      "f": 4
+    },
+    "night": {
+      "o": 20043,
+      "dur": 1706,
+      "f": 4
     }
   }
 }
