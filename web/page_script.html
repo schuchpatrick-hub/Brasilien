@@ -8080,7 +8080,7 @@ setGroup(G);
     if (CUP) { const tbl = Object.entries(CUP.pts).sort((a, b) => b[1] - a[1]); st.innerHTML = '<p class="kr-lbl">Gesamtwertung nach ' + (CUP.i + 1) + ' von ' + CUP.list.length + ' Rennen</p>' +
       '<div class="kr-st">' + tbl.map(([id, p], i) => '<span' + (id === me ? ' class="me"' : '') + '><b>' + (i + 1) + '.</b> ' + esc(NAME(id)) + ' <i>' + p + '</i></span>').join('') + '</div>'; }
     res.querySelector('.kr-again').textContent = CUP ? (lastCup ? '🏆 Zur Siegerehrung' : '▶ Nächstes Rennen: ' + TBY[CUP.list[CUP.i + 1]].e + ' ' + TBY[CUP.list[CUP.i + 1]].name) : 'Nochmal';
-    res.querySelector('.kr-res .kr-back').textContent = CUP ? 'Grand Prix abbrechen' : 'Strecke / Fahrer wechseln';
+    res.querySelector('.kr-res .kr-back').textContent = CUP ? '☰ Menü (Grand Prix abbrechen)' : '☰ Zurück ins Menü';
     res.hidden = false; S.paused = true; MUS.on = false; racing(false); engOff();
   }
   // Siegerehrung nach dem Grand Prix: Podest auf dem Canvas, Tabelle im Kasten
@@ -8096,7 +8096,7 @@ setGroup(G);
       d.insertAdjacentHTML('beforeend', '<span>' + esc(NAME(e[0])) + '</span><b>' + ['🥇', '🥈', '🥉'][i] + ' ' + e[1] + ' P.</b>'); pod.appendChild(d); }); ol.appendChild(pod);
     tbl.slice(3).forEach(([id, p], i) => { const li = document.createElement('li'); if (id === me) li.className = 'me'; li.innerHTML = '<b>' + (i + 4) + '.</b>'; li.appendChild(headCv(id)); li.insertAdjacentHTML('beforeend', '<span>' + esc(NAME(id)) + '</span><small>' + p + ' P.</small>'); ol.appendChild(li); });
     res.querySelector('.kr-stand').hidden = true;
-    res.querySelector('.kr-again').textContent = '🏆 Neuer Grand Prix'; res.querySelector('.kr-res .kr-back').textContent = 'Zum Menü';
+    res.querySelector('.kr-again').textContent = '🏆 Neuer Grand Prix'; res.querySelector('.kr-res .kr-back').textContent = '☰ Zurück ins Menü';
     CUP.done = 1; SFX.fanfare(); real('applause', .8); say('cupwin', 'Der Grand-Prix-Sieger steht fest!', 1); if (S) fireworks(120);
   }
   const THEME = {guaruja: ['#ffe3a3', '#2fb8cc'], sp: ['#9aa0a8', '#3f444c'], copa: ['#f8d98f', '#1694b8'], reveillon: ['#2a2f6e', '#05081c'], cristo: ['#5fae66', '#1d5a2b'],

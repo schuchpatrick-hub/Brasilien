@@ -1515,6 +1515,7 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
 .kart .kr-pm .kr-pml{grid-template-columns:1fr 1fr;gap:7px}.kart .kr-pm .kr-pml .btn{font-size:.78rem;padding:10px 6px}
 .kart .kr-pm .kr-pml .kr-resume{grid-column:1/-1;font-size:1.1rem;padding:13px}.kart .kr-pm .kr-quit{grid-column:1/-1}
 .kart .kr-pm .kr-card{max-width:380px}
+.kart .kr-res .kr-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}.kart .kr-res .kr-btns .btn{margin:0;width:100%;padding:13px 8px}.kart .kr-res .kr-back{font-size:.9rem}
 .kart .kr-res li{color:#eef6ff}.kart .kr-res li small{color:#9fb6cc}.kart .kr-res li.me{background:rgba(255,210,63,.16)}
 .kart .kr-podium div{color:#1d2a24}
 .kart .kr-coins{color:#ffd23f}.kart .kr-crew{background:rgba(255,210,63,.14);color:#fff}.kart .kr-unlock{background:rgba(95,231,131,.14);color:#c8ffd8}
@@ -1961,11 +1962,11 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
       <p class="kr-help"><b>So geht’s:</b> Gas gibt’s automatisch. <b>Links/rechts</b> = lenken, <b>lange halten</b> = Drift, loslassen = Turbo. Bei der <b>1</b> tippen = Raketenstart. <b>ITEM</b> = 🍹 Turbo, 🧴 Öl, 🦝 Nasenbär. Auf der Schanze tippen = Trick!</p>
       <p class="kr-help">Halten: links/rechts halten = lenken, <b>Doppeltipp + halten</b> = Drift sofort, <b>beide Seiten</b> = Bremse. Analog: Daumen-Position lenkt stufenlos, <b>DRIFT</b>-Knopf, zweiter Finger = Bremse.</p></details></div></div>
       <div class="kr-foot"><p class="kr-best"></p><button type="button" class="btn kr-go">Los geht’s!</button><button type="button" class="kr-link kr-quit">Zurück zur Seite</button></div></div></div>
-    <div class="kr-res" hidden><div class="kr-card"><h3 class="kr-res-t"></h3><p class="kr-res-s"></p><ol></ol><p class="kr-coins"></p><p class="kr-crew" hidden></p><p class="kr-unlock" hidden></p><div class="kr-stand" hidden></div><div class="kr-btns"><button type="button" class="btn kr-again">Nochmal</button><button type="button" class="btn ghost kr-back">Fahrer wechseln</button></div><button type="button" class="kr-link kr-quit">Spiel beenden</button></div></div>
+    <div class="kr-res" hidden><div class="kr-card"><h3 class="kr-res-t"></h3><p class="kr-res-s"></p><ol></ol><p class="kr-coins"></p><p class="kr-crew" hidden></p><p class="kr-unlock" hidden></p><div class="kr-stand" hidden></div><div class="kr-btns"><button type="button" class="btn kr-again">Nochmal</button><button type="button" class="btn ghost kr-back">☰ Zurück ins Menü</button></div><button type="button" class="kr-link kr-quit">Spiel beenden</button></div></div>
     <div class="kr-pm" hidden><div class="kr-card"><h3>⏸ Pause</h3><div class="kr-pml">
       <button type="button" class="btn kr-resume">▶ Weiter</button>
       <button type="button" class="btn ghost kr-restart">↺ Rennen neu starten</button>
-      <button type="button" class="btn ghost kr-back">👤 Fahrer wechseln</button>
+      <button type="button" class="btn ghost kr-back">☰ Zurück ins Menü</button>
       <button type="button" class="btn ghost kr-ctl">🎮 Steuerung</button>
       <button type="button" class="btn ghost kr-steer">🎚 Lenkstärke</button>
       <button type="button" class="btn ghost kr-cam">🎥 Kamera</button>
@@ -10162,7 +10163,7 @@ setGroup(G);
     if (CUP) { const tbl = Object.entries(CUP.pts).sort((a, b) => b[1] - a[1]); st.innerHTML = '<p class="kr-lbl">Gesamtwertung nach ' + (CUP.i + 1) + ' von ' + CUP.list.length + ' Rennen</p>' +
       '<div class="kr-st">' + tbl.map(([id, p], i) => '<span' + (id === me ? ' class="me"' : '') + '><b>' + (i + 1) + '.</b> ' + esc(NAME(id)) + ' <i>' + p + '</i></span>').join('') + '</div>'; }
     res.querySelector('.kr-again').textContent = CUP ? (lastCup ? '🏆 Zur Siegerehrung' : '▶ Nächstes Rennen: ' + TBY[CUP.list[CUP.i + 1]].e + ' ' + TBY[CUP.list[CUP.i + 1]].name) : 'Nochmal';
-    res.querySelector('.kr-res .kr-back').textContent = CUP ? 'Grand Prix abbrechen' : 'Strecke / Fahrer wechseln';
+    res.querySelector('.kr-res .kr-back').textContent = CUP ? '☰ Menü (Grand Prix abbrechen)' : '☰ Zurück ins Menü';
     res.hidden = false; S.paused = true; MUS.on = false; racing(false); engOff();
   }
   // Siegerehrung nach dem Grand Prix: Podest auf dem Canvas, Tabelle im Kasten
@@ -10178,7 +10179,7 @@ setGroup(G);
       d.insertAdjacentHTML('beforeend', '<span>' + esc(NAME(e[0])) + '</span><b>' + ['🥇', '🥈', '🥉'][i] + ' ' + e[1] + ' P.</b>'); pod.appendChild(d); }); ol.appendChild(pod);
     tbl.slice(3).forEach(([id, p], i) => { const li = document.createElement('li'); if (id === me) li.className = 'me'; li.innerHTML = '<b>' + (i + 4) + '.</b>'; li.appendChild(headCv(id)); li.insertAdjacentHTML('beforeend', '<span>' + esc(NAME(id)) + '</span><small>' + p + ' P.</small>'); ol.appendChild(li); });
     res.querySelector('.kr-stand').hidden = true;
-    res.querySelector('.kr-again').textContent = '🏆 Neuer Grand Prix'; res.querySelector('.kr-res .kr-back').textContent = 'Zum Menü';
+    res.querySelector('.kr-again').textContent = '🏆 Neuer Grand Prix'; res.querySelector('.kr-res .kr-back').textContent = '☰ Zurück ins Menü';
     CUP.done = 1; SFX.fanfare(); real('applause', .8); say('cupwin', 'Der Grand-Prix-Sieger steht fest!', 1); if (S) fireworks(120);
   }
   const THEME = {guaruja: ['#ffe3a3', '#2fb8cc'], sp: ['#9aa0a8', '#3f444c'], copa: ['#f8d98f', '#1694b8'], reveillon: ['#2a2f6e', '#05081c'], cristo: ['#5fae66', '#1d5a2b'],
