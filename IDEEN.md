@@ -5,6 +5,12 @@ nach „Umgesetzt“ verschieben.
 
 ## ⭐ Vorgemerkt (Patrick will das)
 
+- **Seite in zwei Hauptbereiche teilen** (vorgemerkt 07.10., „gerne später“): oben ein großer Umschalter **🧳 Reise** | **🎉 Spaß**,
+  darunter die bisherigen Reiter als Unterkategorien. Reise = Übersicht, Tag für Tag, Flüge & Kosten, Praktisches/Gesundheit, Unterwegs & Packen,
+  Downloads. Spaß = Crew & Karten, Kino, Vorfreude, Spiele (Gringo Kart), Drinks. Gewählter Bereich pro Handy merken; Themen-Kacheln, Suche und
+  „Was ist neu?“-Punkte je Bereich (Punkt auch am Hauptschalter); Kopf mit Heute-Karte bleibt immer sichtbar; unterwegs (27.12.–21.01.)
+  Standard = Reise. Im PDF nur der Reise-Teil plus kurzer Spaß-Anhang. Offen: Drinks eher bei Spaß, oder unterwegs auch in Reise?
+
 - **Panini-Sticker-Album „Panini Gringos – Brasil 26/27“** (vorgemerkt 07.10., „die nächsten Tage umsetzen“): ca. 120 Sticker auf Album-Seiten
   (Crew inkl. Glitzer-Wappen und Mannschaftsfoto als 4-Teile-Puzzle · Stationen als 2-Teile-Panoramen · Nebendarsteller (Taxifahrer, Kontrolleur,
   Dona Rosa, Rezeptionistin, Kaiman, rosa Delfin …) · eigene Nasenbär-Seite · Legendäre Momente als Standbilder aus Serie/Porträts · seltene Specials
