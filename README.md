@@ -143,14 +143,17 @@ Transfers laufen per **Uber** (GRU → Guarujá, Rio → Paraty, zum Flughafen a
 ## Tipps vor Ort
 
 ### Rio de Janeiro
-- **Copacabana** und **Ipanema**, **Footvolley** am Strand, Sonnenuntergang am Arpoador
+- **Copacabana** und **Ipanema**, **Footvolley** am Strand, Açaí in Ipanema, Sonnenuntergang am Arpoador
+- Sonntags (So 03.01.): **Hippie-Markt** in Ipanema (ab ca. 10 Uhr), Avenida Atlântica teils autofrei
 - **Christusstatue:** vorher buchen; hoch mit der Bahn oder dem Shuttle ab der Mittelstation
 - **Zuckerhut** mit der Seilbahn, **Fastlane** empfohlen
-- **Rodízio** essen: Fleischspieße am Tisch, so viel man will
+- **Rodízio** essen: Fleischspieße am Tisch, so viel man will, z. B. **Churrascaria Palace**, **Fogo de Chão**, **Joaquina**
 - **Maracanã** (Stadion)
-- **Favela Vidigal**
-- Santa Teresa & Lapa; **Centro** nur tagsüber, nachts gefährlich
-- Lokale Strände: **Praia da Joatinga**; **Praia dos Amores** (um hinzukommen, unter einer Brücke durchs Wasser); **Praia da Barca** 🟡 Name prüfen (auch Fußball möglich)
+- **Favela Vidigal**; von dort zum Sonnenaufgang auf den **Dois Irmãos** (mit lokalem Guide)
+- Santa Teresa (bunte Häuser, gelbe Straßenbahn „Bondinho“) & Lapa; **Centro** nur tagsüber, nachts gefährlich
+- Rio von oben oder vom Wasser: **Helikopterflug** oder **Segeltörn zum Sonnenuntergang** (auch als Bootstag)
+- Kostenlose Outdoor-Gyms am Strand: Academia do Arpoador, YoPRO 🟡 Lage prüfen
+- Lokale Strände ohne Hochhäuser: **Prainha** (weit im Westen); **Praia da Joatinga**; **Praia dos Amores** (um hinzukommen, unter einer Brücke durchs Wasser); **Praia da Barca** 🟡 Name prüfen (auch Fußball möglich)
 
 ### Paraty
 - **Bootstouren** mit Taxiboot oder Privatboot zu Inseln und Schnorchelspots, an Bord meist Drinks und Musik
