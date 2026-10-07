@@ -307,7 +307,7 @@ Eigenes Modul „Gringo Kart“ am Ende von `page_script.html`, Canvas von oben,
 alle 6 px abgetastet (`P`, Normalen `NX`/`NY`), Breite `TW`; Hintergrund (Sand, Meer `shore()`, Stadt, Calçadão-Wellen als Muster, Palmen, Schirme) einmal in `BG` vorgezeichnet.
 6 Fahrer = Crew (Kart in Shirt-Farbe aus `dance.look`, Foto-Kopf mit `face`-Ausschnitt als Sprite `HEAD`), 3 Runden, Gas automatisch, Daumen links/rechts lenkt,
 `.kr-item` zündet das Item (🍹 Turbo, 🧴 Öl-Pfütze, 🦝 Nasenbär jagt den Vordermann); Kokosnüsse/Sand bremsen; KI fährt Ideallinie mit Spur-Wechsel, weicht aus, Gummiband.
-Sprüche beim Treffer je Person (`LINES`), Ton per Web Audio (Motor, Piepsen), Bestzeit im localStorage `br26.kartBest`. Klassen mit Präfix `kr-` (`k-` ist schon belegt).
+Lenkung des Spielers weich (Einschlag baut sich auf), Stärke wählbar Sanft/Mittel/Stark (`STEERS`, localStorage `br26.kartSteer`); Pause-Knopf `.kr-pbtn` oben links (nur im Rennen, Klasse `.racing`) öffnet `.kr-pm`: Weiter, Neustart, Fahrer wechseln, Lenkung, Ton, Beenden (auch Esc/P, App-Wechsel pausiert). Sprüche beim Treffer je Person (`LINES`), Ton per Web Audio (Motor, Piepsen), Bestzeit im localStorage `br26.kartBest`. Klassen mit Präfix `kr-` (`k-` ist schon belegt).
 Test: `window.__kart` (`open`, `state`, `step(dt)`, `draw`, `finish`). Ausbau-Ideen: weitere Strecken entlang der Route, Bestenliste in db, Geister-Fahrten, FIFA-Karten-Werte.
 
 ## Karte: Infokarten

@@ -1359,8 +1359,13 @@ details.more-note .note{margin-top:6px}
 .kart{position:fixed;inset:0;z-index:9999;background:#0b5d8f;touch-action:none;-webkit-user-select:none;user-select:none;overscroll-behavior:contain}
 .kart[hidden]{display:none}
 .kart > canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
-.kr-bar{position:absolute;top:calc(8px + env(safe-area-inset-top));left:8px;display:flex;gap:6px;z-index:2}
-.kr-bar button,.kr-pause{border:0;border-radius:50%;width:40px;height:40px;background:rgba(0,0,0,.45);color:#fff;font-size:1rem;cursor:pointer}
+.kr-pbtn{position:absolute;top:calc(8px + env(safe-area-inset-top));left:8px;z-index:2;border:2px solid rgba(255,255,255,.8);border-radius:50%;width:44px;height:44px;background:rgba(0,0,0,.5);color:#fff;font-size:1.3rem;line-height:1;cursor:pointer;display:none}
+.kart.racing .kr-pbtn{display:block}
+.kart:not(.racing) .kr-item{display:none}
+.kr-pm{position:absolute;inset:0;display:grid;place-items:center;padding:16px;background:rgba(5,30,45,.6);z-index:4}
+.kr-pm[hidden]{display:none}
+.kr-pml{display:grid;gap:8px;margin-top:8px}.kr-pml .btn{margin:0;width:100%}
+.kr-link{border:0;background:none;color:#5b6660;font:600 .88rem system-ui,sans-serif;text-decoration:underline;margin-top:10px;cursor:pointer;display:block;margin-left:auto;margin-right:auto}
 .kr-item{position:absolute;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);width:84px;height:84px;border-radius:50%;border:4px solid #fff;background:radial-gradient(circle at 35% 30%,#ffe27a,#f5a400);color:#6b3a00;font:900 .95rem system-ui,sans-serif;letter-spacing:.04em;box-shadow:0 6px 16px rgba(0,0,0,.35);z-index:2;touch-action:none;cursor:pointer}
 .kr-menu,.kr-res{position:absolute;inset:0;display:grid;place-items:center;padding:16px;background:rgba(5,30,45,.55);z-index:3;overflow:auto}
 .kr-menu[hidden],.kr-res[hidden]{display:none}
@@ -1377,8 +1382,6 @@ details.more-note .note{margin-top:6px}
 .kr-res li canvas{width:34px;height:34px}.kr-res li small{color:#5b6660;font-variant-numeric:tabular-nums}
 .kr-res li.me{background:#fff3cc;font-weight:700}
 .kr-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-.kr-pause{position:absolute;left:50%;top:45%;transform:translate(-50%,-50%);width:auto;height:auto;border-radius:30px;padding:14px 26px;font:800 1.1rem system-ui,sans-serif;z-index:4}
-.kr-pause[hidden]{display:none}
 html.kart-on .fab,html.kart-on #net{display:none!important}
 @media (orientation:landscape) and (max-height:520px){.kr-item{width:66px;height:66px;font-size:.8rem;left:auto;right:18px;transform:none}}
 @media print{.kart-teaser,.kart{display:none!important}}
@@ -1802,13 +1805,19 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
   <button type="button" class="kart-teaser" id="kart-open"><span class="kt-e" aria-hidden="true">🏎️</span><span><b>Gringo Kart</b><small>Prototyp · Grand Prix an der Copacabana, 3 Runden gegen die Crew</small></span><span class="kt-go" aria-hidden="true">▶</span></button>
   <div id="kart" class="kart" hidden>
     <canvas aria-label="Gringo Kart Rennstrecke"></canvas>
-    <div class="kr-bar"><button type="button" class="kr-close" aria-label="Spiel schließen">✕</button><button type="button" class="kr-snd" aria-label="Ton an/aus">🔊</button></div>
+    <button type="button" class="kr-pbtn" aria-label="Pause und Menü">⏸</button>
     <button type="button" class="kr-item" aria-label="Item benutzen">ITEM</button>
     <div class="kr-menu"><div class="kr-card"><h3>🏎️ Gringo Kart</h3><p>Grand Prix do Rio · Copacabana · 3 Runden</p><p class="kr-lbl">Wer fährt?</p><div class="kr-pick"></div>
       <p class="kr-help">Gas gibt’s automatisch. <b>Links/rechts tippen</b> = lenken, <b>ITEM</b> = 🍹 Caipi-Turbo, 🧴 Sonnencreme-Öl oder 🦝 Nasenbär. Kokosnüsse und Sand meiden!</p>
-      <p class="kr-best"></p><button type="button" class="btn kr-go">Los geht’s!</button></div></div>
-    <div class="kr-res" hidden><div class="kr-card"><h3 class="kr-res-t"></h3><p class="kr-res-s"></p><ol></ol><div class="kr-btns"><button type="button" class="btn kr-again">Nochmal</button><button type="button" class="btn ghost kr-back">Fahrer wechseln</button></div></div></div>
-    <button type="button" class="kr-pause" hidden>▶ Weiter</button>
+      <p class="kr-best"></p><button type="button" class="btn kr-go">Los geht’s!</button><button type="button" class="kr-link kr-quit">Zurück zur Seite</button></div></div>
+    <div class="kr-res" hidden><div class="kr-card"><h3 class="kr-res-t"></h3><p class="kr-res-s"></p><ol></ol><div class="kr-btns"><button type="button" class="btn kr-again">Nochmal</button><button type="button" class="btn ghost kr-back">Fahrer wechseln</button></div><button type="button" class="kr-link kr-quit">Spiel beenden</button></div></div>
+    <div class="kr-pm" hidden><div class="kr-card"><h3>⏸ Pause</h3><div class="kr-pml">
+      <button type="button" class="btn kr-resume">▶ Weiter</button>
+      <button type="button" class="btn ghost kr-restart">↺ Rennen neu starten</button>
+      <button type="button" class="btn ghost kr-back">👤 Fahrer wechseln</button>
+      <button type="button" class="btn ghost kr-steer">🎮 Lenkung: Mittel</button>
+      <button type="button" class="btn ghost kr-snd">🔊 Ton: an</button>
+      <button type="button" class="kr-link kr-quit">✕ Spiel beenden</button></div></div></div>
   </div>
   <div class="gm-stage"><div class="gm-bg" aria-hidden="true"><svg class="scene" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Spieltisch mit Würfeln, Figuren und Dominosteinen" xmlns="http://www.w3.org/2000/svg"><rect width="1200" height="300" fill="#c8431f"/><path d="M360 0 L422 0 L391 120Z" fill="#7c2a12" opacity=".85"/><path d="M360 300 L422 300 L391 180Z" fill="#f3dcb4" opacity=".85"/><path d="M422 0 L484 0 L453 120Z" fill="#f0a14a" opacity=".85"/><path d="M422 300 L484 300 L453 180Z" fill="#7c2a12" opacity=".85"/><path d="M484 0 L546 0 L515 120Z" fill="#7c2a12" opacity=".85"/><path d="M484 300 L546 300 L515 180Z" fill="#f3dcb4" opacity=".85"/><path d="M546 0 L608 0 L577 120Z" fill="#f0a14a" opacity=".85"/><path d="M546 300 L608 300 L577 180Z" fill="#7c2a12" opacity=".85"/><path d="M608 0 L670 0 L639 120Z" fill="#7c2a12" opacity=".85"/><path d="M608 300 L670 300 L639 180Z" fill="#f3dcb4" opacity=".85"/><path d="M670 0 L732 0 L701 120Z" fill="#f0a14a" opacity=".85"/><path d="M670 300 L732 300 L701 180Z" fill="#7c2a12" opacity=".85"/><path d="M732 0 L794 0 L763 120Z" fill="#7c2a12" opacity=".85"/><path d="M732 300 L794 300 L763 180Z" fill="#f3dcb4" opacity=".85"/><path d="M794 0 L856 0 L825 120Z" fill="#f0a14a" opacity=".85"/><path d="M794 300 L856 300 L825 180Z" fill="#7c2a12" opacity=".85"/><path d="M856 0 L918 0 L887 120Z" fill="#7c2a12" opacity=".85"/><path d="M856 300 L918 300 L887 180Z" fill="#f3dcb4" opacity=".85"/><path d="M918 0 L980 0 L949 120Z" fill="#f0a14a" opacity=".85"/><path d="M918 300 L980 300 L949 180Z" fill="#7c2a12" opacity=".85"/><path d="M980 0 L1042 0 L1011 120Z" fill="#7c2a12" opacity=".85"/><path d="M980 300 L1042 300 L1011 180Z" fill="#f3dcb4" opacity=".85"/><path d="M1042 0 L1104 0 L1073 120Z" fill="#f0a14a" opacity=".85"/><path d="M1042 300 L1104 300 L1073 180Z" fill="#7c2a12" opacity=".85"/><path d="M1104 0 L1166 0 L1135 120Z" fill="#7c2a12" opacity=".85"/><path d="M1104 300 L1166 300 L1135 180Z" fill="#f3dcb4" opacity=".85"/><path d="M1166 0 L1228 0 L1197 120Z" fill="#f0a14a" opacity=".85"/><path d="M1166 300 L1228 300 L1197 180Z" fill="#7c2a12" opacity=".85"/><g transform="rotate(-8 180 90)"><rect x="-20" y="-60" width="400" height="260" rx="10" fill="#1f8a3a"/><rect x="-8" y="-48" width="376" height="236" rx="8" fill="#f6e27a"/><path d="M30 150 Q190 60 350 150" fill="none" stroke="#d6311f" stroke-width="10"/><circle cx="30" cy="10" r="19" fill="#fffdf3" stroke="#2a2a2a" stroke-width="3"/><circle cx="80" cy="10" r="19" fill="#fffdf3" stroke="#2a2a2a" stroke-width="3"/><circle cx="130" cy="10" r="19" fill="#fffdf3" stroke="#2a2a2a" stroke-width="3"/><circle cx="180" cy="10" r="19" fill="#fffdf3" stroke="#2a2a2a" stroke-width="3"/><circle cx="230" cy="10" r="19" fill="#fffdf3" stroke="#2a2a2a" stroke-width="3"/><circle cx="60" cy="70" r="19" fill="#fffdf3" stroke="#2a2a2a" stroke-width="3"/><circle cx="110" cy="70" r="19" fill="#fffdf3" stroke="#2a2a2a" stroke-width="3"/><circle cx="300" cy="40" r="19" fill="#fffdf3" stroke="#2a2a2a" stroke-width="3"/><circle cx="300" cy="40" r="19" fill="#2c5fb3"/><text x="300" y="47" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="20" fill="#fff">A</text></g><rect x="-20" y="190" width="40" height="40" fill="#3f5f9a" opacity=".9" transform="rotate(6 60 260)"/><rect x="60" y="190" width="40" height="40" fill="#3f5f9a" opacity=".9" transform="rotate(6 60 260)"/><rect x="140" y="190" width="40" height="40" fill="#3f5f9a" opacity=".9" transform="rotate(6 60 260)"/><rect x="20" y="230" width="40" height="40" fill="#3f5f9a" opacity=".9" transform="rotate(6 60 260)"/><rect x="100" y="230" width="40" height="40" fill="#3f5f9a" opacity=".9" transform="rotate(6 60 260)"/><rect x="-20" y="270" width="40" height="40" fill="#3f5f9a" opacity=".9" transform="rotate(6 60 260)"/><rect x="60" y="270" width="40" height="40" fill="#3f5f9a" opacity=".9" transform="rotate(6 60 260)"/><rect x="140" y="270" width="40" height="40" fill="#3f5f9a" opacity=".9" transform="rotate(6 60 260)"/><rect x="20" y="310" width="40" height="40" fill="#3f5f9a" opacity=".9" transform="rotate(6 60 260)"/><rect x="100" y="310" width="40" height="40" fill="#3f5f9a" opacity=".9" transform="rotate(6 60 260)"/><rect x="900" y="180" width="320" height="160" fill="#efe6d2" transform="rotate(-10 1060 260)"/><rect x="900" y="180" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="980" y="180" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="1060" y="180" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="1140" y="180" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="940" y="220" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="1020" y="220" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="1100" y="220" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="1180" y="220" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="900" y="260" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="980" y="260" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="1060" y="260" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="1140" y="260" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="940" y="300" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="1020" y="300" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="1100" y="300" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><rect x="1180" y="300" width="40" height="40" fill="#5a4636" opacity=".85" transform="rotate(-10 1060 260)"/><g transform="translate(640 70) rotate(-20)"><rect x="-22" y="-44" width="44" height="88" rx="6" fill="#151515"/><line x1="-16" y1="0" x2="16" y2="0" stroke="#fff" stroke-width="2"/><circle cx="-8" cy="-31" r="3.2" fill="#fff"/><circle cx="8" cy="-31" r="3.2" fill="#fff"/><circle cx="-8" cy="-22" r="3.2" fill="#fff"/><circle cx="8" cy="-22" r="3.2" fill="#fff"/><circle cx="-8" cy="-13" r="3.2" fill="#fff"/><circle cx="8" cy="-13" r="3.2" fill="#fff"/><circle cx="-8" cy="14" r="3.2" fill="#fff"/><circle cx="8" cy="14" r="3.2" fill="#fff"/><circle cx="0" cy="22" r="3.2" fill="#fff"/><circle cx="-8" cy="30" r="3.2" fill="#fff"/><circle cx="8" cy="30" r="3.2" fill="#fff"/></g><g transform="translate(700 120) rotate(70)"><rect x="-22" y="-44" width="44" height="88" rx="6" fill="#151515"/><line x1="-16" y1="0" x2="16" y2="0" stroke="#fff" stroke-width="2"/><circle cx="-8" cy="-30" r="3.2" fill="#fff"/><circle cx="8" cy="-30" r="3.2" fill="#fff"/><circle cx="-8" cy="-14" r="3.2" fill="#fff"/><circle cx="8" cy="-14" r="3.2" fill="#fff"/><circle cx="-8" cy="13" r="3.2" fill="#fff"/><circle cx="8" cy="13" r="3.2" fill="#fff"/><circle cx="-8" cy="22" r="3.2" fill="#fff"/><circle cx="8" cy="22" r="3.2" fill="#fff"/><circle cx="-8" cy="31" r="3.2" fill="#fff"/><circle cx="8" cy="31" r="3.2" fill="#fff"/></g><g transform="translate(1080 60) rotate(25)"><rect x="-22" y="-44" width="44" height="88" rx="6" fill="#151515"/><line x1="-16" y1="0" x2="16" y2="0" stroke="#fff" stroke-width="2"/><circle cx="-8" cy="-30" r="3.2" fill="#fff"/><circle cx="8" cy="-30" r="3.2" fill="#fff"/><circle cx="0" cy="-22" r="3.2" fill="#fff"/><circle cx="-8" cy="-14" r="3.2" fill="#fff"/><circle cx="8" cy="-14" r="3.2" fill="#fff"/><circle cx="-8" cy="13" r="3.2" fill="#fff"/><circle cx="8" cy="13" r="3.2" fill="#fff"/><circle cx="-8" cy="22" r="3.2" fill="#fff"/><circle cx="8" cy="22" r="3.2" fill="#fff"/><circle cx="-8" cy="31" r="3.2" fill="#fff"/><circle cx="8" cy="31" r="3.2" fill="#fff"/></g><g transform="translate(1140 140) rotate(-15)"><rect x="-22" y="-44" width="44" height="88" rx="6" fill="#151515"/><line x1="-16" y1="0" x2="16" y2="0" stroke="#fff" stroke-width="2"/><circle cx="-8" cy="-30" r="3.2" fill="#fff"/><circle cx="0" cy="-22" r="3.2" fill="#fff"/><circle cx="8" cy="-14" r="3.2" fill="#fff"/><circle cx="-8" cy="13" r="3.2" fill="#fff"/><circle cx="8" cy="13" r="3.2" fill="#fff"/><circle cx="-8" cy="22" r="3.2" fill="#fff"/><circle cx="8" cy="22" r="3.2" fill="#fff"/><circle cx="-8" cy="31" r="3.2" fill="#fff"/><circle cx="8" cy="31" r="3.2" fill="#fff"/></g><g transform="translate(560 230)"><ellipse cx="0" cy="6" rx="30" ry="12" fill="rgba(0,0,0,.25)"/><circle r="28" fill="#f7f3ea"/><circle r="20" fill="none" stroke="#d8d0bf" stroke-width="3"/></g><g transform="translate(620 260)"><ellipse cx="0" cy="6" rx="30" ry="12" fill="rgba(0,0,0,.25)"/><circle r="28" fill="#f7f3ea"/><circle r="20" fill="none" stroke="#d8d0bf" stroke-width="3"/></g><g transform="translate(1020 210)"><ellipse cx="0" cy="6" rx="30" ry="12" fill="rgba(0,0,0,.25)"/><circle r="28" fill="#1d1d1d"/><circle r="20" fill="none" stroke="#3a3a3a" stroke-width="3"/></g><g transform="translate(970 260)"><ellipse cx="0" cy="6" rx="30" ry="12" fill="rgba(0,0,0,.25)"/><circle r="28" fill="#f7f3ea"/><circle r="20" fill="none" stroke="#d8d0bf" stroke-width="3"/></g><g transform="translate(90 220) rotate(-12) scale(1.2)"><rect x="-22" y="-22" width="44" height="44" rx="8" fill="#fffdf3" stroke="#c9c0a8" stroke-width="2"/><circle cx="-9" cy="-10" r="3.6" fill="#1b1b1b"/><circle cx="9" cy="-10" r="3.6" fill="#1b1b1b"/><circle cx="-9" cy="0" r="3.6" fill="#1b1b1b"/><circle cx="9" cy="0" r="3.6" fill="#1b1b1b"/><circle cx="-9" cy="10" r="3.6" fill="#1b1b1b"/><circle cx="9" cy="10" r="3.6" fill="#1b1b1b"/></g><g transform="translate(430 250) rotate(10) scale(1.15)"><rect x="-22" y="-22" width="44" height="44" rx="8" fill="#fffdf3" stroke="#c9c0a8" stroke-width="2"/><circle cx="0" cy="0" r="6" fill="#d6311f"/></g><g transform="translate(760 230) rotate(-18) scale(1.1)"><rect x="-22" y="-22" width="44" height="44" rx="8" fill="#fffdf3" stroke="#c9c0a8" stroke-width="2"/><circle cx="-9" cy="-9" r="3.6" fill="#1b1b1b"/><circle cx="0" cy="0" r="3.6" fill="#1b1b1b"/><circle cx="9" cy="9" r="3.6" fill="#1b1b1b"/></g><g transform="translate(260 260) rotate(20) scale(1.0)"><rect x="-22" y="-22" width="44" height="44" rx="8" fill="#fffdf3" stroke="#c9c0a8" stroke-width="2"/><circle cx="-9" cy="-9" r="3.6" fill="#1b1b1b"/><circle cx="9" cy="-9" r="3.6" fill="#1b1b1b"/><circle cx="-9" cy="9" r="3.6" fill="#1b1b1b"/><circle cx="9" cy="9" r="3.6" fill="#1b1b1b"/></g><g transform="translate(120 120) scale(1.0)"><ellipse cx="0" cy="34" rx="20" ry="7" fill="rgba(0,0,0,.25)"/><path d="M-17 32 L-6 -2 L6 -2 L17 32Z" fill="#d6311f"/><circle cx="0" cy="-12" r="13" fill="#d6311f"/><circle cx="-4" cy="-16" r="4" fill="#fff" opacity=".45"/></g><g transform="translate(240 70) scale(1.0)"><ellipse cx="0" cy="34" rx="20" ry="7" fill="rgba(0,0,0,.25)"/><path d="M-17 32 L-6 -2 L6 -2 L17 32Z" fill="#2c5fb3"/><circle cx="0" cy="-12" r="13" fill="#2c5fb3"/><circle cx="-4" cy="-16" r="4" fill="#fff" opacity=".45"/></g><g transform="translate(330 150) scale(1.0)"><ellipse cx="0" cy="34" rx="20" ry="7" fill="rgba(0,0,0,.25)"/><path d="M-17 32 L-6 -2 L6 -2 L17 32Z" fill="#f2c42c"/><circle cx="0" cy="-12" r="13" fill="#f2c42c"/><circle cx="-4" cy="-16" r="4" fill="#fff" opacity=".45"/></g><g transform="translate(470 100) scale(1.1)"><ellipse cx="0" cy="34" rx="20" ry="7" fill="rgba(0,0,0,.25)"/><path d="M-17 32 L-6 -2 L6 -2 L17 32Z" fill="#d6311f"/><circle cx="0" cy="-12" r="13" fill="#d6311f"/><circle cx="-4" cy="-16" r="4" fill="#fff" opacity=".45"/></g><g transform="translate(520 170) scale(1.15)"><ellipse cx="0" cy="34" rx="20" ry="7" fill="rgba(0,0,0,.25)"/><path d="M-17 32 L-6 -2 L6 -2 L17 32Z" fill="#f2c42c"/><circle cx="0" cy="-12" r="13" fill="#f2c42c"/><circle cx="-4" cy="-16" r="4" fill="#fff" opacity=".45"/></g><g transform="translate(400 210) scale(1.05)"><ellipse cx="0" cy="34" rx="20" ry="7" fill="rgba(0,0,0,.25)"/><path d="M-17 32 L-6 -2 L6 -2 L17 32Z" fill="#2f9a49"/><circle cx="0" cy="-12" r="13" fill="#2f9a49"/><circle cx="-4" cy="-16" r="4" fill="#fff" opacity=".45"/></g><g transform="translate(860 120) scale(1.1)"><ellipse cx="0" cy="34" rx="20" ry="7" fill="rgba(0,0,0,.25)"/><path d="M-17 32 L-6 -2 L6 -2 L17 32Z" fill="#f2c42c"/><circle cx="0" cy="-12" r="13" fill="#f2c42c"/><circle cx="-4" cy="-16" r="4" fill="#fff" opacity=".45"/></g><g transform="translate(180 250) scale(0.95)"><ellipse cx="0" cy="34" rx="20" ry="7" fill="rgba(0,0,0,.25)"/><path d="M-17 32 L-6 -2 L6 -2 L17 32Z" fill="#f2c42c"/><circle cx="0" cy="-12" r="13" fill="#f2c42c"/><circle cx="-4" cy="-16" r="4" fill="#fff" opacity=".45"/></g><g transform="translate(300 210) scale(1.1)"><ellipse cx="0" cy="40" rx="22" ry="6" fill="rgba(0,0,0,.25)"/><path d="M-20 38 L20 38 L16 28 L9 24 L6 0 L12 -6 L-12 -6 L-6 0 L-9 24 L-16 28Z" fill="#1b1b1b"/><circle cx="0" cy="-16" r="12" fill="#1b1b1b"/></g><g transform="translate(820 220) scale(1.0)"><ellipse cx="0" cy="40" rx="22" ry="6" fill="rgba(0,0,0,.25)"/><path d="M-20 38 L20 38 L16 28 L9 24 L6 0 L12 -6 L-12 -6 L-6 0 L-9 24 L-16 28Z" fill="#f4ecd8"/><circle cx="0" cy="-16" r="12" fill="#f4ecd8"/></g><g transform="translate(930 90) scale(1.05)"><ellipse cx="0" cy="40" rx="22" ry="6" fill="rgba(0,0,0,.25)"/><path d="M-20 38 L20 38 L16 28 L9 24 L6 0 L12 -6 L-12 -6 L-6 0 L-9 24 L-16 28Z" fill="#1b1b1b"/><circle cx="0" cy="-16" r="12" fill="#1b1b1b"/></g><rect width="1200" height="300" fill="url(#gmshade-13)"/><defs><linearGradient id="gmshade-13" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></linearGradient></defs></svg></div><div id="gm-top" class="gm-top"></div></div>
   <div id="gm" class="gm"></div>
@@ -9194,7 +9203,8 @@ setGroup(G);
 
   /* ---- Rennen ---- */
   const box = document.getElementById('kart'), cv = box.querySelector('canvas'), ctx = cv.getContext('2d');
-  const menu = box.querySelector('.kr-menu'), res = box.querySelector('.kr-res'), itemBtn = box.querySelector('.kr-item'), sndBtn = box.querySelector('.kr-snd');
+  const menu = box.querySelector('.kr-menu'), res = box.querySelector('.kr-res'), itemBtn = box.querySelector('.kr-item'), sndBtn = box.querySelector('.kr-snd'), pm = box.querySelector('.kr-pm'), steerBtn = box.querySelector('.kr-steer');
+  const STEERS = [['Sanft', 1.25], ['Mittel', 1.65], ['Stark', 2.2]]; let STEER = +(store.get('kartSteer') || 1); if (!STEERS[STEER]) STEER = 1;
   let S = null, raf = 0, last = 0, me = ME || 'patrick', W = 0, H = 0, DPR = 1;
   const best = () => { try { return JSON.parse(store.get('kartBest') || '{}'); } catch (e) { return {}; } };
   const fmt = ms => { const s = ms / 1000; return Math.floor(s / 60) + ':' + (s % 60).toFixed(1).padStart(4, '0'); };
@@ -9239,7 +9249,8 @@ setGroup(G);
         const bx = S.boxes.find(b => !b.off && !k.item && Math.abs(b.i - k.idx) < 40 && b.i > k.idx); if (bx && !nut) lane = bx.l;
         const [tx, ty] = at(k.idx + la, clamp(lane, -55, 55)); let d = Math.atan2(ty - k.y, tx - k.x) - k.a; d = Math.atan2(Math.sin(d), Math.cos(d)); target = clamp(d * 2.6, -1, 1);
         if (k.item && k.roll <= 0) { k.useAt -= dt; if (k.useAt < 0) useItem(k); } }
-      k.steer += clamp(target - k.steer, -7 * dt, 7 * dt);
+      const rate = k.me ? (target ? 3.2 : 6) : 7;   // Spieler: Lenkeinschlag baut sich weich auf, Loslassen geht schnell zurück
+      k.steer += clamp(target - k.steer, -rate * dt, rate * dt);
       // Tempo
       const sand = Math.abs(k.lat) > TW / 2 - 4, me1 = ks[0];
       let vmax = VMAX * k.skill * (sand ? .55 : 1) * (k.boost > 0 ? 1.55 : 1) * (k.done ? .6 : 1);
@@ -9247,7 +9258,7 @@ setGroup(G);
       if (k.spin > 0) { k.spin -= dt; k.rot += dt * 14; vmax *= .25; } else k.rot *= Math.max(0, 1 - dt * 10);
       k.v += (vmax - k.v) * Math.min(1, dt * (k.v < vmax ? 1.6 : 4));
       k.boost = Math.max(0, k.boost - dt);
-      k.a += k.steer * 2.7 * dt * Math.min(1, k.v / 120);
+      k.a += k.steer * (k.me ? STEERS[STEER][1] : 2.7) * dt * Math.min(1, k.v / 120);
       k.x = clamp(k.x + Math.cos(k.a) * k.v * dt, 20, WW - 20); k.y = clamp(k.y + Math.sin(k.a) * k.v * dt, 210, shore(k.x) - 10);
       if (sand && k.v > 120) { k.dust -= dt; if (k.dust < 0) { k.dust = .06; S.fx.push({x: k.x - Math.cos(k.a) * 18, y: k.y - Math.sin(k.a) * 18, dust: 1, t: 0}); } }
       // Fortschritt und Runden
@@ -9351,7 +9362,7 @@ setGroup(G);
     const ol = res.querySelector('ol'); ol.innerHTML = '';
     order.forEach((k, i) => { const li = document.createElement('li'); if (k.me) li.className = 'me'; const c = document.createElement('canvas'); c.width = c.height = 64; c.getContext('2d').drawImage(HEAD[k.id], 0, 0, 64, 64);
       li.innerHTML = '<b>' + (i + 1) + '.</b>'; li.appendChild(c); li.insertAdjacentHTML('beforeend', '<span>' + esc(name(k.id)) + '</span><small>' + (k.done ? fmt(k.done * 1000) : '+ ' + (k.est - mine.done).toFixed(1) + ' s') + '</small>'); ol.appendChild(li); });
-    res.hidden = false; S.paused = true;
+    res.hidden = false; S.paused = true; racing(false);
   }
   function renderMenu() {
     const pick = menu.querySelector('.kr-pick'); pick.innerHTML = '';
@@ -9359,13 +9370,13 @@ setGroup(G);
       b.appendChild(c); b.insertAdjacentHTML('beforeend', '<span>' + esc(p.name) + '</span>'); pick.appendChild(b); });
     const b = best().copa; menu.querySelector('.kr-best').textContent = b ? 'Deine Bestzeit Copacabana: ' + fmt(b) : 'Noch keine Bestzeit auf diesem Handy.';
   }
-  function startRace() { menu.hidden = true; res.hidden = true; newRace(); audio(); last = 0; }
+  function startRace() { menu.hidden = true; res.hidden = true; pm.hidden = true; racing(true); newRace(); audio(); last = 0; }
   function open() {
     if (!BG) { drawBG(); makeSprites(); }
     if (box.parentElement !== document.body) document.body.appendChild(box);   // Kapitel hat content-visibility, sonst unsichtbar
     box.hidden = false; document.body.style.overflow = 'hidden'; document.documentElement.classList.add('kart-on'); resize();
     try { const r = box.requestFullscreen || box.webkitRequestFullscreen; if (r) { const pr = r.call(box); if (pr && pr.catch) pr.catch(() => {}); } } catch (e) {}
-    S = null; renderMenu(); setTimeout(renderMenu, 900); menu.hidden = false; res.hidden = true;
+    S = null; renderMenu(); setTimeout(renderMenu, 900); menu.hidden = false; res.hidden = true; pm.hidden = true; racing(false);
     newRace(); S.paused = true; S.t = -3.2; cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
   }
   function close() {
@@ -9373,11 +9384,23 @@ setGroup(G);
     if (eng && AC) eng.g.gain.setTargetAtTime(0, AC.currentTime, .05); try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {}
   }
   openBtn.addEventListener('click', open);
-  box.querySelector('.kr-close').addEventListener('click', close);
-  sndBtn.textContent = SOUND ? '🔊' : '🔇';
-  sndBtn.addEventListener('click', () => { SOUND = !SOUND; store.set('kartSound', SOUND ? '1' : '0'); sndBtn.textContent = SOUND ? '🔊' : '🔇'; if (!SOUND && eng && AC) eng.g.gain.value = 0; if (SOUND) audio(); });
+  const racing = on => box.classList.toggle('racing', on);
+  function pause() { if (!S || !box.classList.contains('racing') || !res.hidden) return; S.paused = true; ptr.clear(); upd(); pm.hidden = false; if (eng && AC) eng.g.gain.setTargetAtTime(0, AC.currentTime, .05); }
+  function resume() { pm.hidden = true; if (S) S.paused = false; last = 0; audio(); }
+  const sndTxt = () => { sndBtn.textContent = (SOUND ? '🔊 Ton: an' : '🔇 Ton: aus'); }, steerTxt = () => { steerBtn.textContent = '🎮 Lenkung: ' + STEERS[STEER][0]; };
+  sndTxt(); steerTxt();
+  box.querySelector('.kr-pbtn').addEventListener('click', pause);
+  pm.addEventListener('click', e => {
+    if (e.target.closest('.kr-resume')) resume();
+    if (e.target.closest('.kr-restart')) { pm.hidden = true; startRace(); }
+    if (e.target.closest('.kr-back')) { pm.hidden = true; racing(false); menu.hidden = false; renderMenu(); newRace(); S.paused = true; }
+    if (e.target.closest('.kr-steer')) { STEER = (STEER + 1) % STEERS.length; store.set('kartSteer', STEER); steerTxt(); }
+    if (e.target.closest('.kr-snd')) { SOUND = !SOUND; store.set('kartSound', SOUND ? '1' : '0'); sndTxt(); if (!SOUND && eng && AC) eng.g.gain.value = 0; }
+    if (e.target.closest('.kr-quit')) { pm.hidden = true; close(); }
+  });
+  box.addEventListener('click', e => { if (e.target.closest('.kr-menu .kr-quit, .kr-res .kr-quit')) close(); });
   menu.addEventListener('click', e => { const b = e.target.closest('.kr-pick button'); if (b) { me = b.dataset.id; renderMenu(); newRace(); S.paused = true; } if (e.target.closest('.kr-go')) startRace(); });
-  res.addEventListener('click', e => { if (e.target.closest('.kr-again')) startRace(); if (e.target.closest('.kr-back')) { res.hidden = true; menu.hidden = false; renderMenu(); newRace(); S.paused = true; } });
+  res.addEventListener('click', e => { if (e.target.closest('.kr-again')) startRace(); if (e.target.closest('.kr-res .kr-back')) { res.hidden = true; menu.hidden = false; renderMenu(); newRace(); S.paused = true; } });
   // Steuerung: Daumen links/rechts, Item-Knopf; Tastatur
   const ptr = new Map();
   const upd = () => { INPUT.L = [...ptr.values()].includes('L'); INPUT.R = [...ptr.values()].includes('R'); };
@@ -9387,11 +9410,10 @@ setGroup(G);
   itemBtn.addEventListener('pointerdown', e => { e.preventDefault(); e.stopPropagation(); if (S) useItem(S.karts[0]); });
   box.addEventListener('touchmove', e => e.preventDefault(), {passive: false});
   box.addEventListener('contextmenu', e => e.preventDefault());
-  addEventListener('keydown', e => { if (box.hidden) return; if (e.key === 'Escape') { close(); return; } INPUT.keys[e.key] = true; if (e.key === ' ') { e.preventDefault(); if (S) useItem(S.karts[0]); } if (e.key.startsWith('Arrow')) e.preventDefault(); });
+  addEventListener('keydown', e => { if (box.hidden) return; if (e.key === 'Escape' || e.key === 'p') { if (!pm.hidden) resume(); else if (box.classList.contains('racing')) pause(); else close(); return; } INPUT.keys[e.key] = true; if (e.key === ' ') { e.preventDefault(); if (S) useItem(S.karts[0]); } if (e.key.startsWith('Arrow')) e.preventDefault(); });
   addEventListener('keyup', e => { INPUT.keys[e.key] = false; });
   addEventListener('resize', () => { if (!box.hidden) resize(); });
-  document.addEventListener('visibilitychange', () => { if (document.hidden && S && !box.hidden && S.t > 0 && res.hidden) { S.paused = true; menu.hidden = true; res.hidden = true; box.querySelector('.kr-pause').hidden = false; } });
-  box.querySelector('.kr-pause').addEventListener('click', e => { e.currentTarget.hidden = true; if (S) S.paused = false; last = 0; audio(); });
-  window.__kart = {open, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish()};
+  document.addEventListener('visibilitychange', () => { if (document.hidden && !box.hidden) pause(); });
+  window.__kart = {open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish()};
 })();
 </script>
