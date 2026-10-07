@@ -62,7 +62,7 @@ nach „Umgesetzt“ verschieben.
 **Spiele**
 - **„Wähle dein Abenteuer“** (interaktiver Cartoon, 6–8 Enden, Sammlung der Enden).
 - **„Gringo Run“** (siehe Cartoon-Animationen Nr. 3; Nasenbär als Boss, Rekord = +1 auf der FIFA-Karte).
-- **„Gringo Kart“** (⏳ in Arbeit: Stufe 1 Fahrgefühl und Stufe 2 sechs Strecken + Grand Prix umgesetzt 07.10.; als Nächstes Stufe 3: Persönlichkeit/Items je Person, Fahrzeuge freischalten, Stufe 4: Bestenliste/Geister/Tages-Challenge): Rennspiel von oben über die Reiseroute, Uber/Fiat Uno/Boot/Gepäckkarren, Items Caipi-Turbo, Sonnencreme-Öl, Nasenbär-Blitz, Bestenliste je Strecke.
+- **„Gringo Kart“** (⏳ in Arbeit: Stufe 1 Fahrgefühl, Stufe 2 sechs Strecken + Grand Prix, Stufe 3 Persönlichkeit/Spezial-Items/Fahrzeuge umgesetzt 07.10.; als Nächstes Stufe 4: gemeinsame Bestenliste (Einladen oder Zeit-Codes, Patrick entscheidet), Geister, Tages-Challenge): Rennspiel von oben über die Reiseroute, Uber/Fiat Uno/Boot/Gepäckkarren, Items Caipi-Turbo, Sonnencreme-Öl, Nasenbär-Blitz, Bestenliste je Strecke.
 - **„Gringos – Das Brettspiel“**: digital auf einem Handy (2–6), Felder = Stationen, Ereigniskarten aus echten Geschichten, Splitwise-Schulden als Währung, plus Druck-PDF.
 - **Escape-Room „Gefangen in der Juma Lodge“**: Hinweise in Fotos, Portugiesisch-Sätzen, Steckbriefen; Codes; Lösungszeit mit Rangliste.
 - **„Wer wird Millionär – Gringo-Edition“**: 15 Fragen, Moderator-Stimme, Joker 50:50, Publikum (Crew live), Telefonjoker (Crew-Stimme antwortet frech).
