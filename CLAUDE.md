@@ -300,7 +300,7 @@ Kein Titelsong (auf Wunsch wieder entfernt, 03.10.).
 Nur-Kopf-Figuren (`headOnly`, Hilfsfunktion `headAt`) für Fenster, Gondel und Handy-Bildschirm. Lange Untertitel brechen in zwei Zeilen um.
 Neue Folge: Zeilen in `series.epN` (mit `scenes`, `credits`, `next`), Stimmen per `--series epN`, Szenen-Code in `frame()` ergänzen, `META` erweitern.
 
-## Gringo Kart (seit 07.10., Ausbau in Stufen: 1 Fahrgefühl ✅, 2 sechs Strecken + Grand Prix ✅, 3 Persönlichkeit/Items je Person, 4 Bestenliste/Geister)
+## Gringo Kart (seit 07.10., Ausbau in Stufen: 1 Fahrgefühl ✅, 2 sechs Strecken + Grand Prix ✅, 3 Persönlichkeit/Items je Person ✅, 4 Bestenliste/Geister)
 
 Rennspiel im Kapitel Spiele: Knopf `#kart-open` (`.kart-teaser`) öffnet `#kart` als Vollbild-Overlay (wird beim Öffnen unter `<body>` gehängt, Kapitel hat content-visibility).
 Eigenes Modul „Gringo Kart“ am Ende von `page_script.html`, Canvas von oben, Kamera dreht mit (Fahrtrichtung oben), zoomt bei hohem Tempo leicht raus. Strecke Copacabana: Kontrollpunkte `CP` → Catmull-Rom,
@@ -321,7 +321,13 @@ Sprüche beim Treffer je Person (`LINES`), Bestzeit im localStorage `br26.kartBe
 Guarujá (Einsteiger, Sonnenschirme, Maisverkäufer), Copacabana (Welle, Caipi-Verkäufer), Iguaçu (Regen, rutschig, Wasserfall-Gischt, Nasenbären, 2 Runden), Amazonas (Bootsrennen, Kaimane, Baumstämme, Delfin-Turbo, 2 Runden), Paraty (Kopfsteinpflaster, Flut, Pferdekutsche, 2 Runden), Ilha Grande (Gepäckkarren, Koffer, Hund).
 Menü: Einzelrennen (Strecke wählen, `br26.kartTrack`, Bestzeit je Strecke) oder Grand Prix (`br26.kartMode`, `CUP` {i, pts, races}, Punkte `PTS` 10-8-6-5-4-3, Zwischenstand `.kr-stand`, `ceremony()` mit Podest `.kr-podium`, Siege im localStorage `br26.kartCups`).
 Ansager Stufe 2 (Begrüßung je Strecke `t_<id>`, caiman, dolphin, flood, coatis, cupnext, cupwin, cupend) in `audio/kart2.mp3` (`kartvo[key].f = 2`); beim Veröffentlichen `audio/kart2.mp3` mitgeben. Neue Sätze: vorübergehende `series.kart`, danach `build_series_audio.py kart` schreibt `kart.mp3` → als `kartN.mp3` umbenennen und alte `kart.mp3` zurücklegen.
-Test: `window.__kart` (`open`, `pause`, `resume`, `state`, `step(dt)`, `draw`, `finish`, `say`, `load(id)`, `cup()`); `S.hl` zählt Treffer je Ursache.
+**Persönlichkeit (Stufe 3):** Fahrer-Werte `CS` aus den FIFA-Karten (normiert 0–1 in der Crew): Tempo = TTP, Lenkung = ORI, Start/Beschleunigung = PÜN, Nehmer (kürzere Dreher) = KAT, Wirkung je ±3–6 %; Anzeige als Balken `.kr-bars` im Menü.
+Pegel: Drinks von heute (`MEHUB.drinks[id].today`, ab 8 voll) lassen die Lenkung wackeln (`pegel()`, rosa Schimmer). Spezial-Item je Person `SPECIAL` (22 % Chance statt normalem Item): Jonas 🧾 Splitwise-Rechnung (alle vor ihm gebremst `slowT`),
+Simon ☀️ Sonnenbrand-Blitz (blendet Nahe `blind`, Bildschirm-Blitz), Patrick ♿ Rollstuhl-Boost (langer Turbo, unverwundbar `inv`), Marco ⚽ Fernschuss (schnelles Geschoss auf den Nächsten vor ihm, `coatis` mit `ball`), Greisel 🍺 Bierdusche (große Schaumpfütze `oils` mit `beer`),
+Daijo 🥟 Snack-Runde (alle knapp hinter ihr halten an, sie bekommt Turbo). Persönliche Sprüche mit den Serien-Stimmen (`voice(k, over|hit|sp)`, Texte `VTXT`, Ton `audio/kart3.mp3`, `kartvo[v_<id>_<art>].f = 3`): beim Überholen, Treffer, Spezial-Item.
+Fahrzeuge `VEHS` (Gringo-Kart, Uber nach 3 Rennen, Fiat Uno nach 1 Sieg, Gepäckkarren nach Ilha Grande, Rollstuhl nach 5 Super-Turbos, Goldenes Kart nach Grand-Prix-Sieg), Wahl `br26.kartVeh`, Statistik `br26.kartStats` {races, wins, ilha, supers, cups},
+Feinwerte `VTUNE` (Tempo, Lenkung, Beschleunigung, ±2–20 %), Freischalt-Hinweis `.kr-unlock` in der Siegerliste; auf Amazonas (Boote) und Ilha Grande (Gepäckkarren) fahren alle das Strecken-Fahrzeug.
+Test: `window.__kart` (`open`, `pause`, `resume`, `state`, `step(dt)`, `draw`, `finish`, `say`, `load(id)`, `cup()`); `S.hl` zählt Treffer je Ursache. Beim Veröffentlichen `audio/kart3.mp3` mitgeben.
 
 ## Karte: Infokarten
 

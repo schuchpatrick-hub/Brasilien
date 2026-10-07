@@ -10216,6 +10216,14 @@
   },
   "news": [
     {
+      "id": "n251007i",
+      "d": "2026-10-07",
+      "tab": "spiele-tab",
+      "to": "spiele",
+      "e": "🧾",
+      "t": "Gringo Kart: jeder fährt mit Werten aus seiner FIFA-Karte, eigenem Spezial-Item und eigenen Sprüchen; Fahrzeuge zum Freischalten"
+    },
+    {
       "id": "n251007h",
       "d": "2026-10-07",
       "tab": "spiele-tab",
@@ -10651,6 +10659,96 @@
       "o": 31854,
       "dur": 2559,
       "f": 2
+    },
+    "v_jonas_over": {
+      "o": 250,
+      "dur": 1445,
+      "f": 3
+    },
+    "v_jonas_hit": {
+      "o": 1945,
+      "dur": 1872,
+      "f": 3
+    },
+    "v_jonas_sp": {
+      "o": 4067,
+      "dur": 933,
+      "f": 3
+    },
+    "v_simon_over": {
+      "o": 5250,
+      "dur": 1157,
+      "f": 3
+    },
+    "v_simon_hit": {
+      "o": 6658,
+      "dur": 1469,
+      "f": 3
+    },
+    "v_simon_sp": {
+      "o": 8377,
+      "dur": 1332,
+      "f": 3
+    },
+    "v_patrick_over": {
+      "o": 9960,
+      "dur": 1251,
+      "f": 3
+    },
+    "v_patrick_hit": {
+      "o": 11461,
+      "dur": 903,
+      "f": 3
+    },
+    "v_patrick_sp": {
+      "o": 12614,
+      "dur": 967,
+      "f": 3
+    },
+    "v_marco_over": {
+      "o": 13831,
+      "dur": 1084,
+      "f": 3
+    },
+    "v_marco_hit": {
+      "o": 15166,
+      "dur": 1053,
+      "f": 3
+    },
+    "v_marco_sp": {
+      "o": 16469,
+      "dur": 1668,
+      "f": 3
+    },
+    "v_greisel_over": {
+      "o": 18387,
+      "dur": 1133,
+      "f": 3
+    },
+    "v_greisel_hit": {
+      "o": 19769,
+      "dur": 1066,
+      "f": 3
+    },
+    "v_greisel_sp": {
+      "o": 21085,
+      "dur": 886,
+      "f": 3
+    },
+    "v_dajo_over": {
+      "o": 22221,
+      "dur": 1706,
+      "f": 3
+    },
+    "v_dajo_hit": {
+      "o": 24176,
+      "dur": 1057,
+      "f": 3
+    },
+    "v_dajo_sp": {
+      "o": 25484,
+      "dur": 1513,
+      "f": 3
     }
   }
 }
