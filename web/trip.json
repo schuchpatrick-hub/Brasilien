@@ -10216,114 +10216,122 @@
   },
   "news": [
     {
+      "id": "n251007t",
+      "d": "2026-10-07",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🏎️",
+      "t": "Gringo Kart hat jetzt einen eigenen Reiter „🏎️ Kart“ direkt nach dem Kino"
+    },
+    {
       "id": "n251007s",
       "d": "2026-10-07",
-      "tab": "spiele-tab",
-      "to": "spiele",
+      "tab": "kart-tab",
+      "to": "kartsec",
       "e": "🔄",
       "t": "Gringo Kart: Alle Rekorde und Bestzeiten zurückgesetzt, jetzt zählt es!"
     },
     {
       "id": "n251007r",
       "d": "2026-10-07",
-      "tab": "spiele-tab",
-      "to": "spiele",
+      "tab": "kart-tab",
+      "to": "kartsec",
       "e": "🪪",
       "t": "Gringo Kart: Bei jedem Rekord steht jetzt, wer ihn gefahren hat (Person, Figur, Konto, Gerät, Uhrzeit); ein Konto bleibt auf jedem Handy derselben Person zugeordnet"
     },
     {
       "id": "n251007q",
       "d": "2026-10-07",
-      "tab": "spiele-tab",
-      "to": "spiele",
+      "tab": "kart-tab",
+      "to": "kartsec",
       "e": "⚔️",
       "t": "Gringo Kart: Crew-Rekorde direkt unter dem Spiel, Strecke antippen und gegen den Geist des Rekordhalters fahren, Hinweis wenn dein Rekord geknackt wurde"
     },
     {
       "id": "n251007p",
       "d": "2026-10-07",
-      "tab": "spiele-tab",
-      "to": "spiele",
+      "tab": "kart-tab",
+      "to": "kartsec",
       "e": "🏆",
       "t": "Gringo Kart: Crew-Rekorde aller Strecken auf einen Blick, und das Spiel fragt einmal „Wer spielt?“, damit Zeiten unter dem richtigen Namen landen"
     },
     {
       "id": "n251007o",
       "d": "2026-10-07",
-      "tab": "spiele-tab",
-      "to": "spiele",
+      "tab": "kart-tab",
+      "to": "kartsec",
       "e": "ⓘ",
       "t": "Gringo Kart: Fahrer-Werte (Tempo, Lenkung, Start, Nehmer) antippen zeigt, was sie bewirken"
     },
     {
       "id": "n251007n",
       "d": "2026-10-07",
-      "tab": "spiele-tab",
-      "to": "spiele",
+      "tab": "kart-tab",
+      "to": "kartsec",
       "e": "🎨",
       "t": "Gringo Kart in neuem Look: Startkachel mit Crew, Menü im Spiel-Design mit Streckenkarten, Fahrerkarte und großem Start-Knopf"
     },
     {
       "id": "n251007m",
       "d": "2026-10-07",
-      "tab": "spiele-tab",
-      "to": "spiele",
+      "tab": "kart-tab",
+      "to": "kartsec",
       "e": "🏎️",
       "t": "Gringo Kart: 3 neue Strecken (São Paulo, Réveillon bei Nacht, Cristo im Nebel), Pokale, Abkürzungen, Schranken, Münzen + Garage mit Tuning und Kostümen, Erfolge, Rivalen, Bremse, Drift-Knopf, analoge Lenkung, Musik je Strecke, Tageszeit wie in Rio"
     },
     {
       "id": "n251007l",
       "d": "2026-10-07",
-      "tab": "spiele-tab",
-      "to": "spiele",
+      "tab": "kart-tab",
+      "to": "kartsec",
       "e": "🛣️",
       "t": "Gringo Kart: Iguaçu, Amazonas und Paraty mit weiteren Kurven neu gebaut, etwas langsamer, weiche Banden neben der Strecke"
     },
     {
       "id": "n251007k",
       "d": "2026-10-07",
-      "tab": "spiele-tab",
-      "to": "spiele",
+      "tab": "kart-tab",
+      "to": "kartsec",
       "e": "🏁",
       "t": "Gringo Kart: neue Fahrphysik mit echtem Rutschen, schlauere Gegner (Leicht/Normal/Schwer), Startampel, Tacho, Rundenzeiten"
     },
     {
       "id": "n251007j",
       "d": "2026-10-07",
-      "tab": "spiele-tab",
-      "to": "spiele",
+      "tab": "kart-tab",
+      "to": "kartsec",
       "e": "👻",
       "t": "Gringo Kart: Crew-Bestenliste, Geister-Rennen und täglich neue Tages-Challenge"
     },
     {
       "id": "n251007i",
       "d": "2026-10-07",
-      "tab": "spiele-tab",
-      "to": "spiele",
+      "tab": "kart-tab",
+      "to": "kartsec",
       "e": "🧾",
       "t": "Gringo Kart: jeder fährt mit Werten aus seiner FIFA-Karte, eigenem Spezial-Item und eigenen Sprüchen; Fahrzeuge zum Freischalten"
     },
     {
       "id": "n251007h",
       "d": "2026-10-07",
-      "tab": "spiele-tab",
-      "to": "spiele",
+      "tab": "kart-tab",
+      "to": "kartsec",
       "e": "🏆",
       "t": "Gringo Kart: 6 Strecken der Reise (Guarujá bis Ilha Grande, Bootsrennen am Amazonas) und Grand Prix mit Siegerehrung"
     },
     {
       "id": "n251007g",
       "d": "2026-10-07",
-      "tab": "spiele-tab",
-      "to": "spiele",
+      "tab": "kart-tab",
+      "to": "kartsec",
       "e": "🏎️",
       "t": "Gringo Kart: Driften mit Turbo, Raketenstart, Schanze, Welle, Samba-Musik und Ansager"
     },
     {
       "id": "n251007f",
       "d": "2026-10-07",
-      "tab": "spiele-tab",
-      "to": "spiele",
+      "tab": "kart-tab",
+      "to": "kartsec",
       "e": "🏎️",
       "t": "Neu: Gringo Kart (Prototyp) – Grand Prix an der Copacabana gegen die Crew"
     },
