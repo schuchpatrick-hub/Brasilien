@@ -8117,12 +8117,19 @@ setGroup(G);
   function teaser() { const hd = openBtn.querySelector('.kt-heads'), stt = openBtn.querySelector('.kt-stats'); if (!hd) return;
     if (!hd.childElementCount) CREW.forEach(p0 => { if (!p0.photo) return; const im = document.createElement('img'); im.src = p0.photo; im.alt = ''; im.loading = 'lazy'; im.style.setProperty('--c', (LOOK[p0.id] || {}).shirt || '#ffd23f'); hd.appendChild(im); });
     const st = stats(), ah = Object.keys(loadJ('kartAch')).length, bt = Object.values(best()).length; stt.innerHTML = st.races ? '<span>🪙 ' + coins() + '</span><span>🏁 ' + st.races + ' Rennen</span>' + (st.wins ? '<span>🥇 ' + st.wins + ' Siege</span>' : '') + '<span>🏅 ' + ah + '/' + ACH.length + '</span>' : ''; }
+  // Erklärtexte zu den Fahrer-Werten (Antippen im Menü)
+  const BXK = ['spd', 'hdl', 'acc', 'tgh'], BXT = {spd: ['Tempo', '🏎️ Höchstgeschwindigkeit auf der Geraden (bis ±3 %). Kommt vom Trinktempo (TTP) der FIFA-Karte.'],
+    hdl: ['Lenkung', '🎯 Wie scharf das Kart einlenkt, enge Kurven gehen leichter (bis ±6 %). Kommt von der Orientierung (ORI).'],
+    acc: ['Start', '🚦 Wie schnell das Kart beim Start und nach Unfällen wieder auf Tempo ist (bis ±14 %). Kommt von der Pünktlichkeit (PÜN).'],
+    tgh: ['Nehmer', '💥 Wie gut man Treffer wegsteckt: Nach Öl, Nasenbär oder Hindernis dreht man sich kürzer (bis ein Viertel schneller wieder unterwegs). Kommt von der Kater-Resistenz (KAT).']};
+  let BX = null;
   function renderMenu() {
     const pk = menu.querySelector('.kr-pick'); pk.innerHTML = '';
     CREW.forEach(p => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = p.id; b.setAttribute('aria-pressed', p.id === me); b.setAttribute('aria-label', p.name); b.appendChild(headCv(p.id, 92)); b.insertAdjacentHTML('beforeend', '<span>' + esc(p.name) + '</span>'); pk.appendChild(b); });
     menu.querySelectorAll('.kr-mode button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === MODE));
     const cs = CS[me], bar = v => '<i style="--v:' + Math.round(20 + v * 80) + '%"></i>', sp = SPECIAL[me], pg = pegel(me);
-    const dv = menu.querySelector('.kr-drv'), cosE = (COS.find(c => c.id === cosOf(me)) || {}).e; dv.innerHTML = '<div class="kr-dc" style="--dc:' + ((LOOK[me] || {}).shirt || '#00a651') + '"><span class="kr-dch"></span><div><p class="kr-dn">' + esc(NAME(me)) + (cosE && cosOf(me) ? ' <small>' + cosE + ' Kostüm</small>' : '') + '</p><div class="kr-bars"><span>Tempo' + bar(cs.spd) + '</span><span>Lenkung' + bar(cs.hdl) + '</span><span>Start' + bar(cs.acc) + '</span><span>Nehmer' + bar(cs.tgh) + '</span></div>' +
+    const dv = menu.querySelector('.kr-drv'), cosE = (COS.find(c => c.id === cosOf(me)) || {}).e; dv.innerHTML = '<div class="kr-dc" style="--dc:' + ((LOOK[me] || {}).shirt || '#00a651') + '"><span class="kr-dch"></span><div><p class="kr-dn">' + esc(NAME(me)) + (cosE && cosOf(me) ? ' <small>' + cosE + ' Kostüm</small>' : '') + '</p><div class="kr-bars">' + BXK.map(k => '<button type="button" class="kr-bk" data-k="' + k + '" aria-pressed="' + (BX === k) + '"><span>' + BXT[k][0] + ' <u>ⓘ</u></span>' + bar(cs[k]) + '</button>').join('') + '</div>' +
+      '<p class="kr-bx">' + (BX ? esc(BXT[BX][1]) + ' <b>' + esc(NAME(me)) + ': ' + (cs[BX] < .34 ? 'eher schwach' : cs[BX] < .67 ? 'mittel' : 'stark') + '.</b>' : 'Tipp auf einen Wert, dann steht hier, was er bewirkt.') + '</p>' +
       '<p class="kr-sp">' + sp.e + ' <b>' + esc(sp.n) + '</b>: ' + esc(sp.x) + '</p>' + (pg > 0 ? '<p class="kr-sp">🍹 Heute schon ' + ((MEHUB.drinks || {})[me] || {}).today + ' Drinks: Lenkung wackelt!</p>' : '') + '</div></div>'; dv.querySelector('.kr-dch').replaceWith(headCv(me, 140));
     menu.querySelectorAll('.kr-diff button').forEach(x => x.setAttribute('aria-pressed', +x.dataset.d === DIFF));
     const mv = myVeh(); menu.querySelector('.kr-vehs').innerHTML = VEHS.map(v => { const ok = unlocked(v); return '<button type="button" data-v="' + v.id + '" aria-pressed="' + (v.id === mv) + '"' + (ok ? '' : ' disabled') + ' title="' + esc(ok ? v.n : v.t) + '"><i>' + (ok ? v.e : '🔒') + '</i><small>' + esc(ok ? v.n : v.t) + '</small></button>'; }).join('');
@@ -8217,6 +8224,7 @@ setGroup(G);
     const ob = e.target.closest('.kr-cos button'); if (ob && !ob.disabled) { const C = COS.find(x => x.id === ob.dataset.c), o = loadJ('kartCosOwn');
       if (C && !cosOwn()(C) && !C.ach && coins() >= C.c) { addCoins(-C.c); o[C.id] = 1; store.set('kartCosOwn', JSON.stringify(o)); SFX.pick(); }
       if (C && cosOwn()(C)) { const m = loadJ('kartCos'); m[me] = C.id; store.set('kartCos', JSON.stringify(m)); HEADC = {}; } renderMenu(); }
+    const bk = e.target.closest('.kr-bk'); if (bk) { BX = BX === bk.dataset.k ? null : bk.dataset.k; renderMenu(); return; }
     const pl0 = e.target.closest('.kr-pill'); if (pl0) { const d = menu.querySelector('.kr-' + pl0.dataset.open); if (d) { d.open = true; setTimeout(() => d.scrollIntoView({behavior: 'smooth', block: 'center'}), 30); } }
     const db0 = e.target.closest('.kr-diff button'); if (db0) { DIFF = +db0.dataset.d; store.set('kartDiff', DIFF); renderMenu(); }
     const gb = e.target.closest('.kr-ghost:not(.kr-diff) button'); if (gb) { GHOST.mode = gb.dataset.g; store.set('kartGhost', GHOST.mode); renderMenu(); }
