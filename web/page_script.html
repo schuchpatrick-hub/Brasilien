@@ -90,7 +90,8 @@ const NETERR = /unavailable|network|offline|timeout|deadline|fetch|failed to fet
 function withTimeout(p, ms) { return Promise.race([p, new Promise((_, rej) => setTimeout(() => rej({code: 'timeout'}), ms))]); }
 async function guarded(op, path, data, run) {
   const q = qLoad();
-  if (q.length || navigator.onLine === false) { q.push({op, path, data}); qSave(q); return; }
+  if (navigator.onLine === false) { q.push({op, path, data}); qSave(q); netPaint(); return; }
+  if (q.length) flush();   // Warteschlange nebenher abarbeiten, neuer Eintrag geht trotzdem direkt raus
   try { await withTimeout(run(), 10000); }
   catch (err) {
     const c = String((err && (err.code || err.name || err.message)) || '');
@@ -138,7 +139,10 @@ async function flush() {
     while (q.length) {
       const x = q[0];
       try { await withTimeout(x.op === 'del' ? rawDb.doc(x.path).delete() : rawDb.doc(x.path).set(x.data), 10000); }
-      catch (err) { const c = String((err && (err.code || err.message)) || ''); if (NETERR.test(c)) break; }   // andere Fehler: Eintrag verwerfen
+      catch (err) { const c = String((err && (err.code || err.message)) || '');
+        // Netzfehler: später nochmal (höchstens 12 Versuche); abgelehnt (z. B. kein Schreibrecht): verwerfen und anzeigen statt still verschwinden
+        if (NETERR.test(c) && (x.n = (x.n || 0) + 1) < 12) { q = qLoad(); if (q[0]) { q[0].n = x.n; qSave(q); } break; }
+        let lost = {}; try { lost = JSON.parse(store.get('outboxLost') || '{}'); } catch (e) {} lost.n = (lost.n || 0) + 1; lost.code = c.slice(0, 40); store.set('outboxLost', JSON.stringify(lost)); }
       q = qLoad(); q.shift(); qSave(q);
     }
   } finally { flushing = false; netPaint(); }
@@ -153,6 +157,9 @@ function netPaint() {
   let el = document.getElementById('net');
   if (!el) { el = document.createElement('div'); el.id = 'net'; el.className = 'net'; el.setAttribute('role', 'status'); document.body.appendChild(el); }
   const n = qLoad().length, off = navigator.onLine === false;
+  let lost = null; try { lost = JSON.parse(store.get('outboxLost') || 'null'); } catch (e) {}
+  if (lost && lost.n) { el.className = 'net lost'; el.hidden = false; el.textContent = '⚠️ ' + lost.n + (lost.n === 1 ? ' Eintrag' : ' Einträge') + ' nicht gespeichert (Code: ' + lost.code + ') · antippen';
+    el.onclick = () => { store.set('outboxLost', ''); el.onclick = null; netPaint(); }; return; }
   if (!rawDb && !n) { el.hidden = true; return; }
   el.className = 'net ' + (n ? 'wait' : off ? 'off' : 'live');
   el.textContent = n ? '⏳ ' + n + (n === 1 ? ' Eintrag wartet' : ' Einträge warten') + (off ? ' · offline' : ' · sende …') : off ? '○ offline' : '● live';

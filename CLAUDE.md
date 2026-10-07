@@ -139,7 +139,7 @@ Sprachführer kompakt (`#phrases.compact`): Themen-Chips `.ph-cats` (immer nur e
 
 Alle Module holen die Datenbank über `getDb()` (nicht direkt `claude.use('db')`). Schreibzugriffe (`set`/`delete`) laufen über
 `guarded()`: ohne Netz oder nach 10 s ohne Antwort landen sie im localStorage `br26.outbox` und werden bei `online`, beim Laden
-und alle 20 s nachgeschickt (`flush()`, gleiche Dokument-ID, daher keine Doppelten). Unten links `#net`: „● live“ (nur Admin),
+und alle 20 s nachgeschickt (`flush()`, gleiche Dokument-ID, daher keine Doppelten). Neue Einträge gehen auch bei voller Warteschlange direkt raus. Abgelehnte Einträge (z. B. `invalid_argument` = kein Schreibrecht) oder nach 12 Fehlversuchen werden verworfen, aber gezählt (`br26.outboxLost`) und unten links rot angezeigt („⚠️ n Einträge nicht gespeichert (Code)“, antippen = ausblenden), nie still. Unten links `#net`: „● live“ (nur Admin),
 „○ offline“, „⏳ n Einträge warten“.
 
 ## Drinks-Counter
