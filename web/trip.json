@@ -9950,238 +9950,6 @@
         "Staffelfinale:",
         "Paraty & Ilha Grande"
       ]
-    },
-    "kart": {
-      "lines": [
-        {
-          "key": "lead_jonas",
-          "who": "narrator",
-          "say": "Jonas übernimmt die Führung!",
-          "text": "Jonas übernimmt die Führung!"
-        },
-        {
-          "key": "lead_simon",
-          "who": "narrator",
-          "say": "Simon übernimmt die Führung!",
-          "text": "Simon übernimmt die Führung!"
-        },
-        {
-          "key": "lead_patrick",
-          "who": "narrator",
-          "say": "Patrick übernimmt die Führung!",
-          "text": "Patrick übernimmt die Führung!"
-        },
-        {
-          "key": "lead_marco",
-          "who": "narrator",
-          "say": "Marco übernimmt die Führung!",
-          "text": "Marco übernimmt die Führung!"
-        },
-        {
-          "key": "lead_greisel",
-          "who": "narrator",
-          "say": "Greisel übernimmt die Führung!",
-          "text": "Greisel übernimmt die Führung!"
-        },
-        {
-          "key": "lead_dajo",
-          "who": "narrator",
-          "say": "Daijo übernimmt die Führung!",
-          "text": "Daijo übernimmt die Führung!"
-        },
-        {
-          "key": "go",
-          "who": "narrator",
-          "say": "Und los geht's!",
-          "text": "Und los geht's!"
-        },
-        {
-          "key": "rocket",
-          "who": "narrator",
-          "say": "Was für ein Raketenstart!",
-          "text": "Was für ein Raketenstart!"
-        },
-        {
-          "key": "last",
-          "who": "narrator",
-          "say": "Letzte Runde!",
-          "text": "Letzte Runde!"
-        },
-        {
-          "key": "super",
-          "who": "narrator",
-          "say": "Super-Turbo!",
-          "text": "Super-Turbo!"
-        },
-        {
-          "key": "coati",
-          "who": "narrator",
-          "say": "Nasenbär-Alarm!",
-          "text": "Nasenbär-Alarm!"
-        },
-        {
-          "key": "wave",
-          "who": "narrator",
-          "say": "Achtung, die Welle!",
-          "text": "Achtung, die Welle!"
-        },
-        {
-          "key": "jump",
-          "who": "narrator",
-          "say": "Abflug!",
-          "text": "Abflug!"
-        },
-        {
-          "key": "hit",
-          "who": "narrator",
-          "say": "Autsch, das tat weh!",
-          "text": "Autsch, das tat weh!"
-        },
-        {
-          "key": "vendor",
-          "who": "narrator",
-          "say": "Der Caipi-Verkäufer! Mitten auf der Strecke!",
-          "text": "Der Caipi-Verkäufer! Mitten auf der Strecke!"
-        },
-        {
-          "key": "win",
-          "who": "narrator",
-          "say": "Sieg! Der Pokal geht nach Hause!",
-          "text": "Sieg! Der Pokal geht nach Hause!"
-        },
-        {
-          "key": "podium",
-          "who": "narrator",
-          "say": "Aufs Podest! Stark gefahren!",
-          "text": "Aufs Podest! Stark gefahren!"
-        },
-        {
-          "key": "lose",
-          "who": "narrator",
-          "say": "Naja. Dabei sein ist alles.",
-          "text": "Naja. Dabei sein ist alles."
-        },
-        {
-          "key": "over",
-          "who": "narrator",
-          "say": "Überholt!",
-          "text": "Überholt!"
-        },
-        {
-          "key": "finish",
-          "who": "narrator",
-          "say": "Zielflagge!",
-          "text": "Zielflagge!"
-        },
-        {
-          "key": "stall",
-          "who": "narrator",
-          "say": "Abgewürgt! Zu früh gestartet!",
-          "text": "Abgewürgt! Zu früh gestartet!"
-        },
-        {
-          "key": "trick",
-          "who": "narrator",
-          "say": "Was für ein Trick!",
-          "text": "Was für ein Trick!"
-        }
-      ],
-      "voice": {
-        "lead_jonas": {
-          "dur": 2059,
-          "env": "9987687986767621002967889872540894455443446310006000"
-        },
-        "lead_simon": {
-          "dur": 1965,
-          "env": "99888899999630009979999996653996665764598653320000"
-        },
-        "lead_patrick": {
-          "dur": 1992,
-          "env": "89844678422000968899999356139565564445867610009000"
-        },
-        "lead_marco": {
-          "dur": 2166,
-          "env": "9976640778666520029577889975540498457664347745320011000"
-        },
-        "lead_greisel": {
-          "dur": 2255,
-          "env": "899876687899836979999995571995675443566430002344210069000"
-        },
-        "lead_dajo": {
-          "dur": 2131,
-          "env": "979889999988770009979999998576099457744445777410003000"
-        },
-        "go": {
-          "dur": 1316,
-          "env": "999548969873887612988630003676100"
-        },
-        "rocket": {
-          "dur": 1728,
-          "env": "99999988875763599996985087981099886577552000"
-        },
-        "last": {
-          "dur": 1282,
-          "env": "999964886499869997888888520011000"
-        },
-        "super": {
-          "dur": 1153,
-          "env": "99998679727898879997630009000"
-        },
-        "coati": {
-          "dur": 1243,
-          "env": "99887879857876665587878730001000"
-        },
-        "wave": {
-          "dur": 1433,
-          "env": "999763599997420059985865665541001200"
-        },
-        "jump": {
-          "dur": 1006,
-          "env": "99505876766535761001683000"
-        },
-        "hit": {
-          "dur": 1891,
-          "env": "997984999871005998989439977645466998643200079000"
-        },
-        "vendor": {
-          "dur": 3556,
-          "env": "99768887999987664000887761569745636971877654566552000993001997109996664598784798627864000"
-        },
-        "win": {
-          "dur": 2312,
-          "env": "9986777414640019730998189989628981798556769775541001210000"
-        },
-        "podium": {
-          "dur": 2016,
-          "env": "998878307977987855720019769998179677666458410019000"
-        },
-        "lose": {
-          "dur": 2706,
-          "env": "99869877646542000288877387410049868876876576660007985109856458774000"
-        },
-        "over": {
-          "dur": 1002,
-          "env": "98876777664555156300094000"
-        },
-        "finish": {
-          "dur": 983,
-          "env": "9978997678865987410019000"
-        },
-        "stall": {
-          "dur": 2068,
-          "env": "9992010996788665144830007867665979977498874862541000"
-        },
-        "trick": {
-          "dur": 1201,
-          "env": "8997899987834689991688961751000"
-        }
-      },
-      "comedy": {
-        "narrator": {
-          "tempo": 1.14,
-          "pitch": 1.03
-        }
-      }
     }
   },
   "sfx": {
@@ -10721,5 +10489,95 @@
       "t": "Real",
       "x": "Brasilianische Währung (R$). Umrechnen geht im Real-Rechner."
     }
-  ]
+  ],
+  "kartvo": {
+    "lead_jonas": {
+      "o": 250,
+      "dur": 2059
+    },
+    "lead_simon": {
+      "o": 2559,
+      "dur": 1965
+    },
+    "lead_patrick": {
+      "o": 4774,
+      "dur": 1992
+    },
+    "lead_marco": {
+      "o": 7016,
+      "dur": 2166
+    },
+    "lead_greisel": {
+      "o": 9433,
+      "dur": 2255
+    },
+    "lead_dajo": {
+      "o": 11937,
+      "dur": 2131
+    },
+    "go": {
+      "o": 14319,
+      "dur": 1316
+    },
+    "rocket": {
+      "o": 15885,
+      "dur": 1728
+    },
+    "last": {
+      "o": 17863,
+      "dur": 1282
+    },
+    "super": {
+      "o": 19396,
+      "dur": 1153
+    },
+    "coati": {
+      "o": 20798,
+      "dur": 1243
+    },
+    "wave": {
+      "o": 22291,
+      "dur": 1433
+    },
+    "jump": {
+      "o": 23974,
+      "dur": 1006
+    },
+    "hit": {
+      "o": 25230,
+      "dur": 1891
+    },
+    "vendor": {
+      "o": 27372,
+      "dur": 3331
+    },
+    "win": {
+      "o": 30953,
+      "dur": 2312
+    },
+    "podium": {
+      "o": 33515,
+      "dur": 2016
+    },
+    "lose": {
+      "o": 35781,
+      "dur": 2099
+    },
+    "over": {
+      "o": 38130,
+      "dur": 1002
+    },
+    "finish": {
+      "o": 39382,
+      "dur": 983
+    },
+    "stall": {
+      "o": 40615,
+      "dur": 2068
+    },
+    "trick": {
+      "o": 42933,
+      "dur": 1201
+    }
+  }
 }

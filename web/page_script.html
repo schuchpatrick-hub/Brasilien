@@ -7661,6 +7661,6 @@ setGroup(G);
   addEventListener('keyup', e => { INPUT.keys[e.key] = false; });
   addEventListener('resize', () => { if (!box.hidden) resize(); });
   document.addEventListener('visibilitychange', () => { if (document.hidden && !box.hidden) pause(); });
-  window.__kart = {open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say};
+  window.__kart = {open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF};
 })();
 </script>
