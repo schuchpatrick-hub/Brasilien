@@ -7576,6 +7576,24 @@ setGroup(G);
     return '<p class="kr-lb-t">' + title + '</p><ol class="kr-lb-l">' + list.slice(0, 6).map((v, i) => '<li' + (v.who === player() ? ' class="me"' : '') + '>' +
       '<span>' + (['🥇', '🥈', '🥉'][i] || (i + 1) + '.') + ' ' + esc(NAME(v.who)) + (v.drv && v.drv !== v.who ? ' <small>als ' + esc(NAME(v.drv)) + '</small>' : '') + '</span><i>' + fmt(v.ms) + '</i></li>').join('') + '</ol>';
   }
+  // Bestenliste: nur unter der echten Person speichern („Ich bin …“); ohne Wahl wird nach dem Rennen gefragt
+  let PEND = null;
+  function saveLB(pd) { const who = ME; if (!who || !DB) return;
+    if (pd.kind === 'best') { const id = pd.track + '__' + who, old = LB[id]; if (old && old.ms <= pd.ms) return; const doc = {track: pd.track, who, drv: pd.drv, veh: pd.veh, ms: pd.ms, ts: Date.now()};
+      DB.doc('kartbest/' + id).set(doc).catch(() => {}); DB.doc('kartghost/' + id).set({g: pd.g, ms: pd.ms}).catch(() => {}); LB[id] = doc; }
+    else { const id = pd.d + '__' + who, old = LBD[id]; if (old && old.ms <= pd.ms) return; const doc = {d: pd.d, who, drv: pd.drv, ms: pd.ms, ts: Date.now()}; DB.doc('kartdaily/' + id).set(doc).catch(() => {}); LBD[id] = doc; } }
+  function setMe(id) { ME = id; store.set('me', id);
+    try { const g = Object.keys(GROUP_IDS).find(k => GROUP_IDS[k].includes(id)); if (g && typeof setGroup === 'function') setGroup(g); meMark(); renderMe(); } catch (e) {}
+    if (PEND) { saveLB(PEND); PEND = null; const w = res.querySelector('.kr-who'); if (w) { w.innerHTML = '<p>✅ Gespeichert als <b>' + esc(NAME(id)) + '</b>. Ab jetzt merkt sich dieses Handy, wer spielt.</p>'; } }
+    if (!menu.hidden) renderMenu(); }
+  const whoHtml = txt => '<div class="kr-who"><p>' + txt + '</p><div class="kr-pick kr-whop">' + CREW.map(p => '<button type="button" data-who="' + p.id + '" aria-label="' + esc(p.name) + '"><span class="kr-wh" data-h="' + p.id + '"></span><span>' + esc(p.name) + '</span></button>').join('') + '</div></div>';
+  const whoHeads = el => el.querySelectorAll('.kr-wh').forEach(x => x.replaceWith(headCv(x.dataset.h, 92)));
+  // Crew-Rekorde aller Strecken
+  function recsHtml() { const rows = TRACKS.map(tr => ({tr, top: lbList(LB, tr.id)[0]})), cnt = {};
+    rows.forEach(r => { if (r.top) cnt[r.top.who] = (cnt[r.top.who] || 0) + 1; });
+    const king = Object.entries(cnt).sort((x, y) => y[1] - x[1]);
+    return '<p class="kr-rk">' + (king.length ? '👑 ' + king.map(([id, n]) => esc(NAME(id)) + ' ' + n).join(' · ') : 'Noch kein Rekord, die Strecken warten!') + '</p><ul class="kr-recl">' + rows.map(r => '<li><button type="button" class="kr-rec" data-t="' + r.tr.id + '"><i>' + r.tr.e + '</i><b>' + esc(r.tr.name) + '</b>' +
+      (r.top ? '<span' + (r.top.who === ME ? ' class="me"' : '') + '>' + esc(NAME(r.top.who)) + '</span><em>' + fmt(r.top.ms) + '</em>' : '<span class="no">frei</span><em>–</em>') + '</button></li>').join('') + '</ul>'; }
   const GHOST = {mode: store.get('kartGhost') || 'off'};   // off | mine | crew
   function ghostLocal(tid) { try { return JSON.parse(localStorage.getItem('br26.kartGhost.' + tid) || 'null'); } catch (e) { return null; } }
   async function ghostFor(tid) {
@@ -8047,12 +8065,12 @@ setGroup(G);
     const order = ks.slice().sort((a, b) => (a.done || a.est) - (b.done || b.est)), mine = ks[0], bkey = T.id + (RULE ? '@' + RULE.k : ''), b = best(), prev = b[bkey], rec = !prev || mine.done * 1000 < prev, ms = Math.round(mine.done * 1000);
     if (rec) { b[bkey] = ms; store.set('kartBest', JSON.stringify(b)); if (!RULE) try { localStorage.setItem('br26.kartGhost.' + T.id, JSON.stringify({ms, drv: me, g: S.rec})); } catch (e) {} }
     // Crew-Bestenliste / Tages-Challenge (nur mit Schreibrecht)
-    let crewMsg = '';
+    let crewMsg = ''; PEND = null;
     if (!RULE) { const top = lbList(LB, T.id)[0], mineLB = LB[T.id + '__' + player()];
-      if (WR && DB && (!mineLB || ms < mineLB.ms)) { const doc = {track: T.id, who: player(), drv: me, veh: vehOf(me), ms, ts: Date.now()}; DB.doc('kartbest/' + T.id + '__' + player()).set(doc).catch(() => {}); DB.doc('kartghost/' + T.id + '__' + player()).set({g: S.rec, ms}).catch(() => {}); LB[T.id + '__' + player()] = doc; }
+      if (WR && DB) { const pd = {kind: 'best', track: T.id, drv: me, veh: vehOf(me), ms, g: S.rec}; if (ME) saveLB(pd); else PEND = pd; }
       crewMsg = !top || ms < top.ms ? (WR ? '👑 Neuer Crew-Rekord auf ' + T.name + '!' : '👑 Schneller als der Crew-Rekord, aber nur eingeladene Bearbeiter kommen in die Bestenliste.') : '🏆 Crew-Rekord: ' + NAME(top.who) + ' ' + fmt(top.ms); }
     else { const dk = daily().d + '__' + player(), mineD = LBD[dk];
-      if (WR && DB && (!mineD || ms < mineD.ms)) { const doc = {d: daily().d, who: player(), drv: me, ms, ts: Date.now()}; DB.doc('kartdaily/' + dk).set(doc).catch(() => {}); LBD[dk] = doc; }
+      if (WR && DB) { const pd = {kind: 'daily', d: daily().d, drv: me, ms}; if (ME) saveLB(pd); else PEND = pd; }
       const day = lbList(LBD, daily().d); crewMsg = day.length ? '🎯 Heute vorne: ' + NAME(day[0].who) + ' ' + fmt(day[0].ms) : ''; }
     const pl = order.indexOf(mine) + 1;
     let msg = pl === 1 ? ['Campeão! 🏆', 'Der Pokal geht nach Hause!'] : pl === 6 ? ['Rote Laterne 🏮', 'Immerhin heil angekommen.'] : pl <= 3 ? ['Podium! 🥉', 'Stark gefahren.'] : ['Mittelfeld', 'Nächstes Mal mehr Caipi-Turbo.'];
@@ -8074,6 +8092,7 @@ setGroup(G);
     order.forEach((k, i) => { const li = document.createElement('li'); if (k.me) li.className = 'me'; li.innerHTML = '<b>' + (i + 1) + '.</b>'; li.appendChild(headCv(k.id));
       li.insertAdjacentHTML('beforeend', '<span>' + esc(NAME(k.id)) + '</span><small>' + (k.done ? fmt(k.done * 1000) : '+ ' + (k.est - mine.done).toFixed(1) + ' s') + (CUP ? ' · +' + PTS[i] : '') + '</small>'); ol.appendChild(li); });
     res.querySelector('.kr-crew').textContent = crewMsg; res.querySelector('.kr-crew').hidden = !crewMsg || !!CUP;
+    { const wr = res.querySelector('.kr-whores'); wr.innerHTML = PEND ? whoHtml('🙋 <b>Wer bist du?</b> Tippe dich an, dann kommt deine Zeit (' + fmt(ms) + ') in die Crew-Bestenliste.') : ''; whoHeads(wr); }
     res.querySelector('.kr-coins').innerHTML = '🪙 +' + earn + ' Münzen (' + S.got + ' eingesammelt, ' + [10, 6, 4, 2, 1, 1][pl - 1] + ' Platz-Bonus' + (beatRival ? ', 5 ⚔️ Rivale ' + esc(NAME(rv.id)) + ' geschlagen' : rv ? ', ⚔️ ' + esc(NAME(rv.id)) + ' war schneller' : '') + ') · Kasse: ' + coins();
     const ul = res.querySelector('.kr-unlock'); ul.hidden = !newV.length; ul.innerHTML = newV.map(v => '🔓 Neues Fahrzeug: <b>' + v.e + ' ' + esc(v.n) + '</b>').join('<br>'); if (newV.length) setTimeout(() => SFX.fanfare(), 600);
     const st = res.querySelector('.kr-stand'); st.innerHTML = ''; st.hidden = !CUP;
@@ -8124,7 +8143,7 @@ setGroup(G);
     tgh: ['Nehmer', '💥 Wie gut man Treffer wegsteckt: Nach Öl, Nasenbär oder Hindernis dreht man sich kürzer (bis ein Viertel schneller wieder unterwegs). Kommt von der Kater-Resistenz (KAT).']};
   let BX = null;
   function renderMenu() {
-    const pk = menu.querySelector('.kr-pick'); pk.innerHTML = '';
+    const pk = menu.querySelector('.kr-pick:not(.kr-whop)'); pk.innerHTML = '';
     CREW.forEach(p => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = p.id; b.setAttribute('aria-pressed', p.id === me); b.setAttribute('aria-label', p.name); b.appendChild(headCv(p.id, 92)); b.insertAdjacentHTML('beforeend', '<span>' + esc(p.name) + '</span>'); pk.appendChild(b); });
     menu.querySelectorAll('.kr-mode button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === MODE));
     const cs = CS[me], bar = v => '<i style="--v:' + Math.round(20 + v * 80) + '%"></i>', sp = SPECIAL[me], pg = pegel(me);
@@ -8159,7 +8178,9 @@ setGroup(G);
     else lb.innerHTML = '';
     lb.hidden = MODE === 'cup';
     menu.querySelector('.kr-wr').textContent = WR ? 'Deine Zeiten landen als ' + NAME(player()) + ' in der Crew-Bestenliste' + (ME ? '' : ' (wähle oben auf der Seite „Ich bin …“)') + '.' : 'Bestenliste nur ansehen: Eintragen können nur eingeladene Bearbeiter, deine Zeiten bleiben auf diesem Handy.';
-    menu.querySelector('.kr-wr').hidden = MODE === 'cup';
+    menu.querySelector('.kr-wr').hidden = MODE === 'cup' || (WR && !ME);
+    const wb = menu.querySelector('.kr-whobox'); wb.innerHTML = WR && !ME ? whoHtml('🙋 <b>Wer spielt an diesem Handy?</b> Einmal antippen, dann landen deine Zeiten unter deinem Namen in der Crew-Bestenliste.') : ''; whoHeads(wb);
+    const rc = menu.querySelector('.kr-recs'); rc.querySelector('.kr-recb').innerHTML = recsHtml(); rc.querySelector('summary').textContent = '🏆 Crew-Rekorde aller Strecken (' + TRACKS.filter(x => lbList(LB, x.id).length).length + '/' + TRACKS.length + ')';
   }
   function preview(id) { loadTrack(id, RULE && RULE.k === 'rev'); newRace(); S.paused = true; }
   const TIPS = ['Doppeltipp und halten = sofort driften. Länger driften = blauer, dann oranger Turbo.', 'Beide Seiten gleichzeitig halten = bremsen.', 'Bei der 1 tippen = Raketenstart.',
@@ -8217,7 +8238,7 @@ setGroup(G);
   });
   box.addEventListener('click', e => { if (e.target.closest('.kr-menu .kr-quit, .kr-res .kr-quit')) close(); });
   menu.addEventListener('click', e => {
-    const b = e.target.closest('.kr-pick button'); if (b) { me = b.dataset.id; makeVehicles(); renderMenu(); newRace(); S.paused = true; }
+    const b = e.target.closest('.kr-pick:not(.kr-whop) button'); if (b) { me = b.dataset.id; makeVehicles(); renderMenu(); newRace(); S.paused = true; }
     const m = e.target.closest('.kr-mode button'); if (m) { MODE = m.dataset.mode; store.set('kartMode', MODE); RULE = MODE === 'daily' ? daily().rule : null; preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); }
     const cb = e.target.closest('.kr-cups button'); if (cb) { CUPSEL = CUPS.find(c => c.id === cb.dataset.c) || CUPS[0]; store.set('kartCup', CUPSEL.id); preview(CUPSEL.t[0]); renderMenu(); }
     const sb = e.target.closest('.kr-shop button'); if (sb && !sb.disabled) { const tu = tune(), c = TCOST[tu[sb.dataset.k]]; if (tu[sb.dataset.k] < 5 && coins() >= c) { addCoins(-c); tu[sb.dataset.k]++; store.set('kartTune', JSON.stringify(tu)); SFX.pick(); if (tu[sb.dataset.k] >= 5) ach('tuned'); renderMenu(); } }
@@ -8225,6 +8246,7 @@ setGroup(G);
       if (C && !cosOwn()(C) && !C.ach && coins() >= C.c) { addCoins(-C.c); o[C.id] = 1; store.set('kartCosOwn', JSON.stringify(o)); SFX.pick(); }
       if (C && cosOwn()(C)) { const m = loadJ('kartCos'); m[me] = C.id; store.set('kartCos', JSON.stringify(m)); HEADC = {}; } renderMenu(); }
     const bk = e.target.closest('.kr-bk'); if (bk) { BX = BX === bk.dataset.k ? null : bk.dataset.k; renderMenu(); return; }
+    const rec = e.target.closest('.kr-rec'); if (rec) { TRK = rec.dataset.t; store.set('kartTrack', TRK); if (MODE !== 'single') menu.querySelector('.kr-mode button[data-mode="single"]').click(); else { preview(TRK); renderMenu(); } menu.querySelector('.kr-trk').scrollIntoView({behavior: 'smooth', block: 'center'}); return; }
     const pl0 = e.target.closest('.kr-pill'); if (pl0) { const d = menu.querySelector('.kr-' + pl0.dataset.open); if (d) { d.open = true; setTimeout(() => d.scrollIntoView({behavior: 'smooth', block: 'center'}), 30); } }
     const db0 = e.target.closest('.kr-diff button'); if (db0) { DIFF = +db0.dataset.d; store.set('kartDiff', DIFF); renderMenu(); }
     const gb = e.target.closest('.kr-ghost:not(.kr-diff) button'); if (gb) { GHOST.mode = gb.dataset.g; store.set('kartGhost', GHOST.mode); renderMenu(); }
@@ -8264,6 +8286,7 @@ setGroup(G);
   addEventListener('resize', () => { if (!box.hidden) resize(); });
   document.addEventListener('visibilitychange', () => { if (document.hidden && !box.hidden) pause(); });
   try { teaser(); } catch (e) {}
+  box.addEventListener('click', e => { const w = e.target.closest('.kr-whop button'); if (w) setMe(w.dataset.who); });
   window.__kartAt = (i, l) => at(i, l); window.__kartTW = () => TW;
   window.__kart = {open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
 })();
