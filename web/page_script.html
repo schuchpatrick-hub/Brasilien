@@ -1041,7 +1041,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   if (PRINT) { $('dr-add').hidden = true; document.querySelectorAll('#drinks details.dr-card').forEach(d => d.open = true); return; }
   setInterval(renderBac, 60000);
   (async () => {
-    if (!window.claude || !window.claude.use) { setMode('Offline-Ansicht: Eintragen geht nur auf claude.ai durch den Admin (Patrick).', false); return; }
+    if (!window.claude || !window.claude.use) { setMode('Offline-Ansicht: Eintragen geht nur auf claude.ai (Patrick und Eingeladene).', false); return; }
     dbRef = await getDb();
     if (!dbRef) { setMode('Nur ansehen: Eintragen können Patrick und alle, die er eingeladen hat. Das Live-Ranking sehen angemeldete claude.ai-Nutzer.', false); return; }
     const w = await canWrite();
