@@ -300,6 +300,16 @@ Kein Titelsong (auf Wunsch wieder entfernt, 03.10.).
 Nur-Kopf-Figuren (`headOnly`, Hilfsfunktion `headAt`) für Fenster, Gondel und Handy-Bildschirm. Lange Untertitel brechen in zwei Zeilen um.
 Neue Folge: Zeilen in `series.epN` (mit `scenes`, `credits`, `next`), Stimmen per `--series epN`, Szenen-Code in `frame()` ergänzen, `META` erweitern.
 
+## Gringo Kart (Prototyp, seit 07.10.)
+
+Rennspiel im Kapitel Spiele: Knopf `#kart-open` (`.kart-teaser`) öffnet `#kart` als Vollbild-Overlay (wird beim Öffnen unter `<body>` gehängt, Kapitel hat content-visibility).
+Eigenes Modul „Gringo Kart“ am Ende von `page_script.html`, Canvas von oben, Kamera dreht mit (Fahrtrichtung oben). Strecke Copacabana: Kontrollpunkte `CP` → Catmull-Rom,
+alle 6 px abgetastet (`P`, Normalen `NX`/`NY`), Breite `TW`; Hintergrund (Sand, Meer `shore()`, Stadt, Calçadão-Wellen als Muster, Palmen, Schirme) einmal in `BG` vorgezeichnet.
+6 Fahrer = Crew (Kart in Shirt-Farbe aus `dance.look`, Foto-Kopf mit `face`-Ausschnitt als Sprite `HEAD`), 3 Runden, Gas automatisch, Daumen links/rechts lenkt,
+`.kr-item` zündet das Item (🍹 Turbo, 🧴 Öl-Pfütze, 🦝 Nasenbär jagt den Vordermann); Kokosnüsse/Sand bremsen; KI fährt Ideallinie mit Spur-Wechsel, weicht aus, Gummiband.
+Sprüche beim Treffer je Person (`LINES`), Ton per Web Audio (Motor, Piepsen), Bestzeit im localStorage `br26.kartBest`. Klassen mit Präfix `kr-` (`k-` ist schon belegt).
+Test: `window.__kart` (`open`, `state`, `step(dt)`, `draw`, `finish`). Ausbau-Ideen: weitere Strecken entlang der Route, Bestenliste in db, Geister-Fahrten, FIFA-Karten-Werte.
+
 ## Karte: Infokarten
 
 Stopps (`data-stop`) und Flughäfen GRU/CGH (`data-ap`) in `tools/gen_map.py` sind antippbar; darunter Stations-Chips und
