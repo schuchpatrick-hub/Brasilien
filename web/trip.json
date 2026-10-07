@@ -237,6 +237,21 @@
             "end": "20270106T155000Z",
             "desc": "Noch nicht gebucht (Stand 30.09.). Uhrzeit laut Planung."
           }
+        },
+        {
+          "time": "17:00",
+          "text": "Vorschlag (statt 09.01., dann geht der Flug nach Manaus): Sonnenuntergang & Kulturshow am Dreiländereck (Marco das Três Fronteiras)",
+          "unsicher": true
+        },
+        {
+          "time": "20:30",
+          "text": "Icebar Iguazú (Argentinien, Reisepass!): 30 Minuten All-you-can-drink bei −10 °C",
+          "unsicher": true
+        },
+        {
+          "time": "00:30",
+          "text": "Club-Finale im Casanova Night Club (Reggaeton & Charts)",
+          "unsicher": true
         }
       ]
     },
@@ -244,11 +259,28 @@
       "date": "2027-01-07",
       "g": "all",
       "place": "Foz do Iguaçu",
-      "title": "Iguaçu-Fälle",
+      "title": "Argentinische Fälle & Steak-Nacht",
       "stay": "TuCasa Flats, Foz do Iguaçu",
       "items": [
         {
-          "text": "Idee: brasilianische Seite mit Panoramablick, optional Helikopterflug"
+          "time": "09:00",
+          "text": "Mit zwei Ubers oder einem Großraumtaxi über die Grenze nach Argentinien (Reisepässe!)"
+        },
+        {
+          "time": "Mittag",
+          "text": "Öko-Zug zum Teufelsschlund (Garganta del Diablo)"
+        },
+        {
+          "time": "Nachm.",
+          "text": "Gran Aventura: Speedboot direkt unter die Fälle (Wechselkleidung!)"
+        },
+        {
+          "time": "19:30",
+          "text": "Riesige Steaks und Wein im La Cabrera Iguazú (vorab reservieren)"
+        },
+        {
+          "time": "Nacht",
+          "text": "Craft-Beer & Party auf der Avenida Brasil in Puerto Iguazú (Patagonia oder Holy Iguazú)"
         }
       ]
     },
@@ -256,11 +288,24 @@
       "date": "2027-01-08",
       "g": "all",
       "place": "Foz do Iguaçu",
-      "title": "Iguazú, argentinische Seite",
+      "title": "Brasilianische Fälle & Live-Musik",
       "stay": "TuCasa Flats, Foz do Iguaçu",
       "items": [
         {
-          "text": "Reisepass mitnehmen (Grenzübertritt), optional Bootstour unter die Fälle"
+          "time": "10:00",
+          "text": "Brasilianischer Nationalpark: kurzer Weg mit der besten Panorama-Aussicht"
+        },
+        {
+          "time": "13:30",
+          "text": "Parque das Aves direkt nebenan: riesige, begehbare Vogelvolieren"
+        },
+        {
+          "time": "Abend",
+          "text": "Fleischspieße satt in der Churrascaria do Gaúcho"
+        },
+        {
+          "time": "Nacht",
+          "text": "Live-Bands, Bier und Billard in der Zeppelin Old Bar (Foz do Iguaçu)"
         }
       ]
     },
@@ -3234,6 +3279,26 @@
           {
             "t": "Bootstour Macuco Safari",
             "q": "Macuco Safari, Foz do Iguaçu"
+          },
+          {
+            "t": "La Cabrera (Steak)",
+            "q": "La Cabrera Puerto Iguazú"
+          },
+          {
+            "t": "Parque das Aves",
+            "q": "Parque das Aves, Foz do Iguaçu"
+          },
+          {
+            "t": "Dreiländereck",
+            "q": "Marco das Três Fronteiras, Foz do Iguaçu"
+          },
+          {
+            "t": "Icebar Iguazú",
+            "q": "Icebar Iguazú, Puerto Iguazú"
+          },
+          {
+            "t": "Itaipú-Staudamm",
+            "q": "Itaipu Binacional, Foz do Iguaçu"
           }
         ],
         "warn": "Argentinische Seite: Reisepass mitnehmen!",
@@ -10189,6 +10254,14 @@
     ]
   },
   "news": [
+    {
+      "id": "n251007d",
+      "d": "2026-10-07",
+      "tab": "tage-tab",
+      "to": "tage",
+      "e": "🌊",
+      "t": "Iguaçu-Plan: argentinische Fälle & Steak-Nacht (07.01.), brasilianische Fälle & Live-Musik (08.01.), Steakhaus-Tipps"
+    },
     {
       "id": "n251007c",
       "d": "2026-10-07",
