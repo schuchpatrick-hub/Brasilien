@@ -1973,7 +1973,8 @@
         "v": 132.5,
         "k": "fix"
       },
-      "b": null
+      "b": null,
+      "url": "https://www.booking.com/Share-q0Nagir"
     },
     {
       "label": "Rio",
@@ -1983,7 +1984,8 @@
         "v": 275,
         "k": "fix"
       },
-      "b": null
+      "b": null,
+      "url": "https://www.booking.com/Share-UjjihY"
     },
     {
       "label": "Foz do Iguaçu",
@@ -1996,7 +1998,8 @@
         "k": "fix"
       },
       "cat": "stay",
-      "sub": "TuCasa Flats · 3 Nächte"
+      "sub": "TuCasa Flats · 3 Nächte",
+      "url": "https://www.booking.com/searchresults.html?ss=TuCasa+Flats+Foz+do+Igua%C3%A7u"
     },
     {
       "label": "Manaus",
@@ -2009,7 +2012,8 @@
         "k": "fix"
       },
       "cat": "stay",
-      "sub": "Casa 307 · 1 Nacht"
+      "sub": "Casa 307 · 1 Nacht",
+      "url": "https://www.booking.com/Share-xSVoEp"
     },
     {
       "label": "Juma Lodge (Amazonas)",
@@ -2022,7 +2026,8 @@
         "k": "fix"
       },
       "cat": "stay",
-      "sub": "3 Nächte, alles inklusive außer Bar"
+      "sub": "3 Nächte, alles inklusive außer Bar",
+      "url": "https://www.jumakabanas.com/package/nature-experience-package-3-nights/"
     },
     {
       "label": "Paraty",
@@ -2035,7 +2040,8 @@
         "k": "fix"
       },
       "cat": "stay",
-      "sub": "Geko Pousada · 2 Nächte mit Frühstück"
+      "sub": "Geko Pousada · 2 Nächte mit Frühstück",
+      "url": "https://www.booking.com/Share-zfyVPQM"
     },
     {
       "label": "Ilha Grande",
@@ -10209,6 +10215,14 @@
     ]
   },
   "news": [
+    {
+      "id": "n251007e",
+      "d": "2026-10-07",
+      "tab": "reise",
+      "to": "kosten",
+      "e": "🔗",
+      "t": "Kosten: Unterkünfte lassen sich jetzt antippen und öffnen direkt die Buchungsseite"
+    },
     {
       "id": "n251007d",
       "d": "2026-10-07",
