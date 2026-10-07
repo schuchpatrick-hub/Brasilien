@@ -8099,13 +8099,31 @@ setGroup(G);
     res.querySelector('.kr-again').textContent = '🏆 Neuer Grand Prix'; res.querySelector('.kr-res .kr-back').textContent = 'Zum Menü';
     CUP.done = 1; SFX.fanfare(); real('applause', .8); say('cupwin', 'Der Grand-Prix-Sieger steht fest!', 1); if (S) fireworks(120);
   }
+  const THEME = {guaruja: ['#ffe3a3', '#2fb8cc'], sp: ['#9aa0a8', '#3f444c'], copa: ['#f8d98f', '#1694b8'], reveillon: ['#2a2f6e', '#05081c'], cristo: ['#5fae66', '#1d5a2b'],
+    iguacu: ['#4c9a52', '#1a4a28'], amazon: ['#3a8a62', '#6b4a22'], paraty: ['#e2d6c0', '#8f8578'], ilha: ['#f1dca8', '#22a9c4']}, THUMB = {};
+  function thumb(tr) { if (THUMB[tr.id]) return THUMB[tr.id]; const w = 272, h = 172, c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'), cp = tr.cp, n = cp.length;
+    const th = THEME[tr.id] || ['#2fb8cc', '#0b5d8f'], g = x.createLinearGradient(0, 0, w, h); g.addColorStop(0, th[0]); g.addColorStop(1, th[1]); x.fillStyle = g; x.fillRect(0, 0, w, h);
+    if (tr.id === 'reveillon') for (let j = 0; j < 40; j++) { x.fillStyle = ['#ffd23f', '#ff4d4d', '#3fa7ff', '#fff'][j % 4]; x.fillRect((j * 97) % w, (j * 53) % h, 3, 3); }
+    const pts = []; for (let i = 0; i < n; i++) { const p0 = cp[(i - 1 + n) % n], p1 = cp[i], p2 = cp[(i + 1) % n], p3 = cp[(i + 2) % n];
+      for (let k = 0; k < 10; k++) { const u = k / 10, u2 = u * u, u3 = u2 * u; pts.push([0, 1].map(d => .5 * (2 * p1[d] + (-p0[d] + p2[d]) * u + (2 * p0[d] - 5 * p1[d] + 4 * p2[d] - p3[d]) * u2 + (-p0[d] + 3 * p1[d] - 3 * p2[d] + p3[d]) * u3))); } }
+    const xs = pts.map(p0 => p0[0]), ys = pts.map(p0 => p0[1]), x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys), sc = Math.min((w - 44) / (x1 - x0), (h - 40) / (y1 - y0)),
+      ox = (w - (x1 - x0) * sc) / 2 - x0 * sc, oy = (h - (y1 - y0) * sc) / 2 - y0 * sc + 6;
+    const path = () => { x.beginPath(); pts.forEach((p0, i) => x[i ? 'lineTo' : 'moveTo'](ox + p0[0] * sc, oy + p0[1] * sc)); x.closePath(); };
+    x.lineJoin = x.lineCap = 'round'; x.shadowColor = 'rgba(0,0,0,.35)'; x.shadowBlur = 10; x.shadowOffsetY = 4; path(); x.strokeStyle = '#14171c'; x.lineWidth = 16; x.stroke(); x.shadowColor = 'transparent';
+    path(); x.strokeStyle = tr.veh === 'boat' ? '#8fd6ff' : '#f4f1ea'; x.lineWidth = 9; x.stroke(); path(); x.strokeStyle = 'rgba(0,0,0,.25)'; x.lineWidth = 1.5; x.setLineDash([6, 6]); x.stroke(); x.setLineDash([]);
+    const s0 = pts[0], s1 = pts[2], an = Math.atan2(s1[1] - s0[1], s1[0] - s0[0]); x.save(); x.translate(ox + s0[0] * sc, oy + s0[1] * sc); x.rotate(an);
+    for (let a2 = 0; a2 < 2; a2++) for (let b2 = 0; b2 < 4; b2++) { x.fillStyle = (a2 + b2) % 2 ? '#111' : '#fff'; x.fillRect(-4 + a2 * 4, -8 + b2 * 4, 4, 4); } x.restore();
+    return THUMB[tr.id] = c; }
+  function teaser() { const hd = openBtn.querySelector('.kt-heads'), stt = openBtn.querySelector('.kt-stats'); if (!hd) return;
+    if (!hd.childElementCount) CREW.forEach(p0 => { if (!p0.photo) return; const im = document.createElement('img'); im.src = p0.photo; im.alt = ''; im.loading = 'lazy'; im.style.setProperty('--c', (LOOK[p0.id] || {}).shirt || '#ffd23f'); hd.appendChild(im); });
+    const st = stats(), ah = Object.keys(loadJ('kartAch')).length, bt = Object.values(best()).length; stt.innerHTML = st.races ? '<span>🪙 ' + coins() + '</span><span>🏁 ' + st.races + ' Rennen</span>' + (st.wins ? '<span>🥇 ' + st.wins + ' Siege</span>' : '') + '<span>🏅 ' + ah + '/' + ACH.length + '</span>' : ''; }
   function renderMenu() {
     const pk = menu.querySelector('.kr-pick'); pk.innerHTML = '';
-    CREW.forEach(p => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = p.id; b.setAttribute('aria-pressed', p.id === me); b.appendChild(headCv(p.id)); b.insertAdjacentHTML('beforeend', '<span>' + esc(p.name) + '</span>'); pk.appendChild(b); });
+    CREW.forEach(p => { const b = document.createElement('button'); b.type = 'button'; b.dataset.id = p.id; b.setAttribute('aria-pressed', p.id === me); b.setAttribute('aria-label', p.name); b.appendChild(headCv(p.id, 92)); b.insertAdjacentHTML('beforeend', '<span>' + esc(p.name) + '</span>'); pk.appendChild(b); });
     menu.querySelectorAll('.kr-mode button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === MODE));
     const cs = CS[me], bar = v => '<i style="--v:' + Math.round(20 + v * 80) + '%"></i>', sp = SPECIAL[me], pg = pegel(me);
-    menu.querySelector('.kr-drv').innerHTML = '<div class="kr-bars"><span>Tempo' + bar(cs.spd) + '</span><span>Lenkung' + bar(cs.hdl) + '</span><span>Start' + bar(cs.acc) + '</span><span>Nehmer' + bar(cs.tgh) + '</span></div>' +
-      '<p class="kr-sp">' + sp.e + ' <b>' + esc(sp.n) + '</b>: ' + esc(sp.x) + '</p>' + (pg > 0 ? '<p class="kr-sp">🍹 Heute schon ' + ((MEHUB.drinks || {})[me] || {}).today + ' Drinks: Lenkung wackelt!</p>' : '');
+    const dv = menu.querySelector('.kr-drv'), cosE = (COS.find(c => c.id === cosOf(me)) || {}).e; dv.innerHTML = '<div class="kr-dc" style="--dc:' + ((LOOK[me] || {}).shirt || '#00a651') + '"><span class="kr-dch"></span><div><p class="kr-dn">' + esc(NAME(me)) + (cosE && cosOf(me) ? ' <small>' + cosE + ' Kostüm</small>' : '') + '</p><div class="kr-bars"><span>Tempo' + bar(cs.spd) + '</span><span>Lenkung' + bar(cs.hdl) + '</span><span>Start' + bar(cs.acc) + '</span><span>Nehmer' + bar(cs.tgh) + '</span></div>' +
+      '<p class="kr-sp">' + sp.e + ' <b>' + esc(sp.n) + '</b>: ' + esc(sp.x) + '</p>' + (pg > 0 ? '<p class="kr-sp">🍹 Heute schon ' + ((MEHUB.drinks || {})[me] || {}).today + ' Drinks: Lenkung wackelt!</p>' : '') + '</div></div>'; dv.querySelector('.kr-dch').replaceWith(headCv(me, 140));
     menu.querySelectorAll('.kr-diff button').forEach(x => x.setAttribute('aria-pressed', +x.dataset.d === DIFF));
     const mv = myVeh(); menu.querySelector('.kr-vehs').innerHTML = VEHS.map(v => { const ok = unlocked(v); return '<button type="button" data-v="' + v.id + '" aria-pressed="' + (v.id === mv) + '"' + (ok ? '' : ' disabled') + ' title="' + esc(ok ? v.n : v.t) + '"><i>' + (ok ? v.e : '🔒') + '</i><small>' + esc(ok ? v.n : v.t) + '</small></button>'; }).join('');
     const tu = tune(), own = cosOwn(), mc = cosOf(me), cn = coins();
@@ -8116,7 +8134,11 @@ setGroup(G);
     menu.querySelector('.kr-ach').innerHTML = ACH.map(x => '<span class="' + (ah[x.id] ? 'on' : '') + '"><i>' + (ah[x.id] ? x.e : '🔒') + '</i><b>' + esc(x.n) + '</b>' + (x.x ? '<small>' + esc(x.x) + '</small>' : '') + '</span>').join('');
     const bt = best(), tr = menu.querySelector('.kr-tracks:not(.kr-cups)'); tr.hidden = MODE !== 'single'; lbInit();
     const cu = menu.querySelector('.kr-cups'); cu.hidden = MODE !== 'cup'; cu.innerHTML = CUPS.map(c => '<button type="button" data-c="' + c.id + '" aria-pressed="' + (c === CUPSEL) + '"><i>' + c.e + '</i><b>' + esc(c.n) + '</b><small>' + c.t.length + ' Strecken</small></button>').join('');
-    tr.innerHTML = TRACKS.map(t => '<button type="button" data-t="' + t.id + '" aria-pressed="' + (t.id === TRK) + '"><i>' + t.e + '</i><b>' + esc(t.name) + '</b><small>' + (bt[t.id] ? '⏱ ' + fmt(bt[t.id]) : esc(t.sub)) + '</small></button>').join('');
+    tr.innerHTML = TRACKS.map(t => '<button type="button" data-t="' + t.id + '" aria-pressed="' + (t.id === TRK) + '"><i>' + t.e + '</i>' + (bt[t.id] ? '<em>⏱ ' + fmt(bt[t.id]) + '</em>' : '') + '<b>' + esc(t.name) + '</b><small>' + esc(t.sub) + '</small></button>').join('');
+    tr.querySelectorAll('button').forEach(b0 => { const c = thumb(TBY[b0.dataset.t]), d = document.createElement('canvas'); d.width = c.width; d.height = c.height; d.getContext('2d').drawImage(c, 0, 0); b0.prepend(d); });
+    requestAnimationFrame(() => { const sel = tr.querySelector('[aria-pressed="true"]'); if (sel && tr.scrollWidth > tr.clientWidth) tr.scrollLeft = sel.offsetLeft - (tr.clientWidth - sel.clientWidth) / 2; });
+    menu.querySelector('.kr-tl').textContent = MODE === 'cup' ? 'Pokal' : MODE === 'daily' ? 'Heutige Challenge' : 'Strecke';
+    menu.querySelector('.kr-pc').textContent = coins(); menu.querySelector('.kr-pa').textContent = Object.keys(achs()).length + '/' + ACH.length;
     const cups = loadJ('kartCups'), cw = cups[me] || 0;
     menu.querySelector('.kr-best').textContent = MODE === 'cup' ? CUPSEL.t.map(id => TBY[id].e).join(' ') + ' · ' + CUPSEL.t.length + ' Rennen, Punkte 10-8-6-5-4-3, am Ende Siegerehrung.' + (cw ? ' Deine Grand-Prix-Siege: ' + cw + ' 🏆' : '')
       : (bt[TRK] ? 'Deine Bestzeit ' + TBY[TRK].name + ': ' + fmt(bt[TRK]) : 'Noch keine Bestzeit auf dieser Strecke.');
@@ -8156,7 +8178,7 @@ setGroup(G);
     cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
   }
   function close() {
-    cancelAnimationFrame(raf); S = null; MUS.on = false; box.hidden = true; document.body.style.overflow = ''; document.documentElement.classList.remove('kart-on');
+    cancelAnimationFrame(raf); S = null; MUS.on = false; box.hidden = true; teaser(); document.body.style.overflow = ''; document.documentElement.classList.remove('kart-on');
     engOff(); try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {}
   }
   function toMenu() { CUP = null; RULE = MODE === 'daily' ? daily().rule : null; res.hidden = true; pm.hidden = true; racing(false); MUS.on = false; menu.hidden = false; preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); }
@@ -8195,9 +8217,10 @@ setGroup(G);
     const ob = e.target.closest('.kr-cos button'); if (ob && !ob.disabled) { const C = COS.find(x => x.id === ob.dataset.c), o = loadJ('kartCosOwn');
       if (C && !cosOwn()(C) && !C.ach && coins() >= C.c) { addCoins(-C.c); o[C.id] = 1; store.set('kartCosOwn', JSON.stringify(o)); SFX.pick(); }
       if (C && cosOwn()(C)) { const m = loadJ('kartCos'); m[me] = C.id; store.set('kartCos', JSON.stringify(m)); HEADC = {}; } renderMenu(); }
+    const pl0 = e.target.closest('.kr-pill'); if (pl0) { const d = menu.querySelector('.kr-' + pl0.dataset.open); if (d) { d.open = true; setTimeout(() => d.scrollIntoView({behavior: 'smooth', block: 'center'}), 30); } }
     const db0 = e.target.closest('.kr-diff button'); if (db0) { DIFF = +db0.dataset.d; store.set('kartDiff', DIFF); renderMenu(); }
     const gb = e.target.closest('.kr-ghost:not(.kr-diff) button'); if (gb) { GHOST.mode = gb.dataset.g; store.set('kartGhost', GHOST.mode); renderMenu(); }
-    const t = e.target.closest('.kr-tracks:not(.kr-cups):not(.kr-shop) button'); if (t) { TRK = t.dataset.t; store.set('kartTrack', TRK); preview(TRK); renderMenu(); }
+    const t = e.target.closest('.kr-trk button'); if (t) { TRK = t.dataset.t; store.set('kartTrack', TRK); preview(TRK); renderMenu(); }
     const vb = e.target.closest('.kr-vehs:not(.kr-cos) button'); if (vb && !vb.disabled) { store.set('kartVeh', vb.dataset.v); makeVehicles(); newRace(); S.paused = true; renderMenu(); }
     if (e.target.closest('.kr-go')) { CUP = MODE === 'cup' ? {i: 0, pts: {}, races: [], list: CUPSEL.t, n: CUPSEL.n, e: CUPSEL.e} : null; RULE = MODE === 'daily' ? daily().rule : null; startRace(); }
   });
@@ -8232,6 +8255,7 @@ setGroup(G);
   addEventListener('keyup', e => { INPUT.keys[e.key] = false; });
   addEventListener('resize', () => { if (!box.hidden) resize(); });
   document.addEventListener('visibilitychange', () => { if (document.hidden && !box.hidden) pause(); });
+  try { teaser(); } catch (e) {}
   window.__kartAt = (i, l) => at(i, l); window.__kartTW = () => TW;
   window.__kart = {open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
 })();
