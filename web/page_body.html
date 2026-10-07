@@ -304,6 +304,17 @@
 <section id="spiele" data-kind="fun" data-tab="spiele-tab">
   <h2><span class="ico">🎲</span>Spiele</h2>
   <p class="note sub-lead">Blacky Jacky, Wizard, Footvolley und alles, was unterwegs noch dazukommt. Jede Partie wird eingetragen, daraus entstehen Ranglisten pro Spiel und der Spiele-Champion der Reise.</p>
+  <button type="button" class="kart-teaser" id="kart-open"><span class="kt-e" aria-hidden="true">🏎️</span><span><b>Gringo Kart</b><small>Prototyp · Grand Prix an der Copacabana, 3 Runden gegen die Crew</small></span><span class="kt-go" aria-hidden="true">▶</span></button>
+  <div id="kart" class="kart" hidden>
+    <canvas aria-label="Gringo Kart Rennstrecke"></canvas>
+    <div class="kr-bar"><button type="button" class="kr-close" aria-label="Spiel schließen">✕</button><button type="button" class="kr-snd" aria-label="Ton an/aus">🔊</button></div>
+    <button type="button" class="kr-item" aria-label="Item benutzen">ITEM</button>
+    <div class="kr-menu"><div class="kr-card"><h3>🏎️ Gringo Kart</h3><p>Grand Prix do Rio · Copacabana · 3 Runden</p><p class="kr-lbl">Wer fährt?</p><div class="kr-pick"></div>
+      <p class="kr-help">Gas gibt’s automatisch. <b>Links/rechts tippen</b> = lenken, <b>ITEM</b> = 🍹 Caipi-Turbo, 🧴 Sonnencreme-Öl oder 🦝 Nasenbär. Kokosnüsse und Sand meiden!</p>
+      <p class="kr-best"></p><button type="button" class="btn kr-go">Los geht’s!</button></div></div>
+    <div class="kr-res" hidden><div class="kr-card"><h3 class="kr-res-t"></h3><p class="kr-res-s"></p><ol></ol><div class="kr-btns"><button type="button" class="btn kr-again">Nochmal</button><button type="button" class="btn ghost kr-back">Fahrer wechseln</button></div></div></div>
+    <button type="button" class="kr-pause" hidden>▶ Weiter</button>
+  </div>
   <div class="gm-stage"><div class="gm-bg" aria-hidden="true">%%SCENE:spiele%%</div><div id="gm-top" class="gm-top"></div></div>
   <div id="gm" class="gm"></div>
 </section>
