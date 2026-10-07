@@ -307,7 +307,7 @@
   <button type="button" class="kart-teaser" id="kart-open"><span class="kt-e" aria-hidden="true">🏎️</span><span><b>Gringo Kart</b><small>6 Strecken der Reise · Einzelrennen oder Grand Prix gegen die Crew</small></span><span class="kt-go" aria-hidden="true">▶</span></button>
   <div id="kart" class="kart" hidden>
     <canvas aria-label="Gringo Kart Rennstrecke"></canvas>
-    <button type="button" class="kr-pbtn" aria-label="Pause und Menü">⏸</button>
+    <button type="button" class="kr-pbtn" aria-label="Pause und Menü">⏸</button><div class="kr-toast" hidden></div>
     <div class="kr-load" hidden><div class="kr-load-c"><div class="kr-load-t"></div><div class="kr-load-s"></div><div class="kr-load-bar"><i></i></div><p class="kr-load-tip"></p></div></div>
     <button type="button" class="kr-item" aria-label="Item benutzen">ITEM</button>
     <button type="button" class="kr-drift" aria-label="Driften (gedrückt halten)">DRIFT</button>
@@ -316,10 +316,12 @@
       <p class="kr-help">Gas gibt’s automatisch. <b>Links/rechts</b> = lenken, <b>lange halten</b> = Drift, loslassen = Turbo. Bei der <b>1</b> tippen = Raketenstart. <b>ITEM</b> = 🍹 Turbo, 🧴 Öl, 🦝 Nasenbär. Auf der Schanze tippen = Trick!</p>
       <div class="kr-ghost" hidden><span>👻 Geist:</span><button type="button" data-g="off">Aus</button><button type="button" data-g="mine">Meine Bestzeit</button><button type="button" data-g="crew">Crew-Rekord</button></div>
       <div class="kr-lb" hidden></div><p class="kr-wr" hidden></p>
+      <details class="kr-set kr-garage"><summary>🛠 Garage</summary><div class="kr-tracks kr-shop"></div><div class="kr-vehs kr-cos"></div></details>
+      <details class="kr-set kr-achs"><summary>🏅 Erfolge</summary><div class="kr-ach"></div></details>
       <details class="kr-set"><summary>⚙️ Einstellungen & Steuerung</summary><div class="kr-pml"><button type="button" class="btn ghost kr-ctl">🎮 Steuerung</button><button type="button" class="btn ghost kr-steer">🎚 Lenkstärke</button><button type="button" class="btn ghost kr-cam">🎥 Kamera</button><button type="button" class="btn ghost kr-q">✨ Grafik</button><button type="button" class="btn ghost kr-tod">🌗 Tageszeit</button><button type="button" class="btn ghost kr-ann">🎙 Ansager</button><button type="button" class="btn ghost kr-snd">🔊 Ton</button></div>
       <p class="kr-help">Halten: links/rechts halten = lenken, <b>Doppeltipp + halten</b> = Drift sofort, <b>beide Seiten</b> = Bremse. Analog: Daumen-Position lenkt stufenlos, <b>DRIFT</b>-Knopf, zweiter Finger = Bremse.</p></details>
       <p class="kr-best"></p><button type="button" class="btn kr-go">Los geht’s!</button><button type="button" class="kr-link kr-quit">Zurück zur Seite</button></div></div>
-    <div class="kr-res" hidden><div class="kr-card"><h3 class="kr-res-t"></h3><p class="kr-res-s"></p><ol></ol><p class="kr-crew" hidden></p><p class="kr-unlock" hidden></p><div class="kr-stand" hidden></div><div class="kr-btns"><button type="button" class="btn kr-again">Nochmal</button><button type="button" class="btn ghost kr-back">Fahrer wechseln</button></div><button type="button" class="kr-link kr-quit">Spiel beenden</button></div></div>
+    <div class="kr-res" hidden><div class="kr-card"><h3 class="kr-res-t"></h3><p class="kr-res-s"></p><ol></ol><p class="kr-coins"></p><p class="kr-crew" hidden></p><p class="kr-unlock" hidden></p><div class="kr-stand" hidden></div><div class="kr-btns"><button type="button" class="btn kr-again">Nochmal</button><button type="button" class="btn ghost kr-back">Fahrer wechseln</button></div><button type="button" class="kr-link kr-quit">Spiel beenden</button></div></div>
     <div class="kr-pm" hidden><div class="kr-card"><h3>⏸ Pause</h3><div class="kr-pml">
       <button type="button" class="btn kr-resume">▶ Weiter</button>
       <button type="button" class="btn ghost kr-restart">↺ Rennen neu starten</button>
