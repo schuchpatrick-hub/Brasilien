@@ -10174,6 +10174,14 @@
   },
   "news": [
     {
+      "id": "n251007b",
+      "d": "2026-10-07",
+      "tab": "uebersicht",
+      "to": "uebersicht",
+      "e": "💬",
+      "t": "Insider-Begriffe sind jetzt gepunktet unterstrichen: antippen zeigt, was gemeint ist"
+    },
+    {
       "id": "n251007a",
       "d": "2026-10-07",
       "tab": "tage-tab",
@@ -10372,6 +10380,40 @@
       "to": "series",
       "e": "🐊",
       "t": "Folge 4 „Ab in den Dschungel“ für alle freigegeben"
+    }
+  ],
+  "glossary": [
+    {
+      "t": "Gringos plus 1 Cevapi",
+      "x": "Unsere Vierer-Gruppe ab 27.12.: Jonas, Patrick, Simon und Marco. „Gringos“ = Ausländer auf Brasilianisch, „Cevapi“ = Marco."
+    },
+    {
+      "t": "Daijo & Greisel",
+      "x": "Das Ehepaar der Crew, auf Flitterwochen. Stößt am 06.01. in Rio dazu."
+    },
+    {
+      "t": "Rote Laterne",
+      "x": "Bekommt, wer bei den Spielen am öftesten Letzter wird."
+    },
+    {
+      "t": "TOTS",
+      "x": "„Team of the Season“: die beste Spielerkarte, blau hervorgehoben."
+    },
+    {
+      "t": "Splitwise",
+      "x": "App, in der wir gemeinsame Ausgaben eintragen und am Ende ausgleichen."
+    },
+    {
+      "t": "Footvolley",
+      "x": "Fußball-Volleyball am Strand: über ein Netz, ohne Hände. Brasilianischer Volkssport."
+    },
+    {
+      "t": "Caipi",
+      "x": "Caipirinha: Cachaça (Zuckerrohrschnaps), Limette, Zucker, Eis."
+    },
+    {
+      "t": "Real",
+      "x": "Brasilianische Währung (R$). Umrechnen geht im Real-Rechner."
     }
   ]
 }
