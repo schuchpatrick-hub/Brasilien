@@ -68,7 +68,7 @@ Object.assign(TRIP.series, {"ep1": {"title": "Ab in den Süden", "n": 1, "lines"
     // fertig gebaute Szenen für spätere Folgen (trip.json → series.parked)
     ny: {amb: 'crowd', mus: 'show', cap: '🎆 Copacabana · Silvester 2026/27'}, buf: {mus: 'stay', cap: '🦜 Foz do Iguaçu · 06.01.'}, jg: {mus: 'stay', cap: '🌴 Amazonas · Juma Lodge'}, fv: {mus: 'show', cap: '⚽ Footvolley gegen Einheimische'}};
   const ALLSC = Object.keys(META).map(id => ({id}));
-  // Folgen mit admin: true sind noch nicht freigegeben: erst sichtbar, wenn canWrite() Schreibrechte bestätigt (nicht in der Gast-Ansicht)
+  // Folgen mit admin: true sind noch nicht freigegeben: erst sichtbar, wenn canWrite() Schreibrechte bestätigt
   const EPALL = Object.keys(TRIP.series).filter(k => /^ep\d+$/.test(k)).sort((x, y) => +x.slice(2) - +y.slice(2)), EPS = EPALL.filter(k => !TRIP.series[k].admin);
   // Spielerporträts (series.p<name> mit portrait: Crew-id): keine Kachel, Start über den Knopf an Steckbrief/Spielerkarte
   const PORT = Object.keys(TRIP.series).filter(k => TRIP.series[k] && TRIP.series[k].portrait); let PORTOK = PORT.filter(k => !TRIP.series[k].admin);

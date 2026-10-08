@@ -181,17 +181,15 @@ function undoToast(text, undo) {
   undoTimer = setTimeout(() => { el.hidden = true; }, 9000);
 }
 
-/* Gast-Ansicht: der Admin sieht die Seite wie alle anderen (nur auf diesem Gerät, ändert keine Rechte) */
-const GUEST = store.get('guest') === '1';
+if (store.get('guest')) store.set('guest', '');   // Gast-Ansicht gibt es nicht mehr (alle sind Bearbeiter): alten Schalter auf dem Gerät löschen
 let canWriteP = null;
 function canWrite() {
   if (!canWriteP) canWriteP = (async () => {
     const user = await window.claude.use('user');
     const w = user ? await user.can('data.write') : null;
-    if (w !== false && !PRINT) showGuestSwitch();
-    if (w !== false && !GUEST && !PRINT) showFab();
-    if (w !== false && !GUEST) { netWriter = true; netPaint(); }
-    return GUEST ? false : w;
+    if (w !== false && !PRINT) showFab();
+    if (w !== false) { netWriter = true; netPaint(); }
+    return w;
   })();
   return canWriteP;
 }
@@ -215,18 +213,6 @@ function showFab() {
     const b = e.target.closest('[data-i]'); if (b) { toggle(false); items[+b.dataset.i][2](); }
   });
   document.addEventListener('click', e => { if (!menu.hidden && !wrap.contains(e.target)) toggle(false); });
-}
-function setGuest(on) { store.set('guest', on ? '1' : '0'); location.reload(); }
-function showGuestSwitch() {
-  const box = document.getElementById('guest-box'); if (box) box.hidden = false;
-  const b = document.getElementById('guest-btn');
-  if (b) { b.textContent = GUEST ? '🔑 Zurück zur Admin-Ansicht' : '👁 Als Gast ansehen'; b.onclick = () => setGuest(!GUEST); }
-  if (GUEST && !document.getElementById('guest-bar')) {
-    const bar = document.createElement('div'); bar.id = 'guest-bar'; bar.className = 'guest-bar';
-    bar.innerHTML = '👁 Gast-Ansicht <button type="button">Beenden</button>';
-    bar.querySelector('button').onclick = () => setGuest(false);
-    document.body.appendChild(bar);
-  }
 }
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 
@@ -3519,7 +3505,7 @@ function wavB64(buf) {
     // fertig gebaute Szenen für spätere Folgen (trip.json → series.parked)
     ny: {amb: 'crowd', mus: 'show', cap: '🎆 Copacabana · Silvester 2026/27'}, buf: {mus: 'stay', cap: '🦜 Foz do Iguaçu · 06.01.'}, jg: {mus: 'stay', cap: '🌴 Amazonas · Juma Lodge'}, fv: {mus: 'show', cap: '⚽ Footvolley gegen Einheimische'}};
   const ALLSC = Object.keys(META).map(id => ({id}));
-  // Folgen mit admin: true sind noch nicht freigegeben: erst sichtbar, wenn canWrite() Schreibrechte bestätigt (nicht in der Gast-Ansicht)
+  // Folgen mit admin: true sind noch nicht freigegeben: erst sichtbar, wenn canWrite() Schreibrechte bestätigt
   const EPALL = Object.keys(TRIP.series).filter(k => /^ep\d+$/.test(k)).sort((x, y) => +x.slice(2) - +y.slice(2)), EPS = EPALL.filter(k => !TRIP.series[k].admin);
   // Spielerporträts (series.p<name> mit portrait: Crew-id): keine Kachel, Start über den Knopf an Steckbrief/Spielerkarte
   const PORT = Object.keys(TRIP.series).filter(k => TRIP.series[k] && TRIP.series[k].portrait); let PORTOK = PORT.filter(k => !TRIP.series[k].admin);
