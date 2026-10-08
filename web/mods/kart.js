@@ -519,7 +519,7 @@
   // Konto ↔ Person: Ein Konto gehört fest zu einer Person (gilt auf jedem Handy, auf dem man angemeldet ist)
   function accSync() { if (!UID || !DB) return; const mapped = USERS[UID];
     if (mapped && mapped !== ME && !ME) setMe(mapped);
-    else if (ME && mapped !== ME && WR) { USERS[UID] = ME; DB.doc('kartusers/' + UID).set({who: ME, ts: Date.now()}).catch(() => {}); }
+    else if (ME && !mapped && WR) { USERS[UID] = ME; DB.doc('kartusers/' + UID).set({who: ME, ts: Date.now()}).catch(() => {}); }   // Konto → Person wird nur einmal festgelegt (Zeitkapsel: jeder tippt nur für sich)
     const ids = Object.values(LB).map(v => v.uid).filter(x => x && !(x in PNAME)); if (ACC && ACC.profiles && ids.length) { ids.forEach(x => { PNAME[x] = ''; });
       ACC.profiles(ids).then(ps => { ids.forEach(x => { const n = ps && ps[x] && ps[x].name; PNAME[x] = n ? n.split(' ')[0] : ''; }); board(); if (!box.hidden && !menu.hidden) renderMenu(); }).catch(() => {}); } }
   // „Wer hat es gefahren?“: Person, gefahrene Figur, Konto, Gerät, Zeitpunkt
@@ -571,7 +571,7 @@
   store.onSet = k => { if (progMute || !PROGK.test(k)) return; progMute = true; store.set('kartProgLT', String(Date.now())); progMute = false;
     clearTimeout(progT); progT = setTimeout(() => progSync(true), 2500); };
   const progLine = () => !ME ? '☁️ Wähle „Wer spielt?“, dann gelten Münzen, Garage und Erfolge auf jedem Handy.' : progWR ? '☁️ Fortschritt von ' + esc(NAME(ME)) + ' wird am Konto gespeichert und gilt auf jedem Handy.' : '📱 Fortschritt nur auf diesem Handy (Speichern am Konto nur für Eingeladene).';
-  function setMe(id) { ME = id; store.set('me', id); setTimeout(accSync, 0); setTimeout(() => progSync(true), 0);
+  function setMe(id) { ME = id; store.set('me', id); window.dispatchEvent(new Event('br26-me')); setTimeout(accSync, 0); setTimeout(() => progSync(true), 0);
     try { const g = Object.keys(GROUP_IDS).find(k => GROUP_IDS[k].includes(id)); if (g && typeof setGroup === 'function') setGroup(g); meMark(); renderMe(); } catch (e) {}
     if (PEND) { saveLB(PEND); PEND = null; const w = res.querySelector('.kr-who'); if (w) { w.innerHTML = '<p>✅ Gespeichert als <b>' + esc(NAME(id)) + '</b>. Ab jetzt merkt sich dieses Handy, wer spielt.</p>'; } }
     if (!box.hidden && !menu.hidden) renderMenu(); }

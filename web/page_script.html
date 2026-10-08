@@ -57,7 +57,7 @@ document.addEventListener('click', e => {
     const g = Object.keys(GROUP_IDS).find(k => GROUP_IDS[k].includes(ME)); if (g && typeof setGroup === 'function') setGroup(g);
   } else if ('meSkip' in b.dataset) store.set('meSkip', '1');
   else { ME = null; store.set('me', ''); store.set('meSkip', '0'); }
-  meMark(); renderMe();
+  meMark(); renderMe(); window.dispatchEvent(new Event('br26-me'));
 });
 
 /* Zahlen per Knopf statt Handy-Tastatur (Zahlenfelder ließen die Seite im claude.ai-Viewer hängen).
@@ -1349,7 +1349,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   const Q = K.questions, CREW = TRIP.crew;
   const byId = Object.fromEntries(CREW.map(c => [c.id, c]));
   const reveal = Date.parse(K.revealAt);
-  let dbK = null, writable = false, tips = {}, sol = {}, who = null, draft = {}, msg = '', justSealed = null, step = 0, formOpen = null;
+  let dbK = null, writable = false, tips = {}, sol = {}, who = null, draft = {}, msg = '', justSealed = null, step = 0, formOpen = null, uid = null, accWho = null;
+  // Jeder tippt nur für sich selbst: Person = dem claude.ai-Konto zugeordnete Person (db kartusers, wie bei der Kart-Bestenliste), sonst „Ich bin …“
+  const self = () => accWho || ME || null, foreign = id => !!(tips[id] && tips[id].uid && uid && tips[id].uid !== uid);
   const has = v => v !== undefined && v !== '' && v !== null;
   const av = (p, cls) => '<span class="' + (cls || 'av') + '">' + (p.photo ? '<img src="' + esc(p.photo) + '" alt="" loading="lazy" decoding="async">' : esc(p.name[0])) + '</span>';
   const isOpen = () => Date.now() >= reveal;
@@ -1393,11 +1395,13 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       (i < N ? '<button type="button" class="btn" data-ka-step="' + (i + 1) + '">' + (i === N - 1 ? 'Zur Übersicht ▶' : has(draft[Q[i].id]) ? 'Weiter ▶' : 'Überspringen ▶') + '</button>' : '') + '</div>';
     const sum = '<ol class="ka-sum">' + Q.map((q, j) => '<li><button type="button" data-ka-step="' + j + '"><span>' + q.emoji + ' ' + esc(q.q) + '</span><b class="' + (has(draft[q.id]) ? '' : 'miss') + '">' + esc(has(draft[q.id]) ? fmtAns(q, draft[q.id]) : 'offen') + '</b></button></li>').join('') + '</ol>';
     h += '<details class="ka-form' + (writable ? '' : ' locked') + '"' + (formOpen ? ' open' : '') + '><summary>✍️ Tipps eintragen</summary>' +
-      (writable ? '' : '<p class="ka-lock">Eintragen nur für Eingeladene (Patrick lädt ein). Sonst schick Patrick deine Tipps per WhatsApp, die Fragen kannst du unten kopieren.</p>') +
-      '<div><div class="eyebrow" style="margin-bottom:8px">1. Wer tippt?</div><div class="ka-pick" role="radiogroup">' + CREW.map(p => '<button type="button" role="radio" data-p="' + p.id + '" aria-checked="' + (who === p.id) + '"' + (writable ? '' : ' disabled') + '>' + av(p) + esc(p.name) + (tips[p.id] ? ' 🔒' : '') + '</button>').join('') + '</div></div>' +
-      (who && tips[who] ? '<p class="ka-lock">⚠️ ' + esc(byId[who].name) + ' hat schon am ' + new Date(tips[who].ts).toLocaleDateString('de-DE') + ' getippt. Neu versiegeln überschreibt die alten Tipps (die bleiben geheim).</p>' : '') +
+      (writable ? '' : '<p class="ka-lock">Eintragen nur für Eingeladene (Patrick lädt ein, als Bearbeiter).</p>') +
+      (self() ? '<div><div class="eyebrow" style="margin-bottom:8px">1. Du tippst als</div><div class="ka-pick ka-self">' + (p => '<button type="button" role="radio" data-p="' + p.id + '" aria-checked="true"' + (writable ? '' : ' disabled') + '>' + av(p) + esc(p.name) + (tips[p.id] ? ' 🔒' : '') + '</button>')(byId[self()]) + '</div>' +
+          '<p class="ka-note">Jeder tippt nur für sich selbst.' + (accWho ? ' Dein Konto gehört zu ' + esc(byId[accWho].name) + '.' : ' Nicht du? Oben bei „Ich bin …“ ändern.') + '</p></div>'
+        : '<div><div class="eyebrow" style="margin-bottom:8px">1. Wer bist du?</div><p class="ka-note">Jeder tippt nur für sich selbst. Deine Wahl gilt danach fest für dein Konto.</p><div class="ka-pick" role="radiogroup">' + CREW.map(p => '<button type="button" role="radio" data-p="' + p.id + '" aria-checked="false"' + (writable ? '' : ' disabled') + '>' + av(p) + esc(p.name) + (tips[p.id] ? ' 🔒' : '') + '</button>').join('') + '</div></div>') +
+      (who && foreign(who) ? '<p class="ka-lock">⛔ Der Tipp von ' + esc(byId[who].name) + ' wurde mit einem anderen Konto versiegelt und kann hier nicht überschrieben werden.</p>' : who && tips[who] ? '<p class="ka-lock">⚠️ Du hast schon am ' + new Date(tips[who].ts).toLocaleDateString('de-DE') + ' getippt. Neu versiegeln überschreibt deine alten Tipps.</p>' : '') +
       '<div class="eyebrow">2. Die Prognosen</div>' + prog + '<div class="ka-qs">' + (i < N ? input(Q[i]) : sum) + '</div>' + nav +
-      (i === N ? '<div class="ka-go"><button type="button" class="btn" id="ka-save"' + (writable && who ? '' : ' disabled') + '>🔒 Versiegeln</button><span class="ka-msg" id="ka-msg">' + esc(msg) + '</span></div>' : '') + '</details>' +
+      (i === N ? '<div class="ka-go"><button type="button" class="btn" id="ka-save"' + (writable && who && who === self() && !foreign(who) ? '' : ' disabled') + '>🔒 Versiegeln</button><span class="ka-msg" id="ka-msg">' + esc(msg) + '</span></div>' : '') + '</details>' +
       '<div class="ka-go"><button type="button" class="btn ghost" id="ka-wa">📋 Fragen für WhatsApp kopieren</button><span class="ka-msg" id="ka-wa-msg"></span></div>';
     box.innerHTML = h;
     if (justSealed) { const el = document.getElementById('ka-done'); confettiIn(el); justSealed = null; }
@@ -1484,7 +1488,9 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   }
   function render() { (isOpen() ? renderOpen : renderSealed)(); }
   box.addEventListener('click', async e => {
-    const p = e.target.closest('[data-p]'); if (p && writable) { who = p.dataset.p; draft = {}; msg = ''; step = 0; render(); return; }
+    const p = e.target.closest('[data-p]'); if (p && writable) { const id = p.dataset.p;
+      if (!self()) { if (!confirm('Du bist ' + byId[id].name + '? Das gilt dann fest für dein Konto.')) return; ME = id; store.set('me', id); try { meMark(); renderMe(); } catch (x) {} if (uid && dbK) { accWho = id; dbK.doc('kartusers/' + uid).set({who: id, ts: Date.now()}).catch(() => {}); } window.dispatchEvent(new Event('br26-me')); }
+      if (id !== self() && self()) return; who = self(); draft = {}; msg = ''; step = 0; render(); return; }
     const sb = e.target.closest('[data-ka-step]'); if (sb && !sb.disabled) { step = +sb.dataset.kaStep; render(); const f = box.querySelector('.ka-prog'); if (f && f.getBoundingClientRect().top < 60) f.scrollIntoView({block: 'start'}); return; }
     const st = e.target.closest('.ka-step button'); if (st && writable) { const sp = st.parentElement, qid = sp.dataset.q;
       draft[qid] = Math.max(0, (typeof draft[qid] === 'number' ? draft[qid] : 0) + Number(st.dataset.d)); sp.querySelector('output').textContent = draft[qid]; return; }
@@ -1495,12 +1501,12 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       catch (err) { out.textContent = ''; const pre = document.createElement('pre'); pre.className = 'wa'; pre.textContent = txt; e.target.parentElement.after(pre); }
       return;
     }
-    if (e.target.id === 'ka-save' && writable && who && dbK) {
+    if (e.target.id === 'ka-save' && writable && who && dbK && who === self() && !foreign(who)) {
       const a = {}; Object.entries(draft).forEach(([k, v]) => { if (v !== '' && v !== undefined && v !== null) a[k] = v; });
       const cnt = Object.keys(a).length;
       if (!cnt) { msg = 'Noch keine Antwort ausgefüllt.'; document.getElementById('ka-msg').textContent = msg; return; }
       e.target.disabled = true; document.getElementById('ka-msg').textContent = 'Versiegle …';
-      try { await dbK.doc('kapsel/' + who).set({a, ts: Date.now(), by: ME || null, dev: /iPhone|iPad/.test(navigator.userAgent) ? 'iPhone' : /Android/.test(navigator.userAgent) ? 'Android' : 'Computer'}); justSealed = who; who = null; draft = {}; msg = ''; step = 0; formOpen = false; }
+      try { await dbK.doc('kapsel/' + who).set({a, ts: Date.now(), by: ME || null, uid: uid || null, dev: /iPhone|iPad/.test(navigator.userAgent) ? 'iPhone' : /Android/.test(navigator.userAgent) ? 'Android' : 'Computer'}); justSealed = who; who = null; draft = {}; msg = ''; step = 0; formOpen = false; }
       catch (err) { const c = String((err && (err.code || err.message)) || ''); msg = /not_granted|invalid_argument|permission|denied/i.test(c) ? '⛔ Kein Schreibrecht (' + c.slice(0, 30) + '). Oben rechts in claude.ai muss „Bearbeiter“ stehen, sonst Patrick fragen.' : 'Konnte nicht speichern (' + c.slice(0, 30) + '), bitte nochmal.'; e.target.disabled = false; }
       render();
     }
@@ -1524,8 +1530,11 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   (async () => {
     if (!window.claude || !window.claude.use) return;
     dbK = await getDb(); if (!dbK) return;
-    const w = await canWrite(); writable = w !== false; formOpen = null; if (writable && ME && !who) who = ME;   // eigene Person („Ich bin …“) vorauswählen
+    const w = await canWrite(); writable = w !== false; formOpen = null; if (writable && self() && !who) who = self();
     render();
+    try { const u = await window.claude.use('user'); if (u && u.id) uid = await u.id(); } catch (x) {}
+    dbK.collection('kartusers').onSnapshot(snap => { let m = null; snap.docs.forEach(d => { if (d.exists && d.id === uid) m = (d.data() || {}).who || null; }); if (m && !byId[m]) m = null; if (m !== accWho) { accWho = m; if (writable && self()) who = self(); if (!box.contains(document.activeElement) || isOpen()) render(); } }, () => {});
+    window.addEventListener('br26-me', () => { if (writable && self() && who !== self()) { who = self(); draft = {}; step = 0; } render(); });
     dbK.collection('kapsel').onSnapshot(snap => {
       tips = {}; snap.docs.forEach(d => { if (d.exists && byId[d.id]) { const x = d.data(); if (x && x.a) tips[d.id] = x; } });
       meSet('kapsel', Object.fromEntries(CREW.map(p => [p.id, !!tips[p.id]])));
@@ -7724,7 +7733,7 @@ setGroup(G);
   // Konto ↔ Person: Ein Konto gehört fest zu einer Person (gilt auf jedem Handy, auf dem man angemeldet ist)
   function accSync() { if (!UID || !DB) return; const mapped = USERS[UID];
     if (mapped && mapped !== ME && !ME) setMe(mapped);
-    else if (ME && mapped !== ME && WR) { USERS[UID] = ME; DB.doc('kartusers/' + UID).set({who: ME, ts: Date.now()}).catch(() => {}); }
+    else if (ME && !mapped && WR) { USERS[UID] = ME; DB.doc('kartusers/' + UID).set({who: ME, ts: Date.now()}).catch(() => {}); }   // Konto → Person wird nur einmal festgelegt (Zeitkapsel: jeder tippt nur für sich)
     const ids = Object.values(LB).map(v => v.uid).filter(x => x && !(x in PNAME)); if (ACC && ACC.profiles && ids.length) { ids.forEach(x => { PNAME[x] = ''; });
       ACC.profiles(ids).then(ps => { ids.forEach(x => { const n = ps && ps[x] && ps[x].name; PNAME[x] = n ? n.split(' ')[0] : ''; }); board(); if (!box.hidden && !menu.hidden) renderMenu(); }).catch(() => {}); } }
   // „Wer hat es gefahren?“: Person, gefahrene Figur, Konto, Gerät, Zeitpunkt
@@ -7776,7 +7785,7 @@ setGroup(G);
   store.onSet = k => { if (progMute || !PROGK.test(k)) return; progMute = true; store.set('kartProgLT', String(Date.now())); progMute = false;
     clearTimeout(progT); progT = setTimeout(() => progSync(true), 2500); };
   const progLine = () => !ME ? '☁️ Wähle „Wer spielt?“, dann gelten Münzen, Garage und Erfolge auf jedem Handy.' : progWR ? '☁️ Fortschritt von ' + esc(NAME(ME)) + ' wird am Konto gespeichert und gilt auf jedem Handy.' : '📱 Fortschritt nur auf diesem Handy (Speichern am Konto nur für Eingeladene).';
-  function setMe(id) { ME = id; store.set('me', id); setTimeout(accSync, 0); setTimeout(() => progSync(true), 0);
+  function setMe(id) { ME = id; store.set('me', id); window.dispatchEvent(new Event('br26-me')); setTimeout(accSync, 0); setTimeout(() => progSync(true), 0);
     try { const g = Object.keys(GROUP_IDS).find(k => GROUP_IDS[k].includes(id)); if (g && typeof setGroup === 'function') setGroup(g); meMark(); renderMe(); } catch (e) {}
     if (PEND) { saveLB(PEND); PEND = null; const w = res.querySelector('.kr-who'); if (w) { w.innerHTML = '<p>✅ Gespeichert als <b>' + esc(NAME(id)) + '</b>. Ab jetzt merkt sich dieses Handy, wer spielt.</p>'; } }
     if (!box.hidden && !menu.hidden) renderMenu(); }
