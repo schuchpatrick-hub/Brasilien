@@ -1500,8 +1500,8 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       const cnt = Object.keys(a).length;
       if (!cnt) { msg = 'Noch keine Antwort ausgefüllt.'; document.getElementById('ka-msg').textContent = msg; return; }
       e.target.disabled = true; document.getElementById('ka-msg').textContent = 'Versiegle …';
-      try { await dbK.doc('kapsel/' + who).set({a, ts: Date.now()}); justSealed = who; who = null; draft = {}; msg = ''; step = 0; formOpen = false; }
-      catch (err) { msg = err && err.code === 'not_granted' ? 'Keine Schreibrechte.' : 'Konnte nicht speichern, bitte nochmal.'; e.target.disabled = false; }
+      try { await dbK.doc('kapsel/' + who).set({a, ts: Date.now(), by: ME || null, dev: /iPhone|iPad/.test(navigator.userAgent) ? 'iPhone' : /Android/.test(navigator.userAgent) ? 'Android' : 'Computer'}); justSealed = who; who = null; draft = {}; msg = ''; step = 0; formOpen = false; }
+      catch (err) { const c = String((err && (err.code || err.message)) || ''); msg = /not_granted|invalid_argument|permission|denied/i.test(c) ? '⛔ Kein Schreibrecht (' + c.slice(0, 30) + '). Oben rechts in claude.ai muss „Bearbeiter“ stehen, sonst Patrick fragen.' : 'Konnte nicht speichern (' + c.slice(0, 30) + '), bitte nochmal.'; e.target.disabled = false; }
       render();
     }
   });
@@ -1524,7 +1524,8 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   (async () => {
     if (!window.claude || !window.claude.use) return;
     dbK = await getDb(); if (!dbK) return;
-    const w = await canWrite(); writable = w !== false; formOpen = null; render();
+    const w = await canWrite(); writable = w !== false; formOpen = null; if (writable && ME && !who) who = ME;   // eigene Person („Ich bin …“) vorauswählen
+    render();
     dbK.collection('kapsel').onSnapshot(snap => {
       tips = {}; snap.docs.forEach(d => { if (d.exists && byId[d.id]) { const x = d.data(); if (x && x.a) tips[d.id] = x; } });
       meSet('kapsel', Object.fromEntries(CREW.map(p => [p.id, !!tips[p.id]])));
