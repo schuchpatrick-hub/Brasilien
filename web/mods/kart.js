@@ -1066,7 +1066,11 @@
     const LP = LIVE.race && LIVE.race.players ? LIVE.race.players.filter(pl => pl !== LIVE.me).map(pl => ({peer: pl, pr: ((LIVE.peers.find(p0 => p0.peer === pl) || {}).presence) || {}})) : null;
     const LAI = LP ? (LIVE.race.ai || []) : [], HOST = LP && LIVE.race.host === LIVE.me;
     const order = LP ? [me].concat(LP.map(x => x.pr.drv || x.pr.who || 'jonas'), LAI) : [me].concat(CREW.map(c => c.id).filter(id => id !== baseOf(me)).sort(() => Math.random() - .5));
-    if (!LP && !CUP && me !== 'manuel' && XBY.manuel && Math.random() < .3) order[order.length - 1] = 'manuel';   // Gastfahrer fährt ab und zu als Gegner mit
+    // Einzelrennen (Wunsch Patrick 08.10.): Gegner = bunter Zufallsmix aus allen Figuren (Crew, Ausnahmezustand, Serie, Gäste), je Person höchstens eine Fassung, nicht die eigene Person
+    if (!LP && !CUP && MODE === 'single' && !TUTON) { const used = new Set([baseOf(me)]), pool = DRVS.filter(id => id !== me).sort(() => Math.random() - .5), mix = [];
+      const rv0 = loadJ('kartRival')[me]; if (rv0 && DRVS.includes(rv0) && !used.has(baseOf(rv0))) { mix.push(rv0); used.add(baseOf(rv0)); }   // gespeicherter Rivale fährt immer mit
+      for (const id of pool) { if (mix.length >= 5) break; if (used.has(baseOf(id))) continue; used.add(baseOf(id)); mix.push(id); }
+      order.splice(1, order.length - 1, ...mix.sort(() => Math.random() - .5)); }
     // Startfeld: versetzte Zweierreihen mit Abstand; im Einzelrennen startet man aus Reihe 2 (live bleibt die Reihenfolge, damit alle Handys gleich rechnen)
     const karts = order.map((id, k) => { const sl = LP ? k : (k === 0 ? 2 : k <= 2 ? k - 1 : k), row = Math.floor(sl / 2), lat = (sl % 2 ? 1 : -1) * Math.min(42, TW * .26), i = N - 10 - row * 14 - (sl % 2) * 5, [x, y] = at(i, lat);
       const a = Math.atan2(P[(i + 1) % N][1] - P[i][1], P[(i + 1) % N][0] - P[i][0]);
@@ -1082,7 +1086,7 @@
     const puddles = (T.puddles || []).map(([f, l, r]) => { const [x, y] = at(f * N, l); return {x, y, r, r0: r}; });
     const gates = (T.gates || []).map(g => ({i: wrap(g.f * N), period: g.period, closed: g.closed, kind: g.kind, ph: rnd(0, g.period)}));
     const coinsT = []; [.13, .38, .63, .88].forEach((f, n) => { const l0 = [-40, 30, -20, 40][n]; for (let j = 0; j < 5; j++) { const i = wrap(f * N + j * 5), [x, y] = at(i, l0 + Math.sin(j) * 8); coinsT.push({x, y, off: 0}); } });
-    let rival = loadJ('kartRival')[me]; const rp0 = pick(order.slice(1)); if (!rival || rival === me || !CREW.some(c => c.id === rival)) rival = rp0;
+    let rival = loadJ('kartRival')[me]; const rp0 = pick(order.slice(1)); if (!rival || rival === me || !order.includes(rival)) rival = rp0;
     karts.forEach(k => { if (k.id === rival) k.skill = Math.max(k.skill, DIFFS[DIFF].s[1] + .005); }); HEADC = {};
     if (LP) LP.forEach(x => { const pr = x.pr, id = pr.drv || pr.who || 'jonas', pt = pr.paint || {}; VEH['r:' + x.peer] = vehSprite(pt.c || (LOOK[id] || {}).shirt || '#00a651', T.veh === 'boat' || T.veh === 'cart' ? T.veh : (pr.veh || 'kart'), Object.assign({}, pt, pr.parts || {}), id); });
     const dolphins = (T.dolphins || []).map(f => { const l = rnd(-40, 40), [x, y] = at(f * N, l); return {x, y, i: wrap(f * N), t: rnd(0, 3), cd: 0}; });
