@@ -1569,8 +1569,44 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
   .kart .kr-trk{flex-wrap:wrap;overflow:visible;margin:0;padding:3px 0 6px}.kart .kr-trk button{flex:0 0 calc(33.33% - 6px)}}
 @media (orientation:landscape) and (max-height:540px){.kart .kr-main{max-width:min(96vw,980px)}.kr-cols{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:start}
   .kart .kr-logo{font-size:1.1rem}.kr-top{margin-bottom:6px}.kart .kr-lbl{margin:8px 0 5px!important}.kart .kr-trk canvas{height:62px}.kart .kr-trk button{flex-basis:118px}
-  .kart .kr-pick canvas{width:36px;height:36px}.kr-dc canvas{width:52px;height:52px}.kr-dc{padding:7px 10px}.kart .kr-mode button{padding:6px 2px}
+  .kart .kr-pick:not(.kr-roster) canvas{width:36px;height:36px}.kr-dc canvas{width:52px;height:52px}.kr-dc{padding:7px 10px}.kart .kr-mode button{padding:6px 2px}
   .kart .kr-pm .kr-card{max-width:620px}.kart .kr-pm{place-items:start center;overflow:auto}.kart .kr-pm .kr-pml{grid-template-columns:1fr 1fr 1fr}.kart .kr-pm .kr-pml .btn{padding:7px 4px;font-size:.72rem}.kart .kr-pm .kr-pml .kr-resume{padding:9px}.kart .kr-pm .kr-card h3{font-size:1.1rem;margin:0}.kart .kr-res .kr-card{max-width:620px}.kr-res li{padding:2px 8px}.kart .kr-res li canvas{width:26px;height:26px}
   .kr-foot{display:grid;grid-template-columns:1fr auto;align-items:center;gap:4px 12px;padding-top:8px}.kr-foot .kr-best{grid-column:1/-1}.kr-foot .kr-go{padding:10px}.kr-foot .kr-link{margin:0}}
 @media print{.kart-teaser,.kart{display:none!important}}
+/* Fahrerauswahl im Prügelspiel-Stil (Smash/Tekken) */
+.kart .kr-roster{grid-template-columns:repeat(6,minmax(0,1fr));gap:4px 3px;margin:8px 0 10px;padding:0 4px}
+.kart .kr-roster .kr-pgh{grid-column:1/-1;margin:6px 0 1px;font:italic 900 .62rem system-ui,sans-serif;letter-spacing:.12em;color:#0b1220;background:linear-gradient(90deg,#ffd23f,#ff8a00 60%,transparent);padding:2px 8px;transform:skewX(-12deg);width:max-content;max-width:100%}
+.kart .kr-roster .kr-tile{position:relative;aspect-ratio:1/1.12;padding:0;border:2px solid rgba(255,255,255,.16);border-radius:4px;overflow:hidden;transform:skewX(-7deg);background:radial-gradient(120% 90% at 50% 20%,var(--tc,#00a651),#0b1220 85%);box-shadow:0 3px 8px rgba(0,0,0,.45);transition:transform .12s,border-color .12s,box-shadow .12s;display:block}
+.kart .kr-roster .kr-tile canvas{position:absolute;width:150%;height:auto;left:-25%;top:-14%;border-radius:0;box-shadow:none;transform:skewX(7deg);transition:transform .15s}
+.kart .kr-roster .kr-tile span{position:absolute;left:-6px;right:-6px;bottom:0;padding:2px 6px 2px;background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.55));color:#fff;font:italic 900 .5rem/1.15 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.02em;transform:skewX(7deg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center}
+.kart .kr-roster .kr-tile em{position:absolute;right:2px;top:1px;font-style:normal;font-size:.8rem;transform:skewX(7deg);filter:drop-shadow(0 1px 2px #000)}
+.kart .kr-roster .kr-tile:hover{border-color:rgba(255,255,255,.6)}
+.kart .kr-roster .kr-tile:hover canvas{transform:skewX(7deg) scale(1.08)}
+.kart .kr-roster .kr-tile[aria-pressed="true"]{border-color:#ffd23f;box-shadow:0 0 0 2px #e63946,0 0 16px rgba(255,210,63,.7);transform:skewX(-7deg) scale(1.06);z-index:2}
+.kart .kr-roster .kr-tile[aria-pressed="true"]::after{content:"P1";position:absolute;left:1px;top:1px;background:#e63946;color:#fff;font:italic 900 .55rem/1 system-ui,sans-serif;padding:2px 4px;border-radius:2px;transform:skewX(7deg);animation:krP1 .9s ease-in-out infinite}
+.kart .kr-roster .kr-tile.kr-rl{border-color:#fff;box-shadow:0 0 14px #fff}
+.kart .kr-roster .kr-rnd{background:repeating-linear-gradient(45deg,#2a2f45 0 8px,#1b1f30 8px 16px)}
+.kart .kr-roster .kr-rnd b{position:absolute;inset:0;display:grid;place-items:center;font:italic 900 1.9rem system-ui,sans-serif;color:#ffd23f;transform:skewX(7deg);text-shadow:0 0 12px rgba(255,210,63,.7)}
+.kart .kr-roster .kr-tile[aria-pressed="true"] canvas{transform:skewX(7deg) scale(1.08);box-shadow:none}
+@keyframes krP1{50%{background:#ff6b6b}}
+.kr-fs{position:relative;height:170px;border-radius:14px;overflow:hidden;isolation:isolate;background:#0b1220;border:1px solid rgba(255,255,255,.14);margin:2px 0 0}
+.kr-fs::before{content:"";position:absolute;inset:-40%;z-index:-2;background:repeating-linear-gradient(115deg,var(--dc) 0 14px,transparent 14px 34px);opacity:.35;animation:krStripe 6s linear infinite}
+.kr-fs::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(100deg,transparent 30%,rgba(11,18,32,.85) 58%),radial-gradient(70% 90% at 22% 60%,var(--dc),transparent 70%);opacity:.95}
+@keyframes krStripe{to{transform:translateX(68px)}}
+.kr-fsp{position:absolute;left:-14px;bottom:-34px;width:196px;height:196px;z-index:0}
+.kr-fsp canvas{width:100%!important;height:100%!important;border-radius:50%;box-shadow:none!important;filter:drop-shadow(0 8px 18px rgba(0,0,0,.55))}
+.kr-fst{position:absolute;right:12px;top:12px;bottom:12px;left:44%;display:flex;flex-direction:column;justify-content:center;align-items:flex-end;text-align:right;gap:4px}
+.kr-fsg{font:italic 800 .62rem system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#cfe3f5}
+.kr-fsg b{background:#e63946;color:#fff;padding:1px 5px;border-radius:2px;margin-right:4px;letter-spacing:0}
+.kr-fs .kr-dn{margin:0;display:block;font:italic 900 clamp(1.25rem,6.2vw,1.9rem)/.95 system-ui,sans-serif;text-transform:uppercase;color:#fff;letter-spacing:-.01em;text-shadow:3px 3px 0 #e63946,-1px -1px 0 #0b1220,0 0 18px rgba(0,0,0,.6);overflow-wrap:anywhere}
+.kr-fss{margin:2px 0 0;font:700 .72rem system-ui,sans-serif;color:#ffd23f;background:rgba(0,0,0,.45);padding:3px 8px;border-radius:999px}
+.kr-fs.in .kr-fsp{animation:krIn .45s cubic-bezier(.2,1.4,.4,1) both}
+.kr-fs.in .kr-fst{animation:krIn2 .4s .08s cubic-bezier(.2,1.3,.4,1) both}
+.kr-fs.in{animation:krFlash .5s ease-out}
+@keyframes krIn{from{transform:translateX(-120px) rotate(-12deg);opacity:0}}
+@keyframes krIn2{from{transform:translateX(140px) skewX(-20deg);opacity:0}}
+@keyframes krFlash{0%{box-shadow:inset 0 0 0 200px rgba(255,255,255,.55)}100%{box-shadow:inset 0 0 0 200px rgba(255,255,255,0)}}
+.kr-dc2{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:8px 10px;text-align:left}
+@media (prefers-reduced-motion:reduce){.kr-fs::before,.kr-fs.in,.kr-fs.in .kr-fsp,.kr-fs.in .kr-fst,.kart .kr-roster .kr-tile[aria-pressed="true"]::after{animation:none}}
+@media (min-width:820px){.kr-fs{height:200px}.kr-fsp{width:236px;height:236px;bottom:-40px}}
 </style>
