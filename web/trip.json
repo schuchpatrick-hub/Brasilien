@@ -10215,6 +10215,7 @@
     ]
   },
   "news": [
+    {"id": "n251008m", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🖼️", "t": "Gringo Kart: Fahrerauswahl mit gestochen scharfen Porträts direkt aus den Fotos, Werte-Balken in der Kämpfer-Vorschau und übersichtlicheren Kacheln"},
     {"id": "n251008l", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🥊", "t": "Gringo Kart: Fahrerauswahl jetzt wie bei Smash Bros. und Tekken, mit großer Kämpfer-Vorschau, P1-Rahmen, Namensansage und Zufalls-Kachel"},
     {"id": "n251008k", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "😍", "t": "Gringo Kart: 13 neue Fahrer (verliebter Simon, vollgefressener Patrick, Marco mit Durchfall … plus Taxifahrer, Nasenbär, Kontrolleur, Dona Rosa, Kaiman), Baukasten mit Reifen und Flügeln und Obststände, Liegen und Kokos-Pyramiden zum Umfahren"},
     {"id": "n251008j", "d": "2026-10-08", "tab": "vorfreude-tab", "to": "kapsel", "e": "🔒", "t": "Zeitkapsel: Jeder kann jetzt nur noch für sich selbst tippen (fest an dein Konto gebunden)"},
