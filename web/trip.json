@@ -890,7 +890,9 @@
       "name": "Jonas",
       "nick": "Joni · „Papi“",
       "team": "a",
-      "photo": "crew/jonas.jpg", "photo2": "crew/jonas-2.jpg", "swap2": true,
+      "photo": "crew/jonas.jpg",
+      "photo2": "crew/jonas-2.jpg",
+      "swap2": true,
       "role": "Reiseleiter. Diktator. Papi.",
       "facts": [
         [
@@ -978,7 +980,8 @@
       "name": "Simon",
       "nick": "Steini",
       "team": "a",
-      "photo": "crew/simon.jpg", "photo2": "crew/simon-2.jpg",
+      "photo": "crew/simon.jpg",
+      "photo2": "crew/simon-2.jpg",
       "photoLarge": "crew/simon-gross.jpg",
       "role": "Selbsternannter Latin Lover & Tollpatsch vom Dienst",
       "facts": [
@@ -1062,7 +1065,8 @@
       "name": "Patrick",
       "nick": "„Das Mammut“",
       "team": "a",
-      "photo": "crew/patrick.jpg", "photo2": "crew/patrick-2.jpg",
+      "photo": "crew/patrick.jpg",
+      "photo2": "crew/patrick-2.jpg",
       "photoLarge": "crew/patrick-gross.jpg",
       "role": "Buffet-Terminator & Senior der Reisegruppe",
       "facts": [
@@ -1150,7 +1154,8 @@
       "name": "Marco",
       "nick": "„Lubo“ · „Dani Olmo“ · „Cevape Jr.“",
       "team": "a",
-      "photo": "crew/marco.jpg", "photo2": "crew/marco-2.jpg",
+      "photo": "crew/marco.jpg",
+      "photo2": "crew/marco-2.jpg",
       "photoLarge": "crew/marco-gross.jpg",
       "role": "Feelgood-Manager, Obstkorb-Beauftragter & Sohnemann",
       "facts": [
@@ -1238,7 +1243,8 @@
       "name": "Greisel",
       "nick": "„Der Honeymooner“",
       "team": "b",
-      "photo": "crew/greisel.jpg", "photo2": "crew/greisel-2.jpg",
+      "photo": "crew/greisel.jpg",
+      "photo2": "crew/greisel-2.jpg",
       "photoLarge": "crew/greisel-gross.jpg",
       "role": "Scharfschütze mit Ladehemmung & Jugo auf Flitterwochen",
       "facts": [
@@ -1326,7 +1332,8 @@
       "name": "Daijo",
       "nick": "„Die Excel-Queen“ · „Bald-Tschechin“",
       "team": "b",
-      "photo": "crew/dajo.jpg", "photo2": "crew/dajo-2.jpg",
+      "photo": "crew/dajo.jpg",
+      "photo2": "crew/dajo-2.jpg",
       "photoLarge": "crew/dajo-gross.jpg",
       "role": "Einzige Erwachsene der Gruppe & Chef-Controllerin",
       "facts": [
@@ -10245,29 +10252,191 @@
     ]
   },
   "news": [
-    {"id": "n251008z", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "💃", "t": "Gringo Kart: neuer Gastfahrer Rasmus, Animator und Partychef von Schwaben Augsburg, im Hippie-Bulli mit Polonaise"},
-    {"id": "n251008y", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "😠", "t": "Gringo Kart: neuer Gastfahrer Erich, der grantige Betreuer von Schwaben Augsburg, im Bollerwagen mit Kabinenpredigt und Wut-Turbo"},
-    {"id": "n251008x", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🎲", "t": "Gringo Kart: im Einzelrennen jedes Mal ein bunter Zufallsmix aus allen Figuren als Gegner (Crew, Ausnahmezustand, Serien-Figuren, Manuel)"},
-    {"id": "n251008w", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "💩", "t": "Gringo Kart: Marco mit Durchfall, Greisel mit Weißbier und Daijo auf der Party haben jetzt eigene Fotos"},
-    {"id": "n251008v", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🏁", "t": "Gringo Kart: neue Gegner-Stufe „Profi“ und stärkeres „Normal“, Abkürzungen jetzt auch auf Guarujá, Cristo und Iguaçu, versetztes Startfeld (du startest aus Reihe 2), mehr Spezial-Items bei den Gegnern, Manuel fährt ab und zu als Gegner mit"},
-    {"id": "n251008u", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🤏", "t": "Gringo Kart: Gastfahrer Manuel „Abzwickter“ (winzig, wendig, federleicht, Spezial „Abgezwickt!“), Spiel gründlich geprüft: flüssiger auf Brücke, Lopes, Manaus und Réveillon, Bierpfütze fairer, Gegner fallen nicht mehr ständig von Abgründen"},
-    {"id": "n251008t", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🎵", "t": "Gringo Kart: Menü-Musik, bei jedem Öffnen zufällig Brasil-Phonk, Samba-Drum'n'Bass oder Eurodance (abschaltbar in den Einstellungen), dazu eigene Fotos für Patrick vollgefressen, Jonas verkatert und Simon verliebt"},
-    {"id": "n251008s", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "📖", "t": "Gringo Kart: neue Item-Anleitung im Menü mit kleinen Animationen zu jedem Item, allen Spezial-Items und Kombos"},
-    {"id": "n251008r", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🚁", "t": "Gringo Kart: Auf Brücke, Minhocão, Cristo und Iguaçu kann man jetzt runterfallen (Hubschrauber, Kran, Geier oder Arara holen dich zurück), neue Mehrfach-Items: 🍹×3 Caipi-Runde, 🩴×2 Flip-Flop-Paar, 🥥×3 Kokos-Trio, 🍌×3 Bananen, 🧨×3 Böller; auf der Seite stehen nur noch neue Rekorde"},
-    {"id": "n251008q", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🛣️", "t": "Gringo Kart: neue Strecke Minhocão als Acht mit Brücke, Tunnel auf 5 Strecken, 6 Strecken jetzt rechtsherum, Abkürzungen nur noch mit Turbo lohnend, Bande und Rasen kosten echt Zeit, mehr Tempo auf Geraden, Windschatten stärker, Start mit Technik und Stromausfall wirklich stockdunkel"},
-    {"id": "n251008p", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🏆", "t": "Gringo Kart: Zeiten aller Bearbeiter landen jetzt sicher in der Crew-Bestenliste, im Menü steht, wer gerade fährt (antippen zum Ändern)"},
-    {"id": "n251008o", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🤫", "t": "Gringo Kart: Fehler bei den Abkürzungen behoben, Platz, Runden, Minikarte und Live-Position stimmen jetzt auch auf dem Schleichweg"},
-    {"id": "n251008n", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🛋️", "t": "Gringo Kart: Jede Figur hat jetzt ihr eigenes Gefährt (Couch-Kart, Klo-Rakete, Liebesbett, Bierfass, Kaiman …) in eigener Größe, sitzt sichtbar am Lenkrad, mit Kopf in eigener Form und Wackelkopf. Kopfgröße in den Einstellungen: Mini, Normal oder Wackelkopf XXL"},
-    {"id": "n251008m", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🖼️", "t": "Gringo Kart: Fahrerauswahl mit gestochen scharfen Porträts direkt aus den Fotos, Werte-Balken in der Kämpfer-Vorschau und übersichtlicheren Kacheln"},
-    {"id": "n251008l", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🥊", "t": "Gringo Kart: Fahrerauswahl jetzt wie bei Smash Bros. und Tekken, mit großer Kämpfer-Vorschau, P1-Rahmen, Namensansage und Zufalls-Kachel"},
-    {"id": "n251008k", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "😍", "t": "Gringo Kart: 13 neue Fahrer (verliebter Simon, vollgefressener Patrick, Marco mit Durchfall … plus Taxifahrer, Nasenbär, Kontrolleur, Dona Rosa, Kaiman), Baukasten mit Reifen und Flügeln und Obststände, Liegen und Kokos-Pyramiden zum Umfahren"},
-    {"id": "n251008j", "d": "2026-10-08", "tab": "vorfreude-tab", "to": "kapsel", "e": "🔒", "t": "Zeitkapsel: Jeder kann jetzt nur noch für sich selbst tippen (fest an dein Konto gebunden)"},
-    {"id": "n251008i", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🎯", "t": "Gringo Kart Live: Mitspieler stehen jetzt auf allen Handys fast exakt an derselben Stelle (Uhrabgleich beim Start und Vorhersage statt Verzögerung)"},
-    {"id": "n251008h", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🚔", "t": "Gringo Kart: Zufallsereignisse (Polizeikontrolle, Karnevalsumzug, Kokosnussregen, Stromausfall), zwei Item-Plätze mit Kombos, Geheimwege, Siegerehrung auf dem Podest und eine eigene Hymne für jeden"},
-    {"id": "n251008g", "d": "2026-10-08", "tab": "uebersicht", "to": "heute", "e": "⚡", "t": "Seite lädt doppelt so schnell: Kino und Gringo Kart kommen erst, wenn man hinscrollt oder sie antippt"},
-    {"id": "n251008f", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🏁", "t": "Gringo Kart Live 3.0: gleiche Strecke und Gefahren für alle, gemeinsame Kisten, echtes Rempeln, Wiedereinstieg nach Absturz, Ping-Anzeige, Einstellungen für alle, Lobby-Hinweis auf der Seite und derbe Schnellsprüche"},
-    {"id": "n251008e", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "👥", "t": "Gringo Kart Live 2.0: flüssigere Gegner, Bereit-Knopf mit Auto-Start, Strecken-Abstimmung, Live-Pokal über 3 Rennen, Emoji-Reaktionen, Revanche, Windschatten und Live-Bilanz"},
-    {"id": "n251008d", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "☁️", "t": "Gringo Kart: Münzen, Garage, Kostüme, Erfolge und Bestzeiten hängen jetzt an deiner Person und gelten auf jedem Handy (vorher „Ich bin …“ wählen)"},
+    {"id": "n251008za", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🎙️", "t": "Gringo Kart: jede Figur spricht jetzt mit eigener Stimme, Fahrerwahl mit Smash-Ansage, Werte ausgeglichen, kein Vollbild-Hinweis mehr"},
+    {
+      "id": "n251008z",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "💃",
+      "t": "Gringo Kart: neuer Gastfahrer Rasmus, Animator und Partychef von Schwaben Augsburg, im Hippie-Bulli mit Polonaise"
+    },
+    {
+      "id": "n251008y",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "😠",
+      "t": "Gringo Kart: neuer Gastfahrer Erich, der grantige Betreuer von Schwaben Augsburg, im Bollerwagen mit Kabinenpredigt und Wut-Turbo"
+    },
+    {
+      "id": "n251008x",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🎲",
+      "t": "Gringo Kart: im Einzelrennen jedes Mal ein bunter Zufallsmix aus allen Figuren als Gegner (Crew, Ausnahmezustand, Serien-Figuren, Manuel)"
+    },
+    {
+      "id": "n251008w",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "💩",
+      "t": "Gringo Kart: Marco mit Durchfall, Greisel mit Weißbier und Daijo auf der Party haben jetzt eigene Fotos"
+    },
+    {
+      "id": "n251008v",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🏁",
+      "t": "Gringo Kart: neue Gegner-Stufe „Profi“ und stärkeres „Normal“, Abkürzungen jetzt auch auf Guarujá, Cristo und Iguaçu, versetztes Startfeld (du startest aus Reihe 2), mehr Spezial-Items bei den Gegnern, Manuel fährt ab und zu als Gegner mit"
+    },
+    {
+      "id": "n251008u",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🤏",
+      "t": "Gringo Kart: Gastfahrer Manuel „Abzwickter“ (winzig, wendig, federleicht, Spezial „Abgezwickt!“), Spiel gründlich geprüft: flüssiger auf Brücke, Lopes, Manaus und Réveillon, Bierpfütze fairer, Gegner fallen nicht mehr ständig von Abgründen"
+    },
+    {
+      "id": "n251008t",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🎵",
+      "t": "Gringo Kart: Menü-Musik, bei jedem Öffnen zufällig Brasil-Phonk, Samba-Drum'n'Bass oder Eurodance (abschaltbar in den Einstellungen), dazu eigene Fotos für Patrick vollgefressen, Jonas verkatert und Simon verliebt"
+    },
+    {
+      "id": "n251008s",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "📖",
+      "t": "Gringo Kart: neue Item-Anleitung im Menü mit kleinen Animationen zu jedem Item, allen Spezial-Items und Kombos"
+    },
+    {
+      "id": "n251008r",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🚁",
+      "t": "Gringo Kart: Auf Brücke, Minhocão, Cristo und Iguaçu kann man jetzt runterfallen (Hubschrauber, Kran, Geier oder Arara holen dich zurück), neue Mehrfach-Items: 🍹×3 Caipi-Runde, 🩴×2 Flip-Flop-Paar, 🥥×3 Kokos-Trio, 🍌×3 Bananen, 🧨×3 Böller; auf der Seite stehen nur noch neue Rekorde"
+    },
+    {
+      "id": "n251008q",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🛣️",
+      "t": "Gringo Kart: neue Strecke Minhocão als Acht mit Brücke, Tunnel auf 5 Strecken, 6 Strecken jetzt rechtsherum, Abkürzungen nur noch mit Turbo lohnend, Bande und Rasen kosten echt Zeit, mehr Tempo auf Geraden, Windschatten stärker, Start mit Technik und Stromausfall wirklich stockdunkel"
+    },
+    {
+      "id": "n251008p",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🏆",
+      "t": "Gringo Kart: Zeiten aller Bearbeiter landen jetzt sicher in der Crew-Bestenliste, im Menü steht, wer gerade fährt (antippen zum Ändern)"
+    },
+    {
+      "id": "n251008o",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🤫",
+      "t": "Gringo Kart: Fehler bei den Abkürzungen behoben, Platz, Runden, Minikarte und Live-Position stimmen jetzt auch auf dem Schleichweg"
+    },
+    {
+      "id": "n251008n",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🛋️",
+      "t": "Gringo Kart: Jede Figur hat jetzt ihr eigenes Gefährt (Couch-Kart, Klo-Rakete, Liebesbett, Bierfass, Kaiman …) in eigener Größe, sitzt sichtbar am Lenkrad, mit Kopf in eigener Form und Wackelkopf. Kopfgröße in den Einstellungen: Mini, Normal oder Wackelkopf XXL"
+    },
+    {
+      "id": "n251008m",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🖼️",
+      "t": "Gringo Kart: Fahrerauswahl mit gestochen scharfen Porträts direkt aus den Fotos, Werte-Balken in der Kämpfer-Vorschau und übersichtlicheren Kacheln"
+    },
+    {
+      "id": "n251008l",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🥊",
+      "t": "Gringo Kart: Fahrerauswahl jetzt wie bei Smash Bros. und Tekken, mit großer Kämpfer-Vorschau, P1-Rahmen, Namensansage und Zufalls-Kachel"
+    },
+    {
+      "id": "n251008k",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "😍",
+      "t": "Gringo Kart: 13 neue Fahrer (verliebter Simon, vollgefressener Patrick, Marco mit Durchfall … plus Taxifahrer, Nasenbär, Kontrolleur, Dona Rosa, Kaiman), Baukasten mit Reifen und Flügeln und Obststände, Liegen und Kokos-Pyramiden zum Umfahren"
+    },
+    {
+      "id": "n251008j",
+      "d": "2026-10-08",
+      "tab": "vorfreude-tab",
+      "to": "kapsel",
+      "e": "🔒",
+      "t": "Zeitkapsel: Jeder kann jetzt nur noch für sich selbst tippen (fest an dein Konto gebunden)"
+    },
+    {
+      "id": "n251008i",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🎯",
+      "t": "Gringo Kart Live: Mitspieler stehen jetzt auf allen Handys fast exakt an derselben Stelle (Uhrabgleich beim Start und Vorhersage statt Verzögerung)"
+    },
+    {
+      "id": "n251008h",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🚔",
+      "t": "Gringo Kart: Zufallsereignisse (Polizeikontrolle, Karnevalsumzug, Kokosnussregen, Stromausfall), zwei Item-Plätze mit Kombos, Geheimwege, Siegerehrung auf dem Podest und eine eigene Hymne für jeden"
+    },
+    {
+      "id": "n251008g",
+      "d": "2026-10-08",
+      "tab": "uebersicht",
+      "to": "heute",
+      "e": "⚡",
+      "t": "Seite lädt doppelt so schnell: Kino und Gringo Kart kommen erst, wenn man hinscrollt oder sie antippt"
+    },
+    {
+      "id": "n251008f",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🏁",
+      "t": "Gringo Kart Live 3.0: gleiche Strecke und Gefahren für alle, gemeinsame Kisten, echtes Rempeln, Wiedereinstieg nach Absturz, Ping-Anzeige, Einstellungen für alle, Lobby-Hinweis auf der Seite und derbe Schnellsprüche"
+    },
+    {
+      "id": "n251008e",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "👥",
+      "t": "Gringo Kart Live 2.0: flüssigere Gegner, Bereit-Knopf mit Auto-Start, Strecken-Abstimmung, Live-Pokal über 3 Rennen, Emoji-Reaktionen, Revanche, Windschatten und Live-Bilanz"
+    },
+    {
+      "id": "n251008d",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "☁️",
+      "t": "Gringo Kart: Münzen, Garage, Kostüme, Erfolge und Bestzeiten hängen jetzt an deiner Person und gelten auf jedem Handy (vorher „Ich bin …“ wählen)"
+    },
     {
       "id": "n251008c",
       "d": "2026-10-08",
@@ -11079,6 +11248,691 @@
       "o": 46068,
       "dur": 1905,
       "f": 5
+    },
+    "v_simon_love_over": {
+      "o": 250,
+      "dur": 2535,
+      "f": 6
+    },
+    "v_simon_love_hit": {
+      "o": 3035,
+      "dur": 3121,
+      "f": 6
+    },
+    "v_simon_love_sp": {
+      "o": 6405,
+      "dur": 1490,
+      "f": 6
+    },
+    "v_simon_love_win": {
+      "o": 8146,
+      "dur": 2608,
+      "f": 6
+    },
+    "v_simon_love_drift": {
+      "o": 11004,
+      "dur": 1592,
+      "f": 6
+    },
+    "v_simon_love_item": {
+      "o": 12846,
+      "dur": 2810,
+      "f": 6
+    },
+    "v_simon_love_pass": {
+      "o": 15905,
+      "dur": 2589,
+      "f": 6
+    },
+    "v_patrick_fat_over": {
+      "o": 18744,
+      "dur": 1507,
+      "f": 6
+    },
+    "v_patrick_fat_hit": {
+      "o": 20501,
+      "dur": 3170,
+      "f": 6
+    },
+    "v_patrick_fat_sp": {
+      "o": 23920,
+      "dur": 2499,
+      "f": 6
+    },
+    "v_patrick_fat_win": {
+      "o": 26669,
+      "dur": 2453,
+      "f": 6
+    },
+    "v_patrick_fat_drift": {
+      "o": 29372,
+      "dur": 2050,
+      "f": 6
+    },
+    "v_patrick_fat_item": {
+      "o": 31673,
+      "dur": 2397,
+      "f": 6
+    },
+    "v_patrick_fat_pass": {
+      "o": 34319,
+      "dur": 2430,
+      "f": 6
+    },
+    "v_marco_dia_over": {
+      "o": 37000,
+      "dur": 1959,
+      "f": 6
+    },
+    "v_marco_dia_hit": {
+      "o": 39208,
+      "dur": 1892,
+      "f": 6
+    },
+    "v_marco_dia_sp": {
+      "o": 41351,
+      "dur": 2053,
+      "f": 6
+    },
+    "v_marco_dia_win": {
+      "o": 43654,
+      "dur": 2131,
+      "f": 6
+    },
+    "v_marco_dia_drift": {
+      "o": 46034,
+      "dur": 1602,
+      "f": 6
+    },
+    "v_marco_dia_item": {
+      "o": 47887,
+      "dur": 1477,
+      "f": 6
+    },
+    "v_marco_dia_pass": {
+      "o": 49614,
+      "dur": 1435,
+      "f": 6
+    },
+    "v_jonas_kater_over": {
+      "o": 51299,
+      "dur": 2502,
+      "f": 6
+    },
+    "v_jonas_kater_hit": {
+      "o": 54052,
+      "dur": 3008,
+      "f": 6
+    },
+    "v_jonas_kater_sp": {
+      "o": 57310,
+      "dur": 2172,
+      "f": 6
+    },
+    "v_jonas_kater_win": {
+      "o": 59732,
+      "dur": 3837,
+      "f": 6
+    },
+    "v_jonas_kater_drift": {
+      "o": 63819,
+      "dur": 1416,
+      "f": 6
+    },
+    "v_jonas_kater_item": {
+      "o": 65485,
+      "dur": 2243,
+      "f": 6
+    },
+    "v_jonas_kater_pass": {
+      "o": 67979,
+      "dur": 4327,
+      "f": 6
+    },
+    "v_greisel_wb_over": {
+      "o": 72555,
+      "dur": 2122,
+      "f": 6
+    },
+    "v_greisel_wb_hit": {
+      "o": 74927,
+      "dur": 2053,
+      "f": 6
+    },
+    "v_greisel_wb_sp": {
+      "o": 77231,
+      "dur": 1883,
+      "f": 6
+    },
+    "v_greisel_wb_win": {
+      "o": 79364,
+      "dur": 2440,
+      "f": 6
+    },
+    "v_greisel_wb_drift": {
+      "o": 82054,
+      "dur": 1389,
+      "f": 6
+    },
+    "v_greisel_wb_item": {
+      "o": 83693,
+      "dur": 1782,
+      "f": 6
+    },
+    "v_greisel_wb_pass": {
+      "o": 85725,
+      "dur": 1568,
+      "f": 6
+    },
+    "v_dajo_party_over": {
+      "o": 87544,
+      "dur": 1852,
+      "f": 6
+    },
+    "v_dajo_party_hit": {
+      "o": 89646,
+      "dur": 1727,
+      "f": 6
+    },
+    "v_dajo_party_sp": {
+      "o": 91623,
+      "dur": 1500,
+      "f": 6
+    },
+    "v_dajo_party_win": {
+      "o": 93373,
+      "dur": 2531,
+      "f": 6
+    },
+    "v_dajo_party_drift": {
+      "o": 96153,
+      "dur": 1417,
+      "f": 6
+    },
+    "v_dajo_party_item": {
+      "o": 97820,
+      "dur": 1787,
+      "f": 6
+    },
+    "v_dajo_party_pass": {
+      "o": 99857,
+      "dur": 1598,
+      "f": 6
+    },
+    "v_taxi_over": {
+      "o": 101705,
+      "dur": 2248,
+      "f": 6
+    },
+    "v_taxi_hit": {
+      "o": 104203,
+      "dur": 2442,
+      "f": 6
+    },
+    "v_taxi_sp": {
+      "o": 106894,
+      "dur": 2593,
+      "f": 6
+    },
+    "v_taxi_win": {
+      "o": 109737,
+      "dur": 2164,
+      "f": 6
+    },
+    "v_taxi_drift": {
+      "o": 112151,
+      "dur": 1726,
+      "f": 6
+    },
+    "v_taxi_item": {
+      "o": 114127,
+      "dur": 5758,
+      "f": 6
+    },
+    "v_taxi_pass": {
+      "o": 120135,
+      "dur": 2180,
+      "f": 6
+    },
+    "v_coati_over": {
+      "o": 122565,
+      "dur": 1599,
+      "f": 6
+    },
+    "v_coati_hit": {
+      "o": 124414,
+      "dur": 1976,
+      "f": 6
+    },
+    "v_coati_sp": {
+      "o": 126640,
+      "dur": 2453,
+      "f": 6
+    },
+    "v_coati_win": {
+      "o": 129344,
+      "dur": 2903,
+      "f": 6
+    },
+    "v_coati_drift": {
+      "o": 132497,
+      "dur": 557,
+      "f": 6
+    },
+    "v_coati_item": {
+      "o": 133303,
+      "dur": 1954,
+      "f": 6
+    },
+    "v_coati_pass": {
+      "o": 135507,
+      "dur": 1505,
+      "f": 6
+    },
+    "v_officer_over": {
+      "o": 137262,
+      "dur": 2246,
+      "f": 6
+    },
+    "v_officer_hit": {
+      "o": 139758,
+      "dur": 2270,
+      "f": 6
+    },
+    "v_officer_sp": {
+      "o": 142278,
+      "dur": 2914,
+      "f": 6
+    },
+    "v_officer_win": {
+      "o": 145442,
+      "dur": 2852,
+      "f": 6
+    },
+    "v_officer_drift": {
+      "o": 148544,
+      "dur": 1606,
+      "f": 6
+    },
+    "v_officer_item": {
+      "o": 150401,
+      "dur": 2069,
+      "f": 6
+    },
+    "v_officer_pass": {
+      "o": 152720,
+      "dur": 2224,
+      "f": 6
+    },
+    "v_dona_over": {
+      "o": 155194,
+      "dur": 1189,
+      "f": 6
+    },
+    "v_dona_hit": {
+      "o": 156634,
+      "dur": 1944,
+      "f": 6
+    },
+    "v_dona_sp": {
+      "o": 158828,
+      "dur": 1542,
+      "f": 6
+    },
+    "v_dona_win": {
+      "o": 160620,
+      "dur": 2122,
+      "f": 6
+    },
+    "v_dona_drift": {
+      "o": 162992,
+      "dur": 1638,
+      "f": 6
+    },
+    "v_dona_item": {
+      "o": 164880,
+      "dur": 1226,
+      "f": 6
+    },
+    "v_dona_pass": {
+      "o": 166357,
+      "dur": 1643,
+      "f": 6
+    },
+    "v_guide_over": {
+      "o": 168250,
+      "dur": 1706,
+      "f": 6
+    },
+    "v_guide_hit": {
+      "o": 170206,
+      "dur": 2742,
+      "f": 6
+    },
+    "v_guide_sp": {
+      "o": 173198,
+      "dur": 1294,
+      "f": 6
+    },
+    "v_guide_win": {
+      "o": 174742,
+      "dur": 1555,
+      "f": 6
+    },
+    "v_guide_drift": {
+      "o": 176547,
+      "dur": 2269,
+      "f": 6
+    },
+    "v_guide_item": {
+      "o": 179066,
+      "dur": 2373,
+      "f": 6
+    },
+    "v_guide_pass": {
+      "o": 181690,
+      "dur": 2338,
+      "f": 6
+    },
+    "v_steward_over": {
+      "o": 184278,
+      "dur": 2307,
+      "f": 6
+    },
+    "v_steward_hit": {
+      "o": 186834,
+      "dur": 2883,
+      "f": 6
+    },
+    "v_steward_sp": {
+      "o": 189967,
+      "dur": 2430,
+      "f": 6
+    },
+    "v_steward_win": {
+      "o": 192648,
+      "dur": 3884,
+      "f": 6
+    },
+    "v_steward_drift": {
+      "o": 196782,
+      "dur": 3213,
+      "f": 6
+    },
+    "v_steward_item": {
+      "o": 200244,
+      "dur": 2393,
+      "f": 6
+    },
+    "v_steward_pass": {
+      "o": 202887,
+      "dur": 3826,
+      "f": 6
+    },
+    "v_caimanx_over": {
+      "o": 206963,
+      "dur": 2822,
+      "f": 6
+    },
+    "v_caimanx_hit": {
+      "o": 210036,
+      "dur": 2568,
+      "f": 6
+    },
+    "v_caimanx_sp": {
+      "o": 212853,
+      "dur": 1424,
+      "f": 6
+    },
+    "v_caimanx_win": {
+      "o": 214527,
+      "dur": 3570,
+      "f": 6
+    },
+    "v_caimanx_drift": {
+      "o": 218347,
+      "dur": 1184,
+      "f": 6
+    },
+    "v_caimanx_item": {
+      "o": 219781,
+      "dur": 2558,
+      "f": 6
+    },
+    "v_caimanx_pass": {
+      "o": 222589,
+      "dur": 1844,
+      "f": 6
+    },
+    "v_manuel_over": {
+      "o": 224683,
+      "dur": 1847,
+      "f": 6
+    },
+    "v_manuel_hit": {
+      "o": 226780,
+      "dur": 2484,
+      "f": 6
+    },
+    "v_manuel_sp": {
+      "o": 229514,
+      "dur": 2569,
+      "f": 6
+    },
+    "v_manuel_win": {
+      "o": 232333,
+      "dur": 1775,
+      "f": 6
+    },
+    "v_manuel_drift": {
+      "o": 234358,
+      "dur": 2116,
+      "f": 6
+    },
+    "v_manuel_item": {
+      "o": 236724,
+      "dur": 1699,
+      "f": 6
+    },
+    "v_manuel_pass": {
+      "o": 238673,
+      "dur": 2347,
+      "f": 6
+    },
+    "v_erich_over": {
+      "o": 241270,
+      "dur": 2421,
+      "f": 6
+    },
+    "v_erich_hit": {
+      "o": 243941,
+      "dur": 2541,
+      "f": 6
+    },
+    "v_erich_sp": {
+      "o": 246732,
+      "dur": 2793,
+      "f": 6
+    },
+    "v_erich_win": {
+      "o": 249776,
+      "dur": 3338,
+      "f": 6
+    },
+    "v_erich_drift": {
+      "o": 253364,
+      "dur": 2643,
+      "f": 6
+    },
+    "v_erich_item": {
+      "o": 256257,
+      "dur": 4373,
+      "f": 6
+    },
+    "v_erich_pass": {
+      "o": 260880,
+      "dur": 2771,
+      "f": 6
+    },
+    "v_rasmus_over": {
+      "o": 263901,
+      "dur": 1546,
+      "f": 6
+    },
+    "v_rasmus_hit": {
+      "o": 265697,
+      "dur": 2186,
+      "f": 6
+    },
+    "v_rasmus_sp": {
+      "o": 268133,
+      "dur": 1542,
+      "f": 6
+    },
+    "v_rasmus_win": {
+      "o": 269925,
+      "dur": 3035,
+      "f": 6
+    },
+    "v_rasmus_drift": {
+      "o": 273210,
+      "dur": 1736,
+      "f": 6
+    },
+    "v_rasmus_item": {
+      "o": 275196,
+      "dur": 2355,
+      "f": 6
+    },
+    "v_rasmus_pass": {
+      "o": 277801,
+      "dur": 2117,
+      "f": 6
+    },
+    "g_manuel": {
+      "o": 280168,
+      "dur": 3817,
+      "f": 6
+    },
+    "g_erich": {
+      "o": 284235,
+      "dur": 4667,
+      "f": 6
+    },
+    "g_rasmus": {
+      "o": 289152,
+      "dur": 6021,
+      "f": 6
+    },
+    "h_jonas": {
+      "o": 250,
+      "dur": 2673,
+      "f": 7
+    },
+    "h_simon": {
+      "o": 3173,
+      "dur": 3219,
+      "f": 7
+    },
+    "h_patrick": {
+      "o": 6641,
+      "dur": 2468,
+      "f": 7
+    },
+    "h_marco": {
+      "o": 9360,
+      "dur": 4156,
+      "f": 7
+    },
+    "h_greisel": {
+      "o": 13765,
+      "dur": 2633,
+      "f": 7
+    },
+    "h_dajo": {
+      "o": 16649,
+      "dur": 3036,
+      "f": 7
+    },
+    "h_simon_love": {
+      "o": 19934,
+      "dur": 2998,
+      "f": 7
+    },
+    "h_patrick_fat": {
+      "o": 23182,
+      "dur": 3093,
+      "f": 7
+    },
+    "h_marco_dia": {
+      "o": 26525,
+      "dur": 2758,
+      "f": 7
+    },
+    "h_jonas_kater": {
+      "o": 29533,
+      "dur": 2947,
+      "f": 7
+    },
+    "h_greisel_wb": {
+      "o": 32730,
+      "dur": 2370,
+      "f": 7
+    },
+    "h_dajo_party": {
+      "o": 35350,
+      "dur": 3397,
+      "f": 7
+    },
+    "h_taxi": {
+      "o": 38998,
+      "dur": 4364,
+      "f": 7
+    },
+    "h_coati": {
+      "o": 43612,
+      "dur": 3220,
+      "f": 7
+    },
+    "h_officer": {
+      "o": 47082,
+      "dur": 3667,
+      "f": 7
+    },
+    "h_dona": {
+      "o": 50999,
+      "dur": 4538,
+      "f": 7
+    },
+    "h_guide": {
+      "o": 55787,
+      "dur": 5639,
+      "f": 7
+    },
+    "h_steward": {
+      "o": 61676,
+      "dur": 3877,
+      "f": 7
+    },
+    "h_caimanx": {
+      "o": 65802,
+      "dur": 4308,
+      "f": 7
+    },
+    "h_manuel": {
+      "o": 70361,
+      "dur": 4016,
+      "f": 7
+    },
+    "h_erich": {
+      "o": 74627,
+      "dur": 4398,
+      "f": 7
+    },
+    "h_rasmus": {
+      "o": 79275,
+      "dur": 3794,
+      "f": 7
     }
   },
   "kartReset": "2026-10-07a"
