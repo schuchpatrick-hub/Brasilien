@@ -7761,6 +7761,55 @@ setGroup(G);
     splash: () => { if (!real('splash', .6)) noise(.6, .15, 500); }, rocket: () => { beep(200, .6, 'sawtooth', .07, 1200); noise(.8, .12, 300); }, stall: () => beep(160, .5, 'square', .06, 60),
     birds: () => { for (let i = 0; i < 4; i++) setTimeout(() => noise(.06, .05, 0, 0, 0, 2500 + Math.random() * 1500), i * 60); }, trick: () => beep(660, .2, 'square', .05, 1320),
     chomp: () => { if (!real('chomp', .7)) beep(180, .2, 'square', .08, 90); }, fanfare: () => [392, 523, 659, 784, 1046, 784, 1046].forEach((f, i) => setTimeout(() => beep(f, i > 4 ? .5 : .2, 'square', .07), i * 160))};
+  // Menü-Musik „Gringo Orbit“: eigene Weltraum-Disco (Space-Synth, 132 BPM, a-Moll), live per Web Audio erzeugt, keine Datei.
+  // Ablauf: 4 Takte Intro (Fläche, Arpeggio öffnet sich, Laser), dann Schleife aus 8 Takten Groove, 8 Takten mit Melodie, 4 Takten Break mit Riser.
+  const MM = {next: 0, step: 0, iv: 0, g: null, dl: null, on: false, bpm: 132};
+  const MM_CH = [[0, 0], [-4, 1], [3, 1], [-2, 1], [0, 0], [-4, 1], [3, 1], [-5, 1]];   // Grundton (Halbtöne über A2), 0 = moll, 1 = dur
+  const MM_LEAD = [[[0, 12, 3], [3, 15, 3], [6, 19, 2], [8, 17, 2], [10, 15, 2], [12, 12, 4]], [[0, 20, 3], [3, 19, 3], [6, 15, 2], [8, 12, 4], [12, 15, 4]],
+    [[0, 19, 3], [3, 22, 3], [6, 19, 2], [8, 17, 2], [10, 15, 2], [12, 19, 4]], [[0, 17, 6], [6, 14, 2], [8, 10, 4], [12, 14, 2], [14, 17, 2]],
+    [[0, 24, 3], [3, 22, 3], [6, 19, 2], [8, 22, 2], [10, 24, 2], [12, 27, 4]], [[0, 24, 3], [3, 20, 3], [6, 17, 2], [8, 20, 4], [12, 24, 4]],
+    [[0, 22, 3], [3, 19, 3], [6, 15, 2], [8, 19, 2], [10, 22, 2], [12, 27, 4]], [[0, 23, 4], [4, 20, 4], [8, 19, 4], [12, 23, 4]]];
+  const hz = n => 110 * Math.pow(2, n / 12);
+  function mmGraph() { const a = AC; if (MM.g) return; MM.g = a.createGain(); MM.g.gain.value = 0; MM.g.connect(a.destination);
+    MM.dl = a.createDelay(1); MM.dl.delayTime.value = 60 / MM.bpm * .75; const fb = a.createGain(); fb.gain.value = .32; const wet = a.createGain(); wet.gain.value = .35;
+    MM.dl.connect(fb); fb.connect(MM.dl); MM.dl.connect(wet); wet.connect(MM.g); }
+  function mmNote(s, t) {
+    const a = AC, sp = 60 / MM.bpm / 4, i = s % 16, b = s >> 4, intro = b < 4, c = (b - 4) % 20, sec = intro ? 'intro' : c < 8 ? 'groove' : c < 16 ? 'lead' : 'break', bar = intro ? b % 8 : c % 8;
+    const [r0, maj] = MM_CH[bar], root = hz(r0), tri = maj ? [0, 4, 7] : [0, 3, 7];
+    const osc = (f, d, type, v, o) => { o = o || {}; const n = a.createOscillator(), g = a.createGain(); n.type = type; n.frequency.setValueAtTime(f, t); if (o.f2) n.frequency.exponentialRampToValueAtTime(o.f2, t + (o.sl || d)); if (o.det) n.detune.value = o.det;
+      let out = g; if (o.lp) { const fl = a.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.setValueAtTime(o.lp, t); if (o.lp2) fl.frequency.exponentialRampToValueAtTime(o.lp2, t + d); fl.Q.value = o.q || 1; n.connect(fl); fl.connect(g); } else n.connect(g);
+      const at = o.at || .004; g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(v, t + at); g.gain.exponentialRampToValueAtTime(.0001, t + d); g.connect(MM.g); if (o.dly) g.connect(MM.dl); n.start(t); n.stop(t + d + .05); return out; };
+    const nz = (d, v, type, f, q) => { const len = Math.max(1, a.sampleRate * d | 0), bf = a.createBuffer(1, len, a.sampleRate), dd = bf.getChannelData(0); for (let k = 0; k < len; k++) dd[k] = (Math.random() * 2 - 1) * (1 - k / len);
+      const src = a.createBufferSource(), fl = a.createBiquadFilter(), g = a.createGain(); src.buffer = bf; fl.type = type; fl.frequency.value = f; fl.Q.value = q || 1; g.gain.value = v; src.connect(fl); fl.connect(g); g.connect(MM.g); src.start(t); };
+    const drums = sec === 'groove' || sec === 'lead';
+    // Fläche: drei verstimmte Sägezähne je Takt, weicher Einsatz
+    if (i === 0) tri.forEach((iv, k) => [-9, 9].forEach(dt => osc(root * 2 * Math.pow(2, iv / 12), sp * 16 * .98, 'sawtooth', sec === 'break' || intro ? .035 : .022, {at: .35, lp: intro ? 500 + b * 300 : 1400, det: dt + k})));
+    // Arpeggio (16tel), Filter öffnet sich im Intro und pumpt im Groove
+    { const arp = [0, 1, 2, 1, 2, 0, 2, 1], iv = tri[arp[i % 8]] + (i % 8 > 3 ? 12 : 0), lp = intro ? 400 + (b * 16 + i) * 40 : sec === 'break' ? 1800 : 1200 + 900 * Math.sin((s % 64) / 64 * Math.PI);
+      osc(root * 4 * Math.pow(2, iv / 12), sp * .9, 'square', .028, {lp, lp2: lp * .4, q: 6}); }
+    if (drums || (sec === 'intro' && b === 3 && i >= 8)) {
+      // Bass: rollende Oktaven (tief/hoch im Wechsel), typischer Weltraum-Disco-Galopp
+      osc(i % 2 ? root : root / 2, sp * .85, 'sawtooth', drums ? .12 : .07, {lp: 900, lp2: 250, q: 4}); }
+    if (drums) {
+      if (i % 4 === 0) osc(150, .28, 'sine', .7, {f2: 42, sl: .12});                                  // Kick: gerade Viertel
+      if (i % 4 === 2) nz(.09, .09, 'highpass', 7500);                                                // offene Hi-Hat auf dem Offbeat
+      else nz(.025, .025, 'highpass', 9000);                                                          // geschlossene Hi-Hat
+      if (i === 4 || i === 12) { nz(.16, .16, 'bandpass', 1400, .8); nz(.05, .1, 'bandpass', 2600, 2); }   // Clap
+    }
+    // Melodie (eigene Komposition) mit Echo
+    if (sec === 'lead') MM_LEAD[bar].forEach(([st, n, l]) => { if (st === i) { osc(hz(n + 24), sp * l * .95, 'sawtooth', .05, {lp: 3200, dly: 1, det: 6, at: .01}); osc(hz(n + 24), sp * l * .95, 'square', .025, {lp: 2400, dly: 1, det: -6, at: .01}); } });
+    // Laser-Zaps und Riser
+    if (i === 14 && b % 4 === 3) osc(2400, .35, 'square', .03, {f2: 180, lp: 5000});
+    if (i === 6 && (intro || sec === 'break') && bar % 2) osc(900, .5, 'sine', .04, {f2: 3200, dly: 1});
+    if (sec === 'break' && c === 19 && i === 0) { const d = sp * 16, n = a.createOscillator(), g = a.createGain(); n.type = 'sawtooth'; n.frequency.setValueAtTime(200, t); n.frequency.exponentialRampToValueAtTime(2400, t + d);
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.05, t + d); g.gain.linearRampToValueAtTime(0, t + d + .02); n.connect(g); g.connect(MM.g); n.start(t); n.stop(t + d + .05); nz(d, .08, 'highpass', 2000); }
+  }
+  function mmTick() { const want = !!(AC && SOUND && SET.mm !== 'off' && !box.hidden && !menu.hidden && !document.hidden);
+    if (want && !MM.on) { if (AC.state === 'suspended') AC.resume(); mmGraph(); MM.on = true; MM.step = 0; MM.next = AC.currentTime + .1; MM.g.gain.cancelScheduledValues(AC.currentTime); MM.g.gain.setValueAtTime(MM.g.gain.value, AC.currentTime); MM.g.gain.linearRampToValueAtTime(.9, AC.currentTime + 1.2); }
+    if (!want && MM.on) { MM.on = false; if (MM.g && AC) { MM.g.gain.cancelScheduledValues(AC.currentTime); MM.g.gain.setValueAtTime(MM.g.gain.value, AC.currentTime); MM.g.gain.linearRampToValueAtTime(0, AC.currentTime + .4); } }
+    if (!MM.on || AC.state !== 'running') return; const sp = 60 / MM.bpm / 4; if (MM.next < AC.currentTime) MM.next = AC.currentTime + .05;
+    while (MM.next < AC.currentTime + .25) { mmNote(MM.step, MM.next); MM.next += sp; MM.step++; } }
+  const mmStart = () => { if (!MM.iv) MM.iv = setInterval(mmTick, 60); mmTick(); }, mmStop = () => { if (MM.iv) { clearInterval(MM.iv); MM.iv = 0; } MM.on = false; if (MM.g && AC) { MM.g.gain.cancelScheduledValues(AC.currentTime); MM.g.gain.setValueAtTime(0, AC.currentTime); } };
   // Samba-Rennmusik: Surdo, Tamborim, Ganzá, Agogô, Bass (Lookahead-Planer, 16tel); Tempo/Tonart je Strecke
   const MUS = {on: false, next: 0, step: 0, fast: false};
   function musTick() {
@@ -9197,8 +9246,10 @@ setGroup(G);
     try { const r = box.requestFullscreen || box.webkitRequestFullscreen; if (r) { const pr = r.call(box); if (pr && pr.catch) pr.catch(() => {}); } } catch (e) {}
     CUP = null; S = null; RULE = MODE === 'daily' ? daily().rule : null; lbInit(); progSync(true); { const s0 = {}; TRACKS.forEach(tr => { const top = lbList(LB, tr.id)[0]; if (top) s0[tr.id] = top.who; }); if (Object.keys(s0).length) store.set('kartRecSeen', JSON.stringify(s0)); } preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); setTimeout(renderMenu, 900); menu.hidden = false; res.hidden = true; pm.hidden = true; racing(false);
     cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
+    audio(); mmStart();
   }
   function close() {
+    mmStop();
     if (LIVE.diff0 != null) { DIFF = LIVE.diff0; LIVE.diff0 = null; } liveLeave(); cancelAnimationFrame(raf); S = null; MUS.on = false; box.hidden = true; if (LIVE.room) livePres(); teaser(); board(); document.body.style.overflow = ''; document.documentElement.classList.remove('kart-on');
     engOff(); try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {}
   }
@@ -9213,7 +9264,7 @@ setGroup(G);
   const setT = (sel, txt) => box.querySelectorAll(sel).forEach(b => { b.textContent = txt; });
   const sndTxt = () => setT('.kr-snd', SOUND ? '🔊 Ton: an' : '🔇 Ton: aus'), steerTxt = () => setT('.kr-steer', '🎚 Lenkstärke: ' + STEERS[STEER][0]), annTxt = () => setT('.kr-ann', '🎙 Ansager: ' + (ANN ? 'an' : 'aus'));
   const setTxt = () => { sndTxt(); steerTxt(); annTxt(); setT('.kr-ctl', '🎮 Steuerung: ' + (SET.ctl === 'analog' ? 'Analog (Daumen-Position)' : 'Halten links/rechts'));
-    setT('.kr-q', '✨ Grafik: ' + ['Sparsam', 'Normal', 'Hoch'][SET.q]); setT('.kr-cam', '🎥 Kamera: ' + ['Nah', 'Normal', 'Weit'][SET.cam]); setT('.kr-tod', '🌗 Tageszeit: ' + (SET.tod === 'day' ? 'immer Tag' : 'wie in Rio')); setT('.kr-evt', '🎲 Ereignisse: ' + (SET.ev === 'off' ? 'aus' : 'an')); setT('.kr-hd', '🗿 Köpfe: ' + ['Mini', 'Normal', 'Wackelkopf XXL'][SET.hd === undefined ? 1 : SET.hd]); };
+    setT('.kr-q', '✨ Grafik: ' + ['Sparsam', 'Normal', 'Hoch'][SET.q]); setT('.kr-cam', '🎥 Kamera: ' + ['Nah', 'Normal', 'Weit'][SET.cam]); setT('.kr-tod', '🌗 Tageszeit: ' + (SET.tod === 'day' ? 'immer Tag' : 'wie in Rio')); setT('.kr-evt', '🎲 Ereignisse: ' + (SET.ev === 'off' ? 'aus' : 'an')); setT('.kr-hd', '🗿 Köpfe: ' + ['Mini', 'Normal', 'Wackelkopf XXL'][SET.hd === undefined ? 1 : SET.hd]); setT('.kr-mm', '🎵 Menü-Musik: ' + (SET.mm === 'off' ? 'aus' : 'an')); };
   setTxt();
   box.addEventListener('click', e => {
     if (e.target.closest('.kr-steer')) { STEER = (STEER + 1) % STEERS.length; store.set('kartSteer', STEER); }
@@ -9225,7 +9276,8 @@ setGroup(G);
     if (e.target.closest('.kr-tod')) { SET.tod = SET.tod === 'day' ? 'real' : 'day'; saveSet(); }
     if (e.target.closest('.kr-evt')) { SET.ev = SET.ev === 'off' ? 'on' : 'off'; saveSet(); }
     if (e.target.closest('.kr-hd')) { SET.hd = ((SET.hd === undefined ? 1 : SET.hd) + 1) % 3; saveSet(); }
-    if (e.target.closest('.kr-steer, .kr-ann, .kr-snd, .kr-ctl, .kr-q, .kr-cam, .kr-tod, .kr-evt, .kr-hd')) setTxt(); });
+    if (e.target.closest('.kr-mm')) { SET.mm = SET.mm === 'off' ? 'on' : 'off'; saveSet(); audio(); mmTick(); }
+    if (e.target.closest('.kr-steer, .kr-ann, .kr-snd, .kr-ctl, .kr-q, .kr-cam, .kr-tod, .kr-evt, .kr-hd, .kr-mm')) setTxt(); if (e.target.closest('.kr-snd')) { audio(); mmTick(); } });
   box.querySelector('.kr-pbtn').addEventListener('click', pause);
   // Live: Emoji-Reaktionen während des Rennens (über dem eigenen Kart, bei allen sichtbar)
   { const eb = box.querySelector('.kr-emo'); if (eb) { const el = eb.querySelector('.kr-emol');
@@ -9320,7 +9372,10 @@ setGroup(G);
   box.addEventListener('click', e => { const w = e.target.closest('.kr-whop button'); if (w) { WHOOPEN = false; setMe(w.dataset.who); if (!menu.hidden) renderMenu(); }
     if (e.target.closest('.kr-whochg')) { WHOOPEN = true; renderMenu(); } });
   window.__kartAt = (i, l) => at(i, l); window.__kartTW = () => TW; window.__kartDeck = () => DECK && {i0: DECK.i0, len: DECK.len, under: DECK.under}; window.__kartTun = () => TUN.map(u => ({i0: u.i0, len: u.len, nm: u.nm})); window.__kartN = () => N;
-  window.__kart = {ls: pr => liveSample(pr, q => q), give: (i, k) => { const kk = S.karts[i]; kk.item = ITEMS[k]; kk.icntFor = null; kk.roll = 0; }, use: i => useItem(S.karts[i]), icnt: i => icnt(S.karts[i]), hymn: id => hymn(id), cut: () => CUT, live: () => LIVE, liveGo: a => liveGo(a), emo: e => { const b = [...box.querySelectorAll('.kr-emol button')].find(x => x.textContent === e); if (b) b.click(); }, hitK: (i, why) => hit(S.karts[i], why), open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
+  window.__kart = {mm: () => ({on: MM.on, step: MM.step}), mmRender: async sec => { const A0 = AC, G0 = MM.g, D0 = MM.dl, oc = new OfflineAudioContext(1, 44100 * sec, 44100); AC = oc; MM.g = null; mmGraph(); MM.g.gain.value = .9; const sp = 60 / MM.bpm / 4; for (let st = 0, t = 0; t < sec; st++, t += sp) mmNote(st, t);
+    const buf = await oc.startRendering(); AC = A0; MM.g = G0; MM.dl = D0; const d = buf.getChannelData(0); let pk = 0, ss = 0; for (let i = 0; i < d.length; i++) { pk = Math.max(pk, Math.abs(d[i])); ss += d[i] * d[i]; }
+    const pcm = new Int16Array(d.length); for (let i = 0; i < d.length; i++) pcm[i] = Math.max(-1, Math.min(1, d[i])) * 32767; let bin = ''; const u8 = new Uint8Array(pcm.buffer); for (let i = 0; i < u8.length; i += 8192) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 8192));
+    return {peak: pk, rms: Math.sqrt(ss / d.length), pcm: btoa(bin)}; }, ls: pr => liveSample(pr, q => q), give: (i, k) => { const kk = S.karts[i]; kk.item = ITEMS[k]; kk.icntFor = null; kk.roll = 0; }, use: i => useItem(S.karts[i]), icnt: i => icnt(S.karts[i]), hymn: id => hymn(id), cut: () => CUT, live: () => LIVE, liveGo: a => liveGo(a), emo: e => { const b = [...box.querySelectorAll('.kr-emol button')].find(x => x.textContent === e); if (b) b.click(); }, hitK: (i, why) => hit(S.karts[i], why), open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
 })();
 /*@@END*/
 </script>
