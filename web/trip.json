@@ -10215,6 +10215,7 @@
     ]
   },
   "news": [
+    {"id": "n251008o", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🤫", "t": "Gringo Kart: Fehler bei den Abkürzungen behoben, Platz, Runden, Minikarte und Live-Position stimmen jetzt auch auf dem Schleichweg"},
     {"id": "n251008n", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🛋️", "t": "Gringo Kart: Jede Figur hat jetzt ihr eigenes Gefährt (Couch-Kart, Klo-Rakete, Liebesbett, Bierfass, Kaiman …) in eigener Größe, sitzt sichtbar am Lenkrad, mit Kopf in eigener Form und Wackelkopf. Kopfgröße in den Einstellungen: Mini, Normal oder Wackelkopf XXL"},
     {"id": "n251008m", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🖼️", "t": "Gringo Kart: Fahrerauswahl mit gestochen scharfen Porträts direkt aus den Fotos, Werte-Balken in der Kämpfer-Vorschau und übersichtlicheren Kacheln"},
     {"id": "n251008l", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🥊", "t": "Gringo Kart: Fahrerauswahl jetzt wie bei Smash Bros. und Tekken, mit großer Kämpfer-Vorschau, P1-Rahmen, Namensansage und Zufalls-Kachel"},
