@@ -268,7 +268,7 @@ Sechstes Porträt Daijo (`pdajo`, Keys `pd…`): Szenen `phost` (Wohnzimmer, Dai
 `pczech` (Flaggen-Tafel, Zähler „Zum … Mal“), `pparty` (Disco mit Lichtkegeln). `tx.runOff`: Porträtierte läuft nach der Interview-Antwort aus dem Bild.
 Alle persönlichen Texte im Bild kommen aus den privaten Daten: `tx` (Bandenwerbung, Schilder, Banner, Stärken/Schwächen …) und `caps` (Ort-Einblendung je Szene); im öffentlichen Code nur neutrale Platzhalter.
 Keine Kachel im Kino: Start über „🎬 Spielerporträt ansehen“ (`.port-btn[data-port]`) im Steckbrief und auf der Kartenrückseite,
-`window.serPortrait(id)` lädt das Porträt im Vollbild und kehrt danach zur vorherigen Folge und zur Karte zurück. Knöpfe sind per CSS-Klasse
+Die Klassen `port-p<id>` setzt die Hauptseite selbst gleich beim Laden (Block direkt nach `MODV`; vorher erst das nachgeladene `mods/serie.js`, dadurch waren die Knöpfe im Crew-Kapitel bis zum Nachladen unsichtbar, Fehler 08.10.); der Klick lädt `serie` nach und wiederholt sich. `window.serPortrait(id)` lädt das Porträt im Vollbild und kehrt danach zur vorherigen Folge und zur Karte zurück. Knöpfe sind per CSS-Klasse
 `port-p<id>` am `<html>` sichtbar (alle sechs seit 06.10. für alle freigegeben). Zeilen-Keys `pj1…` (eindeutig gegenüber den Folgen).
 **Privat:** Porträts enthalten echte Geschichten, deshalb nicht im öffentlichen Repo: `web/private/series.json` und `web/audio/p*.mp3` sind
 gitignored, `build.py` mischt die Datei beim Bauen ein. Für die Werkzeuge `python3 tools/private.py in` (nach trip.json holen), danach
