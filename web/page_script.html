@@ -10,7 +10,7 @@ try { if ((navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.
 
 const store = {
   get(k) { try { return localStorage.getItem('br26.' + k); } catch (e) { return null; } },
-  set(k, v) { try { localStorage.setItem('br26.' + k, v); } catch (e) {} }
+  set(k, v) { try { localStorage.setItem('br26.' + k, v); } catch (e) {} if (store.onSet) store.onSet(k); }
 };
 // allererster Besuch auf diesem Gerät (vor allen anderen Modulen gemessen, die gleich selbst etwas speichern)
 const FIRST_VISIT = (() => { try { return !Object.keys(localStorage).some(k => k.indexOf('br26.') === 0); } catch (e) { return false; } })();
@@ -7658,9 +7658,10 @@ setGroup(G);
       db.collection('kartbest').onSnapshot(sn => { LB = {}; sn.docs.forEach(d => { if (d.exists) LB[d.id] = d.data(); }); board(); if (!box.hidden && !menu.hidden) renderMenu(); }, () => {});
       try { window.claude.use('user').then(u => u && u.id ? u.id().then(id => { UID = id || null; ACC = u; accSync(); }) : null).catch(() => {}); } catch (e) {}
       db.collection('kartusers').onSnapshot(sn => { USERS = {}; sn.docs.forEach(d => { if (d.exists) USERS[d.id] = d.data().who; }); accSync(); board(); }, () => {});
+      db.collection('kartprog').onSnapshot(sn => { PROG = {}; sn.docs.forEach(d => { if (d.exists) PROG[d.id] = d.data(); }); progOn = true; progSync(true); }, () => {});
       db.collection('kartdaily').onSnapshot(sn => { LBD = {}; sn.docs.forEach(d => { if (d.exists) LBD[d.id] = d.data(); }); if (!box.hidden && !menu.hidden) renderMenu(); }, () => {});
     }).catch(() => {});
-    canWrite().then(w => { WR = w !== false && w !== null; if (!box.hidden && !menu.hidden) renderMenu(); }).catch(() => {});
+    canWrite().then(w => { WR = w !== false && w !== null; progWR = WR; progSync(true); if (!box.hidden && !menu.hidden) renderMenu(); }).catch(() => {});
   }
   const lbList = (src, pre) => Object.entries(src).filter(([id]) => id.indexOf(pre + '__') === 0).map(([, v]) => v).filter(v => v && v.ms).sort((a, b) => a.ms - b.ms);
   function lbHtml(list, title) {
@@ -7687,7 +7688,46 @@ setGroup(G);
     if (pd.kind === 'best') { const id = pd.track + '__' + who, old = LB[id]; if (old && old.ms <= pd.ms) return; const doc = {track: pd.track, who, drv: pd.drv, veh: pd.veh, ms: pd.ms, ts: Date.now(), uid: UID, dev: devName()};
       DB.doc('kartbest/' + id).set(doc).catch(() => {}); DB.doc('kartghost/' + id).set({g: pd.g, ms: pd.ms}).catch(() => {}); LB[id] = doc; }
     else { const id = pd.d + '__' + who, old = LBD[id]; if (old && old.ms <= pd.ms) return; const doc = {d: pd.d, who, drv: pd.drv, ms: pd.ms, ts: Date.now(), uid: UID, dev: devName()}; DB.doc('kartdaily/' + id).set(doc).catch(() => {}); LBD[id] = doc; } }
-  function setMe(id) { ME = id; store.set('me', id); setTimeout(accSync, 0);
+  /* ---- Fortschritt am Konto (db kartprog/<person>): Münzen, Tuning, Kostüme, Lack, Aufkleber, Erfolge, Statistik, eigene Bestzeiten.
+     Gilt auf jedem Handy, auf dem die Person „Ich bin …“ gewählt hat. Zusammenführen: Gekauftes/Erreichtes wird vereinigt (Maximum),
+     Bestzeiten Minimum, Auswahl (Fahrzeug, Kostüm, Lack, Rivale) = neuester Stand, Münzen als Zähler (Änderung seit dem letzten Abgleich). ---- */
+  const PROGK = /^kart(Coins|Tune|Cos|CosOwn|Ach|Stats|Cups|Paint|StkOwn|TutDone|Rival|Veh|Best|Lap\..+|Sec\..+)$/, PREFK = /^kart(Cos|Paint|Rival|Veh)$/, TIMEK = /^kart(Best|Lap\.|Sec\.)/;
+  let PROG = {}, progOn = false, progMute = false, progT = 0, progWR = false;
+  const pj = s0 => { try { return JSON.parse(s0); } catch (e) { return null; } };
+  const progKeys = () => { try { return Object.keys(localStorage).filter(k => k.indexOf('br26.') === 0 && PROGK.test(k.slice(5))).map(k => k.slice(5)); } catch (e) { return []; } };
+  const progLocal = () => { const o = {}; progKeys().forEach(k => { const v = store.get(k); if (v !== null && v !== '') o[k] = v; }); return o; };
+  function progWrite(o) { progMute = true; try { progKeys().forEach(k => { if (!(k in o)) localStorage.removeItem('br26.' + k); }); Object.entries(o).forEach(([k, v]) => store.set(k, v)); } finally { progMute = false; } }
+  function deep(x, y, f) { if (typeof x === 'number' && typeof y === 'number') return f(x, y);
+    if (Array.isArray(x) && Array.isArray(y)) return Array.from({length: Math.max(x.length, y.length)}, (_, i) => x[i] == null ? y[i] : y[i] == null ? x[i] : deep(x[i], y[i], f));
+    if (x && y && typeof x === 'object' && typeof y === 'object') { const o = Object.assign({}, y, x); Object.keys(y).forEach(k => { if (k in x) o[k] = deep(x[k], y[k], f); }); return o; }
+    return x == null ? y : x; }
+  function progMerge(loc, rem, localNewer) { const o = Object.assign({}, rem, loc);
+    Object.keys(rem).forEach(k => { if (!(k in loc) || k === 'kartCoins') return;
+      if (PREFK.test(k)) { if (!localNewer) o[k] = rem[k]; return; }
+      const x = pj(loc[k]), y = pj(rem[k]); if (x === null || y === null) return;
+      o[k] = typeof x === 'object' || typeof y === 'object' ? JSON.stringify(deep(x, y, TIMEK.test(k) ? Math.min : k === 'kartAch' ? Math.min : Math.max)) : String(TIMEK.test(k) ? Math.min(x, y) : Math.max(x, y)); });
+    return o; }
+  // Handy wechselt die Person: Stand der bisherigen Person auf dem Handy zur Seite legen, Stand der neuen holen
+  function progOwner() { const own = store.get('kartProgOwner'); if (!ME || own === ME) return; progMute = true;
+    try { if (own) localStorage.setItem('br26.kartProgBak.' + own, JSON.stringify({p: progLocal(), b: store.get('kartCoinsBase'), lt: store.get('kartProgLT')}));
+      const bak = own ? pj(localStorage.getItem('br26.kartProgBak.' + ME)) : null;
+      if (own) { progWrite(bak ? bak.p : {}); progMute = true; store.set('kartCoinsBase', bak && bak.b || ''); store.set('kartProgLT', bak && bak.lt || ''); }
+      store.set('kartProgOwner', ME); } catch (e) {} finally { progMute = false; } HEADC = {}; }
+  let progBusy = false;
+  function progSync(push) { if (!ME || !progOn || progBusy) return; progBusy = true; try { progSync0(push); } finally { progBusy = false; } }
+  function progSync0(push) { progOwner();
+    const rd = PROG[ME] || null, rem = Object.assign({}, rd && rd.p || {}); if (rd && rd.r !== (TRIP.kartReset || '')) Object.keys(rem).forEach(k => { if (TIMEK.test(k)) delete rem[k]; });
+    const loc = progLocal(), lt = +store.get('kartProgLT') || 0, m = progMerge(loc, rem, lt > (rd && rd.ts || 0));
+    const rc = +(rem.kartCoins || 0), base = +(store.get('kartCoinsBase') || 0), lc = +(loc.kartCoins || 0); m.kartCoins = String(Math.max(0, rc + lc - base));
+    progWrite(m); progMute = true; store.set('kartCoinsBase', String(rc)); progMute = false;
+    if (JSON.stringify(loc) !== JSON.stringify(m)) { HEADC = {}; try { teaser(); } catch (e) {} if (!box.hidden && !menu.hidden) renderMenu(); }
+    const diff = Object.keys(m).some(k => m[k] !== rem[k]) || Object.keys(rem).some(k => !(k in m)) || !rd || rd.r !== (TRIP.kartReset || '');
+    if (push && diff && progWR && DB) { const doc = {p: m, ts: Date.now(), r: TRIP.kartReset || '', uid: UID, dev: devName()}; PROG[ME] = doc;
+      progMute = true; store.set('kartCoinsBase', m.kartCoins); progMute = false; DB.doc('kartprog/' + ME).set(doc).catch(() => {}); } }
+  store.onSet = k => { if (progMute || !PROGK.test(k)) return; progMute = true; store.set('kartProgLT', String(Date.now())); progMute = false;
+    clearTimeout(progT); progT = setTimeout(() => progSync(true), 2500); };
+  const progLine = () => !ME ? '☁️ Wähle „Wer spielt?“, dann gelten Münzen, Garage und Erfolge auf jedem Handy.' : progWR ? '☁️ Fortschritt von ' + esc(NAME(ME)) + ' wird am Konto gespeichert und gilt auf jedem Handy.' : '📱 Fortschritt nur auf diesem Handy (Speichern am Konto nur für Eingeladene).';
+  function setMe(id) { ME = id; store.set('me', id); setTimeout(accSync, 0); setTimeout(() => progSync(true), 0);
     try { const g = Object.keys(GROUP_IDS).find(k => GROUP_IDS[k].includes(id)); if (g && typeof setGroup === 'function') setGroup(g); meMark(); renderMe(); } catch (e) {}
     if (PEND) { saveLB(PEND); PEND = null; const w = res.querySelector('.kr-who'); if (w) { w.innerHTML = '<p>✅ Gespeichert als <b>' + esc(NAME(id)) + '</b>. Ab jetzt merkt sich dieses Handy, wer spielt.</p>'; } }
     if (!box.hidden && !menu.hidden) renderMenu(); }
@@ -8427,7 +8467,7 @@ setGroup(G);
     menu.querySelectorAll('.kr-diff button').forEach(x => x.setAttribute('aria-pressed', +x.dataset.d === DIFF));
     const mv = myVeh(); menu.querySelector('.kr-vehs').innerHTML = VEHS.map(v => { const ok = unlocked(v); return '<button type="button" data-v="' + v.id + '" aria-pressed="' + (v.id === mv) + '"' + (ok ? '' : ' disabled') + ' title="' + esc(ok ? v.n : v.t) + '"><i>' + (ok ? v.e : '🔒') + '</i><small>' + esc(ok ? v.n : v.t) + '</small></button>'; }).join('');
     const tu = tune(), own = cosOwn(), mc = cosOf(me), cn = coins();
-    menu.querySelector('.kr-garage summary').textContent = '🛠 Garage: Tuning & Kostüme · 🪙 ' + cn;
+    menu.querySelector('.kr-garage summary').textContent = '🛠 Garage: Tuning & Kostüme · 🪙 ' + cn; { const pl = menu.querySelector('.kr-prog'); if (pl) pl.innerHTML = progLine(); }
     { const mv0 = myVeh(), V0 = VEHS.find(v => v.id === mv0) || VEHS[0], vxe = menu.querySelector('.kr-vx'); if (vxe) vxe.textContent = V0.e + ' ' + V0.n + ': ' + (VTX[mv0] || VTX.kart).x;
       const st0 = menu.querySelector('.kr-shopt'); if (st0) st0.textContent = 'Tuning für ' + V0.e + ' ' + V0.n + ' (jedes Fahrzeug einzeln)'; }
     { const pt = paintOf(me), so = loadJ('kartStkOwn'), pe = menu.querySelector('.kr-paintb');
@@ -8487,7 +8527,7 @@ setGroup(G);
     if (box.parentElement !== document.body) document.body.appendChild(box);   // Kapitel hat content-visibility, sonst unsichtbar
     box.hidden = false; document.body.style.overflow = 'hidden'; document.documentElement.classList.add('kart-on'); resize();
     try { const r = box.requestFullscreen || box.webkitRequestFullscreen; if (r) { const pr = r.call(box); if (pr && pr.catch) pr.catch(() => {}); } } catch (e) {}
-    CUP = null; S = null; RULE = MODE === 'daily' ? daily().rule : null; lbInit(); { const s0 = {}; TRACKS.forEach(tr => { const top = lbList(LB, tr.id)[0]; if (top) s0[tr.id] = top.who; }); if (Object.keys(s0).length) store.set('kartRecSeen', JSON.stringify(s0)); } preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); setTimeout(renderMenu, 900); menu.hidden = false; res.hidden = true; pm.hidden = true; racing(false);
+    CUP = null; S = null; RULE = MODE === 'daily' ? daily().rule : null; lbInit(); progSync(true); { const s0 = {}; TRACKS.forEach(tr => { const top = lbList(LB, tr.id)[0]; if (top) s0[tr.id] = top.who; }); if (Object.keys(s0).length) store.set('kartRecSeen', JSON.stringify(s0)); } preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); setTimeout(renderMenu, 900); menu.hidden = false; res.hidden = true; pm.hidden = true; racing(false);
     cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
   }
   function close() {
