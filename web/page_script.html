@@ -8838,16 +8838,25 @@ setGroup(G);
     acc: ['Start', '🚦 Wie schnell das Kart beim Start und nach Unfällen wieder auf Tempo ist (bis ±14 %). Kommt von der Pünktlichkeit (PÜN).'],
     tgh: ['Nehmer', '💥 Wie gut man Treffer wegsteckt: Nach Öl, Nasenbär oder Hindernis dreht man sich kürzer (bis ein Viertel schneller wieder unterwegs). Kommt von der Kater-Resistenz (KAT).']};
   let BX = null;
+  let FSL = null, RSPIN = 0;
+  function pickDrv(id) { const ch = me !== id; me = id; makeVehicles(); renderMenu(); newRace(); S.paused = true; if (ch) announce(me); }
+  // Ansage des Fahrernamens wie im Prügelspiel (Handy-Stimme), Auswahl-Geräusch
+  function announce(id) { try { SFX.pick(); noise(.22, .08, 2400); beep(120, .35, 'sawtooth', .07, 50); } catch (e) {}
+    if (!SOUND || !ANN || !window.speechSynthesis) return; try { const u = new SpeechSynthesisUtterance(NAME(id) + '!'); u.lang = 'de-DE'; u.rate = 1.05; u.pitch = .55; u.volume = 1; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {} }
   function renderMenu() {
     const pk = menu.querySelector('.kr-pick:not(.kr-whop)'); pk.innerHTML = '';
-    const grp = (t, ids) => { const h = document.createElement('p'); h.className = 'kr-pgh'; h.textContent = t; pk.appendChild(h);
-      ids.forEach(id => { const X = XBY[id], nm = NAME(id), b = document.createElement('button'); b.type = 'button'; b.dataset.id = id; b.setAttribute('aria-pressed', id === me); b.setAttribute('aria-label', nm); b.appendChild(headCv(id, 92)); b.insertAdjacentHTML('beforeend', '<span lang="de">' + esc(X ? (X.base ? X.e + ' ' + X.sh : nm) : nm) + '</span>'); pk.appendChild(b); }); };
-    grp('Crew', CREW.map(c => c.id)); grp('Crew im Ausnahmezustand', XDRV.filter(x => x.base).map(x => x.id)); grp('Figuren aus der Serie', XDRV.filter(x => x.npc).map(x => x.id));
+    // Fahrerauswahl im Stil von Smash Bros./Tekken: schräge Porträt-Kacheln, P1-Rahmen, Zufalls-Kachel
+    const grp = (t, ids, rnd0) => { const h = document.createElement('p'); h.className = 'kr-pgh'; h.textContent = t; pk.appendChild(h);
+      ids.forEach(id => { const X = XBY[id], nm = NAME(id), b = document.createElement('button'); b.type = 'button'; b.dataset.id = id; b.className = 'kr-tile'; b.style.setProperty('--tc', (LOOK[id] || {}).shirt || '#00a651'); b.setAttribute('aria-pressed', id === me); b.setAttribute('aria-label', nm);
+        const cv = headCv(id, 120); b.appendChild(cv); b.insertAdjacentHTML('beforeend', '<span lang="de">' + esc(X ? (X.base ? X.sh : nm) : nm) + '</span>' + (X && X.base ? '<em>' + X.e + '</em>' : '')); pk.appendChild(b); });
+      if (rnd0) { const b = document.createElement('button'); b.type = 'button'; b.className = 'kr-tile kr-rnd'; b.dataset.rnd = '1'; b.setAttribute('aria-label', 'Zufälliger Fahrer'); b.innerHTML = '<b>?</b><span>Zufall</span>'; pk.appendChild(b); } };
+    grp('Crew', CREW.map(c => c.id)); grp('Crew im Ausnahmezustand', XDRV.filter(x => x.base).map(x => x.id)); grp('Figuren aus der Serie', XDRV.filter(x => x.npc).map(x => x.id), 1);
     menu.querySelectorAll('.kr-mode button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === MODE));
     const cs = CS[me], bar = v => '<i style="--v:' + Math.round(20 + clamp(v, 0, 1) * 80) + '%"></i>', sp = SPECIAL[me], pg = pegel(baseOf(me));
-    const dv = menu.querySelector('.kr-drv'), cosE = (COS.find(c => c.id === cosOf(me)) || {}).e; dv.innerHTML = '<div class="kr-dc" style="--dc:' + ((LOOK[me] || {}).shirt || '#00a651') + '"><span class="kr-dch"></span><div><p class="kr-dn">' + esc(NAME(me)) + (cosE && cosOf(me) ? ' <small>' + cosE + ' Kostüm</small>' : '') + '</p><div class="kr-bars">' + BXK.map(k => '<button type="button" class="kr-bk" data-k="' + k + '" aria-pressed="' + (BX === k) + '"><span>' + BXT[k][0] + ' <u>ⓘ</u></span>' + bar(cs[k]) + '</button>').join('') + '</div>' +
+    const fresh = FSL !== me; FSL = me; const X0 = XBY[me], gl = X0 ? (X0.base ? 'Ausnahmezustand' : 'Serien-Figur') : 'Crew';
+    const dv = menu.querySelector('.kr-drv'), cosE = (COS.find(c => c.id === cosOf(me)) || {}).e; dv.innerHTML = '<div class="kr-fs' + (fresh ? ' in' : '') + '" style="--dc:' + ((LOOK[me] || {}).shirt || '#00a651') + '"><span class="kr-fsp"><span class="kr-dch"></span></span><div class="kr-fst"><small class="kr-fsg"><b>P1</b> ' + gl + '</small><p class="kr-dn">' + esc(NAME(me)) + '</p><p class="kr-fss">' + sp.e + ' ' + esc(sp.n) + (cosE && cosOf(me) ? ' · ' + cosE + ' Kostüm' : '') + '</p></div></div><div class="kr-dc2"><div class="kr-bars">' + BXK.map(k => '<button type="button" class="kr-bk" data-k="' + k + '" aria-pressed="' + (BX === k) + '"><span>' + BXT[k][0] + ' <u>ⓘ</u></span>' + bar(cs[k]) + '</button>').join('') + '</div>' +
       '<p class="kr-bx">' + (BX ? esc(BXT[BX][1]) + ' <b>' + esc(NAME(me)) + ': ' + (cs[BX] < .34 ? 'eher schwach' : cs[BX] < .67 ? 'mittel' : 'stark') + '.</b>' : 'Tipp auf einen Wert, dann steht hier, was er bewirkt.') + '</p>' +
-      (XBY[me] ? '<p class="kr-sp kr-xd">' + esc(XBY[me].x) + '</p>' : '') + '<p class="kr-sp">' + sp.e + ' <b>' + esc(sp.n) + '</b>: ' + esc(sp.x) + '</p>' + ((PERS[me] || {}).x ? '<p class="kr-sp kr-pp">🤖 Als Gegner: ' + esc(PERS[me].x) + '</p>' : '') + (pg > 0 ? '<p class="kr-sp">🍹 Heute schon ' + ((MEHUB.drinks || {})[baseOf(me)] || {}).today + ' Drinks: Lenkung wackelt!</p>' : '') + '</div></div>'; dv.querySelector('.kr-dch').replaceWith(headCv(me, 140));
+      (XBY[me] ? '<p class="kr-sp kr-xd">' + esc(XBY[me].x) + '</p>' : '') + '<p class="kr-sp">' + sp.e + ' <b>' + esc(sp.n) + '</b>: ' + esc(sp.x) + '</p>' + ((PERS[me] || {}).x ? '<p class="kr-sp kr-pp">🤖 Als Gegner: ' + esc(PERS[me].x) + '</p>' : '') + (pg > 0 ? '<p class="kr-sp">🍹 Heute schon ' + ((MEHUB.drinks || {})[baseOf(me)] || {}).today + ' Drinks: Lenkung wackelt!</p>' : '') + '</div>'; dv.querySelector('.kr-dch').replaceWith(headCv(me, 300)); { const x2 = menu.querySelector('.kr-drvx'); if (x2) { x2.innerHTML = ''; x2.appendChild(dv.querySelector('.kr-dc2')); } }
     menu.querySelectorAll('.kr-diff button').forEach(x => x.setAttribute('aria-pressed', +x.dataset.d === DIFF));
     const mv = myVeh(); menu.querySelector('.kr-vehs').innerHTML = VEHS.map(v => { const ok = unlocked(v); return '<button type="button" data-v="' + v.id + '" aria-pressed="' + (v.id === mv) + '"' + (ok ? '' : ' disabled') + ' title="' + esc(ok ? v.n : v.t) + '"><i>' + (ok ? v.e : '🔒') + '</i><small>' + esc(ok ? v.n : v.t) + '</small></button>'; }).join('');
     const tu = tune(), own = cosOwn(), mc = cosOf(me), cn = coins();
@@ -8961,7 +8970,10 @@ setGroup(G);
   });
   box.addEventListener('click', e => { if (e.target.closest('.kr-menu .kr-quit, .kr-res .kr-quit')) close(); });
   menu.addEventListener('click', e => {
-    const b = e.target.closest('.kr-pick:not(.kr-whop) button'); if (b) { me = b.dataset.id; makeVehicles(); renderMenu(); newRace(); S.paused = true; }
+    const rb = e.target.closest('.kr-pick:not(.kr-whop) .kr-rnd'); if (rb) { if (RSPIN) return; RSPIN = 1; const ids = DRVS.filter(id => id !== me), fin = pick(ids), tile = id => menu.querySelector('.kr-roster .kr-tile[data-id="' + id + '"]'); let n = 0, cur = null;
+      const spin = () => { if (cur && tile(cur)) tile(cur).classList.remove('kr-rl'); n++; cur = n >= 16 ? fin : pick(ids); const t0 = tile(cur); if (t0) t0.classList.add('kr-rl'); beep(500 + n * 40, .04, 'square', .04);
+        if (n < 16) setTimeout(spin, 40 + n * n * 1.4); else setTimeout(() => { RSPIN = 0; pickDrv(fin); }, 260); }; spin(); return; }
+    const b = e.target.closest('.kr-pick:not(.kr-whop) button[data-id]'); if (b) pickDrv(b.dataset.id);
     const m = e.target.closest('.kr-mode button'); if (m) { MODE = m.dataset.mode; store.set('kartMode', MODE); RULE = MODE === 'daily' ? daily().rule : null; preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); }
     const cb = e.target.closest('.kr-cups button'); if (cb) { CUPSEL = CUPS.find(c => c.id === cb.dataset.c) || CUPS[0]; store.set('kartCup', CUPSEL.id); preview(CUPSEL.t[0]); renderMenu(); }
     const pb = e.target.closest('.kr-paints button'); if (pb) { const all = loadJ('kartPaint'), pt = paintOf(me); pt.c = pb.dataset.p || null; all[me] = pt; store.set('kartPaint', JSON.stringify(all)); makeVehicles(); renderMenu(); return; }
