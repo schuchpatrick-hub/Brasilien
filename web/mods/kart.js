@@ -435,23 +435,18 @@
       [-1, 1].forEach(sd => { dot(sd * 5, -16, 2.6, '#e8d64a'); x.fillStyle = '#111'; x.fillRect(sd * 5 - .5, -18, 1, 4); }); }
     else return false; return true; }
   const HEAD = {}, VEH = {};
-  const PH = {}, HV = {};
-  function paintHead(id) { const ph = (PH[id] || [])[HV[id] || 0] || (PH[id] || [])[0], hs = HEAD[id]; if (!ph || !hs) return;
-    const L = LOOK[id] || {}, col = L.shirt || '#00a651', R = 52, sh = (STY[id] || {}).shp || 'circle', x = hs.getContext('2d'), {im, f} = ph, D = 2 * R * f.z;
-    x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, hs.width, hs.height); x.scale(hs.width / (2 * R + 12), hs.height / (2 * R + 12));
-    x.save(); x.translate(R + 6, R + 6); x.fillStyle = col; shapePath(x, sh, R + 6); x.fill(); shapePath(x, sh, R); x.clip(); x.drawImage(im, -f.x * D, -f.y * D, D, D); x.restore();
-    x.save(); x.translate(R + 6, R + 6); x.strokeStyle = 'rgba(255,255,255,.85)'; x.lineWidth = 2.5; shapePath(x, sh, R + 1); x.stroke(); x.restore(); x.setTransform(1, 0, 0, 1, 0, 0);
-    XDRV.filter(x0 => x0.base === id).forEach(x0 => { xHead(x0, ph, HEAD[x0.id]); }); HEADC = {}; }
-  // je Rennen pro Person zufällig eins ihrer Fotos (eigener Zufall, nicht der gemeinsame Zufall des Live-Rennens)
-  function pickFaces() { Object.keys(PH).forEach(id => { const n = PH[id].filter(Boolean).length; if (n < 2) return; const r = crypto.getRandomValues(new Uint8Array(1))[0] % PH[id].length; if (PH[id][r] && r !== (HV[id] || 0)) { HV[id] = r; paintHead(id); } }); }
   function makeHeads() {
     CREW.forEach(p => {
       const L = LOOK[p.id] || {}, col = L.shirt || '#00a651', R = 52, sh = (STY[p.id] || {}).shp || 'circle';
       const hs = sprite(2 * R + 12, 2 * R + 12, (x) => { x.translate(R + 6, R + 6); x.fillStyle = col; shapePath(x, sh, R + 6); x.fill();
         x.fillStyle = '#ffe0bd'; shapePath(x, sh, R); x.fill(); x.fillStyle = '#333'; x.font = '800 52px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(p.name[0], 0, 1); });
       HEAD[p.id] = hs; XDRV.filter(x0 => x0.base === p.id).forEach(x0 => { HEAD[x0.id] = xHead(x0, null); });
-      // Fotos: crew/<id>.jpg und optional ein zweites (photo2 + look.face2); je Rennen wird pro Person zufällig eins genommen (pickFaces)
-      if (p.photo) { PH[p.id] = []; [[p.photo, L.face], [p.photo2, L.face2]].forEach(([src, f], v) => { if (!src) return; const im = new Image(); im.onload = () => { PH[p.id][v] = {im, f: f || {x: .5, y: .5, z: 1}}; if ((HV[p.id] || 0) === v) paintHead(p.id); }; im.src = src; }); }
+      // Foto der Person; die Zustands-Figur (z. B. Patrick vollgefressen) nimmt das zweite Foto (photo2 + look.face2), falls vorhanden
+      if (p.photo) { const im = new Image(); im.onload = () => { const x = hs.getContext('2d'), f = L.face || {x: .5, y: .5, z: 1}, D = 2 * R * f.z;
+        x.setTransform(1, 0, 0, 1, 0, 0); x.save(); x.translate(R + 6, R + 6); shapePath(x, sh, R); x.clip(); x.drawImage(im, -f.x * D, -f.y * D, D, D); x.restore();
+        x.save(); x.translate(R + 6, R + 6); x.strokeStyle = 'rgba(255,255,255,.85)'; x.lineWidth = 2.5; shapePath(x, sh, R + 1); x.stroke(); x.restore();
+        if (!p.photo2) XDRV.filter(x0 => x0.base === p.id).forEach(x0 => { xHead(x0, {im, f}, HEAD[x0.id]); }); HEADC = {}; }; im.src = p.photo; }
+      if (p.photo2) { const im2 = new Image(); im2.onload = () => { const f = L.face2 || {x: .5, y: .5, z: 1}; XDRV.filter(x0 => x0.base === p.id).forEach(x0 => { xHead(x0, {im: im2, f}, HEAD[x0.id]); }); HEADC = {}; }; im2.src = p.photo2; }
     });
     XDRV.filter(x0 => x0.npc).forEach(x0 => { HEAD[x0.id] = xHead(x0, null); });
   }
@@ -1928,17 +1923,17 @@
   let BX = null;
   // Hochaufgelöste Porträts fürs Menü: direkt aus dem Foto (nicht aus dem kleinen Renn-Kopf), eckig, mit Zeichnungen der Zustände
   const PIMG = {}; let PCACHE = {}, PRT = 0;
-  function pimg(id) { const p = CREW.find(c => c.id === id); if (!p || !p.photo) return null; const im = PIMG[id]; if (im) return im.ok ? im : null;
-    const n = new Image(); PIMG[id] = n; n.onload = () => { n.ok = 1; PCACHE = {}; clearTimeout(PRT); PRT = setTimeout(() => { if (!box.hidden && !menu.hidden) renderMenu(); }, 60); }; n.src = p.photo; return null; }
+  function pimg(id, alt) { const p = CREW.find(c => c.id === id), src = p && (alt ? p.photo2 : p.photo), key = id + (alt ? '#2' : ''); if (!src) return null; const im = PIMG[key]; if (im) return im.ok ? im : null;
+    const n = new Image(); PIMG[key] = n; n.onload = () => { n.ok = 1; PCACHE = {}; clearTimeout(PRT); PRT = setTimeout(() => { if (!box.hidden && !menu.hidden) renderMenu(); }, 60); }; n.src = src; return null; }
   function portrait(id, w, h, zm) { const dpr = Math.min(3, Math.max(2, window.devicePixelRatio || 1)), key = id + ':' + w + 'x' + h + ':' + (zm || 1); if (PCACHE[key]) return cloneCv(PCACHE[key], w, h);
-    const X = XBY[id], b = X && X.base ? X.base : (X ? null : id), col = (LOOK[id] || {}).shirt || '#00a651', im = b ? pimg(b) : null;
+    const X = XBY[id], b = X && X.base ? X.base : (X ? null : id), alt = !!(X && X.base && (CREW.find(c => c.id === X.base) || {}).photo2), col = (LOOK[id] || {}).shirt || '#00a651', im = b ? pimg(b, alt) : null;
     const c = document.createElement('canvas'); c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); const x = c.getContext('2d'); x.scale(dpr, dpr); x.imageSmoothingQuality = 'high';
     const g = x.createRadialGradient(w * .5, h * .38, 4, w * .5, h * .5, h * .85); g.addColorStop(0, col); g.addColorStop(1, '#0b1220'); x.fillStyle = g; x.fillRect(0, 0, w, h);
     x.save(); x.globalAlpha = .12; x.strokeStyle = '#fff'; x.lineWidth = w * .05; for (let q = -h; q < w + h; q += w * .16) { x.beginPath(); x.moveTo(q, h); x.lineTo(q + h * .6, 0); x.stroke(); } x.restore();
     const em = (e, px, ex, ey, rot) => { x.save(); x.translate(ex, ey); if (rot) x.rotate(rot); x.font = px + 'px system-ui,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji"'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.shadowColor = 'rgba(0,0,0,.45)'; x.shadowBlur = px * .15; x.fillText(e, 0, 0); x.restore(); };
     let eyeY = h * .45;
     if (X && X.npc) em(X.e, h * .66, w / 2, h * .54);
-    else if (im) { const f = (LOOK[b] || {}).face || {x: .5, y: .5, z: 1, e: .45}, D = Math.min(w, h) * 1.15 * (zm || 1) * f.z, cx = w / 2, cy = h * .5, sx = X && X.ov === 'fat' ? 1.18 : 1;
+    else if (im) { const f = (alt && (LOOK[b] || {}).face2) || (LOOK[b] || {}).face || {x: .5, y: .5, z: 1, e: .45}, D = Math.min(w, h) * 1.15 * (zm || 1) * f.z, cx = w / 2, cy = h * .5, sx = X && X.ov === 'fat' ? 1.18 : 1;
       x.save(); x.translate(cx, cy); x.scale(sx, 1); x.drawImage(im, -f.x * D, -f.y * D, D, D); x.restore(); eyeY = cy + ((f.e || .45) - f.y) * D;
       const v = x.createLinearGradient(0, h * .55, 0, h); v.addColorStop(0, 'rgba(11,18,32,0)'); v.addColorStop(1, 'rgba(11,18,32,.85)'); x.fillStyle = v; x.fillRect(0, 0, w, h); }
     else { x.fillStyle = 'rgba(255,255,255,.85)'; x.font = '900 ' + h * .5 + 'px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(NAME(id)[0], w / 2, h * .52); }
@@ -2060,7 +2055,7 @@
     L.querySelector('.kr-load-tip').textContent = '💡 ' + pick(TIPS); L.hidden = false; const t0 = performance.now(); setTimeout(() => { fn(); setTimeout(() => { L.hidden = true; }, Math.max(0, 900 - (performance.now() - t0))); }, 40); }
   function startRace() { if (MODE === 'live' && !LIVE.pending) { liveGo(); return; } const tid = CUP ? CUP.list[CUP.i] : RULE ? daily().track.id : TRK; menu.hidden = true; res.hidden = true; pm.hidden = true; racing(true); if (S) S.paused = true; showLoad(tid, startRace0); }
   function startRace0() {
-    setTimeout(() => { if (BUF.more) BUF.more(); }, 1200); pickFaces();
+    setTimeout(() => { if (BUF.more) BUF.more(); }, 1200); 
     menu.hidden = true; res.hidden = true; pm.hidden = true; racing(true);
     if (CUP) { RULE = null; loadTrack(CUP.list[CUP.i]); } else if (RULE) loadTrack(daily().track.id, RULE.k === 'rev'); else loadTrack(TRK);
     if (LIVE.pending) { LIVE.race = LIVE.pending; LIVE.pending = null; } else if (MODE !== 'live') LIVE.race = null;
