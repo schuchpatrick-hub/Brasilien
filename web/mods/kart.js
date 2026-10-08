@@ -755,7 +755,7 @@
     // Alter der Meldung = Laufzeit übers Netz + seit dem Empfang vergangene Zeit (ohne st: geschätzt)
     const age = clamp((st !== undefined ? S.t - st : (now - lb.t) / 1000 + .08), 0, .8);
     if (last.done || last.sp || !(last.v > 5)) return out;
-    if (last.lat !== undefined && Math.abs(last.lat) < TW && last.idx !== undefined) { const i2 = last.idx + last.v * age / 6, [x, y] = at(i2, last.lat); out.x = x; out.y = y; out.a = tdir(i2) + angd(last.a, tdir(last.idx)); }
+    if (last.lat !== undefined && Math.abs(last.lat) < TW && last.idx !== undefined && onCut(last.x, last.y) === false) { const i2 = last.idx + last.v * age / 6, [x, y] = at(i2, last.lat); out.x = x; out.y = y; out.a = tdir(i2) + angd(last.a, tdir(last.idx)); }
     else { out.x += Math.cos(last.a) * last.v * age; out.y += Math.sin(last.a) * last.v * age; }
     return out; }
   // ferngesteuerte Karts: Position aus der presence, weich nachgeführt
@@ -1161,7 +1161,7 @@
       const cq = onCut(k.x, k.y), edge = cq !== false ? -50 : Math.abs(k.lat) - TW / 2, offT = edge > -4 && !k.air, me1 = ks[0], deep = clamp((edge + 4) / 45, 0, 1);
       // Randsteine: rütteln, leicht bremsen
       if (!k.air && T.veh !== 'boat' && edge > -16 && edge < 8 && k.v > 80) { k.rumble -= dt; if (k.rumble <= 0) { k.rumble = .07; if (k.me) { S.shake = Math.max(S.shake, .06); noise(.04, .05, 0, 0, 0, 180); } } }
-      const blt = T.belts && !k.air ? T.belts.find(q => k.idx >= q[0] * N && k.idx <= q[1] * N) : null;
+      const blt = T.belts && !k.air && !k.onCut ? T.belts.find(q => k.idx >= q[0] * N && k.idx <= q[1] * N) : null;
       let vmax = (blt ? 1 + blt[2] * .16 : 1) * (k.me ? 1 + S.tu.m * .012 + Math.min(10, k.coins) * .004 : 1) * VMAX * k.skill * (.97 + k.cs.spd * .06) * k.vt[0] * k.pf.v * (k.slowT > 0 ? .55 : 1) * (k.blind > 0 ? .8 : 1) * (offT ? 1 - (1 - T.off) * deep * k.pf.off : 1) * (edge > -16 && edge < 8 && !k.air ? .985 : 1) * (k.wet > 0 ? .68 : 1) * (k.boost > 0 ? 1.45 : 1) * (k.done ? .6 : 1) * (k.dr ? .97 : 1 - Math.abs(k.steer) * .1) * (k.brk ? .35 : 1) * (cq !== false && k.boost <= 0 ? .86 : 1);   // starkes Einlenken kostet Tempo (Reifenabrieb)
       if (!k.me && !k.done) { const gap = (progress(me1) - progress(k)) / N; vmax *= clamp(1 + gap * DIFFS[DIFF].rb, .9, 1.12);   // Gummiband: knapp bleibt spannend
         let ca = 0; for (let j = 10; j < 60; j += 6) ca = Math.max(ca, Math.abs(CURV[wrap(k.idx + j)])); vmax *= 1 - clamp((ca - .003) * 55, 0, .2) * k.pp.brake;
@@ -1205,7 +1205,11 @@
         [[-s * 11, c * 11], [s * 11, -c * 11]].forEach(([ox, oy], j) => { const p = k['mk' + j]; if (p) S.marks.push([p[0], p[1], rx + ox, ry + oy]); k['mk' + j] = [rx + ox, ry + oy]; });
         if (S.marks.length > 700) S.marks.splice(0, S.marks.length - 700); } else { k.mk0 = k.mk1 = null; }
       // Fortschritt und Runden
-      const prev = k.idx; [k.idx, k.lat] = nearest(k.x, k.y, k.idx);
+      // Auf dem Schleichweg zählt der Fortschritt anteilig zwischen Ein- und Ausfahrt (sonst springt der nächste Streckenpunkt wild hin und her, Platz und Runde stimmen nicht)
+      const prev = k.idx, cqp = onCut(k.x, k.y);
+      if (cqp !== false && CUT.i2 - CUT.i1 > 30) { const ax = CUT.b[0] - CUT.a[0], ay = CUT.b[1] - CUT.a[1], l = Math.hypot(ax, ay) || 1; k.idx = wrap(Math.round(CUT.i1 + cqp * (CUT.i2 - CUT.i1))); k.lat = ((k.x - CUT.a[0]) * -ay + (k.y - CUT.a[1]) * ax) / l * .3; }
+      else [k.idx, k.lat] = nearest(k.x, k.y, k.idx);
+      k.onCut = cqp !== false;   // Schranken, Pfeile, Schanze, Gepäckbänder liegen auf der normalen Strecke, nicht auf dem Schleichweg
       if (k.idx > N * .4 && k.idx < N * .6) k.half = true;
       // Zwischenzeiten: zwei Messpunkte pro Runde (1/3, 2/3), Vergleich mit der eigenen besten Zwischenzeit
       if (k.me && !k.done && k.lap >= 0 && S.t > 0) [1, 2].forEach(j => { const bi = Math.round(N * j / 3); if (prev < bi && k.idx >= bi && k.idx - prev < 40) { const st = S.t - k.lapT0, key = 'kartSec.' + T.id + (RULE ? '@' + RULE.k : ''); let bs = []; try { bs = JSON.parse(store.get(key) || '[]'); } catch (e) {}
@@ -1223,13 +1227,13 @@
       if (k.me && S.t > 4 && !k.done) { const rv = S.karts.find(o => o.id === S.rival); if (rv && !rv.done) { const ah = progress(rv) > progress(k);
           if (S.rivalAhead && !ah && S.t - S.rivalSaid > 12) { S.rivalSaid = S.t; floatTxt(k, '⚔️ Rivale überholt!', '#ffb86b'); say('rival', 'Der Rivale ist überholt!'); } S.rivalAhead = ah; } }
       // Schranken: geschlossen = Anhalten
-      S.gates.forEach(g => { const shut = gateShut(g); if (shut && prev < g.i && k.idx >= g.i && k.idx - prev < 30 && !k.air) { const [bx, by] = at(g.i - 4, k.lat); k.x = bx; k.y = by; k.v = 0; k.vr = 0; k.bump = .4; if (k.me) { S.shake = .25; vib(40); SFX.land(); k.say = HITSAY.gate; k.sayT = 1.2; } }
+      S.gates.forEach(g => { const shut = gateShut(g) && !k.onCut; if (shut && prev < g.i && k.idx >= g.i && k.idx - prev < 30 && !k.air) { const [bx, by] = at(g.i - 4, k.lat); k.x = bx; k.y = by; k.v = 0; k.vr = 0; k.bump = .4; if (k.me) { S.shake = .25; vib(40); SFX.land(); k.say = HITSAY.gate; k.sayT = 1.2; } }
         if (!k.me && shut && g.i - k.idx > 0 && g.i - k.idx < 45) k.v = Math.min(k.v, 60);
         if (k.me && shut && g.i - k.idx > 0 && g.i - k.idx < 70 && g.said !== k.lap) { g.said = k.lap; say('gate', 'Achtung, Schranke!'); } });
       // Boost-Pfeile, Schanze, Luft
-      if (!k.air && k.pad <= 0) { const pd = PADS.find(p => Math.abs(p.i - k.idx) < 5 && Math.abs(p.l - k.lat) < 24); if (pd) { k.boost = Math.max(k.boost, .8); k.pad = .5; if (k.me) { SFX.pad(); vib(15); } } }
+      if (!k.air && k.pad <= 0 && !k.onCut) { const pd = PADS.find(p => Math.abs(p.i - k.idx) < 5 && Math.abs(p.l - k.lat) < 24); if (pd) { k.boost = Math.max(k.boost, .8); k.pad = .5; if (k.me) { SFX.pad(); vib(15); } } }
       k.pad -= dt;
-      if (RAMP >= 0 && prev < RAMP && k.idx >= RAMP && k.idx - prev < 30 && !k.air && Math.abs(k.lat) < TW / 2 && k.v > 170) { k.airT = k.air = (.55 + k.v / 1400) * k.pf.air; k.trick = 0; if (k.me) { SFX.jump(); say('jump', 'Abflug!'); } else if (Math.random() < .5) k.trick = 1; }
+      if (RAMP >= 0 && !k.onCut && prev < RAMP && k.idx >= RAMP && k.idx - prev < 30 && !k.air && Math.abs(k.lat) < TW / 2 && k.v > 170) { k.airT = k.air = (.55 + k.v / 1400) * k.pf.air; k.trick = 0; if (k.me) { SFX.jump(); say('jump', 'Abflug!'); } else if (Math.random() < .5) k.trick = 1; }
       if (k.air > 0) { k.air -= dt; if (k.me && k.trick === 0 && anyInput() && k.airT - k.air > .08) { k.trick = 1; SFX.trick(); ach('trick'); }
         if (k.air <= 0) { k.air = 0; k.squash = .3; if (k.pf.land) { k.boost = Math.max(k.boost, .9); if (k.me) floatTxt(k, "🏄 Surf-Landung!", "#7fd3ff"); } for (let j = 0; j < 10; j++) { const an = j / 10 * TAU; S.fx.push({x: k.x + Math.cos(an) * 14, y: k.y + Math.sin(an) * 14, dust: 1, t: 0, c: '210,190,150'}); } if (k.me) { SFX.land(); vib(25); } if (k.trick) { k.boost = Math.max(k.boost, .7); if (k.me) { floatTxt(k, '🤸 Trick!', '#7fffa5'); say('trick', 'Was für ein Trick!'); } } } }
       // Item-Roulette
