@@ -607,6 +607,8 @@
     if (d.t === 'taunt') { LIVE.taunts[m.sameTab ? LIVE.me : m.peer] = {txt: String(d.txt || '').slice(0, 160), until: performance.now() + 6000}; if (!m.sameTab) beep(990, .07, 'triangle', .05); if (!menu.hidden && MODE === 'live') { liveBox(); setTimeout(() => { if (!menu.hidden && MODE === 'live') liveBox(); }, 6100); } return; }
     if (d.t === 'rj' && !m.sameTab && S && S.live && S.live.id === d.race && !S.karts[0].done) { liveEmit({t: 'rjs', race: d.race, to: d.from, st: +S.t.toFixed(3)}); return; }
     if (d.t === 'rjs' && d.to === LIVE.me && LIVE.rjWait && LIVE.rjWait.race.id === d.race && !LIVE.race) { const sv = LIVE.rjWait; LIVE.rjWait = null; liveRejoinGo(sv, d.st); return; }
+    if (d.t === 'cs' && !m.sameTab && S && S.live && S.live.id === d.race && d.to === LIVE.me) { liveEmit({t: 'csr', race: d.race, id: d.id, to: d.from, th: +S.t.toFixed(4)}); return; }
+    if (d.t === 'csr' && d.to === LIVE.me && S && S.live && S.live.id === d.race) { liveClockReply(d); return; }
     if (!S || !LIVE.race || d.race !== LIVE.race.id) return; const k0 = S.karts[0];
     if (d.t === 'box' && !m.sameTab) { const b = S.boxes[d.i]; if (b) b.off = Math.max(b.off, 3); return; }
     if (d.t === 'bump' && d.to === LIVE.me && !k0.done) { const pu = clamp(d.p || 4, 2, 12); k0.x -= d.nx * pu; k0.y -= d.ny * pu; k0.vr -= (d.nx * -Math.sin(k0.a) + d.ny * Math.cos(k0.a)) * pu * 9; k0.v *= .97; if (!S.bumpT) { S.bumpT = .25; noise(.08, .1, 0, 0, 0, 900); vib(15); } return; }
@@ -618,26 +620,37 @@
   // ferngesteuerte Karts: Position aus der presence, weich nachgeführt
   // Empfangene Positionen mit Empfangszeit puffern (eigene Uhr, unabhängig von der Uhrzeit der anderen Handys)
   function liveRecv(peers) { const tn = performance.now();
-    peers.forEach(p0 => { const pr = p0.presence; if (!pr || !pr.race || pr.n === undefined || p0.sameTab) return; const sig = pr.race + '|' + pr.n; if (LIVE.lastN[p0.peer] === sig) return; LIVE.lastN[p0.peer] = sig;
+    peers.forEach(p0 => { const pr = p0.presence; if (!pr || !pr.race || pr.n === undefined || p0.sameTab) return; const sig = pr.race + '|' + pr.n, ln = LIVE.lastN[p0.peer]; if (ln === sig) return; if (ln && ln.split('|')[0] === pr.race && +ln.split('|')[1] > pr.n) return; LIVE.lastN[p0.peer] = sig;
       if (pr.rj && S && S.live && pr.race === S.live.id && pr.rj !== p0.peer) { const ok = S.karts.find(k => k.peer === pr.rj && k.aiIdx === undefined); if (ok) { ok.peer = p0.peer; ok.vkey = 'r:' + p0.peer; S.karts.forEach(k => { if (k.peer === pr.rj) k.peer = p0.peer; }); } S.live.players = (S.live.players || []).map(x => x === pr.rj ? p0.peer : x); if (S.live.curHost === pr.rj) S.live.curHost = p0.peer; }
       const b = LIVE.buf[p0.peer] || (LIVE.buf[p0.peer] = []); if (b.length && b[b.length - 1].race !== pr.race) b.length = 0; b.push({t: tn, race: pr.race, q: pr}); if (b.length > 16) b.shift(); }); }
   // Zustand eines fremden Karts etwas in der Vergangenheit (Puffer ≈ 1,7 Sendeabstände): zwischen zwei Meldungen weich überblenden, bei Lücken kurz vorausrechnen
+  // Zustand eines fremden Karts JETZT: letzte Meldung + Vorhersage. Jede Meldung trägt die Rennzeit des Absenders (tm); da alle Rennuhren
+  // gemeinsam laufen, ist S.t − st das Alter der Meldung (Netz-Laufzeit). So weit wird das Kart entlang der Strecke vorausgerechnet (auch in Kurven).
+  const tdir = i => { const a = P[wrap(i)], b2 = P[wrap(i + 1)]; return Math.atan2(b2[1] - a[1], b2[0] - a[0]); };
   function liveSample(peer, conv) { const b = LIVE.buf[peer]; if (!b || !b.length || b[b.length - 1].race !== LIVE.race.id) return null;
-    const now = performance.now(), n = b.length, iv = n > 4 ? (b[n - 1].t - b[n - 5].t) / 4 : 70, rt = now - clamp(iv * 1.7, 80, 280), last = conv(b[n - 1].q); if (!last) return null;
-    const out = Object.assign({}, last, {age: now - b[n - 1].t});
-    if (rt >= b[n - 1].t) { const e = Math.min(.3, (rt - b[n - 1].t) / 1000); out.x += Math.cos(last.a) * last.v * e; out.y += Math.sin(last.a) * last.v * e; return out; }
-    if (n < 2) return out; let j = n - 2; while (j > 0 && b[j].t > rt) j--; const s0 = conv(b[j].q), s1 = conv(b[j + 1].q); if (!s0 || !s1) return out;
-    if (rt <= b[j].t || Math.hypot(s1.x - s0.x, s1.y - s0.y) > 320) { out.x = (rt <= b[j].t ? s0 : s1).x; out.y = (rt <= b[j].t ? s0 : s1).y; out.a = (rt <= b[j].t ? s0 : s1).a; return out; }
-    const f = clamp((rt - b[j].t) / Math.max(1, b[j + 1].t - b[j].t), 0, 1); out.x = s0.x + (s1.x - s0.x) * f; out.y = s0.y + (s1.y - s0.y) * f; out.a = s0.a + angd(s1.a, s0.a) * f; out.v = s0.v + (s1.v - s0.v) * f; return out; }
+    const now = performance.now(), lb = b[b.length - 1], last = conv(lb.q); if (!last) return null;
+    const out = Object.assign({}, last, {age: now - lb.t}), st = lb.q.tm;
+    // Alter der Meldung = Laufzeit übers Netz + seit dem Empfang vergangene Zeit (ohne st: geschätzt)
+    const age = clamp((st !== undefined ? S.t - st : (now - lb.t) / 1000 + .08), 0, .8);
+    if (last.done || last.sp || !(last.v > 5)) return out;
+    if (last.lat !== undefined && Math.abs(last.lat) < TW && last.idx !== undefined) { const i2 = last.idx + last.v * age / 6, [x, y] = at(i2, last.lat); out.x = x; out.y = y; out.a = tdir(i2) + angd(last.a, tdir(last.idx)); }
+    else { out.x += Math.cos(last.a) * last.v * age; out.y += Math.sin(last.a) * last.v * age; }
+    return out; }
   // ferngesteuerte Karts: Position aus der presence, weich nachgeführt
-  function liveRemote(k, dt) { const conv = k.aiIdx !== undefined ? q => { const r0 = (q.ai || [])[k.aiIdx]; return r0 ? {x: r0[0], y: r0[1], a: r0[2], v: r0[3], lap: r0[4], idx: r0[5], done: r0[6], b: r0[7], sp: r0[8]} : null; } : q => q;
+  // Empfangene Positionen mit Empfangszeit puffern (eigene Uhr, unabhängig von der Uhrzeit der anderen Handys)
+  function liveRecv(peers) { const tn = performance.now();
+    peers.forEach(p0 => { const pr = p0.presence; if (!pr || !pr.race || pr.n === undefined || p0.sameTab) return; const sig = pr.race + '|' + pr.n, ln = LIVE.lastN[p0.peer]; if (ln === sig) return; if (ln && ln.split('|')[0] === pr.race && +ln.split('|')[1] > pr.n) return; LIVE.lastN[p0.peer] = sig;
+      if (pr.rj && S && S.live && pr.race === S.live.id && pr.rj !== p0.peer) { const ok = S.karts.find(k => k.peer === pr.rj && k.aiIdx === undefined); if (ok) { ok.peer = p0.peer; ok.vkey = 'r:' + p0.peer; S.karts.forEach(k => { if (k.peer === pr.rj) k.peer = p0.peer; }); } S.live.players = (S.live.players || []).map(x => x === pr.rj ? p0.peer : x); if (S.live.curHost === pr.rj) S.live.curHost = p0.peer; }
+      const b = LIVE.buf[p0.peer] || (LIVE.buf[p0.peer] = []); if (b.length && b[b.length - 1].race !== pr.race) b.length = 0; b.push({t: tn, race: pr.race, q: pr}); if (b.length > 16) b.shift(); }); }
+  // ferngesteuerte Karts: Position aus der presence, weich nachgeführt
+  function liveRemote(k, dt) { const conv = k.aiIdx !== undefined ? q => { const r0 = (q.ai || [])[k.aiIdx]; return r0 ? {x: r0[0], y: r0[1], a: r0[2], v: r0[3], lap: r0[4], idx: r0[5], done: r0[6], b: r0[7], sp: r0[8], lat: r0[9]} : null; } : q => q;
     const q = liveSample(k.peer, conv), stale = !q || (q.age > 6000 && !q.done);
     if (stale) { k.gone = (k.gone || 0) + dt; k.lagging = 1; if (k.gone > 6 && !k.done) { k.out = 1; k.lap = -5; } return; } k.gone = 0; k.out = 0; k.lagging = q.age > 1200 ? 1 : 0;
-    if (k.x0 === undefined) { k.x = q.x; k.y = q.y; k.a = q.a; } const f = Math.min(1, dt * 22); k.x += (q.x - k.x) * f; k.y += (q.y - k.y) * f; k.x0 = 1;
+    if (k.x0 === undefined || Math.hypot(q.x - k.x, q.y - k.y) > 160) { k.x = q.x; k.y = q.y; k.a = q.a; } const f = Math.min(1, dt * 14); k.x += (q.x - k.x) * f; k.y += (q.y - k.y) * f; k.x0 = 1;
     k.a += angd(q.a, k.a) * f; k.v = q.v; k.lap = q.lap; k.idx = q.idx; k.lat = q.lat || 0; k.done = q.done || 0; k.boost = q.b ? .2 : 0; k.spin = q.sp ? .2 : 0; k.rot = q.sp ? k.rot + dt * 14 : 0; k.steer = q.st || 0; k.shield = q.sh ? 1 : 0; }
-  function liveSend(k) { const now = performance.now(); if (now - LIVE.sentAt < 66) return; LIVE.sentAt = now;
+  function liveSend(k) { const now = performance.now(); if (now - LIVE.sentAt < 50) return; LIVE.sentAt = now;
     liveKeep(k); liveHostCheck();
-    livePres({race: LIVE.race.id, rj: LIVE.race.rjFrom || undefined, n: ++LIVE.seq, x: Math.round(k.x), y: Math.round(k.y), a: +k.a.toFixed(3), v: Math.round(k.v), lap: k.lap, idx: k.idx, lat: Math.round(k.lat), done: k.done ? +k.done.toFixed(3) : 0, b: k.boost > 0 ? 1 : 0, sp: k.spin > 0 ? 1 : 0, st: +k.steer.toFixed(2), sh: k.shield > 0 ? 1 : 0, ai: S.karts.filter(o => o.aiIdx !== undefined && !o.remote).map(o => [Math.round(o.x), Math.round(o.y), +o.a.toFixed(3), Math.round(o.v), o.lap, o.idx, o.done ? +o.done.toFixed(3) : 0, o.boost > 0 ? 1 : 0, o.spin > 0 ? 1 : 0])}); }
+    livePres({race: LIVE.race.id, rj: LIVE.race.rjFrom || undefined, n: ++LIVE.seq, tm: +S.t.toFixed(3), x: Math.round(k.x), y: Math.round(k.y), a: +k.a.toFixed(3), v: Math.round(k.v), lap: k.lap, idx: k.idx, lat: Math.round(k.lat), done: k.done ? +k.done.toFixed(3) : 0, b: k.boost > 0 ? 1 : 0, sp: k.spin > 0 ? 1 : 0, st: +k.steer.toFixed(2), sh: k.shield > 0 ? 1 : 0, ai: S.karts.filter(o => o.aiIdx !== undefined && !o.remote).map(o => [Math.round(o.x), Math.round(o.y), +o.a.toFixed(3), Math.round(o.v), o.lap, o.idx, o.done ? +o.done.toFixed(3) : 0, o.boost > 0 ? 1 : 0, o.spin > 0 ? 1 : 0, Math.round(o.lat)])}); }
   // Fahrschule: eine geführte Runde allein auf Guarujá
   const TUT = [{t: 'Lenken: links oder rechts halten (Analog: Daumen-Position).', ok: k => (S.tut.st = (S.tut.st || 0) + (Math.abs(k.steer) > .6 ? 1 / 60 : 0)) > .8},
     {t: 'Driften: in der Kurve doppelt tippen und halten, Funken sammeln, dann loslassen = Turbo!', ok: () => S.tutMini},
@@ -672,6 +685,12 @@
     const ids = Object.keys(r).sort((a, b) => (w[b] || 0) - (w[a] || 0) || r[b] - r[a]); if (!ids.length) return '';
     return '<p class="kr-live-b">📊 <b>Live-Bilanz</b> (' + LIVEST.length + ' Rennen): ' + ids.slice(0, 6).map((id, i) => (i === 0 && w[id] ? '👑 ' : '') + esc(NAME(id)) + ' ' + (w[id] || 0) + '/' + r[id]).join(' · ') + '</p>'; }
   function liveLeave() { if (LIVE.race) { LIVE.race = null; livePres(); } }
+  // Uhrabgleich im Countdown: Rennuhr an die des Starters angleichen (hin und zurück messen, halbe Laufzeit, kürzeste Messung zählt)
+  function liveClockSync() { const L = S && S.live; if (!L || !L.host || L.host === LIVE.me) return; L.cs = {sent: {}, best: null};
+    for (let i = 0; i < 6; i++) setTimeout(() => { if (!S || S.live !== L) return; const id = Math.random().toString(36).slice(2, 7); L.cs.sent[id] = S.t; liveEmit({t: 'cs', race: L.id, id, from: LIVE.me, to: L.host}); }, 120 + i * 180); }
+  function liveClockReply(d) { const L = S.live, cs = L.cs, tc = cs && cs.sent[d.id]; if (tc === undefined) return; delete cs.sent[d.id]; const tr = S.t, rtt = tr - tc;
+    if (rtt < 0 || rtt > 2 || (cs.best && cs.best.rtt <= rtt)) return; const off = d.th + rtt / 2 - tr; cs.best = {rtt, off};
+    if (Math.abs(off) > .008) { L.t0p -= off * 1000; S.t += off; } L.rtt = rtt; }
   // Gastgeber-Wechsel: fällt der Gastgeber (rechnet die Computer-Gegner) aus, übernimmt der nächste lebende Spieler (gleiche Regel auf allen Handys)
   function liveHostCheck() { const L = S.live; if (!L || !(L.ai || []).length || S.t < 3) return; const now = performance.now(); if (now - (LIVE.hcT || 0) < 500) return; LIVE.hcT = now;
     const alive = pr => pr === LIVE.me || (b => b && b.length && (now - b[b.length - 1].t < 3500 || b[b.length - 1].q.done))(LIVE.buf[pr]);
@@ -1574,7 +1593,7 @@
     if (LR0) { S.seed = LR0.seed || LR0.id; S.wave.next = wrnd('wave', 9, 13); S.storm.at = CF.storm === 'on' ? wrnd('storm', 12, 26) : CF.storm === 'rnd' && T.id !== 'cristo' && wr('storm') < .33 ? wrnd('storm', 22, 40) : -1; if (CF.items === 'off') S.boxes = []; }
     S.ev = {next: wrnd('ev', 15, 24), cur: null}; S.evOn = !TUTON && (LR0 ? CF.ev !== 'off' : SET.ev !== 'off');
     if (TUTON) { S.tut = {i: 0, ok: 0}; S.karts.length = 1; LAPS = 2; S.storm.at = -1; S.rival = null; }
-    if (LIVE.race) { S.live = LIVE.race; S.live.t0p = LIVE.race.delay && LIVE.race.rt ? LIVE.race.rt + LIVE.race.delay : performance.now() + clamp(LIVE.race.at - Date.now(), 500, 6000); S.t = clamp((performance.now() - S.live.t0p) / 1000, -6, -.5); LIVE.buf = {}; LIVE.lastN = {}; S.live.curHost = S.live.host; liveRejoinRestore(); } box.classList.toggle('live', !!S.live); S.tod = T.night || SET.tod === 'day' ? 'day' : (h => h >= 19 || h < 6 ? 'night' : h >= 17 ? 'dusk' : h < 7 ? 'dawn' : 'day')(+new Intl.DateTimeFormat('en-GB', {timeZone: 'America/Sao_Paulo', hour: 'numeric', hour12: false}).format(new Date()) % 24);
+    if (LIVE.race) { S.live = LIVE.race; S.live.t0p = LIVE.race.delay && LIVE.race.rt ? LIVE.race.rt + LIVE.race.delay : performance.now() + clamp(LIVE.race.at - Date.now(), 500, 6000); S.t = clamp((performance.now() - S.live.t0p) / 1000, -6, -.5); LIVE.buf = {}; LIVE.lastN = {}; S.live.curHost = S.live.host; liveRejoinRestore(); liveClockSync(); } box.classList.toggle('live', !!S.live); S.tod = T.night || SET.tod === 'day' ? 'day' : (h => h >= 19 || h < 6 ? 'night' : h >= 17 ? 'dusk' : h < 7 ? 'dawn' : 'day')(+new Intl.DateTimeFormat('en-GB', {timeZone: 'America/Sao_Paulo', hour: 'numeric', hour12: false}).format(new Date()) % 24);
     if (!CUP && !RULE && GHOST.mode !== 'off') { const tid = T.id, s0 = S; ghostFor(tid).then(g => { if (S === s0 && g) { S.ghost = g; ghostProg(g); } }); } audio(); MUS.on = false; MUS.fast = false; MUS.step = 0; MUS.next = 0; banner = null; last = 0; if (MG && AC) MG.gain.value = .5;
     setTimeout(() => { if (S && S.tod === 'night' && !T.night) setTimeout(() => say('night', 'Es wird Nacht! Licht an!'), 2600); if (S && S.t < 0) say('t_' + T.id, RULE ? 'Tages-Challenge: ' + RULE.n + '!' : 'Willkommen in ' + T.name + '!', 1); }, 150);
   }
@@ -1700,5 +1719,5 @@
   openBtn.addEventListener('click', () => { if (LIVE.waiting && MODE !== 'live') { MODE = 'live'; store.set('kartMode', MODE); setTimeout(renderMenu, 50); } }, true);
   box.addEventListener('click', e => { const w = e.target.closest('.kr-whop button'); if (w) setMe(w.dataset.who); });
   window.__kartAt = (i, l) => at(i, l); window.__kartTW = () => TW;
-  window.__kart = {hymn: id => hymn(id), cut: () => CUT, live: () => LIVE, liveGo: a => liveGo(a), emo: e => { const b = [...box.querySelectorAll('.kr-emol button')].find(x => x.textContent === e); if (b) b.click(); }, hitK: (i, why) => hit(S.karts[i], why), open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
+  window.__kart = {ls: pr => liveSample(pr, q => q), hymn: id => hymn(id), cut: () => CUT, live: () => LIVE, liveGo: a => liveGo(a), emo: e => { const b = [...box.querySelectorAll('.kr-emol button')].find(x => x.textContent === e); if (b) b.click(); }, hitK: (i, why) => hit(S.karts[i], why), open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
 })();
