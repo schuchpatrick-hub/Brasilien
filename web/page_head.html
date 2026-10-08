@@ -1551,7 +1551,46 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
 .kart .kr-set summary::after{content:"▾";opacity:.6;transition:transform .2s}.kart .kr-set[open] summary::after{transform:rotate(180deg)}
 .kart .kr-set[open]{padding-bottom:10px}
 .kart .kr-ach{grid-template-columns:repeat(2,minmax(0,1fr))}.kart .kr-ach span{-webkit-hyphens:auto;hyphens:auto;font-size:.7rem}.kart .kr-shop,.kart .kr-cos{grid-template-columns:repeat(3,minmax(0,1fr))!important}.kart .kr-cos{grid-template-columns:repeat(4,minmax(0,1fr))!important}
-.kart .kr-ach span{background:rgba(255,255,255,.05);color:#cfe3f5}.kart .kr-ach span.on{background:rgba(255,210,63,.16);color:#fff}
+.kart .kr-ach span{background:rgba(255,255,255,.05);color:#cfe3f5}
+/* Item-Anleitung: Mini-Szenen (3 s Schleife) */
+.kg-how{font-size:.76rem;line-height:1.4;margin:2px 0 8px;color:#cfe3f5}
+.kg-row{display:grid;grid-template-columns:116px 1fr;gap:9px;align-items:center;padding:6px 0;border-top:1px solid rgba(255,255,255,.08)}
+.kg-row b{font-size:.82rem;color:#fff}.kg-row b em{font-style:normal;color:#ffd23f}.kg-row b small{font-weight:500;color:#9fb6cc;font-size:.68rem}.kg-row p{margin:2px 0 0;font-size:.72rem;line-height:1.35;color:#cfe3f5}
+.kg-st{position:relative;width:116px;height:50px;border-radius:9px;overflow:hidden;background:linear-gradient(#2e3138,#3b3e44 40%,#3b3e44 60%,#2e3138);box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.kg-st::after{content:"";position:absolute;left:0;right:0;top:24px;height:2px;background:repeating-linear-gradient(90deg,rgba(255,255,255,.35) 0 10px,transparent 10px 20px)}
+.kg-st i{position:absolute;top:12px;font-style:normal;font-size:20px;line-height:1;z-index:1}.kg-st u{display:inline-block;text-decoration:none;transform:scaleX(-1)}.kg-st u.kg-me{filter:hue-rotate(150deg) saturate(1.6) drop-shadow(0 0 3px #ffd23f)}
+.kg-st .kg-k{left:8px}.kg-st .kg-t{left:86px}.kg-st .kg-p{left:30px;font-size:15px;top:15px;opacity:0}
+.kg-k b{position:absolute;right:100%;top:3px;font-size:13px;font-weight:400}
+.kg-boost .kg-k,.kg-fire .kg-k{animation:kgRun 3s ease-in infinite}.kg-boost .kg-k b,.kg-fire .kg-k b{animation:kgFlame .15s steps(2) infinite}
+.kg-fire .kg-t{left:-24px;animation:kgFollow 3s linear infinite}
+.kg-throw .kg-p,.kg-home .kg-p{animation:kgShot 3s linear infinite}.kg-home .kg-p{animation-name:kgHome}
+.kg-throw .kg-t,.kg-home .kg-t,.kg-bang .kg-t{animation:kgSpin 3s linear infinite}
+.kg-drop .kg-k,.kg-trail .kg-k{animation:kgPass 3s linear infinite}.kg-drop .kg-p{left:46px;animation:kgLay 3s linear infinite}.kg-drop .kg-t{left:-24px;animation:kgVictim 3s linear infinite}
+.kg-trail .kg-k b{font-size:11px;letter-spacing:-2px;animation:kgWig .4s ease-in-out infinite alternate}
+.kg-bang .kg-p{left:52px;animation:kgFuse 3s linear infinite}.kg-bang .kg-x{left:46px;top:6px;font-size:30px;opacity:0;animation:kgBoom 3s linear infinite}.kg-bang .kg-t{left:74px}.kg-bang .kg-k{animation:kgPass 3s linear infinite}
+.kg-orbit .kg-k{left:48px}.kg-o{left:58px!important;top:25px!important;width:0;height:0;animation:kgRot 1.6s linear infinite}.kg-o b{position:absolute;font-size:11px;font-weight:400;transform:translate(-50%,-50%)}
+.kg-o b:nth-child(1){left:0;top:-19px}.kg-o b:nth-child(2){left:16px;top:10px}.kg-o b:nth-child(3){left:-16px;top:10px}
+.kg-area .kg-k{left:16px}.kg-area .kg-t{left:62px;top:4px;animation:kgShake 3s linear infinite}.kg-area .kg-t2{left:84px;top:24px}
+.kg-r{left:26px!important;top:24px!important;width:0;height:0;border-radius:50%;border:2px solid #ffd23f;transform:translate(-50%,-50%);animation:kgRing 3s ease-out infinite}
+.kg-shield .kg-k{left:74px}.kg-shield .kg-k b{right:auto;left:-3px;top:-10px;font-size:26px;opacity:.75}.kg-shield .kg-p{left:4px;animation:kgBlock 3s linear infinite}
+@keyframes kgRun{0%,8%{transform:translateX(0)}60%{transform:translateX(88px)}61%,100%{transform:translateX(88px);opacity:0}}
+@keyframes kgFlame{to{transform:scale(1.3,.8)}}
+@keyframes kgFollow{0%,10%{transform:translateX(0)}45%{transform:translateX(70px)}50%,80%{transform:translateX(70px) rotate(360deg)}81%,100%{opacity:0}}
+@keyframes kgShot{0%,10%{opacity:0;transform:translateX(0) rotate(0)}12%{opacity:1}40%{opacity:1;transform:translateX(52px) rotate(540deg)}42%,100%{opacity:0;transform:translateX(52px)}}
+@keyframes kgHome{0%,10%{opacity:0;transform:translate(0,0)}12%{opacity:1}26%{transform:translate(26px,-9px)}40%{opacity:1;transform:translate(52px,0)}42%,100%{opacity:0;transform:translate(52px,0)}}
+@keyframes kgSpin{0%,40%{transform:rotate(0)}70%,100%{transform:rotate(720deg)}}
+@keyframes kgPass{0%{transform:translateX(0)}50%{transform:translateX(96px)}51%,100%{transform:translateX(96px);opacity:0}}
+@keyframes kgLay{0%,18%{opacity:0}20%,62%{opacity:1}64%,100%{opacity:0}}
+@keyframes kgVictim{0%,30%{transform:translateX(0)}60%{transform:translateX(70px) rotate(0)}85%,100%{transform:translateX(70px) rotate(720deg)}}
+@keyframes kgWig{to{transform:translateX(-3px) rotate(-8deg)}}
+@keyframes kgFuse{0%,22%{opacity:0}24%{opacity:1;transform:scale(1)}50%{transform:scale(1.25)}54%,100%{opacity:0}}
+@keyframes kgBoom{0%,53%{opacity:0;transform:scale(.3)}56%{opacity:1;transform:scale(1.2)}70%,100%{opacity:0;transform:scale(1.5)}}
+@keyframes kgRot{to{transform:rotate(360deg)}}
+@keyframes kgRing{0%,10%{width:0;height:0;opacity:1}55%{width:110px;height:110px;opacity:0}100%{opacity:0}}
+@keyframes kgShake{0%,25%{transform:rotate(0)}30%{transform:rotate(-15deg)}35%{transform:rotate(15deg)}40%{transform:rotate(-15deg)}45%{transform:rotate(15deg)}50%,100%{transform:rotate(0)}}
+@keyframes kgBlock{0%,10%{opacity:0;transform:translateX(0)}12%{opacity:1}38%{opacity:1;transform:translateX(56px) rotate(400deg)}55%{opacity:0;transform:translateX(18px) translateY(-14px) rotate(-200deg)}100%{opacity:0}}
+.kg-cb{display:grid;gap:4px}.kg-cb div{display:grid;background:rgba(255,255,255,.05);border-radius:9px;padding:5px 8px}.kg-cb b{font-size:.76rem;color:#fff}.kg-cb small{font-size:.68rem;color:#9fb6cc}
+@media (prefers-reduced-motion:reduce){.kg-st *{animation:none!important}.kg-st .kg-p{opacity:1}}.kart .kr-ach span.on{background:rgba(255,210,63,.16);color:#fff}
 .kart .btn{border-radius:14px;font-weight:800}
 .kart .btn.ghost{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.18);box-shadow:none}
 .kart .kr-go,.kart .kr-again,.kart .kr-resume{background:linear-gradient(180deg,#5fe783,#16a34a);color:#fff;border:0;box-shadow:0 5px 0 #0d6b30,0 10px 22px rgba(0,0,0,.35);font:italic 900 1.1rem system-ui,sans-serif;letter-spacing:.03em;text-transform:uppercase;padding:13px 20px}
