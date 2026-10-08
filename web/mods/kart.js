@@ -273,6 +273,14 @@
   function sea(x, c1, c2) { const g = x.createLinearGradient(0, 1400, 0, WH); g.addColorStop(0, c1 || '#2fc4c9'); g.addColorStop(.3, '#1694b8'); g.addColorStop(1, c2 || '#0b5d8f');
     x.fillStyle = g; x.beginPath(); x.moveTo(0, WH); for (let X = 0; X <= WW; X += 20) x.lineTo(X, shore(X)); x.lineTo(WW, WH); x.fill();
     x.strokeStyle = 'rgba(255,255,255,.8)'; x.lineWidth = 6; x.beginPath(); for (let X = 0; X <= WW; X += 20) x[X ? 'lineTo' : 'moveTo'](X, shore(X)); x.stroke(); }
+  // Belag-Texturen (Qualitätsrunde 2): Asphalt mit Körnung, Teerfugen und Flicken bzw. Erdweg mit Kieseln und Flecken, nahtlos kachelbar
+  /* eigener Zufall (fester Startwert): verbraucht nichts vom gemeinsamen Live-Zufall */
+  function grainPat(base, kind) { return sprite(160, 160, (c, w, h) => { c.fillStyle = base; c.fillRect(0, 0, w, h); let sd = 1234567; const rr = () => (sd = (Math.imul(sd, 1664525) + 1013904223) >>> 0) / 4294967296, R = (a, b) => a + rr() * (b - a);
+    if (kind === 'asph') { for (let j = 0; j < 3; j++) { c.fillStyle = `rgba(0,0,0,${R(.05, .1)})`; c.fillRect(R(0, w - 50), R(0, h - 40), R(30, 60), R(20, 45)); }
+      c.strokeStyle = 'rgba(0,0,0,.22)'; c.lineWidth = 1.4; for (let j = 0; j < 2; j++) { let X = R(0, w), Y = 0; c.beginPath(); c.moveTo(X, Y); while (Y < h) { X += R(-8, 8); Y += R(8, 18); c.lineTo(X, Y); } c.stroke(); } }
+    else for (let j = 0; j < 10; j++) { c.fillStyle = `rgba(${rr() < .5 ? '60,35,15' : '255,240,210'},${R(.06, .14)})`; c.beginPath(); c.ellipse(R(0, w), R(0, h), R(8, 22), R(5, 14), R(0, 3), 0, TAU); c.fill(); }
+    for (let j = 0; j < 1400; j++) { const l = rr() < .5; c.fillStyle = l ? `rgba(255,255,255,${R(.04, .16)})` : `rgba(0,0,0,${R(.05, .2)})`; const s0 = R(.8, kind === 'asph' ? 2 : 2.8); c.fillRect(R(0, w), R(0, h), s0, s0); }
+    if (kind !== 'asph') for (let j = 0; j < 40; j++) { c.fillStyle = `rgba(${rr() < .5 ? '120,110,100' : '200,190,170'},.7)`; c.beginPath(); c.arc(R(2, w - 2), R(2, h - 2), R(1.2, 2.6), 0, TAU); c.fill(); } }); }
   function drawBG() {
     // Auflösung des Hintergrunds: nach Grafikstufe, aber höchstens ~6,5 Mio. Pixel und 4000 px Kante (größere Bilder machten das Zeichnen 10× langsamer, z. B. Brücke, Lopes; Handys haben oft 4096 px als Grenze)
     const BGS = Math.min([.7, .85, 1][SET.q], Math.sqrt(6.5e6 / (WW * WH)), 4000 / Math.max(WW, WH));
@@ -350,11 +358,17 @@
         if (id === 'copa' || id === 'reveillon') pat = sprite(120, 60, (c, w, h) => { c.fillStyle = '#f7f3ea'; c.fillRect(0, 0, w, h); c.fillStyle = '#26221f';
           c.beginPath(); c.moveTo(0, 18); for (let X = 0; X <= w; X += 4) c.lineTo(X, 18 + 12 * Math.sin(X / w * TAU)); for (let X = w; X >= 0; X -= 4) c.lineTo(X, 34 + 12 * Math.sin(X / w * TAU)); c.fill(); });
         if (id === 'paraty') pat = sprite(64, 64, (c) => { c.fillStyle = '#5d554b'; c.fillRect(0, 0, 64, 64); for (let i = 0; i < 9; i++) { c.fillStyle = pick(['#8f8578', '#9d927f', '#7f776c', '#a49a88']); c.beginPath(); c.ellipse((i % 3) * 21 + 11, (i / 3 | 0) * 21 + 11, 9, 8, rnd(0, 3), 0, TAU); c.fill(); } });
+        const dirt = {ilha: 1, iguacu: 1, lopes: 1}[id]; if (!pat && surf) pat = grainPat(surf, dirt ? 'dirt' : 'asph');
         x.strokeStyle = pat ? x.createPattern(pat, 'repeat') : surf; x.lineWidth = TW; x.stroke(path);
+        // abgefahrene Ideallinie (Gummiabrieb) und weiße Randlinien auf Asphalt
+        if (surf && !dirt) { const rl = new Path2D(); for (let i = 0; i <= N; i += 2) { const q0 = i % N, [X, Y] = at(q0, LINE[q0] || 0); i ? rl.lineTo(X, Y) : rl.moveTo(X, Y); } x.strokeStyle = 'rgba(0,0,0,.07)'; x.lineWidth = 56; x.stroke(rl); x.strokeStyle = 'rgba(0,0,0,.12)'; x.lineWidth = 28; x.stroke(rl);
+          [-1, 1].forEach(sd => { const ep = new Path2D(); P.forEach((p0, i) => { const X = p0[0] + NX[i] * sd * (TW / 2 - 7), Y = p0[1] + NY[i] * sd * (TW / 2 - 7); i ? ep.lineTo(X, Y) : ep.moveTo(X, Y); }); ep.closePath(); x.strokeStyle = 'rgba(255,255,255,.5)'; x.lineWidth = 3; x.stroke(ep); }); }
         if (id === 'iguacu') { for (let i = 0; i < N; i += 3) { const [px, py] = at(i, rnd(-TW / 2 + 8, TW / 2 - 8)); x.fillStyle = 'rgba(70,20,10,.25)'; x.fillRect(px, py, 3, 3); } }
         if (id === 'guaruja' || id === 'sp' || id === 'cristo' || id === 'bridge' || id === 'gru' || id === 'manaus') { x.strokeStyle = id === 'sp' || id === 'manaus' ? 'rgba(255,210,63,.85)' : 'rgba(255,255,255,.75)'; x.lineWidth = 4; x.setLineDash([26, 26]); x.stroke(path); x.setLineDash([]); }
         if (id === 'ilha') { x.strokeStyle = 'rgba(255,240,200,.35)'; x.lineWidth = TW * .45; x.stroke(path); x.strokeStyle = 'rgba(90,60,30,.35)'; x.lineWidth = 3; x.setLineDash([4, 18]); for (const o of [-TW * .3, TW * .3]) { x.save(); x.stroke(path); x.restore(); } x.setLineDash([]); }
       }
+      // feine Körnung über alles (Sand, Rasen, Stadt wirken weniger glatt)
+      { let sd = 987654; const rr = () => (sd = (Math.imul(sd, 1664525) + 1013904223) >>> 0) / 4294967296; for (let j = 0, n0 = Math.min(26000, WW * WH / 260); j < n0; j++) { x.fillStyle = rr() < .5 ? 'rgba(255,255,255,.05)' : 'rgba(0,0,0,.06)'; const s0 = 1 + rr() * 2.5; x.fillRect(rr() * WW, rr() * WH, s0, s0); } }
       // Start/Ziel
       across(x, 0, () => { for (let r = 0; r < 2; r++) for (let c = -TW / 2; c < TW / 2; c += 12) { x.fillStyle = ((c / 12 + r) & 1) ? '#111' : '#fff'; x.fillRect(c, -12 + r * 12, 12, 12); } });
       // Boost-Pfeile
@@ -1165,13 +1179,13 @@
   }
   function rollItem(k) { if ((RULE && RULE.k === 'turbo') || (S.live && S.live.cfg && S.live.cfg.items === 'turbo')) return ITEMS.turbo; if (RULE && RULE.k === 'coati') return ITEMS.coati; if (SPECIAL[k.id] && Math.random() < (k.me ? .22 : .32)) return SPECIAL[k.id]; /* Gegner etwas öfter mit Spezial-Item: mehr Chaos */ const pl = place(k), tb = IW[pl === 1 ? 'front' : pl <= 3 ? 'mid' : 'back']; let r = Math.random(); for (const [kk, p0] of Object.entries(tb)) { r -= p0; if (r < 0) return ITEMS[kk]; } return ITEMS.turbo; const w = [0, 0]; return r < w[0] ? ITEMS.turbo : r < w[0] + w[1] ? ITEMS.oil : ITEMS.coati; }
   /* ---- Zufallsereignisse mitten im Rennen (im Live-Rennen über den gemeinsamen Zufall bei allen gleich) ---- */
-  const EVK = [{k: 'police', e: '🚔', n: 'Polizeikontrolle', x: 'Langsam fahren, sonst Strafe!'}, {k: 'parade', e: '💃', n: 'Karnevalsumzug', x: 'Sambazug quert die Strecke!'},
-    {k: 'coco', e: '🥥', n: 'Kokosnussregen', x: 'Auf die Schatten achten!'}, {k: 'blackout', e: '🔌', n: 'Stromausfall', x: 'Alles dunkel, nur Scheinwerfer!'}];
+  const EVK = [{k: 'police', e: '🚔', n: 'Polizeikontrolle', x: 'langsam!'}, {k: 'parade', e: '💃', n: 'Karnevalsumzug', x: 'Tänzer queren!'},
+    {k: 'coco', e: '🥥', n: 'Kokosregen', x: 'Schatten meiden!'}, {k: 'blackout', e: '🔌', n: 'Stromausfall', x: 'alles dunkel!'}];
   function evStart() { const E0 = S.ev, ty = EVK[Math.floor(wr('ev') * EVK.length)], f = wr('ev'), c = {k: ty.k, ty, i: wrap(f * N), t0: S.t, end: S.t + (ty.k === 'coco' ? 7 : ty.k === 'blackout' ? 8 : 10)};
     if (ty.k === 'coco') { c.nuts = []; const base = f * N; for (let j = 0; j < 34; j++) { const ii = base + wr('ev') * N * .45, l = (wr('ev') - .5) * TW * .9, [x, y] = at(ii, l); c.nuts.push({x, y, t: S.t + .4 + j * .19, done: 0}); } }
     S.karts.forEach(k => { k.evP = k.idx; k.evRaser = !k.me && Math.random() < .3; });
-    E0.cur = c; S.evBan = {t: ty.e + ' ' + ty.n + '! ' + ty.x, until: performance.now() + 3200}; beep(ty.k === 'police' ? 960 : 520, .18, 'square', .06); if (ty.k === 'police') setTimeout(() => beep(720, .18, 'square', .06), 200);
-    say('ev_' + ty.k, ty.n + '! ' + ty.x); }
+    E0.cur = c; S.evBan = {t: ty.e + ' ' + ty.n + ': ' + ty.x, until: performance.now() + 3200};   /* nur diese eine Zeile, der Ansager spricht ohne eigene Textzeile */ beep(ty.k === 'police' ? 960 : 520, .18, 'square', .06); if (ty.k === 'police') setTimeout(() => beep(720, .18, 'square', .06), 200);
+    say('ev_' + ty.k, '', 0, 1); }
   function evStep(dt) { if (!S.evOn || S.t < 0 || !S.ev) return; const E0 = S.ev;
     if (!E0.cur) { if (S.t > E0.next) evStart(); return; } const c = E0.cur;
     if (c.k === 'police') S.karts.forEach(k => { if (k.remote || k.done) { k.evP = k.idx; return; } const pv = k.evP === undefined ? k.idx : k.evP, d = wrap(k.idx - pv); k.evP = k.idx;
