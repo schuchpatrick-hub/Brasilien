@@ -10252,7 +10252,14 @@
     ]
   },
   "news": [
-    {"id": "n251008za", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🎙️", "t": "Gringo Kart: jede Figur spricht jetzt mit eigener Stimme, Fahrerwahl mit Smash-Ansage, Werte ausgeglichen, kein Vollbild-Hinweis mehr"},
+    {
+      "id": "n251008za",
+      "d": "2026-10-08",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🎙️",
+      "t": "Gringo Kart: jede Figur spricht jetzt mit eigener Stimme, Fahrerwahl mit Smash-Ansage, Werte ausgeglichen, kein Vollbild-Hinweis mehr"
+    },
     {
       "id": "n251008z",
       "d": "2026-10-08",
@@ -11835,7 +11842,7 @@
       "f": 7
     },
     "h_patrick": {
-      "o": 6641,
+      "o": 6642,
       "dur": 2468,
       "f": 7
     },
@@ -11845,7 +11852,7 @@
       "f": 7
     },
     "h_greisel": {
-      "o": 13765,
+      "o": 13766,
       "dur": 2633,
       "f": 7
     },
@@ -11855,32 +11862,32 @@
       "f": 7
     },
     "h_simon_love": {
-      "o": 19934,
+      "o": 19935,
       "dur": 2998,
       "f": 7
     },
     "h_patrick_fat": {
-      "o": 23182,
+      "o": 23183,
       "dur": 3093,
       "f": 7
     },
     "h_marco_dia": {
-      "o": 26525,
+      "o": 26526,
       "dur": 2758,
       "f": 7
     },
     "h_jonas_kater": {
-      "o": 29533,
+      "o": 29534,
       "dur": 2947,
       "f": 7
     },
     "h_greisel_wb": {
-      "o": 32730,
+      "o": 32731,
       "dur": 2370,
       "f": 7
     },
     "h_dajo_party": {
-      "o": 35350,
+      "o": 35351,
       "dur": 3397,
       "f": 7
     },
@@ -11915,22 +11922,22 @@
       "f": 7
     },
     "h_caimanx": {
-      "o": 65802,
+      "o": 65803,
       "dur": 4308,
       "f": 7
     },
     "h_manuel": {
       "o": 70361,
-      "dur": 4016,
+      "dur": 3249,
       "f": 7
     },
     "h_erich": {
-      "o": 74627,
-      "dur": 4398,
+      "o": 73860,
+      "dur": 3281,
       "f": 7
     },
     "h_rasmus": {
-      "o": 79275,
+      "o": 77392,
       "dur": 3794,
       "f": 7
     }
