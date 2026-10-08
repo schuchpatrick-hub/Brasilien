@@ -626,7 +626,8 @@
       db.collection('kartlive').onSnapshot(sn => { LIVEST = []; sn.docs.forEach(d => { if (d.exists) LIVEST.push(d.data()); }); if (!box.hidden && !menu.hidden && MODE === 'live') liveBox(); }, () => {});
       db.collection('kartdaily').onSnapshot(sn => { LBD = {}; sn.docs.forEach(d => { if (d.exists) LBD[d.id] = d.data(); }); if (!box.hidden && !menu.hidden) renderMenu(); }, () => {});
     }).catch(() => {});
-    canWrite().then(w => { WR = w !== false && w !== null; progWR = WR; progSync(true); if (!box.hidden && !menu.hidden) renderMenu(); }).catch(() => {});
+    canWrite().then(w => { WR = w !== false; progWR = WR;   // null = Plattform sagt nichts: trotzdem eintragen (abgelehnte Schreibversuche meldet die Warteschlange unten links)
+      progSync(true); if (!box.hidden && !menu.hidden) renderMenu(); }).catch(() => {});
   }
   const lbList = (src, pre) => Object.entries(src).filter(([id]) => id.indexOf(pre + '__') === 0).map(([, v]) => v).filter(v => v && v.ms).sort((a, b) => a.ms - b.ms);
   function lbHtml(list, title) {
@@ -1761,7 +1762,7 @@
     const v = VEH[id]; x.save(); x.translate(W2 / 2, H2 / 2 + 6); x.scale(1.75 * vz, 1.75 * vz); x.fillStyle = 'rgba(0,0,0,.3)'; x.beginPath(); x.ellipse(2, 4, 20, 27, 0, 0, TAU); x.fill(); if (v) x.drawImage(v, -22, -30, 44, 60); x.restore();
     const h = headImg(id); if (h) { const sz = h.width * .26 * 1.75 * (st.hs || 1) * Math.sqrt(vz); x.drawImage(h, W2 / 2 - sz / 2, H2 / 2 + 6 + (st.seat === 'none' ? 0 : 6) * vz - sz / 2 - sz * .05, sz, sz * (h.height / h.width)); }
     x.fillStyle = 'rgba(255,255,255,.75)'; x.font = '700 10px system-ui'; x.textAlign = 'center'; x.fillText(vz > 1.04 ? '⬆ groß' : vz < .96 ? '⬇ klein' : '', W2 / 2, H2 - 4); return c; }
-  let FSL = null, RSPIN = 0;
+  let FSL = null, RSPIN = 0, WHOOPEN = false;
   function pickDrv(id) { const ch = me !== id; me = id; makeVehicles(); renderMenu(); newRace(); S.paused = true; if (ch) announce(me); }
   // Ansage des Fahrernamens wie im Prügelspiel (Handy-Stimme), Auswahl-Geräusch
   function announce(id) { try { SFX.pick(); noise(.22, .08, 2400); beep(120, .35, 'sawtooth', .07, 50); } catch (e) {}
@@ -1817,9 +1818,10 @@
     else lb.innerHTML = '';
     lb.hidden = MODE === 'cup';
     menu.querySelector('.kr-wr').textContent = WR ? 'Deine Zeiten landen als ' + NAME(player()) + ' in der Crew-Bestenliste' + (ME ? '' : ' (wähle oben auf der Seite „Ich bin …“)') + '.' : 'Bestenliste nur ansehen: Eintragen können nur eingeladene Bearbeiter, deine Zeiten bleiben auf diesem Handy.';
-    menu.querySelector('.kr-wr').hidden = MODE === 'cup' || (WR && !ME);
+    menu.querySelector('.kr-wr').hidden = WR;
     menu.querySelector('.kr-tutb').hidden = !!store.get('kartTutDone') && stats().races > 2;
-    const wb = menu.querySelector('.kr-whobox'); wb.innerHTML = WR && !ME ? whoHtml('🙋 <b>Wer spielt an diesem Handy?</b> Einmal antippen, dann landen deine Zeiten unter deinem Namen in der Crew-Bestenliste.') : ''; whoHeads(wb);
+    const wb = menu.querySelector('.kr-whobox'); wb.innerHTML = !WR ? '' : !ME || WHOOPEN ? whoHtml(ME ? '🙋 <b>Wer spielt jetzt?</b> Antippen, unter diesem Namen landen die Zeiten in der Crew-Bestenliste.' : '🙋 <b>Wer spielt an diesem Handy?</b> Einmal antippen, dann landen deine Zeiten unter deinem Namen in der Crew-Bestenliste.')
+      : '<p class="kr-wholn">🙋 Es spielt: <b>' + esc(NAME(ME)) + '</b> · Zeiten kommen in die Crew-Bestenliste <button type="button" class="kr-whochg">Wer spielt? ändern</button></p>'; whoHeads(wb);
     const rc = menu.querySelector('.kr-recs'); rc.querySelector('.kr-recb').innerHTML = recsHtml(); rc.querySelector('summary').textContent = '🏆 Crew-Rekorde aller Strecken (' + TRACKS.filter(x => lbList(LB, x.id).length).length + '/' + TRACKS.length + ')';
   }
   function preview(id) { loadTrack(id, RULE && RULE.k === 'rev'); newRace(); S.paused = true; }
@@ -1971,7 +1973,8 @@
   setTimeout(() => { try { liveJoin(); } catch (e) {} }, 5000);
   setInterval(() => { if (!LIVE.room) return; liveHint(); if (!box.hidden && !menu.hidden && MODE === 'live' && lobby().length > 1) livePing(); }, 4000);
   openBtn.addEventListener('click', () => { if (LIVE.waiting && MODE !== 'live') { MODE = 'live'; store.set('kartMode', MODE); setTimeout(renderMenu, 50); } }, true);
-  box.addEventListener('click', e => { const w = e.target.closest('.kr-whop button'); if (w) setMe(w.dataset.who); });
+  box.addEventListener('click', e => { const w = e.target.closest('.kr-whop button'); if (w) { WHOOPEN = false; setMe(w.dataset.who); if (!menu.hidden) renderMenu(); }
+    if (e.target.closest('.kr-whochg')) { WHOOPEN = true; renderMenu(); } });
   window.__kartAt = (i, l) => at(i, l); window.__kartTW = () => TW;
   window.__kart = {ls: pr => liveSample(pr, q => q), hymn: id => hymn(id), cut: () => CUT, live: () => LIVE, liveGo: a => liveGo(a), emo: e => { const b = [...box.querySelectorAll('.kr-emol button')].find(x => x.textContent === e); if (b) b.click(); }, hitK: (i, why) => hit(S.karts[i], why), open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
 })();
