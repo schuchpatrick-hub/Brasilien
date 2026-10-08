@@ -2015,7 +2015,7 @@
   let ANNSRC = null;
   function announce(id) { try { SFX.pick(); noise(.22, .08, 2400); beep(120, .35, 'sawtooth', .07, 50); } catch (e) {}
     const hv = TRIP.kartvo && TRIP.kartvo['h_' + id], hb = hv && BUF['ann' + (hv.f > 1 ? hv.f : '')];
-    if (SOUND && ANN && hb && AC) { try { if (ANNSRC) ANNSRC.stop(); } catch (e) {} const s0 = AC.createBufferSource(), g = AC.createGain(); s0.buffer = hb; g.gain.value = 1.25; s0.connect(g); g.connect(FXG); s0.start(AC.currentTime + .12, hv.o / 1000, hv.dur / 1000 + .35); ANNSRC = s0;
+    if (SOUND && ANN && hb && AC) { try { if (ANNSRC) ANNSRC.stop(); } catch (e) {} const s0 = AC.createBufferSource(), g = AC.createGain(); s0.buffer = hb; const t0 = AC.currentTime + .12, d0 = hv.dur / 1000; g.gain.setValueAtTime(1.25, t0); g.gain.setValueAtTime(1.25, t0 + d0 - .08); g.gain.linearRampToValueAtTime(0, t0 + d0); s0.connect(g); g.connect(FXG); s0.start(t0, hv.o / 1000, d0); ANNSRC = s0;   /* genau die Länge der Aufnahme (vorher +0,35 s → Anfang der nächsten Ansage hörbar) */
       if (MM.g) { MM.g.gain.setTargetAtTime(.2, AC.currentTime, .05); MM.g.gain.setTargetAtTime(.55, AC.currentTime + hv.dur / 1000 + .3, .4); } return; }
     if (!SOUND || !ANN || !window.speechSynthesis) return; try { const u = new SpeechSynthesisUtterance(NAME(id) + '!'); u.lang = 'de-DE'; u.rate = 1.05; u.pitch = .55; u.volume = 1; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {} }
   // Item-Anleitung im Menü: Kurztext + Mini-Animation aus CSS und Emojis (keine Bilder/Videos, kostet fast nichts)
