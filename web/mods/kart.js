@@ -73,7 +73,7 @@
     {id: 'steward', sh: 'Stewardess', npc: 1, name: 'Flugbegleiterin', e: '💁🏻‍♀️', col: '#1694b8', cs: {spd: .7, hdl: .7, acc: .65, tgh: .45}, x: 'Aus dem Flieger: immer freundlich, immer schneller als man denkt.', sp: {k: 'trolley', e: '🛒', n: 'Servierwagen', x: 'rollt geradeaus nach vorn und räumt ab'}, l: ['Chicken or pasta?', 'Bitte anschnallen!', 'Turbulenzen!']},
     {id: 'caimanx', sh: 'Kaiman', npc: 1, name: 'Kaiman', e: '🐊', col: '#4a7a3a', cs: {spd: .35, hdl: .35, acc: .3, tgh: 1}, m: 2, x: 'Hat Simons Fischerhut gefressen: schwer, langsam, beißt alles in der Nähe.', sp: {k: 'chomp', e: '🦷', n: 'Biss', x: 'beißt alle direkt neben dir: Dreher'}, l: ['*schnapp*', '*grummel*', '*zisch*']},
     // Gastfahrer (Kumpel der Crew, eigenes Foto nur im Artifact): Manuel, Spitznamen Abzwickter, Miniman, Half Cutted, Stumpen, weil er so klein ist
-    {id: 'manuel', sh: 'Abzwickter', npc: 1, guest: 1, name: 'Manuel', e: '🤏', col: '#2bb3a3', photo: 'crew/manuel.jpg', face: {x: .5, y: .5, z: 1}, cs: {spd: .55, hdl: 1.1, acc: 1, tgh: .1}, m: .55,
+    {id: 'manuel', sh: 'Abzwickter', npc: 1, guest: 1, name: 'Manuel', ann: 'Achtung, der Abzwickter ist am Start! Bitte nicht übersehen!', e: '🤏', col: '#2bb3a3', photo: 'crew/manuel.jpg', face: {x: .5, y: .5, z: 1}, cs: {spd: .55, hdl: 1.1, acc: 1, tgh: .1}, m: .55,
       x: 'Gastfahrer, auch bekannt als Miniman, Half Cutted oder Stumpen. Sieht nur mit Kissen übers Lenkrad, flutscht dafür durch jede Lücke und zieht um die Kurven wie kein anderer. Federleicht: Bei Remplern fliegt er weit.',
       sp: {k: 'mini', e: '🤏', n: 'Abgezwickt!', x: 'schrumpft auf Taschenformat: unverwundbar, flutscht unter allen durch und gibt Gas'},
       l: ['Ich seh nix übers Lenkrad!', 'Wer hat Stumpen gesagt?!', 'Kleiner Mann, großer Turbo!', 'Ich fahr unten durch!', 'Unterschätz nie den Abzwickter!', 'Half cutted, full speed!', 'Hey, nicht auf den Kleinen!', 'Wo ist mein Sitzkissen?']}];
@@ -226,14 +226,18 @@
     // Kreuzung mit sich selbst (Acht): die zweite Durchfahrt wird zur Brücke
     DECK = null; for (let i = 0; i < N && !DECK; i += 2) for (let j = i + Math.round(N * .25); j < N - Math.round(N * .1); j += 2) { if (Math.hypot(P[i][0] - P[j][0], P[i][1] - P[j][1]) < 14) { const i0 = wrap(j - 34), len = 68, pth = new Path2D(); for (let q = 0; q <= len; q++) { const pp = P[wrap(i0 + q)]; q ? pth.lineTo(pp[0], pp[1]) : pth.moveTo(pp[0], pp[1]); } DECK = {i0, len, pth, under: i}; break; } }
     // Abkürzung: kürzeste sichere Verbindung zweier Streckenstellen durchs Innere (holprig, mit Turbo-Pfeil in der Mitte)
-    CUT = null; if (T.cut !== false && T.veh !== 'boat') { const cand = [];
-      for (let i = Math.round(N * .1); i < N * .9; i += 6) for (let d = Math.round(N * .08); d < N * .22; d += 6) { const j = i + d; if (j > N * .92) continue;
-        const dist = Math.hypot(P[j][0] - P[i][0], P[j][1] - P[i][1]), r = dist / (d * 6); if (dist < 200 || r < .42 || r > .74) continue; cand.push({i, j, dist, r, save: d * 6 - dist}); }
-      // Abkürzung neu (Wunsch Patrick 08.10.): kurze Sehne, Schlamm bremst so stark, dass sie ohne Turbo kaum etwas bringt
-      cand.sort((p0, p1) => p1.save - p0.save);
-      for (const c of cand.slice(0, 400)) { let ok = true; const qm = Math.min(.4, (TW / 2 + 70) / c.dist); for (let q = qm; q <= 1 - qm && ok; q += .04) { const x = P[c.i][0] + (P[c.j][0] - P[c.i][0]) * q, y = P[c.i][1] + (P[c.j][1] - P[c.i][1]) * q, nl = nearest(x, y, -1)[1];
-          if (Math.abs(nl) < TW / 2 + 45 || y > shore(x) - 60) ok = false; if (T.falls && Math.hypot(x - T.falls.x, y - T.falls.y) < 330) ok = false; if (T.statue && Math.hypot(x - T.statue.x, y - T.statue.y) < 160) ok = false; }
-        if (ok) { CUT = {i1: c.i, i2: c.j, a: P[c.i], b: P[c.j], w: 74, f: clamp(c.r / .97, .45, .9)}; break; } } } LINE = LINE.map((_, i) => { let s0 = 0; for (let j = -12; j <= 12; j++) s0 += LINE[wrap(i + j)]; return s0 / 25; });
+    CUT = null; if (T.cut !== false && T.veh !== 'boat') {
+      // Abkürzung neu (Wunsch Patrick 08.10.): kurze Sehne, Schlamm bremst so stark, dass sie ohne Turbo kaum etwas bringt.
+      // Zweiter, lockererer Durchgang für Strecken, auf denen die strenge Suche nichts findet (Guarujá, Cristo, Iguaçu)
+      const findCut = (rmin, rmax, dmax, clr) => { const cand = [];
+        for (let i = Math.round(N * .1); i < N * .9; i += 6) for (let d = Math.round(N * .08); d < N * dmax; d += 6) { const j = i + d; if (j > N * .92) continue;
+          const dist = Math.hypot(P[j][0] - P[i][0], P[j][1] - P[i][1]), r = dist / (d * 6); if (dist < 200 || r < rmin || r > rmax) continue; cand.push({i, j, dist, r, save: d * 6 - dist}); }
+        cand.sort((p0, p1) => p1.save - p0.save);
+        for (const c of cand.slice(0, 600)) { let ok = true; const qm = Math.min(.4, (TW / 2 + 70) / c.dist); for (let q = qm; q <= 1 - qm && ok; q += .04) { const x = P[c.i][0] + (P[c.j][0] - P[c.i][0]) * q, y = P[c.i][1] + (P[c.j][1] - P[c.i][1]) * q, nl = nearest(x, y, -1)[1];
+            if (Math.abs(nl) < TW / 2 + clr || y > shore(x) - 60) ok = false; if (T.falls && Math.hypot(x - T.falls.x, y - T.falls.y) < 300) ok = false; if (T.statue && Math.hypot(x - T.statue.x, y - T.statue.y) < 160) ok = false; }
+          if (ok) return {i1: c.i, i2: c.j, a: P[c.i], b: P[c.j], w: 74, f: clamp(c.r / .97, .45, .9)}; } return null; };
+      CUT = findCut(.42, .74, .22, 45) || findCut(.3, .82, .3, 34); }
+    LINE = LINE.map((_, i) => { let s0 = 0; for (let j = -12; j <= 12; j++) s0 += LINE[wrap(i + j)]; return s0 / 25; });
     SPECT = [];
     (T.spect || []).forEach(([f, s]) => { for (let j = 0; j < 9; j++) { const [x, y] = at(f * N + j * 4, s * (TW / 2 + 34 + (j % 2) * 16));
       if (y < shore(x) - 30) SPECT.push({x, y, c: T.white ? pick(['#fff', '#f4f4f4', '#fffbe8']) : pick(['#ff4d4d', '#ffd23f', '#3fa7ff', '#3ccf6e', '#ff5fa2', '#fff', '#8a4fbf']), s: pick(['#f1c27d', '#c68642', '#8d5524', '#ffe0bd']), ph: rnd(0, TAU)}); } });
@@ -946,8 +950,8 @@
   // Einstellungen für alle: jeder darf ändern, es gilt die zuletzt geänderte (presence.cfg mit Zeitstempel)
   const CFG0 = {laps: 0, items: 'all', diff: -1, storm: 'off', ev: 'on', ts: 0};
   function liveCfg() { let c = Object.assign({}, CFG0, LIVE.cfg || {}); lobby().forEach(p0 => { const x = p0.presence.cfg; if (x && x.ts > c.ts) c = Object.assign({}, CFG0, x); }); return c; }
-  const cfgTxt = c => ({laps: '🔁 Runden: ' + (c.laps || 'Standard'), items: '🎁 Items: ' + {all: 'alle', turbo: 'nur 🍹 Turbo', off: 'aus'}[c.items], diff: '🤖 Gegner: ' + (c.diff < 0 ? 'je nach Gastgeber' : ['Leicht', 'Normal', 'Schwer'][c.diff]), storm: '⛈️ Gewitter: ' + {off: 'nie', rnd: 'Zufall', on: 'immer'}[c.storm], ev: '🎲 Ereignisse: ' + (c.ev === 'off' ? 'aus' : 'an')});
-  function cfgStep(key) { const c = liveCfg(); if (key === 'laps') c.laps = (c.laps + 1) % 6; if (key === 'items') c.items = {all: 'turbo', turbo: 'off', off: 'all'}[c.items]; if (key === 'diff') c.diff = c.diff >= 2 ? -1 : c.diff + 1; if (key === 'storm') c.storm = {off: 'rnd', rnd: 'on', on: 'off'}[c.storm]; if (key === 'ev') c.ev = c.ev === 'off' ? 'on' : 'off';
+  const cfgTxt = c => ({laps: '🔁 Runden: ' + (c.laps || 'Standard'), items: '🎁 Items: ' + {all: 'alle', turbo: 'nur 🍹 Turbo', off: 'aus'}[c.items], diff: '🤖 Gegner: ' + (c.diff < 0 ? 'je nach Gastgeber' : ['Leicht', 'Normal', 'Schwer', 'Profi'][c.diff]), storm: '⛈️ Gewitter: ' + {off: 'nie', rnd: 'Zufall', on: 'immer'}[c.storm], ev: '🎲 Ereignisse: ' + (c.ev === 'off' ? 'aus' : 'an')});
+  function cfgStep(key) { const c = liveCfg(); if (key === 'laps') c.laps = (c.laps + 1) % 6; if (key === 'items') c.items = {all: 'turbo', turbo: 'off', off: 'all'}[c.items]; if (key === 'diff') c.diff = c.diff >= 3 ? -1 : c.diff + 1; if (key === 'storm') c.storm = {off: 'rnd', rnd: 'on', on: 'off'}[c.storm]; if (key === 'ev') c.ev = c.ev === 'off' ? 'on' : 'off';
     c.ts = Date.now(); LIVE.cfg = c; livePres(); liveBox(); }
   // Schnellsprüche in der Lobby (derb, schwarz, Crew war einverstanden); {n} = zufälliger Mitspieler
   const TAUNTS = ['{n}, ich fahr dich platter als deine letzte Beziehung.', 'Wer Letzter wird, zahlt die nächste Runde. Und die Beerdigung.', '{n} fährt, wie er trinkt: viel zu lang und am Ende gegen die Wand.',
@@ -993,7 +997,8 @@
   const menu = box.querySelector('.kr-menu'), res = box.querySelector('.kr-res'), itemBtn = box.querySelector('.kr-item'), sndBtn = box.querySelector('.kr-snd'), pm = box.querySelector('.kr-pm'), steerBtn = box.querySelector('.kr-steer'), annBtn = box.querySelector('.kr-ann');
   const STEERS = [['Sanft', 1.25], ['Mittel', 1.65], ['Stark', 2.2]]; let STEER = +(store.get('kartSteer') || 1); if (!STEERS[STEER]) STEER = 1;
   // Gegner-Stärke: Tempo-Spanne, Gummiband, wie genau die Ideallinie gefahren wird
-  const DIFFS = [{n: 'Leicht', s: [.86, .92], rb: .45, line: .4}, {n: 'Normal', s: [.9, .97], rb: .33, line: .75}, {n: 'Schwer', s: [.96, 1.005], rb: .18, line: 1}];
+  // Gegner-Stärke (08.10.: Normal etwas stärker, neu Profi = schneller, Ideallinie, kaum Fehler, wenig Gummiband)
+  const DIFFS = [{n: 'Leicht', s: [.86, .92], rb: .45, line: .4, mis: 1.3}, {n: 'Normal', s: [.925, .985], rb: .3, line: .85, mis: 1}, {n: 'Schwer', s: [.97, 1.015], rb: .18, line: 1, mis: .75}, {n: 'Profi', s: [1.005, 1.04], rb: .1, line: 1, mis: .4}];
   let DIFF = +(store.get('kartDiff') || 1); if (!DIFFS[DIFF]) DIFF = 1;
   const vib = ms => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} };
   let S = null, raf = 0, last = 0, me = ME || 'patrick', W = 0, H = 0, DPR = 1, MODE = ['cup', 'daily', 'live'].includes(store.get('kartMode')) ? store.get('kartMode') : 'single', TRK = TBY[store.get('kartTrack')] ? store.get('kartTrack') : 'copa', CUP = null;
@@ -1061,7 +1066,9 @@
     const LP = LIVE.race && LIVE.race.players ? LIVE.race.players.filter(pl => pl !== LIVE.me).map(pl => ({peer: pl, pr: ((LIVE.peers.find(p0 => p0.peer === pl) || {}).presence) || {}})) : null;
     const LAI = LP ? (LIVE.race.ai || []) : [], HOST = LP && LIVE.race.host === LIVE.me;
     const order = LP ? [me].concat(LP.map(x => x.pr.drv || x.pr.who || 'jonas'), LAI) : [me].concat(CREW.map(c => c.id).filter(id => id !== baseOf(me)).sort(() => Math.random() - .5));
-    const karts = order.map((id, k) => { const row = Math.floor(k / 2), lat = (k % 2 ? 1 : -1) * Math.min(34, TW * .22), i = N - 10 - row * 9, [x, y] = at(i, lat);
+    if (!LP && !CUP && me !== 'manuel' && XBY.manuel && Math.random() < .3) order[order.length - 1] = 'manuel';   // Gastfahrer fährt ab und zu als Gegner mit
+    // Startfeld: versetzte Zweierreihen mit Abstand; im Einzelrennen startet man aus Reihe 2 (live bleibt die Reihenfolge, damit alle Handys gleich rechnen)
+    const karts = order.map((id, k) => { const sl = LP ? k : (k === 0 ? 2 : k <= 2 ? k - 1 : k), row = Math.floor(sl / 2), lat = (sl % 2 ? 1 : -1) * Math.min(42, TW * .26), i = N - 10 - row * 14 - (sl % 2) * 5, [x, y] = at(i, lat);
       const a = Math.atan2(P[(i + 1) % N][1] - P[i][1], P[(i + 1) % N][0] - P[i][0]);
       return {id, me: k === 0, x, y, a, mv: a, v: 0, steer: 0, idx: i, lat, lap: -1, half: true, done: 0, spin: 0, rot: 0, boost: 0, item: null, roll: 0, useAt: 0,
         skill: id === me ? 1 : rnd(DIFFS[DIFF].s[0], DIFFS[DIFF].s[1]), vr: 0, lost: 0, rumble: 0, squash: 0, lapT0: 0, lane: rnd(-35, 35), laneT: 0, say: null, sayT: 0, dust: 0, hold: 0, dr: 0, dt: 0, yaw: 0, air: 0, airT: 0, trick: 0, stall: 0, pad: 0, wet: 0, dol: 0, inv: 0, glow: 0, blind: 0, slowT: 0, slowE: '', bump: 0, cs: Object.assign({}, CS[id] || {spd: .5, hdl: .5, acc: .5, tgh: .5}), pf: k === 0 ? partsFx() : PF0, vt: VTUNE[id === me ? vehOf(id) : 'kart'] || VTUNE.kart, vtype: vehOf(id), vsz: (STY[id] || {}).vs || 1, fw: vehOf(id) === 'kart' && STYK(id) ? FWS[STYK(id)] || null : FW[vehOf(id)], vx: xvx(id, k === 0), brk: false, manual: null, peg: pegel(baseOf(id)),
@@ -1109,7 +1116,7 @@
     if (k.me) { S.myHits++; if (k.coins > 0) { const n = Math.min(2, k.coins); k.coins -= n; S.got = Math.max(0, S.got - n); floatTxt(k, '−' + n + ' 🪙', '#ffb0b0'); } } 
     if (k.me) { S.shake = .35; if (why === 'caiman') say('caiman', 'Vorsicht, Kaiman!'); else if (['oil', 'coati', 'ball', 'flip', 'fire', 'beer', 'coco', 'banana', 'bang'].includes(why) && Math.random() < .6) voice(k, 'item'); else if (Math.random() < .5) voice(k, 'hit'); else if (Math.random() < .4) say('hit', 'Autsch, das tat weh!'); }
   }
-  function rollItem(k) { if ((RULE && RULE.k === 'turbo') || (S.live && S.live.cfg && S.live.cfg.items === 'turbo')) return ITEMS.turbo; if (RULE && RULE.k === 'coati') return ITEMS.coati; if (SPECIAL[k.id] && Math.random() < .22) return SPECIAL[k.id]; const pl = place(k), tb = IW[pl === 1 ? 'front' : pl <= 3 ? 'mid' : 'back']; let r = Math.random(); for (const [kk, p0] of Object.entries(tb)) { r -= p0; if (r < 0) return ITEMS[kk]; } return ITEMS.turbo; const w = [0, 0]; return r < w[0] ? ITEMS.turbo : r < w[0] + w[1] ? ITEMS.oil : ITEMS.coati; }
+  function rollItem(k) { if ((RULE && RULE.k === 'turbo') || (S.live && S.live.cfg && S.live.cfg.items === 'turbo')) return ITEMS.turbo; if (RULE && RULE.k === 'coati') return ITEMS.coati; if (SPECIAL[k.id] && Math.random() < (k.me ? .22 : .32)) return SPECIAL[k.id]; /* Gegner etwas öfter mit Spezial-Item: mehr Chaos */ const pl = place(k), tb = IW[pl === 1 ? 'front' : pl <= 3 ? 'mid' : 'back']; let r = Math.random(); for (const [kk, p0] of Object.entries(tb)) { r -= p0; if (r < 0) return ITEMS[kk]; } return ITEMS.turbo; const w = [0, 0]; return r < w[0] ? ITEMS.turbo : r < w[0] + w[1] ? ITEMS.oil : ITEMS.coati; }
   /* ---- Zufallsereignisse mitten im Rennen (im Live-Rennen über den gemeinsamen Zufall bei allen gleich) ---- */
   const EVK = [{k: 'police', e: '🚔', n: 'Polizeikontrolle', x: 'Langsam fahren, sonst Strafe!'}, {k: 'parade', e: '💃', n: 'Karnevalsumzug', x: 'Sambazug quert die Strecke!'},
     {k: 'coco', e: '🥥', n: 'Kokosnussregen', x: 'Auf die Schatten achten!'}, {k: 'blackout', e: '🔌', n: 'Stromausfall', x: 'Alles dunkel, nur Scheinwerfer!'}];
@@ -1304,7 +1311,7 @@
         if (k.pp.straight && ca < .002) vmax *= 1.025; if (k.pp.late && k.lap >= LAPS - 1) vmax *= 1.035;
         if (k.pp.burst && S.t > 3) { k.burstT -= dt; if (k.burstT < 0) { k.burstT = rnd(10, 20); k.boost = Math.max(k.boost, .9); } }
         // typische Fehler je Person
-        if (S.t > 3) { k.misT -= dt; if (k.misT < 0 && !k.misD) { k.misT = rnd(9, 17) / k.pp.mis[0]; k.misK = k.pp.mis[1]; k.misD = k.misK === 'wide' ? 1.1 : k.misK === 'wobble' ? 1.6 : .9; }
+        if (S.t > 3) { k.misT -= dt; if (k.misT < 0 && !k.misD) { k.misT = rnd(9, 17) / k.pp.mis[0] / (DIFFS[DIFF].mis || 1); k.misK = k.pp.mis[1]; k.misD = k.misK === 'wide' ? 1.1 : k.misK === 'wobble' ? 1.6 : .9; }
           if (k.misD > 0) { k.misD = Math.max(0, k.misD - dt); if (k.misK === 'lapse') vmax *= .6; if (k.misK === 'brake') vmax *= .72; } } }   // vor engen Kurven bremsen
       if (!k.me && S.ev && S.ev.cur && S.ev.cur.k === 'police' && !k.evRaser && wrap(S.ev.cur.i - k.idx) < 70) vmax *= .5;
       if (k.spin > 0) { k.spin -= dt; k.rot += dt * 14; vmax *= .25; } else k.rot *= Math.max(0, 1 - dt * 10);
@@ -1865,9 +1872,9 @@
     const dt0 = 1 / 60; P0.p = P0.p.filter(q => { q.t += dt0; q.x += q.vx * dt0; q.y += q.vy * dt0; q.vy += 700 * dt0; ctx.fillStyle = `rgba(255,248,200,${clamp(1.2 - q.t, 0, 1)})`; ctx.beginPath(); ctx.arc(q.x, q.y, 3, 0, TAU); ctx.fill(); return q.t < 1.2; });
     P0.cf.forEach(c => { c.y += c.v * dt0; c.r += dt0 * 4; if (c.y > 1.05) c.y = -.05; ctx.save(); ctx.translate(c.x * W + Math.sin(el * 2 + c.r) * 10, c.y * H); ctx.rotate(c.r); ctx.fillStyle = c.c; ctx.fillRect(-4, -2, 8, 4); ctx.restore(); });
     // Der Letzte steht mit dem Eimer daneben
-    if (P0.last && el > 1.4) { const x = W - 52, y = base + 40, img = headImg(P0.last.id), hs = 52; ctx.globalAlpha = clamp((el - 1.4) / .5, 0, 1); ctx.save(); ctx.translate(x, y); ctx.rotate(Math.sin(el * 2) * .12);
+    if (P0.last && el > 1.4) { const x = W - 52, y = Math.min(H - 150, base + 150), img = headImg(P0.last.id), hs = 52; ctx.globalAlpha = clamp((el - 1.4) / .5, 0, 1); ctx.save(); ctx.translate(x, y); ctx.rotate(Math.sin(el * 2) * .12);
       ctx.drawImage(img, -img.width / 2 * hs / 116, -40 - img.height / 2 * hs / 116, img.width * hs / 116, img.height * hs / 116); ctx.drawImage(E('🪣', 34), -17, 2, 34, 34); ctx.restore();
-      ctx.font = '700 11px system-ui,sans-serif'; ctx.fillStyle = '#ffb3b3'; ctx.fillText('Letzter: ' + P0.last.n, x - 6, y + 50, 110); ctx.fillText('hält den Kotzeimer', x - 6, y + 64, 110); ctx.globalAlpha = 1; }
+      ctx.fillStyle = 'rgba(20,10,30,.72)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - 64, y + 38, 116, 32, 8) : ctx.rect(x - 64, y + 38, 116, 32); ctx.fill(); ctx.font = '700 11px system-ui,sans-serif'; ctx.fillStyle = '#ffb3b3'; ctx.fillText('Letzter: ' + P0.last.n, x - 6, y + 50, 110); ctx.fillText('hält den Kotzeimer', x - 6, y + 64, 110); ctx.globalAlpha = 1; }
     ctx.font = '700 13px system-ui,sans-serif'; ctx.fillStyle = `rgba(255,255,255,${.5 + .3 * Math.sin(el * 4)})`; ctx.fillText('Antippen zum Überspringen', cx, H - 40);
     ctx.restore(); }
   // Siegerehrung nach dem Grand Prix: Podest auf dem Canvas, Tabelle im Kasten
@@ -2074,6 +2081,8 @@
     if (LIVE.race) { S.live = LIVE.race; S.live.t0p = LIVE.race.delay && LIVE.race.rt ? LIVE.race.rt + LIVE.race.delay : performance.now() + clamp(LIVE.race.at - Date.now(), 500, 6000); S.t = clamp((performance.now() - S.live.t0p) / 1000, -6, -.5); LIVE.buf = {}; LIVE.lastN = {}; S.live.curHost = S.live.host; liveRejoinRestore(); liveClockSync(); } box.classList.toggle('live', !!S.live); S.tod = T.night || SET.tod === 'day' ? 'day' : (h => h >= 19 || h < 6 ? 'night' : h >= 17 ? 'dusk' : h < 7 ? 'dawn' : 'day')(+new Intl.DateTimeFormat('en-GB', {timeZone: 'America/Sao_Paulo', hour: 'numeric', hour12: false}).format(new Date()) % 24);
     if (!CUP && !RULE && GHOST.mode !== 'off') { const tid = T.id, s0 = S; ghostFor(tid).then(g => { if (S === s0 && g) { S.ghost = g; ghostProg(g); } }); } audio(); MUS.on = false; MUS.fast = false; MUS.step = 0; MUS.next = 0; banner = null; last = 0; if (MG && AC) MG.gain.value = .5;
     setTimeout(() => { if (S && S.tod === 'night' && !T.night) setTimeout(() => say('night', 'Es wird Nacht! Licht an!'), 2600); if (S && S.t < 0) say('t_' + T.id, RULE ? 'Tages-Challenge: ' + RULE.n + '!' : 'Willkommen in ' + T.name + '!', 1); }, 150);
+    // Gastfahrer im Feld: eigene Ansage (Text + Handy-Stimme, keine Aufnahme)
+    { const gx = S.karts.map(k => XBY[k.id]).find(x => x && x.guest && x.ann); if (gx) setTimeout(() => { if (!S || S.t > 0) return; say('guest', gx.ann, 1); if (SOUND && ANN && window.speechSynthesis) try { const u = new SpeechSynthesisUtterance(gx.ann); u.lang = 'de-DE'; u.rate = 1.1; u.pitch = .7; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {} }, 2500); }
   }
   function open() {
     if (!Object.keys(HEAD).length) makeHeads();
@@ -2207,7 +2216,7 @@
   openBtn.addEventListener('click', () => { if (LIVE.waiting && MODE !== 'live') { MODE = 'live'; store.set('kartMode', MODE); setTimeout(renderMenu, 50); } }, true);
   box.addEventListener('click', e => { const w = e.target.closest('.kr-whop button'); if (w) { WHOOPEN = false; setMe(w.dataset.who); if (!menu.hidden) renderMenu(); }
     if (e.target.closest('.kr-whochg')) { WHOOPEN = true; renderMenu(); } });
-  window.__kartAt = (i, l) => at(i, l); window.__kartBG = () => [BG.width, BG.height, WW, WH]; window.__kartTW = () => TW; window.__kartDeck = () => DECK && {i0: DECK.i0, len: DECK.len, under: DECK.under}; window.__kartTun = () => TUN.map(u => ({i0: u.i0, len: u.len, nm: u.nm})); window.__kartN = () => N;
+  window.__kartAt = (i, l) => at(i, l); window.__kartBG = () => [BG.width, BG.height, WW, WH]; window.__kartBGimg = w => { const c = document.createElement("canvas"); c.width = w; c.height = Math.round(w * BG.height / BG.width); c.getContext("2d").drawImage(BG, 0, 0, c.width, c.height); return c.toDataURL("image/jpeg", .8); }; window.__kartTW = () => TW; window.__kartDeck = () => DECK && {i0: DECK.i0, len: DECK.len, under: DECK.under}; window.__kartTun = () => TUN.map(u => ({i0: u.i0, len: u.len, nm: u.nm})); window.__kartN = () => N;
   window.__kart = {toMenu: () => toMenu(), mm: () => ({on: MM.on, step: MM.step}), mmRender: async (sec, song) => { const A0 = AC, G0 = MM.g, D0 = MM.dl, S0 = MM.song, oc = new OfflineAudioContext(1, 44100 * sec, 44100); AC = oc; MM.g = null; MM.song = song || S0 || 'phonk'; mmGraph(); MM.g.gain.value = .8 * SONGS[MM.song].v; MM.dl.delayTime.value = 60 / SONGS[MM.song].bpm * .75; const sp = 60 / SONGS[MM.song].bpm / 4; for (let st = 0, t = 0; t < sec; st++, t += sp) mmNote(st, t);
     const buf = await oc.startRendering(); AC = A0; MM.g = G0; MM.dl = D0; MM.song = S0; const d = buf.getChannelData(0); let pk = 0, ss = 0; for (let i = 0; i < d.length; i++) { pk = Math.max(pk, Math.abs(d[i])); ss += d[i] * d[i]; }
     const pcm = new Int16Array(d.length); for (let i = 0; i < d.length; i++) pcm[i] = Math.max(-1, Math.min(1, d[i])) * 32767; let bin = ''; const u8 = new Uint8Array(pcm.buffer); for (let i = 0; i < u8.length; i += 8192) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 8192));
