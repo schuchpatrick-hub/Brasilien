@@ -7550,31 +7550,101 @@ setGroup(G);
   }
 
   /* ---- Fahrer: Kopf- und Fahrzeug-Sprites ---- */
+  // Jede Figur mit eigenem Fahrzeug, eigener Kopfform und Größe (Wunsch Patrick 08.10.): k = Fahrzeug-Stil (nur beim Gringo-Kart), shp = Kopfform,
+  // vs = Fahrzeug-Größe (auch Zusammenstöße), hs = Kopfgröße, seat = Lenkrad (wheel), Lenker (bar) oder ohne Körper (none)
+  const STY = {jonas: {k: 'f1', shp: 'squircle'}, simon: {k: 'buggy', shp: 'oval'}, patrick: {k: 'kart', shp: 'egg', hs: 1.06}, marco: {k: 'f1', shp: 'shield'}, greisel: {k: 'buggy', shp: 'hex', hs: 1.08, vs: 1.05}, dajo: {k: 'kart', shp: 'circle', hs: .95},
+    simon_love: {k: 'bed', shp: 'heart', vs: 1.05}, patrick_fat: {k: 'sofa', shp: 'wide', vs: 1.22, hs: 1.25, fat: 1}, marco_dia: {k: 'toilet', shp: 'blob'}, jonas_kater: {k: 'tub', shp: 'squircle', hs: .95}, greisel_wb: {k: 'keg', shp: 'mug', vs: 1.08, hs: 1.1}, dajo_party: {k: 'disco', shp: 'star', hs: 1.05},
+    taxi: {k: 'taxi', vs: 1.12, skin: '#a8704a'}, coati: {k: 'skate', vs: .8, hs: .9, seat: 'none'}, officer: {k: 'police', vs: 1.1}, dona: {k: 'scooter', vs: .92, seat: 'bar', skin: '#b98060'}, guide: {k: 'jeep', vs: 1.1, skin: '#c08a5a'}, steward: {k: 'trolley', vs: .95, seat: 'bar'}, caimanx: {k: 'gator', vs: 1.28, hs: 1.1, seat: 'none'}};
+  const STYK = id => { const st = STY[id]; return st && st.k !== 'kart' ? st.k : null; }, KLIKE = {f1: 1, buggy: 1};
+  const STN = {f1: 'Formel-Kart', buggy: 'Strand-Buggy', bed: 'Liebesbett', sofa: 'Couch-Kart', toilet: 'Klo-Rakete', tub: 'Badewanne', keg: 'Bierfass', disco: 'Disco-Mobil', taxi: 'Taxi', skate: 'Skateboard', police: 'Streifenwagen', scooter: 'Seniorenmobil', jeep: 'Safari-Jeep', trolley: 'Servierwagen', gator: 'Kaiman'};
+  const FWS = {f1: [[-15, -20], [15, -20]]}, HSET = () => [.75, 1, 1.5][SET.hd === undefined ? 1 : SET.hd];
+  function shapePath(x, sh, R) { x.beginPath();
+    if (sh === 'oval') x.ellipse(0, 0, R * .84, R, 0, 0, TAU);
+    else if (sh === 'wide') x.ellipse(0, 0, R, R * .8, 0, 0, TAU);
+    else if (sh === 'squircle' || sh === 'mug') { const a = sh === 'mug' ? .78 : .92, b = sh === 'mug' ? .95 : .92; if (x.roundRect) x.roundRect(-R * a, -R * b, R * a * 2, R * b * 2, R * (sh === 'mug' ? .22 : .42)); else x.rect(-R * a, -R * b, R * a * 2, R * b * 2); }
+    else if (sh === 'egg') { x.moveTo(0, -R); x.bezierCurveTo(R * .8, -R, R, R * .1, R * .92, R * .45); x.bezierCurveTo(R * .78, R, -R * .78, R, -R * .92, R * .45); x.bezierCurveTo(-R, R * .1, -R * .8, -R, 0, -R); }
+    else if (sh === 'shield') { x.moveTo(-R * .9, -R * .85); x.quadraticCurveTo(0, -R * 1.08, R * .9, -R * .85); x.lineTo(R * .9, R * .1); x.quadraticCurveTo(R * .78, R * .78, 0, R); x.quadraticCurveTo(-R * .78, R * .78, -R * .9, R * .1); x.closePath(); }
+    else if (sh === 'hex') { for (let i = 0; i < 6; i++) { const a = i / 6 * TAU + Math.PI / 6; x[i ? 'lineTo' : 'moveTo'](Math.cos(a) * R, Math.sin(a) * R); } x.closePath(); }
+    else if (sh === 'heart') { x.moveTo(0, R); x.bezierCurveTo(-R * 1.3, R * .15, -R * 1.02, -R * 1.08, 0, -R * .42); x.bezierCurveTo(R * 1.02, -R * 1.08, R * 1.3, R * .15, 0, R); }
+    else if (sh === 'blob') { for (let i = 0; i <= 60; i++) { const a = i / 60 * TAU, r = R * (.91 + .09 * Math.sin(a * 5 + .7)); x[i ? 'lineTo' : 'moveTo'](Math.cos(a) * r, Math.sin(a) * r); } x.closePath(); }
+    else if (sh === 'star') { for (let i = 0; i < 20; i++) { const a = i / 20 * TAU - Math.PI / 2, r = i % 2 ? R * .82 : R; x[i ? 'lineTo' : 'moveTo'](Math.cos(a) * r, Math.sin(a) * r); } x.closePath(); }
+    else x.arc(0, 0, R, 0, TAU); }
+  // Fahrzeuge der Figuren (Draufsicht, Logik-Koordinaten −22…22 × −30…30, vorn = oben)
+  function drawSty(x, kd, col) { const rr = (a, b, w, h, r) => { x.beginPath(); if (x.roundRect) x.roundRect(a, b, w, h, r); else x.rect(a, b, w, h); }, fill = c => { x.fillStyle = c; x.fill(); x.stroke(); },
+      wh = (a, b, w, h, c) => { x.fillStyle = c || '#111'; rr(a, b, w, h, 2); x.fill(); }, dot = (a, b, r, c) => { x.fillStyle = c; x.beginPath(); x.arc(a, b, r, 0, TAU); x.fill(); };
+    x.lineWidth = 1.6; x.strokeStyle = 'rgba(0,0,0,.55)';
+    if (kd === 'f1') { wh(-20, 9, 7, 15); wh(13, 9, 7, 15); x.fillStyle = col; x.beginPath(); x.moveTo(-3, -29); x.lineTo(3, -29); x.lineTo(6, -8); x.lineTo(12, -3); x.lineTo(12, 19); x.lineTo(-12, 19); x.lineTo(-12, -3); x.lineTo(-6, -8); x.closePath(); x.fill(); x.stroke();
+      x.fillStyle = '#1b1b1b'; x.fillRect(-17, -30, 34, 4); x.fillRect(-16, 23, 32, 5); x.fillStyle = col; x.fillRect(-17, -30, 5, 4); x.fillRect(12, -30, 5, 4); x.fillStyle = 'rgba(255,255,255,.65)'; x.fillRect(-1, -27, 2, 17); x.fillStyle = 'rgba(0,0,0,.35)'; x.fillRect(-12, 2, 3, 14); x.fillRect(9, 2, 3, 14); }
+    else if (kd === 'buggy') { [[-21, -24], [14, -24], [-22, 8], [14, 8]].forEach(([a, b]) => { wh(a, b, 8, 16); x.fillStyle = '#555'; for (let q = 1; q < 16; q += 4) x.fillRect(a, b + q, 8, 1.2); });
+      x.strokeStyle = '#2b2b2b'; x.lineWidth = 3; x.strokeRect(-12, -20, 24, 40); x.beginPath(); x.moveTo(-12, -20); x.lineTo(12, 20); x.moveTo(12, -20); x.lineTo(-12, 20); x.stroke(); x.lineWidth = 1.6; x.strokeStyle = 'rgba(0,0,0,.55)';
+      rr(-10, -16, 20, 30, 6); fill(col); x.fillStyle = 'rgba(255,255,255,.35)'; x.fillRect(-8, -14, 16, 4); x.strokeStyle = '#ffd23f'; x.lineWidth = 3; x.beginPath(); x.arc(0, 16, 10, Math.PI, 0); x.stroke(); }
+    else if (kd === 'bed') { [[-15, -27], [15, -27], [-15, 25], [15, 25]].forEach(([a, b]) => dot(a, b, 2.4, '#333')); rr(-16, -29, 32, 57, 4); fill('#8a5a2b'); rr(-14, -27, 28, 53, 4); fill('#fff');
+      rr(-14, -3, 28, 29, 3); fill(col); rr(-10, -25, 20, 10, 5); fill('#ffd1e3'); x.fillStyle = '#ff2d6f'; [[-6, 6], [5, 12], [-3, 19], [7, 3]].forEach(([a, b]) => { x.beginPath(); x.moveTo(a, b + 2.6); x.bezierCurveTo(a - 4, b, a - 2, b - 3, a, b - 1); x.bezierCurveTo(a + 2, b - 3, a + 4, b, a, b + 2.6); x.fill(); }); }
+    else if (kd === 'sofa') { [[-20, -21], [17, -21], [-20, 20], [17, 20]].forEach(([a, b]) => wh(a, b, 4, 4, '#3a2a1a')); rr(-21, -22, 42, 47, 6); fill(col); x.fillStyle = 'rgba(0,0,0,.25)'; rr(-21, 12, 42, 13, 5); x.fill();
+      rr(-21, -20, 8, 40, 4); fill(col); rr(13, -20, 8, 40, 4); fill(col); x.fillStyle = 'rgba(255,255,255,.22)'; rr(-12, -18, 11.5, 29, 3); x.fill(); rr(.5, -18, 11.5, 29, 3); x.fill(); dot(-15, 20, 3, '#ffd23f'); }
+    else if (kd === 'toilet') { [[-11, -24], [11, -24], [-11, 22], [11, 22]].forEach(([a, b]) => dot(a, b, 2.4, '#222')); rr(-12, 9, 24, 17, 3); fill('#f4f4f4'); dot(0, 17, 2.4, '#bbb');
+      x.beginPath(); x.ellipse(0, -7, 13, 17, 0, 0, TAU); fill('#fafafa'); x.strokeStyle = '#cfcfcf'; x.lineWidth = 3; x.beginPath(); x.ellipse(0, -8, 9, 12, 0, 0, TAU); x.stroke(); x.lineWidth = 1.6; x.strokeStyle = 'rgba(0,0,0,.55)';
+      x.fillStyle = '#7fc8f8'; x.beginPath(); x.ellipse(0, -9, 5.5, 7.5, 0, 0, TAU); x.fill(); x.fillStyle = '#8a5a2b'; x.beginPath(); x.ellipse(1, -8, 2.2, 1.6, 0, 0, TAU); x.fill(); dot(16, 14, 4.5, '#fff'); dot(16, 14, 1.5, '#bbb'); x.fillStyle = col; x.fillRect(-12, 24, 24, 2); }
+    else if (kd === 'tub') { [[-13, -26], [13, -26], [-13, 25], [13, 25]].forEach(([a, b]) => dot(a, b, 3, '#d4af37')); rr(-15, -28, 30, 56, 13); fill('#fff'); rr(-11, -24, 22, 48, 10); fill('#7fd3ff');
+      [[-5, -14, 3], [4, -8, 2.2], [-3, 14, 2.6], [6, 18, 3.2], [0, -20, 1.8]].forEach(([a, b, r]) => dot(a, b, r, 'rgba(255,255,255,.9)')); rr(-3, 22, 6, 6, 2); fill('#9aa3ad'); x.fillStyle = '#ffd23f'; x.beginPath(); x.ellipse(6, -18, 3.5, 2.5, 0, 0, TAU); x.fill(); x.fillStyle = col; x.fillRect(-15, -2, 2, 6); }
+    else if (kd === 'keg') { [[-15, -24], [11, -24], [-15, 14], [11, 14]].forEach(([a, b]) => wh(a, b, 4, 10)); rr(-14, -27, 28, 54, 12); fill('#9a6332'); x.strokeStyle = 'rgba(60,30,10,.45)'; x.lineWidth = 1; for (let q = -9; q <= 9; q += 6) { x.beginPath(); x.moveTo(q, -26); x.lineTo(q, 26); x.stroke(); }
+      x.fillStyle = '#4a4f55'; [-18, 0, 18].forEach(b => x.fillRect(-14, b - 1.5, 28, 3)); rr(-3, -30, 6, 5, 1); fill('#9aa3ad'); rr(-9, 4, 18, 9, 2); fill(col); x.fillStyle = '#fff'; x.font = '900 5.5px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('BIER', 0, 8.8); }
+    else if (kd === 'disco' || kd === 'taxi' || kd === 'police') { const body = kd === 'taxi' ? '#ffd23f' : kd === 'police' ? '#f4f4f4' : col; [[-17, -22], [11, -22], [-17, 9], [11, 9]].forEach(([a, b]) => wh(a, b, 6, 13)); rr(-14, -28, 28, 55, 7); fill(body);
+      if (kd === 'police') { x.fillStyle = '#1b1b1b'; x.fillRect(-14, -28, 28, 8); x.fillRect(-14, 19, 28, 8); }
+      x.fillStyle = 'rgba(160,210,255,.9)'; rr(-11, -18, 22, 9, 3); x.fill(); rr(-11, 11, 22, 6, 2); x.fill();
+      if (kd === 'taxi') { for (let q = 0; q < 7; q++) { x.fillStyle = q % 2 ? '#111' : '#fff'; x.fillRect(-14 + q * 4, -1, 4, 3); x.fillStyle = q % 2 ? '#fff' : '#111'; x.fillRect(-14 + q * 4, 2, 4, 3); } rr(-7, -6, 14, 5, 1.5); fill('#fff'); x.fillStyle = '#111'; x.font = '900 4.5px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('TAXI', 0, -3.4); }
+      if (kd === 'police') { rr(-10, -5, 10, 5, 1.5); fill('#2b6cff'); rr(0, -5, 10, 5, 1.5); fill('#ff2d2d'); x.fillStyle = '#111'; x.font = '900 4px system-ui'; x.textAlign = 'center'; x.fillText('POLÍCIA', 0, 6); }
+      if (kd === 'disco') { ['#ff5fa2', '#ffd23f', '#22c3c9', '#9b5de5', '#7cff6b'].forEach((c, n) => { x.fillStyle = c; [[-12, -24 + n * 10], [12, -22 + n * 10]].forEach(([a, b]) => { x.beginPath(); x.arc(a, b, 1.8, 0, TAU); x.fill(); }); });
+        const g = x.createRadialGradient(-1, -26, .5, 0, -24, 5); g.addColorStop(0, '#fff'); g.addColorStop(1, '#8a93a0'); x.fillStyle = g; x.beginPath(); x.arc(0, -24, 4.6, 0, TAU); x.fill(); x.strokeStyle = 'rgba(0,0,0,.35)'; x.lineWidth = .6; for (let q = -3; q <= 3; q += 2) { x.beginPath(); x.moveTo(-4.6, -24 + q); x.lineTo(4.6, -24 + q); x.stroke(); x.beginPath(); x.moveTo(q, -28.6); x.lineTo(q, -19.4); x.stroke(); } } }
+    else if (kd === 'skate') { [[-11, -21], [7, -21], [-11, 15], [7, 15]].forEach(([a, b]) => wh(a, b, 4, 6, '#ffd23f')); x.fillStyle = '#9aa3ad'; x.fillRect(-10, -19, 20, 2); x.fillRect(-10, 17, 20, 2);
+      rr(-8, -29, 16, 58, 8); fill('#c58b4e'); rr(-6.5, -25, 13, 50, 6); fill('#262626'); x.fillStyle = col; x.fillRect(-6.5, -2, 13, 4); }
+    else if (kd === 'scooter') { [[-12, -20], [8, -20], [-12, 12], [8, 12]].forEach(([a, b]) => wh(a, b, 4, 9)); rr(-11, -20, 22, 44, 8); fill('#d62828'); rr(-9, -30, 18, 11, 2); fill('#c9a36b');
+      x.strokeStyle = 'rgba(90,60,20,.6)'; x.lineWidth = .8; for (let q = -8; q < 9; q += 3) { x.beginPath(); x.moveTo(q, -30); x.lineTo(q + 3, -19); x.stroke(); } x.lineWidth = 1.6; x.strokeStyle = 'rgba(0,0,0,.55)'; rr(-8, 4, 16, 14, 5); fill('#333'); x.fillStyle = '#ffd23f'; x.fillRect(-2, 20, 4, 4); }
+    else if (kd === 'jeep') { [[-18, -23], [12, -23], [-18, 9], [12, 9]].forEach(([a, b]) => wh(a, b, 6, 14)); rr(-15, -27, 30, 52, 4); fill('#6b7a45'); x.fillStyle = 'rgba(0,0,0,.25)'; for (let q = -24; q < -12; q += 3) x.fillRect(-12, q, 24, 1.2);
+      x.strokeStyle = '#2b2b2b'; x.lineWidth = 2.6; x.strokeRect(-13, -9, 26, 26); x.lineWidth = 1.6; x.strokeStyle = 'rgba(0,0,0,.55)'; dot(0, 27, 5.5, '#111'); dot(0, 27, 2.5, '#777'); x.fillStyle = col; x.fillRect(-15, -12, 30, 2.5); }
+    else if (kd === 'trolley') { [[-11, -26], [7, -26], [-11, 22], [7, 22]].forEach(([a, b]) => wh(a, b, 4, 5)); const g = x.createLinearGradient(-12, 0, 12, 0); g.addColorStop(0, '#9aa3ad'); g.addColorStop(.5, '#e3e7ea'); g.addColorStop(1, '#8a939d'); rr(-12, -25, 24, 48, 2); fill(g);
+      x.strokeStyle = 'rgba(0,0,0,.3)'; x.lineWidth = 1; for (let q = -17; q < 23; q += 8) { x.beginPath(); x.moveTo(-12, q); x.lineTo(12, q); x.stroke(); } x.fillStyle = col; x.fillRect(-2, -25, 4, 48); x.strokeStyle = '#333'; x.lineWidth = 2.4; x.beginPath(); x.moveTo(-11, 27); x.lineTo(11, 27); x.stroke(); }
+    else if (kd === 'gator') { const gc = '#4f7d3a'; [[-17, -14], [12, -14], [-17, 10], [12, 10]].forEach(([a, b]) => { x.fillStyle = '#3d6230'; rr(a, b, 5, 8, 2.5); x.fill(); });
+      x.fillStyle = gc; x.beginPath(); x.moveTo(0, -30); x.quadraticCurveTo(7, -28, 7, -18); x.quadraticCurveTo(14, -12, 14, 2); x.quadraticCurveTo(14, 16, 6, 21); x.quadraticCurveTo(2, 26, 0, 30); x.quadraticCurveTo(-2, 26, -6, 21); x.quadraticCurveTo(-14, 16, -14, 2); x.quadraticCurveTo(-14, -12, -7, -18); x.quadraticCurveTo(-7, -28, 0, -30); x.fill(); x.stroke();
+      x.fillStyle = '#fff'; [-1, 1].forEach(sd => { for (let q = -27; q < -19; q += 3) { x.beginPath(); x.moveTo(sd * 5.5, q); x.lineTo(sd * 7.4, q + 1.2); x.lineTo(sd * 5.5, q + 2.4); x.fill(); } }); x.fillStyle = '#2f4f24'; for (let q = -6; q < 22; q += 5) [-5, 0, 5].forEach(a => { x.beginPath(); x.arc(a * (1 - q / 40), q, 1.6, 0, TAU); x.fill(); });
+      [-1, 1].forEach(sd => { dot(sd * 5, -16, 2.6, '#e8d64a'); x.fillStyle = '#111'; x.fillRect(sd * 5 - .5, -18, 1, 4); }); }
+    else return false; return true; }
   const HEAD = {}, VEH = {};
   function makeHeads() {
     CREW.forEach(p => {
-      const L = LOOK[p.id] || {}, col = L.shirt || '#00a651', R = 52;
-      const hs = sprite(2 * R + 12, 2 * R + 12, (x) => { x.translate(R + 6, R + 6); x.fillStyle = col; x.beginPath(); x.arc(0, 0, R + 6, 0, TAU); x.fill();
-        x.fillStyle = '#ffe0bd'; x.beginPath(); x.arc(0, 0, R, 0, TAU); x.fill(); x.fillStyle = '#333'; x.font = '800 52px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(p.name[0], 0, 1); });
+      const L = LOOK[p.id] || {}, col = L.shirt || '#00a651', R = 52, sh = (STY[p.id] || {}).shp || 'circle';
+      const hs = sprite(2 * R + 12, 2 * R + 12, (x) => { x.translate(R + 6, R + 6); x.fillStyle = col; shapePath(x, sh, R + 6); x.fill();
+        x.fillStyle = '#ffe0bd'; shapePath(x, sh, R); x.fill(); x.fillStyle = '#333'; x.font = '800 52px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(p.name[0], 0, 1); });
       HEAD[p.id] = hs; XDRV.filter(x0 => x0.base === p.id).forEach(x0 => { HEAD[x0.id] = xHead(x0, null); });
       if (p.photo) { const im = new Image(); im.onload = () => { const x = hs.getContext('2d'), f = L.face || {x: .5, y: .5, z: 1}, D = 2 * R * f.z;
-        x.setTransform(1, 0, 0, 1, 0, 0); x.save(); x.translate(R + 6, R + 6); x.beginPath(); x.arc(0, 0, R, 0, TAU); x.clip(); x.drawImage(im, -f.x * D, -f.y * D, D, D); x.restore();
-        XDRV.filter(x0 => x0.base === p.id).forEach(x0 => { xHead(x0, hs, HEAD[x0.id]); }); HEADC = {}; }; im.src = p.photo; }
+        x.setTransform(1, 0, 0, 1, 0, 0); x.save(); x.translate(R + 6, R + 6); shapePath(x, sh, R); x.clip(); x.drawImage(im, -f.x * D, -f.y * D, D, D); x.restore();
+        x.save(); x.translate(R + 6, R + 6); x.strokeStyle = 'rgba(255,255,255,.85)'; x.lineWidth = 2.5; shapePath(x, sh, R + 1); x.stroke(); x.restore();
+        XDRV.filter(x0 => x0.base === p.id).forEach(x0 => { xHead(x0, {im, f}, HEAD[x0.id]); }); HEADC = {}; }; im.src = p.photo; }
     });
     XDRV.filter(x0 => x0.npc).forEach(x0 => { HEAD[x0.id] = xHead(x0, null); });
   }
-  // Kopf der Zusatz-Fahrer: Foto der Person mit Zeichnung darüber bzw. Emoji im farbigen Kreis (Serien-Figuren)
-  function xHead(X, src, into) { const R = 52, W0 = 2 * R + 12;
-    const draw = (x) => { x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, W0, W0); x.translate(R + 6, R + 6); x.fillStyle = X.col; x.beginPath(); x.arc(0, 0, R + 6, 0, TAU); x.fill();
-      if (X.npc) { x.fillStyle = 'rgba(255,255,255,.92)'; x.beginPath(); x.arc(0, 0, R, 0, TAU); x.fill(); x.font = '72px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(X.e, 0, 5); return; }
-      x.save(); if (X.ov === 'fat') x.scale(1.14, .94); x.beginPath(); x.arc(0, 0, R, 0, TAU); x.clip(); if (src) x.drawImage(src, -R - 6, -R - 6); else { x.fillStyle = '#ffe0bd'; x.fill(); } x.restore();
+  // Kopf der Zusatz-Fahrer: Foto der Person in eigener Form mit Zeichnung darüber bzw. Emoji ohne Rahmen (Serien-Figuren)
+  function xHead(X, src, into) { const R = 52, W0 = 2 * R + 12, sh = (STY[X.id] || {}).shp || 'circle';
+    const draw = (x) => { x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, W0, W0); x.translate(R + 6, R + 6);
+      if (X.npc) { x.font = '96px system-ui,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji"'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.shadowColor = 'rgba(0,0,0,.5)'; x.shadowBlur = 8; x.shadowOffsetY = 3; x.fillText(X.e, 0, 6); return; }
+      x.fillStyle = X.col; shapePath(x, sh, R + 6); x.fill();
+      if (sh === 'mug') { x.strokeStyle = X.col; x.lineWidth = 9; x.beginPath(); x.arc(R * .86, 4, R * .34, -Math.PI / 2, Math.PI / 2); x.stroke(); }
+      x.save(); if (X.ov === 'fat') x.scale(1.12, .96); shapePath(x, sh, R); x.clip(); if (src) { const f = src.f, D = 2 * R * f.z; x.drawImage(src.im, -f.x * D, -f.y * D, D, D); } else { x.fillStyle = '#ffe0bd'; x.fill(); } x.restore();
+      x.strokeStyle = 'rgba(255,255,255,.85)'; x.lineWidth = 2.5; shapePath(x, sh, R + 1); x.stroke();
       const em = (e, px, ex, ey, rot) => { x.save(); x.translate(ex, ey); if (rot) x.rotate(rot); x.font = px + 'px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(e, 0, 0); x.restore(); };
-      if (X.ov === 'love') { x.fillStyle = 'rgba(255,95,162,.28)'; x.beginPath(); x.arc(0, 0, R, 0, TAU); x.fill(); em('💋', 30, R * .45, R * .2, -.3); em('❤️', 26, -R * .7, -R * .7); em('💕', 22, R * .72, -R * .72); }
-      if (X.ov === 'fat') { x.fillStyle = 'rgba(255,120,90,.18)'; x.beginPath(); x.arc(0, 0, R, 0, TAU); x.fill(); em('🍗', 34, R * .62, R * .5, .5); em('💦', 18, -R * .72, -R * .5); }
-      if (X.ov === 'sick') { x.fillStyle = 'rgba(120,190,60,.38)'; x.beginPath(); x.arc(0, 0, R, 0, TAU); x.fill(); em('💩', 30, R * .65, R * .55); em('💦', 20, -R * .7, -R * .55); }
-      if (X.ov === 'hang') { x.fillStyle = 'rgba(160,200,140,.25)'; x.beginPath(); x.arc(0, 0, R, 0, TAU); x.fill(); em('🕶️', 52, 0, -R * .12); em('💫', 22, R * .7, -R * .75); }
-      if (X.ov === 'foam') { x.fillStyle = '#fffaf0'; [[-.6, -.85, .32], [-.15, -.98, .36], [.35, -.92, .34], [.75, -.7, .26]].forEach(([a, b, r]) => { x.beginPath(); x.arc(a * R, b * R, r * R, 0, TAU); x.fill(); }); em('🍺', 34, R * .7, R * .5); }
-      if (X.ov === 'disco') { ['#ff5fa2', '#ffd23f', '#22c3c9', '#9b5de5'].forEach((c, n) => { x.fillStyle = c; x.globalAlpha = .22; x.beginPath(); x.moveTo(0, 0); x.arc(0, 0, R, n * TAU / 4, n * TAU / 4 + TAU / 8); x.fill(); }); x.globalAlpha = 1; em('🪩', 28, R * .66, -R * .66); em('🕺', 22, -R * .7, R * .55); } };
+      x.save(); shapePath(x, sh, R); x.clip();
+      if (X.ov === 'love') { x.fillStyle = 'rgba(255,95,162,.28)'; x.fillRect(-R, -R, 2 * R, 2 * R); }
+      if (X.ov === 'fat') { x.fillStyle = 'rgba(255,120,90,.18)'; x.fillRect(-R, -R, 2 * R, 2 * R); }
+      if (X.ov === 'sick') { x.fillStyle = 'rgba(120,190,60,.38)'; x.fillRect(-R, -R, 2 * R, 2 * R); }
+      if (X.ov === 'hang') { x.fillStyle = 'rgba(160,200,140,.25)'; x.fillRect(-R, -R, 2 * R, 2 * R); }
+      if (X.ov === 'disco') { ['#ff5fa2', '#ffd23f', '#22c3c9', '#9b5de5'].forEach((c, n) => { x.fillStyle = c; x.globalAlpha = .22; x.beginPath(); x.moveTo(0, 0); x.arc(0, 0, R * 1.5, n * TAU / 4, n * TAU / 4 + TAU / 8); x.fill(); }); x.globalAlpha = 1; }
+      x.restore();
+      if (X.ov === 'love') { em('💋', 30, R * .45, R * .2, -.3); em('❤️', 26, -R * .7, -R * .7); em('💕', 22, R * .72, -R * .72); }
+      if (X.ov === 'fat') { em('🍗', 34, R * .62, R * .5, .5); em('💦', 18, -R * .72, -R * .5); }
+      if (X.ov === 'sick') { em('💩', 30, R * .65, R * .55); em('💦', 20, -R * .7, -R * .55); }
+      if (X.ov === 'hang') { em('🕶️', 52, 0, -R * .12); em('💫', 22, R * .7, -R * .75); }
+      if (X.ov === 'foam') { x.fillStyle = '#fffaf0'; [[-.6, -.85, .32], [-.15, -.98, .36], [.35, -.92, .34], [.7, -.8, .26]].forEach(([a, b, r]) => { x.beginPath(); x.arc(a * R, b * R, r * R, 0, TAU); x.fill(); }); }
+      if (X.ov === 'disco') { em('🪩', 28, R * .66, -R * .66); } };
     const c = into || sprite(W0, W0, () => {}); draw(c.getContext('2d')); return c; }
   const FW = {kart: [[-14, -13], [14, -13]], gold: [[-14, -13], [14, -13]], uber: [[-14, -13], [14, -13]], uno: [[-14, -13], [14, -13]], cart: [[-16, -10], [16, -10]]};
   const vehOf = id => T.veh === 'boat' || T.veh === 'cart' ? T.veh : (id === me ? myVeh() : 'kart');
@@ -7586,7 +7656,7 @@ setGroup(G);
   const partsPt = () => { const pp = partsOf(); return {tire: pp.tire, wing: pp.wing}; };
   function makeVehicles() {
     DRVS.forEach(id => { const p = {id}; const pt = Object.assign({}, paintOf(p.id), id === me ? partsPt() : {}); VEH[p.id] = vehSprite(pt.c || (LOOK[p.id] || {}).shirt || '#00a651', vehOf(p.id), pt, p.id); }); }
-  function vehSprite(col, vt, pt, nid) { pt = pt || {s: []};
+  function vehSprite(col, vt, pt, nid) { pt = pt || {s: []}; const cus = vt === 'kart' ? STYK(nid) : null, plain = !cus || KLIKE[cus];
       return sprite(88, 120, (x) => { x.scale(2, 2); x.translate(22, 30); x.strokeStyle = 'rgba(0,0,0,.55)'; x.lineWidth = 2;
         if (vt === 'uber' || vt === 'uno') { const c2 = vt === 'uber' ? '#151515' : '#d62828'; x.fillStyle = '#111'; [[-17, 8], [11, 8]].forEach(([a, b]) => x.fillRect(a, b, 6, 12));
           x.fillStyle = c2; x.beginPath(); x.roundRect ? x.roundRect(-14, -28, 28, 54, vt === 'uno' ? 4 : 9) : x.rect(-14, -28, 28, 54); x.fill(); x.stroke();
@@ -7603,24 +7673,25 @@ setGroup(G);
         else if (vt === 'cart') { x.fillStyle = '#222'; [[-19, 6], [13, 6]].forEach(([a, b]) => x.fillRect(a, b, 6, 12));
           x.fillStyle = '#9b6a3a'; x.fillRect(-15, -24, 30, 46); x.strokeRect(-15, -24, 30, 46); x.strokeStyle = 'rgba(60,30,10,.6)'; for (let y = -18; y < 22; y += 7) { x.beginPath(); x.moveTo(-15, y); x.lineTo(15, y); x.stroke(); }
           x.fillStyle = col; x.fillRect(-11, 2, 22, 16); x.fillStyle = 'rgba(0,0,0,.3)'; x.fillRect(-4, 0, 8, 3); x.strokeStyle = '#555'; x.lineWidth = 3; x.beginPath(); x.moveTo(-12, -26); x.lineTo(-12, -30); x.lineTo(12, -30); x.lineTo(12, -26); x.stroke(); }
+        else if (cus) drawSty(x, cus, col);
         else { x.fillStyle = '#111'; [[-17, 8], [11, 8]].forEach(([a, b]) => { x.beginPath(); x.roundRect ? x.roundRect(a, b, 6, 14, 2) : x.rect(a, b, 6, 14); x.fill(); });
           x.fillStyle = col; x.beginPath(); x.moveTo(-9, -27); x.lineTo(9, -27); x.lineTo(13, -6); x.lineTo(13, 22); x.lineTo(-13, 22); x.lineTo(-13, -6); x.closePath(); x.fill(); x.stroke();
           x.fillStyle = 'rgba(255,255,255,.55)'; x.fillRect(-8, -24, 16, 5); x.fillStyle = '#222'; x.fillRect(-15, 20, 30, 5); }
-        if (vt !== 'boat' && vt !== 'wheel') { const g = x.createLinearGradient(-14, 0, 14, 0); g.addColorStop(0, 'rgba(255,255,255,.28)'); g.addColorStop(.45, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(0,0,0,.18)'); x.fillStyle = g; x.fillRect(-13, -26, 26, 48); }
+        if (vt !== 'boat' && vt !== 'wheel' && !cus) { const g = x.createLinearGradient(-14, 0, 14, 0); g.addColorStop(0, 'rgba(255,255,255,.28)'); g.addColorStop(.45, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(0,0,0,.18)'); x.fillStyle = g; x.fillRect(-13, -26, 26, 48); }
         // Aufkleber (nur auf Karosserien)
-        if (vt !== 'boat' && vt !== 'wheel' && vt !== 'cart') { const S0 = pt.s || [];
+        if (vt !== 'boat' && vt !== 'wheel' && vt !== 'cart' && plain) { const S0 = pt.s || [];
           if (S0.includes('stripes')) { x.fillStyle = 'rgba(255,255,255,.9)'; x.fillRect(-5, -26, 3, 47); x.fillRect(2, -26, 3, 47); }
           if (S0.includes('flames')) { [-1, 1].forEach(sd => { x.fillStyle = '#ff5a1f'; x.beginPath(); x.moveTo(sd * 12, -20); x.quadraticCurveTo(sd * 4, -14, sd * 12, -6); x.quadraticCurveTo(sd * 6, -10, sd * 12, 4); x.lineTo(sd * 13, -20); x.fill(); x.fillStyle = '#ffd23f'; x.beginPath(); x.moveTo(sd * 12, -16); x.quadraticCurveTo(sd * 7, -12, sd * 12, -8); x.fill(); }); }
           if (S0.includes('flag')) { x.fillStyle = '#009c3b'; x.fillRect(-12, 12, 24, 8); x.fillStyle = '#ffdf00'; x.beginPath(); x.moveTo(-7, 16); x.lineTo(0, 12.5); x.lineTo(7, 16); x.lineTo(0, 19.5); x.fill(); x.fillStyle = '#002776'; x.beginPath(); x.arc(0, 16, 2.2, 0, TAU); x.fill(); }
           if (S0.includes('num')) { x.fillStyle = '#fff'; x.beginPath(); x.arc(0, -3, 6.5, 0, TAU); x.fill(); x.strokeStyle = '#111'; x.lineWidth = 1; x.stroke(); x.fillStyle = '#111'; x.font = '900 7px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(String(NUMS[nid] || 1), 0, -2.6); }
           if (S0.includes('name')) { x.save(); x.fillStyle = 'rgba(255,255,255,.95)'; x.font = '900 5px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('GRINGO', 0, 9); x.restore(); } }
         // Baukasten: Reifen + Flügel (pt.tire, pt.wing)
-        if (vt !== 'boat' && pt.tire && pt.tire !== 'std') { [[-17, 8], [11, 8], [-17, -22], [11, -22]].forEach(([a, b], n) => { if (vt === 'wheel' || (vt === 'cart' && n > 1)) return;
+        if (vt !== 'boat' && plain && pt.tire && pt.tire !== 'std') { [[-17, 8], [11, 8], [-17, -22], [11, -22]].forEach(([a, b], n) => { if (vt === 'wheel' || (vt === 'cart' && n > 1)) return;
             if (pt.tire === 'coco') { x.fillStyle = '#7a4a22'; x.beginPath(); x.ellipse(a + 3, b + 7, 5, 8, 0, 0, TAU); x.fill(); x.strokeStyle = '#4a2a10'; x.lineWidth = 1; for (let q = -5; q < 7; q += 3) { x.beginPath(); x.moveTo(a, b + 7 + q); x.lineTo(a + 6, b + 8 + q); x.stroke(); } }
             if (pt.tire === 'off') { x.fillStyle = '#111'; x.fillRect(a - 1.5, b - 1, 9, 16); x.fillStyle = '#555'; for (let q = 0; q < 15; q += 3) x.fillRect(a - 1.5, b - 1 + q, 9, 1.4); }
             if (pt.tire === 'slick') { x.fillStyle = '#0d0d0d'; x.fillRect(a - .5, b, 7, 14); x.fillStyle = '#ff2d2d'; x.fillRect(a + 2.3, b, 1.4, 14); }
             if (pt.tire === 'monster') { x.fillStyle = '#0b0b0b'; x.beginPath(); x.roundRect ? x.roundRect(a - 4, b - 3, 14, 20, 4) : x.rect(a - 4, b - 3, 14, 20); x.fill(); x.fillStyle = '#c0c4c8'; x.beginPath(); x.arc(a + 3, b + 7, 3, 0, TAU); x.fill(); } }); }
-        if (vt !== 'boat' && pt.wing && pt.wing !== 'none') { x.lineWidth = 1.5; x.strokeStyle = 'rgba(0,0,0,.55)';
+        if (vt !== 'boat' && plain && pt.wing && pt.wing !== 'none') { x.lineWidth = 1.5; x.strokeStyle = 'rgba(0,0,0,.55)';
           if (pt.wing === 'surf') { const g = x.createLinearGradient(-20, 0, 20, 0); g.addColorStop(0, '#22c3c9'); g.addColorStop(.5, '#fff'); g.addColorStop(1, '#ff8a00'); x.fillStyle = g; x.beginPath(); x.ellipse(0, 25, 21, 4.2, 0, 0, TAU); x.fill(); x.stroke(); x.fillStyle = '#d62828'; x.fillRect(-1, 21, 2, 8); }
           if (pt.wing === 'palm') { x.fillStyle = '#2e9e4a'; [-1, 1].forEach(sd => { x.beginPath(); x.moveTo(0, 24); x.quadraticCurveTo(sd * 12, 16, sd * 21, 27); x.quadraticCurveTo(sd * 10, 25, 0, 27); x.fill(); x.stroke(); }); x.strokeStyle = '#1b6b2e'; x.beginPath(); x.moveTo(-18, 26); x.lineTo(18, 26); x.stroke(); }
           if (pt.wing === 'jet') { [-7, 7].forEach(sd => { x.fillStyle = '#8a8f96'; x.fillRect(sd - 3.5, 18, 7, 10); x.strokeRect(sd - 3.5, 18, 7, 10); x.fillStyle = '#ff8a00'; x.beginPath(); x.arc(sd, 28.5, 2.6, 0, TAU); x.fill(); }); } } });
@@ -8084,7 +8155,7 @@ setGroup(G);
     const karts = order.map((id, k) => { const row = Math.floor(k / 2), lat = (k % 2 ? 1 : -1) * Math.min(34, TW * .22), i = N - 10 - row * 9, [x, y] = at(i, lat);
       const a = Math.atan2(P[(i + 1) % N][1] - P[i][1], P[(i + 1) % N][0] - P[i][0]);
       return {id, me: k === 0, x, y, a, mv: a, v: 0, steer: 0, idx: i, lat, lap: -1, half: true, done: 0, spin: 0, rot: 0, boost: 0, item: null, roll: 0, useAt: 0,
-        skill: id === me ? 1 : rnd(DIFFS[DIFF].s[0], DIFFS[DIFF].s[1]), vr: 0, lost: 0, rumble: 0, squash: 0, lapT0: 0, lane: rnd(-35, 35), laneT: 0, say: null, sayT: 0, dust: 0, hold: 0, dr: 0, dt: 0, yaw: 0, air: 0, airT: 0, trick: 0, stall: 0, pad: 0, wet: 0, dol: 0, inv: 0, glow: 0, blind: 0, slowT: 0, slowE: '', bump: 0, cs: Object.assign({}, CS[id] || {spd: .5, hdl: .5, acc: .5, tgh: .5}), pf: k === 0 ? partsFx() : PF0, vt: VTUNE[id === me ? vehOf(id) : 'kart'] || VTUNE.kart, vtype: vehOf(id), vx: xvx(id, k === 0), brk: false, manual: null, peg: pegel(baseOf(id)),
+        skill: id === me ? 1 : rnd(DIFFS[DIFF].s[0], DIFFS[DIFF].s[1]), vr: 0, lost: 0, rumble: 0, squash: 0, lapT0: 0, lane: rnd(-35, 35), laneT: 0, say: null, sayT: 0, dust: 0, hold: 0, dr: 0, dt: 0, yaw: 0, air: 0, airT: 0, trick: 0, stall: 0, pad: 0, wet: 0, dol: 0, inv: 0, glow: 0, blind: 0, slowT: 0, slowE: '', bump: 0, cs: Object.assign({}, CS[id] || {spd: .5, hdl: .5, acc: .5, tgh: .5}), pf: k === 0 ? partsFx() : PF0, vt: VTUNE[id === me ? vehOf(id) : 'kart'] || VTUNE.kart, vtype: vehOf(id), vsz: (STY[id] || {}).vs || 1, fw: vehOf(id) === 'kart' && STYK(id) ? FWS[STYK(id)] || null : FW[vehOf(id)], vx: xvx(id, k === 0), brk: false, manual: null, peg: pegel(baseOf(id)),
         rocket: !LP && id !== me && !(PERS[id] || {}).noRocket && Math.random() < .45, remote: LP && k > 0 && (k <= LP.length || !HOST) ? 1 : 0, peer: LP && k > 0 ? (k <= LP.length ? LP[k - 1].peer : LIVE.race.host) : null, aiIdx: LP && k > LP.length ? k - LP.length - 1 : undefined, vkey: LP && k > 0 && k <= LP.length ? 'r:' + LP[k - 1].peer : null, who: LP && k > 0 && k <= LP.length ? LP[k - 1].pr.who : null, coins: 0, pp: PERS[id] || PERS0, misT: rnd(6, 14), misK: null, misD: 0, burstT: rnd(8, 18)}; });
     const boxes = []; (T.boxes || []).forEach(f => [-42, 0, 42].forEach(l => { const i = Math.round(f * N); boxes.push({i, l, x: at(i, l)[0], y: at(i, l)[1], off: 0}); }));
     const obst = (T.obst || []).map(([f, l, kind]) => { const [x, y] = at(f * N, l); return {x, y, kind, r: {crate: 22, umbrella: 24, log: 26, suitcase: 20, stone: 18, nut: 20, cone: 16, champ: 16}[kind] || 20}; });
@@ -8368,7 +8439,7 @@ setGroup(G);
     });
     // Kart gegen Kart
     for (let i = 0; i < ks.length; i++) for (let j = i + 1; j < ks.length; j++) { const a = ks[i], b = ks[j]; if (a.air || b.air) continue; const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
-      if (d < 30 && d > .01) { const p = (30 - d) / 2, nx = dx / d, ny = dy / d, ma = a.vx.m, mb = b.vx.m, fa = b.remote ? 2 : a.remote ? 0 : 2 * mb / (ma + mb), fb = a.remote ? 2 : b.remote ? 0 : 2 * ma / (ma + mb); a.x -= nx * p * fa; a.y -= ny * p * fa; b.x += nx * p * fb; b.y += ny * p * fb; a.v *= .97; b.v *= .97;
+      const R0 = 15 * ((a.vsz || 1) + (b.vsz || 1)); if (d < R0 && d > .01) { const p = (R0 - d) / 2, nx = dx / d, ny = dy / d, ma = a.vx.m, mb = b.vx.m, fa = b.remote ? 2 : a.remote ? 0 : 2 * mb / (ma + mb), fb = a.remote ? 2 : b.remote ? 0 : 2 * ma / (ma + mb); a.x -= nx * p * fa; a.y -= ny * p * fa; b.x += nx * p * fb; b.y += ny * p * fb; a.v *= .97; b.v *= .97;
         const push = p * 9; a.vr -= (nx * -Math.sin(a.a) + ny * Math.cos(a.a)) * push * fa; b.vr += (nx * -Math.sin(b.a) + ny * Math.cos(b.a)) * push * fb;
         if (S.live && p > 2 && (a.me || b.me) && !S.bumpSent) { const o = a.me ? b : a; if (o.remote && o.aiIdx === undefined) { S.bumpSent = .35; liveEmit({t: 'bump', race: S.live.id, to: o.peer, nx: +(a.me ? nx : -nx).toFixed(2), ny: +(a.me ? ny : -ny).toFixed(2), p: Math.round(p)}); } }
         if (p > 3 && (a.me || b.me) && !S.bumpT) { S.bumpT = .25; noise(.08, .1, 0, 0, 0, 900); vib(15); for (let q = 0; q < 6; q++) S.sp.push({x: a.x + nx * 15, y: a.y + ny * 15, vx: rnd(-140, 140), vy: rnd(-140, 140), t: 0, c: '#ffe08a'}); } } }
@@ -8483,6 +8554,18 @@ setGroup(G);
     // Reifenspuren
     if (S.marks.length) { ctx.strokeStyle = 'rgba(40,30,25,.32)'; ctx.lineWidth = 4; ctx.lineCap = 'round'; ctx.beginPath(); S.marks.forEach(m => { ctx.moveTo(m[0], m[1]); ctx.lineTo(m[2], m[3]); }); ctx.stroke(); }
     const up = (x, y, img, s) => { ctx.save(); ctx.translate(x, y); ctx.rotate(-phi); ctx.drawImage(img, -img.width * s / 2, -img.height * s / 2, img.width * s, img.height * s); ctx.restore(); };
+    // Wackelkopf: Kopf neigt sich in Kurven, wippt mit dem Tempo, staucht bei der Landung (Drehpunkt = Hals)
+    const upB = (x, y, img, s, r, q) => { ctx.save(); ctx.translate(x, y); ctx.rotate(-phi); ctx.translate(0, img.height * s * .42); ctx.rotate(r); ctx.scale(1 / Math.sqrt(q), q); ctx.drawImage(img, -img.width * s / 2, -img.height * s * .92, img.width * s, img.height * s); ctx.restore(); };
+    // Fahrer im Sitz (im gedrehten Fahrzeug-Koordinatensystem): Schultern im Shirt, Arme zum Lenkrad bzw. Lenker, bei Drehern und im Ziel Arme hoch
+    function rider(k, tt) { const st = STY[k.id] || {}, seat = T.veh === 'boat' ? 'bar' : st.seat || 'wheel'; if (seat === 'none') return;
+      const col = (LOOK[k.id] || {}).shirt || '#00a651', fat = st.fat ? 1.4 : 1, skin = st.skin || '#e8b48a', sy = 9, wy = -6, sw = k.steer * .7;
+      if (seat === 'wheel') { ctx.save(); ctx.translate(0, wy); ctx.rotate(sw); ctx.strokeStyle = '#1b1b1b'; ctx.lineWidth = 2.4; ctx.beginPath(); ctx.arc(0, 0, 5.5, 0, TAU); ctx.stroke(); ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(-5.5, 0); ctx.lineTo(5.5, 0); ctx.stroke(); ctx.restore(); }
+      else { ctx.save(); ctx.translate(0, wy - 2); ctx.rotate(sw * .5); ctx.strokeStyle = '#2b2b2b'; ctx.lineWidth = 2.4; ctx.beginPath(); ctx.moveTo(-9, 0); ctx.lineTo(9, 0); ctx.stroke(); ctx.restore(); }
+      const up0 = k.spin > 0 || (k.done && !k.out), hl = seat === 'wheel' ? 5.5 : 8.5;
+      ctx.lineCap = 'round'; [-1, 1].forEach(sd => { let hx, hy; if (up0) { hx = sd * 14; hy = sy - 13 + Math.sin(tt * 18 + sd) * 2; } else { const a = sw * (seat === 'wheel' ? 1 : .5); hx = sd * hl * Math.cos(a); hy = wy - (seat === 'wheel' ? 0 : 2) + sd * hl * Math.sin(a); }
+        ctx.strokeStyle = col; ctx.lineWidth = 3.6 * (fat > 1 ? 1.25 : 1); ctx.beginPath(); ctx.moveTo(sd * 8.5 * fat, sy - 2); ctx.lineTo(hx, hy); ctx.stroke(); ctx.fillStyle = skin; ctx.beginPath(); ctx.arc(hx, hy, 2.3, 0, TAU); ctx.fill(); });
+      ctx.lineCap = 'butt'; ctx.fillStyle = col; ctx.strokeStyle = 'rgba(0,0,0,.45)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.ellipse(0, sy, 11 * fat, 6.5, 0, 0, TAU); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.beginPath(); ctx.ellipse(-2, sy - 2, 7 * fat, 2.5, 0, 0, TAU); ctx.fill(); }
     // Zuschauer (winken, springen, wenn du vorbeifährst)
     SPECT.forEach(s => { if (!near(s.x, s.y)) return; const close = Math.hypot(k0.x - s.x, k0.y - s.y) < 160, j = close ? Math.abs(Math.sin(tt * 9 + s.ph)) * 6 : 0, w = Math.sin(tt * (close ? 12 : 4) + s.ph);
       ctx.save(); ctx.translate(s.x, s.y); ctx.rotate(-phi); ctx.scale(1 + j / 30, 1 + j / 30); ctx.fillStyle = 'rgba(0,0,0,.15)'; ctx.beginPath(); ctx.ellipse(3, 10, 9, 5, 0, 0, TAU); ctx.fill();
@@ -8536,18 +8619,22 @@ setGroup(G);
     S.karts.slice().sort((a, b) => (a.air > 0) - (b.air > 0) || a.y - b.y).forEach(k => {
       const z = k.air > 0 ? Math.sin(Math.PI * (1 - k.air / k.airT)) : 0, s = 1 + z * .38, tr = k.trick && k.air > 0 ? (1 - k.air / k.airT) * TAU : 0;
       ctx.save(); ctx.translate(k.x, k.y); ctx.fillStyle = `rgba(0,0,0,${.25 - z * .12})`; ctx.beginPath(); ctx.ellipse(3 + z * 16, 4 + z * 16, 20 * (1 - z * .2), 26 * (1 - z * .2), k.a + Math.PI / 2, 0, TAU); ctx.fill();
-      ctx.scale(s, s); ctx.rotate(k.a + Math.PI / 2 + k.rot + k.yaw + tr + (k.bump > 0 ? Math.sin(k.bump * 40) * .25 * k.bump : 0) + clamp(k.vr / 900, -.12, .12)); if (k.squash > 0) ctx.scale(1 + k.squash * .5, 1 - k.squash * .35);
+      const vz = k.vsz || 1; ctx.scale(s * vz, s * vz); ctx.rotate(k.a + Math.PI / 2 + k.rot + k.yaw + tr + (k.bump > 0 ? Math.sin(k.bump * 40) * .25 * k.bump : 0) + clamp(k.vr / 900, -.12, .12)); if (k.squash > 0) ctx.scale(1 + k.squash * .5, 1 - k.squash * .35);
       if (k.boost > 0) { const fl = 40 + Math.random() * 18; ctx.fillStyle = 'rgba(255,90,0,.55)'; ctx.beginPath(); ctx.moveTo(-11, 24); ctx.quadraticCurveTo(0, fl + 14, 11, 24); ctx.fill(); ctx.fillStyle = `rgba(255,${190 + Math.random() * 60 | 0},60,.95)`; ctx.beginPath(); ctx.moveTo(-6, 24); ctx.quadraticCurveTo(0, fl, 6, 24); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.beginPath(); ctx.moveTo(-3, 24); ctx.quadraticCurveTo(0, fl * .7, 3, 24); ctx.fill(); }
       if (k.stall > 0) { ctx.fillStyle = 'rgba(120,120,120,.6)'; ctx.beginPath(); ctx.arc(rnd(-6, 6), 34 + rnd(0, 8), 9, 0, TAU); ctx.fill(); }
       if (k.glow > 0) { ctx.fillStyle = `rgba(255,70,30,${.35 + .2 * Math.sin(tt * 20)})`; ctx.beginPath(); ctx.arc(0, 0, 46, 0, TAU); ctx.fill(); }
       if (k.inv > 0) { ctx.strokeStyle = `hsl(${tt * 600 % 360},90%,60%)`; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(0, 0, 34, 0, TAU); ctx.stroke(); }
-      const fw = FW[k.vtype]; if (fw) { ctx.fillStyle = '#111'; fw.forEach(([wx, wy]) => { ctx.save(); ctx.translate(wx, wy); ctx.rotate(k.steer * .5); ctx.fillRect(-3, -7, 6, 14); ctx.restore(); }); }
+      const fw = k.fw === undefined ? FW[k.vtype] : k.fw; if (fw) { ctx.fillStyle = '#111'; fw.forEach(([wx, wy]) => { ctx.save(); ctx.translate(wx, wy); ctx.rotate(k.steer * .5); ctx.fillRect(-3, -7, 6, 14); ctx.restore(); }); }
       ctx.drawImage(VEH[k.vkey || k.id] || VEH[k.id], -22, -30, 44, 60);
+      rider(k, tt);
       if (k.brk && k.v > 20) { ctx.fillStyle = '#ff2020'; ctx.shadowColor = '#ff2020'; ctx.shadowBlur = 8; ctx.fillRect(-11, 22, 6, 4); ctx.fillRect(5, 22, 6, 4); ctx.shadowBlur = 0; }
       ctx.restore();
       if (k.slowT > 0 && k.slowE) up(k.x + 18, k.y - 18, E(k.slowE, 22), .9); if (k.blind > 0) up(k.x - 18, k.y - 18, E('😵', 22), .9);
       if (k.out) { up(k.x, k.y - 34, E('📴', 22), .9); }
-      up(k.x, k.y - z * 2 + (T.veh === 'cart' ? -8 : 0), headImg(k.id), (k.me ? .31 : .275) * s);
+      { const st = STY[k.id] || {}, back = (st.seat === 'none' ? 0 : 7) * vz, sp0 = Math.min(1, k.v / 250), hop = k.bump > 0 ? Math.abs(Math.sin(k.bump * 30)) * 5 : 0;
+        const rot = Math.sin(tt * 11 + k.idx * .3) * .07 * sp0 + (k.spin > 0 ? Math.sin(tt * 28) * .4 : 0) + clamp(k.steer * -.18 - k.vr / 2000, -.3, .3) + (k.done ? Math.sin(tt * 9) * .15 : 0);
+        const q = 1 + Math.sin(tt * 16 + k.idx) * .045 * sp0 - (k.squash || 0) * .35;
+        upB(k.x - Math.cos(k.a) * back, k.y - Math.sin(k.a) * back - z * 2 - hop + (T.veh === 'cart' ? -8 : 0), headImg(k.id), (k.me ? .31 : .275) * s * (st.hs || 1) * HSET() * Math.sqrt(vz), rot, q); }
       if (k.id === S.rival && !k.done) up(k.x + 20, k.y - 22, E('⚔️', 20), .75);
       if (k.shield > 0 && (k.shield > 1.5 || Math.floor(tt * 8) % 2)) { ctx.save(); ctx.globalAlpha = .9; up(k.x, k.y - 30, E('⛱️', 40), .9); ctx.restore(); ctx.strokeStyle = 'rgba(127,211,255,.6)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.arc(k.x, k.y, 36, 0, TAU); ctx.stroke(); }
       if (k.parrot > 0) up(k.x - 18, k.y - 24, E('🦜', 24), .9);
@@ -8865,6 +8952,11 @@ setGroup(G);
     if (!im && b && CREW.some(c0 => c0.id === b && c0.photo)) return c;   // Foto lädt noch: nicht zwischenspeichern
     PCACHE[key] = c; return cloneCv(c, w, h); }
   const cloneCv = (src, w, h) => { const c = document.createElement('canvas'); c.width = src.width; c.height = src.height; c.getContext('2d').drawImage(src, 0, 0); c.style.aspectRatio = w + '/' + h; return c; };
+  // Vorschau im Menü: eigenes Fahrzeug von oben mit Kopf und Größe der Figur
+  function vehPreview(id) { const c = document.createElement('canvas'), st = STY[id] || {}, vz = st.vs || 1, W2 = 130, H2 = 160; c.width = W2 * 2; c.height = H2 * 2; c.className = 'kr-vp'; const x = c.getContext('2d'); x.scale(2, 2);
+    const v = VEH[id]; x.save(); x.translate(W2 / 2, H2 / 2 + 6); x.scale(1.75 * vz, 1.75 * vz); x.fillStyle = 'rgba(0,0,0,.3)'; x.beginPath(); x.ellipse(2, 4, 20, 27, 0, 0, TAU); x.fill(); if (v) x.drawImage(v, -22, -30, 44, 60); x.restore();
+    const h = headImg(id); if (h) { const sz = h.width * .26 * 1.75 * (st.hs || 1) * Math.sqrt(vz); x.drawImage(h, W2 / 2 - sz / 2, H2 / 2 + 6 + (st.seat === 'none' ? 0 : 6) * vz - sz / 2 - sz * .05, sz, sz * (h.height / h.width)); }
+    x.fillStyle = 'rgba(255,255,255,.75)'; x.font = '700 10px system-ui'; x.textAlign = 'center'; x.fillText(vz > 1.04 ? '⬆ groß' : vz < .96 ? '⬇ klein' : '', W2 / 2, H2 - 4); return c; }
   let FSL = null, RSPIN = 0;
   function pickDrv(id) { const ch = me !== id; me = id; makeVehicles(); renderMenu(); newRace(); S.paused = true; if (ch) announce(me); }
   // Ansage des Fahrernamens wie im Prügelspiel (Handy-Stimme), Auswahl-Geräusch
@@ -8883,9 +8975,9 @@ setGroup(G);
     const fresh = FSL !== me; FSL = me; const X0 = XBY[me], gl = X0 ? (X0.base ? 'Ausnahmezustand' : 'Serien-Figur') : 'Crew';
     const dv = menu.querySelector('.kr-drv'), cosE = (COS.find(c => c.id === cosOf(me)) || {}).e; dv.innerHTML = '<div class="kr-fs' + (fresh ? ' in' : '') + '" style="--dc:' + ((LOOK[me] || {}).shirt || '#00a651') + '"><span class="kr-fsp"><span class="kr-dch"></span></span><div class="kr-fst"><small class="kr-fsg"><b>P1</b> ' + gl + '</small><p class="kr-dn' + (NAME(me).split(' ').some(w0 => w0.length > 9) ? ' kr-dnl' : '') + '">' + esc(NAME(me)) + '</p><p class="kr-fss">' + sp.e + ' ' + esc(sp.n) + (cosE && cosOf(me) ? ' · ' + cosE + ' Kostüm' : '') + '</p></div></div><div class="kr-dc2"><div class="kr-bars">' + BXK.map(k => '<button type="button" class="kr-bk" data-k="' + k + '" aria-pressed="' + (BX === k) + '"><span>' + BXT[k][0] + ' <u>ⓘ</u></span>' + bar(cs[k]) + '</button>').join('') + '</div>' +
       '<p class="kr-bx">' + (BX ? esc(BXT[BX][1]) + ' <b>' + esc(NAME(me)) + ': ' + (cs[BX] < .34 ? 'eher schwach' : cs[BX] < .67 ? 'mittel' : 'stark') + '.</b>' : 'Tipp auf einen Wert, dann steht hier, was er bewirkt.') + '</p>' +
-      (XBY[me] ? '<p class="kr-sp kr-xd">' + esc(XBY[me].x) + '</p>' : '') + '<p class="kr-sp">' + sp.e + ' <b>' + esc(sp.n) + '</b>: ' + esc(sp.x) + '</p>' + ((PERS[me] || {}).x ? '<p class="kr-sp kr-pp">🤖 Als Gegner: ' + esc(PERS[me].x) + '</p>' : '') + (pg > 0 ? '<p class="kr-sp">🍹 Heute schon ' + ((MEHUB.drinks || {})[baseOf(me)] || {}).today + ' Drinks: Lenkung wackelt!</p>' : '') + '</div>'; dv.querySelector('.kr-dch').replaceWith(portrait(me, 300, 300, .8)); { const bars0 = dv.querySelector('.kr-dc2 .kr-bars'); if (bars0) dv.querySelector('.kr-fst').appendChild(bars0); } { const x2 = menu.querySelector('.kr-drvx'); if (x2) { x2.innerHTML = ''; x2.appendChild(dv.querySelector('.kr-dc2')); } }
+      (XBY[me] ? '<p class="kr-sp kr-xd">' + esc(XBY[me].x) + '</p>' : '') + '<p class="kr-sp">' + sp.e + ' <b>' + esc(sp.n) + '</b>: ' + esc(sp.x) + '</p>' + ((PERS[me] || {}).x ? '<p class="kr-sp kr-pp">🤖 Als Gegner: ' + esc(PERS[me].x) + '</p>' : '') + (pg > 0 ? '<p class="kr-sp">🍹 Heute schon ' + ((MEHUB.drinks || {})[baseOf(me)] || {}).today + ' Drinks: Lenkung wackelt!</p>' : '') + '</div>'; dv.querySelector('.kr-dch').replaceWith(portrait(me, 300, 300, .8)); { const bars0 = dv.querySelector('.kr-dc2 .kr-bars'); if (bars0) dv.querySelector('.kr-fst').appendChild(bars0); } { const x2 = menu.querySelector('.kr-drvx'); if (x2) { x2.innerHTML = ''; const d2 = dv.querySelector('.kr-dc2'); d2.prepend(vehPreview(me)); x2.appendChild(d2); } }
     menu.querySelectorAll('.kr-diff button').forEach(x => x.setAttribute('aria-pressed', +x.dataset.d === DIFF));
-    const mv = myVeh(); menu.querySelector('.kr-vehs').innerHTML = VEHS.map(v => { const ok = unlocked(v); return '<button type="button" data-v="' + v.id + '" aria-pressed="' + (v.id === mv) + '"' + (ok ? '' : ' disabled') + ' title="' + esc(ok ? v.n : v.t) + '"><i>' + (ok ? v.e : '🔒') + '</i><small>' + esc(ok ? v.n : v.t) + '</small></button>'; }).join('');
+    const mv = myVeh(); menu.querySelector('.kr-vehs').innerHTML = VEHS.map(v0 => { const ok = unlocked(v0), v = v0.id === 'kart' && STYK(me) ? Object.assign({}, v0, {n: STN[STYK(me)] || v0.n}) : v0; return '<button type="button" data-v="' + v.id + '" aria-pressed="' + (v.id === mv) + '"' + (ok ? '' : ' disabled') + ' title="' + esc(ok ? v.n : v.t) + '"><i>' + (ok ? v.e : '🔒') + '</i><small>' + esc(ok ? v.n : v.t) + '</small></button>'; }).join('');
     const tu = tune(), own = cosOwn(), mc = cosOf(me), cn = coins();
     menu.querySelector('.kr-garage summary').textContent = '🛠 Garage: Tuning & Kostüme · 🪙 ' + cn; { const pl = menu.querySelector('.kr-prog'); if (pl) pl.innerHTML = progLine(); }
     { const mv0 = myVeh(), V0 = VEHS.find(v => v.id === mv0) || VEHS[0], vxe = menu.querySelector('.kr-vx'); if (vxe) vxe.textContent = V0.e + ' ' + V0.n + ': ' + (VTX[mv0] || VTX.kart).x;
@@ -8971,7 +9063,7 @@ setGroup(G);
   const setT = (sel, txt) => box.querySelectorAll(sel).forEach(b => { b.textContent = txt; });
   const sndTxt = () => setT('.kr-snd', SOUND ? '🔊 Ton: an' : '🔇 Ton: aus'), steerTxt = () => setT('.kr-steer', '🎚 Lenkstärke: ' + STEERS[STEER][0]), annTxt = () => setT('.kr-ann', '🎙 Ansager: ' + (ANN ? 'an' : 'aus'));
   const setTxt = () => { sndTxt(); steerTxt(); annTxt(); setT('.kr-ctl', '🎮 Steuerung: ' + (SET.ctl === 'analog' ? 'Analog (Daumen-Position)' : 'Halten links/rechts'));
-    setT('.kr-q', '✨ Grafik: ' + ['Sparsam', 'Normal', 'Hoch'][SET.q]); setT('.kr-cam', '🎥 Kamera: ' + ['Nah', 'Normal', 'Weit'][SET.cam]); setT('.kr-tod', '🌗 Tageszeit: ' + (SET.tod === 'day' ? 'immer Tag' : 'wie in Rio')); setT('.kr-evt', '🎲 Ereignisse: ' + (SET.ev === 'off' ? 'aus' : 'an')); };
+    setT('.kr-q', '✨ Grafik: ' + ['Sparsam', 'Normal', 'Hoch'][SET.q]); setT('.kr-cam', '🎥 Kamera: ' + ['Nah', 'Normal', 'Weit'][SET.cam]); setT('.kr-tod', '🌗 Tageszeit: ' + (SET.tod === 'day' ? 'immer Tag' : 'wie in Rio')); setT('.kr-evt', '🎲 Ereignisse: ' + (SET.ev === 'off' ? 'aus' : 'an')); setT('.kr-hd', '🗿 Köpfe: ' + ['Mini', 'Normal', 'Wackelkopf XXL'][SET.hd === undefined ? 1 : SET.hd]); };
   setTxt();
   box.addEventListener('click', e => {
     if (e.target.closest('.kr-steer')) { STEER = (STEER + 1) % STEERS.length; store.set('kartSteer', STEER); }
@@ -8982,7 +9074,8 @@ setGroup(G);
     if (e.target.closest('.kr-cam')) { SET.cam = (SET.cam + 1) % 3; saveSet(); }
     if (e.target.closest('.kr-tod')) { SET.tod = SET.tod === 'day' ? 'real' : 'day'; saveSet(); }
     if (e.target.closest('.kr-evt')) { SET.ev = SET.ev === 'off' ? 'on' : 'off'; saveSet(); }
-    if (e.target.closest('.kr-steer, .kr-ann, .kr-snd, .kr-ctl, .kr-q, .kr-cam, .kr-tod, .kr-evt')) setTxt(); });
+    if (e.target.closest('.kr-hd')) { SET.hd = ((SET.hd === undefined ? 1 : SET.hd) + 1) % 3; saveSet(); }
+    if (e.target.closest('.kr-steer, .kr-ann, .kr-snd, .kr-ctl, .kr-q, .kr-cam, .kr-tod, .kr-evt, .kr-hd')) setTxt(); });
   box.querySelector('.kr-pbtn').addEventListener('click', pause);
   // Live: Emoji-Reaktionen während des Rennens (über dem eigenen Kart, bei allen sichtbar)
   { const eb = box.querySelector('.kr-emo'); if (eb) { const el = eb.querySelector('.kr-emol');
