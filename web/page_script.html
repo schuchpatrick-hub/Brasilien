@@ -7300,7 +7300,7 @@ setGroup(G);
   // Ausgleich (Wunsch Patrick 08.10.: einige hatten fast überall volle Punkte): einzelne Werte dürfen voll sein, aber die Summe ist begrenzt:
   // jeder Wert 0,08–1, Summe der Abweichungen über 0,08 zwischen 1,2 und 1,9 (Gesamtstärke ähnlich); das Profil der Figur (Stärken/Schwächen) bleibt
   Object.keys(CS).forEach(id => { const c = CS[id], ks = ['spd', 'hdl', 'acc', 'tgh']; ks.forEach(k => { c[k] = .08 + clamp(c[k], 0, 1) * .92; });
-    const sm = ks.reduce((a, k) => a + c[k] - .08, 0), f = sm > 1.9 ? 1.9 / sm : sm > 0 && sm < 1.2 ? 1.2 / sm : 1; ks.forEach(k => { c[k] = Math.min(1, .08 + (c[k] - .08) * f); }); });
+    const sm = ks.reduce((a, k) => a + c[k] - .08, 0), f = sm > 1.9 ? 1.9 / sm : sm > 0 && sm < 1.2 && baseOf(id) !== 'marco' ? 1.2 / sm : 1;   /* Marco bleibt als Running Gag schwach (Wunsch Patrick) */ ks.forEach(k => { c[k] = Math.min(1, .08 + (c[k] - .08) * f); }); });
 
   /* ---- Strecken ----
      cp = Kontrollpunkte (geschlossen), tw = Breite, ww/wh = Weltgröße, sea = Uferlinie (y) oder null, off = Tempo neben der Strecke,
