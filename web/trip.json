@@ -10313,8 +10313,8 @@
         {
           "key": "v_taxi_win",
           "who": "x_taxi",
-          "say": "Endstation! Macht fünfzig Reais, bitte!",
-          "text": "Endstation! Macht fünfzig Reais, bitte!",
+          "say": "Endstation! Fünfzig Reais, bitte!",
+          "text": "Endstation! Fünfzig Reais, bitte!",
           "at": 0
         },
         {
@@ -10411,8 +10411,8 @@
         {
           "key": "v_officer_win",
           "who": "x_officer",
-          "say": "Sieg. Ordnungsgemäß und ohne Flüssigkeiten.",
-          "text": "Sieg. Ordnungsgemäß und ohne Flüssigkeiten.",
+          "say": "Sieg! Alles ordnungsgemäß!",
+          "text": "Sieg! Alles ordnungsgemäß!",
           "at": 0
         },
         {
