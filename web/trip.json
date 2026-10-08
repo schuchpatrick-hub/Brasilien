@@ -5614,9 +5614,6 @@
         "model": "vits-piper-de_DE-eva_k-x_low",
         "pitch": 1.0,
         "speed": 0.95
-      },
-      "x_hero": {
-        "fx": "aecho=0.8:0.8:70|140:0.3|0.18,alimiter=limit=0.95"
       }
     },
     "parked": {
@@ -9990,1681 +9987,6 @@
         "Staffelfinale:",
         "Paraty & Ilha Grande"
       ]
-    },
-    "kart": {
-      "n": 0,
-      "admin": true,
-      "lines": [
-        {
-          "key": "v_simon_love_over",
-          "who": "x_simon_love",
-          "say": "Ich fliege auf Wolke sieben an euch vorbei!",
-          "text": "Ich fliege auf Wolke sieben an euch vorbei!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_love_hit",
-          "who": "x_simon_love",
-          "say": "Aua! Aber ich spüre nur Liebe!",
-          "text": "Aua! Aber ich spüre nur Liebe!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_love_sp",
-          "who": "x_simon_love",
-          "say": "Ein Küsschen für alle!",
-          "text": "Ein Küsschen für alle!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_love_win",
-          "who": "x_simon_love",
-          "say": "Sieg! Den widme ich meiner Gatinha!",
-          "text": "Sieg! Den widme ich meiner Gatinha!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_love_drift",
-          "who": "x_simon_love",
-          "say": "Ich schwebe, ich schwebe!",
-          "text": "Ich schwebe, ich schwebe!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_love_item",
-          "who": "x_simon_love",
-          "say": "Mein Herz! Ihr habt mein Herz getroffen!",
-          "text": "Mein Herz! Ihr habt mein Herz getroffen!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_love_pass",
-          "who": "x_simon_love",
-          "say": "Platz da, ich muss zu meiner Liebsten!",
-          "text": "Platz da, ich muss zu meiner Liebsten!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_fat_over",
-          "who": "x_patrick_fat",
-          "say": "Bauch voraus, Platz da!",
-          "text": "Bauch voraus, Platz da!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_fat_hit",
-          "who": "x_patrick_fat",
-          "say": "Uff! Das hat der Bauch abgefedert.",
-          "text": "Uff! Das hat der Bauch abgefedert.",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_fat_sp",
-          "who": "x_patrick_fat",
-          "say": "Achtung, jetzt kommt die Picanha zurück!",
-          "text": "Achtung, jetzt kommt die Picanha zurück!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_fat_win",
-          "who": "x_patrick_fat",
-          "say": "Gewonnen! Und jetzt ab zum Nachtisch!",
-          "text": "Gewonnen! Und jetzt ab zum Nachtisch!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_fat_drift",
-          "who": "x_patrick_fat",
-          "say": "Langsam, sonst kommt alles wieder hoch!",
-          "text": "Langsam, sonst kommt alles wieder hoch!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_fat_item",
-          "who": "x_patrick_fat",
-          "say": "Ich hab doch nur zwölf Spieße gegessen!",
-          "text": "Ich hab doch nur zwölf Spieße gegessen!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_fat_pass",
-          "who": "x_patrick_fat",
-          "say": "Rollender Bauch, bitte Abstand halten!",
-          "text": "Rollender Bauch, bitte Abstand halten!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_dia_over",
-          "who": "x_marco_dia",
-          "say": "Weg da, ich muss ganz dringend!",
-          "text": "Weg da, ich muss ganz dringend!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_dia_hit",
-          "who": "x_marco_dia",
-          "say": "Nicht schütteln! Bitte nicht schütteln!",
-          "text": "Nicht schütteln! Bitte nicht schütteln!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_dia_sp",
-          "who": "x_marco_dia",
-          "say": "Sorry, Jungs, das musste raus!",
-          "text": "Sorry, Jungs, das musste raus!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_dia_win",
-          "who": "x_marco_dia",
-          "say": "Erster! Und jetzt sofort aufs Klo!",
-          "text": "Erster! Und jetzt sofort aufs Klo!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_dia_drift",
-          "who": "x_marco_dia",
-          "say": "Kneifen, Marco, kneifen!",
-          "text": "Kneifen, Marco, kneifen!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_dia_item",
-          "who": "x_marco_dia",
-          "say": "Oh nein, oh nein, oh nein!",
-          "text": "Oh nein, oh nein, oh nein!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_dia_pass",
-          "who": "x_marco_dia",
-          "say": "Notfall! Lasst mich durch!",
-          "text": "Notfall! Lasst mich durch!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_kater_over",
-          "who": "x_jonas_kater",
-          "say": "Leise überholen, bitte.",
-          "text": "Leise überholen, bitte.",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_kater_hit",
-          "who": "x_jonas_kater",
-          "say": "Mein Kopf! Mein armer Kopf!",
-          "text": "Mein Kopf! Mein armer Kopf!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_kater_sp",
-          "who": "x_jonas_kater",
-          "say": "Ich glaube, mir wird schlecht.",
-          "text": "Ich glaube, mir wird schlecht.",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_kater_win",
-          "who": "x_jonas_kater",
-          "say": "Gewonnen. Kann bitte jemand das Licht ausmachen?",
-          "text": "Gewonnen. Kann bitte jemand das Licht ausmachen?",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_kater_drift",
-          "who": "x_jonas_kater",
-          "say": "Alles dreht sich!",
-          "text": "Alles dreht sich!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_kater_item",
-          "who": "x_jonas_kater",
-          "say": "Zu laut! Alles viel zu laut!",
-          "text": "Zu laut! Alles viel zu laut!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_kater_pass",
-          "who": "x_jonas_kater",
-          "say": "Nie wieder Cachaça. Ab morgen.",
-          "text": "Nie wieder Cachaça. Ab morgen.",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_wb_over",
-          "who": "x_greisel_wb",
-          "say": "Servus, ich bin dann mal vorne!",
-          "text": "Servus, ich bin dann mal vorne!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_wb_hit",
-          "who": "x_greisel_wb",
-          "say": "Nicht verschütten, nicht verschütten!",
-          "text": "Nicht verschütten, nicht verschütten!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_wb_sp",
-          "who": "x_greisel_wb",
-          "say": "Weißbier-Dusche für alle!",
-          "text": "Weißbier-Dusche für alle!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_wb_win",
-          "who": "x_greisel_wb",
-          "say": "Prost, Burschen, die Maß geht auf mich!",
-          "text": "Prost, Burschen, die Maß geht auf mich!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_wb_drift",
-          "who": "x_greisel_wb",
-          "say": "Hoppla, der Schaum!",
-          "text": "Hoppla, der Schaum!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_wb_item",
-          "who": "x_greisel_wb",
-          "say": "Mein Bier! Wer war das?!",
-          "text": "Mein Bier! Wer war das?!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_wb_pass",
-          "who": "x_greisel_wb",
-          "say": "Eins geht noch, und vorbei!",
-          "text": "Eins geht noch, und vorbei!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_party_over",
-          "who": "x_dajo_party",
-          "say": "Party! Ich bin vorne!",
-          "text": "Party! Ich bin vorne!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_party_hit",
-          "who": "x_dajo_party",
-          "say": "Hey, wer hat die Musik ausgemacht?!",
-          "text": "Hey, wer hat die Musik ausgemacht?!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_party_sp",
-          "who": "x_dajo_party",
-          "say": "Lichtorgel an, alle tanzen!",
-          "text": "Lichtorgel an, alle tanzen!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_party_win",
-          "who": "x_dajo_party",
-          "say": "Sieg! Die Party geht bis morgen früh!",
-          "text": "Sieg! Die Party geht bis morgen früh!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_party_drift",
-          "who": "x_dajo_party",
-          "say": "Dreh dich, dreh dich!",
-          "text": "Dreh dich, dreh dich!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_party_item",
-          "who": "x_dajo_party",
-          "say": "Hey, nicht auf die Tanzfläche!",
-          "text": "Hey, nicht auf die Tanzfläche!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_party_pass",
-          "who": "x_dajo_party",
-          "say": "Noch eine Runde, bis gleich!",
-          "text": "Noch eine Runde, bis gleich!",
-          "at": 0
-        },
-        {
-          "key": "v_taxi_over",
-          "who": "x_taxi",
-          "say": "Atalho, amigo! Abkürzung!",
-          "text": "Atalho, amigo! Abkürzung!",
-          "at": 0
-        },
-        {
-          "key": "v_taxi_hit",
-          "who": "x_taxi",
-          "say": "Ai! Mein schönes Taxi!",
-          "text": "Ai! Mein schönes Taxi!",
-          "at": 0
-        },
-        {
-          "key": "v_taxi_sp",
-          "who": "x_taxi",
-          "say": "Taxameter läuft! Das wird teuer!",
-          "text": "Taxameter läuft! Das wird teuer!",
-          "at": 0
-        },
-        {
-          "key": "v_taxi_win",
-          "who": "x_taxi",
-          "say": "Endstation! Fünfzig Reais, bitte!",
-          "text": "Endstation! Fünfzig Reais, bitte!",
-          "at": 0
-        },
-        {
-          "key": "v_taxi_drift",
-          "who": "x_taxi",
-          "say": "Rio-Fahrstil, festhalten!",
-          "text": "Rio-Fahrstil, festhalten!",
-          "at": 0
-        },
-        {
-          "key": "v_taxi_item",
-          "who": "x_taxi",
-          "say": "Wer zahlt jetzt den Schaden?!",
-          "text": "Wer zahlt jetzt den Schaden?!",
-          "at": 0
-        },
-        {
-          "key": "v_taxi_pass",
-          "who": "x_taxi",
-          "say": "Ich kenne einen schnelleren Weg!",
-          "text": "Ich kenne einen schnelleren Weg!",
-          "at": 0
-        },
-        {
-          "key": "v_coati_over",
-          "who": "x_coati",
-          "say": "Hihi, viel zu langsam!",
-          "text": "Hihi, viel zu langsam!",
-          "at": 0
-        },
-        {
-          "key": "v_coati_hit",
-          "who": "x_coati",
-          "say": "Aua, meine Nase!",
-          "text": "Aua, meine Nase!",
-          "at": 0
-        },
-        {
-          "key": "v_coati_sp",
-          "who": "x_coati",
-          "say": "Her damit, das gehört jetzt mir!",
-          "text": "Her damit, das gehört jetzt mir!",
-          "at": 0
-        },
-        {
-          "key": "v_coati_win",
-          "who": "x_coati",
-          "say": "Hihi! Alles meins! Auch der Pokal!",
-          "text": "Hihi! Alles meins! Auch der Pokal!",
-          "at": 0
-        },
-        {
-          "key": "v_coati_drift",
-          "who": "x_coati",
-          "say": "Wuiii!",
-          "text": "Wuiii!",
-          "at": 0
-        },
-        {
-          "key": "v_coati_item",
-          "who": "x_coati",
-          "say": "Gemein! Ganz gemein!",
-          "text": "Gemein! Ganz gemein!",
-          "at": 0
-        },
-        {
-          "key": "v_coati_pass",
-          "who": "x_coati",
-          "say": "Tschüss, Sandwich-Mann!",
-          "text": "Tschüss, Sandwich-Mann!",
-          "at": 0
-        },
-        {
-          "key": "v_officer_over",
-          "who": "x_officer",
-          "say": "Bitte zur Seite treten!",
-          "text": "Bitte zur Seite treten!",
-          "at": 0
-        },
-        {
-          "key": "v_officer_hit",
-          "who": "x_officer",
-          "say": "Das ist eine Straftat!",
-          "text": "Das ist eine Straftat!",
-          "at": 0
-        },
-        {
-          "key": "v_officer_sp",
-          "who": "x_officer",
-          "say": "Allgemeine Kontrolle! Alle anhalten!",
-          "text": "Allgemeine Kontrolle! Alle anhalten!",
-          "at": 0
-        },
-        {
-          "key": "v_officer_win",
-          "who": "x_officer",
-          "say": "Sieg! Alles ordnungsgemäß!",
-          "text": "Sieg! Alles ordnungsgemäß!",
-          "at": 0
-        },
-        {
-          "key": "v_officer_drift",
-          "who": "x_officer",
-          "say": "Verdächtiges Fahrverhalten!",
-          "text": "Verdächtiges Fahrverhalten!",
-          "at": 0
-        },
-        {
-          "key": "v_officer_item",
-          "who": "x_officer",
-          "say": "Wer hat das eingeschmuggelt?!",
-          "text": "Wer hat das eingeschmuggelt?!",
-          "at": 0
-        },
-        {
-          "key": "v_officer_pass",
-          "who": "x_officer",
-          "say": "Ausweis bitte, und tschüss!",
-          "text": "Ausweis bitte, und tschüss!",
-          "at": 0
-        },
-        {
-          "key": "v_dona_over",
-          "who": "x_dona",
-          "say": "Com licença, querido!",
-          "text": "Com licença, querido!",
-          "at": 0
-        },
-        {
-          "key": "v_dona_hit",
-          "who": "x_dona",
-          "say": "Ai, ai, ai! Minha coluna!",
-          "text": "Ai, ai, ai! Minha coluna!",
-          "at": 0
-        },
-        {
-          "key": "v_dona_sp",
-          "who": "x_dona",
-          "say": "Que gatinho! Vem cá!",
-          "text": "Que gatinho! Vem cá!",
-          "at": 0
-        },
-        {
-          "key": "v_dona_win",
-          "who": "x_dona",
-          "say": "A vovó ganhou! Beijinhos!",
-          "text": "A vovó ganhou! Beijinhos!",
-          "at": 0
-        },
-        {
-          "key": "v_dona_drift",
-          "who": "x_dona",
-          "say": "Uiii, que delícia!",
-          "text": "Uiii, que delícia!",
-          "at": 0
-        },
-        {
-          "key": "v_dona_item",
-          "who": "x_dona",
-          "say": "Ai, menino malcriado!",
-          "text": "Ai, menino malcriado!",
-          "at": 0
-        },
-        {
-          "key": "v_dona_pass",
-          "who": "x_dona",
-          "say": "Tchau, tchau, gatinho!",
-          "text": "Tchau, tchau, gatinho!",
-          "at": 0
-        },
-        {
-          "key": "v_guide_over",
-          "who": "x_guide",
-          "say": "Olja, ich kenne den Weg!",
-          "text": "Olja, ich kenne den Weg!",
-          "at": 0
-        },
-        {
-          "key": "v_guide_hit",
-          "who": "x_guide",
-          "say": "Nau, nau, nau! Vorsicht!",
-          "text": "Nau, nau, nau! Vorsicht!",
-          "at": 0
-        },
-        {
-          "key": "v_guide_sp",
-          "who": "x_guide",
-          "say": "Kaiman, fass!",
-          "text": "Kaiman, fass!",
-          "at": 0
-        },
-        {
-          "key": "v_guide_win",
-          "who": "x_guide",
-          "say": "Der Dschungel gehört mir!",
-          "text": "Der Dschungel gehört mir!",
-          "at": 0
-        },
-        {
-          "key": "v_guide_drift",
-          "who": "x_guide",
-          "say": "Wie im Kanu, einfach treiben lassen!",
-          "text": "Wie im Kanu, einfach treiben lassen!",
-          "at": 0
-        },
-        {
-          "key": "v_guide_item",
-          "who": "x_guide",
-          "say": "Sokorro! Wer war das?",
-          "text": "Sokorro! Wer war das?",
-          "at": 0
-        },
-        {
-          "key": "v_guide_pass",
-          "who": "x_guide",
-          "say": "Folgt mir nicht, hier gibt es Piranhas!",
-          "text": "Folgt mir nicht, hier gibt es Piranhas!",
-          "at": 0
-        },
-        {
-          "key": "v_steward_over",
-          "who": "x_steward",
-          "say": "Bitte bleiben Sie angeschnallt!",
-          "text": "Bitte bleiben Sie angeschnallt!",
-          "at": 0
-        },
-        {
-          "key": "v_steward_hit",
-          "who": "x_steward",
-          "say": "Turbulenzen! Wir haben Turbulenzen!",
-          "text": "Turbulenzen! Wir haben Turbulenzen!",
-          "at": 0
-        },
-        {
-          "key": "v_steward_sp",
-          "who": "x_steward",
-          "say": "Achtung, der Servierwagen kommt!",
-          "text": "Achtung, der Servierwagen kommt!",
-          "at": 0
-        },
-        {
-          "key": "v_steward_win",
-          "who": "x_steward",
-          "say": "Wir sind gelandet! Danke für Ihren Flug!",
-          "text": "Wir sind gelandet! Danke für Ihren Flug!",
-          "at": 0
-        },
-        {
-          "key": "v_steward_drift",
-          "who": "x_steward",
-          "say": "Bitte die Rückenlehnen senkrecht stellen!",
-          "text": "Bitte die Rückenlehnen senkrecht stellen!",
-          "at": 0
-        },
-        {
-          "key": "v_steward_item",
-          "who": "x_steward",
-          "say": "Das ist gegen die Sicherheitsvorschriften!",
-          "text": "Das ist gegen die Sicherheitsvorschriften!",
-          "at": 0
-        },
-        {
-          "key": "v_steward_pass",
-          "who": "x_steward",
-          "say": "Chicken or pasta? Egal, ich bin weg!",
-          "text": "Chicken or pasta? Egal, ich bin weg!",
-          "at": 0
-        },
-        {
-          "key": "v_caimanx_over",
-          "who": "x_caimanx",
-          "say": "Zu langsam. Lecker.",
-          "text": "Zu langsam. Lecker.",
-          "at": 0
-        },
-        {
-          "key": "v_caimanx_hit",
-          "who": "x_caimanx",
-          "say": "Das kitzelt nur.",
-          "text": "Das kitzelt nur.",
-          "at": 0
-        },
-        {
-          "key": "v_caimanx_sp",
-          "who": "x_caimanx",
-          "say": "Schnapp, schnapp!",
-          "text": "Schnapp, schnapp!",
-          "at": 0
-        },
-        {
-          "key": "v_caimanx_win",
-          "who": "x_caimanx",
-          "say": "Gewonnen! Fischerhut zum Nachtisch!",
-          "text": "Gewonnen! Fischerhut zum Nachtisch!",
-          "at": 0
-        },
-        {
-          "key": "v_caimanx_drift",
-          "who": "x_caimanx",
-          "say": "Rutschig hier!",
-          "text": "Rutschig hier!",
-          "at": 0
-        },
-        {
-          "key": "v_caimanx_item",
-          "who": "x_caimanx",
-          "say": "Wer stört meine Ruhe?",
-          "text": "Wer stört meine Ruhe?",
-          "at": 0
-        },
-        {
-          "key": "v_caimanx_pass",
-          "who": "x_caimanx",
-          "say": "Bis gleich, Abendessen.",
-          "text": "Bis gleich, Abendessen.",
-          "at": 0
-        },
-        {
-          "key": "v_manuel_over",
-          "who": "x_manuel",
-          "say": "Hier unten, ihr Riesen!",
-          "text": "Hier unten, ihr Riesen!",
-          "at": 0
-        },
-        {
-          "key": "v_manuel_hit",
-          "who": "x_manuel",
-          "say": "Hey, nicht auf den Kleinen!",
-          "text": "Hey, nicht auf den Kleinen!",
-          "at": 0
-        },
-        {
-          "key": "v_manuel_sp",
-          "who": "x_manuel",
-          "say": "Abgezwickt! Jetzt seht ihr mich nicht mehr!",
-          "text": "Abgezwickt! Jetzt seht ihr mich nicht mehr!",
-          "at": 0
-        },
-        {
-          "key": "v_manuel_win",
-          "who": "x_manuel",
-          "say": "Kleiner Mann, großer Sieg!",
-          "text": "Kleiner Mann, großer Sieg!",
-          "at": 0
-        },
-        {
-          "key": "v_manuel_drift",
-          "who": "x_manuel",
-          "say": "Halt, mein Sitzkissen rutscht!",
-          "text": "Halt, mein Sitzkissen rutscht!",
-          "at": 0
-        },
-        {
-          "key": "v_manuel_item",
-          "who": "x_manuel",
-          "say": "Wer hat Stumpen gesagt?!",
-          "text": "Wer hat Stumpen gesagt?!",
-          "at": 0
-        },
-        {
-          "key": "v_manuel_pass",
-          "who": "x_manuel",
-          "say": "Ich fahre einfach unten durch!",
-          "text": "Ich fahre einfach unten durch!",
-          "at": 0
-        },
-        {
-          "key": "v_erich_over",
-          "who": "x_erich",
-          "say": "Schleich dich, du Bagage!",
-          "text": "Schleich dich, du Bagage!",
-          "at": 0
-        },
-        {
-          "key": "v_erich_hit",
-          "who": "x_erich",
-          "say": "Kruzifix! Wer war das?",
-          "text": "Kruzifix! Wer war das?",
-          "at": 0
-        },
-        {
-          "key": "v_erich_sp",
-          "who": "x_erich",
-          "say": "Ruhe jetzt! Kabinenpredigt!",
-          "text": "Ruhe jetzt! Kabinenpredigt!",
-          "at": 0
-        },
-        {
-          "key": "v_erich_win",
-          "who": "x_erich",
-          "say": "Gewonnen. Freuen tu ich mich trotzdem nicht.",
-          "text": "Gewonnen. Freuen tu ich mich trotzdem nicht.",
-          "at": 0
-        },
-        {
-          "key": "v_erich_drift",
-          "who": "x_erich",
-          "say": "Früher hätte es das nicht gegeben!",
-          "text": "Früher hätte es das nicht gegeben!",
-          "at": 0
-        },
-        {
-          "key": "v_erich_item",
-          "who": "x_erich",
-          "say": "Ihr Weicheier! Das gibt ein Nachspiel!",
-          "text": "Ihr Weicheier! Das gibt ein Nachspiel!",
-          "at": 0
-        },
-        {
-          "key": "v_erich_pass",
-          "who": "x_erich",
-          "say": "Platz da, ich hab keine Zeit!",
-          "text": "Platz da, ich hab keine Zeit!",
-          "at": 0
-        },
-        {
-          "key": "v_rasmus_over",
-          "who": "x_rasmus",
-          "say": "Auf geht’s, Party!",
-          "text": "Auf geht’s, Party!",
-          "at": 0
-        },
-        {
-          "key": "v_rasmus_hit",
-          "who": "x_rasmus",
-          "say": "Locker bleiben, Jungs, alles gut!",
-          "text": "Locker bleiben, Jungs, alles gut!",
-          "at": 0
-        },
-        {
-          "key": "v_rasmus_sp",
-          "who": "x_rasmus",
-          "say": "Alle Mann: Polonaise!",
-          "text": "Alle Mann: Polonaise!",
-          "at": 0
-        },
-        {
-          "key": "v_rasmus_win",
-          "who": "x_rasmus",
-          "say": "Sieg! Mannschaftsabend, heute, Pflicht!",
-          "text": "Sieg! Mannschaftsabend, heute, Pflicht!",
-          "at": 0
-        },
-        {
-          "key": "v_rasmus_drift",
-          "who": "x_rasmus",
-          "say": "Peace, Bruder, und quer!",
-          "text": "Peace, Bruder, und quer!",
-          "at": 0
-        },
-        {
-          "key": "v_rasmus_item",
-          "who": "x_rasmus",
-          "say": "Hey! Das gibt Strafrunden beim Training!",
-          "text": "Hey! Das gibt Strafrunden beim Training!",
-          "at": 0
-        },
-        {
-          "key": "v_rasmus_pass",
-          "who": "x_rasmus",
-          "say": "Training um sieben, Party um acht!",
-          "text": "Training um sieben, Party um acht!",
-          "at": 0
-        },
-        {
-          "key": "g_manuel",
-          "who": "x_annc",
-          "say": "Achtung, der Abzwickter ist am Start! Bitte nicht übersehen!",
-          "text": "Achtung, der Abzwickter ist am Start! Bitte nicht übersehen!",
-          "at": 0
-        },
-        {
-          "key": "g_erich",
-          "who": "x_annc",
-          "say": "Achtung, Erich ist am Start. Und er hat, wie immer, schlechte Laune!",
-          "text": "Achtung, Erich ist am Start. Und er hat, wie immer, schlechte Laune!",
-          "at": 0
-        },
-        {
-          "key": "g_rasmus",
-          "who": "x_annc",
-          "say": "Achtung, Rasmus ist da! Animator, sportlicher Leiter und Partychef in einer Person!",
-          "text": "Achtung, Rasmus ist da! Animator, sportlicher Leiter und Partychef in einer Person!",
-          "at": 0
-        },
-        {
-          "key": "h_jonas",
-          "who": "x_hero",
-          "say": "Der Herr der Rechnungen, Jonas!",
-          "text": "Der Herr der Rechnungen, Jonas!",
-          "at": 0
-        },
-        {
-          "key": "h_simon",
-          "who": "x_hero",
-          "say": "Der Mann, der leuchtet! Simon!",
-          "text": "Der Mann, der leuchtet! Simon!",
-          "at": 0
-        },
-        {
-          "key": "h_patrick",
-          "who": "x_hero",
-          "say": "Der Rollstuhl-Rebell! Patrick!",
-          "text": "Der Rollstuhl-Rebell! Patrick!",
-          "at": 0
-        },
-        {
-          "key": "h_marco",
-          "who": "x_hero",
-          "say": "Der König des Fernschusses! Marco!",
-          "text": "Der König des Fernschusses! Marco!",
-          "at": 0
-        },
-        {
-          "key": "h_greisel",
-          "who": "x_hero",
-          "say": "Die bayerische Legende! Greisel!",
-          "text": "Die bayerische Legende! Greisel!",
-          "at": 0
-        },
-        {
-          "key": "h_dajo",
-          "who": "x_hero",
-          "say": "Die Snack-Königin! Daijo!",
-          "text": "Die Snack-Königin! Daijo!",
-          "at": 0
-        },
-        {
-          "key": "h_simon_love",
-          "who": "x_hero",
-          "say": "Verliebt bis über beide Ohren, Simon!",
-          "text": "Verliebt bis über beide Ohren, Simon!",
-          "at": 0
-        },
-        {
-          "key": "h_patrick_fat",
-          "who": "x_hero",
-          "say": "Zwölf Spieße schwer! Patrick!",
-          "text": "Zwölf Spieße schwer! Patrick!",
-          "at": 0
-        },
-        {
-          "key": "h_marco_dia",
-          "who": "x_hero",
-          "say": "Keine Zeit zu verlieren, Marco!",
-          "text": "Keine Zeit zu verlieren, Marco!",
-          "at": 0
-        },
-        {
-          "key": "h_jonas_kater",
-          "who": "x_hero",
-          "say": "Auferstanden aus der Lodge-Bar! Jonas!",
-          "text": "Auferstanden aus der Lodge-Bar! Jonas!",
-          "at": 0
-        },
-        {
-          "key": "h_greisel_wb",
-          "who": "x_hero",
-          "say": "Mit Schaumkrone, Greisel!",
-          "text": "Mit Schaumkrone, Greisel!",
-          "at": 0
-        },
-        {
-          "key": "h_dajo_party",
-          "who": "x_hero",
-          "say": "Die Königin der Tanzfläche! Daijo!",
-          "text": "Die Königin der Tanzfläche! Daijo!",
-          "at": 0
-        },
-        {
-          "key": "h_taxi",
-          "who": "x_hero",
-          "say": "Der Schrecken von Rio! Der Taxifahrer!",
-          "text": "Der Schrecken von Rio! Der Taxifahrer!",
-          "at": 0
-        },
-        {
-          "key": "h_coati",
-          "who": "x_hero",
-          "say": "Der Erzfeind! Der Nasenbär!",
-          "text": "Der Erzfeind! Der Nasenbär!",
-          "at": 0
-        },
-        {
-          "key": "h_officer",
-          "who": "x_hero",
-          "say": "Niemand kommt an ihm vorbei! Der Kontrolleur!",
-          "text": "Niemand kommt an ihm vorbei! Der Kontrolleur!",
-          "at": 0
-        },
-        {
-          "key": "h_dona",
-          "who": "x_hero",
-          "say": "Die Herzensbrecherin der Ilha Grande! Dona Rosa!",
-          "text": "Die Herzensbrecherin der Ilha Grande! Dona Rosa!",
-          "at": 0
-        },
-        {
-          "key": "h_guide",
-          "who": "x_hero",
-          "say": "Herr des Dschungels, der Guide!",
-          "text": "Herr des Dschungels, der Guide!",
-          "at": 0
-        },
-        {
-          "key": "h_steward",
-          "who": "x_hero",
-          "say": "Bitte anschnallen! Die Flugbegleiterin!",
-          "text": "Bitte anschnallen! Die Flugbegleiterin!",
-          "at": 0
-        },
-        {
-          "key": "h_caimanx",
-          "who": "x_hero",
-          "say": "Aus den Tiefen des Amazonas! Der Kaiman!",
-          "text": "Aus den Tiefen des Amazonas! Der Kaiman!",
-          "at": 0
-        },
-        {
-          "key": "h_manuel",
-          "who": "x_hero",
-          "say": "Klein, aber gefährlich! Der Abzwickter!",
-          "text": "Klein, aber gefährlich! Der Abzwickter!",
-          "at": 0
-        },
-        {
-          "key": "h_erich",
-          "who": "x_hero",
-          "say": "Der Grantler aus Augsburg! Erich!",
-          "text": "Der Grantler aus Augsburg! Erich!",
-          "at": 0
-        },
-        {
-          "key": "h_rasmus",
-          "who": "x_hero",
-          "say": "Der Partykönig von Schwaben! Rasmus!",
-          "text": "Der Partykönig von Schwaben! Rasmus!",
-          "at": 0
-        }
-      ],
-      "voice": {
-        "v_simon_love_over": {
-          "dur": 2534,
-          "env": "7633234578895115987156422465344322353654214539998654310001221000"
-        },
-        "v_simon_love_hit": {
-          "dur": 3121,
-          "env": "9999999898988875221000899994977842100287434530076456687566779663242101234430000"
-        },
-        "v_simon_love_sp": {
-          "dur": 1490,
-          "env": "99888524762333654410001469999796420000"
-        },
-        "v_simon_love_win": {
-          "dur": 2608,
-          "env": "235499999870000898564462179947343987798623999401345565421100061000"
-        },
-        "v_simon_love_drift": {
-          "dur": 1592,
-          "env": "9967647989499987510009975676487643321000"
-        },
-        "v_simon_love_item": {
-          "dur": 2810,
-          "env": "68998764654456875311022320001667988981028976554599412182023872134410000"
-        },
-        "v_simon_love_pass": {
-          "dur": 2589,
-          "env": "69950221799998866665421000987333796221254487659664852022107421000"
-        },
-        "v_patrick_fat_over": {
-          "dur": 1507,
-          "env": "89973447569997661056972375189654443000"
-        },
-        "v_patrick_fat_hit": {
-          "dur": 3170,
-          "env": "89566666555554211100009966877585108993299974333100573020593445633994047620003000"
-        },
-        "v_patrick_fat_sp": {
-          "dur": 2499,
-          "env": "696546854320002995465329986326740665067975567752664338521032000"
-        },
-        "v_patrick_fat_win": {
-          "dur": 2453,
-          "env": "69734975543210005764589615521005971000455433686542044537762000"
-        },
-        "v_patrick_fat_drift": {
-          "dur": 2050,
-          "env": "5996566698643323673463476635985656243898225552120000"
-        },
-        "v_patrick_fat_item": {
-          "dur": 2397,
-          "env": "477794009933555552376299953576005687775421585159657633221000"
-        },
-        "v_patrick_fat_pass": {
-          "dur": 2429,
-          "env": "5999976795239986732210005930799740099249725763247774103432000"
-        },
-        "v_marco_dia_over": {
-          "dur": 1959,
-          "env": "7982309999996752444534953229934213774698511001000"
-        },
-        "v_marco_dia_hit": {
-          "dur": 1892,
-          "env": "478755355990799864320018940996766346981886211000"
-        },
-        "v_marco_dia_sp": {
-          "dur": 2053,
-          "env": "2389998544694323220110066522127732498669985642221000"
-        },
-        "v_marco_dia_win": {
-          "dur": 2131,
-          "env": "678521797886555320068426812114994259952996323479851000"
-        },
-        "v_marco_dia_drift": {
-          "dur": 1602,
-          "env": "43899833787433399953799875136974358310000"
-        },
-        "v_marco_dia_item": {
-          "dur": 1477,
-          "env": "9998532766457833765425841166544311000"
-        },
-        "v_marco_dia_pass": {
-          "dur": 1435,
-          "env": "249971259966544200583105322986332000"
-        },
-        "v_jonas_kater_over": {
-          "dur": 2502,
-          "env": "599987865579988320003734994479999979732100001860159994310006000"
-        },
-        "v_jonas_kater_hit": {
-          "dur": 3008,
-          "env": "3679876688502579990122210001578887665799710079999677776101469720011000010000"
-        },
-        "v_jonas_kater_sp": {
-          "dur": 2172,
-          "env": "6765403799993599663000004556799238810454569842231000000"
-        },
-        "v_jonas_kater_win": {
-          "dur": 3837,
-          "env": "686289857542100014200037768749933999741000038869972089766542114795551259989564798558898510001100"
-        },
-        "v_jonas_kater_drift": {
-          "dur": 1416,
-          "env": "799879956543025786661254542123210000"
-        },
-        "v_jonas_kater_item": {
-          "dur": 2243,
-          "env": "356758998731131000799779455433113444520458759873200000000"
-        },
-        "v_jonas_kater_pass": {
-          "dur": 4327,
-          "env": "3679999445863899885310002678737767887646566678521000039855530110003774521000099930010037899852767652000035000"
-        },
-        "v_greisel_wb_over": {
-          "dur": 2122,
-          "env": "798765999877773000669617998668887644656697653100053000"
-        },
-        "v_greisel_wb_hit": {
-          "dur": 2053,
-          "env": "8987624666767300474211000789777504244366641002430000"
-        },
-        "v_greisel_wb_sp": {
-          "dur": 1883,
-          "env": "598787996109999629989878445576569999642100061000"
-        },
-        "v_greisel_wb_win": {
-          "dur": 2440,
-          "env": "68998997551000489979987551000999999889989209963564355665740000"
-        },
-        "v_greisel_wb_drift": {
-          "dur": 1389,
-          "env": "69512999655300019659987677567662000"
-        },
-        "v_greisel_wb_item": {
-          "dur": 1782,
-          "env": "898998899775443100036765469868746944677762000"
-        },
-        "v_greisel_wb_pass": {
-          "dur": 1568,
-          "env": "9998938952998531499666746965554100064000"
-        },
-        "v_dajo_party_over": {
-          "dur": 1852,
-          "env": "49997017885535100487632197621159997666420006000"
-        },
-        "v_dajo_party_hit": {
-          "dur": 1727,
-          "env": "79845210004686666716887367259862155532000000"
-        },
-        "v_dajo_party_sp": {
-          "dur": 1500,
-          "env": "59432377678786421004999813876311231000"
-        },
-        "v_dajo_party_win": {
-          "dur": 2531,
-          "env": "3699631007977532223100289981495279610773289995784112455421001000"
-        },
-        "v_dajo_party_drift": {
-          "dur": 1417,
-          "env": "869987735972221001687787554996221000"
-        },
-        "v_dajo_party_item": {
-          "dur": 1787,
-          "env": "699776620006997430885129523975522113311421000"
-        },
-        "v_dajo_party_pass": {
-          "dur": 1598,
-          "env": "7952288675687765310059522059999954121000"
-        },
-        "v_taxi_over": {
-          "dur": 2247,
-          "env": "997203686533775102864355314541000598201367722444210021000"
-        },
-        "v_taxi_hit": {
-          "dur": 2442,
-          "env": "99998897422100026987644432000477677768655256712554321000003000"
-        },
-        "v_taxi_sp": {
-          "dur": 2593,
-          "env": "59922657749715765997421111000566455421898663031000558999975542000"
-        },
-        "v_taxi_win": {
-          "dur": 2164,
-          "env": "8874751942453433100000024994432465547886432210621231000"
-        },
-        "v_taxi_drift": {
-          "dur": 1726,
-          "env": "47999723995653688642000048664456863103310000"
-        },
-        "v_taxi_item": {
-          "dur": 5758,
-          "env": "229999971266699996102598265320079668869996101100006799899998628639999754579874200007886300028778667569877641000594799999741000379782885667752000"
-        },
-        "v_taxi_pass": {
-          "dur": 2180,
-          "env": "7687156989999597656986389899577643149642000121000895000"
-        },
-        "v_coati_over": {
-          "dur": 1599,
-          "env": "9965457654311000259672259999755618643000"
-        },
-        "v_coati_hit": {
-          "dur": 1976,
-          "env": "99999877756200147986685468887894158622100111000000"
-        },
-        "v_coati_sp": {
-          "dur": 2453,
-          "env": "89886631007875365111100785111055835998312664010023454454421000"
-        },
-        "v_coati_win": {
-          "dur": 2903,
-          "env": "8954687975432100049886962111210024686554210111100059964197127678966641000"
-        },
-        "v_coati_drift": {
-          "dur": 557,
-          "env": "66899965532000"
-        },
-        "v_coati_item": {
-          "dur": 1954,
-          "env": "9966699997754323300239997611139749998652111210000"
-        },
-        "v_coati_pass": {
-          "dur": 1505,
-          "env": "44545589831149953489433349752110001000"
-        },
-        "v_officer_over": {
-          "dur": 2246,
-          "env": "684367777995200023576652378752457655720028977525752111000"
-        },
-        "v_officer_hit": {
-          "dur": 2270,
-          "env": "689732222016532130964245897568898878554049997788752034100"
-        },
-        "v_officer_sp": {
-          "dur": 2914,
-          "env": "9766447327875424665410009995214597886586667400099758646942599864042210000"
-        },
-        "v_officer_win": {
-          "dur": 2852,
-          "env": "343478543210066641009996659985444100199995133863564467742877788544341000"
-        },
-        "v_officer_drift": {
-          "dur": 1606,
-          "env": "69931999835448544799975799999820012110000"
-        },
-        "v_officer_item": {
-          "dur": 2069,
-          "env": "1258798879993330675220098422469983254677630442001100"
-        },
-        "v_officer_pass": {
-          "dur": 2224,
-          "env": "99954333667422046145643410045521144300057867543222232000"
-        },
-        "v_dona_over": {
-          "dur": 1189,
-          "env": "398999543898547407967883264000"
-        },
-        "v_dona_hit": {
-          "dur": 1944,
-          "env": "8999986569978899865430001898999702997799764542000"
-        },
-        "v_dona_sp": {
-          "dur": 1542,
-          "env": "562997003556644320000369767600299852000"
-        },
-        "v_dona_win": {
-          "dur": 2122,
-          "env": "998328952399369765689986300017989654466655766533430000"
-        },
-        "v_dona_drift": {
-          "dur": 1638,
-          "env": "79999988752000289459997887786444447764000"
-        },
-        "v_dona_item": {
-          "dur": 1226,
-          "env": "8987887777666488304577776313000"
-        },
-        "v_dona_pass": {
-          "dur": 1643,
-          "env": "489997531000369995310002995005566654320000"
-        },
-        "v_guide_over": {
-          "dur": 1706,
-          "env": "6999997888774210004576035848579544498763000"
-        },
-        "v_guide_hit": {
-          "dur": 2742,
-          "env": "235778998766422211367789786542221256889966754321000027997335534220000"
-        },
-        "v_guide_sp": {
-          "dur": 1294,
-          "env": "397764599985541000599857999851000"
-        },
-        "v_guide_win": {
-          "dur": 1555,
-          "env": "787269756996420001684579972133567631000"
-        },
-        "v_guide_drift": {
-          "dur": 2269,
-          "env": "276654235999956663100057612963033789964448823233200005300"
-        },
-        "v_guide_item": {
-          "dur": 2373,
-          "env": "236950067999998999887788877630000279987527999972877742220000"
-        },
-        "v_guide_pass": {
-          "dur": 2338,
-          "env": "39997101588556455223573670044303565974334889983344310001000"
-        },
-        "v_steward_over": {
-          "dur": 2307,
-          "env": "9943998753100899749766776310007997889898985989998877232000"
-        },
-        "v_steward_hit": {
-          "dur": 2883,
-          "env": "4699869999989554443210006999876899993799875253763367565432452332200005000"
-        },
-        "v_steward_sp": {
-          "dur": 2430,
-          "env": "9955303865432000099966779746999975899947972459865420210002400"
-        },
-        "v_steward_win": {
-          "dur": 6336,
-          "env": "489987999982331000069988754533544310033100069986999979620155410003897697975543322215986544321000499674699875300007876689999831389956228443787536555654321210000"
-        },
-        "v_steward_drift": {
-          "dur": 3213,
-          "env": "996476765310001899778993289997798878655431000157999944498567428940799877665443000"
-        },
-        "v_steward_item": {
-          "dur": 2393,
-          "env": "996665367403996997986899568666525347546635622103754220001500"
-        },
-        "v_steward_pass": {
-          "dur": 3826,
-          "env": "698981289665100099995001679865542056654200029998527989997643210008996750498987422997204520003100"
-        },
-        "v_caimanx_over": {
-          "dur": 2821,
-          "env": "58787679768679776777988899972000058775644322210000499872447864100287000"
-        },
-        "v_caimanx_hit": {
-          "dur": 2568,
-          "env": "59975677740014681267698767994342479998978666565444333431000032000"
-        },
-        "v_caimanx_sp": {
-          "dur": 1424,
-          "env": "378785679887610014678659879998773000"
-        },
-        "v_caimanx_win": {
-          "dur": 4543,
-          "env": "198647766449987886410000654445544200004899873466401000069831005855566410000235899667557665553210049999953100220000"
-        },
-        "v_caimanx_drift": {
-          "dur": 1184,
-          "env": "499993588799655579799553210000"
-        },
-        "v_caimanx_item": {
-          "dur": 2558,
-          "env": "3799995677510079979930236886689798645777649896565544432100001000"
-        },
-        "v_caimanx_pass": {
-          "dur": 1844,
-          "env": "89871999779955654100029888499951001666773521000"
-        },
-        "v_manuel_over": {
-          "dur": 1847,
-          "env": "99986552000999810066410006976446979620033310000"
-        },
-        "v_manuel_hit": {
-          "dur": 2484,
-          "env": "998654100059997521102666610001689764530001213598886654554231000"
-        },
-        "v_manuel_sp": {
-          "dur": 2569,
-          "env": "67400174011378710100000035999500000003699304753465213564110042000"
-        },
-        "v_manuel_win": {
-          "dur": 1775,
-          "env": "598566765344331000578896114899511767341000000"
-        },
-        "v_manuel_drift": {
-          "dur": 2116,
-          "env": "79876200000268766200000783001002583124463689740012000"
-        },
-        "v_manuel_item": {
-          "dur": 1699,
-          "env": "2799965422268501310499713853351154330001000"
-        },
-        "v_manuel_pass": {
-          "dur": 2347,
-          "env": "99431139855587763000897630188211599941773735999987411059000"
-        },
-        "v_erich_over": {
-          "dur": 2421,
-          "env": "5887999996773007995453000039996219995239989998857779987631000"
-        },
-        "v_erich_hit": {
-          "dur": 2541,
-          "env": "6799869317875573223896300377763000049976338999953986755323331000"
-        },
-        "v_erich_sp": {
-          "dur": 2793,
-          "env": "4658667999855799876103441010003588622586787877630134878742753102211000"
-        },
-        "v_erich_win": {
-          "dur": 3338,
-          "env": "699499868864220000016789998752048987766477546666641000357852885149946759734442011000"
-        },
-        "v_erich_drift": {
-          "dur": 2643,
-          "env": "3467999998663000058407997663986763667578403116732897572112210000000"
-        },
-        "v_erich_item": {
-          "dur": 4373,
-          "env": "37998532128889989546668200589778878766530000677757777766642000069710059987776999985234676510154578887764100000"
-        },
-        "v_erich_pass": {
-          "dur": 2771,
-          "env": "5997517741998986785410002884477653498200003576577512766666789951131000"
-        },
-        "v_rasmus_over": {
-          "dur": 1546,
-          "env": "689995229999763681189996069764330003000"
-        },
-        "v_rasmus_hit": {
-          "dur": 2186,
-          "env": "8997059879999979998876544776300069998973177660020009000"
-        },
-        "v_rasmus_sp": {
-          "dur": 1541,
-          "env": "799999998864100159899899966666430003000"
-        },
-        "v_rasmus_win": {
-          "dur": 3035,
-          "env": "5899973100088779973003999897983273788799952200079995069742000334663334102000"
-        },
-        "v_rasmus_drift": {
-          "dur": 1736,
-          "env": "39988873027999987542588311328999764320006000"
-        },
-        "v_rasmus_item": {
-          "dur": 2355,
-          "env": "59996321000199773992164467886223777646635666232788897653000"
-        },
-        "v_rasmus_pass": {
-          "dur": 2117,
-          "env": "58998899977546655657784998400027675037775444468542000"
-        },
-        "g_manuel": {
-          "dur": 3817,
-          "env": "988651999995300089743583078564309767856886762688653223100071001944999985259699776667654310005000"
-        },
-        "g_erich": {
-          "dur": 4667,
-          "env": "899642699997400059999689666541000688731079998524536643300029949899630564210007952699999995000057489563399788754442000"
-        },
-        "g_rasmus": {
-          "dur": 6021,
-          "env": "9986418999540001777778639978713997723988888500008800048999999945699872000750897119776887999346768713898239777465433320007995799895057787666634210006000"
-        },
-        "h_jonas": {
-          "dur": 2876,
-          "env": "899986667766567743998875688786556654887895672200069865564559632103210000"
-        },
-        "h_simon": {
-          "dur": 3219,
-          "env": "496667998587754699765331002856666887897877944654221442110377643366567664342110000"
-        },
-        "h_patrick": {
-          "dur": 2468,
-          "env": "79997677777968773899999599759986532100468984496688643453111000"
-        },
-        "h_marco": {
-          "dur": 4156,
-          "env": "79686664544345544421100257999879876665632566766654465555566544376544776532105866664235799864321002010000"
-        },
-        "h_greisel": {
-          "dur": 2633,
-          "env": "799985329889998969996999898598676564311004689997979988854333210000"
-        },
-        "h_dajo": {
-          "dur": 3036,
-          "env": "3999997885444422100058874489953355321176989876644754433210069999866544211000"
-        },
-        "h_simon_love": {
-          "dur": 2933,
-          "env": "36687655999433473219999998434997888763288978997797425776545652321000110000"
-        },
-        "h_patrick_fat": {
-          "dur": 3093,
-          "env": "599877788979576653210289434599978887566545421103779984387799976544221552110000"
-        },
-        "h_marco_dia": {
-          "dur": 2315,
-          "env": "6989985746788999459878774587655588665897433221000019231100"
-        },
-        "h_jonas_kater": {
-          "dur": 2947,
-          "env": "89967678887498893479956568389999748853754433110039999859986648766553210000"
-        },
-        "h_greisel_wb": {
-          "dur": 1798,
-          "env": "799955988979877776355446564966464321005020000"
-        },
-        "h_dajo_party": {
-          "dur": 3397,
-          "env": "5898444432103557676999569678748632115575666776653223435653333311006677957663443110000"
-        },
-        "h_taxi": {
-          "dur": 4364,
-          "env": "39997777987669842599998886732100356776455322220024579967786644321005999866431167853588777455578754866531110000"
-        },
-        "h_coati": {
-          "dur": 3220,
-          "env": "999877995421177787339989755754443217532112887799999899999889684368797665553110000"
-        },
-        "h_officer": {
-          "dur": 3667,
-          "env": "59999996988735765236767945676767476556439887755321002988864321176798725555776779988642100000"
-        },
-        "h_dona": {
-          "dur": 4538,
-          "env": "598899773388675995366897868635555567665522100998998676777664238899976452210089999987555445433457889986654332100000"
-        },
-        "h_guide": {
-          "dur": 2872,
-          "env": "398787698754459999853378999876653211578776421102010498589998754322100000"
-        },
-        "h_steward": {
-          "dur": 3877,
-          "env": "5964689798765311007677677653355666775633321211000777656673324217744897775368648999984311104110100"
-        },
-        "h_caimanx": {
-          "dur": 4308,
-          "env": "899999739997433767785665965989734999963789786533635467786421129999866555544642110066988789899999685542100000"
-        },
-        "h_manuel": {
-          "dur": 4016,
-          "env": "35576556799876321056766698853996655556655443254345653211012210008785321773211567646633533644331100000"
-        },
-        "h_erich": {
-          "dur": 4398,
-          "env": "89977554445662211069989998434897665432100488899989863210989874278732475331002321006997997677587888431106220100"
-        },
-        "h_rasmus": {
-          "dur": 3794,
-          "env": "77864311366686254753458999979866533344435666633555653212211100001000135547765455459866553210000"
-        }
-      },
-      "xtts": {
-        "x_simon_love": [
-          "Ludvig Milivoj",
-          "de"
-        ],
-        "x_patrick_fat": [
-          "Damien Black",
-          "de"
-        ],
-        "x_marco_dia": [
-          "Viktor Eka",
-          "de"
-        ],
-        "x_jonas_kater": [
-          "Torcull Diarmuid",
-          "de"
-        ],
-        "x_greisel_wb": [
-          "Dionisio Schuyler",
-          "de"
-        ],
-        "x_dajo_party": [
-          "Annmarie Nele",
-          "de"
-        ],
-        "x_taxi": [
-          "Gilberto Mathias",
-          "de"
-        ],
-        "x_coati": [
-          "Royston Min",
-          "de"
-        ],
-        "x_officer": [
-          "Baldur Sanjin",
-          "de"
-        ],
-        "x_dona": [
-          "Brenda Stern",
-          "pt"
-        ],
-        "x_guide": [
-          "Marcos Rudaski",
-          "de"
-        ],
-        "x_steward": [
-          "Gitta Nikolina",
-          "de"
-        ],
-        "x_caimanx": [
-          "Viktor Menelaos",
-          "de"
-        ],
-        "x_manuel": [
-          "Andrew Chipper",
-          "de"
-        ],
-        "x_erich": [
-          "Craig Gutsy",
-          "de"
-        ],
-        "x_rasmus": [
-          "Zacharie Aimilios",
-          "de"
-        ],
-        "x_annc": [
-          "Abrahan Mack",
-          "de"
-        ],
-        "x_hero": [
-          "Wulf Carlevaro",
-          "de"
-        ]
-      },
-      "comedy": {
-        "x_simon_love": {
-          "tempo": 1.12,
-          "pitch": 1.42,
-          "style": "nasal2"
-        },
-        "x_patrick_fat": {
-          "tempo": 1.15,
-          "pitch": 1.05,
-          "style": "opa"
-        },
-        "x_marco_dia": {
-          "tempo": 1.7,
-          "pitch": 1.6,
-          "style": "nasal"
-        },
-        "x_jonas_kater": {
-          "tempo": 1.1,
-          "pitch": 1.15,
-          "style": "sleepy"
-        },
-        "x_greisel_wb": {
-          "tempo": 1.12,
-          "pitch": 1.25
-        },
-        "x_dajo_party": {
-          "tempo": 1.42,
-          "pitch": 1.25,
-          "style": "nasal2"
-        },
-        "x_taxi": {
-          "tempo": 1.18,
-          "pitch": 1.1,
-          "style": "nasal2"
-        },
-        "x_coati": {
-          "tempo": 1.3,
-          "pitch": 1.9,
-          "style": "nasal"
-        },
-        "x_officer": {
-          "tempo": 1.15,
-          "pitch": 1.12,
-          "style": "mega"
-        },
-        "x_dona": {
-          "tempo": 1.12,
-          "pitch": 1.12,
-          "style": "opa"
-        },
-        "x_guide": {
-          "tempo": 1.14,
-          "pitch": 1.12,
-          "style": "nasal2"
-        },
-        "x_steward": {
-          "tempo": 1.06,
-          "pitch": 1.06
-        },
-        "x_caimanx": {
-          "tempo": 0.92,
-          "pitch": 0.62
-        },
-        "x_manuel": {
-          "tempo": 1.25,
-          "pitch": 1.38,
-          "style": "nasal2"
-        },
-        "x_erich": {
-          "tempo": 1.02,
-          "pitch": 0.94
-        },
-        "x_rasmus": {
-          "tempo": 1.25,
-          "pitch": 1.15
-        },
-        "x_annc": {
-          "tempo": 1.1,
-          "pitch": 1.0
-        },
-        "x_hero": {
-          "tempo": 1.0,
-          "pitch": 0.88
-        }
-      },
-      "scenes": []
     }
   },
   "sfx": {
@@ -11930,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251008za", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🎙️", "t": "Gringo Kart: jede Figur spricht jetzt mit eigener Stimme, Fahrerwahl mit Smash-Ansage, Werte ausgeglichen, kein Vollbild-Hinweis mehr"},
     {
       "id": "n251008z",
       "d": "2026-10-08",
@@ -12925,6 +11248,691 @@
       "o": 46068,
       "dur": 1905,
       "f": 5
+    },
+    "v_simon_love_over": {
+      "o": 250,
+      "dur": 2535,
+      "f": 6
+    },
+    "v_simon_love_hit": {
+      "o": 3035,
+      "dur": 3121,
+      "f": 6
+    },
+    "v_simon_love_sp": {
+      "o": 6405,
+      "dur": 1490,
+      "f": 6
+    },
+    "v_simon_love_win": {
+      "o": 8146,
+      "dur": 2608,
+      "f": 6
+    },
+    "v_simon_love_drift": {
+      "o": 11004,
+      "dur": 1592,
+      "f": 6
+    },
+    "v_simon_love_item": {
+      "o": 12846,
+      "dur": 2810,
+      "f": 6
+    },
+    "v_simon_love_pass": {
+      "o": 15905,
+      "dur": 2589,
+      "f": 6
+    },
+    "v_patrick_fat_over": {
+      "o": 18744,
+      "dur": 1507,
+      "f": 6
+    },
+    "v_patrick_fat_hit": {
+      "o": 20501,
+      "dur": 3170,
+      "f": 6
+    },
+    "v_patrick_fat_sp": {
+      "o": 23920,
+      "dur": 2499,
+      "f": 6
+    },
+    "v_patrick_fat_win": {
+      "o": 26669,
+      "dur": 2453,
+      "f": 6
+    },
+    "v_patrick_fat_drift": {
+      "o": 29372,
+      "dur": 2050,
+      "f": 6
+    },
+    "v_patrick_fat_item": {
+      "o": 31673,
+      "dur": 2397,
+      "f": 6
+    },
+    "v_patrick_fat_pass": {
+      "o": 34319,
+      "dur": 2430,
+      "f": 6
+    },
+    "v_marco_dia_over": {
+      "o": 37000,
+      "dur": 1959,
+      "f": 6
+    },
+    "v_marco_dia_hit": {
+      "o": 39208,
+      "dur": 1892,
+      "f": 6
+    },
+    "v_marco_dia_sp": {
+      "o": 41351,
+      "dur": 2053,
+      "f": 6
+    },
+    "v_marco_dia_win": {
+      "o": 43654,
+      "dur": 2131,
+      "f": 6
+    },
+    "v_marco_dia_drift": {
+      "o": 46034,
+      "dur": 1602,
+      "f": 6
+    },
+    "v_marco_dia_item": {
+      "o": 47887,
+      "dur": 1477,
+      "f": 6
+    },
+    "v_marco_dia_pass": {
+      "o": 49614,
+      "dur": 1435,
+      "f": 6
+    },
+    "v_jonas_kater_over": {
+      "o": 51299,
+      "dur": 2502,
+      "f": 6
+    },
+    "v_jonas_kater_hit": {
+      "o": 54052,
+      "dur": 3008,
+      "f": 6
+    },
+    "v_jonas_kater_sp": {
+      "o": 57310,
+      "dur": 2172,
+      "f": 6
+    },
+    "v_jonas_kater_win": {
+      "o": 59732,
+      "dur": 3837,
+      "f": 6
+    },
+    "v_jonas_kater_drift": {
+      "o": 63819,
+      "dur": 1416,
+      "f": 6
+    },
+    "v_jonas_kater_item": {
+      "o": 65485,
+      "dur": 2243,
+      "f": 6
+    },
+    "v_jonas_kater_pass": {
+      "o": 67979,
+      "dur": 4327,
+      "f": 6
+    },
+    "v_greisel_wb_over": {
+      "o": 72555,
+      "dur": 2122,
+      "f": 6
+    },
+    "v_greisel_wb_hit": {
+      "o": 74927,
+      "dur": 2053,
+      "f": 6
+    },
+    "v_greisel_wb_sp": {
+      "o": 77231,
+      "dur": 1883,
+      "f": 6
+    },
+    "v_greisel_wb_win": {
+      "o": 79364,
+      "dur": 2440,
+      "f": 6
+    },
+    "v_greisel_wb_drift": {
+      "o": 82054,
+      "dur": 1389,
+      "f": 6
+    },
+    "v_greisel_wb_item": {
+      "o": 83693,
+      "dur": 1782,
+      "f": 6
+    },
+    "v_greisel_wb_pass": {
+      "o": 85725,
+      "dur": 1568,
+      "f": 6
+    },
+    "v_dajo_party_over": {
+      "o": 87544,
+      "dur": 1852,
+      "f": 6
+    },
+    "v_dajo_party_hit": {
+      "o": 89646,
+      "dur": 1727,
+      "f": 6
+    },
+    "v_dajo_party_sp": {
+      "o": 91623,
+      "dur": 1500,
+      "f": 6
+    },
+    "v_dajo_party_win": {
+      "o": 93373,
+      "dur": 2531,
+      "f": 6
+    },
+    "v_dajo_party_drift": {
+      "o": 96153,
+      "dur": 1417,
+      "f": 6
+    },
+    "v_dajo_party_item": {
+      "o": 97820,
+      "dur": 1787,
+      "f": 6
+    },
+    "v_dajo_party_pass": {
+      "o": 99857,
+      "dur": 1598,
+      "f": 6
+    },
+    "v_taxi_over": {
+      "o": 101705,
+      "dur": 2248,
+      "f": 6
+    },
+    "v_taxi_hit": {
+      "o": 104203,
+      "dur": 2442,
+      "f": 6
+    },
+    "v_taxi_sp": {
+      "o": 106894,
+      "dur": 2593,
+      "f": 6
+    },
+    "v_taxi_win": {
+      "o": 109737,
+      "dur": 2164,
+      "f": 6
+    },
+    "v_taxi_drift": {
+      "o": 112151,
+      "dur": 1726,
+      "f": 6
+    },
+    "v_taxi_item": {
+      "o": 114127,
+      "dur": 5758,
+      "f": 6
+    },
+    "v_taxi_pass": {
+      "o": 120135,
+      "dur": 2180,
+      "f": 6
+    },
+    "v_coati_over": {
+      "o": 122565,
+      "dur": 1599,
+      "f": 6
+    },
+    "v_coati_hit": {
+      "o": 124414,
+      "dur": 1976,
+      "f": 6
+    },
+    "v_coati_sp": {
+      "o": 126640,
+      "dur": 2453,
+      "f": 6
+    },
+    "v_coati_win": {
+      "o": 129344,
+      "dur": 2903,
+      "f": 6
+    },
+    "v_coati_drift": {
+      "o": 132497,
+      "dur": 557,
+      "f": 6
+    },
+    "v_coati_item": {
+      "o": 133303,
+      "dur": 1954,
+      "f": 6
+    },
+    "v_coati_pass": {
+      "o": 135507,
+      "dur": 1505,
+      "f": 6
+    },
+    "v_officer_over": {
+      "o": 137262,
+      "dur": 2246,
+      "f": 6
+    },
+    "v_officer_hit": {
+      "o": 139758,
+      "dur": 2270,
+      "f": 6
+    },
+    "v_officer_sp": {
+      "o": 142278,
+      "dur": 2914,
+      "f": 6
+    },
+    "v_officer_win": {
+      "o": 145442,
+      "dur": 2852,
+      "f": 6
+    },
+    "v_officer_drift": {
+      "o": 148544,
+      "dur": 1606,
+      "f": 6
+    },
+    "v_officer_item": {
+      "o": 150401,
+      "dur": 2069,
+      "f": 6
+    },
+    "v_officer_pass": {
+      "o": 152720,
+      "dur": 2224,
+      "f": 6
+    },
+    "v_dona_over": {
+      "o": 155194,
+      "dur": 1189,
+      "f": 6
+    },
+    "v_dona_hit": {
+      "o": 156634,
+      "dur": 1944,
+      "f": 6
+    },
+    "v_dona_sp": {
+      "o": 158828,
+      "dur": 1542,
+      "f": 6
+    },
+    "v_dona_win": {
+      "o": 160620,
+      "dur": 2122,
+      "f": 6
+    },
+    "v_dona_drift": {
+      "o": 162992,
+      "dur": 1638,
+      "f": 6
+    },
+    "v_dona_item": {
+      "o": 164880,
+      "dur": 1226,
+      "f": 6
+    },
+    "v_dona_pass": {
+      "o": 166357,
+      "dur": 1643,
+      "f": 6
+    },
+    "v_guide_over": {
+      "o": 168250,
+      "dur": 1706,
+      "f": 6
+    },
+    "v_guide_hit": {
+      "o": 170206,
+      "dur": 2742,
+      "f": 6
+    },
+    "v_guide_sp": {
+      "o": 173198,
+      "dur": 1294,
+      "f": 6
+    },
+    "v_guide_win": {
+      "o": 174742,
+      "dur": 1555,
+      "f": 6
+    },
+    "v_guide_drift": {
+      "o": 176547,
+      "dur": 2269,
+      "f": 6
+    },
+    "v_guide_item": {
+      "o": 179066,
+      "dur": 2373,
+      "f": 6
+    },
+    "v_guide_pass": {
+      "o": 181690,
+      "dur": 2338,
+      "f": 6
+    },
+    "v_steward_over": {
+      "o": 184278,
+      "dur": 2307,
+      "f": 6
+    },
+    "v_steward_hit": {
+      "o": 186834,
+      "dur": 2883,
+      "f": 6
+    },
+    "v_steward_sp": {
+      "o": 189967,
+      "dur": 2430,
+      "f": 6
+    },
+    "v_steward_win": {
+      "o": 192648,
+      "dur": 3884,
+      "f": 6
+    },
+    "v_steward_drift": {
+      "o": 196782,
+      "dur": 3213,
+      "f": 6
+    },
+    "v_steward_item": {
+      "o": 200244,
+      "dur": 2393,
+      "f": 6
+    },
+    "v_steward_pass": {
+      "o": 202887,
+      "dur": 3826,
+      "f": 6
+    },
+    "v_caimanx_over": {
+      "o": 206963,
+      "dur": 2822,
+      "f": 6
+    },
+    "v_caimanx_hit": {
+      "o": 210036,
+      "dur": 2568,
+      "f": 6
+    },
+    "v_caimanx_sp": {
+      "o": 212853,
+      "dur": 1424,
+      "f": 6
+    },
+    "v_caimanx_win": {
+      "o": 214527,
+      "dur": 3570,
+      "f": 6
+    },
+    "v_caimanx_drift": {
+      "o": 218347,
+      "dur": 1184,
+      "f": 6
+    },
+    "v_caimanx_item": {
+      "o": 219781,
+      "dur": 2558,
+      "f": 6
+    },
+    "v_caimanx_pass": {
+      "o": 222589,
+      "dur": 1844,
+      "f": 6
+    },
+    "v_manuel_over": {
+      "o": 224683,
+      "dur": 1847,
+      "f": 6
+    },
+    "v_manuel_hit": {
+      "o": 226780,
+      "dur": 2484,
+      "f": 6
+    },
+    "v_manuel_sp": {
+      "o": 229514,
+      "dur": 2569,
+      "f": 6
+    },
+    "v_manuel_win": {
+      "o": 232333,
+      "dur": 1775,
+      "f": 6
+    },
+    "v_manuel_drift": {
+      "o": 234358,
+      "dur": 2116,
+      "f": 6
+    },
+    "v_manuel_item": {
+      "o": 236724,
+      "dur": 1699,
+      "f": 6
+    },
+    "v_manuel_pass": {
+      "o": 238673,
+      "dur": 2347,
+      "f": 6
+    },
+    "v_erich_over": {
+      "o": 241270,
+      "dur": 2421,
+      "f": 6
+    },
+    "v_erich_hit": {
+      "o": 243941,
+      "dur": 2541,
+      "f": 6
+    },
+    "v_erich_sp": {
+      "o": 246732,
+      "dur": 2793,
+      "f": 6
+    },
+    "v_erich_win": {
+      "o": 249776,
+      "dur": 3338,
+      "f": 6
+    },
+    "v_erich_drift": {
+      "o": 253364,
+      "dur": 2643,
+      "f": 6
+    },
+    "v_erich_item": {
+      "o": 256257,
+      "dur": 4373,
+      "f": 6
+    },
+    "v_erich_pass": {
+      "o": 260880,
+      "dur": 2771,
+      "f": 6
+    },
+    "v_rasmus_over": {
+      "o": 263901,
+      "dur": 1546,
+      "f": 6
+    },
+    "v_rasmus_hit": {
+      "o": 265697,
+      "dur": 2186,
+      "f": 6
+    },
+    "v_rasmus_sp": {
+      "o": 268133,
+      "dur": 1542,
+      "f": 6
+    },
+    "v_rasmus_win": {
+      "o": 269925,
+      "dur": 3035,
+      "f": 6
+    },
+    "v_rasmus_drift": {
+      "o": 273210,
+      "dur": 1736,
+      "f": 6
+    },
+    "v_rasmus_item": {
+      "o": 275196,
+      "dur": 2355,
+      "f": 6
+    },
+    "v_rasmus_pass": {
+      "o": 277801,
+      "dur": 2117,
+      "f": 6
+    },
+    "g_manuel": {
+      "o": 280168,
+      "dur": 3817,
+      "f": 6
+    },
+    "g_erich": {
+      "o": 284235,
+      "dur": 4667,
+      "f": 6
+    },
+    "g_rasmus": {
+      "o": 289152,
+      "dur": 6021,
+      "f": 6
+    },
+    "h_jonas": {
+      "o": 250,
+      "dur": 2673,
+      "f": 7
+    },
+    "h_simon": {
+      "o": 3173,
+      "dur": 3219,
+      "f": 7
+    },
+    "h_patrick": {
+      "o": 6641,
+      "dur": 2468,
+      "f": 7
+    },
+    "h_marco": {
+      "o": 9360,
+      "dur": 4156,
+      "f": 7
+    },
+    "h_greisel": {
+      "o": 13765,
+      "dur": 2633,
+      "f": 7
+    },
+    "h_dajo": {
+      "o": 16649,
+      "dur": 3036,
+      "f": 7
+    },
+    "h_simon_love": {
+      "o": 19934,
+      "dur": 2998,
+      "f": 7
+    },
+    "h_patrick_fat": {
+      "o": 23182,
+      "dur": 3093,
+      "f": 7
+    },
+    "h_marco_dia": {
+      "o": 26525,
+      "dur": 2758,
+      "f": 7
+    },
+    "h_jonas_kater": {
+      "o": 29533,
+      "dur": 2947,
+      "f": 7
+    },
+    "h_greisel_wb": {
+      "o": 32730,
+      "dur": 2370,
+      "f": 7
+    },
+    "h_dajo_party": {
+      "o": 35350,
+      "dur": 3397,
+      "f": 7
+    },
+    "h_taxi": {
+      "o": 38998,
+      "dur": 4364,
+      "f": 7
+    },
+    "h_coati": {
+      "o": 43612,
+      "dur": 3220,
+      "f": 7
+    },
+    "h_officer": {
+      "o": 47082,
+      "dur": 3667,
+      "f": 7
+    },
+    "h_dona": {
+      "o": 50999,
+      "dur": 4538,
+      "f": 7
+    },
+    "h_guide": {
+      "o": 55787,
+      "dur": 5639,
+      "f": 7
+    },
+    "h_steward": {
+      "o": 61676,
+      "dur": 3877,
+      "f": 7
+    },
+    "h_caimanx": {
+      "o": 65802,
+      "dur": 4308,
+      "f": 7
+    },
+    "h_manuel": {
+      "o": 70361,
+      "dur": 4016,
+      "f": 7
+    },
+    "h_erich": {
+      "o": 74627,
+      "dur": 4398,
+      "f": 7
+    },
+    "h_rasmus": {
+      "o": 79275,
+      "dur": 3794,
+      "f": 7
     }
   },
   "kartReset": "2026-10-07a"
