@@ -8001,7 +8001,7 @@ setGroup(G);
     if (v.drv && v.drv !== v.who) p.push('als ' + NAME(v.drv));
     if (v.uid) p.push('✓ Konto' + (PNAME[v.uid] ? ' ' + PNAME[v.uid] : '') + (USERS[v.uid] && USERS[v.uid] !== v.who ? ' (gehört ' + NAME(USERS[v.uid]) + ')' : '')); else p.push('❓ ohne Konto-Zuordnung');
     if (v.dev) p.push(v.dev); if (v.ts) p.push(when(v.ts)); return p.join(' · '); }
-  function saveLB(pd) { const who = ME; if (!who || !DB) return;
+  function saveLB(pd) { const who = ME; if (!who || !DB || !(pd.ms > 15000)) return;   /* unmögliche Zeiten nie in die Crew-Bestenliste */
     if (pd.kind === 'best') { const id = pd.track + '__' + who, old = LB[id]; if (old && old.ms <= pd.ms) return; const doc = {track: pd.track, who, drv: pd.drv, veh: pd.veh, ms: pd.ms, ts: Date.now(), uid: UID, dev: devName()};
       DB.doc('kartbest/' + id).set(doc).catch(() => {}); DB.doc('kartghost/' + id).set({g: pd.g, ms: pd.ms}).catch(() => {}); LB[id] = doc; }
     else { const id = pd.d + '__' + who, old = LBD[id]; if (old && old.ms <= pd.ms) return; const doc = {d: pd.d, who, drv: pd.drv, ms: pd.ms, ts: Date.now(), uid: UID, dev: devName()}; DB.doc('kartdaily/' + id).set(doc).catch(() => {}); LBD[id] = doc; } }
@@ -8272,7 +8272,7 @@ setGroup(G);
     {id: 'fish', e: '🎣', n: 'Fischerhut', from: '2026-12-27', fl: 'ab Abflug 27.12.'}, {id: 'nye', e: '🤍', n: 'Silvester-Weiß', from: '2026-12-31', fl: 'ab Silvester'},
     {id: 'flag', e: '🇧🇷', n: 'Brasil-Stirnband', from: '2027-01-06', fl: 'ab 06.01., Crew komplett'}, {id: 'coatihat', e: '🦝', n: 'Nasenbär-Mütze', from: '2027-01-07', fl: 'ab Iguaçu 07.01.'},
     {id: 'net', e: '🦟', n: 'Moskitonetz', from: '2027-01-09', fl: 'ab Dschungel 09.01.'}];
-  const ACH = [{id: 'combo', e: '💥', n: 'Erste Item-Kombo'}, {id: 'police', e: '👮', n: 'Brav durch die Polizeikontrolle'}, {id: 'first', e: '🏁', n: 'Erstes Rennen'}, {id: 'win', e: '🥇', n: 'Erster Sieg'}, {id: 'rocket', e: '🚀', n: 'Raketenstart'}, {id: 'trick', e: '🤸', n: 'Trick auf der Schanze'},
+  const ACH = [{id: 'td1', e: '💀', n: 'Erster Abschuss', x: 'einen Gegner mit einem Item erledigt'}, {id: 'td3', e: '☠️', n: 'Dreifach-Massaker', x: 'drei Takedowns in Folge'}, {id: 'combo', e: '💥', n: 'Erste Item-Kombo'}, {id: 'police', e: '👮', n: 'Brav durch die Polizeikontrolle'}, {id: 'first', e: '🏁', n: 'Erstes Rennen'}, {id: 'win', e: '🥇', n: 'Erster Sieg'}, {id: 'rocket', e: '🚀', n: 'Raketenstart'}, {id: 'trick', e: '🤸', n: 'Trick auf der Schanze'},
     {id: 'cut', e: '⤴', n: 'Abkürzung gefunden'}, {id: 'dolphin', e: '🐬', n: 'Delfin-Turbo'}, {id: 'nohit', e: '😇', n: 'Fehlerfrei', x: 'ein Rennen ohne Treffer'}, {id: 'super10', e: '🔥', n: 'Turbo-Junkie', x: '10 Super-Turbos'},
     {id: 'coins100', e: '🪙', n: 'Sparschwein', x: '100 Münzen gesammelt'}, {id: 'night', e: '🌙', n: 'Nachtfahrer', x: 'Rennen bei Nacht'}, {id: 'sp', e: '🏙️', n: 'Stau-Sieger', x: 'São Paulo gewinnen'},
     {id: 'reveillon', e: '🎆', n: 'Feliz Ano Novo', x: 'Réveillon gewinnen'}, {id: 'cristo', e: '⛰️', n: 'Gipfelstürmer', x: 'Cristo gewinnen'}, {id: 'all', e: '🗺️', n: 'Weltenbummler', x: 'alle Strecken gefahren'},
@@ -8346,9 +8346,16 @@ setGroup(G);
   function place(k) { return S.karts.filter(o => o !== k && (o.done ? (!k.done || o.done < k.done) : !k.done && progress(o) > progress(k))).length + 1; }
   function floatTxt(k, t, c) { S.fx.push({x: k.x, y: k.y, txt: t, col: c || '#ffd23f', t: 0}); }
   const HITSAY = {banana: 'Auf der Bananenschale ausgerutscht!', bang: 'Böller! Meine Ohren!', trolley: 'Vom Servierwagen überrollt!', puke: 'Igitt, Kotze!', parade: 'In den Sambazug gekracht!', coco: 'Kokosnuss auf die Birne!', tug: 'Vom Gepäckwagen erwischt!', fork: 'Gabelstapler!', bus: 'Der Bus! Der Bus!', soccer: 'Ball an den Kopf!', crate: 'Container!', flip: 'Flip-Flop ins Gesicht!', fire: 'Heiß, heiß, heiß!', tram: 'Von der Straßenbahn erwischt!', moto: 'Motoboy!!', monkey: 'Der Affe hat mein Item geklaut!', cone: 'Baustelle!', champ: 'Sekt verschüttet!', gate: 'Schranke zu!', ball: 'Fernschuss ins Gesicht!', beer: 'Alles voller Schaum!', coati: 'Dieser Nasenbär!!', vendor: 'Ich wollte nur einen Caipi!', corn: 'Mein Mais!', caiman: 'Der Kaiman hat mich gebissen!', horse: 'Pferd hat Vorfahrt?!', dog: 'Guter Hund … AUA!', log: 'Baumstamm!', umbrella: 'Sonnenschirm-Treffer!', suitcase: 'Wessen Koffer ist das?!'};
+  // Takedown (Burnout-Stil, Wunsch Patrick: mehr Spaß, schwarzer Humor): eigener Treffer mit Item = große Einblendung, Münze, Serien (Doppel/Dreifach)
+  let HBY = null; const hitBy = (k, why, by) => { HBY = by; hit(k, why); HBY = null; };
+  const TDTXT = ['💀 {n} ist raus. Blumen bitte an die Eltern.', '⚰️ {n} wurde fachgerecht entsorgt.', '🪦 {n}: gefahren, getroffen, vergessen.', '💥 Volltreffer! {n} sieht jetzt die Oma. Die tote.',
+    '🩸 {n} braucht jetzt einen Priester.', '🚑 Für {n} kommt jede Hilfe zu spät.', '☠️ {n} hat das Rennen verlassen. Innerlich.', '🧹 {n} wird später zusammengekehrt.'];
+  function takedown(v) { const t0 = S.t, td = S.td || (S.td = {n: 0, last: -9, chain: 0}); td.n++; td.chain = t0 - td.last < 4 ? td.chain + 1 : 1; td.last = t0; addCoins(1);
+    if (v && !v.me) { ach('td1'); if (td.chain >= 3) ach('td3'); } const big = ['', '💀 TAKEDOWN!', '💀💀 DOPPEL-TAKEDOWN!', '💀💀💀 DREIFACH-MASSAKER!', '☠️ AMOKLAUF!'][Math.min(4, td.chain)];
+    S.tdMsg = {t: big, sub: pick(TDTXT).replace(/\{n\}/g, NAME(v.id)), until: performance.now() + 1700}; if (td.chain >= 2) S.shake = Math.max(S.shake || 0, .3); vib(td.chain >= 2 ? [20, 30, 20, 30, 40] : 25); beep(td.chain >= 2 ? 1200 : 900, .12, 'square', .06, td.chain >= 2 ? 1800 : 1400); }
   function hit(k, why) {
     if (k.remote) { if (S.live && ['coati', 'ball', 'flip', 'fire', 'caiman', 'trolley', 'coco', 'bang'].includes(why) && !k.hitT) { k.hitT = 1; setTimeout(() => { k.hitT = 0; }, 900); liveEmit({t: 'hit', race: S.live.id, to: k.peer, ai: k.aiIdx, why}); } return; }
-    if (k.spin > 0 || k.air > 0 || k.inv > 0 || k.fall > 0) return; if (k.shield > 0 && why !== 'gate') { k.shield = 0; floatTxt(k, '⛱️ geblockt!', '#7fd3ff'); if (k.me) { beep(520, .1, 'triangle', .07); vib(15); } return; } S.hl[why] = (S.hl[why] || 0) + 1; k.spin = .9 * Math.max(.45, 1.12 - (k.cs.tgh + (k.pf ? k.pf.tgh : 0)) * .3); k.vr += rnd(-60, 60); if (k.me) vib([30, 40, 30]); k.boost = 0; k.dr = 0; k.dt = 0; SFX.spin(); if (why === 'caiman') SFX.chomp(); if (k.id === 'erich') k.wut = 1;
+    if (k.spin > 0 || k.air > 0 || k.inv > 0 || k.fall > 0) return; if (k.shield > 0 && why !== 'gate') { k.shield = 0; floatTxt(k, '⛱️ geblockt!', '#7fd3ff'); if (k.me) { beep(520, .1, 'triangle', .07); vib(15); } return; } S.hl[why] = (S.hl[why] || 0) + 1; if (HBY && HBY.me && !k.me && S.t > 0) takedown(k); k.spin = .9 * Math.max(.45, 1.12 - (k.cs.tgh + (k.pf ? k.pf.tgh : 0)) * .3); k.vr += rnd(-60, 60); if (k.me) vib([30, 40, 30]); k.boost = 0; k.dr = 0; k.dt = 0; SFX.spin(); if (why === 'caiman') SFX.chomp(); if (k.id === 'erich') k.wut = 1;
     const l = LINES[k.id]; k.say = (HITSAY[why] && Math.random() < .55) ? HITSAY[why] : l ? pick(l) : 'Aua!'; k.sayT = 1.6;
     if (k.me) { S.myHits++; if (k.coins > 0) { const n = Math.min(2, k.coins); k.coins -= n; S.got = Math.max(0, S.got - n); floatTxt(k, '−' + n + ' 🪙', '#ffb0b0'); } } 
     if (k.me) { S.shake = .35; if (why === 'caiman') say('caiman', 'Vorsicht, Kaiman!'); else if (['oil', 'coati', 'ball', 'flip', 'fire', 'beer', 'coco', 'banana', 'bang'].includes(why) && Math.random() < .6) voice(k, 'item'); else if (Math.random() < .5) voice(k, 'hit'); else if (Math.random() < .4) say('hit', 'Autsch, das tat weh!'); }
@@ -8410,7 +8417,7 @@ setGroup(G);
     if (key === 'oil+oil') { for (let j = 0; j < 3; j++) { const [x, y] = [k.x - Math.cos(k.a) * (34 + j * 30), k.y - Math.sin(k.a) * (34 + j * 30)]; S.oils.push({x, y, t: 12, by: k}); if (S.live) liveEmit({t: 'oil', race: S.live.id, x: Math.round(x), y: Math.round(y)}); } SFX.oil(); }
     if (key === 'shield+shield') { k.shield = 16; } }
   // Absturz: 1,1 s fallen (kleiner, dreht, blasser), dann bringt der Retter das Kart 1,4 s lang von oben zurück auf die Strecke
-  function fallStart(k) { k.falls = (k.falls || 0) + 1; k.fall = .001; k.fallI = k.idx; k.dr = 0; k.dt = 0; k.boost = 0; k.str = 0; k.spin = 0; k.resc = 0; S.hl.fall = (S.hl.fall || 0) + 1; k.say = pick(['Neeeiiin!', 'Hilfeee!', 'Mamãe!', 'Das war\'s …']); k.sayT = 1.2;
+  function fallStart(k) { k.falls = (k.falls || 0) + 1; k.fall = .001; k.fallI = k.idx; k.dr = 0; k.dt = 0; k.boost = 0; k.str = 0; k.spin = 0; k.resc = 0; S.hl.fall = (S.hl.fall || 0) + 1; if (k.me) say('fall_t', pick(['🪦 Ruhe in Frieden … ach nein, der Retter kommt.', '☠️ Kurz tot. Gleich weiter.', '🚑 Die Versicherung zahlt das nicht.', '⚰️ Der Bestatter war schon unterwegs.', '🙏 Die Crew betet. Halbherzig.']), 1); k.say = pick(['Neeeiiin!', 'Hilfeee!', 'Mamãe!', 'Das war\'s …', 'Sagt Mama, ich hab sie lieb!', 'Ich seh das Licht!', 'Mein Testament liegt im Handschuhfach!', 'Nicht heute, Tod!', 'Wer kriegt meine Playstation?']); k.sayT = 1.4;
     if (k.me) { say('fall', FALL.t); floatTxt(k, '😱 ' + FALL.t, '#ff8a8a'); beep(900, 1, 'sine', .07, 140); vib([20, 60, 20]); S.falls = (S.falls || 0) + 1; } }
   function fallStep(k, dt) { k.fall += dt;
     if (k.fall < 1.1) { k.x += Math.cos(k.mv) * k.v * dt * .55; k.y += Math.sin(k.mv) * k.v * dt * .55; k.v *= Math.exp(-dt * 1.5); k.rot += dt * 7;
@@ -8477,7 +8484,7 @@ setGroup(G);
         if (own && !o.remote) { o.boost = Math.max(o.boost, .8); o.say = pick(['Polonaise!', 'Ich bin dabei, Rasmus!', 'Party!']); } else if (!own) { o.slowT = 1.3; o.slowE = '💃'; o.say = pick(['Ich muss mittanzen!', 'Polonaise Blankenese!', 'Nicht schon wieder!']); } o.sayT = 1.4; });
       k.boost = Math.max(k.boost, 1.2); floatTxt(k, '💃 POLONAISE!', '#c79bf0'); if (k.me) SFX.turbo(); [523, 659, 784].forEach((f, j) => setTimeout(() => beep(f, .12, 'square', .05), j * 110)); }
     if (it.k === 'mini') { k.mini = 4; k.inv = Math.max(k.inv, 4); k.boost = Math.max(k.boost, 1.1); if (!k.vsz0) k.vsz0 = k.vsz || 1; k.vsz = k.vsz0 * .55; floatTxt(k, '🤏 Wo ist er hin?', '#ffd23f'); if (k.me) SFX.turbo(); }
-    if (it.k === 'chomp') { nearK(90).forEach(o => { if (!o.air) hit(o, 'caiman'); }); SFX.chomp(); }
+    if (it.k === 'chomp') { nearK(90).forEach(o => { if (!o.air) hitBy(o, 'caiman', k); }); SFX.chomp(); }
     if (it.k === 'snack') { k.boost = Math.max(k.boost, .8); S.karts.forEach(o => { if (o !== k && !o.done && progress(o) < progress(k) && progress(k) - progress(o) < 110 && o.inv <= 0) { o.slowT = 1.2; o.slowE = '🥟'; o.say = 'Mmmh, Snacks!'; o.sayT = 1.2; } }); }
   }
   const INPUT = {L: false, R: false, keys: {}, ax: null, brake: false, drift: false, dtap: null};
@@ -8526,7 +8533,7 @@ setGroup(G);
       if (k.parrot > 0) { k.parrot -= dt; target = clamp(target * .8 + Math.sin(S.t * 6) * .45, -1, 1); }
       if (k.kiss > 0) { k.kiss -= dt; target = k.me ? -target * .9 + Math.sin(S.t * 4) * .2 : clamp(target * .5 + Math.sin(S.t * 5 + k.idx) * .7, -1, 1); }
       if (k.shield > 0) k.shield -= dt;
-      if (k.fire > 0) { k.fire -= dt; S.karts.forEach(o => { if (o !== k && !o.air && Math.hypot(o.x - (k.x - Math.cos(k.a) * 40), o.y - (k.y - Math.sin(k.a) * 40)) < 26) hit(o, 'fire'); }); if (Math.random() < dt * 30) S.sp.push({x: k.x - Math.cos(k.a) * 26, y: k.y - Math.sin(k.a) * 26, vx: -Math.cos(k.a) * 120 + rnd(-40, 40), vy: -Math.sin(k.a) * 120 + rnd(-40, 40), t: 0, c: pick(['#ff5a1f', '#ffb21f', '#ff2a2a']), big: 1}); }
+      if (k.fire > 0) { k.fire -= dt; S.karts.forEach(o => { if (o !== k && !o.air && Math.hypot(o.x - (k.x - Math.cos(k.a) * 40), o.y - (k.y - Math.sin(k.a) * 40)) < 26) hitBy(o, 'fire', k); }); if (Math.random() < dt * 30) S.sp.push({x: k.x - Math.cos(k.a) * 26, y: k.y - Math.sin(k.a) * 26, vx: -Math.cos(k.a) * 120 + rnd(-40, 40), vy: -Math.sin(k.a) * 120 + rnd(-40, 40), t: 0, c: pick(['#ff5a1f', '#ffb21f', '#ff2a2a']), big: 1}); }
       if (k.air > 0) target *= .25;
       const rate = k.me ? (SET.ctl === 'analog' ? 6 : target ? 3.2 : 6) : 7;   // Spieler: Lenkeinschlag baut sich weich auf, Loslassen geht schnell zurück
       k.steer += clamp(target - k.steer, -rate * dt, rate * dt);
@@ -8643,23 +8650,23 @@ setGroup(G);
       k.x = o.x + dx / d * (o.r + 8); k.y = o.y + dy / d * (o.r + 8); if (k.bump > 0) return; k.bump = .45; k.v *= .4; k.dr = 0; k.dt = 0; S.hl[o.kind] = (S.hl[o.kind] || 0) + 1; k.obH = (k.obH || 0) + 1; if (k.me) { S.shake = .2; SFX.land(); }
       if (Math.random() < .5 && HITSAY[o.kind]) { k.say = HITSAY[o.kind]; k.sayT = 1.3; } }));
     S.oils = S.oils.filter(o => { o.t -= dt;
-      if (o.bang) { o.bang -= dt; if (o.bang > 0) return true; const me0 = S.karts[0]; ks.forEach(k => { if (!k.air && !(k.fall > 0) && Math.hypot(k.x - o.x, k.y - o.y) < 74) hit(k, 'bang'); });   // Böller: Zündschnur, dann Knall
+      if (o.bang) { o.bang -= dt; if (o.bang > 0) return true; const me0 = S.karts[0]; ks.forEach(k => { if (!k.air && !(k.fall > 0) && Math.hypot(k.x - o.x, k.y - o.y) < 74) hitBy(k, 'bang', o.by); });   // Böller: Zündschnur, dann Knall
         if (Math.hypot(me0.x - o.x, me0.y - o.y) < 600) { noise(.35, .22, 0, 0, 0, 260); S.shake = Math.max(S.shake, .25); } for (let j = 0; j < 22; j++) { const an = j / 22 * TAU, sp = rnd(80, 240); S.sp.push({x: o.x, y: o.y, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp, t: 0, c: pick(['#ffd23f', '#ff5a1f', '#fff', '#ff2a6a'])}); } return false; }
       if (o.stink) { ks.forEach(k => { if (ground(k) && o.by !== k && !k.remote && Math.hypot(k.x - o.x, k.y - o.y) < 58) { if (k.slowT < .45) { k.slowT = .45; k.slowE = '💨'; if (!k.sayT) { k.say = pick(['Wer war das?!', 'Boah, Marco!', 'Ich krieg keine Luft!']); k.sayT = 1.2; } } } }); return o.t > 0; } ks.forEach(k => { if (ground(k) && Math.hypot(k.x - o.x, k.y - o.y) < (o.beer ? 44 : 24) && !(o.by === k && (o.fire || o.t > (o.beer ? 7 : 11)))) { if (o.beer || o.fire) { o.hk = o.hk || []; if (o.hk.includes(k)) return; o.hk.push(k); }   // Bier-/Feuerpfütze erwischt jedes Kart nur einmal (vorher drehte man sich darin mehrmals hintereinander)
-        hit(k, o.beer ? 'beer' : o.fire ? 'fire' : o.puke ? 'puke' : o.banana ? 'banana' : 'oil'); if (!o.beer && !o.fire) o.t = 0; } }); return o.t > 0; });
+        hitBy(k, o.beer ? 'beer' : o.fire ? 'fire' : o.puke ? 'puke' : o.banana ? 'banana' : 'oil', o.by); if (!o.beer && !o.fire) o.t = 0; } }); return o.t > 0; });
     S.brk.forEach(b => { if (b.dead >= 0) { if (S.t - b.dead > 20) b.dead = -1; return; } const k = ks.find(k0 => ground(k0) && !k0.remote && Math.hypot(k0.x - b.x, k0.y - b.y) < 26); if (k) brkBreak(b, k); });
     S.brkP = S.brkP.filter(q => { q.t += dt; const fr = Math.exp(-3.5 * dt); q.x += q.vx * dt; q.y += q.vy * dt; q.vx *= fr; q.vy *= fr; q.r += q.vr * dt; q.vr *= fr; return q.t < 2.2; });
     S.deb = S.deb.filter(d => { d.t -= dt; ks.forEach(k => { if (ground(k) && !k.remote && Math.hypot(k.x - d.x, k.y - d.y) < 22 && k.slowT < .3) { k.slowT = .3; k.slowE = d.e; } }); return d.t > 0; });
     S.coatis = S.coatis.filter(c => { c.t -= dt; c.i += (c.ball ? 1000 : c.flip ? 1150 : 560) / 6 * dt; const tl = c.tgt ? c.tgt.lat : c.l; c.l += clamp(tl - c.l, -90 * dt, 90 * dt);
       if (c.tgt && c.i > c.tgt.idx + (c.tgt.lap - c.by.lap) * N - 4) { c.x += (c.tgt.x - c.x) * Math.min(1, dt * 8); c.y += (c.tgt.y - c.y) * Math.min(1, dt * 8); } else [c.x, c.y] = at(c.i, c.l);
-      const v = ks.find(k => k !== c.by && ground(k) && Math.hypot(k.x - c.x, k.y - c.y) < 26); if (v) { hit(v, c.ball ? 'ball' : c.coco ? 'coco' : c.tro ? 'trolley' : c.flip ? 'flip' : c.cai ? 'caiman' : 'coati'); return false; }
+      const v = ks.find(k => k !== c.by && ground(k) && Math.hypot(k.x - c.x, k.y - c.y) < 26); if (v) { hitBy(v, c.ball ? 'ball' : c.coco ? 'coco' : c.tro ? 'trolley' : c.flip ? 'flip' : c.cai ? 'caiman' : 'coati', c.by); return false; }
       // Kokos-Trio (kreisend) und Bananen (hinten) fangen Geschosse ab und verbrauchen dabei eins
       const gd = ks.find(k => k !== c.by && !k.remote && k.item && (k.item.orb || k.item.trail) && k.roll <= 0 && Math.hypot(k.x - c.x, k.y - c.y) < 46);
       if (gd) { const e0 = gd.item.e; gd.icnt = icnt(gd) - 1; if (gd.icnt <= 0) { gd.item = null; gd.icntFor = null; } floatTxt(gd, e0 + ' abgewehrt!', '#7fd3ff'); for (let j = 0; j < 8; j++) S.sp.push({x: c.x, y: c.y, vx: rnd(-120, 120), vy: rnd(-120, 120), t: 0, c: '#fff6c0'}); return false; }
       return c.t > 0; });
     // Kokos-Trio kreist um den Fahrer und rammt Gegner im Vorbeifahren
     ks.forEach(k => { if (k.remote || !k.item || !k.item.orb || k.roll > 0 || k.fall > 0) return; const n = icnt(k); for (let j = 0; j < n; j++) { const an = S.t * 5 + j * TAU / n, ox = k.x + Math.cos(an) * 34, oy = k.y + Math.sin(an) * 34;
-      const v = ks.find(o => o !== k && ground(o) && o.spin <= 0 && o.inv <= 0 && Math.hypot(o.x - ox, o.y - oy) < 20); if (v) { hit(v, 'coco'); k.icnt = n - 1; if (k.icnt <= 0) { k.item = null; k.icntFor = null; } break; } } });
+      const v = ks.find(o => o !== k && ground(o) && o.spin <= 0 && o.inv <= 0 && Math.hypot(o.x - ox, o.y - oy) < 20); if (v) { hitBy(v, 'coco', k); k.icnt = n - 1; if (k.icnt <= 0) { k.item = null; k.icntFor = null; } break; } } });
     // Querläufer (Verkäufer, Nasenbären, Kaimane, Pferdekutsche, Hund)
     S.movers.forEach(m => { m.l += m.dir * m.speed * dt; if (Math.abs(m.l) > m.range) { m.dir *= -1; m.l = clamp(m.l, -m.range, m.range); } [m.x, m.y] = at(m.i, m.l);
       m.say = m.say > 0 ? m.say - dt : (Math.random() < dt * .2 ? 2 : 0);
@@ -8986,7 +8993,7 @@ setGroup(G);
       if (bh && pk - progress(bh) < N) rows.push(['▼ ' + NAME(bh.who || bh.id), '−' + ((pk - progress(bh)) * 6 / v).toFixed(1) + ' s', '#9dffb4']);
       const gg = S.ghost ? ghostGap(pk) : null; if (gg !== null) rows.push(['👻 Geist', (gg > 0 ? '+' : '−') + Math.abs(gg).toFixed(1) + ' s', gg > 0 ? '#ff9a8a' : '#9dffb4']);
       ctx.font = '700 11px system-ui,sans-serif'; ctx.textBaseline = 'top'; ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 4;
-      rows.forEach((r, i) => { const y = top + 50 + mh + 12 + i * 15; ctx.textAlign = 'left'; ctx.fillStyle = '#fff'; ctx.fillText(r[0], 10, y, 62); ctx.textAlign = 'right'; ctx.fillStyle = r[2]; ctx.fillText(r[1], 108, y); }); ctx.shadowBlur = 0; ctx.textAlign = 'center'; }
+      rows.forEach((r, i) => { const y = top + 50 + mh + 12 + i * 15; ctx.textAlign = 'left'; ctx.fillStyle = '#fff'; let t0 = r[0]; while (t0.length > 4 && ctx.measureText(t0).width > 64) t0 = t0.slice(0, -2) + '…'; ctx.fillText(t0, 10, y); ctx.textAlign = 'right'; ctx.fillStyle = r[2]; ctx.fillText(r[1], 108, y); }); ctx.shadowBlur = 0; ctx.textAlign = 'center'; }
     if (S.live && S.liveWait > 0) { ctx.font = '800 16px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = '#fff'; ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 6; ctx.fillText('⏳ Warte auf die anderen … ' + Math.ceil(30 - S.liveWait) + ' s', W / 2, H * .25); ctx.shadowBlur = 0; }
     // Fahrschule: Aufgabe oben einblenden
     if (S.tut) { const st = TUT[Math.min(S.tut.i, TUT.length - 1)], fresh = performance.now() - S.tut.ok < 900; ctx.save(); const bw = Math.min(W - 24, 420), bx = (W - bw) / 2, by = H - (W > H ? 180 : 250);
@@ -9006,6 +9013,9 @@ setGroup(G);
       const wl = (VTXT2[ps.id] || {}).win; if (wl) { ctx.font = '700 16px system-ui,sans-serif'; ctx.fillStyle = '#fff'; ctx.fillText('„' + wl + '“', W / 2, H * .42 + hs * .7 + 36, W - 30); }
       ctx.shadowBlur = 0; ctx.restore(); }
     // Zwischenzeit-Meldung
+    if (S.tdMsg && performance.now() < S.tdMsg.until) { const m = S.tdMsg, left = m.until - performance.now(), age = 1700 - left, sc = 1 + Math.max(0, 1 - age / 160) * .6; ctx.save(); ctx.globalAlpha = clamp(left / 350, 0, 1); ctx.translate(W / 2, H * .38); ctx.scale(sc, sc); ctx.rotate(-.05);
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = 'italic 900 30px system-ui,sans-serif'; ctx.lineWidth = 6; ctx.strokeStyle = 'rgba(40,0,0,.85)'; ctx.strokeText(m.t, 0, 0, W - 30); ctx.fillStyle = '#ff3b3b'; ctx.fillText(m.t, 0, 0, W - 30);
+      ctx.font = '700 13px system-ui,sans-serif'; ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(0,0,0,.8)'; ctx.strokeText(m.sub, 0, 30, W - 30); ctx.fillStyle = '#ffe3e3'; ctx.fillText(m.sub, 0, 30, W - 30); ctx.restore(); }
     if (S.secMsg && performance.now() < S.secMsg.until) { const m = S.secMsg; ctx.globalAlpha = clamp((m.until - performance.now()) / 400, 0, 1); ctx.font = '800 14px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 6;
       ctx.fillStyle = '#fff'; ctx.fillText('⏱ ' + m.t + (m.d !== null ? '  ' : ''), W / 2 - (m.d !== null ? 30 : 0), top + 232); if (m.d !== null) { ctx.fillStyle = m.d <= 0 ? '#5dff8a' : '#ff8a8a'; ctx.textAlign = 'left'; ctx.fillText((m.d <= 0 ? '−' : '+') + Math.abs(m.d).toFixed(2), W / 2 + ctx.measureText('⏱ ' + m.t).width / 2 - 20, top + 232); } ctx.shadowBlur = 0; ctx.globalAlpha = 1; }
     ctx.restore();
@@ -9035,17 +9045,18 @@ setGroup(G);
     if (PERF.t < 4) return; const avg = PERF.acc / PERF.n; PERF.acc = PERF.n = PERF.t = 0;
     if (avg > 1 / 40) { SET.q--; SET.qAuto = 1; saveSet(); resize(); setTxt(); toast('⚙️ Grafik automatisch auf <b>' + ['Niedrig', 'Normal', 'Hoch'][SET.q] + '</b> gestellt, damit es flüssig läuft.'); if (SET.q === 0) PERF.done = true; } }
   function loop(ts) { raf = requestAnimationFrame(loop); const raw = (ts - (last || ts)) / 1000; let dt = Math.min(.05, raw); last = ts; if (!S) return; if (raw > 0 && raw < .5) perfCheck(raw);
-    if (S.fw.length) { S.fw.forEach(p => { p.t += dt; }); S.fw = S.fw.filter(p => p.t < 1.5); }
+    if (S.fw.length) { S.fw.forEach(p => { p.t += dt; }); S.fw = S.fw.filter(p => p.t < 1.5); if (S.fw.length > 700) S.fw.splice(0, S.fw.length - 700); }
     if (!S.paused) { if (S.slow > 0) { S.slow -= dt; dt *= .3; } step(dt); } musTick(); draw(); }
   const headCv = (id, n) => { const c = document.createElement('canvas'); c.width = c.height = n || 64; c.getContext('2d').drawImage(HEAD[id], 0, 0, c.width, c.height); return c; };
   function finish() {
     if (S.live && S.pose) { const wk = S.karts.find(o => o.id === S.pose.id); if (wk) voice(wk, 'win', 1); }
     const ks = S.karts; ks.forEach(k => { if (!k.done) k.est = k.out ? 1e6 : S.t + (LAPS * N - progress(k)) * 6 / (VMAX * .9); });
-    const order = ks.slice().sort((a, b) => (a.done || a.est) - (b.done || b.est)), mine = ks[0], bkey = T.id + (RULE ? '@' + RULE.k : ''), b = best(), prev = b[bkey], rec = !prev || mine.done * 1000 < prev, ms = Math.round(mine.done * 1000);
+    const order = ks.slice().sort((a, b) => (a.done || a.est) - (b.done || b.est)), mine = ks[0], bkey = T.id + (RULE ? '@' + RULE.k : ''), b = best(), prev = b[bkey], ok = !!mine.done && mine.done > 15 && !mine.out, rec = ok && (!prev || mine.done * 1000 < prev), ms = Math.round((mine.done || 0) * 1000);   /* nie eine unmögliche Zeit (abgebrochen/Test) speichern */
     if (rec) { b[bkey] = ms; store.set('kartBest', JSON.stringify(b)); if (!RULE) try { localStorage.setItem('br26.kartGhost.' + T.id, JSON.stringify({ms, drv: me, g: S.rec})); } catch (e) {} }
     // Crew-Bestenliste / Tages-Challenge (nur mit Schreibrecht)
     let crewMsg = ''; PEND = null;
     if (TUTON) { TUTON = false; if (!store.get('kartTutDone')) { store.set('kartTutDone', '1'); addCoins(20); setTimeout(() => toast('🎓 <b>Fahrschule bestanden!</b><br>+20 🪙'), 600); } }
+    else if (!ok) { /* abgebrochen: nichts eintragen */ }
     else if (!RULE) { const top = lbList(LB, T.id)[0], mineLB = LB[T.id + '__' + player()];
       if (WR && DB) { const pd = {kind: 'best', track: T.id, drv: me, veh: vehOf(me), ms, g: S.rec}; if (ME) saveLB(pd); else PEND = pd; }
       crewMsg = !top || ms < top.ms ? (WR ? '👑 Neuer Crew-Rekord auf ' + T.name + '!' : '👑 Schneller als der Crew-Rekord, aber nur eingeladene Bearbeiter kommen in die Bestenliste.') : '🏆 Crew-Rekord: ' + NAME(top.who) + ' ' + fmt(top.ms); }
@@ -9089,13 +9100,32 @@ setGroup(G);
     if (TUTON || order.length < 2) { res.hidden = false; return; }
     // Siegerehrung auf der Strecke: Podest, Sekt, Konfetti, Hymne des Siegers, der Letzte hält den Eimer; antippen = überspringen
     const nm = o => o.me ? (S.live ? NAME(ME || me) : NAME(o.id)) : NAME(o.who || o.id);
-    S.pose = null; S.pod = {t0: performance.now(), top: order.slice(0, 3).map(o => ({id: o.id, n: nm(o), me: !!o.me})), last: order.length > 3 ? {id: order[order.length - 1].id, n: nm(order[order.length - 1]), me: !!order[order.length - 1].me} : null, p: [], cf: []};
+    S.pose = null; S.pod = {t0: performance.now(), top: order.slice(0, 3).map(o => ({id: o.id, n: nm(o), me: !!o.me})), last: order.length > 3 ? {id: order[order.length - 1].id, n: nm(order[order.length - 1]), me: !!order[order.length - 1].me, roast: roastOf(nm(order[order.length - 1]))} : null, p: [], cf: []};
     for (let j = 0; j < 90; j++) S.pod.cf.push({x: Math.random(), y: -Math.random() * .6, v: .12 + Math.random() * .2, r: Math.random() * TAU, c: ['#ffd23f', '#5fe783', '#ff5a8a', '#5ec8ff', '#fff'][j % 5]});
     SFX.fanfare(); setTimeout(() => { real('applause', .7); hymn(order[0].id); }, 700);
     clearTimeout(podT); podT = setTimeout(podEnd, 6500);
   }
   let podT = 0;
   function podEnd() { clearTimeout(podT); if (!S || !S.pod) return; S.pod = null; res.hidden = false; }
+  // Schwarzhumorige Nachrufe für den Letzten (Wunsch Patrick: so schwarz wie möglich)
+  const ROAST = ['Die Familie von {n} wurde bereits informiert.', '{n} hält den Kotzeimer. Für immer.', 'Der Leichenwagen war schneller als {n}.', '{n} wird im Testament nicht mehr erwähnt.',
+    'Für {n} wird eine Schweigeminute eingelegt. Mehr ist es nicht wert.', '{n} hat die Rente vor dem Ziel erreicht.', 'Sogar der Kaiman hatte Mitleid mit {n}. Und der frisst Kinder.',
+    '{n} fährt wie er lebt: ohne Ziel und ohne Hoffnung.', 'Organspender-Ausweis für {n} wäre jetzt eine gute Idee.', 'Der Bestatter hat {n} schon mal vermessen.',
+    '{n}: Selbst die Schnecke im Hostel ist enttäuscht.', 'Die Crew hat für {n} gesammelt. Für den Sarg.', '{n} wurde vom Pfarrer überholt. Auf dem Weg zur eigenen Beerdigung.',
+    'Wenn {n} so weiterfährt, reicht ein Urnengrab.', 'Mama von {n} schaut zu. Und weint.', '{n} muss die nächste Runde zahlen. Und die Beerdigung.'];
+  // Schwarzhumorige Untertitel in der Fahrer-Vorschau (Wunsch Patrick: Ansage nur der Name wie bei Smash, Witz als Text)
+  const TAGS = {jonas: 'Rechnet nach jedem Unfall sofort ab. Auch mit den Hinterbliebenen.', simon: 'Leuchtet im Dunkeln. Sonnenbrand Stufe Hautkrebs.',
+    patrick: 'Fährt jedes Rennen, als wäre es sein letztes. Statistisch gesehen bald richtig.', marco: 'Schwächster Fahrer im Feld. Hat trotzdem einen Führerschein. Keiner weiß, wie.',
+    greisel: 'Promille sind auch nur Zahlen. Die Leber sieht das anders.', dajo: 'Bringt Snacks mit. Notfalls für den Leichenschmaus.',
+    simon_love: 'Hat sein Herz verloren. Und das Portemonnaie. Und 400 Euro.', patrick_fat: 'Zwölf Spieße Picanha. Der Defibrillator fährt mit.',
+    marco_dia: 'Bremsspuren garantiert. Nicht nur auf der Straße.', jonas_kater: 'Fährt mit Restalkohol von vorgestern. Und gestern.',
+    greisel_wb: 'Die Leber hat bereits gekündigt. Fristlos.', dajo_party: 'Seit drei Tagen wach. Was soll schon passieren?',
+    taxi: 'Hat noch keinen Fahrgast lebend abgeliefert. Fast keinen.', coati: 'Tollwut nicht ausgeschlossen. Eher wahrscheinlich.',
+    officer: 'Hat schon Omas wegen Nagelfeilen in Handschellen gelegt.', dona: 'Hat drei Ehemänner überlebt. Du bist Nummer vier.',
+    guide: 'Bringt jeden Touristen zurück. Meistens am Stück.', steward: 'Die Notausgänge befinden sich … ach, egal.',
+    caimanx: 'Hat den letzten Guide gefressen. Und dessen Fischerhut.', manuel: 'Kommt nicht an die Pedale. Fährt trotzdem. Gott steh uns bei.',
+    erich: 'Hat seit 1987 nicht mehr gelächelt. Und fängt jetzt nicht damit an.', rasmus: 'Organisiert auch deine Trauerfeier. Mit Polonaise und Freibier.'};
+  const roastOf = n => pick(ROAST).replace(/\{n\}/g, n);
   function podDraw() { const P0 = S.pod, el = (performance.now() - P0.t0) / 1000, cx = W / 2, base = H * .66, bw = Math.min(110, W * .26);
     ctx.save(); const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, 'rgba(6,20,48,.92)'); g.addColorStop(1, 'rgba(40,10,60,.92)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
     for (let j = 0; j < 3; j++) { const a = -Math.PI / 2 + Math.sin(el * .8 + j * 2) * .5; ctx.fillStyle = 'rgba(255,240,180,.07)'; ctx.beginPath(); ctx.moveTo(cx + (j - 1) * W * .35, 0); ctx.lineTo(cx + Math.cos(a + .25) * H, H); ctx.lineTo(cx + Math.cos(a - .25) * H, H); ctx.fill(); }
@@ -9114,9 +9144,13 @@ setGroup(G);
     const dt0 = 1 / 60; P0.p = P0.p.filter(q => { q.t += dt0; q.x += q.vx * dt0; q.y += q.vy * dt0; q.vy += 700 * dt0; ctx.fillStyle = `rgba(255,248,200,${clamp(1.2 - q.t, 0, 1)})`; ctx.beginPath(); ctx.arc(q.x, q.y, 3, 0, TAU); ctx.fill(); return q.t < 1.2; });
     P0.cf.forEach(c => { c.y += c.v * dt0; c.r += dt0 * 4; if (c.y > 1.05) c.y = -.05; ctx.save(); ctx.translate(c.x * W + Math.sin(el * 2 + c.r) * 10, c.y * H); ctx.rotate(c.r); ctx.fillStyle = c.c; ctx.fillRect(-4, -2, 8, 4); ctx.restore(); });
     // Der Letzte steht mit dem Eimer daneben
-    if (P0.last && el > 1.4) { const x = W - 52, y = Math.min(H - 150, base + 150), img = headImg(P0.last.id), hs = 52; ctx.globalAlpha = clamp((el - 1.4) / .5, 0, 1); ctx.save(); ctx.translate(x, y); ctx.rotate(Math.sin(el * 2) * .12);
-      ctx.drawImage(img, -img.width / 2 * hs / 116, -40 - img.height / 2 * hs / 116, img.width * hs / 116, img.height * hs / 116); ctx.drawImage(E('🪣', 34), -17, 2, 34, 34); ctx.restore();
-      ctx.fillStyle = 'rgba(20,10,30,.72)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - 64, y + 38, 116, 32, 8) : ctx.rect(x - 64, y + 38, 116, 32); ctx.fill(); ctx.font = '700 11px system-ui,sans-serif'; ctx.fillStyle = '#ffb3b3'; ctx.fillText('Letzter: ' + P0.last.n, x - 6, y + 50, 110); ctx.fillText('hält den Kotzeimer', x - 6, y + 64, 110); ctx.globalAlpha = 1; }
+    // Der Letzte: eigene Leiste unten vor dem Podest (Kopf, Eimer, schwarzhumoriger Nachruf), überdeckt keinen Podestplatz
+    if (P0.last && el > 1.4) { const pw = Math.min(W - 24, 360), px = (W - pw) / 2, py = H - 132, img = headImg(P0.last.id), hs = 50; ctx.globalAlpha = clamp((el - 1.4) / .5, 0, 1);
+      ctx.fillStyle = 'rgba(14,6,22,.9)'; ctx.strokeStyle = 'rgba(255,120,120,.55)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px, py, pw, 70, 12) : ctx.rect(px, py, pw, 70); ctx.fill(); ctx.stroke();
+      ctx.save(); ctx.translate(px + 36, py + 35); ctx.rotate(Math.sin(el * 2) * .12); ctx.drawImage(img, -img.width / 2 * hs / 116, -img.height / 2 * hs / 116, img.width * hs / 116, img.height * hs / 116); ctx.restore(); ctx.drawImage(E('🪣', 26), px + 52, py + 38, 26, 26);
+      ctx.textAlign = 'left'; ctx.font = '800 12px system-ui,sans-serif'; ctx.fillStyle = '#ff9a9a'; ctx.fillText('🪦 LETZTER: ' + P0.last.n.toUpperCase(), px + 84, py + 22, pw - 94); ctx.font = 'italic 600 12px system-ui,sans-serif'; ctx.fillStyle = '#ffe3e3';
+      const rw = P0.last.roast.split(' '), lines = ['']; rw.forEach(w0 => { const t2 = (lines[lines.length - 1] + ' ' + w0).trim(); if (ctx.measureText(t2).width > pw - 96 && lines[lines.length - 1]) lines.push(w0); else lines[lines.length - 1] = t2; });
+      lines.slice(0, 2).forEach((l0, i) => ctx.fillText(l0, px + 84, py + 42 + i * 15, pw - 94)); ctx.textAlign = 'center'; ctx.globalAlpha = 1; }
     ctx.font = '700 13px system-ui,sans-serif'; ctx.fillStyle = `rgba(255,255,255,${.5 + .3 * Math.sin(el * 4)})`; ctx.fillText('Antippen zum Überspringen', cx, H - 40);
     ctx.restore(); }
   // Siegerehrung nach dem Grand Prix: Podest auf dem Canvas, Tabelle im Kasten
@@ -9263,7 +9297,7 @@ setGroup(G);
     menu.querySelectorAll('.kr-mode button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === MODE));
     const cs = CS[me], bar = v => '<i style="--v:' + Math.round(20 + clamp(v, 0, 1) * 80) + '%"></i>', sp = SPECIAL[me], pg = pegel(baseOf(me));
     const fresh = FSL !== me; FSL = me; const X0 = XBY[me], gl = X0 ? (X0.base ? 'Ausnahmezustand' : X0.guest ? 'Gastfahrer' : 'Serien-Figur') : 'Crew';
-    const dv = menu.querySelector('.kr-drv'), cosE = (COS.find(c => c.id === cosOf(me)) || {}).e; dv.innerHTML = '<div class="kr-fs' + (fresh ? ' in' : '') + '" style="--dc:' + ((LOOK[me] || {}).shirt || '#00a651') + '"><span class="kr-fsp"><span class="kr-dch"></span></span><div class="kr-fst"><small class="kr-fsg"><b>P1</b> ' + gl + '</small><p class="kr-dn' + (NAME(me).split(' ').some(w0 => w0.length > 9) ? ' kr-dnl' : '') + '">' + esc(NAME(me)) + '</p><p class="kr-fss">' + sp.e + ' ' + esc(sp.n) + (cosE && cosOf(me) ? ' · ' + cosE + ' Kostüm' : '') + '</p></div></div><div class="kr-dc2"><div class="kr-bars">' + BXK.map(k => '<button type="button" class="kr-bk" data-k="' + k + '" aria-pressed="' + (BX === k) + '"><span>' + BXT[k][0] + ' <u>ⓘ</u></span>' + bar(cs[k]) + '</button>').join('') + '</div>' +
+    const dv = menu.querySelector('.kr-drv'), cosE = (COS.find(c => c.id === cosOf(me)) || {}).e; dv.innerHTML = '<div class="kr-fs' + (fresh ? ' in' : '') + '" style="--dc:' + ((LOOK[me] || {}).shirt || '#00a651') + '"><span class="kr-fsp"><span class="kr-dch"></span></span><div class="kr-fst"><small class="kr-fsg"><b>P1</b> ' + gl + '</small><p class="kr-dn' + (NAME(me).split(' ').some(w0 => w0.length > 9) ? ' kr-dnl' : '') + '">' + esc(NAME(me)) + '</p><p class="kr-fss">' + sp.e + ' ' + esc(sp.n) + (cosE && cosOf(me) ? ' · ' + cosE + ' Kostüm' : '') + '</p>' + (TAGS[me] ? '<p class="kr-ftag">„' + esc(TAGS[me]) + '“</p>' : '') + '</div></div><div class="kr-dc2"><div class="kr-bars">' + BXK.map(k => '<button type="button" class="kr-bk" data-k="' + k + '" aria-pressed="' + (BX === k) + '"><span>' + BXT[k][0] + ' <u>ⓘ</u></span>' + bar(cs[k]) + '</button>').join('') + '</div>' +
       '<p class="kr-bx">' + (BX ? esc(BXT[BX][1]) + ' <b>' + esc(NAME(me)) + ': ' + (cs[BX] < .34 ? 'eher schwach' : cs[BX] < .67 ? 'mittel' : 'stark') + '.</b>' : 'Tipp auf einen Wert, dann steht hier, was er bewirkt.') + '</p>' +
       (XBY[me] ? '<p class="kr-sp kr-xd">' + esc(XBY[me].x) + '</p>' : '') + '<p class="kr-sp">' + sp.e + ' <b>' + esc(sp.n) + '</b>: ' + esc(sp.x) + '</p>' + ((PERS[me] || {}).x ? '<p class="kr-sp kr-pp">🤖 Als Gegner: ' + esc(PERS[me].x) + '</p>' : '') + (pg > 0 ? '<p class="kr-sp">🍹 Heute schon ' + ((MEHUB.drinks || {})[baseOf(me)] || {}).today + ' Drinks: Lenkung wackelt!</p>' : '') + '</div>'; dv.querySelector('.kr-dch').replaceWith(portrait(me, 300, 300, .8)); { const bars0 = dv.querySelector('.kr-dc2 .kr-bars'); if (bars0) dv.querySelector('.kr-fst').appendChild(bars0); } { const x2 = menu.querySelector('.kr-drvx'); if (x2) { x2.innerHTML = ''; const d2 = dv.querySelector('.kr-dc2'); d2.prepend(vehPreview(me)); x2.appendChild(d2); } }
     menu.querySelectorAll('.kr-diff button').forEach(x => x.setAttribute('aria-pressed', +x.dataset.d === DIFF));
