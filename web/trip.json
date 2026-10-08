@@ -5614,6 +5614,9 @@
         "model": "vits-piper-de_DE-eva_k-x_low",
         "pitch": 1.0,
         "speed": 0.95
+      },
+      "x_hero": {
+        "fx": "aecho=0.8:0.8:70|140:0.3|0.18,alimiter=limit=0.95"
       }
     },
     "parked": {
@@ -10796,6 +10799,160 @@
           "say": "Achtung, Rasmus ist da! Animator, sportlicher Leiter und Partychef in einer Person!",
           "text": "Achtung, Rasmus ist da! Animator, sportlicher Leiter und Partychef in einer Person!",
           "at": 0
+        },
+        {
+          "key": "h_jonas",
+          "who": "x_hero",
+          "say": "Der Herr der Rechnungen! Jonas!",
+          "text": "Der Herr der Rechnungen! Jonas!",
+          "at": 0
+        },
+        {
+          "key": "h_simon",
+          "who": "x_hero",
+          "say": "Der Mann, der leuchtet! Simon!",
+          "text": "Der Mann, der leuchtet! Simon!",
+          "at": 0
+        },
+        {
+          "key": "h_patrick",
+          "who": "x_hero",
+          "say": "Der Rollstuhl-Rebell! Patrick!",
+          "text": "Der Rollstuhl-Rebell! Patrick!",
+          "at": 0
+        },
+        {
+          "key": "h_marco",
+          "who": "x_hero",
+          "say": "Der König des Fernschusses! Marco!",
+          "text": "Der König des Fernschusses! Marco!",
+          "at": 0
+        },
+        {
+          "key": "h_greisel",
+          "who": "x_hero",
+          "say": "Die bayerische Legende! Greisel!",
+          "text": "Die bayerische Legende! Greisel!",
+          "at": 0
+        },
+        {
+          "key": "h_dajo",
+          "who": "x_hero",
+          "say": "Die Snack-Königin! Daijo!",
+          "text": "Die Snack-Königin! Daijo!",
+          "at": 0
+        },
+        {
+          "key": "h_simon_love",
+          "who": "x_hero",
+          "say": "Verliebt bis über beide Ohren! Simon!",
+          "text": "Verliebt bis über beide Ohren! Simon!",
+          "at": 0
+        },
+        {
+          "key": "h_patrick_fat",
+          "who": "x_hero",
+          "say": "Zwölf Spieße schwer! Patrick!",
+          "text": "Zwölf Spieße schwer! Patrick!",
+          "at": 0
+        },
+        {
+          "key": "h_marco_dia",
+          "who": "x_hero",
+          "say": "Er hat keine Zeit zu verlieren! Marco!",
+          "text": "Er hat keine Zeit zu verlieren! Marco!",
+          "at": 0
+        },
+        {
+          "key": "h_jonas_kater",
+          "who": "x_hero",
+          "say": "Auferstanden aus der Lodge-Bar! Jonas!",
+          "text": "Auferstanden aus der Lodge-Bar! Jonas!",
+          "at": 0
+        },
+        {
+          "key": "h_greisel_wb",
+          "who": "x_hero",
+          "say": "Mit Schaumkrone! Greisel!",
+          "text": "Mit Schaumkrone! Greisel!",
+          "at": 0
+        },
+        {
+          "key": "h_dajo_party",
+          "who": "x_hero",
+          "say": "Die Königin der Tanzfläche! Daijo!",
+          "text": "Die Königin der Tanzfläche! Daijo!",
+          "at": 0
+        },
+        {
+          "key": "h_taxi",
+          "who": "x_hero",
+          "say": "Der Schrecken von Rio! Der Taxifahrer!",
+          "text": "Der Schrecken von Rio! Der Taxifahrer!",
+          "at": 0
+        },
+        {
+          "key": "h_coati",
+          "who": "x_hero",
+          "say": "Der Erzfeind! Der Nasenbär!",
+          "text": "Der Erzfeind! Der Nasenbär!",
+          "at": 0
+        },
+        {
+          "key": "h_officer",
+          "who": "x_hero",
+          "say": "Niemand kommt an ihm vorbei! Der Kontrolleur!",
+          "text": "Niemand kommt an ihm vorbei! Der Kontrolleur!",
+          "at": 0
+        },
+        {
+          "key": "h_dona",
+          "who": "x_hero",
+          "say": "Die Herzensbrecherin der Ilha Grande! Dona Rosa!",
+          "text": "Die Herzensbrecherin der Ilha Grande! Dona Rosa!",
+          "at": 0
+        },
+        {
+          "key": "h_guide",
+          "who": "x_hero",
+          "say": "Der Herr des Dschungels! Der Guide!",
+          "text": "Der Herr des Dschungels! Der Guide!",
+          "at": 0
+        },
+        {
+          "key": "h_steward",
+          "who": "x_hero",
+          "say": "Bitte anschnallen! Die Flugbegleiterin!",
+          "text": "Bitte anschnallen! Die Flugbegleiterin!",
+          "at": 0
+        },
+        {
+          "key": "h_caimanx",
+          "who": "x_hero",
+          "say": "Aus den Tiefen des Amazonas! Der Kaiman!",
+          "text": "Aus den Tiefen des Amazonas! Der Kaiman!",
+          "at": 0
+        },
+        {
+          "key": "h_manuel",
+          "who": "x_hero",
+          "say": "Klein, aber gefährlich! Der Abzwickter!",
+          "text": "Klein, aber gefährlich! Der Abzwickter!",
+          "at": 0
+        },
+        {
+          "key": "h_erich",
+          "who": "x_hero",
+          "say": "Der Grantler aus Augsburg! Erich!",
+          "text": "Der Grantler aus Augsburg! Erich!",
+          "at": 0
+        },
+        {
+          "key": "h_rasmus",
+          "who": "x_hero",
+          "say": "Der Partykönig von Schwaben! Rasmus!",
+          "text": "Der Partykönig von Schwaben! Rasmus!",
+          "at": 0
         }
       ],
       "voice": {},
@@ -10866,6 +11023,10 @@
         ],
         "x_annc": [
           "Abrahan Mack",
+          "de"
+        ],
+        "x_hero": [
+          "Wulf Carlevaro",
           "de"
         ]
       },
@@ -10948,6 +11109,10 @@
         "x_annc": {
           "tempo": 1.1,
           "pitch": 1.0
+        },
+        "x_hero": {
+          "tempo": 1.0,
+          "pitch": 0.88
         }
       },
       "scenes": []

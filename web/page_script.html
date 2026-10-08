@@ -7781,7 +7781,7 @@ setGroup(G);
     if (loading || !AC) return; loading = true;
     const get = (u, k) => fetch(u).then(r => r.ok ? r.arrayBuffer() : Promise.reject()).then(b => new Promise((ok, no) => AC.decodeAudioData(b, ok, no))).then(d => { BUF[k] = d; }).catch(() => {});
     // zuerst nur Geräusche + Haupt-Ansager; die übrigen Stimmen-Pakete erst beim ersten Rennen nacheinander (lädt nicht alles auf einmal)
-    if (TRIP.sfx) get('audio/sfx.mp3', 'sfx'); if (TRIP.kartvo) get('audio/kart.mp3', 'ann'); BUF.more = () => { if (BUF.moreDone) return; BUF.moreDone = 1; let w = 0; const q = (u, k) => { w += 700; setTimeout(() => get(u, k), w); }; if (TRIP.kartvo) { const get = q; if (Object.values(TRIP.kartvo).some(v => v.f === 6)) get('audio/kart6.mp3', 'ann6'); if (Object.values(TRIP.kartvo).some(v => v.f === 2)) get('audio/kart2.mp3', 'ann2'); if (Object.values(TRIP.kartvo).some(v => v.f === 3)) get('audio/kart3.mp3', 'ann3'); if (Object.values(TRIP.kartvo).some(v => v.f === 4)) get('audio/kart4.mp3', 'ann4'); if (Object.values(TRIP.kartvo).some(v => v.f === 5)) get('audio/kart5.mp3', 'ann5'); } };
+    if (TRIP.sfx) get('audio/sfx.mp3', 'sfx'); if (TRIP.kartvo) get('audio/kart.mp3', 'ann'); if (TRIP.kartvo && Object.values(TRIP.kartvo).some(v => v.f === 7)) get('audio/kart7.mp3', 'ann7'); BUF.more = () => { if (BUF.moreDone) return; BUF.moreDone = 1; let w = 0; const q = (u, k) => { w += 700; setTimeout(() => get(u, k), w); }; if (TRIP.kartvo) { const get = q; if (Object.values(TRIP.kartvo).some(v => v.f === 6)) get('audio/kart6.mp3', 'ann6'); if (Object.values(TRIP.kartvo).some(v => v.f === 2)) get('audio/kart2.mp3', 'ann2'); if (Object.values(TRIP.kartvo).some(v => v.f === 3)) get('audio/kart3.mp3', 'ann3'); if (Object.values(TRIP.kartvo).some(v => v.f === 4)) get('audio/kart4.mp3', 'ann4'); if (Object.values(TRIP.kartvo).some(v => v.f === 5)) get('audio/kart5.mp3', 'ann5'); } };
   }
   function playBuf(buf, off, dur, vol, out) { const a = AC; if (!a || !buf) return false; const s = a.createBufferSource(), g = a.createGain(); s.buffer = buf; g.gain.value = vol; s.connect(g); g.connect(out || FXG); s.start(a.currentTime, off, dur); return true; }
   function real(name, vol) { const seg = TRIP.sfx && TRIP.sfx[name]; if (!seg || !BUF.sfx || !SOUND) return false; const [st, len, v] = pick(seg); return playBuf(BUF.sfx, st, len, (v || 1) * (vol || 1)); }
@@ -9210,7 +9210,12 @@ setGroup(G);
   let FSL = null, RSPIN = 0, WHOOPEN = false;
   function pickDrv(id) { const ch = me !== id; me = id; makeVehicles(); renderMenu(); newRace(); S.paused = true; if (ch) announce(me); }
   // Ansage des Fahrernamens wie im Prügelspiel (Handy-Stimme), Auswahl-Geräusch
+  // Ansage bei der Fahrerwahl wie bei Super Smash Bros (Wunsch Patrick 08.10.): je Figur Beiname + Name mit Hall, Aufnahme h_<id> in audio/kart7.mp3 (lädt beim Öffnen des Menüs)
+  let ANNSRC = null;
   function announce(id) { try { SFX.pick(); noise(.22, .08, 2400); beep(120, .35, 'sawtooth', .07, 50); } catch (e) {}
+    const hv = TRIP.kartvo && TRIP.kartvo['h_' + id], hb = hv && BUF['ann' + (hv.f > 1 ? hv.f : '')];
+    if (SOUND && ANN && hb && AC) { try { if (ANNSRC) ANNSRC.stop(); } catch (e) {} const s0 = AC.createBufferSource(), g = AC.createGain(); s0.buffer = hb; g.gain.value = 1.25; s0.connect(g); g.connect(FXG); s0.start(AC.currentTime + .12, hv.o / 1000, hv.dur / 1000 + .35); ANNSRC = s0;
+      if (MM.g) { MM.g.gain.setTargetAtTime(.2, AC.currentTime, .05); MM.g.gain.setTargetAtTime(.55, AC.currentTime + hv.dur / 1000 + .3, .4); } return; }
     if (!SOUND || !ANN || !window.speechSynthesis) return; try { const u = new SpeechSynthesisUtterance(NAME(id) + '!'); u.lang = 'de-DE'; u.rate = 1.05; u.pitch = .55; u.volume = 1; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {} }
   // Item-Anleitung im Menü: Kurztext + Mini-Animation aus CSS und Emojis (keine Bilder/Videos, kostet fast nichts)
   const GUIDE = [
