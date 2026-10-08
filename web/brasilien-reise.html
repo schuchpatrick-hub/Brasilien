@@ -401,9 +401,6 @@ header .today::before{opacity:.25}
   header>.hero-today{grid-column:2;grid-row:1 / span 4;align-self:end}
 }
 @media (max-width:420px){.hero-seg button{padding:6px 10px}.hero-seg button small{font-size:.64rem}}
-.guest-bar{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);transform:translateX(-50%);z-index:250;background:#1a1a1a;color:#fff;border-radius:999px;padding:8px 8px 8px 14px;font:600 .82rem var(--body);display:flex;gap:10px;align-items:center;box-shadow:0 6px 20px rgba(0,0,0,.3);white-space:nowrap;max-width:calc(100vw - 24px)}
-.guest-bar button{font:700 .78rem var(--body);background:var(--amarelo);color:#1a1a1a;border:0;border-radius:999px;padding:5px 12px;cursor:pointer}
-@media print{.guest-bar{display:none}}
 /* Plus/Minus-Felder, Tastenfeld, Rückgängig-Leiste, Nochmal */
 .stp{display:inline-flex;gap:4px;align-items:center;flex-wrap:wrap}
 .stp button{font:700 .82rem var(--body);min-width:36px;height:38px;padding:0 6px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);cursor:pointer;touch-action:manipulation}
@@ -2118,11 +2115,6 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
       <button type="button" id="pdf-btn" class="btn">PDF speichern</button>
       <p class="note">Falls der Button nicht geht: <a href="https://github.com/schuchpatrick-hub/Brasilien/blob/main/brasilien-reise.pdf" target="_blank" rel="noopener">PDF auf GitHub</a></p>
     </div>
-    <div class="dl" id="guest-box" hidden>
-      <h3>Gast-Ansicht</h3>
-      <p>Nur für dich sichtbar: Zeigt die Seite so, wie die anderen sie sehen (ohne Eintragen, Löschen und Bearbeiten). Gilt nur auf diesem Gerät.</p>
-      <button type="button" id="guest-btn" class="btn">👁 Als Gast ansehen</button>
-    </div>
     <div class="dl">
       <h3>Kalender fürs Handy</h3>
       <p>Alle Flüge, Unterkünfte und Termine als Kalenderdatei. Auf GitHub „Download raw file“ tippen und die Datei öffnen.</p>
@@ -2320,17 +2312,15 @@ function undoToast(text, undo) {
   undoTimer = setTimeout(() => { el.hidden = true; }, 9000);
 }
 
-/* Gast-Ansicht: der Admin sieht die Seite wie alle anderen (nur auf diesem Gerät, ändert keine Rechte) */
-const GUEST = store.get('guest') === '1';
+if (store.get('guest')) store.set('guest', '');   // Gast-Ansicht gibt es nicht mehr (alle sind Bearbeiter): alten Schalter auf dem Gerät löschen
 let canWriteP = null;
 function canWrite() {
   if (!canWriteP) canWriteP = (async () => {
     const user = await window.claude.use('user');
     const w = user ? await user.can('data.write') : null;
-    if (w !== false && !PRINT) showGuestSwitch();
-    if (w !== false && !GUEST && !PRINT) showFab();
-    if (w !== false && !GUEST) { netWriter = true; netPaint(); }
-    return GUEST ? false : w;
+    if (w !== false && !PRINT) showFab();
+    if (w !== false) { netWriter = true; netPaint(); }
+    return w;
   })();
   return canWriteP;
 }
@@ -2354,18 +2344,6 @@ function showFab() {
     const b = e.target.closest('[data-i]'); if (b) { toggle(false); items[+b.dataset.i][2](); }
   });
   document.addEventListener('click', e => { if (!menu.hidden && !wrap.contains(e.target)) toggle(false); });
-}
-function setGuest(on) { store.set('guest', on ? '1' : '0'); location.reload(); }
-function showGuestSwitch() {
-  const box = document.getElementById('guest-box'); if (box) box.hidden = false;
-  const b = document.getElementById('guest-btn');
-  if (b) { b.textContent = GUEST ? '🔑 Zurück zur Admin-Ansicht' : '👁 Als Gast ansehen'; b.onclick = () => setGuest(!GUEST); }
-  if (GUEST && !document.getElementById('guest-bar')) {
-    const bar = document.createElement('div'); bar.id = 'guest-bar'; bar.className = 'guest-bar';
-    bar.innerHTML = '👁 Gast-Ansicht <button type="button">Beenden</button>';
-    bar.querySelector('button').onclick = () => setGuest(false);
-    document.body.appendChild(bar);
-  }
 }
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 
@@ -4883,7 +4861,7 @@ function wavB64(buf) {
 
 /* ---------- Nachladen (Tempo): Samba-Show, Serie und Gringo Kart liegen in eigenen Dateien mods/<name>.js (build.py schneidet die
    Blöcke zwischen den @@MOD-Markierungen heraus). Geladen wird beim Hinscrollen, beim ersten Antippen oder im Leerlauf nach dem Start. ---------- */
-const MODV = {"samba": "973ac7128f", "serie": "ce5f8f2958", "kart": "7103406551"}, MODS = {};
+const MODV = {"samba": "973ac7128f", "serie": "ca5a0c1def", "kart": "7103406551"}, MODS = {};
 function loadMod(n) {
   if (!MODV[n]) return Promise.resolve(true);   // nicht getrennt gebaut: steckt schon in der Seite
   if (PRINT) return Promise.resolve(false);
