@@ -21,7 +21,7 @@ Reiseübersicht, die bei neuen Infos (Buchungen, Chat-Exporte, Screenshots) aktu
 | `IDEEN.md` | Ideen-Speicher: vorgemerkte Wünsche von Patrick (z. B. Strafen-Glücksrad) und Vorschläge; bei „mach X“ hier nachsehen |
 | `tools/build.py` | Baut `reisebild.svg`, `reisebild.png` und `web/brasilien-reise.html` neu |
 
-Generiert (nicht von Hand bearbeiten): `reisebild.svg`, `reisebild.png`, `web/brasilien-reise.html`,
+Generiert (nicht von Hand bearbeiten): `reisebild.svg`, `reisebild.png`, `web/brasilien-reise.html`, `web/mods/*.js` (privat: `web/private/mods/*.js`),
 `kalender/*.ics`, `brasilien-reise.pdf`.
 
 ## Aktualisieren
@@ -42,7 +42,7 @@ Die Webseite erst nach dem Merge neu veröffentlichen.
 4. Webseite neu veröffentlichen: Artifact-Publish von `web/private/brasilien-reise.html` (vollständige Fassung mit den privaten
    Porträts; nur wenn es sie nicht gibt, `web/brasilien-reise.html`) mit
    `url: https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE` (vorher `action: read`), damit der Link gleich bleibt,
-   und `files`: `brasilien-reise.pdf`, `audio/sfx.mp3`, alle `fotos/<name>.jpg` → `web/fotos/<name>.jpg`, plus alle `audio/<name>.mp3` → `web/audio/<name>.mp3` (Sprachführer). `capabilities` weglassen, dann bleiben
+   und `files`: `brasilien-reise.pdf`, **`mods/samba.js`, `mods/serie.js`, `mods/kart.js` → `web/private/mods/<name>.js`** (ohne sie fehlen Kino und Kart!), `audio/sfx.mp3`, alle `fotos/<name>.jpg` → `web/fotos/<name>.jpg`, plus alle `audio/<name>.mp3` → `web/audio/<name>.mp3` (Sprachführer). `capabilities` weglassen, dann bleiben
    `db`, `user`, `downloads` erhalten.
 5. „Stand“-Datum setzt `build.py` automatisch (Tag des Neubaus, README und Webseite `%%STAND%%`); committen, pushen.
 
@@ -377,6 +377,15 @@ Südost-Ausschnitt, Zeitzone Manaus und Pass-Hinweis Iguaçu direkt in `gen_map.
 GIG/SDU im Ausschnitt leicht versetzt neben Rio.
 
 ## Tempo und Bedienung
+
+- **Nachladen (seit 08.10.):** Samba-Show, Serie und Gringo Kart stehen weiter in `page_script.html`, aber zwischen Markierungen `/*@@MOD:<name>*/ … /*@@END*/`.
+  `build.py` (`script_of`) schneidet sie als `mods/<name>.js` heraus (Seite 1,6 MB → 0,7 MB; bei schwachem 3G sind die Reise-Infos nach ~4 s statt ~9 s da).
+  `TRIP.series` bleibt in der Seite nur als Steckbrief (`n`, `admin`, `portrait`, `title` je Folge/Porträt für Kino-Hinweis und Porträt-Knöpfe), die vollständigen Daten
+  hängen vorne an `mods/serie.js` (`Object.assign(TRIP.series, …)`). Lader `loadMod(name)` (Version `MODV` = Prüfsumme gegen alte Zwischenspeicher):
+  beim Hinscrollen (IntersectionObserver, 1500 px Vorlauf auf `#kino`/`#kartsec`), im Leerlauf (Kart nach 2,5 s, Filme nach 7 s) und beim ersten Antippen
+  in `#kino`, `#kartsec` oder auf `[data-port]` (Klick wird abgefangen, nach dem Laden wiederholt; `.mod-wait`). Module dürfen weiter alle globalen Namen der Seite
+  benutzen (gemeinsamer globaler Gültigkeitsbereich), aber die Seite darf nichts aus den Modulen direkt aufrufen (nur über `window.*` mit Prüfung oder `loadMod().then`).
+  Tests über `file://` gehen weiter (die Seite lädt `mods/` relativ), Live-Tests: `web/private/mods` mit in den Test-Server kopieren.
 
 - Kapitel außer Kopf und Karte haben `content-visibility:auto` (werden erst beim Hinscrollen gezeichnet). Vor programmatischem
   Springen `document.body.classList.add('cv-all')` setzen (macht `jump()` schon), sonst stimmt die Zielposition nicht.
