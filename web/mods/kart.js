@@ -81,13 +81,18 @@
     {id: 'erich', sh: 'Grantler', npc: 1, guest: 1, name: 'Erich', ann: 'Achtung, Erich ist am Start. Und er hat, wie immer, schlechte Laune!', e: '😠', ov: 'grump', col: '#b3202a', photo: 'crew/erich.jpg', face: {x: .5, y: .48, z: 1.05}, cs: {spd: .6, hdl: .45, acc: .25, tgh: 1.15}, m: 1.45,
       x: 'Gastfahrer: Betreuer von Schwaben Augsburg und damit Chef von Jonas, Greisel und Marco. Immer grantig, nie zufrieden. Kommt schwer in die Gänge, ist aber zäh wie Leder: Rempler prallen ab, und jeder Dreher macht ihn nur wütender (💢 Wut-Turbo danach).',
       sp: {k: 'grant', e: '📢', n: 'Kabinenpredigt', x: 'brüllt alle in der Nähe zusammen: gebremst, Lenkung zittert; seine eigenen Spieler (Jonas, Greisel, Marco) kuschen extra lang'},
-      l: ['Des isch doch koi Rennfahrer!', 'Früher hätt’s des ned gebe!', 'Wer hat die Trinkflaschen liegen lassen?!', 'Schleich di, du Bagasch!', 'I sag nix mehr …', 'Ihr Weicheier!', 'Die Leibchen wäsch i ned nomal!', 'Mir doch wurscht!', 'Hört eh koiner auf mi!', 'Jonas, Greisel, Marco: Hopp jetzt!']}];
+      l: ['Des isch doch koi Rennfahrer!', 'Früher hätt’s des ned gebe!', 'Wer hat die Trinkflaschen liegen lassen?!', 'Schleich di, du Bagasch!', 'I sag nix mehr …', 'Ihr Weicheier!', 'Die Leibchen wäsch i ned nomal!', 'Mir doch wurscht!', 'Hört eh koiner auf mi!', 'Jonas, Greisel, Marco: Hopp jetzt!']},
+    // Gastfahrer Rasmus: Animator, sportlicher Leiter und Partyorganisator von Schwaben Augsburg, Mitspieler von Jonas, Greisel und Marco; Hippie-Frisur
+    {id: 'rasmus', sh: 'Animator', npc: 1, guest: 1, name: 'Rasmus', ann: 'Achtung, Rasmus ist da! Animator, sportlicher Leiter und Partychef in einer Person!', e: '🎉', ov: 'hippie', col: '#5b2a86', photo: 'crew/rasmus.jpg', face: {x: .5, y: .5, z: 1.05}, cs: {spd: .8, hdl: .75, acc: .9, tgh: .5}, m: 1.1,
+      x: 'Gastfahrer: Animator, sportlicher Leiter und Partyorganisator von Schwaben Augsburg, spielt mit Jonas, Greisel und Marco. Lässige Hippie-Frisur, fährt im bunten Bulli. Rundum stark, nirgends überragend, und wo er ist, ist Party.',
+      sp: {k: 'polo', e: '💃', n: 'Polonaise', x: 'alle in der Nähe müssen mittanzen (gebremst), seine Mitspieler Jonas, Greisel und Marco tanzen mit Turbo mit, er selbst gibt Gas'},
+      l: ['Auf geht’s, Party!', 'Training um sieben, Party um acht!', 'Mannschaftsabend ist Pflicht!', 'Alle Mann: Polonaise!', 'Locker bleiben, Jungs!', 'Wer kommt mit zum Feiern?', 'Erich, lach doch mal!', 'Peace, Bruder!', 'Ich hab schon den Tisch reserviert!']}];
   const XBY = {}; XDRV.forEach(x => { XBY[x.id] = x; });
   const baseOf = id => (XBY[id] && XBY[id].base) || id, isNpc = id => !!(XBY[id] && XBY[id].npc);
   const DRVS = CREW.map(c => c.id).concat(XDRV.map(x => x.id));
   XDRV.forEach(x => { const b = x.base;
     CS[x.id] = x.cs ? Object.assign({}, x.cs) : Object.fromEntries(Object.entries(CS[b] || {spd: .5, hdl: .5, acc: .5, tgh: .5}).map(([k, v]) => [k, clamp(v + ((x.d || {})[k] || 0), -.5, 1.5)]));
-    SPECIAL[x.id] = x.sp; LINES[x.id] = x.l; PERS[x.id] = b ? PERS[b] : Object.assign({}, PERS0, x.id === 'guide' ? {line: 1.3, care: 1.4} : x.id === 'taxi' ? {line: .85, care: .7, ram: 1} : x.id === 'manuel' ? {line: 1.2, care: .8} : x.id === 'erich' ? {line: 1, care: .6, brake: 1.1, ram: 1, x: 'rammt aus Prinzip, weicht keinem aus und schimpft dabei'} : {});
+    SPECIAL[x.id] = x.sp; LINES[x.id] = x.l; PERS[x.id] = b ? PERS[b] : Object.assign({}, PERS0, x.id === 'guide' ? {line: 1.3, care: 1.4} : x.id === 'taxi' ? {line: .85, care: .7, ram: 1} : x.id === 'manuel' ? {line: 1.2, care: .8} : x.id === 'erich' ? {line: 1, care: .6, brake: 1.1, ram: 1, x: 'rammt aus Prinzip, weicht keinem aus und schimpft dabei'} : x.id === 'rasmus' ? {line: 1.1, care: 1.1, item: .8, x: 'fährt locker und sauber und hebt die Polonaise für den richtigen Moment auf'} : {});
     LOOK[x.id] = Object.assign({}, b ? LOOK[b] : {}, {shirt: x.col}); });
 
   /* ---- Strecken ----
@@ -392,11 +397,11 @@
   /* ---- Fahrer: Kopf- und Fahrzeug-Sprites ---- */
   // Jede Figur mit eigenem Fahrzeug, eigener Kopfform und Größe (Wunsch Patrick 08.10.): k = Fahrzeug-Stil (nur beim Gringo-Kart), shp = Kopfform,
   // vs = Fahrzeug-Größe (auch Zusammenstöße), hs = Kopfgröße, seat = Lenkrad (wheel), Lenker (bar) oder ohne Körper (none)
-  const STY = {manuel: {k: 'buggy', shp: 'egg', vs: .74, hs: .8, seat: 'wheel'}, erich: {k: 'boller', shp: 'squircle', vs: 1.08, hs: 1.02, seat: 'wheel'}, jonas: {k: 'f1', shp: 'squircle'}, simon: {k: 'buggy', shp: 'oval'}, patrick: {k: 'kart', shp: 'egg', hs: 1.06}, marco: {k: 'f1', shp: 'shield'}, greisel: {k: 'buggy', shp: 'hex', hs: 1.08, vs: 1.05}, dajo: {k: 'kart', shp: 'circle', hs: .95},
+  const STY = {manuel: {k: 'buggy', shp: 'egg', vs: .74, hs: .8, seat: 'wheel'}, erich: {k: 'boller', shp: 'squircle', vs: 1.08, hs: 1.02, seat: 'wheel'}, rasmus: {k: 'bulli', shp: 'oval', vs: 1.12, hs: 1.02, seat: 'wheel'}, jonas: {k: 'f1', shp: 'squircle'}, simon: {k: 'buggy', shp: 'oval'}, patrick: {k: 'kart', shp: 'egg', hs: 1.06}, marco: {k: 'f1', shp: 'shield'}, greisel: {k: 'buggy', shp: 'hex', hs: 1.08, vs: 1.05}, dajo: {k: 'kart', shp: 'circle', hs: .95},
     simon_love: {k: 'bed', shp: 'heart', vs: 1.05}, patrick_fat: {k: 'sofa', shp: 'wide', vs: 1.22, hs: 1.25, fat: 1}, marco_dia: {k: 'toilet', shp: 'blob'}, jonas_kater: {k: 'tub', shp: 'squircle', hs: .95}, greisel_wb: {k: 'keg', shp: 'mug', vs: 1.08, hs: 1.1}, dajo_party: {k: 'disco', shp: 'star', hs: 1.05},
     taxi: {k: 'taxi', vs: 1.12, skin: '#a8704a'}, coati: {k: 'skate', vs: .8, hs: .9, seat: 'none'}, officer: {k: 'police', vs: 1.1}, dona: {k: 'scooter', vs: .92, seat: 'bar', skin: '#b98060'}, guide: {k: 'jeep', vs: 1.1, skin: '#c08a5a'}, steward: {k: 'trolley', vs: .95, seat: 'bar'}, caimanx: {k: 'gator', vs: 1.28, hs: 1.1, seat: 'none'}};
   const STYK = id => { const st = STY[id]; return st && st.k !== 'kart' ? st.k : null; }, KLIKE = {f1: 1, buggy: 1};
-  const STN = {f1: 'Formel-Kart', buggy: 'Strand-Buggy', bed: 'Liebesbett', sofa: 'Couch-Kart', toilet: 'Klo-Rakete', tub: 'Badewanne', keg: 'Bierfass', disco: 'Disco-Mobil', taxi: 'Taxi', skate: 'Skateboard', police: 'Streifenwagen', scooter: 'Seniorenmobil', jeep: 'Safari-Jeep', trolley: 'Servierwagen', gator: 'Kaiman', boller: 'Betreuer-Bollerwagen'};
+  const STN = {f1: 'Formel-Kart', buggy: 'Strand-Buggy', bed: 'Liebesbett', sofa: 'Couch-Kart', toilet: 'Klo-Rakete', tub: 'Badewanne', keg: 'Bierfass', disco: 'Disco-Mobil', taxi: 'Taxi', skate: 'Skateboard', police: 'Streifenwagen', scooter: 'Seniorenmobil', jeep: 'Safari-Jeep', trolley: 'Servierwagen', gator: 'Kaiman', boller: 'Betreuer-Bollerwagen', bulli: 'Hippie-Bulli'};
   const FWS = {f1: [[-15, -20], [15, -20]]}, HSET = () => [.75, 1, 1.5][SET.hd === undefined ? 1 : SET.hd];
   function shapePath(x, sh, R) { x.beginPath();
     if (sh === 'oval') x.ellipse(0, 0, R * .84, R, 0, 0, TAU);
@@ -453,6 +458,10 @@
       rr(-12, -24, 11, 15, 1.5); fill(col); rr(1, -24, 11, 15, 1.5); fill(col); [-21, -16.5, -12].forEach(b => [-9.5, -4, 3.5, 9].forEach(a => dot(a, b, 1.5, '#5aa34a')));
       rr(2, 13, 11, 9, 2); fill('#fff'); x.fillStyle = '#d62828'; x.fillRect(6.6, 14.2, 1.8, 6.6); x.fillRect(4.2, 16.6, 6.6, 1.8);
       x.strokeStyle = '#333'; x.lineWidth = 2.2; x.beginPath(); x.moveTo(0, -26); x.lineTo(0, -29.5); x.moveTo(-5, -29.5); x.lineTo(5, -29.5); x.stroke(); x.lineWidth = 1.6; x.strokeStyle = 'rgba(0,0,0,.55)'; }
+    else if (kd === 'bulli') { [[-18, -21], [12, -21], [-18, 11], [12, 11]].forEach(([a, b]) => wh(a, b, 6, 12)); rr(-15, -29, 30, 58, 9); fill(col); rr(-13, -27, 26, 22, 7); fill('#f4ecd8');
+      x.fillStyle = 'rgba(160,210,255,.9)'; rr(-11, -25, 22, 7, 3); x.fill(); x.strokeStyle = '#f4ecd8'; x.lineWidth = 2; x.beginPath(); x.moveTo(-15, -5); x.lineTo(0, 4); x.lineTo(15, -5); x.stroke(); x.lineWidth = 1.6; x.strokeStyle = 'rgba(0,0,0,.55)';
+      [[-8, 10, '#ffd23f'], [7, 16, '#ff5fa2'], [-5, 22, '#7cff6b'], [8, 4, '#22c3c9']].forEach(([a, b, c]) => { for (let q = 0; q < 5; q++) dot(a + Math.cos(q * TAU / 5) * 2.6, b + Math.sin(q * TAU / 5) * 2.6, 1.9, c); dot(a, b, 1.4, '#fff'); });
+      x.strokeStyle = '#fff'; x.lineWidth = 1.2; x.beginPath(); x.arc(0, -15, 4.2, 0, TAU); x.moveTo(0, -19.2); x.lineTo(0, -10.8); x.moveTo(0, -15); x.lineTo(-3, -12); x.moveTo(0, -15); x.lineTo(3, -12); x.stroke(); x.lineWidth = 1.6; x.strokeStyle = 'rgba(0,0,0,.55)'; }
     else return false; return true; }
   const HEAD = {}, VEH = {};
   // Kart-Foto einer Person: alt = Zustands-Figur; crew[].swap2 vertauscht im Kart erstes und zweites Foto (Steckbrief/Shows bleiben beim ersten)
@@ -495,7 +504,8 @@
       if (X.ov === 'hang') { em('🕶️', 52, 0, -R * .12); em('💫', 22, R * .7, -R * .75); }
       if (X.ov === 'foam') { x.fillStyle = '#fffaf0'; [[-.6, -.85, .32], [-.15, -.98, .36], [.35, -.92, .34], [.7, -.8, .26]].forEach(([a, b, r]) => { x.beginPath(); x.arc(a * R, b * R, r * R, 0, TAU); x.fill(); }); }
       if (X.ov === 'disco') { em('🪩', 28, R * .66, -R * .66); }
-      if (X.ov === 'grump') { em('💢', 30, R * .7, -R * .7); em('💨', 20, -R * .78, -R * .5, .3); } };
+      if (X.ov === 'grump') { em('💢', 30, R * .7, -R * .7); em('💨', 20, -R * .78, -R * .5, .3); }
+      if (X.ov === 'hippie') { em('🌼', 24, -R * .62, -R * .78, -.3); em('✌️', 24, R * .74, -R * .62, .2); } };
     const c = into || sprite(W0, W0, () => {}); draw(c.getContext('2d')); return c; }
   const FW = {kart: [[-14, -13], [14, -13]], gold: [[-14, -13], [14, -13]], uber: [[-14, -13], [14, -13]], uno: [[-14, -13], [14, -13]], cart: [[-16, -10], [16, -10]]};
   const vehOf = id => T.veh === 'boat' || T.veh === 'cart' ? T.veh : (id === me ? myVeh() : 'kart');
@@ -1252,6 +1262,9 @@
     if (it.k === 'trolley') { S.coatis.push({i: k.idx + 5, l: k.lat, tgt: null, t: 3.6, by: k, x: k.x, y: k.y, flip: 1, tro: 1}); SFX.throw(); }
     if (it.k === 'grant') { nearK(340).forEach(o => { if (shielded(o)) return; const own = ['jonas', 'greisel', 'marco'].includes(baseOf(o.id)); o.slowT = own ? 2.2 : 1.4; o.slowE = '💢'; o.parrot = Math.max(o.parrot || 0, own ? 1.4 : .8);
       o.say = own ? pick(['Ja, Erich …', 'Sorry, Erich!', 'Wir laufen ja schon!']) : pick(['Was hat der denn?!', 'Ist ja gut!', 'Reg di ab, Erich!']); o.sayT = 1.4; }); floatTxt(k, '📢 KABINENPREDIGT!', '#ff6b6b'); beep(170, .4, 'sawtooth', .07, 110); if (k.me) vib(40); }
+    if (it.k === 'polo') { nearK(360).forEach(o => { if (shielded(o)) return; const own = ['jonas', 'greisel', 'marco'].includes(baseOf(o.id));
+        if (own && !o.remote) { o.boost = Math.max(o.boost, .8); o.say = pick(['Polonaise!', 'Ich bin dabei, Rasmus!', 'Party!']); } else if (!own) { o.slowT = 1.3; o.slowE = '💃'; o.say = pick(['Ich muss mittanzen!', 'Polonaise Blankenese!', 'Nicht schon wieder!']); } o.sayT = 1.4; });
+      k.boost = Math.max(k.boost, 1.2); floatTxt(k, '💃 POLONAISE!', '#c79bf0'); if (k.me) SFX.turbo(); [523, 659, 784].forEach((f, j) => setTimeout(() => beep(f, .12, 'square', .05), j * 110)); }
     if (it.k === 'mini') { k.mini = 4; k.inv = Math.max(k.inv, 4); k.boost = Math.max(k.boost, 1.1); if (!k.vsz0) k.vsz0 = k.vsz || 1; k.vsz = k.vsz0 * .55; floatTxt(k, '🤏 Wo ist er hin?', '#ffd23f'); if (k.me) SFX.turbo(); }
     if (it.k === 'chomp') { nearK(90).forEach(o => { if (!o.air) hit(o, 'caiman'); }); SFX.chomp(); }
     if (it.k === 'snack') { k.boost = Math.max(k.boost, .8); S.karts.forEach(o => { if (o !== k && !o.done && progress(o) < progress(k) && progress(k) - progress(o) < 110 && o.inv <= 0) { o.slowT = 1.2; o.slowE = '🥟'; o.say = 'Mmmh, Snacks!'; o.sayT = 1.2; } }); }
@@ -1974,6 +1987,7 @@
       if (X.ov === 'love') { em('💋', s0 * .3, w * .78, h * .72, -.25); em('❤️', s0 * .22, w * .16, h * .16); em('💕', s0 * .2, w * .84, h * .18); em('😍', s0 * .2, w * .16, h * .78); }
       if (X.ov === 'fat') { em('🍗', s0 * .34, w * .8, h * .76, .5); em('🍖', s0 * .22, w * .17, h * .8, -.4); em('💦', s0 * .17, w * .16, h * .2); }
       if (X.ov === 'sick') { em('💩', s0 * .3, w * .8, h * .78); em('💦', s0 * .18, w * .16, h * .22); em('🧻', s0 * .22, w * .18, h * .8); }
+      if (X.ov === 'hippie') { em('🌼', s0 * .22, w * .2, h * .14, -.3); em('✌️', s0 * .24, w * .82, h * .18, .2); em('🎉', s0 * .24, w * .18, h * .8, -.2); }
       if (X.ov === 'grump') { em('💢', s0 * .26, w * .82, h * .17); em('🗯️', s0 * .2, w * .17, h * .2, -.2); em('📋', s0 * .24, w * .18, h * .8, -.2); }
       if (X.ov === 'hang') { em('🕶️', s0 * .6, w / 2, eyeY); em('💫', s0 * .22, w * .84, h * .16); em('🥴', s0 * .2, w * .16, h * .8); }
       if (X.ov === 'foam') { x.fillStyle = '#fffaf0'; [[.15, .05, .18], [.38, 0, .2], [.62, .02, .19], [.86, .06, .16]].forEach(([a, b0, r]) => { x.beginPath(); x.arc(a * w, b0 * h, r * s0, 0, TAU); x.fill(); }); em('🍺', s0 * .34, w * .8, h * .76, -.15); }
@@ -2005,7 +2019,7 @@
     ['coco3', 'orbit', 'Drei Kokosnüsse kreisen um dich: rammen Gegner neben dir und blocken Geschosse. Antippen = Kokosnuss jagt den Vordermann.'],
     ['parrot', 'area', 'Alle knapp vor dir bekommen den Papagei ins Gesicht: Ihre Lenkung wackelt ein paar Sekunden.'],
     ['shield', 'shield', 'Schirm auf: 8 Sekunden Schutz, blockt genau einen Treffer.']];
-  const GANI = {mini: 'boost', grant: 'area', bill: 'area', burn: 'area', wheel: 'boost', ball: 'home', beer: 'drop', snack: 'area', kiss: 'area', burp: 'area', stink: 'drop', puke: 'drop', disco: 'area', meter: 'area', steal: 'home', ticket: 'area', caiman: 'home', trolley: 'throw', chomp: 'area'};
+  const GANI = {mini: 'boost', grant: 'area', polo: 'area', bill: 'area', burn: 'area', wheel: 'boost', ball: 'home', beer: 'drop', snack: 'area', kiss: 'area', burp: 'area', stink: 'drop', puke: 'drop', disco: 'area', meter: 'area', steal: 'home', ticket: 'area', caiman: 'home', trolley: 'throw', chomp: 'area'};
   const GCOMBO = {'oil+pimenta': 'Langer Turbo, hinter dir brennt der Asphalt.', 'coati+parrot': 'Drei Nasenbären jagen die drei Karts vor dir.', 'turbo+turbo': 'Extra langer Turbo und kurz unverwundbar.',
     'pimenta+turbo': 'Längster Turbo im Spiel, mit Feuer am Heck.', 'flip+flip': 'Drei Flip-Flops gleichzeitig im Fächer.', 'oil+oil': 'Drei Pfützen hintereinander.', 'shield+shield': '16 Sekunden Schirm.', 'coati+coati': 'Zwei Nasenbären für die zwei vor dir.'};
   // eine Mini-Szene: eigener Kart (🚙 rot mit Leuchten, gespiegelt = fährt nach rechts), Item, Gegner
