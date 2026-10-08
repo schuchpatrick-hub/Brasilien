@@ -10215,6 +10215,7 @@
     ]
   },
   "news": [
+    {"id": "n251008t", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🎵", "t": "Gringo Kart: eigene Weltraum-Disco „Gringo Orbit“ als Menü-Musik (abschaltbar in den Einstellungen)"},
     {"id": "n251008s", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "📖", "t": "Gringo Kart: neue Item-Anleitung im Menü mit kleinen Animationen zu jedem Item, allen Spezial-Items und Kombos"},
     {"id": "n251008r", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🚁", "t": "Gringo Kart: Auf Brücke, Minhocão, Cristo und Iguaçu kann man jetzt runterfallen (Hubschrauber, Kran, Geier oder Arara holen dich zurück), neue Mehrfach-Items: 🍹×3 Caipi-Runde, 🩴×2 Flip-Flop-Paar, 🥥×3 Kokos-Trio, 🍌×3 Bananen, 🧨×3 Böller; auf der Seite stehen nur noch neue Rekorde"},
     {"id": "n251008q", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🛣️", "t": "Gringo Kart: neue Strecke Minhocão als Acht mit Brücke, Tunnel auf 5 Strecken, 6 Strecken jetzt rechtsherum, Abkürzungen nur noch mit Turbo lohnend, Bande und Rasen kosten echt Zeit, mehr Tempo auf Geraden, Windschatten stärker, Start mit Technik und Stromausfall wirklich stockdunkel"},
