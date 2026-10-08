@@ -435,6 +435,8 @@
       [-1, 1].forEach(sd => { dot(sd * 5, -16, 2.6, '#e8d64a'); x.fillStyle = '#111'; x.fillRect(sd * 5 - .5, -18, 1, 4); }); }
     else return false; return true; }
   const HEAD = {}, VEH = {};
+  // Kart-Foto einer Person: alt = Zustands-Figur; crew[].swap2 vertauscht im Kart erstes und zweites Foto (Steckbrief/Shows bleiben beim ersten)
+  const kPhoto = (p, alt) => { const L = LOOK[p.id] || {}, two = !!p.photo2, use2 = two && (!!alt !== !!p.swap2); return use2 ? {src: p.photo2, f: L.face2} : {src: p.photo, f: L.face}; };
   function makeHeads() {
     CREW.forEach(p => {
       const L = LOOK[p.id] || {}, col = L.shirt || '#00a651', R = 52, sh = (STY[p.id] || {}).shp || 'circle';
@@ -442,11 +444,11 @@
         x.fillStyle = '#ffe0bd'; shapePath(x, sh, R); x.fill(); x.fillStyle = '#333'; x.font = '800 52px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(p.name[0], 0, 1); });
       HEAD[p.id] = hs; XDRV.filter(x0 => x0.base === p.id).forEach(x0 => { HEAD[x0.id] = xHead(x0, null); });
       // Foto der Person; die Zustands-Figur (z. B. Patrick vollgefressen) nimmt das zweite Foto (photo2 + look.face2), falls vorhanden
-      if (p.photo) { const im = new Image(); im.onload = () => { const x = hs.getContext('2d'), f = L.face || {x: .5, y: .5, z: 1}, D = 2 * R * f.z;
+      const k1 = kPhoto(p, false); if (p.photo) { const im = new Image(); im.onload = () => { const x = hs.getContext('2d'), f = k1.f || {x: .5, y: .5, z: 1}, D = 2 * R * f.z;
         x.setTransform(1, 0, 0, 1, 0, 0); x.save(); x.translate(R + 6, R + 6); shapePath(x, sh, R); x.clip(); x.drawImage(im, -f.x * D, -f.y * D, D, D); x.restore();
         x.save(); x.translate(R + 6, R + 6); x.strokeStyle = 'rgba(255,255,255,.85)'; x.lineWidth = 2.5; shapePath(x, sh, R + 1); x.stroke(); x.restore();
-        if (!p.photo2) XDRV.filter(x0 => x0.base === p.id).forEach(x0 => { xHead(x0, {im, f}, HEAD[x0.id]); }); HEADC = {}; }; im.src = p.photo; }
-      if (p.photo2) { const im2 = new Image(); im2.onload = () => { const f = L.face2 || {x: .5, y: .5, z: 1}; XDRV.filter(x0 => x0.base === p.id).forEach(x0 => { xHead(x0, {im: im2, f}, HEAD[x0.id]); }); HEADC = {}; }; im2.src = p.photo2; }
+        if (!p.photo2) XDRV.filter(x0 => x0.base === p.id).forEach(x0 => { xHead(x0, {im, f}, HEAD[x0.id]); }); HEADC = {}; }; im.src = k1.src; }
+      if (p.photo2) { const k2 = kPhoto(p, true), im2 = new Image(); im2.onload = () => { const f = k2.f || {x: .5, y: .5, z: 1}; XDRV.filter(x0 => x0.base === p.id).forEach(x0 => { xHead(x0, {im: im2, f}, HEAD[x0.id]); }); HEADC = {}; }; im2.src = k2.src; }
     });
     XDRV.filter(x0 => x0.npc).forEach(x0 => { HEAD[x0.id] = xHead(x0, null); });
   }
@@ -1923,17 +1925,17 @@
   let BX = null;
   // Hochaufgelöste Porträts fürs Menü: direkt aus dem Foto (nicht aus dem kleinen Renn-Kopf), eckig, mit Zeichnungen der Zustände
   const PIMG = {}; let PCACHE = {}, PRT = 0;
-  function pimg(id, alt) { const p = CREW.find(c => c.id === id), src = p && (alt ? p.photo2 : p.photo), key = id + (alt ? '#2' : ''); if (!src) return null; const im = PIMG[key]; if (im) return im.ok ? im : null;
+  function pimg(id, alt) { const p = CREW.find(c => c.id === id), src = p && kPhoto(p, alt).src, key = id + '#' + src; if (!src) return null; const im = PIMG[key]; if (im) return im.ok ? im : null;
     const n = new Image(); PIMG[key] = n; n.onload = () => { n.ok = 1; PCACHE = {}; clearTimeout(PRT); PRT = setTimeout(() => { if (!box.hidden && !menu.hidden) renderMenu(); }, 60); }; n.src = src; return null; }
   function portrait(id, w, h, zm) { const dpr = Math.min(3, Math.max(2, window.devicePixelRatio || 1)), key = id + ':' + w + 'x' + h + ':' + (zm || 1); if (PCACHE[key]) return cloneCv(PCACHE[key], w, h);
-    const X = XBY[id], b = X && X.base ? X.base : (X ? null : id), alt = !!(X && X.base && (CREW.find(c => c.id === X.base) || {}).photo2), col = (LOOK[id] || {}).shirt || '#00a651', im = b ? pimg(b, alt) : null;
+    const X = XBY[id], b = X && X.base ? X.base : (X ? null : id), alt = !!(X && X.base), col = (LOOK[id] || {}).shirt || '#00a651', im = b ? pimg(b, alt) : null;
     const c = document.createElement('canvas'); c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); const x = c.getContext('2d'); x.scale(dpr, dpr); x.imageSmoothingQuality = 'high';
     const g = x.createRadialGradient(w * .5, h * .38, 4, w * .5, h * .5, h * .85); g.addColorStop(0, col); g.addColorStop(1, '#0b1220'); x.fillStyle = g; x.fillRect(0, 0, w, h);
     x.save(); x.globalAlpha = .12; x.strokeStyle = '#fff'; x.lineWidth = w * .05; for (let q = -h; q < w + h; q += w * .16) { x.beginPath(); x.moveTo(q, h); x.lineTo(q + h * .6, 0); x.stroke(); } x.restore();
     const em = (e, px, ex, ey, rot) => { x.save(); x.translate(ex, ey); if (rot) x.rotate(rot); x.font = px + 'px system-ui,"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji"'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.shadowColor = 'rgba(0,0,0,.45)'; x.shadowBlur = px * .15; x.fillText(e, 0, 0); x.restore(); };
     let eyeY = h * .45;
     if (X && X.npc) em(X.e, h * .66, w / 2, h * .54);
-    else if (im) { const f = (alt && (LOOK[b] || {}).face2) || (LOOK[b] || {}).face || {x: .5, y: .5, z: 1, e: .45}, D = Math.min(w, h) * 1.15 * (zm || 1) * f.z, cx = w / 2, cy = h * .5, sx = X && X.ov === 'fat' ? 1.18 : 1;
+    else if (im) { const f = kPhoto(CREW.find(c => c.id === b), alt).f || {x: .5, y: .5, z: 1, e: .45}, D = Math.min(w, h) * 1.15 * (zm || 1) * f.z, cx = w / 2, cy = h * .5, sx = X && X.ov === 'fat' ? 1.18 : 1;
       x.save(); x.translate(cx, cy); x.scale(sx, 1); x.drawImage(im, -f.x * D, -f.y * D, D, D); x.restore(); eyeY = cy + ((f.e || .45) - f.y) * D;
       const v = x.createLinearGradient(0, h * .55, 0, h); v.addColorStop(0, 'rgba(11,18,32,0)'); v.addColorStop(1, 'rgba(11,18,32,.85)'); x.fillStyle = v; x.fillRect(0, 0, w, h); }
     else { x.fillStyle = 'rgba(255,255,255,.85)'; x.font = '900 ' + h * .5 + 'px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(NAME(id)[0], w / 2, h * .52); }
