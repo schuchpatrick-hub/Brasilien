@@ -1150,7 +1150,7 @@
       "name": "Marco",
       "nick": "„Lubo“ · „Dani Olmo“ · „Cevape Jr.“",
       "team": "a",
-      "photo": "crew/marco.jpg",
+      "photo": "crew/marco.jpg", "photo2": "crew/marco-2.jpg",
       "photoLarge": "crew/marco-gross.jpg",
       "role": "Feelgood-Manager, Obstkorb-Beauftragter & Sohnemann",
       "facts": [
@@ -1238,7 +1238,7 @@
       "name": "Greisel",
       "nick": "„Der Honeymooner“",
       "team": "b",
-      "photo": "crew/greisel.jpg",
+      "photo": "crew/greisel.jpg", "photo2": "crew/greisel-2.jpg",
       "photoLarge": "crew/greisel-gross.jpg",
       "role": "Scharfschütze mit Ladehemmung & Jugo auf Flitterwochen",
       "facts": [
@@ -1326,7 +1326,7 @@
       "name": "Daijo",
       "nick": "„Die Excel-Queen“ · „Bald-Tschechin“",
       "team": "b",
-      "photo": "crew/dajo.jpg",
+      "photo": "crew/dajo.jpg", "photo2": "crew/dajo-2.jpg",
       "photoLarge": "crew/dajo-gross.jpg",
       "role": "Einzige Erwachsene der Gruppe & Chef-Controllerin",
       "facts": [
@@ -3494,6 +3494,11 @@
           "m": 0.79,
           "e": 0.5,
           "ex": 0.13
+        },
+        "face2": {
+          "x": 0.5,
+          "y": 0.52,
+          "z": 1.0
         }
       },
       "greisel": {
@@ -3507,6 +3512,11 @@
           "m": 0.7,
           "e": 0.45,
           "ex": 0.13
+        },
+        "face2": {
+          "x": 0.5,
+          "y": 0.52,
+          "z": 1.0
         }
       },
       "dajo": {
@@ -3520,6 +3530,11 @@
           "m": 0.72,
           "e": 0.45,
           "ex": 0.12
+        },
+        "face2": {
+          "x": 0.55,
+          "y": 0.5,
+          "z": 1.12
         }
       }
     },
@@ -10230,6 +10245,7 @@
     ]
   },
   "news": [
+    {"id": "n251008w", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "💩", "t": "Gringo Kart: Marco mit Durchfall, Greisel mit Weißbier und Daijo auf der Party haben jetzt eigene Fotos"},
     {"id": "n251008v", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🏁", "t": "Gringo Kart: neue Gegner-Stufe „Profi“ und stärkeres „Normal“, Abkürzungen jetzt auch auf Guarujá, Cristo und Iguaçu, versetztes Startfeld (du startest aus Reihe 2), mehr Spezial-Items bei den Gegnern, Manuel fährt ab und zu als Gegner mit"},
     {"id": "n251008u", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🤏", "t": "Gringo Kart: Gastfahrer Manuel „Abzwickter“ (winzig, wendig, federleicht, Spezial „Abgezwickt!“), Spiel gründlich geprüft: flüssiger auf Brücke, Lopes, Manaus und Réveillon, Bierpfütze fairer, Gegner fallen nicht mehr ständig von Abgründen"},
     {"id": "n251008t", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🎵", "t": "Gringo Kart: Menü-Musik, bei jedem Öffnen zufällig Brasil-Phonk, Samba-Drum'n'Bass oder Eurodance (abschaltbar in den Einstellungen), dazu eigene Fotos für Patrick vollgefressen, Jonas verkatert und Simon verliebt"},
