@@ -9,6 +9,7 @@ Erzeugt aus den Quellen in web/ und tools/:
   reisebild.png              Reisebild = poster_template + Karte   } brauchen: pip install playwright
   brasilien-reise.pdf        Offline-Version der Webseite         } und Chromium
 """
+import hashlib
 import json, os, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -141,8 +142,25 @@ def main():
     inline = gen_map.build(standalone=False)
     write(standalone, 'reisebild.svg')
 
-    script_of = lambda tr: read('web', 'page_script.html').replace('%%TRIP%%', json.dumps(tr, ensure_ascii=False).replace('</', '<\\/'))
-    script = script_of(trip)
+    def script_of(tr, outdir):
+        # große Teile (Samba-Show, Serie, Gringo Kart) als eigene Dateien mods/<name>.js, die Seite lädt sie bei Bedarf nach
+        src, mods = read('web', 'page_script.html'), {}
+        def cut(m):
+            mods[m.group(1)] = m.group(2)
+            return ''
+        src = re.sub(r'/\*@@MOD:(\w+)\*/\n(.*?)/\*@@END\*/\n', cut, src, flags=re.S)
+        js = lambda o: json.dumps(o, ensure_ascii=False).replace('</', '<\\/')
+        ser = tr.get('series', {})
+        # in der Seite bleibt nur ein Steckbrief je Folge/Porträt (Kino-Hinweis, Porträt-Knöpfe), der Rest kommt mit mods/serie.js
+        stub = {k: {f: v[f] for f in ('n', 'admin', 'portrait', 'title') if f in v} for k, v in ser.items() if isinstance(v, dict) and re.match(r'^(ep\d+|p\w+)$', k)}
+        small = dict(tr, series=stub) if 'serie' in mods else tr
+        vers = {}
+        for name, code in mods.items():
+            if name == 'serie': code = 'Object.assign(TRIP.series, ' + js(ser) + ');\n' + code
+            vers[name] = hashlib.sha1(code.encode()).hexdigest()[:10]
+            write(code, *outdir, 'mods', name + '.js')
+        return src.replace('%%TRIP%%', js(small)).replace('%%MODV%%', json.dumps(vers))
+    script = script_of(trip, ['web'])
     scenes = gen_scenes.render_all()
     PHOTO_POS = {'rio': ('30% 38%', '30% 24%'), 'iguacu': ('50% 38%', '50% 30%'), 'manaus': ('46% 70%', '46% 76%'), 'juma': ('58% 45%', '58% 48%'), 'paraty': ('50% 60%', '50% 62%'), 'ilha': ('50% 45%', '50% 50%')}  # Bildausschnitt je Foto: Station/Heute, breiter Trenner
     counter = [0]
@@ -169,7 +187,7 @@ def main():
     write(page, 'web', 'brasilien-reise.html')
     if private:   # vollständige Fassung mit den privaten Porträts: diese Datei veröffentlichen
         full = json.loads(json.dumps(trip)); full['series'].update(private)
-        write(read('web', 'page_head.html') + body.replace('%%MAP%%', inline) + '\n' + script_of(full), 'web', 'private', 'brasilien-reise.html')
+        write(read('web', 'page_head.html') + body.replace('%%MAP%%', inline) + '\n' + script_of(full, ['web', 'private']), 'web', 'private', 'brasilien-reise.html')
 
     write(build_ics(trip, 'a'), 'kalender', 'gringos-plus-1-cevapi.ics')
     write(build_ics(trip, 'b'), 'kalender', 'daijo-greisel.ics')

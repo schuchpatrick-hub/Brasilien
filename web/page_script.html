@@ -2731,6 +2731,7 @@ function wavB64(buf) {
   window.__tripPlay = play;   // für die Video-Aufnahme
 })();
 
+/*@@MOD:samba*/
 /* ---------- Samba-Show: Crew-Köpfe auf Cartoon-Körpern, Münder klappen wie bei den South-Park-Kanadiern ----------
    Alles hängt nur an der Zeit t (ms seit Start): frame(t) zeichnet jedes Bild neu, daher kann die Video-Aufnahme die Zeit
    über window.__danceT selbst setzen. Musik = Show-Samba aus der Karten-Animation (window.__TripMusic, Modus 'show'),
@@ -3436,7 +3437,9 @@ function wavB64(buf) {
   window.__danceAudio = async ms => { const sr = 44100, oc = new OfflineAudioContext(1, Math.ceil(sr * ms * SLOW / 1000), sr), m = window.__TripMusic(oc); program(m, 0); m.schedule(ms * SLOW / 1000); return wavB64(await oc.startRendering()); };
   window.__danceVoices = () => LINES.map(l => ({key: l.file, at: l.at * SLOW}));   // echte ms (Showzeit × SLOW)
 })();
+/*@@END*/
 
+/*@@MOD:serie*/
 /* ---------- Gringos – Die Serie: Folgen in trip.json → series.ep1, ep2 … (gleicher Stil wie die Samba-Show) ----------
    Foto-Köpfe auf Cartoon-Körpern, Münder klappen nach der Lautstärkekurve der Stimme (trip.json → series.ep1.voice).
    Alles hängt nur an der Zeit t (ms): frame(t) zeichnet jedes Bild; window.__serT setzt die Zeit für Video-Aufnahmen.
@@ -6962,6 +6965,37 @@ function wavB64(buf) {
   portMark();
   if (PORT.length > PORTOK.length) canWrite().then(w => { if (w === false) return; PORTOK = PORT.slice(); portMark(); }).catch(() => {});
 })();
+/*@@END*/
+/* ---------- Nachladen (Tempo): Samba-Show, Serie und Gringo Kart liegen in eigenen Dateien mods/<name>.js (build.py schneidet die
+   Blöcke zwischen den @@MOD-Markierungen heraus). Geladen wird beim Hinscrollen, beim ersten Antippen oder im Leerlauf nach dem Start. ---------- */
+const MODV = %%MODV%%, MODS = {};
+function loadMod(n) {
+  if (!MODV[n]) return Promise.resolve(true);   // nicht getrennt gebaut: steckt schon in der Seite
+  if (PRINT) return Promise.resolve(false);
+  if (MODS[n]) return MODS[n];
+  const pr = new Promise(res => { const s = document.createElement('script'); s.src = 'mods/' + n + '.js?v=' + MODV[n];
+    s.onload = () => { pr.done = true; res(true); }; s.onerror = () => { delete MODS[n]; s.remove(); res(false); }; document.body.appendChild(s); });
+  return MODS[n] = pr;
+}
+(function () {
+  if (PRINT || !Object.keys(MODV).length) return;
+  const ready = n => !MODV[n] || (MODS[n] && MODS[n].done), load = ns => Promise.all(ns.map(loadMod));
+  const ZONES = [['kino', ['samba', 'serie']], ['kartsec', ['kart']]];
+  if ('IntersectionObserver' in window) { const io = new IntersectionObserver(es => es.forEach(e => { if (!e.isIntersecting) return; const z = ZONES.find(z0 => z0[0] === e.target.id); if (z) load(z[1]); io.unobserve(e.target); }), {rootMargin: '1500px 0px'});
+    ZONES.forEach(([id]) => { const el = document.getElementById(id); if (el) io.observe(el); }); }
+  // im Leerlauf vorladen (nach dem Start der Seite), damit alles bereit ist, ohne den Aufbau der Reise-Infos zu bremsen
+  const idle = window.requestIdleCallback ? f => window.requestIdleCallback(f, {timeout: 4000}) : f => setTimeout(f, 300);
+  // Kart zuerst (Bestenliste, Live-Hinweis „… wartet im Live-Raum“), danach die Filme
+  const pre = () => { setTimeout(() => idle(() => loadMod('kart')), 2500); setTimeout(() => idle(() => loadMod('samba').then(() => loadMod('serie'))), 7000); };
+  if (document.readyState === 'complete') pre(); else window.addEventListener('load', pre);
+  // Antippen, bevor der Teil geladen ist: erst laden, dann denselben Klick wiederholen
+  document.addEventListener('click', e => { const t = e.target; if (!t.closest) return;
+    const ns = t.closest('#kino') ? ['samba', 'serie'] : t.closest('#kartsec') ? ['kart'] : t.closest('[data-port]') ? ['serie'] : null;
+    if (!ns || ns.every(ready)) return; e.preventDefault(); e.stopImmediatePropagation();
+    const el = t.closest('button, a, [role="button"], [data-port], summary') || t; el.classList.add('mod-wait');
+    load(ns).then(r => { el.classList.remove('mod-wait'); if (r.every(Boolean)) el.click(); else undoToast('📡 Konnte nicht nachladen, dafür braucht es Netz. Bitte gleich nochmal tippen.'); }); }, true);
+})();
+
 
 // Spielerporträt-Knöpfe (Steckbrief, Kartenrückseite): sichtbar per Klasse port-<id> am <html>, Start im Vollbild
 document.addEventListener('click', e => { const b = e.target.closest('[data-port]'); if (!b) return; e.preventDefault(); e.stopPropagation();
@@ -7167,6 +7201,7 @@ setGroup(G);
   addEventListener('scroll', hide, {passive: true});
   setTimeout(() => document.querySelectorAll('.wrap > section, header').forEach(apply), 1200);
 })();
+/*@@MOD:kart*/
 /* ---------- Gringo Kart ----------
    Rennspiel von oben, Canvas. Sechs Strecken entlang der Reise (TRACKS: Guarujá, Copacabana, Iguaçu, Amazonas, Paraty, Ilha Grande),
    Einzelrennen oder Grand Prix (alle sechs, Punkte 10/8/6/5/4/3, Siegerehrung). 6 Fahrer mit Crew-Köpfen, 3 Runden.
@@ -8763,4 +8798,5 @@ setGroup(G);
   window.__kartAt = (i, l) => at(i, l); window.__kartTW = () => TW;
   window.__kart = {live: () => LIVE, liveGo: a => liveGo(a), emo: e => { const b = [...box.querySelectorAll('.kr-emol button')].find(x => x.textContent === e); if (b) b.click(); }, hitK: (i, why) => hit(S.karts[i], why), open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
 })();
+/*@@END*/
 </script>
