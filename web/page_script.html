@@ -7279,13 +7279,18 @@ setGroup(G);
     {id: 'manuel', sh: 'Abzwickter', npc: 1, guest: 1, name: 'Manuel', ann: 'Achtung, der Abzwickter ist am Start! Bitte nicht übersehen!', e: '🤏', col: '#2bb3a3', photo: 'crew/manuel.jpg', face: {x: .5, y: .5, z: 1}, cs: {spd: .55, hdl: 1.1, acc: 1, tgh: .1}, m: .55,
       x: 'Gastfahrer, auch bekannt als Miniman, Half Cutted oder Stumpen. Sieht nur mit Kissen übers Lenkrad, flutscht dafür durch jede Lücke und zieht um die Kurven wie kein anderer. Federleicht: Bei Remplern fliegt er weit.',
       sp: {k: 'mini', e: '🤏', n: 'Abgezwickt!', x: 'schrumpft auf Taschenformat: unverwundbar, flutscht unter allen durch und gibt Gas'},
-      l: ['Ich seh nix übers Lenkrad!', 'Wer hat Stumpen gesagt?!', 'Kleiner Mann, großer Turbo!', 'Ich fahr unten durch!', 'Unterschätz nie den Abzwickter!', 'Half cutted, full speed!', 'Hey, nicht auf den Kleinen!', 'Wo ist mein Sitzkissen?']}];
+      l: ['Ich seh nix übers Lenkrad!', 'Wer hat Stumpen gesagt?!', 'Kleiner Mann, großer Turbo!', 'Ich fahr unten durch!', 'Unterschätz nie den Abzwickter!', 'Half cutted, full speed!', 'Hey, nicht auf den Kleinen!', 'Wo ist mein Sitzkissen?']},
+    // Gastfahrer Erich: Betreuer von Schwaben Augsburg (Jonas, Greisel, Marco), immer grantig; nach jedem Dreher Wut-Turbo (k.wut)
+    {id: 'erich', sh: 'Grantler', npc: 1, guest: 1, name: 'Erich', ann: 'Achtung, Erich ist am Start. Und er hat, wie immer, schlechte Laune!', e: '😠', ov: 'grump', col: '#b3202a', photo: 'crew/erich.jpg', face: {x: .5, y: .48, z: 1.05}, cs: {spd: .6, hdl: .45, acc: .25, tgh: 1.15}, m: 1.45,
+      x: 'Gastfahrer: Betreuer von Schwaben Augsburg und damit Chef von Jonas, Greisel und Marco. Immer grantig, nie zufrieden. Kommt schwer in die Gänge, ist aber zäh wie Leder: Rempler prallen ab, und jeder Dreher macht ihn nur wütender (💢 Wut-Turbo danach).',
+      sp: {k: 'grant', e: '📢', n: 'Kabinenpredigt', x: 'brüllt alle in der Nähe zusammen: gebremst, Lenkung zittert; seine eigenen Spieler (Jonas, Greisel, Marco) kuschen extra lang'},
+      l: ['Des isch doch koi Rennfahrer!', 'Früher hätt’s des ned gebe!', 'Wer hat die Trinkflaschen liegen lassen?!', 'Schleich di, du Bagasch!', 'I sag nix mehr …', 'Ihr Weicheier!', 'Die Leibchen wäsch i ned nomal!', 'Mir doch wurscht!', 'Hört eh koiner auf mi!', 'Jonas, Greisel, Marco: Hopp jetzt!']}];
   const XBY = {}; XDRV.forEach(x => { XBY[x.id] = x; });
   const baseOf = id => (XBY[id] && XBY[id].base) || id, isNpc = id => !!(XBY[id] && XBY[id].npc);
   const DRVS = CREW.map(c => c.id).concat(XDRV.map(x => x.id));
   XDRV.forEach(x => { const b = x.base;
     CS[x.id] = x.cs ? Object.assign({}, x.cs) : Object.fromEntries(Object.entries(CS[b] || {spd: .5, hdl: .5, acc: .5, tgh: .5}).map(([k, v]) => [k, clamp(v + ((x.d || {})[k] || 0), -.5, 1.5)]));
-    SPECIAL[x.id] = x.sp; LINES[x.id] = x.l; PERS[x.id] = b ? PERS[b] : Object.assign({}, PERS0, x.id === 'guide' ? {line: 1.3, care: 1.4} : x.id === 'taxi' ? {line: .85, care: .7, ram: 1} : x.id === 'manuel' ? {line: 1.2, care: .8} : {});
+    SPECIAL[x.id] = x.sp; LINES[x.id] = x.l; PERS[x.id] = b ? PERS[b] : Object.assign({}, PERS0, x.id === 'guide' ? {line: 1.3, care: 1.4} : x.id === 'taxi' ? {line: .85, care: .7, ram: 1} : x.id === 'manuel' ? {line: 1.2, care: .8} : x.id === 'erich' ? {line: 1, care: .6, brake: 1.1, ram: 1, x: 'rammt aus Prinzip, weicht keinem aus und schimpft dabei'} : {});
     LOOK[x.id] = Object.assign({}, b ? LOOK[b] : {}, {shirt: x.col}); });
 
   /* ---- Strecken ----
@@ -7590,11 +7595,11 @@ setGroup(G);
   /* ---- Fahrer: Kopf- und Fahrzeug-Sprites ---- */
   // Jede Figur mit eigenem Fahrzeug, eigener Kopfform und Größe (Wunsch Patrick 08.10.): k = Fahrzeug-Stil (nur beim Gringo-Kart), shp = Kopfform,
   // vs = Fahrzeug-Größe (auch Zusammenstöße), hs = Kopfgröße, seat = Lenkrad (wheel), Lenker (bar) oder ohne Körper (none)
-  const STY = {manuel: {k: 'buggy', shp: 'egg', vs: .74, hs: .8, seat: 'wheel'}, jonas: {k: 'f1', shp: 'squircle'}, simon: {k: 'buggy', shp: 'oval'}, patrick: {k: 'kart', shp: 'egg', hs: 1.06}, marco: {k: 'f1', shp: 'shield'}, greisel: {k: 'buggy', shp: 'hex', hs: 1.08, vs: 1.05}, dajo: {k: 'kart', shp: 'circle', hs: .95},
+  const STY = {manuel: {k: 'buggy', shp: 'egg', vs: .74, hs: .8, seat: 'wheel'}, erich: {k: 'boller', shp: 'squircle', vs: 1.08, hs: 1.02, seat: 'wheel'}, jonas: {k: 'f1', shp: 'squircle'}, simon: {k: 'buggy', shp: 'oval'}, patrick: {k: 'kart', shp: 'egg', hs: 1.06}, marco: {k: 'f1', shp: 'shield'}, greisel: {k: 'buggy', shp: 'hex', hs: 1.08, vs: 1.05}, dajo: {k: 'kart', shp: 'circle', hs: .95},
     simon_love: {k: 'bed', shp: 'heart', vs: 1.05}, patrick_fat: {k: 'sofa', shp: 'wide', vs: 1.22, hs: 1.25, fat: 1}, marco_dia: {k: 'toilet', shp: 'blob'}, jonas_kater: {k: 'tub', shp: 'squircle', hs: .95}, greisel_wb: {k: 'keg', shp: 'mug', vs: 1.08, hs: 1.1}, dajo_party: {k: 'disco', shp: 'star', hs: 1.05},
     taxi: {k: 'taxi', vs: 1.12, skin: '#a8704a'}, coati: {k: 'skate', vs: .8, hs: .9, seat: 'none'}, officer: {k: 'police', vs: 1.1}, dona: {k: 'scooter', vs: .92, seat: 'bar', skin: '#b98060'}, guide: {k: 'jeep', vs: 1.1, skin: '#c08a5a'}, steward: {k: 'trolley', vs: .95, seat: 'bar'}, caimanx: {k: 'gator', vs: 1.28, hs: 1.1, seat: 'none'}};
   const STYK = id => { const st = STY[id]; return st && st.k !== 'kart' ? st.k : null; }, KLIKE = {f1: 1, buggy: 1};
-  const STN = {f1: 'Formel-Kart', buggy: 'Strand-Buggy', bed: 'Liebesbett', sofa: 'Couch-Kart', toilet: 'Klo-Rakete', tub: 'Badewanne', keg: 'Bierfass', disco: 'Disco-Mobil', taxi: 'Taxi', skate: 'Skateboard', police: 'Streifenwagen', scooter: 'Seniorenmobil', jeep: 'Safari-Jeep', trolley: 'Servierwagen', gator: 'Kaiman'};
+  const STN = {f1: 'Formel-Kart', buggy: 'Strand-Buggy', bed: 'Liebesbett', sofa: 'Couch-Kart', toilet: 'Klo-Rakete', tub: 'Badewanne', keg: 'Bierfass', disco: 'Disco-Mobil', taxi: 'Taxi', skate: 'Skateboard', police: 'Streifenwagen', scooter: 'Seniorenmobil', jeep: 'Safari-Jeep', trolley: 'Servierwagen', gator: 'Kaiman', boller: 'Betreuer-Bollerwagen'};
   const FWS = {f1: [[-15, -20], [15, -20]]}, HSET = () => [.75, 1, 1.5][SET.hd === undefined ? 1 : SET.hd];
   function shapePath(x, sh, R) { x.beginPath();
     if (sh === 'oval') x.ellipse(0, 0, R * .84, R, 0, 0, TAU);
@@ -7646,6 +7651,11 @@ setGroup(G);
       x.fillStyle = gc; x.beginPath(); x.moveTo(0, -30); x.quadraticCurveTo(7, -28, 7, -18); x.quadraticCurveTo(14, -12, 14, 2); x.quadraticCurveTo(14, 16, 6, 21); x.quadraticCurveTo(2, 26, 0, 30); x.quadraticCurveTo(-2, 26, -6, 21); x.quadraticCurveTo(-14, 16, -14, 2); x.quadraticCurveTo(-14, -12, -7, -18); x.quadraticCurveTo(-7, -28, 0, -30); x.fill(); x.stroke();
       x.fillStyle = '#fff'; [-1, 1].forEach(sd => { for (let q = -27; q < -19; q += 3) { x.beginPath(); x.moveTo(sd * 5.5, q); x.lineTo(sd * 7.4, q + 1.2); x.lineTo(sd * 5.5, q + 2.4); x.fill(); } }); x.fillStyle = '#2f4f24'; for (let q = -6; q < 22; q += 5) [-5, 0, 5].forEach(a => { x.beginPath(); x.arc(a * (1 - q / 40), q, 1.6, 0, TAU); x.fill(); });
       [-1, 1].forEach(sd => { dot(sd * 5, -16, 2.6, '#e8d64a'); x.fillStyle = '#111'; x.fillRect(sd * 5 - .5, -18, 1, 4); }); }
+    else if (kd === 'boller') { [[-18, -22], [13, -22], [-18, 10], [13, 10]].forEach(([a, b]) => wh(a, b, 5, 12)); rr(-14, -26, 28, 52, 3); fill('#7a4a22');
+      x.strokeStyle = 'rgba(40,20,5,.5)'; x.lineWidth = 1; for (let q = -20; q < 26; q += 6) { x.beginPath(); x.moveTo(-14, q); x.lineTo(14, q); x.stroke(); } x.lineWidth = 1.6; x.strokeStyle = 'rgba(0,0,0,.55)';
+      rr(-12, -24, 11, 15, 1.5); fill(col); rr(1, -24, 11, 15, 1.5); fill(col); [-21, -16.5, -12].forEach(b => [-9.5, -4, 3.5, 9].forEach(a => dot(a, b, 1.5, '#5aa34a')));
+      rr(2, 13, 11, 9, 2); fill('#fff'); x.fillStyle = '#d62828'; x.fillRect(6.6, 14.2, 1.8, 6.6); x.fillRect(4.2, 16.6, 6.6, 1.8);
+      x.strokeStyle = '#333'; x.lineWidth = 2.2; x.beginPath(); x.moveTo(0, -26); x.lineTo(0, -29.5); x.moveTo(-5, -29.5); x.lineTo(5, -29.5); x.stroke(); x.lineWidth = 1.6; x.strokeStyle = 'rgba(0,0,0,.55)'; }
     else return false; return true; }
   const HEAD = {}, VEH = {};
   // Kart-Foto einer Person: alt = Zustands-Figur; crew[].swap2 vertauscht im Kart erstes und zweites Foto (Steckbrief/Shows bleiben beim ersten)
@@ -7679,6 +7689,7 @@ setGroup(G);
       if (X.ov === 'fat') { x.fillStyle = 'rgba(255,120,90,.18)'; x.fillRect(-R, -R, 2 * R, 2 * R); }
       if (X.ov === 'sick') { x.fillStyle = 'rgba(120,190,60,.38)'; x.fillRect(-R, -R, 2 * R, 2 * R); }
       if (X.ov === 'hang') { x.fillStyle = 'rgba(160,200,140,.25)'; x.fillRect(-R, -R, 2 * R, 2 * R); }
+      if (X.ov === 'grump') { x.fillStyle = 'rgba(220,40,40,.16)'; x.fillRect(-R, -R, 2 * R, 2 * R); }
       if (X.ov === 'disco') { ['#ff5fa2', '#ffd23f', '#22c3c9', '#9b5de5'].forEach((c, n) => { x.fillStyle = c; x.globalAlpha = .22; x.beginPath(); x.moveTo(0, 0); x.arc(0, 0, R * 1.5, n * TAU / 4, n * TAU / 4 + TAU / 8); x.fill(); }); x.globalAlpha = 1; }
       x.restore();
       if (X.ov === 'love') { em('💋', 30, R * .45, R * .2, -.3); em('❤️', 26, -R * .7, -R * .7); em('💕', 22, R * .72, -R * .72); }
@@ -7686,7 +7697,8 @@ setGroup(G);
       if (X.ov === 'sick') { em('💩', 30, R * .65, R * .55); em('💦', 20, -R * .7, -R * .55); }
       if (X.ov === 'hang') { em('🕶️', 52, 0, -R * .12); em('💫', 22, R * .7, -R * .75); }
       if (X.ov === 'foam') { x.fillStyle = '#fffaf0'; [[-.6, -.85, .32], [-.15, -.98, .36], [.35, -.92, .34], [.7, -.8, .26]].forEach(([a, b, r]) => { x.beginPath(); x.arc(a * R, b * R, r * R, 0, TAU); x.fill(); }); }
-      if (X.ov === 'disco') { em('🪩', 28, R * .66, -R * .66); } };
+      if (X.ov === 'disco') { em('🪩', 28, R * .66, -R * .66); }
+      if (X.ov === 'grump') { em('💢', 30, R * .7, -R * .7); em('💨', 20, -R * .78, -R * .5, .3); } };
     const c = into || sprite(W0, W0, () => {}); draw(c.getContext('2d')); return c; }
   const FW = {kart: [[-14, -13], [14, -13]], gold: [[-14, -13], [14, -13]], uber: [[-14, -13], [14, -13]], uno: [[-14, -13], [14, -13]], cart: [[-16, -10], [16, -10]]};
   const vehOf = id => T.veh === 'boat' || T.veh === 'cart' ? T.veh : (id === me ? myVeh() : 'kart');
@@ -8318,7 +8330,7 @@ setGroup(G);
   const HITSAY = {banana: 'Auf der Bananenschale ausgerutscht!', bang: 'Böller! Meine Ohren!', trolley: 'Vom Servierwagen überrollt!', puke: 'Igitt, Kotze!', parade: 'In den Sambazug gekracht!', coco: 'Kokosnuss auf die Birne!', tug: 'Vom Gepäckwagen erwischt!', fork: 'Gabelstapler!', bus: 'Der Bus! Der Bus!', soccer: 'Ball an den Kopf!', crate: 'Container!', flip: 'Flip-Flop ins Gesicht!', fire: 'Heiß, heiß, heiß!', tram: 'Von der Straßenbahn erwischt!', moto: 'Motoboy!!', monkey: 'Der Affe hat mein Item geklaut!', cone: 'Baustelle!', champ: 'Sekt verschüttet!', gate: 'Schranke zu!', ball: 'Fernschuss ins Gesicht!', beer: 'Alles voller Schaum!', coati: 'Dieser Nasenbär!!', vendor: 'Ich wollte nur einen Caipi!', corn: 'Mein Mais!', caiman: 'Der Kaiman hat mich gebissen!', horse: 'Pferd hat Vorfahrt?!', dog: 'Guter Hund … AUA!', log: 'Baumstamm!', umbrella: 'Sonnenschirm-Treffer!', suitcase: 'Wessen Koffer ist das?!'};
   function hit(k, why) {
     if (k.remote) { if (S.live && ['coati', 'ball', 'flip', 'fire', 'caiman', 'trolley', 'coco', 'bang'].includes(why) && !k.hitT) { k.hitT = 1; setTimeout(() => { k.hitT = 0; }, 900); liveEmit({t: 'hit', race: S.live.id, to: k.peer, ai: k.aiIdx, why}); } return; }
-    if (k.spin > 0 || k.air > 0 || k.inv > 0 || k.fall > 0) return; if (k.shield > 0 && why !== 'gate') { k.shield = 0; floatTxt(k, '⛱️ geblockt!', '#7fd3ff'); if (k.me) { beep(520, .1, 'triangle', .07); vib(15); } return; } S.hl[why] = (S.hl[why] || 0) + 1; k.spin = .9 * Math.max(.45, 1.12 - (k.cs.tgh + (k.pf ? k.pf.tgh : 0)) * .3); k.vr += rnd(-60, 60); if (k.me) vib([30, 40, 30]); k.boost = 0; k.dr = 0; k.dt = 0; SFX.spin(); if (why === 'caiman') SFX.chomp();
+    if (k.spin > 0 || k.air > 0 || k.inv > 0 || k.fall > 0) return; if (k.shield > 0 && why !== 'gate') { k.shield = 0; floatTxt(k, '⛱️ geblockt!', '#7fd3ff'); if (k.me) { beep(520, .1, 'triangle', .07); vib(15); } return; } S.hl[why] = (S.hl[why] || 0) + 1; k.spin = .9 * Math.max(.45, 1.12 - (k.cs.tgh + (k.pf ? k.pf.tgh : 0)) * .3); k.vr += rnd(-60, 60); if (k.me) vib([30, 40, 30]); k.boost = 0; k.dr = 0; k.dt = 0; SFX.spin(); if (why === 'caiman') SFX.chomp(); if (k.id === 'erich') k.wut = 1;
     const l = LINES[k.id]; k.say = (HITSAY[why] && Math.random() < .55) ? HITSAY[why] : l ? pick(l) : 'Aua!'; k.sayT = 1.6;
     if (k.me) { S.myHits++; if (k.coins > 0) { const n = Math.min(2, k.coins); k.coins -= n; S.got = Math.max(0, S.got - n); floatTxt(k, '−' + n + ' 🪙', '#ffb0b0'); } } 
     if (k.me) { S.shake = .35; if (why === 'caiman') say('caiman', 'Vorsicht, Kaiman!'); else if (['oil', 'coati', 'ball', 'flip', 'fire', 'beer', 'coco', 'banana', 'bang'].includes(why) && Math.random() < .6) voice(k, 'item'); else if (Math.random() < .5) voice(k, 'hit'); else if (Math.random() < .4) say('hit', 'Autsch, das tat weh!'); }
@@ -8441,6 +8453,8 @@ setGroup(G);
     if (it.k === 'caiman') { const ah = S.karts.filter(o => o !== k && !o.done && progress(o) > progress(k)).sort((a, b) => progress(a) - progress(b))[0];
       S.coatis.push({i: k.idx + 6, l: k.lat, tgt: ah || null, t: 6, by: k, x: k.x, y: k.y, cai: 1}); SFX.throw(); }
     if (it.k === 'trolley') { S.coatis.push({i: k.idx + 5, l: k.lat, tgt: null, t: 3.6, by: k, x: k.x, y: k.y, flip: 1, tro: 1}); SFX.throw(); }
+    if (it.k === 'grant') { nearK(340).forEach(o => { if (shielded(o)) return; const own = ['jonas', 'greisel', 'marco'].includes(baseOf(o.id)); o.slowT = own ? 2.2 : 1.4; o.slowE = '💢'; o.parrot = Math.max(o.parrot || 0, own ? 1.4 : .8);
+      o.say = own ? pick(['Ja, Erich …', 'Sorry, Erich!', 'Wir laufen ja schon!']) : pick(['Was hat der denn?!', 'Ist ja gut!', 'Reg di ab, Erich!']); o.sayT = 1.4; }); floatTxt(k, '📢 KABINENPREDIGT!', '#ff6b6b'); beep(170, .4, 'sawtooth', .07, 110); if (k.me) vib(40); }
     if (it.k === 'mini') { k.mini = 4; k.inv = Math.max(k.inv, 4); k.boost = Math.max(k.boost, 1.1); if (!k.vsz0) k.vsz0 = k.vsz || 1; k.vsz = k.vsz0 * .55; floatTxt(k, '🤏 Wo ist er hin?', '#ffd23f'); if (k.me) SFX.turbo(); }
     if (it.k === 'chomp') { nearK(90).forEach(o => { if (!o.air) hit(o, 'caiman'); }); SFX.chomp(); }
     if (it.k === 'snack') { k.boost = Math.max(k.boost, .8); S.karts.forEach(o => { if (o !== k && !o.done && progress(o) < progress(k) && progress(k) - progress(o) < 110 && o.inv <= 0) { o.slowT = 1.2; o.slowE = '🥟'; o.say = 'Mmmh, Snacks!'; o.sayT = 1.2; } }); }
@@ -8521,7 +8535,7 @@ setGroup(G);
         if (S.t > 3) { k.misT -= dt; if (k.misT < 0 && !k.misD) { k.misT = rnd(9, 17) / k.pp.mis[0] / (DIFFS[DIFF].mis || 1); k.misK = k.pp.mis[1]; k.misD = k.misK === 'wide' ? 1.1 : k.misK === 'wobble' ? 1.6 : .9; }
           if (k.misD > 0) { k.misD = Math.max(0, k.misD - dt); if (k.misK === 'lapse') vmax *= .6; if (k.misK === 'brake') vmax *= .72; } } }   // vor engen Kurven bremsen
       if (!k.me && S.ev && S.ev.cur && S.ev.cur.k === 'police' && !k.evRaser && wrap(S.ev.cur.i - k.idx) < 70) vmax *= .5;
-      if (k.spin > 0) { k.spin -= dt; k.rot += dt * 14; vmax *= .25; } else k.rot *= Math.max(0, 1 - dt * 10);
+      if (k.spin > 0) { k.spin -= dt; k.rot += dt * 14; vmax *= .25; if (k.spin <= 0 && k.wut) { k.wut = 0; k.boost = Math.max(k.boost, .9); floatTxt(k, '💢 Jetzt reicht’s!', '#ff6b6b'); } } else k.rot *= Math.max(0, 1 - dt * 10);
       if (k.stall > 0) { k.stall -= dt; vmax = 0; }
       k.v += (vmax - k.v) * Math.min(1, dt * (k.v < vmax ? (k.boost > 0 ? 4 : 1.6 * (.86 + k.cs.acc * .28) * k.vt[2] * k.pf.acc) : 4));
       k.wallC = Math.max(0, (k.wallC || 0) - dt); k.inv = Math.max(0, k.inv - dt); k.glow = Math.max(0, k.glow - dt); k.blind = Math.max(0, k.blind - dt); k.slowT = Math.max(0, k.slowT - dt);
@@ -9158,11 +9172,12 @@ setGroup(G);
       x.save(); x.translate(cx, cy); x.scale(sx, 1); x.drawImage(im, -f.x * D, -f.y * D, D, D); x.restore(); eyeY = cy + ((f.e || .45) - f.y) * D;
       const v = x.createLinearGradient(0, h * .55, 0, h); v.addColorStop(0, 'rgba(11,18,32,0)'); v.addColorStop(1, 'rgba(11,18,32,.85)'); x.fillStyle = v; x.fillRect(0, 0, w, h); }
     else { x.fillStyle = 'rgba(255,255,255,.85)'; x.font = '900 ' + h * .5 + 'px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(NAME(id)[0], w / 2, h * .52); }
-    if (X && X.ov) { const tint = {love: 'rgba(255,80,160,.28)', sick: 'rgba(110,200,40,.36)', hang: 'rgba(150,190,140,.22)', fat: 'rgba(255,120,80,.16)', disco: null, foam: null}[X.ov]; if (tint) { x.fillStyle = tint; x.fillRect(0, 0, w, h); }
+    if (X && X.ov) { const tint = {love: 'rgba(255,80,160,.28)', sick: 'rgba(110,200,40,.36)', hang: 'rgba(150,190,140,.22)', fat: 'rgba(255,120,80,.16)', grump: 'rgba(220,40,40,.14)', disco: null, foam: null}[X.ov]; if (tint) { x.fillStyle = tint; x.fillRect(0, 0, w, h); }
       const s0 = Math.min(w, h);
       if (X.ov === 'love') { em('💋', s0 * .3, w * .78, h * .72, -.25); em('❤️', s0 * .22, w * .16, h * .16); em('💕', s0 * .2, w * .84, h * .18); em('😍', s0 * .2, w * .16, h * .78); }
       if (X.ov === 'fat') { em('🍗', s0 * .34, w * .8, h * .76, .5); em('🍖', s0 * .22, w * .17, h * .8, -.4); em('💦', s0 * .17, w * .16, h * .2); }
       if (X.ov === 'sick') { em('💩', s0 * .3, w * .8, h * .78); em('💦', s0 * .18, w * .16, h * .22); em('🧻', s0 * .22, w * .18, h * .8); }
+      if (X.ov === 'grump') { em('💢', s0 * .26, w * .82, h * .17); em('🗯️', s0 * .2, w * .17, h * .2, -.2); em('📋', s0 * .24, w * .18, h * .8, -.2); }
       if (X.ov === 'hang') { em('🕶️', s0 * .6, w / 2, eyeY); em('💫', s0 * .22, w * .84, h * .16); em('🥴', s0 * .2, w * .16, h * .8); }
       if (X.ov === 'foam') { x.fillStyle = '#fffaf0'; [[.15, .05, .18], [.38, 0, .2], [.62, .02, .19], [.86, .06, .16]].forEach(([a, b0, r]) => { x.beginPath(); x.arc(a * w, b0 * h, r * s0, 0, TAU); x.fill(); }); em('🍺', s0 * .34, w * .8, h * .76, -.15); }
       if (X.ov === 'disco') { x.save(); x.globalCompositeOperation = 'screen'; ['#ff5fa2', '#ffd23f', '#22c3c9', '#9b5de5'].forEach((cc, n) => { x.fillStyle = cc; x.globalAlpha = .28; x.beginPath(); x.moveTo(w / 2, -h * .1); x.arc(w / 2, -h * .1, h * 1.4, Math.PI * (.25 + n * .14), Math.PI * (.32 + n * .14)); x.fill(); }); x.restore(); em('🪩', s0 * .26, w * .82, h * .16); em('🕺', s0 * .22, w * .17, h * .8); } }
@@ -9193,7 +9208,7 @@ setGroup(G);
     ['coco3', 'orbit', 'Drei Kokosnüsse kreisen um dich: rammen Gegner neben dir und blocken Geschosse. Antippen = Kokosnuss jagt den Vordermann.'],
     ['parrot', 'area', 'Alle knapp vor dir bekommen den Papagei ins Gesicht: Ihre Lenkung wackelt ein paar Sekunden.'],
     ['shield', 'shield', 'Schirm auf: 8 Sekunden Schutz, blockt genau einen Treffer.']];
-  const GANI = {mini: 'boost', bill: 'area', burn: 'area', wheel: 'boost', ball: 'home', beer: 'drop', snack: 'area', kiss: 'area', burp: 'area', stink: 'drop', puke: 'drop', disco: 'area', meter: 'area', steal: 'home', ticket: 'area', caiman: 'home', trolley: 'throw', chomp: 'area'};
+  const GANI = {mini: 'boost', grant: 'area', bill: 'area', burn: 'area', wheel: 'boost', ball: 'home', beer: 'drop', snack: 'area', kiss: 'area', burp: 'area', stink: 'drop', puke: 'drop', disco: 'area', meter: 'area', steal: 'home', ticket: 'area', caiman: 'home', trolley: 'throw', chomp: 'area'};
   const GCOMBO = {'oil+pimenta': 'Langer Turbo, hinter dir brennt der Asphalt.', 'coati+parrot': 'Drei Nasenbären jagen die drei Karts vor dir.', 'turbo+turbo': 'Extra langer Turbo und kurz unverwundbar.',
     'pimenta+turbo': 'Längster Turbo im Spiel, mit Feuer am Heck.', 'flip+flip': 'Drei Flip-Flops gleichzeitig im Fächer.', 'oil+oil': 'Drei Pfützen hintereinander.', 'shield+shield': '16 Sekunden Schirm.', 'coati+coati': 'Zwei Nasenbären für die zwei vor dir.'};
   // eine Mini-Szene: eigener Kart (🚙 rot mit Leuchten, gespiegelt = fährt nach rechts), Item, Gegner
@@ -9427,7 +9442,7 @@ setGroup(G);
   window.__kart = {toMenu: () => toMenu(), mm: () => ({on: MM.on, step: MM.step}), mmRender: async (sec, song) => { const A0 = AC, G0 = MM.g, D0 = MM.dl, S0 = MM.song, oc = new OfflineAudioContext(1, 44100 * sec, 44100); AC = oc; MM.g = null; MM.song = song || S0 || 'phonk'; mmGraph(); MM.g.gain.value = .8 * SONGS[MM.song].v; MM.dl.delayTime.value = 60 / SONGS[MM.song].bpm * .75; const sp = 60 / SONGS[MM.song].bpm / 4; for (let st = 0, t = 0; t < sec; st++, t += sp) mmNote(st, t);
     const buf = await oc.startRendering(); AC = A0; MM.g = G0; MM.dl = D0; MM.song = S0; const d = buf.getChannelData(0); let pk = 0, ss = 0; for (let i = 0; i < d.length; i++) { pk = Math.max(pk, Math.abs(d[i])); ss += d[i] * d[i]; }
     const pcm = new Int16Array(d.length); for (let i = 0; i < d.length; i++) pcm[i] = Math.max(-1, Math.min(1, d[i])) * 32767; let bin = ''; const u8 = new Uint8Array(pcm.buffer); for (let i = 0; i < u8.length; i += 8192) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 8192));
-    return {peak: pk, rms: Math.sqrt(ss / d.length), pcm: btoa(bin)}; }, song: () => MM.song, ls: pr => liveSample(pr, q => q), give: (i, k) => { const kk = S.karts[i]; kk.item = ITEMS[k]; kk.icntFor = null; kk.roll = 0; }, use: i => useItem(S.karts[i]), icnt: i => icnt(S.karts[i]), hymn: id => hymn(id), cut: () => CUT, live: () => LIVE, liveGo: a => liveGo(a), emo: e => { const b = [...box.querySelectorAll('.kr-emol button')].find(x => x.textContent === e); if (b) b.click(); }, hitK: (i, why) => hit(S.karts[i], why), open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
+    return {peak: pk, rms: Math.sqrt(ss / d.length), pcm: btoa(bin)}; }, song: () => MM.song, ls: pr => liveSample(pr, q => q), hitK0: (i, w) => hit(S.karts[i], w), give: (i, k) => { const kk = S.karts[i]; kk.item = ITEMS[k] || Object.values(SPECIAL).find(q => q && q.k === k); kk.icntFor = null; kk.roll = 0; }, use: i => useItem(S.karts[i]), icnt: i => icnt(S.karts[i]), hymn: id => hymn(id), cut: () => CUT, live: () => LIVE, liveGo: a => liveGo(a), emo: e => { const b = [...box.querySelectorAll('.kr-emol button')].find(x => x.textContent === e); if (b) b.click(); }, hitK: (i, why) => hit(S.karts[i], why), open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
 })();
 /*@@END*/
 </script>
