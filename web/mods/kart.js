@@ -1877,6 +1877,37 @@
   // Ansage des Fahrernamens wie im Prügelspiel (Handy-Stimme), Auswahl-Geräusch
   function announce(id) { try { SFX.pick(); noise(.22, .08, 2400); beep(120, .35, 'sawtooth', .07, 50); } catch (e) {}
     if (!SOUND || !ANN || !window.speechSynthesis) return; try { const u = new SpeechSynthesisUtterance(NAME(id) + '!'); u.lang = 'de-DE'; u.rate = 1.05; u.pitch = .55; u.volume = 1; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {} }
+  // Item-Anleitung im Menü: Kurztext + Mini-Animation aus CSS und Emojis (keine Bilder/Videos, kostet fast nichts)
+  const GUIDE = [
+    ['turbo', 'boost', 'Antippen = kurzer Turbo. Am besten vor Geraden zünden oder um über eine Abkürzung zu kommen.'],
+    ['turbo3', 'boost', 'Drei Turbos: jedes Antippen zündet einen. Schnell hintereinander = langer Schub.'],
+    ['pimenta', 'fire', 'Langer Turbo mit Feuer am Heck: Wer dir direkt folgt, verbrennt sich und dreht sich.'],
+    ['oil', 'drop', 'Legt eine Pfütze hinter dich. Wer drüberfährt, dreht sich. Gut, wenn jemand dicht hinter dir ist.'],
+    ['banana3', 'trail', 'Drei Bananen hängen hinter dir und fangen Geschosse von hinten ab. Antippen = eine Schale ablegen.'],
+    ['boller3', 'bang', 'Antippen legt einen Böller ab. Knapp 1 s Zündschnur, dann dreht es alle im Umkreis. Nicht selbst zurückfahren!'],
+    ['flip', 'throw', 'Fliegt schnurgerade nach vorn und trifft, wer im Weg ist. Vorher auf den Vordermann zielen.'],
+    ['flip2', 'throw', 'Zwei Flip-Flops für zwei Schüsse. Daneben? Gleich nochmal werfen.'],
+    ['coati', 'home', 'Der Nasenbär sucht sich den Kart direkt vor dir und bringt ihn ins Schleudern. Zielen unnötig.'],
+    ['coco3', 'orbit', 'Drei Kokosnüsse kreisen um dich: rammen Gegner neben dir und blocken Geschosse. Antippen = Kokosnuss jagt den Vordermann.'],
+    ['parrot', 'area', 'Alle knapp vor dir bekommen den Papagei ins Gesicht: Ihre Lenkung wackelt ein paar Sekunden.'],
+    ['shield', 'shield', 'Schirm auf: 8 Sekunden Schutz, blockt genau einen Treffer.']];
+  const GANI = {bill: 'area', burn: 'area', wheel: 'boost', ball: 'home', beer: 'drop', snack: 'area', kiss: 'area', burp: 'area', stink: 'drop', puke: 'drop', disco: 'area', meter: 'area', steal: 'home', ticket: 'area', caiman: 'home', trolley: 'throw', chomp: 'area'};
+  const GCOMBO = {'oil+pimenta': 'Langer Turbo, hinter dir brennt der Asphalt.', 'coati+parrot': 'Drei Nasenbären jagen die drei Karts vor dir.', 'turbo+turbo': 'Extra langer Turbo und kurz unverwundbar.',
+    'pimenta+turbo': 'Längster Turbo im Spiel, mit Feuer am Heck.', 'flip+flip': 'Drei Flip-Flops gleichzeitig im Fächer.', 'oil+oil': 'Drei Pfützen hintereinander.', 'shield+shield': '16 Sekunden Schirm.', 'coati+coati': 'Zwei Nasenbären für die zwei vor dir.'};
+  // eine Mini-Szene: eigener Kart (🚙 rot mit Leuchten, gespiegelt = fährt nach rechts), Item, Gegner
+  const gAni = (a, e) => { const me = '<i class="kg-k"><u class="kg-me">🚙</u></i>', foe = '<i class="kg-t"><u>🚙</u></i>', it = '<i class="kg-p">' + e + '</i>';
+    const x = {boost: '<i class="kg-k"><u class="kg-me">🚙</u><b>🔥</b></i>', fire: '<i class="kg-k"><u class="kg-me">🚙</u><b>🔥</b></i><i class="kg-t"><u>🚙</u></i>', drop: me + it + foe, trail: '<i class="kg-k"><u class="kg-me">🚙</u><b>' + e + e + e + '</b></i>',
+      bang: me + it + '<i class="kg-x">💥</i>' + foe, throw: me + it + foe, home: me + it + foe, orbit: '<i class="kg-k"><u class="kg-me">🚙</u></i><i class="kg-o"><b>' + e + '</b><b>' + e + '</b><b>' + e + '</b></i>',
+      area: me + '<i class="kg-r"></i>' + foe + '<i class="kg-t kg-t2"><u>🚗</u></i>', shield: '<i class="kg-k"><u class="kg-me">🚙</u><b>⛱️</b></i><i class="kg-p">🩴</i>'}[a];
+    return '<div class="kg-st kg-' + a + '" aria-hidden="true">' + x + '</div>'; };
+  function guideHtml() {
+    const row = (it, a, x, who) => '<div class="kg-row">' + gAni(a, it.e) + '<div><b>' + it.e + ' ' + esc(it.n) + (it.cnt ? ' <em>×' + it.cnt + '</em>' : '') + (who ? ' <small>' + esc(who) + '</small>' : '') + '</b><p>' + esc(x) + '</p></div></div>';
+    const sp = DRVS.map(id => { const it = SPECIAL[id]; if (!it) return ''; const d = XBY && XBY[id], nm = d ? d.name : NAME(id); return row(it, GANI[it.k] || 'area', it.x ? it.x.charAt(0).toUpperCase() + it.x.slice(1) + '.' : '', nm); }).join('');
+    return '<p class="kg-how">🎁 Durch ❓-Kisten fahren, dann <b>ITEM</b> unten tippen (oder das Item-Fenster oben rechts, am PC die Leertaste). Vorne gibt es eher Verteidigung, hinten eher Turbos und Angriffe.<br>✌️ Hast du schon ein Item, landet das nächste im kleinen Fenster daneben. Passende Paare ergeben eine <b>Kombo</b>.</p>' +
+      '<p class="kr-lbl">Items für alle</p>' + GUIDE.map(([k, a, x]) => row(ITEMS[k], a, x)).join('') +
+      '<p class="kr-lbl">✨ Spezial-Items (22 % Chance, je Fahrer)</p>' + sp +
+      '<p class="kr-lbl">💥 Kombos (zwei Items gleichzeitig halten)</p><div class="kg-cb">' + Object.entries(COMBOS).map(([key, c]) => { const [a, b] = key.split('+').map(q => ITEMS[q].e); return '<div><b>' + a + ' + ' + b + ' = ' + c.e + ' ' + esc(c.n) + '</b><small>' + esc(GCOMBO[key] || '') + '</small></div>'; }).join('') + '</div>'; }
+  document.addEventListener('toggle', e => { const d = e.target; if (!d.classList || !d.classList.contains('kr-guide') || !d.open) return; const b = d.querySelector('.kr-guideb'); if (b && !b.dataset.ok) { b.innerHTML = guideHtml(); b.dataset.ok = 1; } }, true);
   function renderMenu() {
     const pk = menu.querySelector('.kr-pick:not(.kr-whop)'); pk.innerHTML = '';
     // Fahrerauswahl im Stil von Smash Bros./Tekken: schräge Porträt-Kacheln, P1-Rahmen, Zufalls-Kachel
