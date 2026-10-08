@@ -10215,6 +10215,7 @@
     ]
   },
   "news": [
+    {"id": "n251008f", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "🏁", "t": "Gringo Kart Live 3.0: gleiche Strecke und Gefahren für alle, gemeinsame Kisten, echtes Rempeln, Wiedereinstieg nach Absturz, Ping-Anzeige, Einstellungen für alle, Lobby-Hinweis auf der Seite und derbe Schnellsprüche"},
     {"id": "n251008e", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "👥", "t": "Gringo Kart Live 2.0: flüssigere Gegner, Bereit-Knopf mit Auto-Start, Strecken-Abstimmung, Live-Pokal über 3 Rennen, Emoji-Reaktionen, Revanche, Windschatten und Live-Bilanz"},
     {"id": "n251008d", "d": "2026-10-08", "tab": "kart-tab", "to": "kartsec", "e": "☁️", "t": "Gringo Kart: Münzen, Garage, Kostüme, Erfolge und Bestzeiten hängen jetzt an deiner Person und gelten auf jedem Handy (vorher „Ich bin …“ wählen)"},
     {
