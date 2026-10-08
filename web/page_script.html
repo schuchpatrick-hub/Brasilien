@@ -7638,16 +7638,23 @@ setGroup(G);
       [-1, 1].forEach(sd => { dot(sd * 5, -16, 2.6, '#e8d64a'); x.fillStyle = '#111'; x.fillRect(sd * 5 - .5, -18, 1, 4); }); }
     else return false; return true; }
   const HEAD = {}, VEH = {};
+  const PH = {}, HV = {};
+  function paintHead(id) { const ph = (PH[id] || [])[HV[id] || 0] || (PH[id] || [])[0], hs = HEAD[id]; if (!ph || !hs) return;
+    const L = LOOK[id] || {}, col = L.shirt || '#00a651', R = 52, sh = (STY[id] || {}).shp || 'circle', x = hs.getContext('2d'), {im, f} = ph, D = 2 * R * f.z;
+    x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, hs.width, hs.height); x.scale(hs.width / (2 * R + 12), hs.height / (2 * R + 12));
+    x.save(); x.translate(R + 6, R + 6); x.fillStyle = col; shapePath(x, sh, R + 6); x.fill(); shapePath(x, sh, R); x.clip(); x.drawImage(im, -f.x * D, -f.y * D, D, D); x.restore();
+    x.save(); x.translate(R + 6, R + 6); x.strokeStyle = 'rgba(255,255,255,.85)'; x.lineWidth = 2.5; shapePath(x, sh, R + 1); x.stroke(); x.restore(); x.setTransform(1, 0, 0, 1, 0, 0);
+    XDRV.filter(x0 => x0.base === id).forEach(x0 => { xHead(x0, ph, HEAD[x0.id]); }); HEADC = {}; }
+  // je Rennen pro Person zufällig eins ihrer Fotos (eigener Zufall, nicht der gemeinsame Zufall des Live-Rennens)
+  function pickFaces() { Object.keys(PH).forEach(id => { const n = PH[id].filter(Boolean).length; if (n < 2) return; const r = crypto.getRandomValues(new Uint8Array(1))[0] % PH[id].length; if (PH[id][r] && r !== (HV[id] || 0)) { HV[id] = r; paintHead(id); } }); }
   function makeHeads() {
     CREW.forEach(p => {
       const L = LOOK[p.id] || {}, col = L.shirt || '#00a651', R = 52, sh = (STY[p.id] || {}).shp || 'circle';
       const hs = sprite(2 * R + 12, 2 * R + 12, (x) => { x.translate(R + 6, R + 6); x.fillStyle = col; shapePath(x, sh, R + 6); x.fill();
         x.fillStyle = '#ffe0bd'; shapePath(x, sh, R); x.fill(); x.fillStyle = '#333'; x.font = '800 52px system-ui'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(p.name[0], 0, 1); });
       HEAD[p.id] = hs; XDRV.filter(x0 => x0.base === p.id).forEach(x0 => { HEAD[x0.id] = xHead(x0, null); });
-      if (p.photo) { const im = new Image(); im.onload = () => { const x = hs.getContext('2d'), f = L.face || {x: .5, y: .5, z: 1}, D = 2 * R * f.z;
-        x.setTransform(1, 0, 0, 1, 0, 0); x.save(); x.translate(R + 6, R + 6); shapePath(x, sh, R); x.clip(); x.drawImage(im, -f.x * D, -f.y * D, D, D); x.restore();
-        x.save(); x.translate(R + 6, R + 6); x.strokeStyle = 'rgba(255,255,255,.85)'; x.lineWidth = 2.5; shapePath(x, sh, R + 1); x.stroke(); x.restore();
-        XDRV.filter(x0 => x0.base === p.id).forEach(x0 => { xHead(x0, {im, f}, HEAD[x0.id]); }); HEADC = {}; }; im.src = p.photo; }
+      // Fotos: crew/<id>.jpg und optional ein zweites (photo2 + look.face2); je Rennen wird pro Person zufällig eins genommen (pickFaces)
+      if (p.photo) { PH[p.id] = []; [[p.photo, L.face], [p.photo2, L.face2]].forEach(([src, f], v) => { if (!src) return; const im = new Image(); im.onload = () => { PH[p.id][v] = {im, f: f || {x: .5, y: .5, z: 1}}; if ((HV[p.id] || 0) === v) paintHead(p.id); }; im.src = src; }); }
     });
     XDRV.filter(x0 => x0.npc).forEach(x0 => { HEAD[x0.id] = xHead(x0, null); });
   }
@@ -7761,55 +7768,85 @@ setGroup(G);
     splash: () => { if (!real('splash', .6)) noise(.6, .15, 500); }, rocket: () => { beep(200, .6, 'sawtooth', .07, 1200); noise(.8, .12, 300); }, stall: () => beep(160, .5, 'square', .06, 60),
     birds: () => { for (let i = 0; i < 4; i++) setTimeout(() => noise(.06, .05, 0, 0, 0, 2500 + Math.random() * 1500), i * 60); }, trick: () => beep(660, .2, 'square', .05, 1320),
     chomp: () => { if (!real('chomp', .7)) beep(180, .2, 'square', .08, 90); }, fanfare: () => [392, 523, 659, 784, 1046, 784, 1046].forEach((f, i) => setTimeout(() => beep(f, i > 4 ? .5 : .2, 'square', .07), i * 160))};
-  // Menü-Musik „Gringo Orbit“: eigene Weltraum-Disco (Space-Synth, 132 BPM, a-Moll), live per Web Audio erzeugt, keine Datei.
-  // Ablauf: 4 Takte Intro (Fläche, Arpeggio öffnet sich, Laser), dann Schleife aus 8 Takten Groove, 8 Takten mit Melodie, 4 Takten Break mit Riser.
-  const MM = {next: 0, step: 0, iv: 0, g: null, dl: null, on: false, bpm: 132};
-  const MM_CH = [[0, 0], [-4, 1], [3, 1], [-2, 1], [0, 0], [-4, 1], [3, 1], [-5, 1]];   // Grundton (Halbtöne über A2), 0 = moll, 1 = dur
-  const MM_LEAD = [[[0, 12, 3], [3, 15, 3], [6, 19, 2], [8, 17, 2], [10, 15, 2], [12, 12, 4]], [[0, 20, 3], [3, 19, 3], [6, 15, 2], [8, 12, 4], [12, 15, 4]],
-    [[0, 19, 3], [3, 22, 3], [6, 19, 2], [8, 17, 2], [10, 15, 2], [12, 19, 4]], [[0, 17, 6], [6, 14, 2], [8, 10, 4], [12, 14, 2], [14, 17, 2]],
-    [[0, 24, 3], [3, 22, 3], [6, 19, 2], [8, 22, 2], [10, 24, 2], [12, 27, 4]], [[0, 24, 3], [3, 20, 3], [6, 17, 2], [8, 20, 4], [12, 24, 4]],
-    [[0, 22, 3], [3, 19, 3], [6, 15, 2], [8, 19, 2], [10, 22, 2], [12, 27, 4]], [[0, 23, 4], [4, 20, 4], [8, 19, 4], [12, 23, 4]]];
-  const hz = n => 110 * Math.pow(2, n / 12);
-  function mmGraph() { const a = AC; if (MM.g) return; MM.g = a.createGain(); MM.g.gain.value = 0; MM.g.connect(a.destination);
-    MM.dl = a.createDelay(1); MM.dl.delayTime.value = 60 / MM.bpm * .75; const fb = a.createGain(); fb.gain.value = .32; const wet = a.createGain(); wet.gain.value = .35;
-    MM.dl.connect(fb); fb.connect(MM.dl); MM.dl.connect(wet); wet.connect(MM.g); }
-  function mmNote(s, t) {
-    const a = AC, sp = 60 / MM.bpm / 4, i = s % 16, b = s >> 4, intro = b < 4, c = (b - 4) % 20, sec = intro ? 'intro' : c < 8 ? 'groove' : c < 16 ? 'lead' : 'break', bar = intro ? b % 8 : c % 8;
-    const [r0, maj] = MM_CH[bar], root = hz(r0), tri = maj ? [0, 4, 7] : [0, 3, 7];
-    const osc = (f, d, type, v, o) => { o = o || {}; const n = a.createOscillator(), g = a.createGain(); n.type = type; n.frequency.setValueAtTime(f, t); if (o.f2) n.frequency.exponentialRampToValueAtTime(o.f2, t + (o.sl || d)); if (o.det) n.detune.value = o.det;
-      let out = g; if (o.lp) { const fl = a.createBiquadFilter(); fl.type = 'lowpass'; fl.frequency.setValueAtTime(o.lp, t); if (o.lp2) fl.frequency.exponentialRampToValueAtTime(o.lp2, t + d); fl.Q.value = o.q || 1; n.connect(fl); fl.connect(g); } else n.connect(g);
-      const at = o.at || .004; g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(v, t + at); g.gain.exponentialRampToValueAtTime(.0001, t + d); g.connect(MM.g); if (o.dly) g.connect(MM.dl); n.start(t); n.stop(t + d + .05); return out; };
-    const nz = (d, v, type, f, q) => { const len = Math.max(1, a.sampleRate * d | 0), bf = a.createBuffer(1, len, a.sampleRate), dd = bf.getChannelData(0); for (let k = 0; k < len; k++) dd[k] = (Math.random() * 2 - 1) * (1 - k / len);
-      const src = a.createBufferSource(), fl = a.createBiquadFilter(), g = a.createGain(); src.buffer = bf; fl.type = type; fl.frequency.value = f; fl.Q.value = q || 1; g.gain.value = v; src.connect(fl); fl.connect(g); g.connect(MM.g); src.start(t); };
-    const drums = sec === 'groove' || sec === 'lead';
-    // Fläche: drei verstimmte Sägezähne je Takt, weicher Einsatz
-    if (i === 0) tri.forEach((iv, k) => [-9, 9].forEach(dt => osc(root * 2 * Math.pow(2, iv / 12), sp * 16 * .98, 'sawtooth', sec === 'break' || intro ? .035 : .022, {at: .35, lp: intro ? 500 + b * 300 : 1400, det: dt + k})));
-    // Arpeggio (16tel), Filter öffnet sich im Intro und pumpt im Groove
-    { const arp = [0, 1, 2, 1, 2, 0, 2, 1], iv = tri[arp[i % 8]] + (i % 8 > 3 ? 12 : 0), lp = intro ? 400 + (b * 16 + i) * 40 : sec === 'break' ? 1800 : 1200 + 900 * Math.sin((s % 64) / 64 * Math.PI);
-      osc(root * 4 * Math.pow(2, iv / 12), sp * .9, 'square', .028, {lp, lp2: lp * .4, q: 6}); }
-    if (drums || (sec === 'intro' && b === 3 && i >= 8)) {
-      // Bass: rollende Oktaven (tief/hoch im Wechsel), typischer Weltraum-Disco-Galopp
-      osc(i % 2 ? root : root / 2, sp * .85, 'sawtooth', drums ? .12 : .07, {lp: 900, lp2: 250, q: 4}); }
-    if (drums) {
-      if (i % 4 === 0) osc(150, .28, 'sine', .7, {f2: 42, sl: .12});                                  // Kick: gerade Viertel
-      if (i % 4 === 2) nz(.09, .09, 'highpass', 7500);                                                // offene Hi-Hat auf dem Offbeat
-      else nz(.025, .025, 'highpass', 9000);                                                          // geschlossene Hi-Hat
-      if (i === 4 || i === 12) { nz(.16, .16, 'bandpass', 1400, .8); nz(.05, .1, 'bandpass', 2600, 2); }   // Clap
-    }
-    // Melodie (eigene Komposition) mit Echo
-    if (sec === 'lead') MM_LEAD[bar].forEach(([st, n, l]) => { if (st === i) { osc(hz(n + 24), sp * l * .95, 'sawtooth', .05, {lp: 3200, dly: 1, det: 6, at: .01}); osc(hz(n + 24), sp * l * .95, 'square', .025, {lp: 2400, dly: 1, det: -6, at: .01}); } });
-    // Laser-Zaps und Riser
-    if (i === 14 && b % 4 === 3) osc(2400, .35, 'square', .03, {f2: 180, lp: 5000});
-    if (i === 6 && (intro || sec === 'break') && bar % 2) osc(900, .5, 'sine', .04, {f2: 3200, dly: 1});
-    if (sec === 'break' && c === 19 && i === 0) { const d = sp * 16, n = a.createOscillator(), g = a.createGain(); n.type = 'sawtooth'; n.frequency.setValueAtTime(200, t); n.frequency.exponentialRampToValueAtTime(2400, t + d);
-      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.05, t + d); g.gain.linearRampToValueAtTime(0, t + d + .02); n.connect(g); g.connect(MM.g); n.start(t); n.stop(t + d + .05); nz(d, .08, 'highpass', 2000); }
-  }
+  // Menü-Musik: drei eigene Stücke, live per Web Audio erzeugt (keine Dateien); bei jedem Öffnen zufällig eins, nie zweimal hintereinander dasselbe.
+  // Aufbau je Stück: 4 Takte Intro, dann Schleife aus 8 Takten Drop, 8 Takten Drop mit Melodie, 4 Takten Break.
+  const MM = {next: 0, step: 0, iv: 0, g: null, dl: null, on: false, song: null};
+  const hz = (base, n) => base * Math.pow(2, n / 12);
+  let MMCURVE = null;
+  function mmGraph() { const a = AC; if (MM.g && MM.g.context === a) return; MM.g = a.createGain(); MM.g.gain.value = 0; MM.g.connect(a.destination);
+    MM.dl = a.createDelay(1); MM.dl.delayTime.value = .34; const fb = a.createGain(); fb.gain.value = .3; const wet = a.createGain(); wet.gain.value = .3;
+    MM.dl.connect(fb); fb.connect(MM.dl); MM.dl.connect(wet); wet.connect(MM.g);
+    MMCURVE = new Float32Array(1024); for (let k = 0; k < 1024; k++) { const x = k / 512 - 1; MMCURVE[k] = Math.tanh(x * 3.2); } }
+  // Bausteine (t = Startzeit)
+  function mmOsc(t, f, d, type, v, o) { o = o || {}; const a = AC, n = a.createOscillator(), g = a.createGain(); n.type = type; n.frequency.setValueAtTime(f, t); if (o.f2) n.frequency.exponentialRampToValueAtTime(o.f2, t + (o.sl || d)); if (o.det) n.detune.value = o.det;
+    let src = n; if (o.dist) { const ws = a.createWaveShaper(); ws.curve = MMCURVE; n.connect(ws); src = ws; }
+    if (o.lp || o.bp) { const fl = a.createBiquadFilter(); fl.type = o.bp ? 'bandpass' : 'lowpass'; fl.frequency.setValueAtTime(o.bp || o.lp, t); if (o.lp2) fl.frequency.exponentialRampToValueAtTime(o.lp2, t + d); fl.Q.value = o.q || 1; src.connect(fl); fl.connect(g); } else src.connect(g);
+    const at = o.at || .004; g.gain.setValueAtTime(.0001, t); g.gain.linearRampToValueAtTime(v, t + at); if (o.hold) g.gain.setValueAtTime(v, t + o.hold); g.gain.exponentialRampToValueAtTime(.0001, t + d); g.connect(MM.g); if (o.dly) g.connect(MM.dl); n.start(t); n.stop(t + d + .05); return n; }
+  function mmNz(t, d, v, type, f, q) { const a = AC, len = Math.max(1, a.sampleRate * d | 0), bf = a.createBuffer(1, len, a.sampleRate), dd = bf.getChannelData(0); for (let k = 0; k < len; k++) dd[k] = (Math.random() * 2 - 1) * (1 - k / len);
+    const src = a.createBufferSource(), fl = a.createBiquadFilter(), g = a.createGain(); src.buffer = bf; fl.type = type; fl.frequency.value = f; fl.Q.value = q || 1; g.gain.value = v; src.connect(fl); fl.connect(g); g.connect(MM.g); src.start(t); }
+  const mmKick = (t, v, f0) => mmOsc(t, f0 || 160, .3, 'sine', v, {f2: 42, sl: .1});
+  const mmClap = (t, v) => { mmNz(t, .18, v, 'bandpass', 1500, .7); mmNz(t, .06, v * .7, 'bandpass', 2800, 2); };
+  const mmSnare = (t, v) => { mmNz(t, .16, v, 'bandpass', 1900, .6); mmOsc(t, 210, .1, 'triangle', v * .8, {f2: 140}); };
+  const mmHat = (t, v, open) => mmNz(t, open ? .1 : .03, v, 'highpass', open ? 7000 : 9000);
+  const mmWhistle = (t, n) => { for (let k = 0; k < (n || 6); k++) mmOsc(t + k * .055, 2850 + (k % 2) * 120, .045, 'sine', .05); };   // Samba-Pfeife (Apito)
+  const mmAgogo = (t, hi) => { const f = hi ? 940 : 700; mmOsc(t, f, .14, 'square', .025, {bp: f * 1.4, q: 3}); mmOsc(t, f * 1.5, .1, 'sine', .02); };
+  const mmPad = (t, root, iv, d, v, lp) => iv.forEach((x, k) => [-10, 10].forEach(dt => mmOsc(t, hz(root, x), d, 'sawtooth', v, {at: .3, lp: lp || 1200, det: dt + k * 2})));
+  const mmRiser = (t, d) => { const a = AC, n = a.createOscillator(), g = a.createGain(); n.type = 'sawtooth'; n.frequency.setValueAtTime(200, t); n.frequency.exponentialRampToValueAtTime(2200, t + d);
+    g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.04, t + d); g.gain.linearRampToValueAtTime(0, t + d + .02); n.connect(g); g.connect(MM.g); n.start(t); n.stop(t + d + .05); mmNz(t, d, .07, 'highpass', 2500); };
+  const mmSec = b => { if (b < 4) return ['intro', b % 4, b]; const c = (b - 4) % 20; return [c < 8 ? 'drop' : c < 16 ? 'drop2' : 'break', c % 4, c]; };
+  // 1) Brasil-Phonk: Cowbell-Melodie, verzerrter 808-Bass, Halbzeit-Clap, Hi-Hat-Rolls, „Hey“-Rufe (fis-Moll, 130 BPM)
+  const PH_A = {0: 0, 2: 0, 3: 3, 6: 0, 8: 7, 10: 5, 11: 3, 14: 2}, PH_B = {0: 0, 2: 0, 3: 3, 6: 0, 8: 10, 10: 8, 11: 7, 13: 5, 14: 3}, PH_808 = {0: 6, 6: 4, 10: 3, 14: 2};
+  function phonk(s, t, sp) { const i = s % 16, b = s >> 4, [sec, bar, c] = mmSec(b), root = [0, 0, -4, -2][bar], drums = sec === 'drop' || sec === 'drop2';
+    const pat = sec === 'drop2' && bar % 2 ? PH_B : PH_A;
+    if (i in pat) { const f = hz(740, pat[i] + root); mmOsc(t, f, .2, 'square', sec === 'intro' ? .02 + b * .006 : .04, {bp: f * 1.25, q: 2.5, dly: sec !== 'drop'}); mmOsc(t, f * 1.48, .14, 'square', .018, {bp: f * 1.8, q: 3}); }
+    if (drums && i in PH_808) { const f = hz(46.25, root + 12); mmOsc(t, f * 1.6, sp * PH_808[i] * 1.15, 'sine', .55, {f2: f, sl: .06, dist: 1, lp: 900}); if (i === 0 || i === 10) mmKick(t, .55, 180); }
+    if (sec === 'break' && i === 0) { mmOsc(t, hz(46.25, root + 12), sp * 15, 'sine', .3, {lp: 400}); mmPad(t, hz(185, root), [0, 3, 7], sp * 16, .018, 900); }
+    if (drums) { if (i === 8) mmClap(t, .28); if (i === 4 && sec === 'drop2') mmClap(t, .1);
+      if (bar === 3 && i >= 12) { mmHat(t, .05); mmHat(t + sp / 3, .04); mmHat(t + sp * 2 / 3, .04); } else mmHat(t, i % 4 === 2 ? .06 : .035);
+      if (i === 0 && bar % 2 === 0) { mmOsc(t, 230, .22, 'sawtooth', .07, {bp: 850, q: 5}); mmOsc(t, 230, .22, 'sawtooth', .05, {bp: 1250, q: 5}); } }   // „Hey!“
+    if (sec === 'intro' && b === 3 && i === 0) mmRiser(t, sp * 16);
+    if (sec === 'break' && c === 19 && i === 0) mmRiser(t, sp * 16); }
+  // 2) Samba-Drum'n'Bass: Breakbeat, Reese-Bass, Batucada (Surdo, Tamborim, Ganzá, Agogô, Cuíca, Pfeife), Pluck-Melodie (d-Moll, 174 BPM)
+  function sdnb(s, t, sp) { const i = s % 16, b = s >> 4, [sec, bar, c] = mmSec(b), root = [0, -2, -4, -5][bar], maj = bar > 0, tri = maj ? [0, 4, 7] : [0, 3, 7], drums = sec === 'drop' || sec === 'drop2';
+    const R = hz(73.4, root);
+    if (i === 0) mmPad(t, R * 4, tri, sp * 16, drums ? .012 : .02, 1100);
+    // Batucada (im Intro nach und nach, im Break allein)
+    const perc = sec !== 'intro' || b >= 1; if (perc) { if (i === 0 || i === 8) mmOsc(t, i ? 95 : 72, .35, 'sine', drums ? .2 : .4, {f2: 50});
+      if ([0, 3, 6, 8, 11, 14].includes(i) && (sec !== 'intro' || b >= 2)) mmNz(t, .04, i % 4 === 2 ? .08 : .05, 'bandpass', 4200, 2);
+      mmHat(t, i % 2 ? .02 : .012); if (!drums && [0, 2, 4, 7, 8, 10, 12, 14].includes(i)) mmAgogo(t, [0, 4, 8, 12].includes(i)); }
+    if ((sec === 'break' || sec === 'intro') && i === 6 && bar % 2) { const n = mmOsc(t, 480, .32, 'sine', .07); n.frequency.linearRampToValueAtTime(900, t + .12); n.frequency.linearRampToValueAtTime(520, t + .3); }   // Cuíca
+    if ((sec === 'drop' && c === 0 && i === 0) || (sec === 'intro' && b === 3 && i === 8)) mmWhistle(t, 7);
+    if (drums) { if (i === 0 || i === 10) mmKick(t, .6); if (i === 4 || i === 12) mmSnare(t, .22); if (i === 7 || i === 15) mmSnare(t, .05); mmHat(t, i % 2 ? .02 : .04);
+      if (i === 0 || i === 8) { [-12, 12].forEach(dt => mmOsc(t, R, sp * 8, 'sawtooth', .07, {lp: 380, q: 2, det: dt, at: .01, hold: sp * 6})); mmOsc(t, R / 2, sp * 8, 'sine', .25, {at: .01, hold: sp * 6}); } }
+    if (sec === 'drop2' && i % 2 === 0) { const ar = [0, 2, 1, 2, 0, 2, 1, 3], tones = [tri[0], tri[1], tri[2], 12], n = tones[ar[(i >> 1) % 8]] + (bar % 2 && i >= 8 ? 12 : 0);
+      mmOsc(t, hz(293.7, root + n), .22, 'triangle', .07, {dly: 1}); mmOsc(t, hz(293.7, root + n) * 2, .08, 'square', .015, {lp: 3000}); }
+    if (sec === 'break' && c === 19 && i === 0) mmRiser(t, sp * 16);
+    if (sec === 'intro' && b === 3 && i === 0) mmRiser(t, sp * 16); }
+  // 3) Eurodance mit Brasil-Touch: gerade Bass-Drum, Offbeat-Bass, Piano-Stabs, Hoover, Supersaw-Melodie, Pfeife und Agogô (e-Moll, 140 BPM)
+  const EU_LEAD = [[[0, 12, 3], [3, 10, 3], [6, 7, 2], [8, 10, 4], [12, 7, 4]], [[0, 8, 3], [3, 7, 3], [6, 3, 2], [8, 7, 4], [12, 12, 4]],
+    [[0, 10, 3], [3, 12, 3], [6, 15, 2], [8, 14, 4], [12, 10, 4]], [[0, 14, 6], [6, 12, 2], [8, 10, 4], [12, 7, 4]],
+    [[0, 12, 3], [3, 15, 3], [6, 19, 2], [8, 17, 4], [12, 15, 4]], [[0, 15, 3], [3, 12, 3], [6, 8, 2], [8, 12, 4], [12, 15, 4]],
+    [[0, 14, 3], [3, 15, 3], [6, 17, 2], [8, 19, 4], [12, 15, 4]], [[0, 14, 2], [2, 15, 2], [4, 17, 4], [8, 19, 8]]];
+  function euro(s, t, sp) { const i = s % 16, b = s >> 4, [sec, bar, c] = mmSec(b), root = [0, -4, 3, -2][bar], tri = bar ? [0, 4, 7] : [0, 3, 7], drums = sec === 'drop' || sec === 'drop2';
+    const R = hz(82.4, root);
+    if ([0, 3, 6, 10].includes(i)) tri.concat([12]).forEach(x => { const f = hz(R * 4, x); mmOsc(t, f, .28, 'triangle', sec === 'intro' ? .018 : .03, {lp: sec === 'intro' ? 700 + b * 500 : 4000}); mmOsc(t, f * 2, .12, 'sine', .01); });   // Piano-Stabs
+    if (drums) { if (i % 4 === 0) mmKick(t, .65); if (i === 4 || i === 12) mmClap(t, .2); if (i % 4 === 2) mmHat(t, .07, 1); mmNz(t, .03, i % 2 ? .03 : .015, 'highpass', 6000);
+      if (i % 4 === 2 || i % 4 === 3) mmOsc(t, i % 4 === 2 ? R : R * 2, sp * .9, 'sawtooth', .11, {lp: 700, lp2: 250, q: 3});   // Offbeat-Bass
+      if ((c === 0 || c === 8) && i === 0) [-15, 0, 15].forEach(dt => mmOsc(t, R * 2, sp * 30, 'sawtooth', .03, {f2: R * 2 * 1.02, sl: .3, lp: 1800, det: dt, at: .05, hold: sp * 26})); }   // Hoover
+    if (sec === 'drop2') EU_LEAD[c % 8].forEach(([st, n, l]) => { if (st === i) [-14, 0, 14].forEach(dt => mmOsc(t, hz(329.6, n), sp * l * .95, 'sawtooth', .025, {lp: 3500, det: dt, dly: 1, at: .01, hold: sp * l * .6})); });
+    if (sec === 'break' || sec === 'intro') { if ([0, 3, 6, 10, 12].includes(i) && b > 0) mmAgogo(t, i % 2 === 0); if (i === 0) mmPad(t, R * 2, tri, sp * 16, .02, 1000); }
+    if ((sec === 'drop' && c === 0 && i === 0) || (sec === 'drop2' && c === 8 && i === 0)) mmWhistle(t, 6);
+    if ((sec === 'intro' && b === 3 && i === 0) || (sec === 'break' && c === 19 && i === 0)) mmRiser(t, sp * 16); }
+  const SONGS = {phonk: {n: 'Brasil-Phonk', bpm: 130, f: phonk, v: .55}, sdnb: {n: 'Samba-Drum\'n\'Bass', bpm: 174, f: sdnb, v: .8}, euro: {n: 'Eurodance Brasil', bpm: 140, f: euro, v: 1.25}};   // v = Lautstärke angeglichen (RMS ~0,1)
+  function mmPick() { const ks = Object.keys(SONGS), last = store.get('kartSong'), cand = ks.filter(k => k !== last); MM.song = pick(cand.length ? cand : ks); store.set('kartSong', MM.song); }
+  const mmNote = (s, t) => { const so = SONGS[MM.song]; so.f(s, t, 60 / so.bpm / 4); };
   function mmTick() { const want = !!(AC && SOUND && SET.mm !== 'off' && !box.hidden && !menu.hidden && !document.hidden);
-    if (want && !MM.on) { if (AC.state === 'suspended') AC.resume(); mmGraph(); MM.on = true; MM.step = 0; MM.next = AC.currentTime + .1; MM.g.gain.cancelScheduledValues(AC.currentTime); MM.g.gain.setValueAtTime(MM.g.gain.value, AC.currentTime); MM.g.gain.linearRampToValueAtTime(.9, AC.currentTime + 1.2); }
+    if (want && !MM.on) { if (AC.state === 'suspended') AC.resume(); mmGraph(); if (!MM.song) mmPick(); MM.dl.delayTime.value = 60 / SONGS[MM.song].bpm * .75; MM.on = true; MM.step = 0; MM.next = AC.currentTime + .1; MM.g.gain.cancelScheduledValues(AC.currentTime); MM.g.gain.setValueAtTime(MM.g.gain.value, AC.currentTime); MM.g.gain.linearRampToValueAtTime(.8 * SONGS[MM.song].v, AC.currentTime + 1.2); setTxt(); }
     if (!want && MM.on) { MM.on = false; if (MM.g && AC) { MM.g.gain.cancelScheduledValues(AC.currentTime); MM.g.gain.setValueAtTime(MM.g.gain.value, AC.currentTime); MM.g.gain.linearRampToValueAtTime(0, AC.currentTime + .4); } }
-    if (!MM.on || AC.state !== 'running') return; const sp = 60 / MM.bpm / 4; if (MM.next < AC.currentTime) MM.next = AC.currentTime + .05;
+    if (!MM.on || AC.state !== 'running') return; const sp = 60 / SONGS[MM.song].bpm / 4; if (MM.next < AC.currentTime) MM.next = AC.currentTime + .05;
     while (MM.next < AC.currentTime + .25) { mmNote(MM.step, MM.next); MM.next += sp; MM.step++; } }
-  const mmStart = () => { if (!MM.iv) MM.iv = setInterval(mmTick, 60); mmTick(); }, mmStop = () => { if (MM.iv) { clearInterval(MM.iv); MM.iv = 0; } MM.on = false; if (MM.g && AC) { MM.g.gain.cancelScheduledValues(AC.currentTime); MM.g.gain.setValueAtTime(0, AC.currentTime); } };
+  // beim Öffnen des Spiels ein neues Stück (zufällig, nicht dasselbe wie zuletzt)
+  const mmStart = () => { MM.song = null; MM.on = false; if (!MM.iv) MM.iv = setInterval(mmTick, 60); mmTick(); }, mmStop = () => { if (MM.iv) { clearInterval(MM.iv); MM.iv = 0; } MM.on = false; if (MM.g && AC) { MM.g.gain.cancelScheduledValues(AC.currentTime); MM.g.gain.setValueAtTime(0, AC.currentTime); } };
   // Samba-Rennmusik: Surdo, Tamborim, Ganzá, Agogô, Bass (Lookahead-Planer, 16tel); Tempo/Tonart je Strecke
   const MUS = {on: false, next: 0, step: 0, fast: false};
   function musTick() {
@@ -9226,7 +9263,7 @@ setGroup(G);
     L.querySelector('.kr-load-tip').textContent = '💡 ' + pick(TIPS); L.hidden = false; const t0 = performance.now(); setTimeout(() => { fn(); setTimeout(() => { L.hidden = true; }, Math.max(0, 900 - (performance.now() - t0))); }, 40); }
   function startRace() { if (MODE === 'live' && !LIVE.pending) { liveGo(); return; } const tid = CUP ? CUP.list[CUP.i] : RULE ? daily().track.id : TRK; menu.hidden = true; res.hidden = true; pm.hidden = true; racing(true); if (S) S.paused = true; showLoad(tid, startRace0); }
   function startRace0() {
-    setTimeout(() => { if (BUF.more) BUF.more(); }, 1200);
+    setTimeout(() => { if (BUF.more) BUF.more(); }, 1200); pickFaces();
     menu.hidden = true; res.hidden = true; pm.hidden = true; racing(true);
     if (CUP) { RULE = null; loadTrack(CUP.list[CUP.i]); } else if (RULE) loadTrack(daily().track.id, RULE.k === 'rev'); else loadTrack(TRK);
     if (LIVE.pending) { LIVE.race = LIVE.pending; LIVE.pending = null; } else if (MODE !== 'live') LIVE.race = null;
@@ -9264,7 +9301,7 @@ setGroup(G);
   const setT = (sel, txt) => box.querySelectorAll(sel).forEach(b => { b.textContent = txt; });
   const sndTxt = () => setT('.kr-snd', SOUND ? '🔊 Ton: an' : '🔇 Ton: aus'), steerTxt = () => setT('.kr-steer', '🎚 Lenkstärke: ' + STEERS[STEER][0]), annTxt = () => setT('.kr-ann', '🎙 Ansager: ' + (ANN ? 'an' : 'aus'));
   const setTxt = () => { sndTxt(); steerTxt(); annTxt(); setT('.kr-ctl', '🎮 Steuerung: ' + (SET.ctl === 'analog' ? 'Analog (Daumen-Position)' : 'Halten links/rechts'));
-    setT('.kr-q', '✨ Grafik: ' + ['Sparsam', 'Normal', 'Hoch'][SET.q]); setT('.kr-cam', '🎥 Kamera: ' + ['Nah', 'Normal', 'Weit'][SET.cam]); setT('.kr-tod', '🌗 Tageszeit: ' + (SET.tod === 'day' ? 'immer Tag' : 'wie in Rio')); setT('.kr-evt', '🎲 Ereignisse: ' + (SET.ev === 'off' ? 'aus' : 'an')); setT('.kr-hd', '🗿 Köpfe: ' + ['Mini', 'Normal', 'Wackelkopf XXL'][SET.hd === undefined ? 1 : SET.hd]); setT('.kr-mm', '🎵 Menü-Musik: ' + (SET.mm === 'off' ? 'aus' : 'an')); };
+    setT('.kr-q', '✨ Grafik: ' + ['Sparsam', 'Normal', 'Hoch'][SET.q]); setT('.kr-cam', '🎥 Kamera: ' + ['Nah', 'Normal', 'Weit'][SET.cam]); setT('.kr-tod', '🌗 Tageszeit: ' + (SET.tod === 'day' ? 'immer Tag' : 'wie in Rio')); setT('.kr-evt', '🎲 Ereignisse: ' + (SET.ev === 'off' ? 'aus' : 'an')); setT('.kr-hd', '🗿 Köpfe: ' + ['Mini', 'Normal', 'Wackelkopf XXL'][SET.hd === undefined ? 1 : SET.hd]); setT('.kr-mm', '🎵 Menü-Musik: ' + (SET.mm === 'off' ? 'aus' : 'an' + (MM.song ? ' · ' + SONGS[MM.song].n : ''))); };
   setTxt();
   box.addEventListener('click', e => {
     if (e.target.closest('.kr-steer')) { STEER = (STEER + 1) % STEERS.length; store.set('kartSteer', STEER); }
@@ -9372,10 +9409,10 @@ setGroup(G);
   box.addEventListener('click', e => { const w = e.target.closest('.kr-whop button'); if (w) { WHOOPEN = false; setMe(w.dataset.who); if (!menu.hidden) renderMenu(); }
     if (e.target.closest('.kr-whochg')) { WHOOPEN = true; renderMenu(); } });
   window.__kartAt = (i, l) => at(i, l); window.__kartTW = () => TW; window.__kartDeck = () => DECK && {i0: DECK.i0, len: DECK.len, under: DECK.under}; window.__kartTun = () => TUN.map(u => ({i0: u.i0, len: u.len, nm: u.nm})); window.__kartN = () => N;
-  window.__kart = {mm: () => ({on: MM.on, step: MM.step}), mmRender: async sec => { const A0 = AC, G0 = MM.g, D0 = MM.dl, oc = new OfflineAudioContext(1, 44100 * sec, 44100); AC = oc; MM.g = null; mmGraph(); MM.g.gain.value = .9; const sp = 60 / MM.bpm / 4; for (let st = 0, t = 0; t < sec; st++, t += sp) mmNote(st, t);
-    const buf = await oc.startRendering(); AC = A0; MM.g = G0; MM.dl = D0; const d = buf.getChannelData(0); let pk = 0, ss = 0; for (let i = 0; i < d.length; i++) { pk = Math.max(pk, Math.abs(d[i])); ss += d[i] * d[i]; }
+  window.__kart = {mm: () => ({on: MM.on, step: MM.step}), mmRender: async (sec, song) => { const A0 = AC, G0 = MM.g, D0 = MM.dl, S0 = MM.song, oc = new OfflineAudioContext(1, 44100 * sec, 44100); AC = oc; MM.g = null; MM.song = song || S0 || 'phonk'; mmGraph(); MM.g.gain.value = .8 * SONGS[MM.song].v; MM.dl.delayTime.value = 60 / SONGS[MM.song].bpm * .75; const sp = 60 / SONGS[MM.song].bpm / 4; for (let st = 0, t = 0; t < sec; st++, t += sp) mmNote(st, t);
+    const buf = await oc.startRendering(); AC = A0; MM.g = G0; MM.dl = D0; MM.song = S0; const d = buf.getChannelData(0); let pk = 0, ss = 0; for (let i = 0; i < d.length; i++) { pk = Math.max(pk, Math.abs(d[i])); ss += d[i] * d[i]; }
     const pcm = new Int16Array(d.length); for (let i = 0; i < d.length; i++) pcm[i] = Math.max(-1, Math.min(1, d[i])) * 32767; let bin = ''; const u8 = new Uint8Array(pcm.buffer); for (let i = 0; i < u8.length; i += 8192) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 8192));
-    return {peak: pk, rms: Math.sqrt(ss / d.length), pcm: btoa(bin)}; }, ls: pr => liveSample(pr, q => q), give: (i, k) => { const kk = S.karts[i]; kk.item = ITEMS[k]; kk.icntFor = null; kk.roll = 0; }, use: i => useItem(S.karts[i]), icnt: i => icnt(S.karts[i]), hymn: id => hymn(id), cut: () => CUT, live: () => LIVE, liveGo: a => liveGo(a), emo: e => { const b = [...box.querySelectorAll('.kr-emol button')].find(x => x.textContent === e); if (b) b.click(); }, hitK: (i, why) => hit(S.karts[i], why), open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
+    return {peak: pk, rms: Math.sqrt(ss / d.length), pcm: btoa(bin)}; }, song: () => MM.song, ls: pr => liveSample(pr, q => q), give: (i, k) => { const kk = S.karts[i]; kk.item = ITEMS[k]; kk.icntFor = null; kk.roll = 0; }, use: i => useItem(S.karts[i]), icnt: i => icnt(S.karts[i]), hymn: id => hymn(id), cut: () => CUT, live: () => LIVE, liveGo: a => liveGo(a), emo: e => { const b = [...box.querySelectorAll('.kr-emol button')].find(x => x.textContent === e); if (b) b.click(); }, hitK: (i, why) => hit(S.karts[i], why), open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
 })();
 /*@@END*/
 </script>
