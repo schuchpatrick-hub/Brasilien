@@ -7659,6 +7659,7 @@ setGroup(G);
       try { window.claude.use('user').then(u => u && u.id ? u.id().then(id => { UID = id || null; ACC = u; accSync(); }) : null).catch(() => {}); } catch (e) {}
       db.collection('kartusers').onSnapshot(sn => { USERS = {}; sn.docs.forEach(d => { if (d.exists) USERS[d.id] = d.data().who; }); accSync(); board(); }, () => {});
       db.collection('kartprog').onSnapshot(sn => { PROG = {}; sn.docs.forEach(d => { if (d.exists) PROG[d.id] = d.data(); }); progOn = true; progSync(true); }, () => {});
+      db.collection('kartlive').onSnapshot(sn => { LIVEST = []; sn.docs.forEach(d => { if (d.exists) LIVEST.push(d.data()); }); if (!box.hidden && !menu.hidden && MODE === 'live') liveBox(); }, () => {});
       db.collection('kartdaily').onSnapshot(sn => { LBD = {}; sn.docs.forEach(d => { if (d.exists) LBD[d.id] = d.data(); }); if (!box.hidden && !menu.hidden) renderMenu(); }, () => {});
     }).catch(() => {});
     canWrite().then(w => { WR = w !== false && w !== null; progWR = WR; progSync(true); if (!box.hidden && !menu.hidden) renderMenu(); }).catch(() => {});
@@ -7741,34 +7742,50 @@ setGroup(G);
       (r.top ? '<span' + (r.top.who === ME ? ' class="me"' : '') + '>' + esc(NAME(r.top.who)) + '</span><em>' + fmt(r.top.ms) + '</em>' : '<span class="no">frei</span><em>–</em>') + '</button></li>').join('') + '</ul>'; }
 
   /* ---- Live-Mehrspieler (room-Fähigkeit): Lobby im Raum „gringo-kart“, Positionen über presence, Start/Treffer/Effekte als Ereignisse auf Topic „kart“ ---- */
-  const LIVE = {room: null, ok: null, peers: [], me: null, race: null, pending: null, sentAt: 0};
+  const LIVE = {room: null, ok: null, peers: [], me: null, race: null, pending: null, sentAt: 0, buf: {}, lastN: {}, seq: 0, rdy: false, gp: null, autoAt: 0, emoAt: 0};
+  let LIVEST = [];   // gespeicherte Live-Rennen (db kartlive) für die Live-Bilanz
   async function liveJoin() {
     if (LIVE.room || LIVE.ok === false || LIVE.joining) return; LIVE.joining = 1;
     try { const r0 = window.claude && window.claude.use ? await window.claude.use('room') : null; if (!r0) { LIVE.ok = false; renderMenu(); return; }
       const r = await r0.join('gringo-kart'); LIVE.room = r; LIVE.ok = true;
-      r.onPeers(ch => { LIVE.peers = ch.peers; const mine = ch.peers.find(p0 => p0.sameTab); if (mine) LIVE.me = mine.peer; const sig = JSON.stringify(lobby().map(p0 => [p0.peer, p0.presence.who, p0.presence.drv]));
+      r.onPeers(ch => { LIVE.peers = ch.peers; const mine = ch.peers.find(p0 => p0.sameTab); if (mine) LIVE.me = mine.peer; liveRecv(ch.peers); const sig = JSON.stringify(lobby().map(p0 => [p0.peer, p0.presence.who, p0.presence.drv, p0.presence.rdy, p0.presence.trk, p0.presence.gpv])); liveAuto();
         if (sig !== LIVE.sig) { LIVE.sig = sig; if (!box.hidden && !menu.hidden && MODE === 'live') renderMenu(); } }, () => { LIVE.ok = false; });
       r.on('kart', liveMsg, () => {}); livePres();
     } catch (e) { LIVE.ok = false; if (!box.hidden && !menu.hidden) renderMenu(); } finally { LIVE.joining = 0; } }
-  function livePres(extra) { if (!LIVE.room) return; const base = {who: ME || me, drv: me, veh: myVeh(), cos: cosOf(me), paint: paintOf(me), lob: !box.hidden && MODE === 'live' && !LIVE.race};
+  function livePres(extra) { if (!LIVE.room) return; const base = {who: ME || me, drv: me, veh: myVeh(), cos: cosOf(me), paint: paintOf(me), lob: !box.hidden && MODE === 'live' && !LIVE.race, rdy: LIVE.rdy && !LIVE.race ? 1 : 0, trk: TRK, gpv: store.get('kartLiveGP') === '1' ? 1 : 0};
     const o = Object.assign(base, extra || {race: null}), j = JSON.stringify(o); if (j === LIVE.lastPres) return; LIVE.lastPres = j; LIVE.room.presence(o).catch(() => {}); }
   const lobby = () => LIVE.peers.filter(p0 => p0.presence && p0.presence.lob && p0.kind === 'viewer');
   const liveEmit = d => { if (LIVE.room) LIVE.room.emit('kart', d).catch(() => {}); };
   function liveMsg(m) { const d = m.data || {}; if (!d.t) return;
-    if (d.t === 'start') { if (!LIVE.me || !(d.players || []).includes(LIVE.me) || LIVE.race || box.hidden) return; LIVE.pending = d; TRK = d.track; startRace(); return; }
+    if (d.t === 'start') { if (!LIVE.me || !(d.players || []).includes(LIVE.me) || LIVE.race || box.hidden) return; LIVE.pending = Object.assign({rt: performance.now()}, d); TRK = d.track; LIVE.rdy = false; LIVE.autoAt = 0;
+      if (d.gp) { if (!LIVE.gp || LIVE.gp.id !== d.gp.id) LIVE.gp = {id: d.gp.id, list: d.gp.list, i: d.gp.i, pts: {}, nm: {}, seen: {}}; else LIVE.gp.i = d.gp.i; } else LIVE.gp = null; startRace(); return; }
     if (!S || !LIVE.race || d.race !== LIVE.race.id) return; const k0 = S.karts[0];
     const tg = d.ai !== undefined && d.ai !== null ? S.karts.find(x => x.aiIdx === d.ai && !x.remote) : k0;
     if (d.t === 'hit' && d.to === LIVE.me && tg) { const o = S.karts.find(x => x.peer === m.peer && x.aiIdx === undefined); hit(tg, d.why); if (o && tg === k0) { k0.say = 'Das war ' + NAME(o.id) + '!'; k0.sayT = 1.4; } }
     if (d.t === 'fx' && d.to === LIVE.me && tg) { Object.assign(tg, d.f || {}); }
+    if (d.t === 'emo') { const ek = m.sameTab ? k0 : S.karts.find(x => x.peer === m.peer && x.aiIdx === undefined); if (ek) { ek.emo = String(d.e || '').slice(0, 4); ek.emoU = performance.now() + 2400; } }
     if (d.t === 'oil' && !m.sameTab) S.oils.push({x: d.x, y: d.y, t: 12, by: null, beer: d.beer ? 1 : 0}); }
   // ferngesteuerte Karts: Position aus der presence, weich nachgeführt
-  function liveRemote(k, dt) { const po = LIVE.peers.find(p0 => p0.peer === k.peer) || {}, pr = po.presence; let q = pr && pr.race === LIVE.race.id && !(po.updatedAt && Date.now() - po.updatedAt > 6000 && !(pr.done)) ? pr : null;
-    if (q && k.aiIdx !== undefined) { const r0 = (q.ai || [])[k.aiIdx]; q = r0 ? {x: r0[0], y: r0[1], a: r0[2], v: r0[3], lap: r0[4], idx: r0[5], done: r0[6], b: r0[7], sp: r0[8]} : null; }
-    if (!q) { k.gone = (k.gone || 0) + dt; if (k.gone > 6 && !k.done) { k.out = 1; k.lap = -5; } return; } k.gone = 0; k.out = 0;
-    if (k.x0 === undefined) { k.x = q.x; k.y = q.y; } const f = Math.min(1, dt * 10); k.x += (q.x + Math.cos(q.a) * q.v * .05 - k.x) * f; k.y += (q.y + Math.sin(q.a) * q.v * .05 - k.y) * f; k.x0 = 1;
+  // Empfangene Positionen mit Empfangszeit puffern (eigene Uhr, unabhängig von der Uhrzeit der anderen Handys)
+  function liveRecv(peers) { const tn = performance.now();
+    peers.forEach(p0 => { const pr = p0.presence; if (!pr || !pr.race || pr.n === undefined || p0.sameTab) return; const sig = pr.race + '|' + pr.n; if (LIVE.lastN[p0.peer] === sig) return; LIVE.lastN[p0.peer] = sig;
+      const b = LIVE.buf[p0.peer] || (LIVE.buf[p0.peer] = []); if (b.length && b[b.length - 1].race !== pr.race) b.length = 0; b.push({t: tn, race: pr.race, q: pr}); if (b.length > 16) b.shift(); }); }
+  // Zustand eines fremden Karts etwas in der Vergangenheit (Puffer ≈ 1,7 Sendeabstände): zwischen zwei Meldungen weich überblenden, bei Lücken kurz vorausrechnen
+  function liveSample(peer, conv) { const b = LIVE.buf[peer]; if (!b || !b.length || b[b.length - 1].race !== LIVE.race.id) return null;
+    const now = performance.now(), n = b.length, iv = n > 4 ? (b[n - 1].t - b[n - 5].t) / 4 : 70, rt = now - clamp(iv * 1.7, 80, 280), last = conv(b[n - 1].q); if (!last) return null;
+    const out = Object.assign({}, last, {age: now - b[n - 1].t});
+    if (rt >= b[n - 1].t) { const e = Math.min(.3, (rt - b[n - 1].t) / 1000); out.x += Math.cos(last.a) * last.v * e; out.y += Math.sin(last.a) * last.v * e; return out; }
+    if (n < 2) return out; let j = n - 2; while (j > 0 && b[j].t > rt) j--; const s0 = conv(b[j].q), s1 = conv(b[j + 1].q); if (!s0 || !s1) return out;
+    if (rt <= b[j].t || Math.hypot(s1.x - s0.x, s1.y - s0.y) > 320) { out.x = (rt <= b[j].t ? s0 : s1).x; out.y = (rt <= b[j].t ? s0 : s1).y; out.a = (rt <= b[j].t ? s0 : s1).a; return out; }
+    const f = clamp((rt - b[j].t) / Math.max(1, b[j + 1].t - b[j].t), 0, 1); out.x = s0.x + (s1.x - s0.x) * f; out.y = s0.y + (s1.y - s0.y) * f; out.a = s0.a + angd(s1.a, s0.a) * f; out.v = s0.v + (s1.v - s0.v) * f; return out; }
+  // ferngesteuerte Karts: Position aus der presence, weich nachgeführt
+  function liveRemote(k, dt) { const conv = k.aiIdx !== undefined ? q => { const r0 = (q.ai || [])[k.aiIdx]; return r0 ? {x: r0[0], y: r0[1], a: r0[2], v: r0[3], lap: r0[4], idx: r0[5], done: r0[6], b: r0[7], sp: r0[8]} : null; } : q => q;
+    const q = liveSample(k.peer, conv), stale = !q || (q.age > 6000 && !q.done);
+    if (stale) { k.gone = (k.gone || 0) + dt; k.lagging = 1; if (k.gone > 6 && !k.done) { k.out = 1; k.lap = -5; } return; } k.gone = 0; k.out = 0; k.lagging = q.age > 1200 ? 1 : 0;
+    if (k.x0 === undefined) { k.x = q.x; k.y = q.y; k.a = q.a; } const f = Math.min(1, dt * 22); k.x += (q.x - k.x) * f; k.y += (q.y - k.y) * f; k.x0 = 1;
     k.a += angd(q.a, k.a) * f; k.v = q.v; k.lap = q.lap; k.idx = q.idx; k.lat = q.lat || 0; k.done = q.done || 0; k.boost = q.b ? .2 : 0; k.spin = q.sp ? .2 : 0; k.rot = q.sp ? k.rot + dt * 14 : 0; k.steer = q.st || 0; k.shield = q.sh ? 1 : 0; }
   function liveSend(k) { const now = performance.now(); if (now - LIVE.sentAt < 66) return; LIVE.sentAt = now;
-    livePres({race: LIVE.race.id, x: Math.round(k.x), y: Math.round(k.y), a: +k.a.toFixed(3), v: Math.round(k.v), lap: k.lap, idx: k.idx, lat: Math.round(k.lat), done: k.done ? +k.done.toFixed(3) : 0, b: k.boost > 0 ? 1 : 0, sp: k.spin > 0 ? 1 : 0, st: +k.steer.toFixed(2), sh: k.shield > 0 ? 1 : 0, ai: S.karts.filter(o => o.aiIdx !== undefined && !o.remote).map(o => [Math.round(o.x), Math.round(o.y), +o.a.toFixed(3), Math.round(o.v), o.lap, o.idx, o.done ? +o.done.toFixed(3) : 0, o.boost > 0 ? 1 : 0, o.spin > 0 ? 1 : 0])}); }
+    livePres({race: LIVE.race.id, n: ++LIVE.seq, x: Math.round(k.x), y: Math.round(k.y), a: +k.a.toFixed(3), v: Math.round(k.v), lap: k.lap, idx: k.idx, lat: Math.round(k.lat), done: k.done ? +k.done.toFixed(3) : 0, b: k.boost > 0 ? 1 : 0, sp: k.spin > 0 ? 1 : 0, st: +k.steer.toFixed(2), sh: k.shield > 0 ? 1 : 0, ai: S.karts.filter(o => o.aiIdx !== undefined && !o.remote).map(o => [Math.round(o.x), Math.round(o.y), +o.a.toFixed(3), Math.round(o.v), o.lap, o.idx, o.done ? +o.done.toFixed(3) : 0, o.boost > 0 ? 1 : 0, o.spin > 0 ? 1 : 0])}); }
   // Fahrschule: eine geführte Runde allein auf Guarujá
   const TUT = [{t: 'Lenken: links oder rechts halten (Analog: Daumen-Position).', ok: k => (S.tut.st = (S.tut.st || 0) + (Math.abs(k.steer) > .6 ? 1 / 60 : 0)) > .8},
     {t: 'Driften: in der Kurve doppelt tippen und halten, Funken sammeln, dann loslassen = Turbo!', ok: () => S.tutMini},
@@ -7778,15 +7795,44 @@ setGroup(G);
     {t: 'Pfeile auf der Strecke geben Turbo, auf der Schanze tippen = Trick. Fahr jetzt ins Ziel!', ok: () => false}];
   let TUTON = false;
   function tutStart() { TUTON = true; TRK = 'guaruja'; MODE = 'single'; startRace(); }
-  function liveGo() { const lb = lobby(); if (!LIVE.room || lb.length < 2) { toast('👥 Mindestens zwei Spieler müssen im Live-Raum sein.'); return; }
+  // Strecken-Abstimmung: jeder Spieler in der Lobby stimmt mit seiner gewählten Strecke ab
+  function liveVotes(lb) { const v = {}; lb.forEach(p0 => { const t = p0.presence.trk; if (TBY[t]) v[t] = (v[t] || 0) + 1; }); return Object.entries(v).sort((x, y) => y[1] - x[1]); }
+  const liveLeader = lb => lb.map(p0 => p0.peer).sort()[0];
+  function liveGo(auto) { const lb = lobby(); if (!LIVE.room || lb.length < 2) { toast('👥 Mindestens zwei Spieler müssen im Live-Raum sein.'); return; }
     const used = lb.map(p0 => p0.presence.drv || p0.presence.who), ai = store.get('kartLiveAI') === '0' ? [] : CREW.map(c => c.id).filter(id => !used.includes(id)).slice(0, Math.max(0, 6 - lb.length));
-    liveEmit({t: 'start', id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), track: TRK, at: Date.now() + 4500, players: lb.map(p0 => p0.peer), host: LIVE.me, ai}); }
+    const vs = liveVotes(lb), top = vs.filter(v => v[1] === (vs[0] || [0, 0])[1]).map(v => v[0]); let track = top.length ? pick(top) : TRK, gp = null;
+    if (LIVE.gp && LIVE.gp.i < LIVE.gp.list.length - 1) { gp = {id: LIVE.gp.id, list: LIVE.gp.list, i: LIVE.gp.i + 1}; track = gp.list[gp.i]; }
+    else if (lb.filter(p0 => p0.presence.gpv).length * 2 >= lb.length && lb.some(p0 => p0.presence.gpv)) { const rest = TRACKS.map(t => t.id).filter(t => t !== track).sort(() => Math.random() - .5); gp = {id: Date.now().toString(36), list: [track, rest[0], rest[1]], i: 0}; }
+    liveEmit({t: 'start', id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), track, at: Date.now() + 4500, delay: 4500, players: lb.map(p0 => p0.peer), host: LIVE.me, ai, gp, auto: auto ? 1 : 0}); }
+  // Auto-Start: sind alle in der Lobby (mindestens 2) bereit, startet das Rennen nach 3 s von selbst (gesendet vom „Anführer“ = kleinste Peer-Kennung)
+  function liveAuto() { const lb = lobby(), all = lb.length >= 2 && lb.every(p0 => p0.presence.rdy);
+    if (!all || LIVE.race || box.hidden || MODE !== 'live') { if (LIVE.autoAt) { LIVE.autoAt = 0; if (!menu.hidden) liveBox(); } return; }
+    if (LIVE.autoAt) return; LIVE.autoAt = performance.now() + 3000; SFX.pick();
+    const tick = () => { if (!LIVE.autoAt) return; if (!menu.hidden) liveBox(); if (performance.now() < LIVE.autoAt) { setTimeout(tick, 250); return; } LIVE.autoAt = 0;
+      const lb2 = lobby(); if (lb2.length >= 2 && lb2.every(p0 => p0.presence.rdy) && liveLeader(lb2) === LIVE.me && !LIVE.race) liveGo(1); }; tick(); }
+  // Live-Pokal: Punkte nach jedem Rennen (gleiche Reihenfolge auf allen Handys)
+  function liveGpScore(order) { const g = LIVE.gp; if (!g || g.seen[S.live.id]) return; g.seen[S.live.id] = 1;
+    order.forEach((k, i) => { const key = k.me ? 'p:' + LIVE.me : k.aiIdx !== undefined ? 'a:' + k.id : 'p:' + k.peer; g.nm[key] = k.aiIdx !== undefined ? '🤖 ' + NAME(k.id) : NAME(k.me ? (ME || me) : k.who || k.id); g.pts[key] = (g.pts[key] || 0) + (k.out ? 0 : PTS[i] || 0); }); }
+  function liveSave(order) { if (!WR || !DB || !S.live || S.live.host !== LIVE.me) return;
+    const res0 = order.map((k, i) => ({who: k.me ? (ME || me) : k.aiIdx !== undefined ? null : (k.who || k.id), drv: k.id, ai: k.aiIdx !== undefined ? 1 : 0, ms: k.done && !k.out ? Math.round(k.done * 1000) : null, pl: i + 1}));
+    DB.doc('kartlive/' + S.live.id).set({ts: Date.now(), track: T.id, gp: LIVE.gp ? LIVE.gp.id : null, res: res0}).catch(() => {}); }
+  function liveBilanz() { const w = {}, r = {}; LIVEST.forEach(d => (d.res || []).forEach(x => { if (!x.who || x.ai) return; r[x.who] = (r[x.who] || 0) + 1; const hum = d.res.filter(y => !y.ai && y.ms); if (hum.length && hum.sort((a, b) => a.ms - b.ms)[0] === x) w[x.who] = (w[x.who] || 0) + 1; }));
+    const ids = Object.keys(r).sort((a, b) => (w[b] || 0) - (w[a] || 0) || r[b] - r[a]); if (!ids.length) return '';
+    return '<p class="kr-live-b">📊 <b>Live-Bilanz</b> (' + LIVEST.length + ' Rennen): ' + ids.slice(0, 6).map((id, i) => (i === 0 && w[id] ? '👑 ' : '') + esc(NAME(id)) + ' ' + (w[id] || 0) + '/' + r[id]).join(' · ') + '</p>'; }
   function liveLeave() { if (LIVE.race) { LIVE.race = null; livePres(); } }
   function liveBox() { const el = menu.querySelector('.kr-live'); if (!el) return; el.hidden = MODE !== 'live'; if (MODE !== 'live') return; liveJoin();
     if (LIVE.ok === false) { el.innerHTML = '<p>📡 Live geht nur, wenn die Seite auf claude.ai mit deinem Konto offen ist (als Bearbeiter eingeladen).</p>'; return; }
     if (!LIVE.room) { el.innerHTML = '<p>📡 Verbinde mit dem Live-Raum …</p>'; return; }
-    const lb = lobby(); el.innerHTML = '<p class="kr-lbl">Im Live-Raum (' + lb.length + ')</p><div class="kr-pick kr-livep">' + lb.map(p0 => '<span class="kr-lp"><span class="kr-lh" data-h="' + esc(String(p0.presence.drv || p0.presence.who)) + '"></span><span>' + esc(NAME(p0.presence.who)) + (p0.sameTab ? ' (du)' : '') + '</span></span>').join('') + '</div>' +
-      '<button type="button" class="kr-liveai">🤖 Computer-Gegner: ' + (store.get('kartLiveAI') === '0' ? 'aus' : 'an (füllt auf 6 auf)') + '</button><p class="kr-live-n">' + (lb.length < 2 ? 'Warte auf Mitspieler: Die anderen öffnen Gringo Kart und wählen ebenfalls „👥 Live“.' : 'Wer startet, wählt die Strecke und lenkt die Computer-Gegner. Alle hier fahren mit.') + '</p>';
+    const lb = lobby(), nr = lb.filter(p0 => p0.presence.rdy).length, drvs = lb.map(p0 => p0.presence.drv), vs = liveVotes(lb), gpOn = store.get('kartLiveGP') === '1', g = LIVE.gp, gpRun = g && g.i < g.list.length - 1;
+    const cd = LIVE.autoAt ? Math.max(0, Math.ceil((LIVE.autoAt - performance.now()) / 1000)) : 0;
+    el.innerHTML = '<p class="kr-lbl">Im Live-Raum (' + lb.length + ') · ✅ ' + nr + ' bereit</p><div class="kr-pick kr-livep">' + lb.map(p0 => { const pr = p0.presence, dup = drvs.filter(x => x === pr.drv).length > 1;
+        return '<span class="kr-lp' + (pr.rdy ? ' rdy' : '') + '"><span class="kr-lh" data-h="' + esc(String(pr.drv || pr.who)) + '"></span><span>' + esc(NAME(pr.who)) + (p0.sameTab ? ' (du)' : '') + '</span><small>' + (pr.rdy ? '✅' : '⏳') + ' ' + (TBY[pr.trk] ? TBY[pr.trk].e : '') + (dup ? ' ⚠️' : '') + '</small></span>'; }).join('') + '</div>' +
+      (LIVE.autoAt ? '<p class="kr-live-cd">🚦 Alle bereit! Start in ' + cd + ' …</p>' : '') +
+      '<div class="kr-live-btns"><button type="button" class="kr-rdy' + (LIVE.rdy ? ' on' : '') + '">' + (LIVE.rdy ? '✅ Bereit' : '⏳ Bereit?') + '</button><button type="button" class="kr-liveai">🤖 Gegner: ' + (store.get('kartLiveAI') === '0' ? 'aus' : 'an') + '</button><button type="button" class="kr-gpt' + (gpOn ? ' on' : '') + '">🏆 Pokal (3 Rennen): ' + (gpOn ? 'an' : 'aus') + '</button></div>' +
+      (gpRun ? '<p class="kr-live-n">🏆 <b>Live-Pokal läuft:</b> nächstes Rennen ' + (g.i + 2) + '/' + g.list.length + ' ' + TBY[g.list[g.i + 1]].e + ' ' + esc(TBY[g.list[g.i + 1]].name) + ' · ' + Object.entries(g.pts).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k0, v]) => esc(g.nm[k0]) + ' ' + v).join(' · ') + '</p>' :
+        vs.length ? '<p class="kr-live-n">🗳️ Strecke: ' + vs.map(([t, n]) => TBY[t].e + ' ' + esc(TBY[t].name) + ' ' + n).join(' · ') + ' <i>(deine Stimme = gewählte Strecke unten)</i></p>' : '') +
+      (drvs.some((x, i) => drvs.indexOf(x) !== i) ? '<p class="kr-live-n">⚠️ Zwei fahren mit derselben Figur. Geht, aber eine andere Figur ist übersichtlicher.</p>' : '') +
+      '<p class="kr-live-n">' + (lb.length < 2 ? 'Warte auf Mitspieler: Die anderen öffnen Gringo Kart und wählen ebenfalls „👥 Live“.' : 'Sind alle ✅ bereit, startet das Rennen von selbst. Oder unten „Rennen starten“ (alle in der Lobby fahren mit).') + (gpOn && !gpRun ? ' Pokal: Mehrheit der Lobby muss ihn anhaben.' : '') + '</p>' + liveBilanz();
     el.querySelectorAll('.kr-lh').forEach(x => x.replaceWith(headCv(CREW.some(c => c.id === x.dataset.h) ? x.dataset.h : CREW[0].id, 92))); }
   const GHOST = {mode: store.get('kartGhost') || 'off'};   // off | mine | crew
   function ghostLocal(tid) { try { return JSON.parse(localStorage.getItem('br26.kartGhost.' + tid) || 'null'); } catch (e) { return null; } }
@@ -7863,7 +7909,7 @@ setGroup(G);
       const a = Math.atan2(P[(i + 1) % N][1] - P[i][1], P[(i + 1) % N][0] - P[i][0]);
       return {id, me: id === me, x, y, a, mv: a, v: 0, steer: 0, idx: i, lat, lap: -1, half: true, done: 0, spin: 0, rot: 0, boost: 0, item: null, roll: 0, useAt: 0,
         skill: id === me ? 1 : rnd(DIFFS[DIFF].s[0], DIFFS[DIFF].s[1]), vr: 0, lost: 0, rumble: 0, squash: 0, lapT0: 0, lane: rnd(-35, 35), laneT: 0, say: null, sayT: 0, dust: 0, hold: 0, dr: 0, dt: 0, yaw: 0, air: 0, airT: 0, trick: 0, stall: 0, pad: 0, wet: 0, dol: 0, inv: 0, glow: 0, blind: 0, slowT: 0, slowE: '', bump: 0, cs: CS[id] || {spd: .5, hdl: .5, acc: .5, tgh: .5}, vt: VTUNE[id === me ? vehOf(id) : 'kart'] || VTUNE.kart, vtype: vehOf(id), vx: VTX[vehOf(id)] || VTX.kart, brk: false, manual: null, peg: pegel(id),
-        rocket: !LP && id !== me && !(PERS[id] || {}).noRocket && Math.random() < .45, remote: LP && k > 0 && (k <= LP.length || !HOST) ? 1 : 0, peer: LP && k > 0 ? (k <= LP.length ? LP[k - 1].peer : LIVE.race.host) : null, aiIdx: LP && k > LP.length ? k - LP.length - 1 : undefined, vkey: LP && k > 0 && k <= LP.length ? 'r:' + LP[k - 1].peer : null, coins: 0, pp: PERS[id] || PERS0, misT: rnd(6, 14), misK: null, misD: 0, burstT: rnd(8, 18)}; });
+        rocket: !LP && id !== me && !(PERS[id] || {}).noRocket && Math.random() < .45, remote: LP && k > 0 && (k <= LP.length || !HOST) ? 1 : 0, peer: LP && k > 0 ? (k <= LP.length ? LP[k - 1].peer : LIVE.race.host) : null, aiIdx: LP && k > LP.length ? k - LP.length - 1 : undefined, vkey: LP && k > 0 && k <= LP.length ? 'r:' + LP[k - 1].peer : null, who: LP && k > 0 && k <= LP.length ? LP[k - 1].pr.who : null, coins: 0, pp: PERS[id] || PERS0, misT: rnd(6, 14), misK: null, misD: 0, burstT: rnd(8, 18)}; });
     const boxes = []; (T.boxes || []).forEach(f => [-42, 0, 42].forEach(l => { const i = Math.round(f * N); boxes.push({i, l, x: at(i, l)[0], y: at(i, l)[1], off: 0}); }));
     const obst = (T.obst || []).map(([f, l, kind]) => { const [x, y] = at(f * N, l); return {x, y, kind, r: {crate: 22, umbrella: 24, log: 26, suitcase: 20, stone: 18, nut: 20, cone: 16, champ: 16}[kind] || 20}; });
     const birds = []; (T.birds || []).forEach(f => { const l0 = rnd(-40, 40); for (let j = 0; j < 5; j++) { const [x, y] = at(f * N + rnd(-4, 4), l0 + rnd(-22, 22)); birds.push({x0: x, y0: y, x, y, f: 0, vx: 0, vy: 0, a: rnd(0, TAU)}); } });
@@ -7923,6 +7969,7 @@ setGroup(G);
   const anyInput = () => INPUT.L || INPUT.R || INPUT.keys.ArrowLeft || INPUT.keys.ArrowRight || INPUT.keys.a || INPUT.keys.d;
   function step(dt) {
     S.t += dt; S.shake = Math.max(0, S.shake - dt);
+    if (S.live && S.live.t0p && !(S.slow > 0)) { const w = (performance.now() - S.live.t0p) / 1000; if (w - S.t > .25) S.t = w; }   // Live: gemeinsame Rennuhr (nach App-Wechsel/Ruckeln aufholen)
     if (S.t < 0) { const c = Math.ceil(-S.t); if (c !== S.cd) { S.cd = c; if (c <= 3) SFX.count(1); } if (S.press === null && S.t > -3.05 && anyInput()) S.press = S.t; return; }
     if (S.cd !== 0) { S.cd = 0; SFX.count(0); MUS.on = true;
       S.karts.forEach(k => { const pr = k.me ? S.press : (k.rocket ? -.3 : null);
@@ -8110,6 +8157,8 @@ setGroup(G);
     S.fx = S.fx.filter(f => (f.t += dt) < (f.dust ? .5 : f.txt ? 1.3 : 1));
     S.sp = S.sp.filter(p => { p.t += dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= .92; p.vy *= .92; return p.t < (p.big ? .9 : .45); });
     ks.forEach(k => { if (k.boost > 0 && Math.random() < dt * 25) S.sp.push({x: k.x - Math.cos(k.a) * 26, y: k.y - Math.sin(k.a) * 26, vx: -Math.cos(k.a) * 80, vy: -Math.sin(k.a) * 80, t: .15, c: '#ffb13b'}); });
+    { const k = ks[0]; if (S.t > 0 && !k.done && k.v > 150 && !k.air) { const o = ks.find(o => o !== k && !o.out && (d => d > 26 && d < 150)(Math.hypot(o.x - k.x, o.y - k.y)) && Math.abs(angd(Math.atan2(o.y - k.y, o.x - k.x), k.a)) < .22 && Math.abs(angd(o.a, k.a)) < .5);
+        S.draft = o ? (S.draft || 0) + dt : Math.max(0, (S.draft || 0) - dt * 2); if (S.draft > 1.1) { S.draft = 0; k.boost = Math.max(k.boost, .55); floatTxt(k, '💨 Windschatten!', '#bfe8ff'); vib(15); } } }
     if (S.live && S.karts[0]) liveSend(S.karts[0]);
     if (S.tut && S.t > 0) { const st = TUT[S.tut.i]; if (S.tut.t0 === undefined) S.tut.t0 = S.t; if (st && (st.ok(S.karts[0]) || (S.tut.i < TUT.length - 1 && S.t - S.tut.t0 > 30))) { S.tut.i++; S.tut.t0 = S.t; S.tut.ok = performance.now(); SFX.pick(); vib(20); } }
     if (S.pose && S.pose.live) { const wn = S.karts.filter(o => o.done && !o.out).sort((x, y) => x.done - y.done)[0]; if (wn) S.pose.id = wn.id; }
@@ -8249,6 +8298,9 @@ setGroup(G);
     S.fx.forEach(f => { if (!f.txt) return; const p = toScreen(f.x, f.y, sc, phi); ctx.save(); ctx.globalAlpha = clamp(1.3 - f.t, 0, 1); ctx.font = '900 20px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(0,0,0,.6)';
       const y = p[1] - 48 - f.t * 40; ctx.strokeText(f.txt, p[0], y); ctx.fillStyle = f.col; ctx.fillText(f.txt, p[0], y); ctx.restore(); });
     S.karts.forEach(k => { if (k.sayT <= 0) return; const p = toScreen(k.x, k.y, sc, phi); bubble(p[0], p[1] - 34 * sc, k.say, Math.min(1, k.sayT * 3)); });
+    if (S.live) { const tn = performance.now(); ctx.save(); ctx.textAlign = 'center'; S.karts.forEach(k => { if (k.me || k.out) return; const p = toScreen(k.x, k.y, sc, phi); if (p[0] < -40 || p[0] > W + 40 || p[1] < -40 || p[1] > H + 40) return;
+        if (k.aiIdx === undefined) { const t = NAME(k.who || k.id) + (k.lagging ? ' 📶' : ''); ctx.font = '800 12px system-ui,sans-serif'; const w = ctx.measureText(t).width + 12; ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(p[0] - w / 2, p[1] + 22 * sc, w, 18, 9) : ctx.rect(p[0] - w / 2, p[1] + 22 * sc, w, 18); ctx.fill(); ctx.fillStyle = '#9ff0b4'; ctx.fillText(t, p[0], p[1] + 22 * sc + 13); } });
+      S.karts.forEach(k => { if (!(k.emoU > tn)) return; const p = toScreen(k.x, k.y, sc, phi), a = clamp((k.emoU - tn) / 400, 0, 1), up = (2400 - (k.emoU - tn)) / 2400; ctx.globalAlpha = a; ctx.font = '40px system-ui,sans-serif'; ctx.fillText(k.emo, p[0], p[1] - 52 * sc - up * 26); ctx.globalAlpha = 1; }); ctx.restore(); }
     S.movers.forEach(m => { if (m.say > 0 && near(m.x, m.y, 500) && MVSAY[m.kind] && m.kind !== 'coati' && m.kind !== 'caiman' && m.kind !== 'monkey') { const p = toScreen(m.x, m.y, sc, phi); bubble(p[0], p[1] - 30 * sc, MVSAY[m.kind], Math.min(1, m.say)); } });
     hud(sc);
   }
@@ -8261,7 +8313,10 @@ setGroup(G);
     ctx.save(); ctx.textBaseline = 'top'; ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 6;
     ctx.fillStyle = pl === 1 ? '#ffd23f' : '#fff'; ctx.font = '900 44px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText(pl + '.', W / 2, top + 30);
     ctx.font = '700 14px system-ui,sans-serif'; ctx.fillStyle = '#fff'; ctx.fillText('Runde ' + clamp(k.lap + 1, 1, LAPS) + '/' + LAPS + ' · ' + fmt(Math.max(0, (k.done || S.t)) * 1000), W / 2, top + 78);
-    if (CUP) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fillText(CUP.e + ' ' + CUP.n + ' · Rennen ' + (CUP.i + 1) + '/' + CUP.list.length + ' · ' + T.e + ' ' + T.name, W / 2, top + 98); }
+    if (S.live) { const ord = S.karts.slice().sort((a, b) => place(a) - place(b)); ctx.save(); ctx.textAlign = 'right'; ctx.font = '700 12px system-ui,sans-serif'; ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 4;
+      ord.forEach((o, i) => { const y = top + 150 + i * 17; if (o.out) ctx.globalAlpha = .45; ctx.fillStyle = o.me ? '#ffd23f' : o.aiIdx !== undefined ? 'rgba(255,255,255,.7)' : '#9ff0b4'; ctx.fillText((i + 1) + '. ' + (o.me ? 'Du' : NAME(o.who || o.id)) + (o.aiIdx !== undefined ? ' 🤖' : '') + (o.out ? ' 📴' : o.lagging ? ' 📶' : '') + (o.done ? ' 🏁' : ''), W - 14, y); ctx.globalAlpha = 1; }); ctx.restore(); }
+    if (S.live && LIVE.gp) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fillText('🏆 Live-Pokal · Rennen ' + (LIVE.gp.i + 1) + '/' + LIVE.gp.list.length + ' · ' + T.e + ' ' + T.name, W / 2, top + 98); }
+    else if (CUP) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fillText(CUP.e + ' ' + CUP.n + ' · Rennen ' + (CUP.i + 1) + '/' + CUP.list.length + ' · ' + T.e + ' ' + T.name, W / 2, top + 98); }
     else if (RULE) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fillText('🎯 Tages-Challenge · ' + RULE.e + ' ' + RULE.n, W / 2, top + 98); }
     else if (S.ghost) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fillText('👻 Geist: ' + NAME(S.ghost.who) + ' · ' + fmt(S.ghost.ms), W / 2, top + 98); }
     // Ansager-Zeile
@@ -8300,8 +8355,8 @@ setGroup(G);
     // Abstände: Vordermann, Hintermann, Geist (Sekunden)
     if (S.t > 0 && !k.done) { const all = S.karts.filter(o => o !== k && !o.done).sort((x, y) => progress(y) - progress(x)), pk = progress(k), v = Math.max(k.v, 90);
       const ah = all.filter(o => progress(o) > pk).pop(), bh = all.find(o => progress(o) < pk), rows = [];
-      if (ah && progress(ah) - pk < N) rows.push(['▲ ' + NAME(ah.id), '+' + ((progress(ah) - pk) * 6 / v).toFixed(1) + ' s', '#ff9a8a']);
-      if (bh && pk - progress(bh) < N) rows.push(['▼ ' + NAME(bh.id), '−' + ((pk - progress(bh)) * 6 / v).toFixed(1) + ' s', '#9dffb4']);
+      if (ah && progress(ah) - pk < N) rows.push(['▲ ' + NAME(ah.who || ah.id), '+' + ((progress(ah) - pk) * 6 / v).toFixed(1) + ' s', '#ff9a8a']);
+      if (bh && pk - progress(bh) < N) rows.push(['▼ ' + NAME(bh.who || bh.id), '−' + ((pk - progress(bh)) * 6 / v).toFixed(1) + ' s', '#9dffb4']);
       const gg = S.ghost ? ghostGap(pk) : null; if (gg !== null) rows.push(['👻 Geist', (gg > 0 ? '+' : '−') + Math.abs(gg).toFixed(1) + ' s', gg > 0 ? '#ff9a8a' : '#9dffb4']);
       ctx.font = '700 11px system-ui,sans-serif'; ctx.textBaseline = 'top'; ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 4;
       rows.forEach((r, i) => { const y = top + 50 + mh + 12 + i * 15; ctx.textAlign = 'left'; ctx.fillStyle = '#fff'; ctx.fillText(r[0], 10, y, 62); ctx.textAlign = 'right'; ctx.fillStyle = r[2]; ctx.fillText(r[1], 108, y); }); ctx.shadowBlur = 0; ctx.textAlign = 'center'; }
@@ -8371,8 +8426,10 @@ setGroup(G);
       if (WR && DB) { const pd = {kind: 'daily', d: daily().d, drv: me, ms}; if (ME) saveLB(pd); else PEND = pd; }
       const day = lbList(LBD, daily().d); crewMsg = day.length ? '🎯 Heute vorne: ' + NAME(day[0].who) + ' ' + fmt(day[0].ms) : ''; }
     const pl = order.indexOf(mine) + 1;
-    let msg = pl === 1 ? ['Campeão! 🏆', 'Der Pokal geht nach Hause!'] : pl === 6 ? ['Rote Laterne 🏮', 'Immerhin heil angekommen.'] : pl <= 3 ? ['Podium! 🥉', 'Stark gefahren.'] : ['Mittelfeld', 'Nächstes Mal mehr Caipi-Turbo.'];
+    let msg = pl === 1 ? ['Campeão! 🏆', 'Der Pokal geht nach Hause!'] : pl === 6 ? ['Rote Laterne 🏮', 'Immerhin heil angekommen.'] : pl <= 3 ? ['Podium! ' + (pl === 2 ? '🥈' : '🥉'), 'Stark gefahren.'] : ['Mittelfeld', 'Nächstes Mal mehr Caipi-Turbo.'];
     if (CUP) { order.forEach((k, i) => { CUP.pts[k.id] = (CUP.pts[k.id] || 0) + PTS[i]; }); CUP.races.push(order.map(k => k.id)); }
+    if (S.live) { liveGpScore(order); liveSave(order); }
+    const mi0 = order.indexOf(mine), nbF = [order[mi0 - 1], order[mi0 + 1]].filter(o => o && o.done && mine.done && Math.abs(o.done - mine.done) < .15)[0], photo = nbF ? '📸 Fotofinish gegen ' + NAME(nbF.who || nbF.id) + ': ' + Math.round(Math.abs(nbF.done - mine.done) * 1000) + ' ms ' + (nbF.done > mine.done ? 'vorne!' : 'hinten.') + ' ' : '';
     const st0 = stats(), st1 = Object.assign({}, st0, {races: st0.races + 1, wins: st0.wins + (pl === 1 ? 1 : 0), ilha: st0.ilha + (T.id === 'ilha' ? 1 : 0), supers: st0.supers + S.supers});
     const rv = ks.find(o => o.id === S.rival), beatRival = rv && order.indexOf(mine) < order.indexOf(rv), earn = S.got + [10, 6, 4, 2, 1, 1][pl - 1] + (beatRival ? 5 : 0);
     st1.coinsTot = st0.coinsTot + S.got; st1.rivals = st0.rivals + (beatRival ? 1 : 0); if (!st1.tracks.split(',').includes(T.id)) st1.tracks = (st1.tracks ? st1.tracks + ',' : '') + T.id; addCoins(earn);
@@ -8385,10 +8442,10 @@ setGroup(G);
     setTimeout(() => { ach('first'); if (pl === 1) { ach('win'); if (['sp', 'reveillon', 'cristo'].includes(T.id)) ach(T.id); } if (!S.myHits) ach('nohit'); if (st1.supers >= 10) ach('super10'); if (st1.coinsTot >= 100) ach('coins100');
       if (S.tod === 'night' || T.night) ach('night'); if (TRACKS.every(x => st1.tracks.split(',').includes(x.id))) ach('all'); if (st1.rivals >= 5) ach('rival5'); }, 900);
     res.querySelector('.kr-res-t').textContent = (CUP ? T.e + ' ' : '') + msg[0];
-    res.querySelector('.kr-res-s').textContent = msg[1] + ' Deine Zeit: ' + fmt(mine.done * 1000) + (rec ? ' · Neue Bestzeit!' : ' · Bestzeit: ' + fmt(prev));
+    res.querySelector('.kr-res-s').textContent = photo + msg[1] + ' Deine Zeit: ' + fmt(mine.done * 1000) + (rec ? ' · Neue Bestzeit!' : ' · Bestzeit: ' + fmt(prev));
     const ol = res.querySelector('ol'); ol.innerHTML = '';
     order.forEach((k, i) => { const li = document.createElement('li'); if (k.me) li.className = 'me'; li.innerHTML = '<b>' + (i + 1) + '.</b>'; li.appendChild(headCv(k.id));
-      li.insertAdjacentHTML('beforeend', '<span>' + esc(NAME(k.id)) + '</span><small>' + (k.done ? fmt(k.done * 1000) : k.out ? '📴 raus' : '+ ' + (k.est - mine.done).toFixed(1) + ' s') + (CUP ? ' · +' + PTS[i] : '') + '</small>'); ol.appendChild(li); });
+      li.insertAdjacentHTML('beforeend', '<span>' + esc(S.live && k.aiIdx === undefined && !k.me && k.who && k.who !== k.id ? NAME(k.who) + ' (' + NAME(k.id) + ')' : NAME(k.id)) + (S.live && k.aiIdx !== undefined ? ' 🤖' : '') + '</span><small>' + (k.done ? fmt(k.done * 1000) : k.out ? '📴 raus' : '+ ' + (k.est - mine.done).toFixed(1) + ' s') + (CUP ? ' · +' + PTS[i] : '') + '</small>'); ol.appendChild(li); });
     res.querySelector('.kr-crew').textContent = crewMsg; res.querySelector('.kr-crew').hidden = !crewMsg || !!CUP;
     { const wr = res.querySelector('.kr-whores'); wr.innerHTML = PEND ? whoHtml('🙋 <b>Wer bist du?</b> Tippe dich an, dann kommt deine Zeit (' + fmt(ms) + ') in die Crew-Bestenliste.') : ''; whoHeads(wr); }
     res.querySelector('.kr-coins').innerHTML = '🪙 +' + earn + ' Münzen (' + S.got + ' eingesammelt, ' + [10, 6, 4, 2, 1, 1][pl - 1] + ' Platz-Bonus' + (beatRival ? ', 5 ⚔️ Rivale ' + esc(NAME(rv.id)) + ' geschlagen' : rv ? ', ⚔️ ' + esc(NAME(rv.id)) + ' war schneller' : '') + ') · Kasse: ' + coins();
@@ -8396,8 +8453,11 @@ setGroup(G);
     const st = res.querySelector('.kr-stand'); st.innerHTML = ''; st.hidden = !CUP;
     if (CUP) { const tbl = Object.entries(CUP.pts).sort((a, b) => b[1] - a[1]); st.innerHTML = '<p class="kr-lbl">Gesamtwertung nach ' + (CUP.i + 1) + ' von ' + CUP.list.length + ' Rennen</p>' +
       '<div class="kr-st">' + tbl.map(([id, p], i) => '<span' + (id === me ? ' class="me"' : '') + '><b>' + (i + 1) + '.</b> ' + esc(NAME(id)) + ' <i>' + p + '</i></span>').join('') + '</div>'; }
-    if (S.live) { res.querySelector('.kr-again').textContent = '👥 Zurück in die Lobby'; } else res.querySelector('.kr-again').textContent = CUP ? (lastCup ? '🏆 Zur Siegerehrung' : '▶ Nächstes Rennen: ' + TBY[CUP.list[CUP.i + 1]].e + ' ' + TBY[CUP.list[CUP.i + 1]].name) : 'Nochmal';
-    res.querySelector('.kr-res .kr-back').textContent = CUP ? '☰ Menü (Grand Prix abbrechen)' : '☰ Zurück ins Menü';
+    if (S.live && LIVE.gp) { const g = LIVE.gp, last0 = g.i >= g.list.length - 1, tb = Object.entries(g.pts).sort((a, b) => b[1] - a[1]); st.hidden = false;
+      st.innerHTML = '<p class="kr-lbl">' + (last0 ? '🏆 Live-Pokal: Endstand' : '🏆 Live-Pokal nach ' + (g.i + 1) + ' von ' + g.list.length + ' Rennen') + '</p><div class="kr-st">' + tb.map(([k0, p0], i) => '<span' + (k0 === 'p:' + LIVE.me ? ' class="me"' : '') + '><b>' + (last0 && i === 0 ? '🏆' : (i + 1) + '.') + '</b> ' + esc(g.nm[k0]) + ' <i>' + p0 + '</i></span>').join('') + '</div>';
+      if (last0) { res.querySelector('.kr-res-t').textContent = tb[0][0] === 'p:' + LIVE.me ? '🏆 Live-Pokal gewonnen!' : '🏆 Pokal-Sieger: ' + g.nm[tb[0][0]]; if (tb[0][0] === 'p:' + LIVE.me) fireworks(120); } }
+    if (S.live) { res.querySelector('.kr-again').textContent = LIVE.gp && LIVE.gp.i < LIVE.gp.list.length - 1 ? '▶ Nächstes Pokal-Rennen (bereit)' : '🔁 Revanche (bereit)'; } else res.querySelector('.kr-again').textContent = CUP ? (lastCup ? '🏆 Zur Siegerehrung' : '▶ Nächstes Rennen: ' + TBY[CUP.list[CUP.i + 1]].e + ' ' + TBY[CUP.list[CUP.i + 1]].name) : 'Nochmal';
+    res.querySelector('.kr-res .kr-back').textContent = CUP ? '☰ Menü (Grand Prix abbrechen)' : S.live ? '👥 Zur Lobby' : '☰ Zurück ins Menü';
     res.hidden = false; S.paused = true; MUS.on = false; racing(false); engOff();
   }
   // Siegerehrung nach dem Grand Prix: Podest auf dem Canvas, Tabelle im Kasten
@@ -8489,7 +8549,7 @@ setGroup(G);
     menu.querySelector('.kr-best').textContent = MODE === 'cup' ? CUPSEL.t.map(id => TBY[id].e).join(' ') + ' · ' + CUPSEL.t.length + ' Rennen, Punkte 10-8-6-5-4-3, am Ende Siegerehrung.' + (cw ? ' Deine Grand-Prix-Siege: ' + cw + ' 🏆' : '')
       : (bt[TRK] ? 'Deine Bestzeit ' + TBY[TRK].name + ': ' + fmt(bt[TRK]) : 'Noch keine Bestzeit auf dieser Strecke.');
     liveBox(); livePres();
-    menu.querySelector('.kr-go').textContent = MODE === 'live' ? (lobby().length < 2 ? '👥 Warte auf Mitspieler …' : '🚦 Rennen für alle starten') : MODE === 'cup' ? '🏆 Grand Prix starten' : MODE === 'daily' ? '🎯 Challenge fahren' : 'Los geht’s!';
+    menu.querySelector('.kr-go').textContent = MODE === 'live' ? (lobby().length < 2 ? '👥 Warte auf Mitspieler …' : '🚦 Rennen starten (' + lobby().length + ' Spieler)') : MODE === 'cup' ? '🏆 Grand Prix starten' : MODE === 'daily' ? '🎯 Challenge fahren' : 'Los geht’s!';
     const dy = daily(), lb = menu.querySelector('.kr-lb'), gh = menu.querySelector('.kr-ghost:not(.kr-diff)');
     gh.hidden = MODE !== 'single'; gh.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x.dataset.g === GHOST.mode));
     if (MODE === 'daily') { const bd = bt[dy.track.id + '@' + dy.rule.k];
@@ -8518,7 +8578,7 @@ setGroup(G);
     if (CUP) { RULE = null; loadTrack(CUP.list[CUP.i]); } else if (RULE) loadTrack(daily().track.id, RULE.k === 'rev'); else loadTrack(TRK);
     if (LIVE.pending) { LIVE.race = LIVE.pending; LIVE.pending = null; } else if (MODE !== 'live') LIVE.race = null;
     makeVehicles(); newRace(); if (TUTON) { S.tut = {i: 0, ok: 0}; S.karts.length = 1; LAPS = 2; S.storm.at = -1; S.rival = null; }
-    if (LIVE.race) { S.live = LIVE.race; S.t = clamp(-(LIVE.race.at - Date.now()) / 1000, -6, -.5); S.storm.at = -1; } S.tod = T.night || SET.tod === 'day' ? 'day' : (h => h >= 19 || h < 6 ? 'night' : h >= 17 ? 'dusk' : h < 7 ? 'dawn' : 'day')(+new Intl.DateTimeFormat('en-GB', {timeZone: 'America/Sao_Paulo', hour: 'numeric', hour12: false}).format(new Date()) % 24);
+    if (LIVE.race) { S.live = LIVE.race; S.live.t0p = LIVE.race.delay && LIVE.race.rt ? LIVE.race.rt + LIVE.race.delay : performance.now() + clamp(LIVE.race.at - Date.now(), 500, 6000); S.t = clamp((performance.now() - S.live.t0p) / 1000, -6, -.5); S.storm.at = -1; LIVE.buf = {}; LIVE.lastN = {}; } box.classList.toggle('live', !!S.live); S.tod = T.night || SET.tod === 'day' ? 'day' : (h => h >= 19 || h < 6 ? 'night' : h >= 17 ? 'dusk' : h < 7 ? 'dawn' : 'day')(+new Intl.DateTimeFormat('en-GB', {timeZone: 'America/Sao_Paulo', hour: 'numeric', hour12: false}).format(new Date()) % 24);
     if (!CUP && !RULE && GHOST.mode !== 'off') { const tid = T.id, s0 = S; ghostFor(tid).then(g => { if (S === s0 && g) { S.ghost = g; ghostProg(g); } }); } audio(); MUS.on = false; MUS.fast = false; MUS.step = 0; MUS.next = 0; banner = null; last = 0; if (MG && AC) MG.gain.value = .5;
     setTimeout(() => { if (S && S.tod === 'night' && !T.night) setTimeout(() => say('night', 'Es wird Nacht! Licht an!'), 2600); if (S && S.t < 0) say('t_' + T.id, RULE ? 'Tages-Challenge: ' + RULE.n + '!' : 'Willkommen in ' + T.name + '!', 1); }, 150);
   }
@@ -8537,7 +8597,9 @@ setGroup(G);
   function toMenu() { TUTON = false; CUP = null; RULE = MODE === 'daily' ? daily().rule : null; res.hidden = true; pm.hidden = true; racing(false); MUS.on = false; menu.hidden = false; preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); }
   openBtn.addEventListener('click', open);
   const racing = on => box.classList.toggle('racing', on);
-  function pause() { if (!S || !box.classList.contains('racing') || !res.hidden) return; S.paused = true; ptr.clear(); upd(); pm.hidden = false; if (AC) try { AC.suspend(); } catch (e) {} }
+  function pause() { if (!S || !box.classList.contains('racing') || !res.hidden) return; pm.querySelector('.kr-restart').hidden = !!S.live;
+    if (S.live) { ptr.clear(); upd(); pm.hidden = false; return; }   // Live: Rennen läuft weiter, nur das Menü kommt
+    S.paused = true; ptr.clear(); upd(); pm.hidden = false; if (AC) try { AC.suspend(); } catch (e) {} }
   const engOff = () => { if (eng && AC) { eng.g.gain.setTargetAtTime(0, AC.currentTime, .05); eng.sg.gain.setTargetAtTime(0, AC.currentTime, .05); } };
   function resume() { pm.hidden = true; if (S) S.paused = false; last = 0; audio(); }
   const setT = (sel, txt) => box.querySelectorAll(sel).forEach(b => { b.textContent = txt; });
@@ -8555,6 +8617,11 @@ setGroup(G);
     if (e.target.closest('.kr-tod')) { SET.tod = SET.tod === 'day' ? 'real' : 'day'; saveSet(); }
     if (e.target.closest('.kr-steer, .kr-ann, .kr-snd, .kr-ctl, .kr-q, .kr-cam, .kr-tod')) setTxt(); });
   box.querySelector('.kr-pbtn').addEventListener('click', pause);
+  // Live: Emoji-Reaktionen während des Rennens (über dem eigenen Kart, bei allen sichtbar)
+  { const eb = box.querySelector('.kr-emo'); if (eb) { const el = eb.querySelector('.kr-emol');
+    eb.addEventListener('pointerdown', e => { e.stopPropagation(); });
+    eb.addEventListener('click', e => { e.stopPropagation(); if (e.target.closest('.kr-emob')) { el.hidden = !el.hidden; return; } const b = e.target.closest('.kr-emol button'); if (!b || !S || !S.live) return; el.hidden = true;
+      const now = performance.now(); if (now - LIVE.emoAt < 1200) return; LIVE.emoAt = now; liveEmit({t: 'emo', race: S.live.id, e: b.textContent}); const k0 = S.karts[0]; k0.emo = b.textContent; k0.emoU = now + 2400; }); } }
   pm.addEventListener('click', e => {
     if (e.target.closest('.kr-resume')) resume();
     if (e.target.closest('.kr-restart')) { pm.hidden = true; startRace(); }
@@ -8577,6 +8644,8 @@ setGroup(G);
     const bk = e.target.closest('.kr-bk'); if (bk) { BX = BX === bk.dataset.k ? null : bk.dataset.k; renderMenu(); return; }
     const rec = e.target.closest('.kr-rec'); if (rec) { TRK = rec.dataset.t; store.set('kartTrack', TRK); if (MODE !== 'single') menu.querySelector('.kr-mode button[data-mode="single"]').click(); else { preview(TRK); renderMenu(); } menu.querySelector('.kr-trk').scrollIntoView({behavior: 'smooth', block: 'center'}); return; }
     if (e.target.closest('.kr-tutgo')) { tutStart(); return; }
+    if (e.target.closest('.kr-rdy')) { LIVE.rdy = !LIVE.rdy; livePres(); liveBox(); liveAuto(); return; }
+    if (e.target.closest('.kr-gpt')) { store.set('kartLiveGP', store.get('kartLiveGP') === '1' ? '0' : '1'); livePres(); liveBox(); return; }
     if (e.target.closest('.kr-liveai')) { store.set('kartLiveAI', store.get('kartLiveAI') === '0' ? '1' : '0'); renderMenu(); return; }
     const pl0 = e.target.closest('.kr-pill'); if (pl0) { const d = menu.querySelector('.kr-' + pl0.dataset.open); if (d) { d.open = true; setTimeout(() => d.scrollIntoView({behavior: 'smooth', block: 'center'}), 30); } }
     const db0 = e.target.closest('.kr-diff button'); if (db0) { DIFF = +db0.dataset.d; store.set('kartDiff', DIFF); renderMenu(); }
@@ -8590,9 +8659,9 @@ setGroup(G);
       if (CUP && CUP.done) { CUP = {i: 0, pts: {}, races: [], list: CUPSEL.t, n: CUPSEL.n, e: CUPSEL.e}; startRace(); }
       else if (CUP && CUP.i === CUP.list.length - 1) ceremony();
       else if (CUP) { CUP.i++; say('cupnext', 'Auf zum nächsten Rennen!', 1); startRace(); }
-      else if (MODE === 'live') { liveLeave(); toMenu(); }
+      else if (MODE === 'live') { if (LIVE.gp && LIVE.gp.i >= LIVE.gp.list.length - 1) LIVE.gp = null; liveLeave(); LIVE.rdy = true; toMenu(); }
       else startRace(); }
-    if (e.target.closest('.kr-res .kr-back')) { liveLeave(); toMenu(); }
+    if (e.target.closest('.kr-res .kr-back')) { if (LIVE.gp && LIVE.gp.i >= LIVE.gp.list.length - 1) LIVE.gp = null; liveLeave(); LIVE.rdy = false; toMenu(); }
   });
   // Steuerung: Daumen links/rechts, Item-Knopf; Tastatur
   const ptr = new Map();
@@ -8621,6 +8690,6 @@ setGroup(G);
   setTimeout(() => { try { lbInit(); } catch (e) {} }, 1500);
   box.addEventListener('click', e => { const w = e.target.closest('.kr-whop button'); if (w) setMe(w.dataset.who); });
   window.__kartAt = (i, l) => at(i, l); window.__kartTW = () => TW;
-  window.__kart = {live: () => LIVE, hitK: (i, why) => hit(S.karts[i], why), open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
+  window.__kart = {live: () => LIVE, liveGo: a => liveGo(a), emo: e => { const b = [...box.querySelectorAll('.kr-emol button')].find(x => x.textContent === e); if (b) b.click(); }, hitK: (i, why) => hit(S.karts[i], why), open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
 })();
 </script>
