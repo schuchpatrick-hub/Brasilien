@@ -890,7 +890,7 @@
       "name": "Jonas",
       "nick": "Joni · „Papi“",
       "team": "a",
-      "photo": "crew/jonas.jpg", "photo2": "crew/jonas-2.jpg",
+      "photo": "crew/jonas.jpg", "photo2": "crew/jonas-2.jpg", "swap2": true,
       "role": "Reiseleiter. Diktator. Papi.",
       "facts": [
         [
