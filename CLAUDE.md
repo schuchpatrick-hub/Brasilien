@@ -162,7 +162,7 @@ localStorage. **Zeitkapsel** (`#kapsel`): Fragen in `trip.json` → `kapsel.ques
 Abgabe für alle sechs bis 27.12.; alle Fragen zählen über die ganze Reise (optional `from` = Frage zählt erst ab Datum).
 Eingabe Schritt für Schritt (eine Frage pro Karte, Punkte-Leiste `.ka-dots` zum Springen, Ja/Nein und Auswahl springen
 automatisch weiter, am Ende Übersicht `.ka-sum` mit „Versiegeln“; Formular nach dem Versiegeln zugeklappt, ohne Schreibrecht zu).
-Tipps in db-Collection `kapsel` (Dokument-ID = Crew-`id`, `a` = {Frage-id: Antwort}, `ts`), eintragen nur Admin; bis
+Tipps in db-Collection `kapsel` (Dokument-ID = Crew-`id`, `a` = {Frage-id: Antwort}, `ts`, `by` = wer versiegelt hat laut „Ich bin …“, `dev`), eintragen alle mit Schreibrecht (`canWrite()`, geprüft 08.10.: Bearbeiter-Ebene schreibt, Betrachter nicht; eigene Person wird vorausgewählt, Ablehnung zeigt den Code); bis
 `revealAt` (19.01.2027 20 Uhr Rio) zeigt die Seite nur, wer getippt hat. Danach Antworten, Auflösung durch den Admin in
 `kapselres/solution` (`s`). Auswertung: Punkte nach `kapsel.points` (Treffer 3; Zahlen genau 5, am nächsten 3,
 Zweitnächster 1), Podest + Tabelle „Hellseher der Reise“ (Letzter = „Blindgänger“), Stimmenverteilung je Frage und
