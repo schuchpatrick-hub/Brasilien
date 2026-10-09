@@ -10252,6 +10252,8 @@
     ]
   },
   "news": [
+    {"id": "n251009y", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🗺️", "t": "Gringo Kart: Strecken jetzt als Raster wie bei Smash Bros – antippen zeigt darunter einen kurzen Steckbrief (Kurven, Tempo, Chaos, Tunnel, Abgrund …), „?“ lost eine Strecke aus"},
+    {"id": "n251009x", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎲", "t": "Gringo Kart Live: Zufallsrennen für alle – Würfel unten oder Einstellung „Zufallsrennen“, beim Start lost der Automat jedem Fahrer und Fahrzeug, dazu eine Strecke"},
     {"id": "n251009w", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎲", "t": "Gringo Kart: neuer Zufall-Knopf unten neben „Los!“ – der Spielautomat lost Fahrer, Fahrzeug und Strecke aus, dann geht’s sofort los (danach ist deine eigene Auswahl wieder da)"},
     {"id": "n251009v", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "👀", "t": "Gringo Kart: der ITEM-Knopf wird durchsichtig, wenn ein Verfolger dahinter fährt, und Sprechblasen/Texte liegen nicht mehr über Tacho, ITEM-Knopf oder einander"},
     {"id": "n251009u", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🔧", "t": "Gringo Kart durchgecheckt: Ergebnis zeigt keine kaputten Zeiten mehr, im Live-Rennen bekommt nur noch der Schnellste die Crew-Bestzeit, Fahrschule zählt nicht mehr als Sieg, „Profi“-Knopf und Fahrzeugnamen im Querformat passen wieder; Live: langsame Handys fallen nicht mehr zurück, und das Warten auf Nachzügler endet wirklich nach 30 s"},
