@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251009u", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🔧", "t": "Gringo Kart durchgecheckt: Ergebnis zeigt keine kaputten Zeiten mehr, im Live-Rennen bekommt nur noch der Schnellste die Crew-Bestzeit, Fahrschule zählt nicht mehr als Sieg, „Profi“-Knopf und Fahrzeugnamen im Querformat passen wieder; Live: langsame Handys fallen nicht mehr zurück, und das Warten auf Nachzügler endet wirklich nach 30 s"},
     {"id": "n251009t", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "👆", "t": "Gringo Kart: die Infos zum Fahrer erscheinen jetzt direkt unter dem angetippten Fahrer"},
     {"id": "n251009s", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🧹", "t": "Gringo Kart aufgeräumt: die Tages-Challenge ist raus, es gibt nur noch Einzelrennen, Grand Prix und Live"},
     {"id": "n251009r", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🏁", "t": "Gringo Kart Live: großer Bereit-Knopf, Einstellungen als Kacheln, und jede Spieler-Karte zeigt wer spielt, welche Figur und welches Fahrzeug – auch unten in einer Leiste beim Auswählen"},

@@ -1792,7 +1792,7 @@
     if (S.live && S.karts[0]) liveSend(S.karts[0]);
     if (S.tut && S.t > 0) { const st = TUT[S.tut.i]; if (S.tut.t0 === undefined) S.tut.t0 = S.t; if (st && (st.ok(S.karts[0]) || (S.tut.i < TUT.length - 1 && S.t - S.tut.t0 > 30))) { S.tut.i++; S.tut.t0 = S.t; S.tut.ok = performance.now(); SFX.pick(); vib(20); } }
     if (S.pose && S.pose.live) { const wn = S.karts.filter(o => o.done && !o.out).sort((x, y) => x.done - y.done)[0]; if (wn) S.pose.id = wn.id; }
-    if (S.live && S.over > 0 && S.over - dt <= 0 && S.karts.some(o => o.remote && o.aiIdx === undefined && !o.done && (o.gone || 0) < 5) && (S.liveWait = (S.liveWait || 0) + dt) < 30) S.over = .3;
+    if (S.live && S.over > 0 && S.over - dt <= 0 && S.karts.some(o => o.remote && o.aiIdx === undefined && !o.done && (o.gone || 0) < 5) && (S.liveWait = S.t - (S.liveW0 = S.liveW0 || S.t)) < 30) S.over = .3;   // max. 30 s echte Wartezeit (vorher zählte nur ein Bild je 0,3 s)
     if (S.over > 0) { S.over -= dt; if (S.over <= 0) finish(); }
     // Motor
     const p = ks[0]; if (eng && AC) { const gs = 95, gear = Math.min(4, Math.floor(Math.max(0, p.v) / gs)), rpm = (Math.max(0, p.v) - gear * gs) / gs, base = T.veh === 'cart' && p.vtype === 'cart' ? 90 : T.veh === 'boat' ? 42 : 52;
@@ -2166,7 +2166,7 @@
   function loop(ts) { raf = requestAnimationFrame(loop); const raw = (ts - (last || ts)) / 1000; let dt = Math.min(.05, raw); last = ts; if (!S) return; if (raw > 0 && raw < .5) perfCheck(raw);
     if (raw > 2.5 && !document.hidden && performance.now() - visAt > 4000 && !S.paused) kerr('stall', 'Bild hing über 2,5 s', {sec: Math.round(raw * 10) / 10});   // Hänger ohne App-Wechsel
     try { if (S.fw.length) { S.fw.forEach(p => { p.t += dt; }); S.fw = S.fw.filter(p => p.t < 1.5); if (S.fw.length > 320) S.fw.splice(0, S.fw.length - 320); }
-      if (!S.paused) { if (S.slow > 0) { S.slow -= dt; dt *= .3; } step(dt); } } catch (e) { kerr('step', e); oops(); }
+      if (!S.paused) { if (S.slow > 0) { S.slow -= dt; dt *= .3; step(dt); } else { const n = S.live && raw > .05 && raw < .3 ? Math.ceil(raw / .05) : 1; for (let i = 0; i < n; i++) step(n > 1 ? raw / n : dt); } } } catch (e) { kerr('step', e); oops(); }   /* live: unter 20 Bildern/s mehrere Schritte, sonst fährt das langsame Handy (und als Gastgeber alle Computer-Gegner) in Zeitlupe hinterher */
     try { musTick(); if (S) draw(); } catch (e) { kerr('draw', e); oops(); } }
   const headCv = (id, n) => { const c = document.createElement('canvas'); c.width = c.height = n || 64; c.getContext('2d').drawImage(HEAD[id], 0, 0, c.width, c.height); return c; };
   function finish() {
@@ -2176,20 +2176,24 @@
     if (rec) { b[bkey] = ms; store.set('kartBest', JSON.stringify(b)); try { localStorage.setItem('br26.kartGhost.' + T.id, JSON.stringify({ms, drv: me, g: S.rec})); } catch (e) {} }
     // Crew-Bestenliste (nur mit Schreibrecht)
     let crewMsg = ''; PEND = null;
+    const wasTut = TUTON;
     if (TUTON) { TUTON = false; if (!store.get('kartTutDone')) { store.set('kartTutDone', '1'); addCoins(20); setTimeout(() => toast('🎓 <b>Fahrschule bestanden!</b><br>+20 🪙'), 600); } }
     else if (!ok) { /* abgebrochen: nichts eintragen */ }
-    else { const top = lbList(LB, T.id)[0], mineLB = LB[T.id + '__' + player()];
+    else { let top = lbList(LB, T.id)[0]; const mineLB = LB[T.id + '__' + player()];   /* live: schnellere Mitspieler aus diesem Rennen zählen schon mit (ihre Bestzeit ist hier evtl. noch nicht geladen) */
+      if (S.live) S.karts.forEach(o => { if (o !== mine && o.aiIdx === undefined && o.done > 15 && !o.out && (!top || o.done * 1000 < top.ms)) top = {who: o.who || o.id, ms: Math.round(o.done * 1000)}; });
       if (WR && DB) { const pd = {kind: 'best', track: T.id, drv: me, veh: vehOf(me), ms, g: S.rec}; if (ME) saveLB(pd); else PEND = pd; }
       crewMsg = !top || ms < top.ms ? (WR ? '👑 Neue Crew-Bestzeit auf ' + T.name + '!' : '👑 Schneller als die Crew-Bestzeit, aber nur eingeladene Bearbeiter kommen in die Bestenliste.') : '⏱ Crew-Bestzeit: ' + NAME(top.who) + ' ' + fmt(top.ms); }
     const pl = order.indexOf(mine) + 1;
     let msg = pl === 1 ? ['Campeão! 🏆', 'Der Pokal geht nach Hause!'] : pl === 6 ? ['Rote Laterne 🏮', 'Immerhin heil angekommen.'] : pl <= 3 ? ['Podium! ' + (pl === 2 ? '🥈' : '🥉'), 'Stark gefahren.'] : ['Mittelfeld', 'Nächstes Mal mehr Caipi-Turbo.'];
+    if (wasTut) msg = ['Fahrschule bestanden! 🎓', 'Jetzt ab ins erste echte Rennen.'];
+    else if (!mine.done) msg = ['Zeit abgelaufen ⏱️', 'Die anderen waren schon alle im Ziel.'];
     if (CUP) { order.forEach((k, i) => { CUP.pts[k.id] = (CUP.pts[k.id] || 0) + PTS[i]; }); CUP.races.push(order.map(k => k.id)); }
     if (S.live) { liveGpScore(order); liveSave(order); }
     const mi0 = order.indexOf(mine), nbF = [order[mi0 - 1], order[mi0 + 1]].filter(o => o && o.done && mine.done && Math.abs(o.done - mine.done) < .15)[0], photo = nbF ? '📸 Fotofinish gegen ' + NAME(nbF.who || nbF.id) + ': ' + Math.round(Math.abs(nbF.done - mine.done) * 1000) + ' ms ' + (nbF.done > mine.done ? 'vorne!' : 'hinten.') + ' ' : '';
-    const st0 = stats(), st1 = Object.assign({}, st0, {races: st0.races + 1, wins: st0.wins + (pl === 1 ? 1 : 0), ilha: st0.ilha + (T.id === 'ilha' ? 1 : 0), supers: st0.supers + S.supers});
+    const st0 = stats(), st1 = Object.assign({}, st0, {races: st0.races + 1, wins: st0.wins + (pl === 1 && !wasTut ? 1 : 0), ilha: st0.ilha + (T.id === 'ilha' ? 1 : 0), supers: st0.supers + S.supers});
     const rv = ks.find(o => o.id === S.rival), beatRival = rv && order.indexOf(mine) < order.indexOf(rv), earn = S.got + [10, 6, 4, 2, 1, 1][pl - 1] + (beatRival ? 5 : 0);
     st1.smash = (st0.smash || 0) + (S.myBrk || 0); st1.coinsTot = st0.coinsTot + S.got; st1.rivals = st0.rivals + (beatRival ? 1 : 0); if (!st1.tracks.split(',').includes(T.id)) st1.tracks = (st1.tracks ? st1.tracks + ',' : '') + T.id; st1.tracksN = st1.tracks.split(',').filter(Boolean).length; st1.tds = (st0.tds || 0) + (S.td ? S.td.n : 0); st1.vtds = (st0.vtds || 0) + (S.td ? S.td.n : 0); st1.vsup = (st0.vsup || 0) + S.supers; addCoins(earn);
-    { const rr = loadJ('kartRival'), mi = order.indexOf(mine), nb = order[mi + 1] || order[mi - 1]; rr[me] = beatRival ? nb.id : S.rival; store.set('kartRival', JSON.stringify(rr)); }
+    if (S.rival) { const rr = loadJ('kartRival'), mi = order.indexOf(mine), nb = order[mi + 1] || order[mi - 1]; rr[me] = beatRival && nb ? nb.id : S.rival; store.set('kartRival', JSON.stringify(rr)); }   /* Fahrschule/ohne Rivale: gespeicherten Rivalen nicht löschen */
     store.set('kartStats', JSON.stringify(st1)); if (st1.smash >= 25) ach('smash'); const newV = VEHS.filter(v => v.need && st0[v.need[0]] < v.need[1] && st1[v.need[0]] >= v.need[1]);
     const lastCup = CUP && CUP.i === CUP.list.length - 1;
     if (!lastCup) { if (pl === 1) say('win', 'Sieg! Der Pokal geht nach Hause!', 1); else if (pl <= 3) say('podium', 'Aufs Podest! Stark gefahren!', 1); else say('lose', 'Na ja, dabei sein ist alles!', 1); }
@@ -2198,10 +2202,10 @@
     setTimeout(() => { ach('first'); if (pl === 1) { ach('win'); if (['sp', 'reveillon', 'cristo'].includes(T.id)) ach(T.id); } if (!S.myHits) ach('nohit'); if (st1.supers >= 10) ach('super10'); if (st1.coinsTot >= 100) ach('coins100');
       if (S.tod === 'night' || T.night) ach('night'); if (TRACKS.every(x => st1.tracks.split(',').includes(x.id))) ach('all'); if (st1.rivals >= 5) ach('rival5'); }, 900);
     res.querySelector('.kr-res-t').textContent = (CUP ? T.e + ' ' : '') + msg[0];
-    res.querySelector('.kr-res-s').textContent = photo + msg[1] + ' Deine Zeit: ' + fmt(mine.done * 1000) + (rec ? ' · Neue Bestzeit!' : ' · Bestzeit: ' + fmt(prev));
+    res.querySelector('.kr-res-s').textContent = photo + msg[1] + (mine.done ? ' Deine Zeit: ' + fmt(mine.done * 1000) + (rec ? ' · Neue Bestzeit!' : prev ? ' · Bestzeit: ' + fmt(prev) : '') : ' Nicht im Ziel angekommen.');   // vorher „0:00.0 · Bestzeit: NaN“, wenn das Rennen ohne eigenen Zieleinlauf endete oder es noch keine Bestzeit gab
     const ol = res.querySelector('ol'); ol.innerHTML = '';
     order.forEach((k, i) => { const li = document.createElement('li'); if (k.me) li.className = 'me'; li.innerHTML = '<b>' + (i + 1) + '.</b>'; li.appendChild(headCv(k.id));
-      li.insertAdjacentHTML('beforeend', '<span>' + esc(S.live && k.aiIdx === undefined && !k.me && k.who && k.who !== k.id ? NAME(k.who) + ' (' + NAME(k.id) + ')' : NAME(k.id)) + (S.live && k.aiIdx !== undefined ? ' 🤖' : '') + '</span><small>' + (k.done ? fmt(k.done * 1000) : k.out ? '📴 raus' : '+ ' + (k.est - mine.done).toFixed(1) + ' s') + (CUP ? ' · +' + PTS[i] : '') + '</small>'); ol.appendChild(li); });
+      li.insertAdjacentHTML('beforeend', '<span>' + esc(S.live && k.aiIdx === undefined && !k.me && k.who && k.who !== k.id ? NAME(k.who) + ' (' + NAME(k.id) + ')' : NAME(k.id)) + (S.live && k.aiIdx !== undefined ? ' 🤖' : '') + '</span><small>' + (k.done ? fmt(k.done * 1000) : k.out ? '📴 raus' : mine.done ? '+ ' + (k.est - mine.done).toFixed(1) + ' s' : 'noch unterwegs') + (CUP ? ' · +' + PTS[i] : '') + '</small>'); ol.appendChild(li); });
     res.querySelector('.kr-crew').textContent = crewMsg; res.querySelector('.kr-crew').hidden = !crewMsg || !!CUP;
     { const wr = res.querySelector('.kr-whores'); wr.innerHTML = PEND ? whoHtml('🙋 <b>Wer bist du?</b> Tippe dich an, dann kommt deine Zeit (' + fmt(ms) + ') in die Crew-Bestenliste.') : ''; whoHeads(wr); }
     res.querySelector('.kr-coins').innerHTML = '<b>🪙 +' + earn + '</b><span>' + S.got + ' gesammelt</span><span>+' + [10, 6, 4, 2, 1, 1][pl - 1] + ' für Platz ' + pl + '</span>' + (beatRival ? '<span>+5 ⚔️ ' + esc(NAME(rv.id)) + ' geschlagen</span>' : rv ? '<span class="kr-no">⚔️ ' + esc(NAME(rv.id)) + ' war schneller</span>' : '') + '<em>Kasse ' + coins() + '</em>';   // Münzen als kleine Chips statt Klammer-Satz
@@ -2376,9 +2380,9 @@
     for (const x of kids.concat([null])) { if (!x || x.classList.contains('kr-pgh')) { if (hit) break; g = []; continue; } if (!x.classList.contains('kr-tile')) continue; g.push(x); if (x.dataset.id === me) hit = x; }
     if (!hit) { ro.after(inf); return; } const i = g.indexOf(hit), end = g[Math.min(g.length - 1, Math.floor(i / 6) * 6 + 5)];
     end.after(inf); inf.style.setProperty('--col', ((i % 6 + .5) / 6 * 100) + '%'); }
-  // Info-Kasten hinter die Reihe des angetippten Fahrzeugs setzen (3 bzw. 6 Spalten je nach Bildschirm), Pfeil zeigt aufs Fahrzeug
+  // Info-Kasten hinter die Reihe des angetippten Fahrzeugs setzen (Spaltenzahl aus dem CSS-Raster), Pfeil zeigt aufs Fahrzeug
   function placeVInfo() { const vc = menu.querySelector('.kr-vcar'), inf = vc && vc.querySelector('.kr-vinfo'); if (!inf) return; const bs = [...vc.querySelectorAll(':scope > button')], i = bs.findIndex(b => b.dataset.v === VINFO); if (i < 0) return;
-    const cols = matchMedia('(min-width:820px), (orientation:landscape) and (max-height:540px)').matches ? 6 : 3, end = Math.min(bs.length - 1, Math.floor(i / cols) * cols + cols - 1);
+    const cols = Math.max(1, getComputedStyle(vc).gridTemplateColumns.split(' ').filter(Boolean).length), end = Math.min(bs.length - 1, Math.floor(i / cols) * cols + cols - 1);
     bs[end].after(inf); inf.style.setProperty('--col', ((i % cols + .5) / cols * 100) + '%'); }
   // Werkstatt: Fahrzeug wählen, Leistungsbalken (grün = Tuning), 6 Teile mit Vorher/Nachher und Preis
   let WSV = null;
@@ -2512,7 +2516,7 @@
     menu.querySelector('.kr-tutb').hidden = !!store.get('kartTutDone') && stats().races > 2;
     const wb = menu.querySelector('.kr-whobox'); wb.innerHTML = !WR ? '' : !ME || WHOOPEN ? whoHtml(ME ? '🙋 <b>Wer spielt jetzt?</b> Antippen, unter diesem Namen landen die Zeiten in der Crew-Bestenliste.' : '🙋 <b>Wer spielt an diesem Handy?</b> Einmal antippen, dann landen deine Zeiten unter deinem Namen in der Crew-Bestenliste.')
       : '<p class="kr-wholn"><span>🙋 <b>' + esc(NAME(ME)) + '</b> spielt · Zeiten zählen für die Crew-Bestenliste</span><button type="button" class="kr-whochg">ändern</button></p>'; whoHeads(wb);
-    const rc = menu.querySelector('.kr-recs'); rc.querySelector('.kr-recb').innerHTML = recsHtml(); sumBadge('recs', TRACKS.filter(x => lbList(LB, x.id).length).length + '/' + TRACKS.length);
+    const rc = menu.querySelector('.kr-recs'); rc.querySelector('.kr-recb').innerHTML = recsHtml(); sumBadge('recs', '🏁 ' + TRACKS.filter(x => lbList(LB, x.id).length).length + '/' + TRACKS.length);
   }
   function preview(id) { loadTrack(id); newRace(); S.paused = true; }
   const TIPS = ['Gewitter? Pfützen meiden, früher bremsen.', 'Mehrfach-Items (×2, ×3): mehrmals antippen! 🥥 Kokos-Trio kreist um dich und wehrt Geschosse ab, 🍌 Bananen hinten auch.', 'Brücke, Minhocão, Cristo und Iguaçu haben keine Bande: Wer über den Rand fährt, stürzt ab und verliert gut 2 Sekunden.', '⛱️ Schirm blockt einen Treffer, 🩴 Flip-Flop fliegt geradeaus, 🦜 Papagei verdreht den Vorderleuten die Lenkung.', '🌶️ Pimenta: langer Turbo, wer direkt hinter dir fährt, verbrennt sich.', 'Doppeltipp und halten = sofort driften. Länger driften = blauer, dann oranger Turbo.', 'Beide Seiten gleichzeitig halten = bremsen.', 'Bei der 1 tippen = Raketenstart.',
