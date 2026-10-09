@@ -1231,7 +1231,7 @@
   const TDTXT = ['💀 {n} ist raus. Blumen bitte an die Eltern.', '⚰️ {n} wurde fachgerecht entsorgt.', '🪦 {n}: gefahren, getroffen, vergessen.', '💥 Volltreffer! {n} sieht jetzt die Oma. Die tote.',
     '🩸 {n} braucht jetzt einen Priester.', '🚑 Für {n} kommt jede Hilfe zu spät.', '☠️ {n} hat das Rennen verlassen. Innerlich.', '🧹 {n} wird später zusammengekehrt.'];
   function takedown(v) { const t0 = S.t, td = S.td || (S.td = {n: 0, last: -9, chain: 0}); td.n++; td.chain = t0 - td.last < 4 ? td.chain + 1 : 1; td.last = t0; addCoins(1);
-    if (v && !v.me) { ach('td1'); if (td.chain >= 3) ach('td3'); } const big = ['', '💀 TAKEDOWN!', '💀💀 DOPPEL-TAKEDOWN!', '💀💀💀 DREIFACH-MASSAKER!', '☠️ AMOKLAUF!'][Math.min(4, td.chain)];
+    if (v && !v.me) { ach('td1'); if (td.chain >= 3) ach('td3'); } const big = ['', '💀 TAKEDOWN!', '💀💀 DOUBLE TAKEDOWN!', '💀💀💀 DREIFACH-MASSAKER!', '☠️ AMOKLAUF!'][Math.min(4, td.chain)];
     say('td_' + Math.min(4, td.chain), big, 1, 1); S.tdMsg = {t: big, sub: pick(TDTXT).replace(/\{n\}/g, NAME(v.id)), until: performance.now() + 1700}; if (td.chain >= 2) S.shake = Math.max(S.shake || 0, .3); vib(td.chain >= 2 ? [20, 30, 20, 30, 40] : 25); beep(td.chain >= 2 ? 1200 : 900, .12, 'square', .06, td.chain >= 2 ? 1800 : 1400); }
   function hit(k, why) {
     if (k.remote) { if (S.live && ['coati', 'ball', 'flip', 'fire', 'caiman', 'trolley', 'coco', 'bang'].includes(why) && !k.hitT) { k.hitT = 1; setTimeout(() => { k.hitT = 0; }, 900); liveEmit({t: 'hit', race: S.live.id, to: k.peer, ai: k.aiIdx, why}); } return; }
