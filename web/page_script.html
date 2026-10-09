@@ -8461,7 +8461,8 @@ setGroup(G);
     if (!S || !LIVE.race || d.race !== LIVE.race.id) return; const k0 = S.karts[0];
     if (d.t === 'brk' && !m.sameTab) { const b = S.brk && S.brk[d.i]; if (b && b.dead < 0) brkBreak(b, null, 1); return; }
     if (d.t === 'box' && !m.sameTab) { const b = S.boxes[d.i]; if (b) b.off = Math.max(b.off, 3); return; }
-    if (d.t === 'bump' && d.to === LIVE.me && !k0.done) { const pu = clamp(d.p || 4, 2, 12); k0.x -= d.nx * pu; k0.y -= d.ny * pu; k0.vr -= (d.nx * -Math.sin(k0.a) + d.ny * Math.cos(k0.a)) * pu * 9; k0.v *= .97; if (!S.bumpT) { S.bumpT = .25; noise(.08, .1, 0, 0, 0, 900); vib(15); } return; }
+    if (d.t === 'bump' && d.to === LIVE.me && !k0.done) { if (S.kkPeer && S.t - (S.kkPeer[m.peer] ?? -9) < .3) return;   /* eigenes Handy hat den Rempler schon selbst gerechnet */ const pu = clamp(d.p || 4, 2, 12), mo = d.m || 1, sh = mo / (mo + k0.vx.m), kv = clamp(60 + (d.v || 0) * .7, 60, 200) * sh;   // n zeigt vom Absender zu mir: weg von ihm (vorher zog die Nachricht einen zum Absender hin)
+      k0.x += d.nx * pu * sh; k0.y += d.ny * pu * sh; k0.kx = (k0.kx || 0) + d.nx * kv; k0.ky = (k0.ky || 0) + d.ny * kv; k0.jolt = Math.max(k0.jolt || 0, clamp((d.v || 0) / 700, .1, .25)); if (!S.bumpT) { S.bumpT = .25; noise(.08, .1, 0, 0, 0, 900); vib(15); } return; }
     const tg = d.ai !== undefined && d.ai !== null ? S.karts.find(x => x.aiIdx === d.ai && !x.remote) : k0;
     if (d.t === 'hit' && d.to === LIVE.me && tg) { const o = S.karts.find(x => x.peer === m.peer && x.aiIdx === undefined); hit(tg, d.why); if (o && tg === k0) { k0.say = 'Das war ' + NAME(o.id) + '!'; k0.sayT = 1.4; } }
     if (d.t === 'fx' && d.to === LIVE.me && tg) { Object.assign(tg, d.f || {}); }
@@ -8861,7 +8862,7 @@ setGroup(G);
   function fallStep(k, dt) { k.fall += dt;
     if (k.fall < 1.1) { k.x += Math.cos(k.mv) * k.v * dt * .55; k.y += Math.sin(k.mv) * k.v * dt * .55; k.v *= Math.exp(-dt * 1.5); k.rot += dt * 7;
       if (k.fall > .95 && !k.splash) { k.splash = 1; if (FALL.w) { for (let j = 0; j < 14; j++) S.sp.push({x: k.x + rnd(-10, 10), y: k.y + rnd(-10, 10), vx: rnd(-90, 90), vy: rnd(-90, 90), t: 0, c: 'rgba(220,245,255,.9)', big: 1}); if (k.me) SFX.splash(); } else if (k.me) noise(.2, .12, 0, 0, 0, 200); } }
-    else if (!k.resc) { k.resc = 1; k.splash = 0; const i = wrap(k.fallI - 6), [x, y] = at(i, 0); k.x = x; k.y = y; k.idx = i; k.lat = 0; k.a = k.mv = Math.atan2(P[wrap(i + 1)][1] - P[i][1], P[wrap(i + 1)][0] - P[i][0]); k.rot = 0; k.v = 0; k.vr = 0; if (k.me) { S.fade = .45; floatTxt(k, FALL.e + ' ' + FALL.n + ' kommt!', '#fff'); } }
+    else if (!k.resc) { k.resc = 1; k.splash = 0; const i = wrap(k.fallI - 6), [x, y] = at(i, 0); k.x = x; k.y = y; k.idx = i; k.lat = 0; k.a = k.mv = Math.atan2(P[wrap(i + 1)][1] - P[i][1], P[wrap(i + 1)][0] - P[i][0]); k.rot = 0; k.v = 0; k.vr = 0; k.kx = k.ky = 0; if (k.me) { S.fade = .45; floatTxt(k, FALL.e + ' ' + FALL.n + ' kommt!', '#fff'); } }
     if (k.fall >= 2.5) { k.fall = 0; k.resc = 0; k.inv = Math.max(k.inv, 1); k.v = 50; k.lost = 0; if (k.me) beep(660, .12, 'triangle', .06, 990); }
     if (k.sayT > 0) k.sayT -= dt; }
   function useItem(k) {
@@ -9039,6 +9040,7 @@ setGroup(G);
           const pd = PADS.find(p => p.i > k.idx && p.i - k.idx < 35); if (pd && k.skill > .93) lane = pd.l; }
         const mvr = S.movers.find(m => m.i > k.idx && m.i - k.idx < 30); if (mvr) lane = mvr.l > 0 ? -TW * .3 : TW * .3;
         if (!haz && !mvr) { const lw = clamp(DIFFS[DIFF].line * k.pp.line, 0, 1); lane = LINE[wrap(k.idx + la)] * lw + lane * (1 - lw * .7); }
+        if (k.avT > 0) { k.avT -= dt; if (!haz && !mvr) lane += k.avS * 24 * Math.min(1, k.avT / .35); }   // nach einem Rempler kurz zur Seite (sonst drücken beide wieder auf dieselbe Linie)
         if (k.pp.ram && !haz) { const vic = S.karts.find(o => o !== k && !o.done && progress(o) - progress(k) > 2 && progress(o) - progress(k) < 14); if (vic) lane = vic.lat; }
         if (FALL && Math.abs(k.lat) > TW * .4) lane = -Math.sign(k.lat) * TW * .1;   // Abgrund-Strecken: nah am Rand sofort zur Mitte
         const [tx, ty] = at(k.idx + la, clamp(lane, -TW * .37, TW * .37)); const d = angd(Math.atan2(ty - k.y, tx - k.x), k.a); target = clamp(d * 2.6, -1, 1);
@@ -9120,18 +9122,19 @@ setGroup(G);
       k.vr = (k.vr - k.v * dA * .92 + (k.dr ? -k.dr * k.v * .3 * (k.drIn || 0) * k.vx.d * dt : 0)) * Math.exp(-lg * dt);
       k.vr = clamp(k.vr, -k.v * .8 - 20, k.v * .8 + 20);
       const ca = Math.cos(k.a), sa = Math.sin(k.a);
-      k.x = clamp(k.x + (ca * k.v - sa * k.vr) * dt, 20, WW - 20); k.y = clamp(k.y + (sa * k.v + ca * k.vr) * dt, 20, Math.min(WH - 20, shore(k.x) - 10));
+      k.x = clamp(k.x + (ca * k.v - sa * k.vr + (k.kx || 0)) * dt, 20, WW - 20); k.y = clamp(k.y + (sa * k.v + ca * k.vr + (k.ky || 0)) * dt, 20, Math.min(WH - 20, shore(k.x) - 10));
+      if (k.kx || k.ky) { const kd = Math.exp(-7 * dt); k.kx *= kd; k.ky *= kd; if (Math.abs(k.kx) + Math.abs(k.ky) < 3) k.kx = k.ky = 0; }   // Schubs nach einem Rempler klingt ab (~15 px)
       k.mv = Math.atan2(sa * k.v + ca * k.vr, ca * k.v - sa * k.vr);
       // Reifenqualm beim Rutschen
       if (!k.air && T.veh !== 'boat' && (Math.abs(k.vr) > 70 || k.dr) && Math.random() < dt * 14) S.fx.push({x: k.x - ca * 16 + rnd(-6, 6), y: k.y - sa * 16 + rnd(-6, 6), dust: 1, t: 0, c: '235,235,235'});
       // weiche Bande: weit neben der Strecke ist Schluss (Dschungel/Häuser/Absperrung), Kart gleitet an ihr entlang
       { const [ni, nl] = nearest(k.x, k.y, k.idx), brg = BRG.length && inBrg(ni), lim = TW / 2 + (brg ? 12 : T.veh === 'boat' ? 55 : T.id === 'paraty' ? 60 : 85);   // Brücke: Geländer dicht an der Fahrbahn
         if (FALL && !inTun(ni) && !brg && !k.air && cq === false && !k.done && S.t > 0 && Math.abs(nl) > TW / 2 + FALL.m) fallStart(k);
-        else if ((!FALL || inTun(ni) || brg) && Math.abs(nl) > lim && !k.air && cq === false) { const sg = Math.sign(nl), [bx, by] = at(ni, sg * (lim - 4)); k.x = bx; k.y = by; k.v *= k.wallC > 0 ? .95 : .72; k.wallC = .35; k.vr = -sg * 40; k.dr = 0; k.str = 0;
+        else if ((!FALL || inTun(ni) || brg) && Math.abs(nl) > lim && !k.air && cq === false) { const sg = Math.sign(nl), [bx, by] = at(ni, sg * (lim - 4)); k.x = bx; k.y = by; k.v *= k.wallC > 0 ? .95 : .72; k.wallC = .35; k.vr = -sg * 40; k.kx = k.ky = 0; k.dr = 0; k.str = 0;
           if (k.me && !S.wallT) { S.wallT = .3; if (S.rep) S.rep.wall++; noise(.07, .09, 0, 0, 0, 500); vib(12); S.shake = Math.max(S.shake, .12); for (let q = 0; q < 5; q++) S.sp.push({x: bx, y: by, vx: rnd(-90, 90), vy: rnd(-90, 90), t: 0, c: '#ffe08a'}); } } }
       // weit weg oder festgefahren: zurück auf die Strecke
       if (!k.done && !k.air && (edge > 230 || (edge > 10 && k.v < 30) || (T.sea && k.y >= shore(k.x) - 11))) k.lost += dt; else k.lost = Math.max(0, k.lost - dt * 2);
-      if (k.lost > 2.2) { const i = wrap(k.idx - 8), [x, y] = at(i, 0); k.x = x; k.y = y; k.a = k.mv = Math.atan2(P[wrap(i + 1)][1] - P[i][1], P[wrap(i + 1)][0] - P[i][0]); k.v = 60; k.vr = 0; k.lost = 0; k.dr = 0; k.spin = 0;
+      if (k.lost > 2.2) { const i = wrap(k.idx - 8), [x, y] = at(i, 0); k.x = x; k.y = y; k.a = k.mv = Math.atan2(P[wrap(i + 1)][1] - P[i][1], P[wrap(i + 1)][0] - P[i][0]); k.v = 60; k.vr = 0; k.kx = k.ky = 0; k.lost = 0; k.dr = 0; k.spin = 0;
         floatTxt(k, '🔄 Zurück auf die Strecke', '#fff'); if (k.me) { S.fade = .5; vib(40); } }
       if (offT && k.v > 120) { k.dust -= dt; if (k.dust < 0) { k.dust = .06; S.fx.push({x: k.x - Math.cos(k.a) * 18, y: k.y - Math.sin(k.a) * 18, dust: 1, t: 0, c: T.veh === 'boat' ? '120,150,90' : T.id === 'iguacu' ? '150,70,40' : '200,160,100'}); } }
       // Kielwasser (Boot) bzw. Reifenspuren
@@ -9178,12 +9181,26 @@ setGroup(G);
       if (k.mini > 0) { k.mini -= dt; if (k.mini <= 0) { k.vsz = k.vsz0 || 1; floatTxt(k, '👋 Wieder da!'); } }
       if (k.sayT > 0) k.sayT -= dt; k.dol = Math.max(0, k.dol - dt); k.bump = Math.max(0, (k.bump || 0) - dt);
     });
-    // Kart gegen Kart
+    // Kart gegen Kart: leichter Abprall wie beim Autoscooter (Wunsch Patrick 09.10.: vorher klebten Karts aneinander, weil alle auf dieselbe Ideallinie drücken
+    // und jedes Bild mit Berührung 3 % Tempo kostete; gemessen sackten zwei Karts Seite an Seite in 1 s von 250 auf 100–150 ab). Jetzt: Stoß entlang der Verbindungslinie
+    // (Rückprall KBE, nach vorn nur halb), danach trennen sie sich mit mindestens KBS px/s über einen eigenen, abklingenden Schubs (k.kx/k.ky, KBD), Tempo kostet nur
+    // der Aufprall (bis 5 %) und leichtes Reiben; Computerfahrer weichen danach kurz zur Seite aus (k.avT). Abgrund-Strecken: am Rand kein Schubs nach außen.
+    const KBE = .45, KBS = 110, kvel = k => { const c = Math.cos(k.a), s = Math.sin(k.a), r = k.vr || 0; return [c * k.v - s * r + (k.kx || 0), s * k.v + c * r + (k.ky || 0)]; };
+    const kedge = (k, x, y) => { if (FALL && Math.abs(k.lat) > TW / 2 - 16 && !inTun(k.idx)) { const s0 = Math.sign(k.lat), ox = NX[k.idx] * s0, oy = NY[k.idx] * s0, o = x * ox + y * oy; if (o > 0) { x -= ox * o; y -= oy * o; } } return [x, y]; };
+    const kimp = (k, x, y) => { if (k.remote) return; [x, y] = kedge(k, x, y); const c = Math.cos(k.a), s = Math.sin(k.a); k.v = Math.max(0, k.v + (x * c + y * s) * .5); k.vr = (k.vr || 0) + (-x * s + y * c); };
+    const kkick = (k, x, y) => { if (k.remote) return; [x, y] = kedge(k, x, y); k.kx = (k.kx || 0) + x; k.ky = (k.ky || 0) + y; };
     for (let i = 0; i < ks.length; i++) for (let j = i + 1; j < ks.length; j++) { const a = ks[i], b = ks[j]; if (a.air || b.air || a.fall > 0 || b.fall > 0) continue; if (DECK && Math.min(wrap(a.idx - b.idx), wrap(b.idx - a.idx)) > N * .15) continue; const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy);
-      const R0 = 15 * ((a.vsz || 1) * (a.zap > 0 ? .6 : 1) + (b.vsz || 1) * (b.zap > 0 ? .6 : 1)); if (d < R0 && d > .01) { if ((a.zap > 0) !== (b.zap > 0)) { const sm = a.zap > 0 ? a : b, bg = sm === a ? b : a; if (!sm.remote && !(sm.spin > 0)) hitBy(sm, 'squash', bg); } const p = (R0 - d) / 2, nx = dx / d, ny = dy / d, ma = a.vx.m, mb = b.vx.m, fa = b.remote ? 2 : a.remote ? 0 : 2 * mb / (ma + mb), fb = a.remote ? 2 : b.remote ? 0 : 2 * ma / (ma + mb); a.x -= nx * p * fa; a.y -= ny * p * fa; b.x += nx * p * fb; b.y += ny * p * fb; a.v *= .97; b.v *= .97;
-        const push = p * 9; a.vr -= (nx * -Math.sin(a.a) + ny * Math.cos(a.a)) * push * fa; b.vr += (nx * -Math.sin(b.a) + ny * Math.cos(b.a)) * push * fb;
-        if (S.live && p > 2 && (a.me || b.me) && !S.bumpSent) { const o = a.me ? b : a; if (o.remote && o.aiIdx === undefined) { S.bumpSent = .35; liveEmit({t: 'bump', race: S.live.id, to: o.peer, nx: +(a.me ? nx : -nx).toFixed(2), ny: +(a.me ? ny : -ny).toFixed(2), p: Math.round(p)}); } }
-        if (p > 3 && (a.me || b.me) && !S.bumpT) { S.bumpT = .25; noise(.08, .1, 0, 0, 0, 900); vib(15); for (let q = 0; q < 6; q++) S.sp.push({x: a.x + nx * 15, y: a.y + ny * 15, vx: rnd(-140, 140), vy: rnd(-140, 140), t: 0, c: '#ffe08a'}); } } }
+      const R0 = 15 * ((a.vsz || 1) * (a.zap > 0 ? .6 : 1) + (b.vsz || 1) * (b.zap > 0 ? .6 : 1)); if (d < R0 && d > .01) { if ((a.zap > 0) !== (b.zap > 0)) { const sm = a.zap > 0 ? a : b, bg = sm === a ? b : a; if (!sm.remote && !(sm.spin > 0)) hitBy(sm, 'squash', bg); } const p = (R0 - d) / 2, nx = dx / d, ny = dy / d, ma = a.vx.m, mb = b.vx.m, fa = b.remote ? 2 : a.remote ? 0 : 2 * mb / (ma + mb), fb = a.remote ? 2 : b.remote ? 0 : 2 * ma / (ma + mb); a.x -= nx * p * fa; a.y -= ny * p * fa; b.x += nx * p * fb; b.y += ny * p * fb;
+        // Live: gegen einen echten Mitspieler rechnet jedes Handy nur sein eigenes Kart, mit dem Massen-Anteil (das andere Handy macht dasselbe für seins)
+        const sa = a.remote ? 0 : b.remote ? mb / (ma + mb) : fa / 2, sb = b.remote ? 0 : a.remote ? ma / (ma + mb) : fb / 2, va = kvel(a), vb = kvel(b), vn = (vb[0] - va[0]) * nx + (vb[1] - va[1]) * ny;   // vn < 0: aufeinander zu
+        if (vn < 0) { const j0 = -(1 + KBE) * vn, ls = 1 - clamp(-vn * .0004, 0, .05); kimp(a, -nx * j0 * sa, -ny * j0 * sa); kimp(b, nx * j0 * sb, ny * j0 * sb); if (!a.remote) a.v *= ls; if (!b.remote) b.v *= ls; if (vn < -25) { const jl = clamp(-vn / 700, .1, .25); a.jolt = Math.max(a.jolt || 0, jl); b.jolt = Math.max(b.jolt || 0, jl); } }
+        const vs = vn < 0 ? -KBE * vn : vn; if (vs < KBS) { const e0 = KBS - vs; kkick(a, -nx * e0 * sa, -ny * e0 * sa); kkick(b, nx * e0 * sb, ny * e0 * sb); }
+        const rb = Math.exp(-.6 * dt); if (!a.remote) a.v *= rb; if (!b.remote) b.v *= rb;
+        [[a, b], [b, a]].forEach(([k, o]) => { if (!k.me && !k.remote) { k.avS = k.lat - o.lat >= 0 ? 1 : -1; k.avT = .8; } });
+        if ((a.me || b.me) && (a.remote || b.remote)) { const o = a.me ? b : a; if (o.aiIdx === undefined) (S.kkPeer = S.kkPeer || {})[o.peer] = S.t; }
+        if (S.live && (p > 2 || vn < -30) && (a.me || b.me) && !S.bumpSent) { const o = a.me ? b : a; if (o.remote && o.aiIdx === undefined) { S.bumpSent = .35; liveEmit({t: 'bump', race: S.live.id, to: o.peer, nx: +(a.me ? nx : -nx).toFixed(2), ny: +(a.me ? ny : -ny).toFixed(2), p: Math.round(p), v: Math.round(Math.max(0, -vn)), m: +(a.me ? ma : mb).toFixed(2)}); } }
+        if ((vn < -45 || p > 4) && (a.me || b.me) && !S.bumpT) { S.bumpT = .25; noise(.08, clamp(-vn / 1400, .06, .13), 0, 0, 0, 900); vib(clamp(Math.round(-vn / 8), 10, 30)); for (let q = 0; q < 6; q++) S.sp.push({x: a.x + nx * 15, y: a.y + ny * 15, vx: rnd(-140, 140), vy: rnd(-140, 140), t: 0, c: '#ffe08a'}); } } }
+    ks.forEach(k => { if (k.jolt > 0) k.jolt = Math.max(0, k.jolt - dt); });
     S.bumpT = Math.max(0, (S.bumpT || 0) - dt); S.bumpSent = Math.max(0, (S.bumpSent || 0) - dt); S.wallT = Math.max(0, (S.wallT || 0) - dt); S.fade = Math.max(0, (S.fade || 0) - dt);
     const ground = k => !k.air && !(k.fall > 0);
     // Kisten, Hindernisse, Öl, Nasenbären
@@ -9431,7 +9448,7 @@ setGroup(G);
     const KD = k => {
       const z = k.air > 0 ? Math.sin(Math.PI * (1 - k.air / k.airT)) : 0, he = k.fall > 0 ? 0 : hgt(k.idx), s = (1 + z * .38) * (1 + he * .2), tr = k.trick && k.air > 0 ? (1 - k.air / k.airT) * TAU : 0;   // he = Höhe: oben größer, Schatten weiter weg
       ctx.save(); ctx.translate(k.x, k.y); ctx.fillStyle = `rgba(0,0,0,${.25 - z * .12 - he * .05})`; ctx.beginPath(); ctx.ellipse(3 + z * 16 + he * 14, 4 + z * 16 + he * 14, 20 * (1 - z * .2), 26 * (1 - z * .2), k.a + Math.PI / 2, 0, TAU); ctx.fill();
-      const vz = (k.vsz || 1) * (k.zap > 0 ? .6 : 1); ctx.scale(s * vz, s * vz); ctx.rotate(k.a + Math.PI / 2 + k.rot + k.yaw + tr + (k.bump > 0 ? Math.sin(k.bump * 40) * .25 * k.bump : 0) + clamp(k.vr / 900, -.12, .12)); if (k.squash > 0) ctx.scale(1 + k.squash * .5, 1 - k.squash * .35);
+      const vz = (k.vsz || 1) * (k.zap > 0 ? .6 : 1); ctx.scale(s * vz, s * vz); ctx.rotate(k.a + Math.PI / 2 + k.rot + k.yaw + tr + (k.bump > 0 ? Math.sin(k.bump * 40) * .25 * k.bump : 0) + (k.jolt > 0 ? Math.sin(k.jolt * 55) * .55 * k.jolt : 0) + clamp(k.vr / 900, -.12, .12)); if (k.squash > 0) ctx.scale(1 + k.squash * .5, 1 - k.squash * .35);
       if (k.boost > 0 && VNOX[k.vtype]) { ctx.fillStyle = 'rgba(255,255,255,.75)'; for (let j = 0; j < 4; j++) { ctx.beginPath(); ctx.arc(rnd(-9, 9), 26 + j * 9 + Math.random() * 6, 5 + j * 2.2, 0, TAU); ctx.fill(); } }   // ohne Motor: Staubwolken statt Flamme
       else if (k.boost > 0) { const fl = 40 + Math.random() * 18; ctx.fillStyle = 'rgba(255,90,0,.55)'; ctx.beginPath(); ctx.moveTo(-11, 24); ctx.quadraticCurveTo(0, fl + 14, 11, 24); ctx.fill(); ctx.fillStyle = `rgba(255,${190 + Math.random() * 60 | 0},60,.95)`; ctx.beginPath(); ctx.moveTo(-6, 24); ctx.quadraticCurveTo(0, fl, 6, 24); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.beginPath(); ctx.moveTo(-3, 24); ctx.quadraticCurveTo(0, fl * .7, 3, 24); ctx.fill(); }
       if (k.stall > 0) { ctx.fillStyle = 'rgba(120,120,120,.6)'; ctx.beginPath(); ctx.arc(rnd(-6, 6), 34 + rnd(0, 8), 9, 0, TAU); ctx.fill(); }

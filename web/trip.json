@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251009kb", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎢", "t": "Gringo Kart: Karts kleben nicht mehr aneinander – bei Remplern prallen sie jetzt leicht ab wie beim Autoscooter, und ein Rempler kostet kaum noch Tempo"},
     {"id": "n251009vr", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🗣️", "t": "Gringo Kart: kein Fahrer sagt mehr zweimal hintereinander denselben Spruch – die Sprüche wechseln sich jetzt reihum ab"},
     {"id": "n251009rb", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "📊", "t": "Gringo Kart: Rennbericht nach jedem Rennen – Rundenzeiten, Top-Speed, Drift-Anteil, Takedowns, dein Erzfeind (wer dich am öftesten abgeschossen hat) und ein bissiger Kommentar der Rennleitung"},
     {"id": "n251009cc", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🚀", "t": "Gringo Kart: Klassen 100, 150 und 200 ccm (Schritt ④ bzw. live unter „Einstellungen für alle“) – 200 ccm ist 20 % schneller, jede Klasse hat ihre eigene Bestenliste"},
