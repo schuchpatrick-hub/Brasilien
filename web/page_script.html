@@ -7231,7 +7231,9 @@ setGroup(G);
   const hashS = s0 => { let h = 2166136261; for (const c of String(s0)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
   const wr = key => { if (!S || !S.seed) return Math.random(); const g = S.wr || (S.wr = {}); return (g[key] || (g[key] = mulberry(hashS(S.seed + ':' + key))))(); };
   const wrnd = (key, a, b) => a + wr(key) * (b - a);
-  const LOOK = Object.assign({}, (TRIP.dance && TRIP.dance.look) || {}), CREW = TRIP.crew, NAME = id => (CREW.find(c => c.id === id) || XBY[id] || {}).name || id;
+  const LOOK = Object.assign({}, (TRIP.dance && TRIP.dance.look) || {}), CREW = TRIP.crew, NAME = id => (CREW.find(c => c.id === id) || XBY[id] || {}).name || gName(id);
+  // Gäste ohne eigene Figur („Anderer Gast“): Kennung gast_<Name>, angezeigter Name aus Bestenliste/presence (GNM), sonst aus der Kennung
+  const GNM = {}, gName = id => typeof id === 'string' && id.indexOf('gast_') === 0 ? GNM[id] || id.slice(5).replace(/-/g, ' ') : id;
   let LAPS = 3; const VMAX = 272, PTS = [10, 8, 6, 5, 4, 3];
   const LINES = {jonas: ['Das kommt auf Splitwise!', 'Mein Fischerhut!'], simon: ['Schon wieder ich?!', 'Aua, mein Sonnenbrand!'], patrick: ['Mein Rücken!', 'Ich hab Vorfahrt!'],
     marco: ['Wer war das?!', 'Fernschuss!'], greisel: ['Passt scho.', 'Kitzelt bloß.'], dajo: ['Das war Absicht!', 'Ich will nachfüllen!']};
@@ -7982,7 +7984,7 @@ setGroup(G);
     if (loading || !AC) return; loading = true;
     const get = (u, k) => (RAWC[u] || (RAWC[u] = fetch(u).then(r => r.ok ? r.arrayBuffer() : Promise.reject()).catch(e => { delete RAWC[u]; throw e; }))).then(b => decodeAt(AC, b.slice(0), k === 'sfx' ? 32000 : 24000)).then(d => { BUF[k] = d; }).catch(() => {});   // MP3 bleibt im Speicher (~12 MB): nach Schließen/Öffnen nur neu entpacken, nicht neu herunterladen (Datenvolumen unterwegs)   // Stimmen sind 24-kHz-Aufnahmen: halber Speicher ohne hörbaren Unterschied
     // zuerst nur Geräusche + Haupt-Ansager; die übrigen Stimmen-Pakete erst beim ersten Rennen nacheinander (lädt nicht alles auf einmal)
-    if (TRIP.sfx) { const sp = window.loadSfx && window.loadSfx(AC); if (sp) sp.then(b => { if (b) BUF.sfx = b; else get('audio/sfx.mp3', 'sfx'); }); else get('audio/sfx.mp3', 'sfx'); } if (TRIP.kartvo) get('audio/kart.mp3', 'ann'); if (TRIP.kartvo && Object.values(TRIP.kartvo).some(v => v.f === 7)) get('audio/kart7.mp3', 'ann7'); BUF.more = () => { if (BUF.moreDone) return; BUF.moreDone = 1; let w = 0; const q = (u, k) => { w += 700; setTimeout(() => get(u, k), w); }; if (TRIP.kartvo) { const get = q; if (Object.values(TRIP.kartvo).some(v => v.f === 8)) get('audio/kart8.mp3', 'ann8'); if (Object.values(TRIP.kartvo).some(v => v.f === 9)) get('audio/kart9.mp3', 'ann9'); if (Object.values(TRIP.kartvo).some(v => v.f === 6)) get('audio/kart6.mp3', 'ann6'); if (Object.values(TRIP.kartvo).some(v => v.f === 2)) get('audio/kart2.mp3', 'ann2'); if (Object.values(TRIP.kartvo).some(v => v.f === 3)) get('audio/kart3.mp3', 'ann3'); if (Object.values(TRIP.kartvo).some(v => v.f === 4)) get('audio/kart4.mp3', 'ann4'); if (Object.values(TRIP.kartvo).some(v => v.f === 5)) get('audio/kart5.mp3', 'ann5'); } };
+    if (TRIP.sfx) { const sp = window.loadSfx && window.loadSfx(AC); if (sp) sp.then(b => { if (b) BUF.sfx = b; else get('audio/sfx.mp3', 'sfx'); }); else get('audio/sfx.mp3', 'sfx'); } if (TRIP.kartvo) get('audio/kart.mp3', 'ann'); if (TRIP.kartvo && Object.values(TRIP.kartvo).some(v => v.f === 7)) get('audio/kart7.mp3', 'ann7'); if (TRIP.kartvo && Object.values(TRIP.kartvo).some(v => v.f === 10)) get('audio/kart10.mp3', 'ann10'); BUF.more = () => { if (BUF.moreDone) return; BUF.moreDone = 1; let w = 0; const q = (u, k) => { w += 700; setTimeout(() => get(u, k), w); }; if (TRIP.kartvo) { const get = q; if (Object.values(TRIP.kartvo).some(v => v.f === 8)) get('audio/kart8.mp3', 'ann8'); if (Object.values(TRIP.kartvo).some(v => v.f === 9)) get('audio/kart9.mp3', 'ann9'); if (Object.values(TRIP.kartvo).some(v => v.f === 6)) get('audio/kart6.mp3', 'ann6'); if (Object.values(TRIP.kartvo).some(v => v.f === 2)) get('audio/kart2.mp3', 'ann2'); if (Object.values(TRIP.kartvo).some(v => v.f === 3)) get('audio/kart3.mp3', 'ann3'); if (Object.values(TRIP.kartvo).some(v => v.f === 4)) get('audio/kart4.mp3', 'ann4'); if (Object.values(TRIP.kartvo).some(v => v.f === 5)) get('audio/kart5.mp3', 'ann5'); } };
   }
   function playBuf(buf, off, dur, vol, out) { const a = AC; if (!a || !buf) return false; const s = a.createBufferSource(), g = a.createGain(); s.buffer = buf; g.gain.value = vol; s.connect(g); g.connect(out || FXG); s.start(a.currentTime, off, dur); return true; }
   function real(name, vol) { const seg = TRIP.sfx && TRIP.sfx[name]; if (!seg || !BUF.sfx || !SOUND) return false; const [st, len, v] = pick(seg); return playBuf(BUF.sfx, st, len, (v || 1) * (vol || 1)); }
@@ -8154,6 +8156,10 @@ setGroup(G);
     sp: ['¡Ay, caramba! Extra scharf für eure Beerdigung!', 'Yallah, scharf bis ins Grab!', '¡Tu madre! Die kriegt extra scharf, mit alles!'], win: ['¡A huevo! Kebabito ist der König!', 'Vay be! Ihr seid alle Hackfleisch!', '¡Hijo de tu madre! Gewonnen, sag’s deiner Mutter!'],
     drift: ['¡No mames! Ich rutsch in den Tod!', 'Oha lan! Wie auf Ayran!', 'Ananı…! Deine Mutter driftet besser!'], item: ['¿Qué pedo, güey? Du bist tot!', 'Salak! Ich mach dich zu Lahmacun!', 'Ananı satayım! Wer war das?!'], pass: ['¡Adiós, pendejo! Der Leichenwagen wartet!', 'Görüşürüz, kanka! In der Hölle!', 'Orospu çocuğu, tschüss! Grüß deine Mutter im Jenseits!']}};
   Object.assign(VTXT2, {ilkay: {win: 'Gewonnen, Tacos gibt es auf eurer Beerdigung!', drift: 'Rutscht wie Knoblauchsoße, gleich bin ich tot!', item: 'Wer war das, ich mach dich zu Dürüm!', pass: 'Abi, du bist Hackfleisch, guten Appetit!'}});
+  // Gastfahrerin Pat's Mum: eigene Stimme (XTTS „Claribel Dervla“), Sprüche, Ansage g_patmum und Smash-Name h_patmum in audio/kart10.mp3 (lädt früh, wie kart7)
+  Object.assign(VTXT, {patmum: ['Mama überholt! Und raucht dabei noch eine!', 'Hust, hust! Wer war das? Jetzt ist meine Kippe aus!', 'Einsteigen, Jungs! Fenster bleiben zu, Mama raucht!']});
+  Object.assign(VTXT2, {patmum: {win: 'Gewonnen! Jetzt dekorier ich das Siegerpodest!', drift: 'Uiii, meine Lichterkette!', item: 'Hey! Ich hab euch immer von jeder Party abgeholt!', pass: 'Tschüss! Ich hol dich nachher ab, versprochen!'}});
+  VTXTX.patmum = {over: ['Platz da, ich muss Patrick von der Party holen!'], hit: ['Meine Blumenkübel! Die waren ganz neu!'], pass: ['Bis gleich, ich warte mit laufendem Motor!'], win: ['Mama hat gewonnen! Jetzt erst mal eine rauchen!'], item: ['Aufhören soll ich? Mit dem Rauchen? Niemals!']};
   const bufOf = v => v && BUF['ann' + (v.f > 1 ? v.f : '')];
   function voice(k, kind, force) {
     const now = performance.now(); if (!S || (!force && (now < voiceBusy || now < annBusy))) return;
@@ -8171,17 +8177,23 @@ setGroup(G);
   const dayKey = () => new Intl.DateTimeFormat('en-CA', {timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
   /* ---- Crew-Bestenliste und Geister (db: kartbest/<strecke>__<person>, kartghost/<…>; schreiben nur mit Schreibrecht) ---- */
   let LB = {}, WR = false, DB = null;
-  const player = () => ME || me;   // wer am Handy spielt („Ich bin …“), sonst der gewählte Fahrer
+  /* Als Gast spielen (Wunsch Patrick 09.10.): Gäste wie Pat's Mum oder Manuel (auf der Seite nur Kommentatoren) wählen sich im Kart selbst aus.
+     Gilt nur im Kart (localStorage br26.kartGuest), „Ich bin …“ der Seite und die Konto-Zuordnung kartusers bleiben unberührt. */
+  const isGuestId = id => typeof id === 'string' && (/^gast_[A-Za-z0-9-]{1,20}$/.test(id) || !!(XBY[id] && XBY[id].guest));
+  let KG = isGuestId(store.get('kartGuest')) ? store.get('kartGuest') : '';
+  if (KG && store.get('kartGuestName') && KG.indexOf('gast_') === 0) GNM[KG] = store.get('kartGuestName');
+  const PME = () => KG || ME;   // wer im Kart spielt: Gast, sonst „Ich bin …“
+  const player = () => PME() || me;   // wer am Handy spielt, sonst der gewählte Fahrer
   function lbInit() {
     if (DB !== null) return; DB = false;
     getDb().then(db => { if (!db) return; DB = db;
-      db.collection('kartbest').onSnapshot(sn => { LB = {}; sn.docs.forEach(d => { if (d.exists) LB[d.id] = d.data(); }); board(); if (!box.hidden && !menu.hidden) renderMenu(); }, () => {});
+      db.collection('kartbest').onSnapshot(sn => { LB = {}; sn.docs.forEach(d => { if (d.exists) LB[d.id] = d.data(); }); gNames(); board(); if (!box.hidden && !menu.hidden) renderMenu(); }, () => {});
       try { window.claude.use('user').then(u => u && u.id ? u.id().then(id => { UID = id || null; ACC = u; accSync(); }) : null).catch(() => {}); } catch (e) {}
       db.collection('kartusers').onSnapshot(sn => { USERS = {}; sn.docs.forEach(d => { if (d.exists) USERS[d.id] = d.data().who; }); accSync(); board(); }, () => {});
       db.collection('kartprog').onSnapshot(sn => { PROG = {}; sn.docs.forEach(d => { if (d.exists) PROG[d.id] = d.data(); }); progOn = true; progSync(true); }, () => {});
       db.collection('kartlive').onSnapshot(sn => { LIVEST = []; sn.docs.forEach(d => { if (d.exists) LIVEST.push(d.data()); }); if (!box.hidden && !menu.hidden && MODE === 'live') liveBox(); }, () => {});
     }).catch(() => {});
-    canWrite().then(w => { WR = w !== false; progWR = WR;   // null = Plattform sagt nichts: trotzdem eintragen (abgelehnte Schreibversuche meldet die Warteschlange unten links)
+    canWrite().then(w => { WR = w !== false; progWR = WR; if (w === false) LIVE.noEm = true;   // ohne Schreibrecht (Kommentatoren) darf man auch keine Live-Ereignisse senden: dann laufen sie über die presence (pqPush)   // null = Plattform sagt nichts: trotzdem eintragen (abgelehnte Schreibversuche meldet die Warteschlange unten links)
       progSync(true); if (!box.hidden && !menu.hidden) renderMenu(); }).catch(() => {});
   }
   const lbList = (src, pre) => Object.entries(src).filter(([id]) => id.indexOf(pre + '__') === 0).map(([, v]) => v).filter(v => v && v.ms).sort((a, b) => a.ms - b.ms);
@@ -8195,19 +8207,41 @@ setGroup(G);
   const devName = () => { const u = navigator.userAgent || ''; return /iPhone/.test(u) ? 'iPhone' : /iPad/.test(u) ? 'iPad' : /Android/.test(u) ? 'Android' : /Mac/.test(u) ? 'Mac' : /Windows/.test(u) ? 'Windows' : 'Gerät'; };
   // Konto ↔ Person: Ein Konto gehört fest zu einer Person (gilt auf jedem Handy, auf dem man angemeldet ist)
   function accSync() { if (!UID || !DB) return; const mapped = USERS[UID];
-    if (mapped && mapped !== ME && !ME) setMe(mapped);
+    if (mapped && mapped !== ME && !ME && !KG) setMe(mapped);
     else if (ME && !mapped && WR) { USERS[UID] = ME; DB.doc('kartusers/' + UID).set({who: ME, ts: Date.now()}).catch(() => {}); }   // Konto → Person wird nur einmal festgelegt (Zeitkapsel: jeder tippt nur für sich)
     const ids = Object.values(LB).map(v => v.uid).filter(x => x && !(x in PNAME)); if (ACC && ACC.profiles && ids.length) { ids.forEach(x => { PNAME[x] = ''; });
       ACC.profiles(ids).then(ps => { ids.forEach(x => { const n = ps && ps[x] && ps[x].name; PNAME[x] = n ? n.split(' ')[0] : ''; }); board(); if (!box.hidden && !menu.hidden) renderMenu(); }).catch(() => {}); } }
   // „Wer hat es gefahren?“: Person, gefahrene Figur, Konto, Gerät, Zeitpunkt
   const when = ts => { if (!ts) return ''; const d = new Date(ts); return d.getDate() + '.' + (d.getMonth() + 1) + '. ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
-  function byline(v) { const p = [];
+  function byline(v) { const p = []; if (v.g) p.push('👤 Gast'); if (v.pend) return p.concat('⏳ wartet auf ein Crew-Handy').join(' · ');
     if (v.drv && v.drv !== v.who) p.push('als ' + NAME(v.drv));
     if (v.uid) p.push('✓ Konto' + (PNAME[v.uid] ? ' ' + PNAME[v.uid] : '') + (USERS[v.uid] && USERS[v.uid] !== v.who ? ' (gehört ' + NAME(USERS[v.uid]) + ')' : '')); else p.push('❓ ohne Konto-Zuordnung');
     if (v.dev) p.push(v.dev); if (v.ts) p.push(when(v.ts)); return p.join(' · '); }
-  function saveLB(pd) { const who = ME; if (!who || !DB || !(pd.ms > 15000)) return;   /* unmögliche Zeiten nie in die Crew-Bestenliste */
-    if (pd.kind === 'best') { const id = pd.track + '__' + who, old = LB[id]; if (old && old.ms <= pd.ms) return; const doc = {track: pd.track, who, drv: pd.drv, veh: pd.veh, ms: pd.ms, ts: Date.now(), uid: UID, dev: devName()};
-      DB.doc('kartbest/' + id).set(doc).catch(() => {}); DB.doc('kartghost/' + id).set({g: pd.g, ms: pd.ms}).catch(() => {}); LB[id] = doc; } }
+  function saveLB(pd) { const who = PME(); if (!who || !(pd.ms > 15000) || pd.kind !== 'best') return;   /* unmögliche Zeiten nie in die Crew-Bestenliste */
+    const id = pd.track + '__' + who, old = LB[id]; if (old && old.ms <= pd.ms) return; const doc = {track: pd.track, who, drv: pd.drv, veh: pd.veh, ms: pd.ms, ts: Date.now(), uid: UID, dev: devName()};
+    const gst = isGuestId(who); if (gst) { doc.g = 1; if (GNM[who]) doc.gn = GNM[who]; }
+    if (!WR || !DB) { if (gst) gPend(doc); return; }   // Gast ohne Schreibrecht: Zeit wartet auf dem Handy, ein Crew-Handy trägt sie ein
+    DB.doc('kartbest/' + id).set(doc).catch(() => { if (gst) gPend(doc); }); DB.doc('kartghost/' + id).set({g: pd.g, ms: pd.ms}).catch(() => {}); LB[id] = doc; }
+  // Namen von „Anderer Gast“ aus der Bestenliste
+  function gNames() { Object.values(LB).forEach(v => { if (v && v.gn && typeof v.who === 'string' && v.who.indexOf('gast_') === 0) GNM[v.who] = String(v.gn).slice(0, 20); }); }
+  /* Gäste ohne Schreibrecht (Kommentatoren): Kommentatoren dürfen in der Datenbank nichts schreiben. Ihre Bestzeit wartet deshalb auf dem Handy
+     (br26.kartGPend) und reist in der presence des Live-Raums mit (Feld gt, nur außerhalb des Rennens); jedes Handy mit Schreibrecht im Raum
+     (die Seite betritt ihn 5 s nach dem Laden still) trägt sie in kartbest ein (gRelay). Nur Gast-Kennungen, damit niemand Crew-Zeiten fälschen kann. */
+  const gPendGet = () => { const o = pj(store.get('kartGPend') || 'null'); return o && typeof o === 'object' ? o : {}; };
+  function gPend(doc) { const o = gPendGet(), id = doc.track + '__' + doc.who; if (o[id] && o[id].ms <= doc.ms) return;
+    o[id] = {track: doc.track, who: doc.who, drv: doc.drv, veh: doc.veh, ms: doc.ms, ts: doc.ts, dev: doc.dev, gn: doc.gn || ''}; store.set('kartGPend', JSON.stringify(o)); livePres(); }
+  function gPendList() { const o = gPendGet(); let ch = 0; Object.keys(o).forEach(id => { const v = LB[id]; if (v && v.ms <= o[id].ms) { delete o[id]; ch = 1; } }); if (ch) store.set('kartGPend', JSON.stringify(o));
+    return Object.values(o).sort((a, b) => b.ts - a.ts).slice(0, 10).map(v => [v.track, v.who, v.drv, v.veh, v.ms, v.ts, v.dev, v.gn || '']); }
+  // wartende Gast-Zeiten in der Bestenliste dieses Handys schon zeigen (⏳), bis ein Crew-Handy sie eingetragen hat
+  const gPendLB = () => { const o = gPendGet(), r = {}; Object.keys(o).forEach(id => { const v = o[id]; if (v && v.ms && (!LB[id] || LB[id].ms > v.ms)) r[id] = Object.assign({}, v, {g: 1, pend: 1}); }); return r; };
+  const GREL = {};
+  function gRelay(peers) { if (!WR || !DB) return; peers.forEach(p0 => { const g = p0.presence && p0.presence.gt; if (!Array.isArray(g) || p0.sameTab) return;
+    g.slice(0, 10).forEach(e => { if (!Array.isArray(e)) return; const [track, who, drv, veh, ms, ts, dev, gn] = e;
+      if (!TBY[track] || !isGuestId(who) || typeof ms !== 'number' || !(ms > 15000) || ms > 36e5) return;
+      const id = track + '__' + who, old = LB[id]; if ((old && old.ms <= ms) || GREL[id] === ms) return; GREL[id] = ms;
+      const doc = {track, who, drv: DRVS.includes(drv) ? drv : DRVS.includes(who) ? who : 'patrick', veh: VEHS.some(v => v.id === veh) ? veh : 'kart', ms: Math.round(ms), ts: +ts || Date.now(), uid: p0.by || null, dev: String(dev || '').slice(0, 20), g: 1, via: UID || null};
+      if (gn) { doc.gn = String(gn).slice(0, 20); if (who.indexOf('gast_') === 0) GNM[who] = doc.gn; }
+      DB.doc('kartbest/' + id).set(doc).catch(() => {}); LB[id] = doc; }); }); }
   /* ---- Fortschritt am Konto (db kartprog/<person>): Münzen, Tuning, Kostüme, Lack, Aufkleber, Erfolge, Statistik, eigene Bestzeiten.
      Gilt auf jedem Handy, auf dem die Person „Ich bin …“ gewählt hat. Zusammenführen: Gekauftes/Erreichtes wird vereinigt (Maximum),
      Bestzeiten Minimum, Auswahl (Fahrzeug, Kostüm, Lack, Rivale) = neuester Stand, Münzen als Zähler (Änderung seit dem letzten Abgleich). ---- */
@@ -8231,15 +8265,15 @@ setGroup(G);
     if (o.kartTune) o.kartTune = JSON.stringify(tuneNorm(pj(o.kartTune)));
     return o; }
   // Handy wechselt die Person: Stand der bisherigen Person auf dem Handy zur Seite legen, Stand der neuen holen
-  function progOwner() { const own = store.get('kartProgOwner'); if (!ME || own === ME) return; progMute = true;
+  function progOwner() { const own = store.get('kartProgOwner'), ME = PME(); if (!ME || own === ME) return; progMute = true;
     try { if (own) localStorage.setItem('br26.kartProgBak.' + own, JSON.stringify({p: progLocal(), b: store.get('kartCoinsBase'), lt: store.get('kartProgLT')}));
       const bak = own ? pj(localStorage.getItem('br26.kartProgBak.' + ME)) : null;
       if (own) { progWrite(bak ? bak.p : {}); progMute = true; store.set('kartCoinsBase', bak && bak.b || ''); store.set('kartProgLT', bak && bak.lt || ''); }
       store.set('kartProgOwner', ME); } catch (e) {} finally { progMute = false; } HEADC = {}; }
   let progBusy = false;
   const DID = store.get('kartDid') || (d => { store.set('kartDid', d); return d; })(Math.random().toString(36).slice(2, 10));
-  function progSync(push) { if (!ME || !progOn || progBusy) return; progBusy = true; try { progSync0(push); } finally { progBusy = false; } }
-  function progSync0(push) { progOwner();
+  function progSync(push) { if (!PME() || !progOn || progBusy) return; progBusy = true; try { progSync0(push); } finally { progBusy = false; } }
+  function progSync0(push) { progOwner(); const ME = PME();   // Gäste haben ihren eigenen Stand (kartprog/<gast>)
     const rd = PROG[ME] || null, rem = Object.assign({}, rd && rd.p || {}); if (rd && rd.r !== (TRIP.kartReset || '')) Object.keys(rem).forEach(k => { if (TIMEK.test(k)) delete rem[k]; });
     const loc = progLocal(), lt = +store.get('kartProgLT') || 0, m = progMerge(loc, rem, !!(rd && rd.did === DID) || lt > (rd && rd.ts || 0));   /* eigener Stand von diesem Handy: Auswahl hier ist nie älter */
     const rc = +(rem.kartCoins || 0), base = +(store.get('kartCoinsBase') || 0), lc = +(loc.kartCoins || 0); m.kartCoins = String(Math.max(0, rc + lc - base));
@@ -8250,45 +8284,75 @@ setGroup(G);
       progMute = true; store.set('kartCoinsBase', m.kartCoins); progMute = false; DB.doc('kartprog/' + ME).set(doc).catch(() => {}); } }
   store.onSet = k => { if (progMute || !PROGK.test(k)) return; progMute = true; store.set('kartProgLT', String(Date.now())); progMute = false;
     clearTimeout(progT); progT = setTimeout(() => progSync(true), 2500); };
-  const progLine = () => !ME ? '☁️ Wähle „Wer spielt?“, dann gelten Münzen, Garage und Erfolge auf jedem Handy.' : progWR ? '☁️ Fortschritt von ' + esc(NAME(ME)) + ' wird am Konto gespeichert und gilt auf jedem Handy.' : '📱 Fortschritt nur auf diesem Handy (Speichern am Konto nur für Eingeladene).';
-  function setMe(id) { ME = id; store.set('me', id); window.dispatchEvent(new Event('br26-me')); setTimeout(accSync, 0); setTimeout(() => progSync(true), 0);
+  const progLine = () => !PME() ? '☁️ Wähle „Wer spielt?“, dann gelten Münzen, Garage und Erfolge auf jedem Handy.' : progWR ? '☁️ Fortschritt von ' + esc(NAME(PME())) + ' wird am Konto gespeichert und gilt auf jedem Handy.' : '📱 Fortschritt nur auf diesem Handy (Speichern am Konto nur für Eingeladene).';
+  function setMe(id) { KG = ''; store.set('kartGuest', ''); ME = id; store.set('me', id); window.dispatchEvent(new Event('br26-me')); setTimeout(accSync, 0); setTimeout(() => progSync(true), 0);
     try { const g = Object.keys(GROUP_IDS).find(k => GROUP_IDS[k].includes(id)); if (g && typeof setGroup === 'function') setGroup(g); meMark(); renderMe(); } catch (e) {}
     if (PEND) { saveLB(PEND); PEND = null; const w = res.querySelector('.kr-who'); if (w) { w.innerHTML = '<p>✅ Gespeichert als <b>' + esc(NAME(id)) + '</b>. Ab jetzt merkt sich dieses Handy, wer spielt.</p>'; } }
     if (!box.hidden && !menu.hidden) renderMenu(); }
-  const whoHtml = txt => '<div class="kr-who"><p>' + txt + '</p><div class="kr-pick kr-whop">' + CREW.map(p => '<button type="button" data-who="' + p.id + '" aria-label="' + esc(p.name) + '"><span class="kr-wh" data-h="' + p.id + '"></span><span>' + esc(p.name) + '</span></button>').join('') + '</div></div>';
-  const whoHeads = el => el.querySelectorAll('.kr-wh').forEach(x => x.replaceWith(headCv(x.dataset.h, 92)));
+  // Gast wählen: nur fürs Kart (ME der Seite bleibt), Fortschritt/Bestzeiten unter der Gast-Kennung; Gast mit eigener Figur fährt sie gleich
+  function setGuest(id, nm) { KG = isGuestId(id) ? id : ''; store.set('kartGuest', KG); if (KG.indexOf('gast_') === 0 && nm) { GNM[KG] = nm; store.set('kartGuestName', nm); }
+    GOTHER = false; setTimeout(() => progSync(true), 0); livePres();
+    if (KG && DRVS.includes(KG) && me !== KG && !menu.hidden) pickDrv(KG);
+    if (PEND) { saveLB(PEND); PEND = null; const w = res.querySelector('.kr-who'); if (w) w.innerHTML = '<p>✅ Gespeichert als <b>' + esc(NAME(KG)) + '</b> (Gast).' + (WR ? '' : ' Deine Zeit kommt in die Bestenliste, sobald jemand aus der Crew die Seite offen hat.') + '</p>'; }
+    if (!box.hidden && !menu.hidden) renderMenu(); }
+  const gSlug = n => String(n || '').trim().replace(/Ä/g, 'Ae').replace(/Ö/g, 'Oe').replace(/Ü/g, 'Ue').replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue').replace(/ß/g, 'ss').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 20);
+  let GOTHER = false;
+  const GUESTS = () => XDRV.filter(x => x.guest).map(x => x.id);
+  const whoHtml = txt => { const cur = PME(), gs = GUESTS(), og = KG && KG.indexOf('gast_') === 0 ? KG : '';
+    const btn = (id, attr) => '<button type="button" ' + attr + '="' + id + '" aria-label="' + esc(NAME(id)) + '"' + (id === cur ? ' aria-pressed="true"' : '') + '><span class="kr-wh" data-h="' + id + '"></span><span>' + esc(NAME(id)) + '</span></button>';
+    return '<div class="kr-who"><p>' + txt + '</p><div class="kr-pick kr-whop">' + CREW.map(p => btn(p.id, 'data-who')).join('') + '</div>' +
+      '<p class="kr-whog">👤 <b>Als Gast spielen</b> · für alle, die nicht in der Crew sind</p><div class="kr-pick kr-whop kr-whopg">' + gs.map(id => btn(id, 'data-gst')).join('') +
+      (og ? btn(og, 'data-gst') : '') + '<button type="button" class="kr-gother"' + (GOTHER ? ' aria-pressed="true"' : '') + '><span class="kr-gq">＋</span><span>Anderer Gast</span></button></div>' +
+      (GOTHER ? '<div class="kr-gform"><input type="text" class="kr-gname" maxlength="16" placeholder="Dein Vorname" autocomplete="off" enterkeyhint="done" aria-label="Vorname"><button type="button" class="kr-gok">Los</button></div>' : '') +
+      (WR ? '' : '<p class="kr-whonote">Ohne Schreibrecht (z. B. als Kommentator eingeladen): deine Bestzeiten wandern in die Bestenliste, sobald jemand aus der Crew die Seite gleichzeitig offen hat.</p>') + '</div>'; };
+  const whoHeads = el => el.querySelectorAll('.kr-wh').forEach(x => x.replaceWith(HEAD[x.dataset.h] ? headCv(x.dataset.h, 92) : Object.assign(document.createElement('span'), {className: 'kr-gq', textContent: '👤'})));
   // Bestzeiten aller Strecken (Crew-Bestenliste: schnellstes ganzes Rennen je Strecke; dazu die eigene schnellste Runde, nur auf diesem Handy; Name „Bestzeiten“ statt „Crew-Rekorde“, Wunsch Patrick 09.10.)
   let RECOPEN = null;   // aufgeklappte Strecke in der Bestenliste
   function recsHtml() { const rows = TRACKS.map(tr => ({tr, list: lbList(LB, tr.id)})), cnt = {}, pts = {}, nT = {}, PT = [10, 8, 6, 5, 4, 3, 2, 1];
     rows.forEach(r => r.list.forEach((v, i) => { pts[v.who] = (pts[v.who] || 0) + (PT[i] || 1); nT[v.who] = (nT[v.who] || 0) + 1; if (!i) cnt[v.who] = (cnt[v.who] || 0) + 1; }));
     const tab = Object.keys(pts).sort((a, b) => pts[b] - pts[a] || (cnt[b] || 0) - (cnt[a] || 0)), med = i => ['🥇', '🥈', '🥉'][i] || (i + 1) + '.';
     // Gesamtwertung über alle Strecken (Wunsch Patrick 09.10.: „gesamthafte Bestenliste“): Punkte je Strecke nach Platz in der Bestenliste
-    const ges = tab.length ? '<p class="kr-lbl">🏆 Gesamtwertung · alle Strecken</p><ol class="kr-gw">' + tab.map((w, i) => '<li' + (w === ME ? ' class="me"' : '') + '><i>' + med(i) + '</i><b>' + esc(NAME(w)) + '</b><span>' + (cnt[w] ? '👑 ' + cnt[w] + ' · ' : '') + nT[w] + '/' + TRACKS.length + ' Strecken</span><em>' + pts[w] + ' P</em></li>').join('') + '</ol><p class="kr-rkx">Punkte je Strecke nach Platz: 10 · 8 · 6 · 5 · 4 · 3 · 2 · 1 · 👑 = Bestzeiten</p>' : '<p class="kr-rk">Noch keine Bestzeit, die Strecken warten!</p>';
+    const ges = tab.length ? '<p class="kr-lbl">🏆 Gesamtwertung · alle Strecken</p><ol class="kr-gw">' + tab.map((w, i) => '<li' + (w === PME() ? ' class="me"' : '') + '><i>' + med(i) + '</i><b>' + esc(NAME(w)) + '</b><span>' + (cnt[w] ? '👑 ' + cnt[w] + ' · ' : '') + nT[w] + '/' + TRACKS.length + ' Strecken</span><em>' + pts[w] + ' P</em></li>').join('') + '</ol><p class="kr-rkx">Punkte je Strecke nach Platz: 10 · 8 · 6 · 5 · 4 · 3 · 2 · 1 · 👑 = Bestzeiten</p>' : '<p class="kr-rk">Noch keine Bestzeit, die Strecken warten!</p>';
     return ges + '<p class="kr-lbl">⏱ Alle Strecken <small>(antippen = alle Zeiten)</small></p><p class="kr-rkx">⏱ schnellstes ganzes Rennen · 🔁 deine schnellste Runde</p><ul class="kr-recl">' + rows.map(r => { const top = r.list[0], op = RECOPEN === r.tr.id;
       return '<li><button type="button" class="kr-rec' + (op ? ' on' : '') + '" data-t="' + r.tr.id + '" aria-expanded="' + op + '"><i>' + r.tr.e + '</i><b>' + esc(r.tr.name) + '</b>' +
-        (top ? '<span' + (top.who === ME ? ' class="me"' : '') + '>' + esc(NAME(top.who)) + '</span><em>' + fmt(top.ms) + '</em>' : '<span class="no">frei</span><em>–</em>') + ((l0 => '<small>' + (l0 ? '🔁 ' + fmt(l0) : '') + '</small>')(+store.get('kartLap.' + r.tr.id) || 0)) + '</button>' +
-        (op ? '<div class="kr-recx">' + (r.list.length ? '<ol>' + r.list.map((v, i) => '<li' + (v.who === ME ? ' class="me"' : '') + '><span>' + med(i) + ' ' + esc(NAME(v.who)) + '<small>' + esc(byline(v)) + '</small></span><i>' + fmt(v.ms) + (i ? '<u>+' + ((v.ms - top.ms) / 1000).toFixed(2) + ' s</u>' : '') + '</i></li>').join('') + '</ol>' : '<p class="kr-rkx">Noch keine Zeit. Sei der Erste!</p>') +
+        (top ? '<span' + (top.who === PME() ? ' class="me"' : '') + '>' + esc(NAME(top.who)) + '</span><em>' + fmt(top.ms) + '</em>' : '<span class="no">frei</span><em>–</em>') + ((l0 => '<small>' + (l0 ? '🔁 ' + fmt(l0) : '') + '</small>')(+store.get('kartLap.' + r.tr.id) || 0)) + '</button>' +
+        (op ? '<div class="kr-recx">' + (r.list.length ? '<ol>' + r.list.map((v, i) => '<li' + (v.who === PME() ? ' class="me"' : '') + '><span>' + med(i) + ' ' + esc(NAME(v.who)) + '<small>' + esc(byline(v)) + '</small></span><i>' + fmt(v.ms) + (i ? '<u>+' + ((v.ms - top.ms) / 1000).toFixed(2) + ' s</u>' : '') + '</i></li>').join('') + '</ol>' : '<p class="kr-rkx">Noch keine Zeit. Sei der Erste!</p>') +
           '<button type="button" class="kr-recgo" data-t="' + r.tr.id + '">▶ ' + esc(r.tr.name) + ' fahren' + (top ? ' (mit Geist der Bestzeit)' : '') + '</button></div>' : '') + '</li>'; }).join('') + '</ul>'; }
 
   /* ---- Live-Mehrspieler (room-Fähigkeit): Lobby im Raum „gringo-kart“, Positionen über presence, Start/Treffer/Effekte als Ereignisse auf Topic „kart“ ---- */
-  const LIVE = {room: null, ok: null, peers: [], me: null, race: null, pending: null, sentAt: 0, buf: {}, lastN: {}, seq: 0, rdy: false, gp: null, autoAt: 0, emoAt: 0, pings: {}, rtt: {}, taunts: {}, cfg: null, tauntOpen: false, lpDrv: {}, lpAt: {}, lpAnn: 0, jt: 0, lpRdy: {}, lpRdyAt: {}, vsc: new Map()};
+  const LIVE = {room: null, ok: null, peers: [], me: null, race: null, pending: null, sentAt: 0, buf: {}, lastN: {}, seq: 0, rdy: false, gp: null, autoAt: 0, emoAt: 0, pings: {}, rtt: {}, taunts: {}, cfg: null, tauntOpen: false, lpDrv: {}, lpAt: {}, lpAnn: 0, jt: 0, lpRdy: {}, lpRdyAt: {}, vsc: new Map(), pq: [], pqN: 0, pqSeen: {}, noEm: false};
   let LIVEST = [];   // gespeicherte Live-Rennen (db kartlive) für die Live-Bilanz
   async function liveJoin() {
     if (LIVE.room || LIVE.ok === false || LIVE.joining) return; LIVE.joining = 1;
     try { const r0 = window.claude && window.claude.use ? await window.claude.use('room') : null; if (!r0) { LIVE.ok = false; if (!box.hidden) renderMenu(); return; }
       const r = await r0.join('gringo-kart'); LIVE.room = r; LIVE.ok = true;
-      r.onPeers(ch => { LIVE.peers = ch.peers; const mine = ch.peers.find(p0 => p0.sameTab); if (mine) LIVE.me = mine.peer; liveRecv(ch.peers); const sig = JSON.stringify(lobby().map(p0 => [p0.peer, p0.presence.who, p0.presence.drv, p0.presence.veh, p0.presence.rdy, p0.presence.trk, p0.presence.gpv, p0.presence.jt, (p0.presence.cfg || {}).ts])); liveAuto();
+      r.onPeers(ch => { LIVE.peers = ch.peers; const mine = ch.peers.find(p0 => p0.sameTab); if (mine) LIVE.me = mine.peer; liveRecv(ch.peers); pqRecv(ch.peers); gRelay(ch.peers); ch.peers.forEach(p0 => { const pr = p0.presence; if (pr && pr.gn && typeof pr.who === 'string' && pr.who.indexOf('gast_') === 0) GNM[pr.who] = String(pr.gn).slice(0, 20); });
+        const sig = JSON.stringify(lobby().map(p0 => [p0.peer, p0.presence.who, p0.presence.drv, p0.presence.veh, p0.presence.rdy, p0.presence.trk, p0.presence.gpv, p0.presence.jt, (p0.presence.cfg || {}).ts])); liveAuto();
         if (sig !== LIVE.sig) { LIVE.sig = sig; if (!box.hidden && !menu.hidden && MODE === 'live') renderMenu(); } }, () => { LIVE.ok = false; });
       r.on('kart', liveMsg, () => {}); livePres();
     } catch (e) { LIVE.ok = false; if (!box.hidden && !menu.hidden) renderMenu(); } finally { LIVE.joining = 0; } }
-  function livePres(extra) { if (!LIVE.room) return; const base = {who: ME || me, drv: me, veh: myVeh(), cos: cosOf(me), paint: paintOf(me), parts: partsPt(), lob: !box.hidden && !document.hidden && MODE === 'live' && !LIVE.race, rdy: LIVE.rdy && !LIVE.race ? 1 : 0, jt: LIVE.jt || (LIVE.jt = Date.now()), trk: TRK, gpv: store.get('kartLiveGP') === '1' ? 1 : 0, cfg: LIVE.cfg || undefined, vo: LIVE.race ? undefined : VEHS.filter(unlocked).map(v => v.id)};
+  function livePres(extra) { if (!LIVE.room) return; const gt = LIVE.race ? [] : gPendList(), tn = performance.now(); LIVE.pq = LIVE.pq.filter(e => tn - e.t < 2000);
+    const base = {gt: gt.length ? gt : null, pq: LIVE.pq.length ? LIVE.pq.map(e => [e.n, e.d]) : null, gn: KG && GNM[KG] || null, who: PME() || me, drv: me, veh: myVeh(), cos: cosOf(me), paint: paintOf(me), parts: partsPt(), lob: !box.hidden && !document.hidden && MODE === 'live' && !LIVE.race, rdy: LIVE.rdy && !LIVE.race ? 1 : 0, jt: LIVE.jt || (LIVE.jt = Date.now()), trk: TRK, gpv: store.get('kartLiveGP') === '1' ? 1 : 0, cfg: LIVE.cfg || undefined, vo: LIVE.race ? undefined : VEHS.filter(unlocked).map(v => v.id)};
     const o = Object.assign(base, extra || {race: null}), j = JSON.stringify(o); if (j === LIVE.lastPres) return; LIVE.lastPres = j; LIVE.room.presence(o).catch(() => {}); }
   const lobby = () => LIVE.peers.filter(p0 => p0.presence && p0.presence.lob && p0.kind === 'viewer');
   // Spieler-Plätze wie bei Smash Bros: P1 = wer zuerst in der Lobby war (presence jt), feste Farben
   const PCOL = ['#e8383d', '#2f7de1', '#f2c230', '#2fae5b', '#f08a24', '#a05ad8'];
   const lobbyP = () => lobby().slice().sort((a, b) => ((a.presence.jt || 9e15) - (b.presence.jt || 9e15)) || (a.peer < b.peer ? -1 : 1));
   const myP = () => { const i = lobbyP().findIndex(p0 => p0.sameTab || p0.peer === LIVE.me); return i < 0 ? 0 : i + 1; };
-  const liveEmit = d => { if (LIVE.room) LIVE.room.emit('kart', d).catch(() => {}); };
+  /* Ereignisse senden. Kommentatoren dürfen auf dem Topic „kart“ nichts senden (not_permitted, Topic nur ab „interact“): dann reisen ihre Ereignisse
+     ~2 s lang in der eigenen presence mit (Feld pq = [[Nummer, Ereignis] …]), die anderen spielen jedes Ereignis genau einmal ab (pqRecv).
+     So können Gäste voll mitfahren: Start, Treffer, Kisten, Uhrabgleich, Sprüche. */
+  const liveEmit = d => { if (!LIVE.room) return; if (LIVE.noEm) { pqPush(d); return; }
+    LIVE.room.emit('kart', d).catch(e => { if (e && e.code === 'not_permitted') { LIVE.noEm = true; pqPush(d); } }); };
+  function pqPush(d) { const tn = performance.now(); LIVE.pq.push({n: ++LIVE.pqN, d, t: tn});
+    while (LIVE.pq.length > 1 && (LIVE.pq.length > 8 || JSON.stringify(LIVE.pq.map(e => e.d)).length > 1800)) LIVE.pq.shift();   // presence darf höchstens 4 KB groß sein
+    try { liveMsg({topic: 'kart', data: d, peer: LIVE.me, sameTab: true, isMe: true}); } catch (e) {}   // eigenes Echo wie bei emit
+    const mk = LIVE.race && S && S.karts && S.karts.find(k => k.me); if (mk) { LIVE.sentAt = 0; liveSend(mk); } else if (!LIVE.race) livePres();   // sofort senden (im Rennen mit Position, sonst würde race: null die Rennmeldung löschen)
+    clearTimeout(LIVE.pqT); LIVE.pqT = setTimeout(() => { if (!LIVE.race) livePres(); }, 2100); }
+  function pqRecv(peers) { peers.forEach(p0 => { const q = p0.presence && p0.presence.pq; if (!Array.isArray(q) || p0.sameTab) return; const seen = LIVE.pqSeen[p0.peer] || 0; let mx = seen;
+    q.forEach(e => { if (!Array.isArray(e) || !(e[0] > seen) || !e[1] || typeof e[1] !== 'object') return; mx = Math.max(mx, e[0]);
+      try { liveMsg({topic: 'kart', data: e[1], peer: p0.peer, by: p0.by, guest: p0.guest, kind: p0.kind, isMe: p0.isMe, sameTab: false}); } catch (x) {} });
+    LIVE.pqSeen[p0.peer] = mx; }); }
   function liveMsg(m) { const d = m.data || {}; if (!d.t) return;
     if (d.t === 'start') { if (!LIVE.me || !(d.players || []).includes(LIVE.me) || LIVE.race || box.hidden) return; const trk0 = TRK; LIVE.pending = Object.assign({rt: performance.now()}, d); TRK = d.track; LIVE.rdy = false; LIVE.autoAt = 0;
       if (d.gp) { if (!LIVE.gp || LIVE.gp.id !== d.gp.id) LIVE.gp = {id: d.gp.id, list: d.gp.list, i: d.gp.i, pts: {}, nm: {}, seen: {}}; else LIVE.gp.i = d.gp.i; } else LIVE.gp = null;
@@ -8370,9 +8434,9 @@ setGroup(G);
       const lb2 = lobby(); if (lb2.length >= 2 && lb2.every(p0 => p0.presence.rdy) && liveLeader(lb2) === LIVE.me && !LIVE.race) liveGo(1); }; tick(); }
   // Live-Pokal: Punkte nach jedem Rennen (gleiche Reihenfolge auf allen Handys)
   function liveGpScore(order) { const g = LIVE.gp; if (!g || g.seen[S.live.id]) return; g.seen[S.live.id] = 1;
-    order.forEach((k, i) => { const key = k.me ? 'p:' + LIVE.me : k.aiIdx !== undefined ? 'a:' + k.id : 'p:' + k.peer; g.nm[key] = k.aiIdx !== undefined ? '🤖 ' + NAME(k.id) : NAME(k.me ? (ME || me) : k.who || k.id); g.pts[key] = (g.pts[key] || 0) + (k.out ? 0 : PTS[i] || 0); }); }
+    order.forEach((k, i) => { const key = k.me ? 'p:' + LIVE.me : k.aiIdx !== undefined ? 'a:' + k.id : 'p:' + k.peer; g.nm[key] = k.aiIdx !== undefined ? '🤖 ' + NAME(k.id) : NAME(k.me ? (PME() || me) : k.who || k.id); g.pts[key] = (g.pts[key] || 0) + (k.out ? 0 : PTS[i] || 0); }); }
   function liveSave(order) { try { localStorage.removeItem('br26.kartLiveRun'); } catch (e) {} if (!WR || !DB || !S.live || (S.live.curHost || S.live.host) !== LIVE.me) return;
-    const res0 = order.map((k, i) => ({who: k.me ? (ME || me) : k.aiIdx !== undefined ? null : (k.who || k.id), drv: k.id, ai: k.aiIdx !== undefined ? 1 : 0, ms: k.done && !k.out ? Math.round(k.done * 1000) : null, pl: i + 1}));
+    const res0 = order.map((k, i) => ({who: k.me ? (PME() || me) : k.aiIdx !== undefined ? null : (k.who || k.id), drv: k.id, ai: k.aiIdx !== undefined ? 1 : 0, ms: k.done && !k.out ? Math.round(k.done * 1000) : null, pl: i + 1}));
     DB.doc('kartlive/' + S.live.id).set({ts: Date.now(), track: T.id, gp: LIVE.gp ? LIVE.gp.id : null, res: res0}).catch(() => {}); }
   function liveBilanz() { const w = {}, r = {}; LIVEST.forEach(d => (d.res || []).forEach(x => { if (!x.who || x.ai) return; r[x.who] = (r[x.who] || 0) + 1; const hum = d.res.filter(y => !y.ai && y.ms); if (hum.length && hum.sort((a, b) => a.ms - b.ms)[0] === x) w[x.who] = (w[x.who] || 0) + 1; }));
     const ids = Object.keys(r).sort((a, b) => (w[b] || 0) - (w[a] || 0) || r[b] - r[a]); if (!ids.length) return '';
@@ -8423,7 +8487,7 @@ setGroup(G);
 
   // Wer spielt was (Lobby-Karten und Leiste unten): echter Name, Figur, Fahrzeug mit Bild
   function lpInfo(p0) { const pr = p0.presence || {}, d0 = DRVS.includes(pr.drv) ? pr.drv : (DRVS.includes(pr.who) ? pr.who : 'jonas'), X = XBY[d0], vt = VEHS.some(v => v.id === pr.veh) ? pr.veh : 'kart', V0 = VEHS.find(v => v.id === vt);
-    return {pr, d0, who: NAME(p0.sameTab ? (ME || pr.who || me) : pr.who || d0), char: X && X.base ? NAME(X.base) : NAME(d0), sub: X && X.sh ? X.sh : X && X.guest ? 'Gast' : '', vt, vn: vt === 'kart' && STYK(d0) ? STN[STYK(d0)] || V0.n : V0.n, ve: V0.e}; }
+    return {pr, d0, who: NAME(p0.sameTab ? (PME() || pr.who || me) : pr.who || d0), char: X && X.base ? NAME(X.base) : NAME(d0), sub: X && X.sh ? X.sh : X && X.guest ? 'Gast' : '', vt, vn: vt === 'kart' && STYK(d0) ? STN[STYK(d0)] || V0.n : V0.n, ve: V0.e}; }
   function lpVeh(I) { const pt = Object.assign({}, I.pr.paint || {}, I.pr.parts || {}), key = I.d0 + '|' + I.vt + '|' + JSON.stringify(pt); let c = LIVE.vsc.get(key);
     if (!c) { c = vehSprite(pt.c || (LOOK[I.d0] || {}).shirt || '#00a651', I.vt, pt, I.d0); LIVE.vsc.set(key, c); if (LIVE.vsc.size > 40) LIVE.vsc.delete(LIVE.vsc.keys().next().value); }
     const d = document.createElement('canvas'); d.width = c.width; d.height = c.height; d.getContext('2d').drawImage(c, 0, 0); d.className = 'kr-lpv'; return d; }
@@ -8490,7 +8554,7 @@ setGroup(G);
   const DIFFS = [{n: 'Leicht', s: [.86, .92], rb: .45, line: .4, mis: 1.3}, {n: 'Normal', s: [.94, .995], rb: .32, line: .85, mis: 1}, {n: 'Schwer', s: [.97, 1.015], rb: .18, line: 1, mis: .75}, {n: 'Profi', s: [1.005, 1.04], rb: .1, line: 1, mis: .4}];
   let DIFF = +(store.get('kartDiff') || 1); if (!DIFFS[DIFF]) DIFF = 1;
   const vib = ms => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} };
-  let S = null, raf = 0, last = 0, me = ME || 'patrick', W = 0, H = 0, DPR = 1, MODE = ['cup', 'live'].includes(store.get('kartMode')) ? store.get('kartMode') : 'single', TRK = TBY[store.get('kartTrack')] ? store.get('kartTrack') : 'copa', CUP = null;
+  let S = null, raf = 0, last = 0, me = (KG && XBY[KG] ? KG : ME) || 'patrick', W = 0, H = 0, DPR = 1, MODE = ['cup', 'live'].includes(store.get('kartMode')) ? store.get('kartMode') : 'single', TRK = TBY[store.get('kartTrack')] ? store.get('kartTrack') : 'copa', CUP = null;
   const loadJ = k => { try { return JSON.parse(store.get(k) || '{}'); } catch (e) { return {}; } };
   // Zurücksetzen aller Zeiten (Stichtag in trip.json → kartReset): lokale Bestzeiten, Rundenzeiten und eigene Geister einmalig löschen
   if (TRIP.kartReset && store.get('kartResetSeen') !== TRIP.kartReset) { try { Object.keys(localStorage).filter(k => /^br26\.(kart(Best$|Lap\.|Sec\.|Ghost\.|RecSeen$)|cache\.kart(best|ghost|daily)$)/.test(k)).forEach(k => localStorage.removeItem(k)); } catch (e) {} store.set('kartResetSeen', TRIP.kartReset); }
@@ -9415,7 +9479,7 @@ setGroup(G);
   const ERRSEEN = {}; let errN = 0, visAt = 0;
   function kerr(w, e, x) { try { const m0 = String(e && e.message || e || '').slice(0, 220), key = w + ':' + m0; if (ERRSEEN[key] || errN >= 10) return; ERRSEEN[key] = 1; errN++;
     const doc = Object.assign({w, m: m0, st: String(e && e.stack || '').split('\n').slice(0, 6).join('\n').slice(0, 900), ts: Date.now(), v: (typeof MODV === 'object' && MODV.kart) || '', trk: T ? T.id : null, mode: MODE, veh: myVeh(), drv: me, live: !!(S && S.live), t: S && isFinite(S.t) ? Math.round(S.t * 10) / 10 : null,
-      who: ME || '', dev: devName(), ua: (navigator.userAgent || '').replace(/^Mozilla\/5\.0 /, '').slice(0, 140), mem: performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1e6) : null, q: SET.q}, x || {});
+      who: PME() || '', dev: devName(), ua: (navigator.userAgent || '').replace(/^Mozilla\/5\.0 /, '').slice(0, 140), mem: performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1e6) : null, q: SET.q}, x || {});
     const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6), send = n => { if (DB) DB.doc('karterr/' + id).set(doc).catch(() => {}); else if (n < 6) setTimeout(() => send(n + 1), 4000); }; send(0); } catch (z) {} }
   function oops() { if (!S) return; S.errs = (S.errs || 0) + 1; if (S.errs === 30) { try { toast('😬 Da hat sich das Spiel verschluckt – zurück ins Menü. Einfach neu starten!', 5000); } catch (e) {} try { toMenu(); } catch (e) { kerr('toMenu', e); } } }
   addEventListener('error', e => { if (!box.hidden) kerr('win', e.error || e.message, {src: String(e.filename || '').split('/').pop().slice(0, 60) + ':' + e.lineno}); });
@@ -9438,7 +9502,7 @@ setGroup(G);
     else if (!ok) { /* abgebrochen: nichts eintragen */ }
     else { let top = lbList(LB, T.id)[0]; const mineLB = LB[T.id + '__' + player()];   /* live: schnellere Mitspieler aus diesem Rennen zählen schon mit (ihre Bestzeit ist hier evtl. noch nicht geladen) */
       if (S.live) S.karts.forEach(o => { if (o !== mine && o.aiIdx === undefined && o.done > 15 && !o.out && (!top || o.done * 1000 < top.ms)) top = {who: o.who || o.id, ms: Math.round(o.done * 1000)}; });
-      if (WR && DB) { const pd = {kind: 'best', track: T.id, drv: me, veh: vehOf(me), ms, g: S.rec}; if (ME) saveLB(pd); else PEND = pd; }
+      { const pd = {kind: 'best', track: T.id, drv: me, veh: vehOf(me), ms, g: S.rec}; if (PME()) saveLB(pd); else PEND = pd; }   // auch ohne Schreibrecht: Gäste-Zeiten warten auf dem Handy (gPend)
       crewMsg = !top || ms < top.ms ? (WR ? '👑 Neue Crew-Bestzeit auf ' + T.name + '!' : '👑 Schneller als die Crew-Bestzeit, aber nur eingeladene Bearbeiter kommen in die Bestenliste.') : '⏱ Crew-Bestzeit: ' + NAME(top.who) + ' ' + fmt(top.ms); }
     const pl = order.indexOf(mine) + 1;
     let msg = pl === 1 ? ['Campeão! 🏆', 'Der Pokal geht nach Hause!'] : pl === 6 ? ['Rote Laterne 🏮', 'Immerhin heil angekommen.'] : pl <= 3 ? ['Podium! ' + (pl === 2 ? '🥈' : '🥉'), 'Stark gefahren.'] : ['Mittelfeld', 'Nächstes Mal mehr Caipi-Turbo.'];
@@ -9479,7 +9543,7 @@ setGroup(G);
     S.paused = true; MUS.on = false; racing(false); engOff();
     if (TUTON || order.length < 2) { res.hidden = false; return; }
     // Siegerehrung auf der Strecke: Podest, Sekt, Konfetti, Hymne des Siegers, der Letzte hält den Eimer; antippen = überspringen
-    const nm = o => o.me ? (S.live ? NAME(ME || me) : NAME(o.id)) : NAME(o.who || o.id);
+    const nm = o => o.me ? (S.live ? NAME(PME() || me) : NAME(o.id)) : NAME(o.who || o.id);
     S.pose = null; S.pod = {t0: performance.now(), top: order.slice(0, 3).map(o => ({id: o.id, n: nm(o), me: !!o.me})), last: order.length > 3 ? {id: order[order.length - 1].id, n: nm(order[order.length - 1]), me: !!order[order.length - 1].me, roast: roastOf(nm(order[order.length - 1]))} : null, p: [], cf: []};
     for (let j = 0; j < 90; j++) S.pod.cf.push({x: Math.random(), y: -Math.random() * .6, v: .12 + Math.random() * .2, r: Math.random() * TAU, c: ['#ffd23f', '#5fe783', '#ff5a8a', '#5ec8ff', '#fff'][j % 5]});
     SFX.fanfare(); setTimeout(() => { real('applause', .7); hymn(order[0].id); }, 700);
@@ -9571,7 +9635,7 @@ setGroup(G);
   function board() { const el = document.getElementById('kt-board'); if (!el) return;
     const rows = TRACKS.map(tr => ({tr, list: lbList(LB, tr.id)})).filter(r => r.list.length), seen = loadJ('kartRecSeen');
     if (!rows.length) { el.hidden = true; return; } el.hidden = false;
-    const lost = ME ? rows.filter(r => seen[r.tr.id] === ME && r.list[0].who !== ME) : [];
+    const ME = PME(), lost = ME ? rows.filter(r => seen[r.tr.id] === ME && r.list[0].who !== ME) : [];   // Gäste sehen ihre eigenen Rekord-Hinweise
     if (!Object.keys(seen).length) { const s0 = {}; rows.forEach(r => { s0[r.tr.id] = r.list[0].who; }); store.set('kartRecSeen', JSON.stringify(s0)); }
     const cnt = {}; rows.forEach(r => { cnt[r.list[0].who] = (cnt[r.list[0].who] || 0) + 1; });
     { const h = document.querySelector('[data-hint="kart-tab"]'), k0 = Object.entries(cnt).sort((x, y) => y[1] - x[1])[0]; if (h && k0 && !h.dataset.live) { h.textContent = '👑 ' + NAME(k0[0]) + ' · ' + rows.length + '/' + TRACKS.length + ' Bestzeiten'; h.classList.add('live'); } }
@@ -9814,14 +9878,15 @@ setGroup(G);
     { const go = menu.querySelector('.kr-go'); go.textContent = MODE === 'cup' ? '🏆 Starten' : 'Los!'; go.classList.remove('kr-wait'); liveFoot(); }   // Live: der Knopf schaltet „bereit“, los geht es erst, wenn alle bereit sind
     const lb = menu.querySelector('.kr-lb'), gh = menu.querySelector('.kr-ghost:not(.kr-diff)');
     gh.hidden = MODE !== 'single'; gh.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x.dataset.g === GHOST.mode));
-    if (MODE === 'single') lb.innerHTML = lbHtml(lbList(LB, TRK), '⏱️ Bestzeiten ' + TBY[TRK].name);
+    if (MODE === 'single') lb.innerHTML = lbHtml(lbList(Object.assign({}, LB, gPendLB()), TRK), '⏱️ Bestzeiten ' + TBY[TRK].name);
     else lb.innerHTML = '';
     lb.hidden = MODE === 'cup';
-    menu.querySelector('.kr-wr').textContent = WR ? 'Deine Zeiten landen als ' + NAME(player()) + ' in der Crew-Bestenliste' + (ME ? '' : ' (wähle oben auf der Seite „Ich bin …“)') + '.' : 'Bestenliste nur ansehen: Eintragen können nur eingeladene Bearbeiter, deine Zeiten bleiben auf diesem Handy.';
-    menu.querySelector('.kr-wr').hidden = WR;
+    menu.querySelector('.kr-wr').textContent = WR ? 'Deine Zeiten landen als ' + NAME(player()) + ' in der Crew-Bestenliste' + (PME() ? '' : ' (wähle oben auf der Seite „Ich bin …“)') + '.' : 'Bestenliste nur ansehen: Eintragen können nur eingeladene Bearbeiter, deine Zeiten bleiben auf diesem Handy.';
+    menu.querySelector('.kr-wr').hidden = true;   // steht jetzt im „Wer spielt?“-Kasten (auch für Kommentatoren und Gäste)
     menu.querySelector('.kr-tutb').hidden = !!store.get('kartTutDone') && stats().races > 2;
-    const wb = menu.querySelector('.kr-whobox'); wb.innerHTML = !WR ? '' : !ME || WHOOPEN ? whoHtml(ME ? '🙋 <b>Wer spielt jetzt?</b> Antippen, unter diesem Namen landen die Zeiten in der Crew-Bestenliste.' : '🙋 <b>Wer spielt an diesem Handy?</b> Einmal antippen, dann landen deine Zeiten unter deinem Namen in der Crew-Bestenliste.')
-      : '<p class="kr-wholn"><span>🙋 <b>' + esc(NAME(ME)) + '</b> spielt · Zeiten zählen für die Crew-Bestenliste</span><button type="button" class="kr-whochg">ändern</button></p>'; whoHeads(wb);
+    const wb = menu.querySelector('.kr-whobox'), pm = PME(), gi0 = wb.querySelector('.kr-gname'), gv0 = gi0 && gi0.value, gf0 = gi0 && document.activeElement === gi0; wb.innerHTML = !pm || WHOOPEN ? whoHtml(pm ? '🙋 <b>Wer spielt jetzt?</b> Antippen, unter diesem Namen landen die Zeiten in der Bestenliste.' : '🙋 <b>Wer spielt an diesem Handy?</b> Einmal antippen, dann landen deine Zeiten unter deinem Namen in der Bestenliste.')
+      : '<p class="kr-wholn"><span>🙋 <b>' + esc(NAME(pm)) + '</b> spielt' + (KG ? ' als Gast 👤' : '') + ' · ' + (WR ? 'Zeiten zählen für die Bestenliste' : KG ? 'Zeiten kommen über ein Crew-Handy in die Bestenliste' : 'Zeiten bleiben auf diesem Handy') + '</span><button type="button" class="kr-whochg">ändern</button></p>'; whoHeads(wb);
+    { const gi = wb.querySelector('.kr-gname'); if (gi && gv0) gi.value = gv0; if (gi && gf0) gi.focus(); }   // Neuzeichnen (z. B. neue Bestzeit von jemand anderem) löscht den angefangenen Namen nicht
     const rc = menu.querySelector('.kr-recs'); rc.querySelector('.kr-recb').innerHTML = recsHtml(); sumBadge('recs', '🏁 ' + TRACKS.filter(x => lbList(LB, x.id).length).length + '/' + TRACKS.length);
   }
   function preview(id) { loadTrack(id); newRace(); S.paused = true; }
@@ -10015,8 +10080,13 @@ setGroup(G);
   setTimeout(() => { try { liveJoin(); } catch (e) {} }, 5000);
   setInterval(() => { if (!LIVE.room) return; liveHint(); if (!box.hidden && !menu.hidden && MODE === 'live' && lobby().length > 1) livePing(); }, 4000);
   openBtn.addEventListener('click', () => { if (LIVE.waiting && MODE !== 'live') { MODE = 'live'; store.set('kartMode', MODE); setTimeout(renderMenu, 50); } }, true);
-  box.addEventListener('click', e => { const w = e.target.closest('.kr-whop button'); if (w) { WHOOPEN = false; setMe(w.dataset.who); if (!menu.hidden) renderMenu(); }
+  box.addEventListener('click', e => { const w = e.target.closest('.kr-whop button[data-who]'); if (w) { WHOOPEN = false; setMe(w.dataset.who); if (!menu.hidden) renderMenu(); }
+    const g = e.target.closest('.kr-whop button[data-gst]'); if (g) { WHOOPEN = false; setGuest(g.dataset.gst); }
+    if (e.target.closest('.kr-gother')) { GOTHER = !GOTHER; const wx = e.target.closest('.kr-whobox, .kr-whores'); if (wx && wx.classList.contains('kr-whores')) { wx.innerHTML = whoHtml(wx.querySelector('.kr-who > p').innerHTML); whoHeads(wx); } else renderMenu(); setTimeout(() => { const ip = box.querySelector('.kr-gname'); if (ip) ip.focus(); }, 60); }
+    if (e.target.closest('.kr-gok')) { const ip = e.target.closest('.kr-gform').querySelector('.kr-gname'), nm = (ip.value || '').trim().slice(0, 16), sl = gSlug(nm);
+      if (!sl) { toast('✍️ Bitte erst deinen Vornamen eintippen.'); ip.focus(); return; } WHOOPEN = false; setGuest('gast_' + sl, nm); }
     if (e.target.closest('.kr-whochg')) { WHOOPEN = true; renderMenu(); } });
+  box.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('kr-gname')) { e.preventDefault(); const b = e.target.parentNode.querySelector('.kr-gok'); if (b) b.click(); } });
   window.__kartAt = (i, l) => at(i, l); window.__kartBG = () => [BG.width, BG.height, WW, WH]; window.__kartBGimg = w => { const c = document.createElement("canvas"); c.width = w; c.height = Math.round(w * BG.height / BG.width); c.getContext("2d").drawImage(BG, 0, 0, c.width, c.height); return c.toDataURL("image/jpeg", .8); }; window.__kartTW = () => TW; window.__kartDeck = () => DECK && {i0: DECK.i0, len: DECK.len, under: DECK.under}; window.__kartTun = () => TUN.map(u => ({i0: u.i0, len: u.len, nm: u.nm})); window.__kartN = () => N;
   window.__kart = {toMenu: () => toMenu(), mm: () => ({on: MM.on, step: MM.step}), mmRender: async (sec, song) => { const A0 = AC, G0 = MM.g, D0 = MM.dl, S0 = MM.song, oc = new OfflineAudioContext(1, 44100 * sec, 44100); AC = oc; MM.g = null; MM.song = song || S0 || 'phonk'; mmGraph(); MM.g.gain.value = .8 * SONGS[MM.song].v; MM.dl.delayTime.value = 60 / SONGS[MM.song].bpm * .75; const sp = 60 / SONGS[MM.song].bpm / 4; for (let st = 0, t = 0; t < sec; st++, t += sp) mmNote(st, t);
     const buf = await oc.startRendering(); AC = A0; MM.g = G0; MM.dl = D0; MM.song = S0; const d = buf.getChannelData(0); let pk = 0, ss = 0; for (let i = 0; i < d.length; i++) { pk = Math.max(pk, Math.abs(d[i])); ss += d[i] * d[i]; }

@@ -10252,6 +10252,8 @@
     ]
   },
   "news": [
+    {"id": "n251009ga", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "👤", "t": "Gringo Kart: als Gast spielen – im Kasten „Wer spielt?“ gibt es jetzt eine Gäste-Reihe (Manuel, Erich, Rasmus, Ilkay, Ritchi, Pat’s Mum oder „Anderer Gast“ mit Vornamen). Auch Kommentatoren fahren live mit, ihre Bestzeiten landen in der Bestenliste, sobald jemand aus der Crew die Seite offen hat"},
+    {"id": "n251009pv", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🗣️", "t": "Gringo Kart: Pat’s Mum hat jetzt ihre eigene Stimme – 12 Sprüche, Ansage beim Start und Smash-Ansage bei der Fahrerwahl"},
     {"id": "n251009pm", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🚬", "t": "Gringo Kart: neue Gastfahrerin Pat’s Mum im Mama-Taxi (Lichterkette, Blumenkasten, Gartenzwerg) – Spezial „Qualm-Taxi“: Turbo, Qualmwolke für alle dahinter, und Patrick wird abgeholt"},
     {"id": "n251009z", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🗯️", "t": "Gringo Kart: viel mehr Gepöbel im Rennen – die Fahrer beschimpfen sich jetzt laufend gegenseitig (etwa 17 statt 3 Sprüche pro Minute)"},
     {"id": "n251009y", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🗺️", "t": "Gringo Kart: Strecken jetzt als Raster wie bei Smash Bros – antippen zeigt darunter einen kurzen Steckbrief (Kurven, Tempo, Chaos, Tunnel, Abgrund …), „?“ lost eine Strecke aus"},
@@ -12260,6 +12262,76 @@
       "o": 491501,
       "dur": 1754,
       "f": 8
+    },
+    "v_patmum_over": {
+      "o": 250,
+      "dur": 2650,
+      "f": 10
+    },
+    "v_patmum_hit": {
+      "o": 3150,
+      "dur": 4057,
+      "f": 10
+    },
+    "v_patmum_sp": {
+      "o": 7457,
+      "dur": 3365,
+      "f": 10
+    },
+    "v_patmum_win": {
+      "o": 11073,
+      "dur": 2828,
+      "f": 10
+    },
+    "v_patmum_drift": {
+      "o": 14150,
+      "dur": 1701,
+      "f": 10
+    },
+    "v_patmum_item": {
+      "o": 16102,
+      "dur": 3867,
+      "f": 10
+    },
+    "v_patmum_pass": {
+      "o": 20219,
+      "dur": 2526,
+      "f": 10
+    },
+    "v_patmum_over_2": {
+      "o": 22994,
+      "dur": 2693,
+      "f": 10
+    },
+    "v_patmum_hit_2": {
+      "o": 25937,
+      "dur": 3124,
+      "f": 10
+    },
+    "v_patmum_pass_2": {
+      "o": 29311,
+      "dur": 3025,
+      "f": 10
+    },
+    "v_patmum_win_2": {
+      "o": 32585,
+      "dur": 3516,
+      "f": 10
+    },
+    "v_patmum_item_2": {
+      "o": 36352,
+      "dur": 2982,
+      "f": 10
+    },
+    "g_patmum": {
+      "o": 39584,
+      "dur": 6364,
+      "f": 10
+    },
+    "h_patmum": {
+      "o": 46198,
+      "dur": 1323,
+      "f": 10
     }
   },
   "kartReset": "2026-10-09a"
