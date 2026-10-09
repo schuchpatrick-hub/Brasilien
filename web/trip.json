@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251009z", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🗯️", "t": "Gringo Kart: viel mehr Gepöbel im Rennen – die Fahrer beschimpfen sich jetzt laufend gegenseitig (etwa 17 statt 3 Sprüche pro Minute)"},
     {"id": "n251009y", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🗺️", "t": "Gringo Kart: Strecken jetzt als Raster wie bei Smash Bros – antippen zeigt darunter einen kurzen Steckbrief (Kurven, Tempo, Chaos, Tunnel, Abgrund …), „?“ lost eine Strecke aus"},
     {"id": "n251009x", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎲", "t": "Gringo Kart Live: Zufallsrennen für alle – Würfel unten oder Einstellung „Zufallsrennen“, beim Start lost der Automat jedem Fahrer und Fahrzeug, dazu eine Strecke"},
     {"id": "n251009w", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎲", "t": "Gringo Kart: neuer Zufall-Knopf unten neben „Los!“ – der Spielautomat lost Fahrer, Fahrzeug und Strecke aus, dann geht’s sofort los (danach ist deine eigene Auswahl wieder da)"},
