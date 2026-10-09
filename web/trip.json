@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251009e", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🌶️", "t": "Gringo Kart: Taco flucht jetzt auf Mexikanisch und Türkisch – 14 neue Sprüche von „¡Pinche cabrón!“ bis „Siktir git!“"},
     {"id": "n251009d", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🌮", "t": "Gringo Kart: neuer Gastfahrer Ilkay alias Taco im Taco-Döner-Truck, Spezial-Item „Scharf mit alles“ mit eigener Stimme; Takedown jetzt richtig englisch"},
     {"id": "n251009c", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎮", "t": "Gringo Kart: neues Menü in vier Schritten – Fahrer nach Gruppen, Fahrzeuge mit deinem Fahrer drin und Freischalt-Fortschritt, Streckenkarten mit Crew-Rekord, Startleiste mit deiner Auswahl"},
     {"id": "n251009b", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "✈️", "t": "Gringo Kart: aufgeräumte Rennanzeige, Flieger am Flughafen, Zuckerhut und Schiffe an der Brücke, Strandleben an der Lopes Mendes, Gegner sammeln jetzt auch Münzen und Normal ist etwas kniffliger"},
@@ -10860,6 +10861,76 @@
     }
   ],
   "kartvo": {
+    "v_ilkay_over_2": {
+      "o": 300,
+      "dur": 2166,
+      "f": 9
+    },
+    "v_ilkay_over_3": {
+      "o": 2766,
+      "dur": 3085,
+      "f": 9
+    },
+    "v_ilkay_hit_2": {
+      "o": 6151,
+      "dur": 2509,
+      "f": 9
+    },
+    "v_ilkay_hit_3": {
+      "o": 8960,
+      "dur": 2861,
+      "f": 9
+    },
+    "v_ilkay_sp_2": {
+      "o": 12121,
+      "dur": 3365,
+      "f": 9
+    },
+    "v_ilkay_sp_3": {
+      "o": 15786,
+      "dur": 2021,
+      "f": 9
+    },
+    "v_ilkay_win_2": {
+      "o": 18107,
+      "dur": 3940,
+      "f": 9
+    },
+    "v_ilkay_win_3": {
+      "o": 22347,
+      "dur": 2338,
+      "f": 9
+    },
+    "v_ilkay_drift_2": {
+      "o": 24984,
+      "dur": 2306,
+      "f": 9
+    },
+    "v_ilkay_drift_3": {
+      "o": 27590,
+      "dur": 1665,
+      "f": 9
+    },
+    "v_ilkay_item_2": {
+      "o": 29555,
+      "dur": 2589,
+      "f": 9
+    },
+    "v_ilkay_item_3": {
+      "o": 32444,
+      "dur": 2732,
+      "f": 9
+    },
+    "v_ilkay_pass_2": {
+      "o": 35476,
+      "dur": 3440,
+      "f": 9
+    },
+    "v_ilkay_pass_3": {
+      "o": 39217,
+      "dur": 3392,
+      "f": 9
+    },
     "v_ilkay_over": {
       "o": 43535,
       "dur": 2453,
