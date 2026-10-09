@@ -9987,6 +9987,136 @@
         "Staffelfinale:",
         "Paraty & Ilha Grande"
       ]
+    },
+    "kart": {
+      "lines": [
+        {
+          "key": "v_felix_over",
+          "who": "x_felix",
+          "say": "For, aus dem Weg, sonst wirst du eingelocht!",
+          "text": "Fore! Aus dem Weg, sonst wirst du eingelocht!",
+          "at": 0
+        },
+        {
+          "key": "v_felix_hit",
+          "who": "x_felix",
+          "say": "Das war Foul, darüber diskutieren wir auf deiner Beerdigung!",
+          "text": "Das war Foul! Darüber diskutieren wir auf deiner Beerdigung!",
+          "at": 0
+        },
+        {
+          "key": "v_felix_sp",
+          "who": "x_felix",
+          "say": "Hol in wan, direkt ins Grab!",
+          "text": "Hole-in-One! Direkt ins Grab!",
+          "at": 0
+        },
+        {
+          "key": "v_felix_win",
+          "who": "x_felix",
+          "say": "Gewonnen, und ich beschwer mich trotzdem!",
+          "text": "Gewonnen! Und ich beschwer mich trotzdem!",
+          "at": 0
+        },
+        {
+          "key": "v_felix_drift",
+          "who": "x_felix",
+          "say": "Das Grün ist viel zu schnell, ich beschwer mich!",
+          "text": "Das Grün ist viel zu schnell! Ich beschwer mich!",
+          "at": 0
+        },
+        {
+          "key": "v_felix_item",
+          "who": "x_felix",
+          "say": "Unerhört, ich leg Protest ein, bei deiner Witwe!",
+          "text": "Unerhört! Ich leg Protest ein, bei deiner Witwe!",
+          "at": 0
+        },
+        {
+          "key": "v_felix_pass",
+          "who": "x_felix",
+          "say": "Seid Step Broli, du bist Geschichte!",
+          "text": "Side-Step-Broly! Du bist Geschichte!",
+          "at": 0
+        },
+        {
+          "key": "v_felix_over_2",
+          "who": "x_felix",
+          "say": "Röddels auf der Überholspur, Beschwerden bitte schriftlich!",
+          "text": "Röddels auf der Überholspur! Beschwerden bitte schriftlich!",
+          "at": 0
+        },
+        {
+          "key": "v_felix_hit_2",
+          "who": "x_felix",
+          "say": "Wer war das, das gibt eine Diskussion bis zum Tod!",
+          "text": "Wer war das?! Das gibt eine Diskussion bis zum Tod!",
+          "at": 0
+        },
+        {
+          "key": "v_felix_sp_2",
+          "who": "x_felix",
+          "say": "Abschlag, der Ball sucht schon deinen Grabstein!",
+          "text": "Abschlag! Der Ball sucht schon deinen Grabstein!",
+          "at": 0
+        },
+        {
+          "key": "v_felix_win_2",
+          "who": "x_felix",
+          "say": "Raketenforscher Röddels gewinnt, war trotzdem unfair!",
+          "text": "Raketenforscher Röddels gewinnt! War trotzdem unfair!",
+          "at": 0
+        },
+        {
+          "key": "v_felix_drift_2",
+          "who": "x_felix",
+          "say": "Seid Step, seitwärts in den Tod!",
+          "text": "Side-Step! Seitwärts in den Tod!",
+          "at": 0
+        },
+        {
+          "key": "v_felix_item_2",
+          "who": "x_felix",
+          "say": "Das zählt nicht, ich will den Videobeweis!",
+          "text": "Das zählt nicht! Ich will den Videobeweis!",
+          "at": 0
+        },
+        {
+          "key": "v_felix_pass_2",
+          "who": "x_felix",
+          "say": "Peitsche, und tschüss, ab in den Bunker!",
+          "text": "Peitsche! Und tschüss, ab in den Bunker!",
+          "at": 0
+        },
+        {
+          "key": "g_felix",
+          "who": "x_annc",
+          "say": "Achtung, der Raketenforscher Röddels ist am Start, er diskutiert schon mit der Rennleitung über eure Beerdigung!",
+          "text": "",
+          "at": 0
+        }
+      ],
+      "voice": {},
+      "xtts": {
+        "x_felix": [
+          "Ilkin Urbano",
+          "de"
+        ],
+        "x_annc": [
+          "Abrahan Mack",
+          "de"
+        ]
+      },
+      "comedy": {
+        "x_felix": {
+          "tempo": 1.12,
+          "pitch": 1.08
+        },
+        "x_annc": {
+          "tempo": 1.1,
+          "pitch": 1.0
+        }
+      }
     }
   },
   "sfx": {
@@ -10252,12 +10382,54 @@
     ]
   },
   "news": [
-    {"id": "n251009f", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🤬", "t": "Gringo Kart: Taco legt nach – derbe Mutter-Sprüche auf Mexikanisch und Türkisch"},
-    {"id": "n251009e", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🌶️", "t": "Gringo Kart: Taco flucht jetzt auf Mexikanisch und Türkisch – 14 neue Sprüche von „¡Pinche cabrón!“ bis „Siktir git!“"},
-    {"id": "n251009d", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🌮", "t": "Gringo Kart: neuer Gastfahrer Ilkay alias Taco im Taco-Döner-Truck, Spezial-Item „Scharf mit alles“ mit eigener Stimme; Takedown jetzt richtig englisch"},
-    {"id": "n251009c", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎮", "t": "Gringo Kart: neues Menü in vier Schritten – Fahrer nach Gruppen, Fahrzeuge mit deinem Fahrer drin und Freischalt-Fortschritt, Streckenkarten mit Crew-Rekord, Startleiste mit deiner Auswahl"},
-    {"id": "n251009b", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "✈️", "t": "Gringo Kart: aufgeräumte Rennanzeige, Flieger am Flughafen, Zuckerhut und Schiffe an der Brücke, Strandleben an der Lopes Mendes, Gegner sammeln jetzt auch Münzen und Normal ist etwas kniffliger"},
-    {"id": "n251009a", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "⚰️", "t": "Gringo Kart: alle Sprüche neu, derb und schwarz, gesprochene Takedowns, glänzende Fahrzeuge, Treffer-Gesichter und neue Strecken-Texturen"},
+    {
+      "id": "n251009f",
+      "d": "2026-10-09",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🤬",
+      "t": "Gringo Kart: Taco legt nach – derbe Mutter-Sprüche auf Mexikanisch und Türkisch"
+    },
+    {
+      "id": "n251009e",
+      "d": "2026-10-09",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🌶️",
+      "t": "Gringo Kart: Taco flucht jetzt auf Mexikanisch und Türkisch – 14 neue Sprüche von „¡Pinche cabrón!“ bis „Siktir git!“"
+    },
+    {
+      "id": "n251009d",
+      "d": "2026-10-09",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🌮",
+      "t": "Gringo Kart: neuer Gastfahrer Ilkay alias Taco im Taco-Döner-Truck, Spezial-Item „Scharf mit alles“ mit eigener Stimme; Takedown jetzt richtig englisch"
+    },
+    {
+      "id": "n251009c",
+      "d": "2026-10-09",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "🎮",
+      "t": "Gringo Kart: neues Menü in vier Schritten – Fahrer nach Gruppen, Fahrzeuge mit deinem Fahrer drin und Freischalt-Fortschritt, Streckenkarten mit Crew-Rekord, Startleiste mit deiner Auswahl"
+    },
+    {
+      "id": "n251009b",
+      "d": "2026-10-09",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "✈️",
+      "t": "Gringo Kart: aufgeräumte Rennanzeige, Flieger am Flughafen, Zuckerhut und Schiffe an der Brücke, Strandleben an der Lopes Mendes, Gegner sammeln jetzt auch Münzen und Normal ist etwas kniffliger"
+    },
+    {
+      "id": "n251009a",
+      "d": "2026-10-09",
+      "tab": "kart-tab",
+      "to": "kartsec",
+      "e": "⚰️",
+      "t": "Gringo Kart: alle Sprüche neu, derb und schwarz, gesprochene Takedowns, glänzende Fahrzeuge, Treffer-Gesichter und neue Strecken-Texturen"
+    },
     {
       "id": "n251008zb",
       "d": "2026-10-08",
