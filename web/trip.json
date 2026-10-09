@@ -10252,6 +10252,11 @@
     ]
   },
   "news": [
+    {"id": "n251009vr", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🗣️", "t": "Gringo Kart: kein Fahrer sagt mehr zweimal hintereinander denselben Spruch – die Sprüche wechseln sich jetzt reihum ab"},
+    {"id": "n251009rb", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "📊", "t": "Gringo Kart: Rennbericht nach jedem Rennen – Rundenzeiten, Top-Speed, Drift-Anteil, Takedowns, dein Erzfeind (wer dich am öftesten abgeschossen hat) und ein bissiger Kommentar der Rennleitung"},
+    {"id": "n251009cc", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🚀", "t": "Gringo Kart: Klassen 100, 150 und 200 ccm (Schritt ④ bzw. live unter „Einstellungen für alle“) – 200 ccm ist 20 % schneller, jede Klasse hat ihre eigene Bestenliste"},
+    {"id": "n251009fly", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎬", "t": "Gringo Kart: Strecken-Vorschau vor dem Start – die Kamera fliegt einmal über die Strecke und zeigt Tunnel, Brücken, Kuppen, Schleichwege und Gefahren (antippen = überspringen)"},
+    {"id": "n251009lx", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🔁", "t": "Gringo Kart: Strecken ändern sich während des Rennens – Sonnenuntergang in Guarujá, Rushhour in São Paulo, Springflut an der Copacabana, Stau auf der Ponte, Container in Manaus …"},
     {"id": "n251009ww", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "⛔", "t": "Gringo Kart: fährst du verkehrt herum, steht nach gut einer Sekunde groß „FALSCHE RICHTUNG!“ im Bild, mit Pfeil, wie du am schnellsten wendest"},
     {"id": "n251009vi", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🚗", "t": "Gringo Kart: die Infos zum Fahrzeug stehen jetzt fest über dem Raster (mit Bild, Werten, Kaufen bzw. direkt zur Werkstatt) – nichts verrutscht mehr beim Antippen"},
     {"id": "n251009hb", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "⛰️", "t": "Gringo Kart: Höhen und Tiefen – Guarujá neu über den Morro mit Kuppe, Brücke über die Schlucht und Tunnel; GRU mit Abflugebene, Lopes Mendes über den Dschungelhügel mit Holzbrücke, Cristo hoch und runter, Buckel auf der Ponte. Bergauf langsamer, bergab schneller. Neue Bestenlisten für diese fünf Strecken"},

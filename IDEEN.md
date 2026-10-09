@@ -95,7 +95,7 @@ Es fehlen vor allem Spielmodi außer Rennen, Langzeit-Ziele, Gruppen-Funktionen 
 - 🎈 **Ballon-Schlacht / Caipi-Klau** (Battle-Modus Mario Kart): Strand-Arena, live mit der Crew, 3 Ballons bzw. goldenen Caipi 20 s halten.
 - ⚽ **Kart-Fußball im Maracanã** (Rocket League): 3 gegen 3 live, großer Ball, Tore, Torjubel mit Crew-Stimmen; passt zu den FIFA-Karten.
 - 🥁 **Samba-Drift im Takt** (CTR-Turbo-Kette): während des Drifts im Takt der Surdo tippen, jede Stufe stärkerer Turbo.
-- 🔁 **Strecke ändert sich je Runde** (Sonic Transformed): Copacabana Runde 3 Flut, Cristo Nebel dichter, Brücke Stau auf einer Spur, Réveillon Feuerwerk ab Runde 2.
+- ✅ (umgesetzt 09.10.) 🔁 **Strecke ändert sich je Runde** (Sonic Transformed): Copacabana Runde 3 Flut, Cristo Nebel dichter, Brücke Stau auf einer Spur, Réveillon Feuerwerk ab Runde 2.
 - 💣 **Fallen selbst auslösen** (Split/Second): Leiste durch Drift/Windschatten füllen, an markierten Stellen Container, Welle oder Obststand auf Gegner loslassen.
 - 🆕 **Neue Items**: 🚌 Ônibus-Express (Autopilot für Hintere, Bullet Bill), ⚡ Cristo-Blitz (alle anderen schrumpfen), 🟣 Açaí-Spritzer (Bild der Vorderen voll, Blooper), 🦅 Urubu (sucht den Führenden, Blue Shell), 📯 Apito (Pfeife gegen den Urubu).
 - 🪂 **Asa-Delta** (Mario Kart 7): Drachenflieger von der Pedra Bonita, nach großen Schanzen gleiten und in der Luft lenken.
@@ -116,9 +116,15 @@ Es fehlen vor allem Spielmodi außer Rennen, Langzeit-Ziele, Gruppen-Funktionen 
 - 🔗 **Mit der Seite verknüpfen**: Kart-Siege/Bestzeiten wirken auf den FIFA-Marktwert, unterwegs doppelte Münzen auf der Strecke der heutigen Station, Check-in schaltet Bonus-Variante frei.
 - 🏁 **Interlagos** (F1-Strecke in São Paulo mit dem „S do Senna“) als Bonusstrecke.
 
+**Ideen-Runde 2 (09.10. spät, nach Aufwand; Patrick hat 1, 2, 5, 13 gewählt ✅)**
+- Klein: 1 ✅ Rennbericht · 2 ✅ Klassen 100/150/200 ccm · 3 🪞 Spiegel-Modus (jede Strecke seitenverkehrt, eigene Bestenliste) · 4 👻 Geist frei wählen (Bestfahrt von Simon, Marco …) · 5 ✅ Strecken-Vorschau · 6 🔙 Rückspiegel-Streifen oben · 7 ⏳ Live-Nachzügler mit Namen
+- Mittel: 8 🥇 Medaillen je Strecke (Bronze–Platin gegen feste Geister aus dem Test-Bot) · 9 🍻 Party-Modus „Handy rumreichen“ + Strafen-Glücksrad (ohne Netz) · 10 👥 Team-Rennen Schwaben Augsburg gegen den Rest · 11 🎬 Wiederholung mit TV-Kameras + Takedown-Zeitlupe · 12 🗣️ brasilianischer TV-Kommentator (XTTS) · 13 ✅ Strecke ändert sich je Runde · 14 🔗 Kopplung an die Reise (doppelte Münzen an der Station des Tages, Marktwert)
+- Groß: 15 🎈 Battle-Modus „Caipi-Klau“ · 16 📹 Highlight-Clip für WhatsApp (❓ MediaRecorder im Viewer testen) · 17 🤖 Crew-KI aus echten Bestfahrten (wie Forza-Drivatare) · 18 🗺️ Abenteuer „Die Reise“ mit Boss-Rennen · 19 ⚽ Kart-Fußball im Maracanã
+- Sehr hoch: 20 📐 Verfolger-Kamera in Pseudo-3D (Mode 7, Prototyp zuerst) · 21 🧊 echtes 3D (WebGL) · 22 ✏️ Streckenbauer · 23 🌆 offene Welt „Rio Livre“ mit Missionen
+
 **Aus der Gesamtprüfung 2 (09.10. spät), nach Nutzen sortiert**
 1. 📶 **Datensparmodus Live** (Patrick gefragt, wartet auf Ja): 10 statt 20 Meldungen/s, halbe Datenmenge, Handys rechnen dazwischen weiter.
-2. 📊 **Rennbericht nach dem Rennen**: Rundenzeiten, Takedowns, wer dich am häufigsten abgeschossen hat („Erzfeind des Rennens“), Drift-Zeit, Münzen, Abstürze – mit schwarzem Kommentar.
+2. ✅ (umgesetzt 09.10.) 📊 **Rennbericht nach dem Rennen**: Rundenzeiten, Takedowns, wer dich am häufigsten abgeschossen hat („Erzfeind des Rennens“), Drift-Zeit, Münzen, Abstürze – mit schwarzem Kommentar.
 3. 👀 **Zuschauen im Live-Raum**: wer die Seite offen hat, empfängt die Live-Rennen sowieso schon mit; daraus ein Zuschauer-Bild (Kamera springt zwischen den Fahrern, Emoji-Jubel) ohne zusätzliches Datenvolumen.
 4. ⏳ **Live-Nachzügler**: statt „Warte auf die anderen … 18 s“ die Namen zeigen („Warte auf Simon, Marco“), Wartezeit 30 → 20 s; wer schon im Ziel ist, kann Emojis schicken.
 5. 🔄 **Bestenliste nach jedem Rennen neu laden**, damit Rekorde anderer sofort im Ergebnis stehen (heute erst beim nächsten Öffnen).
