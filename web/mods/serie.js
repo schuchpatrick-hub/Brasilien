@@ -3252,8 +3252,11 @@ Object.assign(TRIP.series, {"ep1": {"title": "Ab in den Süden", "n": 1, "lines"
   // alle Stimmen einer Folge stecken in audio/epN.mp3 (Versatz o je Zeile in voice[key].o), Titelsong aus den Samba-Dateien
   const srcOf = ev => { const v = ev.key && (EP.voice || {})[ev.key]; return ev.file ? [ev.file, 0] : v && v.o !== undefined ? [EPID, v.o / 1000] : [EPID + '-' + ev.key, 0]; };
   const prefetchEp = () => prefetch([...new Set(PLAY.map(ev => srcOf(ev)[0]))]);
-  async function bufOf(key) { if (ABUF[key]) return ABUF[key]; prefetch([key]); const raw = await RAW[key]; if (!raw || !ctx) return null;
-    try { ABUF[key] = await ctx.decodeAudioData(raw.slice(0)); } catch (e) { return null; } return ABUF[key]; }
+  const PACK = /^(ep\d+|p[a-z]+)$/;   // Stimmen-Paket einer Folge bzw. eines Porträts (entpackt ~20 MB je Folge)
+  async function bufOf(key) { if (ABUF[key]) return ABUF[key];
+    if (PACK.test(key)) Object.keys(ABUF).forEach(k => { if (k !== key && PACK.test(k)) { delete ABUF[k]; delete RAW[k]; } });   // nur die laufende Folge im Speicher behalten
+    prefetch([key]); const raw = await RAW[key]; if (!raw || !ctx) return null;
+    try { ABUF[key] = await decodeAt(ctx, raw.slice(0), 24000); } catch (e) { return null; } return ABUF[key]; }
   function playVoice(ev, my) {
     const [file, off] = srcOf(ev);
     bufOf(file).then(bf => { if (my !== run || !ctx || !bf) return;
