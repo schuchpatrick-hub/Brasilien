@@ -10252,6 +10252,8 @@
     ]
   },
   "news": [
+    {"id": "n251009l", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🔧", "t": "Gringo Kart: Werkstatt mit 6 Tuning-Teilen je Fahrzeug (Motor, Getriebe, Reifen, Fahrwerk, Turbo, Panzerung), Tuning wird jetzt sicher gespeichert; Bestenliste mit Gesamtwertung über alle Strecken"},
+    {"id": "n251009k", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🦅", "t": "Gringo Kart: 4 neue Items – Urubu, Cristo-Blitz, Açaí-Bombe und Ônibus-Express; Fahrer reden öfter, neue Fahrzeuge kosten jetzt 100–290 Münzen"},
     {"id": "n251009j", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🔊", "t": "Gringo Kart: 8 neue Fahrzeuge mit eigener Fahrweise – Capivara, Motoboy, Kokos-Karren, Strandsegler, Pferdekutsche, Zuckerrohr-Traktor, Raketen-Liegestuhl und Trio Elétrico; freischalten oder mit Münzen kaufen"},
     {"id": "n251009i", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎲", "t": "Gringo Kart: Items gerechter verteilt (weniger Flip-Flops, kaum noch zweimal dasselbe), „Bestzeiten“ statt „Crew-Rekorde“, Gastfahrer heißt jetzt Ritchi"},
     {"id": "n251009h", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🔁", "t": "Gringo Kart: Nach einem App-Wechsel geht das Spiel jetzt von selbst wieder auf, Live-Rennen laufen automatisch weiter"},
