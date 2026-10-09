@@ -1825,7 +1825,7 @@
           const pd = PADS.find(p => p.i > k.idx && p.i - k.idx < 35); if (pd && k.skill > .93) lane = pd.l; }
         const mvr = S.movers.find(m => m.i > k.idx && m.i - k.idx < 30); if (mvr) lane = mvr.l > 0 ? -TW * .3 : TW * .3;
         if (!haz && !mvr) { const lw = clamp(DIFFS[DIFF].line * k.pp.line, 0, 1); lane = LINE[wrap(k.idx + la)] * lw + lane * (1 - lw * .7); }
-        if (k.avT > 0) { k.avT -= dt; lane += k.avS * 24 * Math.min(1, k.avT / .35); }   // nach einem Rempler kurz zur Seite (sonst drücken beide wieder auf dieselbe Linie)
+        if (k.avT > 0) { k.avT -= dt; if (!haz && !mvr) lane += k.avS * 24 * Math.min(1, k.avT / .35); }   // nach einem Rempler kurz zur Seite (sonst drücken beide wieder auf dieselbe Linie)
         if (k.pp.ram && !haz) { const vic = S.karts.find(o => o !== k && !o.done && progress(o) - progress(k) > 2 && progress(o) - progress(k) < 14); if (vic) lane = vic.lat; }
         if (FALL && Math.abs(k.lat) > TW * .4) lane = -Math.sign(k.lat) * TW * .1;   // Abgrund-Strecken: nah am Rand sofort zur Mitte
         const [tx, ty] = at(k.idx + la, clamp(lane, -TW * .37, TW * .37)); const d = angd(Math.atan2(ty - k.y, tx - k.x), k.a); target = clamp(d * 2.6, -1, 1);
