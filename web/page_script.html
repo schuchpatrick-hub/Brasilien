@@ -8479,7 +8479,8 @@ setGroup(G);
   const SET = Object.assign({ctl: 'hold', q: 1, cam: 1, tod: 'real'}, loadJ('kartSet')), saveSet = () => store.set('kartSet', JSON.stringify(SET));
   const stats = () => { const s0 = Object.assign({races: 0, wins: 0, ilha: 0, supers: 0, cups: 0, coinsTot: 0, rivals: 0, tracks: '', smash: 0, tds: 0, vsup: 0, vtds: 0, vcup: 0}, loadJ('kartStats')); s0.tracksN = s0.tracks.split(',').filter(Boolean).length; return s0; };
   const unlocked = v => (!v.need && !v.c) || (v.need ? stats()[v.need[0]] >= v.need[1] : false) || !!loadJ('kartVehOwn2')[v.id];   // frei, Erfolg (seit dem Neustart) erreicht oder gekauft
-  const myVeh = () => { const v = VEHS.find(x => x.id === store.get('kartVeh')); return v && unlocked(v) ? v.id : 'kart'; };
+  let RNDR = null;   // laufendes Zufallsrennen {me0, trk0, veh}: eigene Auswahl kommt im Menü zurück
+  const myVeh = () => { if (RNDR) return RNDR.veh; const v = VEHS.find(x => x.id === store.get('kartVeh')); return v && unlocked(v) ? v.id : 'kart'; };
   // Münzen (auf der Strecke + Bonus), Tuning, Kostüme, Erfolge: alles pro Handy
   // Kart-Baukasten (Garage): Reifen und Flügel einzeln, ändern Aussehen und Fahrgefühl (nur das eigene Fahrzeug, nicht auf dem Boot)
   // f: v = Spitze, g = Haftung, d = Rutschen im Drift, m = Masse, acc = Antritt, tgh = Nehmer, off = Bremsen neben der Strecke, air = Flugzeit, land = Turbo bei Landung, b = Turbo-Dauer, bs = Lenkung im Turbo, wet = Haftung bei Regen
@@ -9443,6 +9444,7 @@ setGroup(G);
       st.innerHTML = '<p class="kr-lbl">' + (last0 ? '🏆 Live-Pokal: Endstand' : '🏆 Live-Pokal nach ' + (g.i + 1) + ' von ' + g.list.length + ' Rennen') + '</p><div class="kr-st">' + tb.map(([k0, p0], i) => '<span' + (k0 === 'p:' + LIVE.me ? ' class="me"' : '') + '><b>' + (last0 && i === 0 ? '🏆' : (i + 1) + '.') + '</b> ' + esc(g.nm[k0]) + ' <i>' + p0 + '</i></span>').join('') + '</div>';
       if (last0) { res.querySelector('.kr-res-t').textContent = tb[0][0] === 'p:' + LIVE.me ? '🏆 Live-Pokal gewonnen!' : '🏆 Pokal-Sieger: ' + g.nm[tb[0][0]]; if (tb[0][0] === 'p:' + LIVE.me) fireworks(120); } }
     if (S.live) { res.querySelector('.kr-again').textContent = LIVE.gp && LIVE.gp.i < LIVE.gp.list.length - 1 ? '▶ Nächstes Pokal-Rennen (bereit)' : '🔁 Revanche (bereit)'; } else res.querySelector('.kr-again').textContent = CUP ? (lastCup ? '🏆 Zur Siegerehrung' : '▶ Nächstes Rennen: ' + TBY[CUP.list[CUP.i + 1]].e + ' ' + TBY[CUP.list[CUP.i + 1]].name) : 'Nochmal';
+    res.querySelector('.kr-rnd2').hidden = !(RNDR && !S.live && !CUP);
     res.querySelector('.kr-res .kr-back').textContent = CUP ? '☰ Menü (Grand Prix abbrechen)' : S.live ? '👥 Zur Lobby' : '☰ Zurück ins Menü';
     S.paused = true; MUS.on = false; racing(false); engOff();
     if (TUTON || order.length < 2) { res.hidden = false; return; }
@@ -9627,6 +9629,23 @@ setGroup(G);
   // Ansage des Fahrernamens wie im Prügelspiel (Handy-Stimme), Auswahl-Geräusch
   // Ansage bei der Fahrerwahl wie bei Super Smash Bros (Wunsch Patrick 08.10.): je Figur Beiname + Name mit Hall, Aufnahme h_<id> in audio/kart7.mp3 (lädt beim Öffnen des Menüs)
   let ANNSRC = null;
+  // Zufallsrennen (Einzelrennen): Fahrer, Fahrzeug und Strecke laufen wie an einem Spielautomaten durch, halten nacheinander an, dann geht es sofort los
+  const slot = document.createElement('div'); slot.className = 'kr-slot'; slot.hidden = true; box.appendChild(slot); let SLOTRUN = false;
+  function randomRace() { if (SLOTRUN || MODE !== 'single') return; SLOTRUN = true; const pick = a => a[Math.floor(Math.random() * a.length)];
+    const d = pick(DRVS), t = pick(TRACKS), boat = t.veh === 'boat', vs = VEHS.filter(unlocked), v = pick(vs), base = RNDR || {me0: me, trk0: TRK};
+    const dEmo = id => (XBY[id] && XBY[id].e) || (SPECIAL[id] || {}).e || '🙂', vName = (v0, id) => v0.id === 'kart' && STYK(id) ? STN[STYK(id)] || v0.n : v0.n;
+    slot.innerHTML = '<div class="kr-slotc" role="dialog" aria-label="Zufallsrennen"><p class="kr-slott">🎲 Zufallsrennen</p><div class="kr-reels">' + ['Fahrer', 'Fahrzeug', 'Strecke'].map(n => '<div class="kr-reel spin"><small>' + n + '</small><span class="kr-rv"></span><b></b></div>').join('') + '</div><p class="kr-slotx">Der Automat entscheidet …</p></div>';
+    slot.hidden = false; res.hidden = true; const R = [...slot.querySelectorAll('.kr-reel')], t0 = performance.now(), STOP = [950, 1550, 2150], done = [0, 0, 0];
+    const show = (r, emo, nm) => { R[r].querySelector('.kr-rv').textContent = emo; R[r].querySelector('b').textContent = nm; };
+    const fin = r => { done[r] = 1; const el = R[r]; el.classList.remove('spin'); el.classList.add('stop'); const rv = el.querySelector('.kr-rv'); rv.textContent = ''; try { SFX.pick(); } catch (e) {}
+      if (r === 0) { rv.appendChild(portrait(d, 92, 92, .9)); el.querySelector('b').textContent = NAME(d); try { announce(d); } catch (e) {} }
+      if (r === 1) { if (boat) show(1, '🛶', 'Boot (Amazonas)'); else { const c = vehSprite(paintOf(d).c || (LOOK[d] || {}).shirt || '#00a651', v.id, Object.assign({}, paintOf(d), partsPt()), d), cv = document.createElement('canvas'); cv.width = c.width; cv.height = c.height; cv.getContext('2d').drawImage(c, 0, 0); cv.className = 'kr-rveh'; rv.appendChild(cv); el.querySelector('b').textContent = vName(v, d); } }
+      if (r === 2) { const c = thumb(t), cv = document.createElement('canvas'); cv.width = c.width; cv.height = c.height; cv.getContext('2d').drawImage(c, 0, 0); rv.appendChild(cv); el.querySelector('b').textContent = t.e + ' ' + t.name; slot.querySelector('.kr-slotx').textContent = '🏁 Los geht’s!'; } };
+    const iv = setInterval(() => { const el = performance.now() - t0; if (box.hidden) { clearInterval(iv); slot.hidden = true; SLOTRUN = false; return; }
+      [0, 1, 2].forEach(r => { if (done[r]) return; if (el >= STOP[r]) return fin(r); if (r === 0) { const q = pick(DRVS); show(0, dEmo(q), NAME(q)); } else if (r === 1) { const q = pick(vs); show(1, q.e, q.n); } else { const q = pick(TRACKS); show(2, q.e, q.name); } });
+      if (!done[2]) try { beep(1500 + Math.random() * 500, .018, 'square', .018); } catch (e) {}
+      if (done[2]) { clearInterval(iv); setTimeout(() => { slot.hidden = true; SLOTRUN = false; if (box.hidden) return; RNDR = {me0: base.me0, trk0: base.trk0, veh: boat ? myVeh0() : v.id}; me = d; TRK = t.id; makeVehicles(); startRace(); }, 1200); } }, 75); }
+  const myVeh0 = () => { const r = RNDR; RNDR = null; const v = myVeh(); RNDR = r; return v; };
   function announce(id) { try { SFX.pick(); noise(.22, .08, 2400); beep(120, .35, 'sawtooth', .07, 50); } catch (e) {}
     const hv = TRIP.kartvo && TRIP.kartvo['h_' + id], hb = hv && BUF['ann' + (hv.f > 1 ? hv.f : '')];
     if (SOUND && ANN && hb && AC) { try { if (ANNSRC) ANNSRC.stop(); } catch (e) {} const s0 = AC.createBufferSource(), g = AC.createGain(); s0.buffer = hb; const t0 = AC.currentTime + .12, d0 = hv.dur / 1000; g.gain.setValueAtTime(1.25, t0); g.gain.setValueAtTime(1.25, t0 + d0 - .08); g.gain.linearRampToValueAtTime(0, t0 + d0); s0.connect(g); g.connect(FXG); s0.start(t0, hv.o / 1000, d0); ANNSRC = s0;   /* genau die Länge der Aufnahme (vorher +0,35 s → Anfang der nächsten Ansage hörbar) */
@@ -9731,6 +9750,7 @@ setGroup(G);
       menu.querySelector('.kr-best').textContent = vn + (MODE === 'cup' ? CUPSEL.e + ' ' + CUPSEL.n + ' · ' + DIFFS[DIFF].n : MODE === 'live' ? '👥 Live · ' + lobby().length + ' im Raum'
         : TBY[TRK].e + ' ' + TBY[TRK].name + ' · ' + DIFFS[DIFF].n + (bt[TRK] ? ' · ⏱ ' + fmt(bt[TRK]) : '')); }
     liveBox(); livePres();
+    { const dc = menu.querySelector('.kr-dice'); if (dc) dc.hidden = MODE !== 'single'; }
     { const go = menu.querySelector('.kr-go'); go.textContent = MODE === 'cup' ? '🏆 Starten' : 'Los!'; go.classList.remove('kr-wait'); liveFoot(); }   // Live: der Knopf schaltet „bereit“, los geht es erst, wenn alle bereit sind
     const lb = menu.querySelector('.kr-lb'), gh = menu.querySelector('.kr-ghost:not(.kr-diff)');
     gh.hidden = MODE !== 'single'; gh.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x.dataset.g === GHOST.mode));
@@ -9783,7 +9803,8 @@ setGroup(G);
     if (LIVE.diff0 != null) { DIFF = LIVE.diff0; LIVE.diff0 = null; } liveLeave(); cancelAnimationFrame(raf); S = null; MUS.on = false; box.hidden = true; if (LIVE.room) livePres(); teaser(); board(); document.body.style.overflow = ''; document.documentElement.classList.remove('kart-on');
     engOff(); try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {}
   }
-  function toMenu() { if (LIVE.diff0 != null) { DIFF = LIVE.diff0; LIVE.diff0 = null; } TUTON = false; CUP = null; res.hidden = true; pm.hidden = true; racing(false); MUS.on = false; menu.hidden = false; preview(MODE === 'cup' ? CUPSEL.t[0] : TRK); renderMenu(); }
+  function toMenu() { if (RNDR) { me = RNDR.me0; TRK = RNDR.trk0; RNDR = null; makeVehicles(); }   // nach dem Zufallsrennen wieder die eigene Auswahl
+    if (LIVE.diff0 != null) { DIFF = LIVE.diff0; LIVE.diff0 = null; } TUTON = false; CUP = null; res.hidden = true; pm.hidden = true; racing(false); MUS.on = false; menu.hidden = false; preview(MODE === 'cup' ? CUPSEL.t[0] : TRK); renderMenu(); }
   openBtn.addEventListener('click', open);
   const racing = on => { box.classList.toggle('racing', on); ITSEE = false; itemBtn.classList.remove('kr-see'); HUDT = 0; };
   function pause() { if (!S || !box.classList.contains('racing') || !res.hidden) return; pm.querySelector('.kr-restart').hidden = !!S.live;
@@ -9820,7 +9841,7 @@ setGroup(G);
     if (e.target.closest('.kr-back')) { liveLeave(); toMenu(); }
     if (e.target.closest('.kr-quit')) { pm.hidden = true; close(); }
   });
-  box.addEventListener('click', e => { if (e.target.closest('.kr-menu .kr-quit, .kr-res .kr-quit')) close(); });
+  box.addEventListener('click', e => { if (e.target.closest('.kr-menu .kr-dice')) randomRace(); if (e.target.closest('.kr-menu .kr-quit, .kr-res .kr-quit')) close(); });
   menu.addEventListener('click', e => {
     { const ui = e.target.closest('.kr-mode button, .kr-trk button, .kr-cups button, .kr-vcar button, .kr-ghost button, .kr-set > summary, .kr-pill'); if (ui && !ui.disabled) { const f = ui.matches('.kr-set > summary, .kr-pill') ? 660 : 990; beep(f, .035, 'triangle', .035, f * 1.25); } }   // kurzer Klick-Ton bei jeder Auswahl
     const rb = e.target.closest('.kr-pick:not(.kr-whop) .kr-rnd'); if (rb) { if (RSPIN) return; RSPIN = 1; const ids = DRVS.filter(id => id !== me), fin = pick(ids), tile = id => menu.querySelector('.kr-roster .kr-tile[data-id="' + id + '"]'); let n = 0, cur = null;
@@ -9869,6 +9890,7 @@ setGroup(G);
     if (e.target.closest('.kr-go')) { CUP = MODE === 'cup' ? {i: 0, pts: {}, races: [], list: CUPSEL.t, n: CUPSEL.n, e: CUPSEL.e} : null; startRace(); }
   });
   res.addEventListener('click', e => {
+    if (e.target.closest('.kr-rnd2')) { randomRace(); return; }
     if (e.target.closest('.kr-again')) {
       if (CUP && CUP.done) { CUP = {i: 0, pts: {}, races: [], list: CUPSEL.t, n: CUPSEL.n, e: CUPSEL.e}; startRace(); }
       else if (CUP && CUP.i === CUP.list.length - 1) ceremony();
