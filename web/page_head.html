@@ -1537,6 +1537,30 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
 .kr-lp small{font-size:.62rem;color:#cfe3f5}.kr-lp.rdy canvas{box-shadow:0 0 0 3px #5fe783,0 0 12px rgba(95,231,131,.7)}.kr-lp:not(.rdy) canvas{box-shadow:0 0 0 2px rgba(255,255,255,.35);opacity:.8}
 .kr-live-btns{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px}.kr-live-btns button{margin:0}.kr-rdy,.kr-gpt{border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.08);color:#fff;border-radius:999px;padding:6px 10px;font:700 .74rem system-ui,sans-serif;cursor:pointer}
 .kr-rdy.on{background:#2fae58;border-color:#5fe783}.kr-gpt.on{background:rgba(255,210,63,.25);border-color:#ffd23f}.kr-rdy{font-size:.86rem;padding:8px 14px}
+.kart .kr-lsm{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px 8px;margin:6px 2px 8px}
+@media (min-width:600px){.kart .kr-lsm{grid-template-columns:repeat(6,minmax(0,1fr))}}
+.kr-lpc{position:relative;display:grid;justify-items:center;align-content:start;gap:1px;padding:19px 5px 7px;border-radius:10px;background:linear-gradient(180deg,color-mix(in srgb,var(--pc) 55%,#0b1622),#0b1622 80%);border:3px solid var(--pc);box-shadow:0 4px 0 rgba(0,0,0,.35);overflow:hidden;color:#fff;transform:skewX(-4deg);min-width:0}
+.kr-lpc>*{transform:skewX(4deg)}
+.kr-lpn{position:absolute;top:0;left:0;background:var(--pc);color:#fff;font:italic 900 .82rem system-ui,sans-serif;padding:2px 10px 3px 7px;border-radius:0 0 10px 0;text-shadow:0 1px 0 rgba(0,0,0,.4);z-index:2}
+.kr-lpc canvas.kr-lpi{width:100%;max-width:96px;height:auto;aspect-ratio:112/132;border-radius:6px;display:block}
+.kr-lpc b{font:italic 900 .8rem system-ui,sans-serif;text-transform:uppercase;line-height:1.05;margin-top:4px;text-align:center;overflow-wrap:anywhere;max-width:100%}
+.kr-lpc small{font:700 .6rem system-ui,sans-serif;color:#cfe3f5;min-height:.72rem;text-align:center}
+.kr-lpc i{font:600 .62rem system-ui,sans-serif;font-style:normal;color:#ffe9a8;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kr-lpc .kr-ping{position:absolute;top:3px;right:6px;min-height:0}
+.kr-lpc.me{box-shadow:0 0 0 2px #fff,0 0 16px var(--pc)}
+.kr-lpc:not(.rdy):not(.kr-lpe) canvas{filter:saturate(.7) brightness(.8)}
+.kr-lpr{position:absolute;left:-8%;right:-8%;top:40%;background:linear-gradient(90deg,#16a34a,#5fe783,#16a34a);color:#fff;font:italic 900 .95rem system-ui,sans-serif;text-align:center;padding:3px 0;transform:rotate(-12deg)!important;box-shadow:0 3px 10px rgba(0,0,0,.45);letter-spacing:.06em;text-shadow:0 2px 0 rgba(0,0,0,.3)}
+.kr-lpr.pop{animation:krstamp .35s cubic-bezier(.2,1.6,.4,1)}
+.kr-lpc em{font:700 .7rem system-ui,sans-serif;font-style:normal;min-height:.8rem}
+@keyframes krstamp{from{transform:rotate(-12deg) scale(2.2)!important;opacity:0}}
+.kr-lpc.new{animation:krlpin .65s cubic-bezier(.2,1.4,.4,1) var(--ad,0ms) both}
+@keyframes krlpin{0%{transform:skewX(-4deg) translateX(-26px) scale(.9);filter:brightness(2.4)}100%{transform:skewX(-4deg)}}
+.kr-lpe{opacity:.55;border-style:dashed;background:rgba(255,255,255,.04);min-height:118px;align-content:center}
+.kr-lpq{font:900 1.8rem system-ui,sans-serif;color:var(--pc)}
+.kart .kr-live-w{font:700 .78rem system-ui,sans-serif;color:#ffd23f;text-align:center;margin:2px 0 6px}
+.kart .kr-rtf{background:linear-gradient(90deg,#b91c1c,#e8383d,#b91c1c);color:#fff!important;padding:8px;border-radius:8px;text-transform:uppercase;font-style:italic;letter-spacing:.04em}
+.kart .kr-go.kr-rdyon{background:linear-gradient(180deg,#ffd23f,#e0a800);box-shadow:0 5px 0 #8a6100,0 10px 22px rgba(0,0,0,.35);color:#2a1d00}
+@media (prefers-reduced-motion:reduce){.kr-lpc.new,.kr-lpr.pop{animation:none}}
 .kr-live-cd{font:900 1rem system-ui,sans-serif!important;color:#ffd23f;text-align:center;animation:krpulse .5s ease-in-out infinite alternate}@keyframes krpulse{to{transform:scale(1.06)}}
 .kr-live-b{color:#ffe9a8;border-top:1px solid rgba(255,255,255,.12);padding-top:6px!important;margin-top:4px!important}
 .kr-ping{font-size:.58rem!important;opacity:.85}.kr-taunts{margin:2px 0 8px}.kr-taunts p{background:rgba(255,80,80,.16);border-left:3px solid #ff6b6b;border-radius:8px;padding:5px 8px!important;margin:0 0 4px!important;color:#ffe0e0;animation:krpop .25s ease-out}@keyframes krpop{from{transform:scale(.92);opacity:0}}

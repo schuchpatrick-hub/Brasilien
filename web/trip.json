@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251009q", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎮", "t": "Gringo Kart Live: Spieler-Karten P1–P6 wie bei Smash Bros, das Rennen startet erst, wenn alle bereit sind; pro Kisten-Reihe gibt es nur noch ein Item"},
     {"id": "n251009p", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "⏱️", "t": "Gringo Kart: Bestenliste zurückgesetzt – alle Strecken sind wieder frei, jetzt zählt jede Zeit"},
     {"id": "n251009o", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🛠️", "t": "Gringo Kart: gewähltes Fahrzeug wird jetzt immer gefahren (auch aus der Werkstatt und auf Ilha Grande), Spiel braucht nur noch halb so viel Speicher für Stimmen – weniger Abstürze"},
     {"id": "n251009n", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🔄", "t": "Gringo Kart: Fahrzeuge neu verteilt – alle starten mit 4, der Rest wird ab jetzt gekauft oder über Erfolge freigespielt"},
