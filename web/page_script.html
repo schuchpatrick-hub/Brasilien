@@ -6985,6 +6985,8 @@ function loadMod(n) {
   // im Leerlauf vorladen (nach dem Start der Seite), damit alles bereit ist, ohne den Aufbau der Reise-Infos zu bremsen
   const idle = window.requestIdleCallback ? f => window.requestIdleCallback(f, {timeout: 4000}) : f => setTimeout(f, 300);
   // Kart zuerst (Bestenliste, Live-Hinweis „… wartet im Live-Raum“), danach die Filme
+  // Spiel war offen, als die Handy-App die Seite neu geladen hat: Kart sofort laden, das Modul öffnet sich dann selbst wieder (br26.kartResume)
+  try { const r = JSON.parse(store.get('kartResume') || 'null'); if (r && Date.now() - r.ts < 30 * 60000) loadMod('kart'); } catch (e) {}
   const pre = () => { setTimeout(() => idle(() => loadMod('kart')), 2500); setTimeout(() => idle(() => loadMod('samba').then(() => loadMod('serie'))), 7000); };
   if (document.readyState === 'complete') pre(); else window.addEventListener('load', pre);
   // Antippen, bevor der Teil geladen ist: erst laden, dann denselben Klick wiederholen
@@ -8396,7 +8398,7 @@ setGroup(G);
     {id: 'cup', e: '🏆', n: 'Pokalsieger', x: 'einen Grand Prix gewinnen'}, {id: 'rival5', e: '⚔️', n: 'Erzfeind', x: '5 Rivalen-Duelle gewonnen'}, {id: 'tuned', e: '🛠', n: 'Voll getunt', x: 'ein Teil auf Stufe 5'}, {id: 'smash', e: '💥', n: 'Abrissbirne', x: '25 Dinge am Streckenrand zerlegt'}];
   const achs = () => loadJ('kartAch'), hasAch = id => !!achs()[id];
   let toastT = 0;
-  function toast(html) { const el = box.querySelector('.kr-toast'); el.innerHTML = html; el.hidden = false; el.classList.remove('on'); void el.offsetWidth; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => { el.hidden = true; }, 3200); }
+  function toast(html, ms) { const el = box.querySelector('.kr-toast'); el.innerHTML = html; el.hidden = false; el.classList.remove('on'); void el.offsetWidth; el.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => { el.hidden = true; }, ms || 3200); }
   function ach(id) { const a0 = achs(); if (a0[id]) return; const A = ACH.find(x => x.id === id); if (!A) return; a0[id] = Date.now(); store.set('kartAch', JSON.stringify(a0)); addCoins(10);
     const cos = COS.find(c => c.ach === id); toast('🏅 <b>' + A.e + ' ' + esc(A.n) + '</b><br>+10 🪙' + (cos ? ' · Kostüm frei: ' + cos.e + ' ' + esc(cos.n) : '')); say('ach', 'Erfolg freigeschaltet!'); SFX.pick(); }
   const cosOf = id => (loadJ('kartCos')[id] || ''), cosOwn = () => { const o = loadJ('kartCosOwn'), dk = dayKey(); return c => !c.id || (c.from ? dk >= c.from : c.ach ? hasAch(c.ach) : !!o[c.id]); };
@@ -9528,10 +9530,10 @@ setGroup(G);
     // kein echtes Vollbild mehr: Chrome blendet dabei jedes Mal „… claudeusercontent.com – zum Beenden des Vollbildmodus …“ ein (Wunsch Patrick 08.10.); das Overlay füllt den Bildschirm auch so
     CUP = null; S = null; RULE = MODE === 'daily' ? daily().rule : null; lbInit(); progSync(true); { const s0 = {}; TRACKS.forEach(tr => { const top = lbList(LB, tr.id)[0]; if (top) s0[tr.id] = top.who; }); if (Object.keys(s0).length) store.set('kartRecSeen', JSON.stringify(s0)); } preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); setTimeout(renderMenu, 900); menu.hidden = false; res.hidden = true; pm.hidden = true; racing(false);
     cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
-    audio(); mmStart();
+    audio(); mmStart(); resKeep();
   }
   function close() {
-    mmStop();
+    mmStop(); resClear();
     if (LIVE.diff0 != null) { DIFF = LIVE.diff0; LIVE.diff0 = null; } liveLeave(); cancelAnimationFrame(raf); S = null; MUS.on = false; box.hidden = true; if (LIVE.room) livePres(); teaser(); board(); document.body.style.overflow = ''; document.documentElement.classList.remove('kart-on');
     engOff(); try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {}
   }
@@ -9642,7 +9644,22 @@ setGroup(G);
   addEventListener('keydown', e => { if (box.hidden) return; if (e.key === 'Escape' || e.key === 'p') { if (!pm.hidden) resume(); else if (box.classList.contains('racing')) pause(); else close(); return; } INPUT.keys[e.key] = true; if (e.key === ' ') { e.preventDefault(); if (S) useItem(S.karts[0]); } if (e.key.startsWith('Arrow')) e.preventDefault(); });
   addEventListener('keyup', e => { INPUT.keys[e.key] = false; });
   addEventListener('resize', () => { if (!box.hidden) resize(); });
-  document.addEventListener('visibilitychange', () => { if (document.hidden && !box.hidden) pause(); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden && !box.hidden) { pause(); resKeep(); } });
+  // Wieder ins Spiel (Wunsch Patrick 09.10.): die claude.ai-App lädt die Seite nach einem App-Wechsel oft neu, dann war das Spiel zu.
+  // Solange es offen ist, merkt sich das Handy das (br26.kartResume); beim nächsten Laden innerhalb von 30 min geht es von selbst wieder auf
+  // (die Seite lädt dafür mods/kart.js sofort). Ein laufendes Einzelrennen lässt sich nicht retten, ein Live-Rennen schon (Wiedereinstieg).
+  function resKeep() { if (box.hidden) return; try { store.set('kartResume', JSON.stringify({ts: Date.now(), race: !!(S && box.classList.contains('racing') && res.hidden && !TUTON), live: !!(S && S.live), trk: S && T ? T.id : null, my: Math.round(menu.scrollTop || 0)})); } catch (e) {} }
+  function resClear() { try { localStorage.removeItem('br26.kartResume'); } catch (e) {} }
+  addEventListener('pagehide', resKeep); setInterval(resKeep, 15000);
+  box.addEventListener('pointerdown', () => { if (AC && AC.state === 'suspended' && !(S && S.paused)) audio(); }, {passive: true});   // ohne Antippen darf kein Ton starten: erster Tipper weckt ihn
+  { let r = null; try { r = JSON.parse(store.get('kartResume') || 'null'); } catch (e) {}
+    if (r && Date.now() - r.ts < 30 * 60000 && !PRINT && box.hidden) {
+      try { jump('kartsec'); } catch (e) {} open();
+      if (r.my && !r.race) setTimeout(() => { if (!menu.hidden) menu.scrollTop = r.my; }, 1000);
+      if (r.race && !r.live) setTimeout(() => toast('😬 Die Seite wurde neu geladen, das Rennen' + (r.trk && TBY[r.trk] ? ' auf ' + esc(TBY[r.trk].name) : '') + ' ist leider weg. Einfach neu starten!', 6500), 700);
+      if (r.live && r.race) { const t0 = Date.now(); toast('🔄 Suche dein Live-Rennen …', 6000);
+        const iv = setInterval(() => { const sv = liveRun(); if (!sv || box.hidden || menu.hidden || Date.now() - t0 > 20000) { clearInterval(iv); return; }
+          if (LIVE.room && LIVE.peers.some(p0 => p0.presence && p0.presence.race === sv.race.id)) { clearInterval(iv); if (MODE !== 'live') { MODE = 'live'; renderMenu(); } liveRejoin(); } }, 1000); } } }
   try { teaser(); } catch (e) {}
   setTimeout(() => { try { lbInit(); } catch (e) {} }, 1500);
   // Lobby-Hinweis auf der Seite: wer gerade im Live-Raum wartet (Raum wird nach dem Laden still betreten)

@@ -9987,197 +9987,6 @@
         "Staffelfinale:",
         "Paraty & Ilha Grande"
       ]
-    },
-    "kart": {
-      "lines": [
-        {
-          "key": "v_felix_over",
-          "who": "x_felix",
-          "say": "For, aus dem Weg, sonst wirst du eingelocht!",
-          "text": "Fore! Aus dem Weg, sonst wirst du eingelocht!",
-          "at": 0
-        },
-        {
-          "key": "v_felix_hit",
-          "who": "x_felix",
-          "say": "Das war Foul, darüber diskutieren wir auf deiner Beerdigung!",
-          "text": "Das war Foul! Darüber diskutieren wir auf deiner Beerdigung!",
-          "at": 0
-        },
-        {
-          "key": "v_felix_sp",
-          "who": "x_felix",
-          "say": "Hol in wan, direkt ins Grab!",
-          "text": "Hole-in-One! Direkt ins Grab!",
-          "at": 0
-        },
-        {
-          "key": "v_felix_win",
-          "who": "x_felix",
-          "say": "Gewonnen, und ich beschwer mich trotzdem!",
-          "text": "Gewonnen! Und ich beschwer mich trotzdem!",
-          "at": 0
-        },
-        {
-          "key": "v_felix_drift",
-          "who": "x_felix",
-          "say": "Das Grün ist viel zu schnell, ich beschwer mich!",
-          "text": "Das Grün ist viel zu schnell! Ich beschwer mich!",
-          "at": 0
-        },
-        {
-          "key": "v_felix_item",
-          "who": "x_felix",
-          "say": "Unerhört, ich leg Protest ein, bei deiner Witwe!",
-          "text": "Unerhört! Ich leg Protest ein, bei deiner Witwe!",
-          "at": 0
-        },
-        {
-          "key": "v_felix_pass",
-          "who": "x_felix",
-          "say": "Seid Step Broli, du bist Geschichte!",
-          "text": "Side-Step-Broly! Du bist Geschichte!",
-          "at": 0
-        },
-        {
-          "key": "v_felix_over_2",
-          "who": "x_felix",
-          "say": "Röddels auf der Überholspur, Beschwerden bitte schriftlich!",
-          "text": "Röddels auf der Überholspur! Beschwerden bitte schriftlich!",
-          "at": 0
-        },
-        {
-          "key": "v_felix_hit_2",
-          "who": "x_felix",
-          "say": "Wer war das, das gibt eine Diskussion bis zum Tod!",
-          "text": "Wer war das?! Das gibt eine Diskussion bis zum Tod!",
-          "at": 0
-        },
-        {
-          "key": "v_felix_sp_2",
-          "who": "x_felix",
-          "say": "Abschlag, der Ball sucht schon deinen Grabstein!",
-          "text": "Abschlag! Der Ball sucht schon deinen Grabstein!",
-          "at": 0
-        },
-        {
-          "key": "v_felix_win_2",
-          "who": "x_felix",
-          "say": "Raketenforscher Röddels gewinnt, war trotzdem unfair!",
-          "text": "Raketenforscher Röddels gewinnt! War trotzdem unfair!",
-          "at": 0
-        },
-        {
-          "key": "v_felix_drift_2",
-          "who": "x_felix",
-          "say": "Seid Step, seitwärts in den Tod!",
-          "text": "Side-Step! Seitwärts in den Tod!",
-          "at": 0
-        },
-        {
-          "key": "v_felix_item_2",
-          "who": "x_felix",
-          "say": "Das zählt nicht, ich will den Videobeweis!",
-          "text": "Das zählt nicht! Ich will den Videobeweis!",
-          "at": 0
-        },
-        {
-          "key": "v_felix_pass_2",
-          "who": "x_felix",
-          "say": "Peitsche, und tschüss, ab in den Bunker!",
-          "text": "Peitsche! Und tschüss, ab in den Bunker!",
-          "at": 0
-        },
-        {
-          "key": "g_felix",
-          "who": "x_annc",
-          "say": "Achtung, der Raketenforscher Röddels ist am Start, er diskutiert schon mit der Rennleitung über eure Beerdigung!",
-          "text": "",
-          "at": 0
-        }
-      ],
-      "voice": {
-        "v_felix_over": {
-          "dur": 2737,
-          "env": "459876520007967289964998640310006788976741269765297787878877544232000"
-        },
-        "v_felix_hit": {
-          "dur": 3542,
-          "env": "76765876558877677400067764997999377844824898899589987520008842078788737969984883886751000"
-        },
-        "v_felix_sp": {
-          "dur": 1947,
-          "env": "7999999579897520008987871102887743787652010003000"
-        },
-        "v_felix_win": {
-          "dur": 2101,
-          "env": "79679978762000894773498758999964358725735985530001000"
-        },
-        "v_felix_drift": {
-          "dur": 2190,
-          "env": "9865499999897764599379663999875100184167749996775665000"
-        },
-        "v_felix_item": {
-          "dur": 3332,
-          "env": "999999978999963041000997686989933023982698873206667996437778538668998449634198651000"
-        },
-        "v_felix_pass": {
-          "dur": 2569,
-          "env": "69988940688209950310097999889997520007967989511689989766058531000"
-        },
-        "v_felix_over_2": {
-          "dur": 3187,
-          "env": "58995996879527998989778988661049997640001888823989963996892397875882322775564000"
-        },
-        "v_felix_hit_2": {
-          "dur": 3402,
-          "env": "35999974698764987677510009767439812588887486725867899788761000399774689972687550451000"
-        },
-        "v_felix_sp_2": {
-          "dur": 2649,
-          "env": "9935989998320007974499999869996443879995989999747889717936876542000"
-        },
-        "v_felix_win_2": {
-          "dur": 3526,
-          "env": "78840599606964478767786557649966719836999744000287742658735742996652000998754567766541000"
-        },
-        "v_felix_drift_2": {
-          "dur": 2010,
-          "env": "699974981998111000689861399763979989991699995041000"
-        },
-        "v_felix_item_2": {
-          "dur": 2670,
-          "env": "8856656869986058864713000197775699859987468659997628735766767752000"
-        },
-        "v_felix_pass_2": {
-          "dur": 2318,
-          "env": "6999818898640006994889987874000596100599998983999857866100"
-        },
-        "g_felix": {
-          "dur": 5556,
-          "env": "6896530799997100099677335994189446766766457459867483777764878981000873986376036897266565496387568789987753465857757877476789387164430004300"
-        }
-      },
-      "xtts": {
-        "x_felix": [
-          "Ilkin Urbano",
-          "de"
-        ],
-        "x_annc": [
-          "Abrahan Mack",
-          "de"
-        ]
-      },
-      "comedy": {
-        "x_felix": {
-          "tempo": 1.12,
-          "pitch": 1.08
-        },
-        "x_annc": {
-          "tempo": 1.1,
-          "pitch": 1.0
-        }
-      }
     }
   },
   "sfx": {
@@ -10443,54 +10252,14 @@
     ]
   },
   "news": [
-    {
-      "id": "n251009f",
-      "d": "2026-10-09",
-      "tab": "kart-tab",
-      "to": "kartsec",
-      "e": "🤬",
-      "t": "Gringo Kart: Taco legt nach – derbe Mutter-Sprüche auf Mexikanisch und Türkisch"
-    },
-    {
-      "id": "n251009e",
-      "d": "2026-10-09",
-      "tab": "kart-tab",
-      "to": "kartsec",
-      "e": "🌶️",
-      "t": "Gringo Kart: Taco flucht jetzt auf Mexikanisch und Türkisch – 14 neue Sprüche von „¡Pinche cabrón!“ bis „Siktir git!“"
-    },
-    {
-      "id": "n251009d",
-      "d": "2026-10-09",
-      "tab": "kart-tab",
-      "to": "kartsec",
-      "e": "🌮",
-      "t": "Gringo Kart: neuer Gastfahrer Ilkay alias Taco im Taco-Döner-Truck, Spezial-Item „Scharf mit alles“ mit eigener Stimme; Takedown jetzt richtig englisch"
-    },
-    {
-      "id": "n251009c",
-      "d": "2026-10-09",
-      "tab": "kart-tab",
-      "to": "kartsec",
-      "e": "🎮",
-      "t": "Gringo Kart: neues Menü in vier Schritten – Fahrer nach Gruppen, Fahrzeuge mit deinem Fahrer drin und Freischalt-Fortschritt, Streckenkarten mit Crew-Rekord, Startleiste mit deiner Auswahl"
-    },
-    {
-      "id": "n251009b",
-      "d": "2026-10-09",
-      "tab": "kart-tab",
-      "to": "kartsec",
-      "e": "✈️",
-      "t": "Gringo Kart: aufgeräumte Rennanzeige, Flieger am Flughafen, Zuckerhut und Schiffe an der Brücke, Strandleben an der Lopes Mendes, Gegner sammeln jetzt auch Münzen und Normal ist etwas kniffliger"
-    },
-    {
-      "id": "n251009a",
-      "d": "2026-10-09",
-      "tab": "kart-tab",
-      "to": "kartsec",
-      "e": "⚰️",
-      "t": "Gringo Kart: alle Sprüche neu, derb und schwarz, gesprochene Takedowns, glänzende Fahrzeuge, Treffer-Gesichter und neue Strecken-Texturen"
-    },
+    {"id": "n251009h", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🔁", "t": "Gringo Kart: Nach einem App-Wechsel geht das Spiel jetzt von selbst wieder auf, Live-Rennen laufen automatisch weiter"},
+    {"id": "n251009g", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "⛳", "t": "Gringo Kart: neuer Gastfahrer Felix alias Röddels im Golfcart – meckert über alles und schlägt mit „Hole-in-One“ den Führenden ab"},
+    {"id": "n251009f", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🤬", "t": "Gringo Kart: Taco legt nach – derbe Mutter-Sprüche auf Mexikanisch und Türkisch"},
+    {"id": "n251009e", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🌶️", "t": "Gringo Kart: Taco flucht jetzt auf Mexikanisch und Türkisch – 14 neue Sprüche von „¡Pinche cabrón!“ bis „Siktir git!“"},
+    {"id": "n251009d", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🌮", "t": "Gringo Kart: neuer Gastfahrer Ilkay alias Taco im Taco-Döner-Truck, Spezial-Item „Scharf mit alles“ mit eigener Stimme; Takedown jetzt richtig englisch"},
+    {"id": "n251009c", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎮", "t": "Gringo Kart: neues Menü in vier Schritten – Fahrer nach Gruppen, Fahrzeuge mit deinem Fahrer drin und Freischalt-Fortschritt, Streckenkarten mit Crew-Rekord, Startleiste mit deiner Auswahl"},
+    {"id": "n251009b", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "✈️", "t": "Gringo Kart: aufgeräumte Rennanzeige, Flieger am Flughafen, Zuckerhut und Schiffe an der Brücke, Strandleben an der Lopes Mendes, Gegner sammeln jetzt auch Münzen und Normal ist etwas kniffliger"},
+    {"id": "n251009a", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "⚰️", "t": "Gringo Kart: alle Sprüche neu, derb und schwarz, gesprochene Takedowns, glänzende Fahrzeuge, Treffer-Gesichter und neue Strecken-Texturen"},
     {
       "id": "n251008zb",
       "d": "2026-10-08",
@@ -11095,6 +10864,86 @@
     }
   ],
   "kartvo": {
+    "v_felix_over": {
+      "o": 67316,
+      "dur": 2737,
+      "f": 9
+    },
+    "v_felix_hit": {
+      "o": 70353,
+      "dur": 3542,
+      "f": 9
+    },
+    "v_felix_sp": {
+      "o": 74196,
+      "dur": 1947,
+      "f": 9
+    },
+    "v_felix_win": {
+      "o": 76442,
+      "dur": 2101,
+      "f": 9
+    },
+    "v_felix_drift": {
+      "o": 78843,
+      "dur": 2190,
+      "f": 9
+    },
+    "v_felix_item": {
+      "o": 81333,
+      "dur": 3332,
+      "f": 9
+    },
+    "v_felix_pass": {
+      "o": 84965,
+      "dur": 2569,
+      "f": 9
+    },
+    "v_felix_over_2": {
+      "o": 87834,
+      "dur": 3188,
+      "f": 9
+    },
+    "v_felix_hit_2": {
+      "o": 91322,
+      "dur": 3402,
+      "f": 9
+    },
+    "v_felix_sp_2": {
+      "o": 95024,
+      "dur": 2649,
+      "f": 9
+    },
+    "v_felix_win_2": {
+      "o": 97972,
+      "dur": 3526,
+      "f": 9
+    },
+    "v_felix_drift_2": {
+      "o": 101799,
+      "dur": 2010,
+      "f": 9
+    },
+    "v_felix_item_2": {
+      "o": 104108,
+      "dur": 2670,
+      "f": 9
+    },
+    "v_felix_pass_2": {
+      "o": 107078,
+      "dur": 2318,
+      "f": 9
+    },
+    "g_felix": {
+      "o": 109695,
+      "dur": 5556,
+      "f": 9
+    },
+    "h_felix": {
+      "o": 74199,
+      "dur": 1222,
+      "f": 7
+    },
     "v_ilkay_over_4": {
       "o": 42909,
       "dur": 3123,
@@ -11106,22 +10955,22 @@
       "f": 9
     },
     "v_ilkay_sp_4": {
-      "o": 49510,
+      "o": 49509,
       "dur": 3273,
       "f": 9
     },
     "v_ilkay_win_4": {
-      "o": 53083,
+      "o": 53082,
       "dur": 3521,
       "f": 9
     },
     "v_ilkay_drift_4": {
-      "o": 56904,
+      "o": 56903,
       "dur": 2486,
       "f": 9
     },
     "v_ilkay_item_4": {
-      "o": 59690,
+      "o": 59689,
       "dur": 2735,
       "f": 9
     },
