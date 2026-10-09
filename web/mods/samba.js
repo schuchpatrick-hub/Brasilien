@@ -593,7 +593,7 @@
   const allKeys = () => [...new Set(D.lines.flatMap(l => [l.src || (l.nogen ? l.src0 : l.key)].concat((l.alts || []).map(v => v.key))).filter(Boolean))];
   async function bufOf(key) {
     if (ABUF[key]) return ABUF[key]; prefetch([key]); const raw = await RAW[key]; if (!raw || !ctx) return null;
-    try { ABUF[key] = await ctx.decodeAudioData(raw.slice(0)); } catch (e) { return null; } return ABUF[key];
+    try { ABUF[key] = await decodeAt(ctx, raw.slice(0), 24000); } catch (e) { return null; } return ABUF[key];
   }
   function playVoice(key, whenMs, my) {   // whenMs = Showzeit; Start über die Audio-Uhr, notfalls mit Versatz in die Aufnahme hinein
     bufOf(key).then(bf => { if (my !== run || !ctx) return;
