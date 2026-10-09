@@ -5614,9 +5614,6 @@
         "model": "vits-piper-de_DE-eva_k-x_low",
         "pitch": 1.0,
         "speed": 0.95
-      },
-      "x_hero": {
-        "fx": "aecho=0.8:0.85:90|180|270:0.4|0.25|0.12,alimiter=limit=0.95"
       }
     },
     "parked": {
@@ -9990,1349 +9987,6 @@
         "Staffelfinale:",
         "Paraty & Ilha Grande"
       ]
-    },
-    "kart": {
-      "n": 0,
-      "admin": true,
-      "lines": [
-        {
-          "key": "v_jonas_over",
-          "who": "jonas",
-          "say": "Tschüss! Deine Beerdigung zahlst du selbst!",
-          "text": "Tschüss! Deine Beerdigung zahlst du selbst!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_hit",
-          "who": "jonas",
-          "say": "Aua! Das kommt auf Splitwise, mit Schmerzensgeld!",
-          "text": "Aua! Das kommt auf Splitwise, mit Schmerzensgeld!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_sp",
-          "who": "jonas",
-          "say": "Rechnung kommt! Zahlbar bis zu deinem Tod!",
-          "text": "Rechnung kommt! Zahlbar bis zu deinem Tod!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_win",
-          "who": "jonas",
-          "say": "Pokal! Die Hinterbliebenen kriegen die Rechnung!",
-          "text": "Pokal! Die Hinterbliebenen kriegen die Rechnung!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_drift",
-          "who": "jonas",
-          "say": "Fischerhut festhalten, sonst bricht das Genick!",
-          "text": "Fischerhut festhalten, sonst bricht das Genick!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_item",
-          "who": "jonas",
-          "say": "Wer war das? Ich verklage deine Erben!",
-          "text": "Wer war das? Ich verklage deine Erben!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_pass",
-          "who": "jonas",
-          "say": "Sorry, du warst eh schon tot!",
-          "text": "Sorry, du warst eh schon tot!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_over",
-          "who": "simon",
-          "say": "Bis später! Oder auf deiner Beerdigung!",
-          "text": "Bis später! Oder auf deiner Beerdigung!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_hit",
-          "who": "simon",
-          "say": "Aua! Mein Sonnenbrand platzt auf!",
-          "text": "Aua! Mein Sonnenbrand platzt auf!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_sp",
-          "who": "simon",
-          "say": "Hautkrebs-Blitz! Augen zu!",
-          "text": "Hautkrebs-Blitz! Augen zu!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_win",
-          "who": "simon",
-          "say": "Sieg! Ich leuchte wie ein Atomkraftwerk!",
-          "text": "Sieg! Ich leuchte wie ein Atomkraftwerk!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_drift",
-          "who": "simon",
-          "say": "Fahrtwind auf verbrannter Haut, herrlich!",
-          "text": "Fahrtwind auf verbrannter Haut, herrlich!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_item",
-          "who": "simon",
-          "say": "Schon wieder ich? Ich hab doch schon Hautkrebs!",
-          "text": "Schon wieder ich? Ich hab doch schon Hautkrebs!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_pass",
-          "who": "simon",
-          "say": "Tschüss, ihr Leichen!",
-          "text": "Tschüss, ihr Leichen!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_over",
-          "who": "patrick",
-          "say": "Platz da, ich hab nicht mehr viel Zeit!",
-          "text": "Platz da, ich hab nicht mehr viel Zeit!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_hit",
-          "who": "patrick",
-          "say": "Mein Rücken! Ruft den Notarzt!",
-          "text": "Mein Rücken! Ruft den Notarzt!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_sp",
-          "who": "patrick",
-          "say": "Rollstuhl-Boost! Die Rente fährt mit!",
-          "text": "Rollstuhl-Boost! Die Rente fährt mit!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_win",
-          "who": "patrick",
-          "say": "Der alte Mann gewinnt! Kurz vor dem Tod!",
-          "text": "Der alte Mann gewinnt! Kurz vor dem Tod!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_drift",
-          "who": "patrick",
-          "say": "Achtung, meine künstliche Hüfte!",
-          "text": "Achtung, meine künstliche Hüfte!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_item",
-          "who": "patrick",
-          "say": "Ich bin zu alt für sowas! Mein Herz!",
-          "text": "Ich bin zu alt für sowas! Mein Herz!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_pass",
-          "who": "patrick",
-          "say": "Senioren zuerst, ihr habt eh mehr Zeit!",
-          "text": "Senioren zuerst, ihr habt eh mehr Zeit!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_over",
-          "who": "marco",
-          "say": "Fernschuss! Endlich treffe ich mal was!",
-          "text": "Fernschuss! Endlich treffe ich mal was!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_hit",
-          "who": "marco",
-          "say": "Foul! Rote Karte für dein ganzes Leben!",
-          "text": "Foul! Rote Karte für dein ganzes Leben!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_sp",
-          "who": "marco",
-          "say": "Fernschuss mitten ins Gesicht!",
-          "text": "Fernschuss mitten ins Gesicht!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_win",
-          "who": "marco",
-          "say": "Ich hab gewonnen? Wer hat hier bestochen?",
-          "text": "Ich hab gewonnen? Wer hat hier bestochen?",
-          "at": 0
-        },
-        {
-          "key": "v_marco_drift",
-          "who": "marco",
-          "say": "Meine Fernschuss-Kurve! Hoffentlich!",
-          "text": "Meine Fernschuss-Kurve! Hoffentlich!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_item",
-          "who": "marco",
-          "say": "Aua! Wie immer bin ich das Opfer!",
-          "text": "Aua! Wie immer bin ich das Opfer!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_pass",
-          "who": "marco",
-          "say": "Ciao! Grüß mir den Bestatter!",
-          "text": "Ciao! Grüß mir den Bestatter!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_over",
-          "who": "greisel",
-          "say": "Servus! Ich hab mehr Promille als du PS!",
-          "text": "Servus! Ich hab mehr Promille als du PS!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_hit",
-          "who": "greisel",
-          "say": "Mein Bier! Mein schönes Bier!",
-          "text": "Mein Bier! Mein schönes Bier!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_sp",
-          "who": "greisel",
-          "say": "Bierdusche! Ersaufen ist auch ein Tod!",
-          "text": "Bierdusche! Ersaufen ist auch ein Tod!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_win",
-          "who": "greisel",
-          "say": "Prost! Auf die Leber, die nicht mehr kann!",
-          "text": "Prost! Auf die Leber, die nicht mehr kann!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_drift",
-          "who": "greisel",
-          "say": "Hoppla! Das war die Leber!",
-          "text": "Hoppla! Das war die Leber!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_item",
-          "who": "greisel",
-          "say": "Tut nicht weh, ich spür eh nix mehr!",
-          "text": "Tut nicht weh, ich spür eh nix mehr!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_pass",
-          "who": "greisel",
-          "say": "Servus! Ich zahl die Grabblumen!",
-          "text": "Servus! Ich zahl die Grabblumen!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_over",
-          "who": "dajo",
-          "say": "Platz da, die Snacks werden kalt!",
-          "text": "Platz da, die Snacks werden kalt!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_hit",
-          "who": "dajo",
-          "say": "Hey! Das gibt Rache! Mit Gift im Essen!",
-          "text": "Hey! Das gibt Rache! Mit Gift im Essen!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_sp",
-          "who": "dajo",
-          "say": "Snacks für alle! Fragt nicht, was drin ist!",
-          "text": "Snacks für alle! Fragt nicht, was drin ist!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_win",
-          "who": "dajo",
-          "say": "Sieg! Der Leichenschmaus geht auf mich!",
-          "text": "Sieg! Der Leichenschmaus geht auf mich!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_drift",
-          "who": "dajo",
-          "say": "Huiii! Hoffentlich überlebe ich das!",
-          "text": "Huiii! Hoffentlich überlebe ich das!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_item",
-          "who": "dajo",
-          "say": "Hey, das war gemein! Ich merk mir das!",
-          "text": "Hey, das war gemein! Ich merk mir das!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_pass",
-          "who": "dajo",
-          "say": "Entschuldigung! Tschüss! Stirb langsam!",
-          "text": "Entschuldigung! Tschüss! Stirb langsam!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_love_over",
-          "who": "x_simon_love",
-          "say": "Ich fliege an euch vorbei! Liebe tötet!",
-          "text": "Ich fliege an euch vorbei! Liebe tötet!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_love_hit",
-          "who": "x_simon_love",
-          "say": "Aua! Das Herz blutet eh schon!",
-          "text": "Aua! Das Herz blutet eh schon!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_love_sp",
-          "who": "x_simon_love",
-          "say": "Ein Küsschen für alle! Mit Herpes!",
-          "text": "Ein Küsschen für alle! Mit Herpes!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_love_win",
-          "who": "x_simon_love",
-          "say": "Sieg! Für meine Gatinha und ihren Zuhälter!",
-          "text": "Sieg! Für meine Gatinha und ihren Zuhälter!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_love_drift",
-          "who": "x_simon_love",
-          "say": "Ich schwebe! Wie auf Drogen!",
-          "text": "Ich schwebe! Wie auf Drogen!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_love_item",
-          "who": "x_simon_love",
-          "say": "Mein Herz! Diesmal wirklich!",
-          "text": "Mein Herz! Diesmal wirklich!",
-          "at": 0
-        },
-        {
-          "key": "v_simon_love_pass",
-          "who": "x_simon_love",
-          "say": "Platz da! Meine Liebste wartet! Mit meinem Geld!",
-          "text": "Platz da! Meine Liebste wartet! Mit meinem Geld!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_fat_over",
-          "who": "x_patrick_fat",
-          "say": "Bauch voraus! Wer drunter liegt, hat Pech!",
-          "text": "Bauch voraus! Wer drunter liegt, hat Pech!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_fat_hit",
-          "who": "x_patrick_fat",
-          "say": "Uff! Ich glaub, das war ein Herzinfarkt!",
-          "text": "Uff! Ich glaub, das war ein Herzinfarkt!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_fat_sp",
-          "who": "x_patrick_fat",
-          "say": "Achtung! Die Picanha kommt zurück!",
-          "text": "Achtung! Die Picanha kommt zurück!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_fat_win",
-          "who": "x_patrick_fat",
-          "say": "Gewonnen! Erst Nachtisch, dann Krankenhaus!",
-          "text": "Gewonnen! Erst Nachtisch, dann Krankenhaus!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_fat_drift",
-          "who": "x_patrick_fat",
-          "say": "Langsam! Sonst platzt mir der Magen!",
-          "text": "Langsam! Sonst platzt mir der Magen!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_fat_item",
-          "who": "x_patrick_fat",
-          "say": "Ich hab doch nur zwölf Spieße gegessen!",
-          "text": "Ich hab doch nur zwölf Spieße gegessen!",
-          "at": 0
-        },
-        {
-          "key": "v_patrick_fat_pass",
-          "who": "x_patrick_fat",
-          "say": "Rollender Bauch! Wer im Weg steht, wird platt!",
-          "text": "Rollender Bauch! Wer im Weg steht, wird platt!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_dia_over",
-          "who": "x_marco_dia",
-          "say": "Weg da! Ich muss! Jetzt! Sofort!",
-          "text": "Weg da! Ich muss! Jetzt! Sofort!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_dia_hit",
-          "who": "x_marco_dia",
-          "say": "Nicht schütteln! Zu spät!",
-          "text": "Nicht schütteln! Zu spät!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_dia_sp",
-          "who": "x_marco_dia",
-          "say": "Sorry, Jungs! Das musste raus! Alles!",
-          "text": "Sorry, Jungs! Das musste raus! Alles!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_dia_win",
-          "who": "x_marco_dia",
-          "say": "Erster! Und keiner will mir die Hand geben!",
-          "text": "Erster! Und keiner will mir die Hand geben!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_dia_drift",
-          "who": "x_marco_dia",
-          "say": "Kneifen, Marco! Kneifen!",
-          "text": "Kneifen, Marco! Kneifen!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_dia_item",
-          "who": "x_marco_dia",
-          "say": "Oh nein! Jetzt ist es passiert!",
-          "text": "Oh nein! Jetzt ist es passiert!",
-          "at": 0
-        },
-        {
-          "key": "v_marco_dia_pass",
-          "who": "x_marco_dia",
-          "say": "Notfall! Haltet die Luft an!",
-          "text": "Notfall! Haltet die Luft an!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_kater_over",
-          "who": "x_jonas_kater",
-          "say": "Leise überholen! Mein Schädel platzt!",
-          "text": "Leise überholen! Mein Schädel platzt!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_kater_hit",
-          "who": "x_jonas_kater",
-          "say": "Mein Kopf! Erschießt mich bitte!",
-          "text": "Mein Kopf! Erschießt mich bitte!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_kater_sp",
-          "who": "x_jonas_kater",
-          "say": "Ich kotze! Auf euch alle!",
-          "text": "Ich kotze! Auf euch alle!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_kater_win",
-          "who": "x_jonas_kater",
-          "say": "Gewonnen. Kann mich jetzt bitte jemand erlösen?",
-          "text": "Gewonnen. Kann mich jetzt bitte jemand erlösen?",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_kater_drift",
-          "who": "x_jonas_kater",
-          "say": "Alles dreht sich! Ich sterbe!",
-          "text": "Alles dreht sich! Ich sterbe!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_kater_item",
-          "who": "x_jonas_kater",
-          "say": "Zu laut! Lasst mich einfach sterben!",
-          "text": "Zu laut! Lasst mich einfach sterben!",
-          "at": 0
-        },
-        {
-          "key": "v_jonas_kater_pass",
-          "who": "x_jonas_kater",
-          "say": "Nie wieder Cachaça! Bis heute Abend!",
-          "text": "Nie wieder Cachaça! Bis heute Abend!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_wb_over",
-          "who": "x_greisel_wb",
-          "say": "Servus! Mein Pegel ist schneller als du!",
-          "text": "Servus! Mein Pegel ist schneller als du!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_wb_hit",
-          "who": "x_greisel_wb",
-          "say": "Nicht verschütten! Sonst gibt es Tote!",
-          "text": "Nicht verschütten! Sonst gibt es Tote!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_wb_sp",
-          "who": "x_greisel_wb",
-          "say": "Weißbier-Dusche! Die Taufe für Tote!",
-          "text": "Weißbier-Dusche! Die Taufe für Tote!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_wb_win",
-          "who": "x_greisel_wb",
-          "say": "Prost! Die Leber hat aufgegeben, ich nicht!",
-          "text": "Prost! Die Leber hat aufgegeben, ich nicht!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_wb_drift",
-          "who": "x_greisel_wb",
-          "say": "Hoppla! Schaum und Mageninhalt!",
-          "text": "Hoppla! Schaum und Mageninhalt!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_wb_item",
-          "who": "x_greisel_wb",
-          "say": "Mein Bier! Dafür zahlst du mit dem Leben!",
-          "text": "Mein Bier! Dafür zahlst du mit dem Leben!",
-          "at": 0
-        },
-        {
-          "key": "v_greisel_wb_pass",
-          "who": "x_greisel_wb",
-          "say": "Eins geht noch! Für dich nicht mehr!",
-          "text": "Eins geht noch! Für dich nicht mehr!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_party_over",
-          "who": "x_dajo_party",
-          "say": "Party! Wer stirbt, verpasst was!",
-          "text": "Party! Wer stirbt, verpasst was!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_party_hit",
-          "who": "x_dajo_party",
-          "say": "Hey! Wer hat die Musik ausgemacht? Und den Puls?",
-          "text": "Hey! Wer hat die Musik ausgemacht? Und den Puls?",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_party_sp",
-          "who": "x_dajo_party",
-          "say": "Lichtorgel an! Epileptiker raus!",
-          "text": "Lichtorgel an! Epileptiker raus!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_party_win",
-          "who": "x_dajo_party",
-          "say": "Sieg! Die Party geht bis zum Notarzt!",
-          "text": "Sieg! Die Party geht bis zum Notarzt!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_party_drift",
-          "who": "x_dajo_party",
-          "say": "Dreh dich, bis die Pupillen platzen!",
-          "text": "Dreh dich, bis die Pupillen platzen!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_party_item",
-          "who": "x_dajo_party",
-          "say": "Hey! Nicht auf die Tanzfläche bluten!",
-          "text": "Hey! Nicht auf die Tanzfläche bluten!",
-          "at": 0
-        },
-        {
-          "key": "v_dajo_party_pass",
-          "who": "x_dajo_party",
-          "say": "Noch eine Runde! Du nicht mehr!",
-          "text": "Noch eine Runde! Du nicht mehr!",
-          "at": 0
-        },
-        {
-          "key": "v_taxi_over",
-          "who": "x_taxi",
-          "say": "Atalho, amigo! Abkürzung über den Friedhof!",
-          "text": "Atalho, amigo! Abkürzung über den Friedhof!",
-          "at": 0
-        },
-        {
-          "key": "v_taxi_hit",
-          "who": "x_taxi",
-          "say": "Ai! Mein Taxi! Du zahlst mit deinen Organen!",
-          "text": "Ai! Mein Taxi! Du zahlst mit deinen Organen!",
-          "at": 0
-        },
-        {
-          "key": "v_taxi_sp",
-          "who": "x_taxi",
-          "say": "Taxameter läuft! Auch nach deinem Tod!",
-          "text": "Taxameter läuft! Auch nach deinem Tod!",
-          "at": 0
-        },
-        {
-          "key": "v_taxi_win",
-          "who": "x_taxi",
-          "say": "Endstation! Für dich die letzte!",
-          "text": "Endstation! Für dich die letzte!",
-          "at": 0
-        },
-        {
-          "key": "v_taxi_drift",
-          "who": "x_taxi",
-          "say": "Rio-Fahrstil! Anschnallen ist für Feiglinge!",
-          "text": "Rio-Fahrstil! Anschnallen ist für Feiglinge!",
-          "at": 0
-        },
-        {
-          "key": "v_taxi_item",
-          "who": "x_taxi",
-          "say": "Wer zahlt den Schaden? Deine Niere!",
-          "text": "Wer zahlt den Schaden? Deine Niere!",
-          "at": 0
-        },
-        {
-          "key": "v_taxi_pass",
-          "who": "x_taxi",
-          "say": "Ich kenne den Weg! Zum Leichenschauhaus!",
-          "text": "Ich kenne den Weg! Zum Leichenschauhaus!",
-          "at": 0
-        },
-        {
-          "key": "v_coati_over",
-          "who": "x_coati",
-          "say": "Hihi! Ich hab Tollwut!",
-          "text": "Hihi! Ich hab Tollwut!",
-          "at": 0
-        },
-        {
-          "key": "v_coati_hit",
-          "who": "x_coati",
-          "say": "Aua! Ich beiß dich tot!",
-          "text": "Aua! Ich beiß dich tot!",
-          "at": 0
-        },
-        {
-          "key": "v_coati_sp",
-          "who": "x_coati",
-          "say": "Her damit! Und deine Finger auch!",
-          "text": "Her damit! Und deine Finger auch!",
-          "at": 0
-        },
-        {
-          "key": "v_coati_win",
-          "who": "x_coati",
-          "say": "Hihi! Alles meins! Auch deine Seele!",
-          "text": "Hihi! Alles meins! Auch deine Seele!",
-          "at": 0
-        },
-        {
-          "key": "v_coati_drift",
-          "who": "x_coati",
-          "say": "Wuiii! Tollwut macht schnell!",
-          "text": "Wuiii! Tollwut macht schnell!",
-          "at": 0
-        },
-        {
-          "key": "v_coati_item",
-          "who": "x_coati",
-          "say": "Gemein! Ich hol meine ganze Familie!",
-          "text": "Gemein! Ich hol meine ganze Familie!",
-          "at": 0
-        },
-        {
-          "key": "v_coati_pass",
-          "who": "x_coati",
-          "say": "Tschüss! Ich klau später deinen Grabstein!",
-          "text": "Tschüss! Ich klau später deinen Grabstein!",
-          "at": 0
-        },
-        {
-          "key": "v_officer_over",
-          "who": "x_officer",
-          "say": "Zur Seite treten! Oder ich schieße!",
-          "text": "Zur Seite treten! Oder ich schieße!",
-          "at": 0
-        },
-        {
-          "key": "v_officer_hit",
-          "who": "x_officer",
-          "say": "Das ist eine Straftat! Lebenslang!",
-          "text": "Das ist eine Straftat! Lebenslang!",
-          "at": 0
-        },
-        {
-          "key": "v_officer_sp",
-          "who": "x_officer",
-          "say": "Kontrolle! Leibesvisitation für alle!",
-          "text": "Kontrolle! Leibesvisitation für alle!",
-          "at": 0
-        },
-        {
-          "key": "v_officer_win",
-          "who": "x_officer",
-          "say": "Sieg. Die Verlierer kommen in Gewahrsam.",
-          "text": "Sieg. Die Verlierer kommen in Gewahrsam.",
-          "at": 0
-        },
-        {
-          "key": "v_officer_drift",
-          "who": "x_officer",
-          "say": "Verdächtiges Fahrverhalten! Schusswaffe frei!",
-          "text": "Verdächtiges Fahrverhalten! Schusswaffe frei!",
-          "at": 0
-        },
-        {
-          "key": "v_officer_item",
-          "who": "x_officer",
-          "say": "Wer hat das eingeschmuggelt? Ich finde dich!",
-          "text": "Wer hat das eingeschmuggelt? Ich finde dich!",
-          "at": 0
-        },
-        {
-          "key": "v_officer_pass",
-          "who": "x_officer",
-          "say": "Ausweis bitte! Ach, egal, du bist eh gleich tot!",
-          "text": "Ausweis bitte! Ach, egal, du bist eh gleich tot!",
-          "at": 0
-        },
-        {
-          "key": "v_dona_over",
-          "who": "x_dona",
-          "say": "Com licença, defunto!",
-          "text": "Com licença, defunto!",
-          "at": 0
-        },
-        {
-          "key": "v_dona_hit",
-          "who": "x_dona",
-          "say": "Ai, ai! Vou te matar, menino!",
-          "text": "Ai, ai! Vou te matar, menino!",
-          "at": 0
-        },
-        {
-          "key": "v_dona_sp",
-          "who": "x_dona",
-          "say": "Que gatinho! Vem morrer comigo!",
-          "text": "Que gatinho! Vem morrer comigo!",
-          "at": 0
-        },
-        {
-          "key": "v_dona_win",
-          "who": "x_dona",
-          "say": "A vovó ganhou! Já enterrei três maridos!",
-          "text": "A vovó ganhou! Já enterrei três maridos!",
-          "at": 0
-        },
-        {
-          "key": "v_dona_drift",
-          "who": "x_dona",
-          "say": "Uiii, que delícia de morte!",
-          "text": "Uiii, que delícia de morte!",
-          "at": 0
-        },
-        {
-          "key": "v_dona_item",
-          "who": "x_dona",
-          "say": "Ai, menino! Vai pro inferno!",
-          "text": "Ai, menino! Vai pro inferno!",
-          "at": 0
-        },
-        {
-          "key": "v_dona_pass",
-          "who": "x_dona",
-          "say": "Tchau, tchau! Te vejo no caixão!",
-          "text": "Tchau, tchau! Te vejo no caixão!",
-          "at": 0
-        },
-        {
-          "key": "v_guide_over",
-          "who": "x_guide",
-          "say": "Olja! Ich kenne den Weg! Der letzte Tourist nicht!",
-          "text": "Olja! Ich kenne den Weg! Der letzte Tourist nicht!",
-          "at": 0
-        },
-        {
-          "key": "v_guide_hit",
-          "who": "x_guide",
-          "say": "Nau! Der Kaiman riecht dein Blut!",
-          "text": "Nau! Der Kaiman riecht dein Blut!",
-          "at": 0
-        },
-        {
-          "key": "v_guide_sp",
-          "who": "x_guide",
-          "say": "Kaiman, fass! Er hat Hunger!",
-          "text": "Kaiman, fass! Er hat Hunger!",
-          "at": 0
-        },
-        {
-          "key": "v_guide_win",
-          "who": "x_guide",
-          "say": "Der Dschungel gehört mir! Und deine Leiche auch!",
-          "text": "Der Dschungel gehört mir! Und deine Leiche auch!",
-          "at": 0
-        },
-        {
-          "key": "v_guide_drift",
-          "who": "x_guide",
-          "say": "Treiben lassen! Wie die Leichen im Fluss!",
-          "text": "Treiben lassen! Wie die Leichen im Fluss!",
-          "at": 0
-        },
-        {
-          "key": "v_guide_item",
-          "who": "x_guide",
-          "say": "Sokorro! Gleich kommen die Piranhas!",
-          "text": "Sokorro! Gleich kommen die Piranhas!",
-          "at": 0
-        },
-        {
-          "key": "v_guide_pass",
-          "who": "x_guide",
-          "say": "Folgt mir nicht! Die Piranhas warten!",
-          "text": "Folgt mir nicht! Die Piranhas warten!",
-          "at": 0
-        },
-        {
-          "key": "v_steward_over",
-          "who": "x_steward",
-          "say": "Bitte bleiben Sie angeschnallt! Bis zum Aufprall!",
-          "text": "Bitte bleiben Sie angeschnallt! Bis zum Aufprall!",
-          "at": 0
-        },
-        {
-          "key": "v_steward_hit",
-          "who": "x_steward",
-          "say": "Turbulenzen! Beten Sie jetzt!",
-          "text": "Turbulenzen! Beten Sie jetzt!",
-          "at": 0
-        },
-        {
-          "key": "v_steward_sp",
-          "who": "x_steward",
-          "say": "Achtung! Der Servierwagen bricht Knochen!",
-          "text": "Achtung! Der Servierwagen bricht Knochen!",
-          "at": 0
-        },
-        {
-          "key": "v_steward_win",
-          "who": "x_steward",
-          "say": "Wir sind gelandet! Die meisten von uns!",
-          "text": "Wir sind gelandet! Die meisten von uns!",
-          "at": 0
-        },
-        {
-          "key": "v_steward_drift",
-          "who": "x_steward",
-          "say": "Notausgänge? Gibt es nicht!",
-          "text": "Notausgänge? Gibt es nicht!",
-          "at": 0
-        },
-        {
-          "key": "v_steward_item",
-          "who": "x_steward",
-          "say": "Gegen die Vorschriften! Sie sterben zuerst!",
-          "text": "Gegen die Vorschriften! Sie sterben zuerst!",
-          "at": 0
-        },
-        {
-          "key": "v_steward_pass",
-          "who": "x_steward",
-          "say": "Chicken or pasta? Oder Sarg?",
-          "text": "Chicken or pasta? Oder Sarg?",
-          "at": 0
-        },
-        {
-          "key": "v_caimanx_over",
-          "who": "x_caimanx",
-          "say": "Zu langsam. Du riechst lecker.",
-          "text": "Zu langsam. Du riechst lecker.",
-          "at": 0
-        },
-        {
-          "key": "v_caimanx_hit",
-          "who": "x_caimanx",
-          "say": "Das kitzelt nur. Dann fress ich dich.",
-          "text": "Das kitzelt nur. Dann fress ich dich.",
-          "at": 0
-        },
-        {
-          "key": "v_caimanx_sp",
-          "who": "x_caimanx",
-          "say": "Schnapp! Da war doch ein Bein!",
-          "text": "Schnapp! Da war doch ein Bein!",
-          "at": 0
-        },
-        {
-          "key": "v_caimanx_win",
-          "who": "x_caimanx",
-          "say": "Gewonnen! Jetzt gibt es Guide zum Nachtisch!",
-          "text": "Gewonnen! Jetzt gibt es Guide zum Nachtisch!",
-          "at": 0
-        },
-        {
-          "key": "v_caimanx_drift",
-          "who": "x_caimanx",
-          "say": "Rutschig hier! Vom Blut!",
-          "text": "Rutschig hier! Vom Blut!",
-          "at": 0
-        },
-        {
-          "key": "v_caimanx_item",
-          "who": "x_caimanx",
-          "say": "Wer stört? Ich fress deine Kinder!",
-          "text": "Wer stört? Ich fress deine Kinder!",
-          "at": 0
-        },
-        {
-          "key": "v_caimanx_pass",
-          "who": "x_caimanx",
-          "say": "Bis gleich, Abendessen!",
-          "text": "Bis gleich, Abendessen!",
-          "at": 0
-        },
-        {
-          "key": "v_manuel_over",
-          "who": "x_manuel",
-          "say": "Hier unten, ihr Riesen! Ich beiß euch in die Knöchel!",
-          "text": "Hier unten, ihr Riesen! Ich beiß euch in die Knöchel!",
-          "at": 0
-        },
-        {
-          "key": "v_manuel_hit",
-          "who": "x_manuel",
-          "say": "Hey! Nicht auf den Kleinen! Ich hab ein Messer!",
-          "text": "Hey! Nicht auf den Kleinen! Ich hab ein Messer!",
-          "at": 0
-        },
-        {
-          "key": "v_manuel_sp",
-          "who": "x_manuel",
-          "say": "Abgezwickt! Jetzt passe ich in jeden Sarg!",
-          "text": "Abgezwickt! Jetzt passe ich in jeden Sarg!",
-          "at": 0
-        },
-        {
-          "key": "v_manuel_win",
-          "who": "x_manuel",
-          "say": "Kleiner Mann, großer Sieg! Ihr seid tot!",
-          "text": "Kleiner Mann, großer Sieg! Ihr seid tot!",
-          "at": 0
-        },
-        {
-          "key": "v_manuel_drift",
-          "who": "x_manuel",
-          "say": "Halt! Mein Sitzkissen! Mein Leben!",
-          "text": "Halt! Mein Sitzkissen! Mein Leben!",
-          "at": 0
-        },
-        {
-          "key": "v_manuel_item",
-          "who": "x_manuel",
-          "say": "Wer hat Stumpen gesagt? Du bist der Nächste!",
-          "text": "Wer hat Stumpen gesagt? Du bist der Nächste!",
-          "at": 0
-        },
-        {
-          "key": "v_manuel_pass",
-          "who": "x_manuel",
-          "say": "Ich fahr unten durch! Wie ein Sarg in die Grube!",
-          "text": "Ich fahr unten durch! Wie ein Sarg in die Grube!",
-          "at": 0
-        },
-        {
-          "key": "v_erich_over",
-          "who": "x_erich",
-          "say": "Schleich dich! Sonst gibt es Tote!",
-          "text": "Schleich dich! Sonst gibt es Tote!",
-          "at": 0
-        },
-        {
-          "key": "v_erich_hit",
-          "who": "x_erich",
-          "say": "Kruzifix! Ich bring dich um!",
-          "text": "Kruzifix! Ich bring dich um!",
-          "at": 0
-        },
-        {
-          "key": "v_erich_sp",
-          "who": "x_erich",
-          "say": "Ruhe jetzt! Kabinenpredigt bis zum Tod!",
-          "text": "Ruhe jetzt! Kabinenpredigt bis zum Tod!",
-          "at": 0
-        },
-        {
-          "key": "v_erich_win",
-          "who": "x_erich",
-          "say": "Gewonnen! Freuen tu ich mich erst auf deiner Beerdigung!",
-          "text": "Gewonnen! Freuen tu ich mich erst auf deiner Beerdigung!",
-          "at": 0
-        },
-        {
-          "key": "v_erich_drift",
-          "who": "x_erich",
-          "say": "Früher sind wir bei so was gestorben!",
-          "text": "Früher sind wir bei so was gestorben!",
-          "at": 0
-        },
-        {
-          "key": "v_erich_item",
-          "who": "x_erich",
-          "say": "Ihr Weicheier! Ich überlebe euch alle!",
-          "text": "Ihr Weicheier! Ich überlebe euch alle!",
-          "at": 0
-        },
-        {
-          "key": "v_erich_pass",
-          "who": "x_erich",
-          "say": "Platz da! Ich hab keine Zeit und keine Geduld!",
-          "text": "Platz da! Ich hab keine Zeit und keine Geduld!",
-          "at": 0
-        },
-        {
-          "key": "v_rasmus_over",
-          "who": "x_rasmus",
-          "say": "Auf geht’s! Party, bis einer stirbt!",
-          "text": "Auf geht’s! Party, bis einer stirbt!",
-          "at": 0
-        },
-        {
-          "key": "v_rasmus_hit",
-          "who": "x_rasmus",
-          "say": "Locker bleiben! Tote feiern nicht!",
-          "text": "Locker bleiben! Tote feiern nicht!",
-          "at": 0
-        },
-        {
-          "key": "v_rasmus_sp",
-          "who": "x_rasmus",
-          "say": "Alle Mann! Polonaise zum Friedhof!",
-          "text": "Alle Mann! Polonaise zum Friedhof!",
-          "at": 0
-        },
-        {
-          "key": "v_rasmus_win",
-          "who": "x_rasmus",
-          "say": "Sieg! Mannschaftsabend, Anwesenheit Pflicht, auch tot!",
-          "text": "Sieg! Mannschaftsabend, Anwesenheit Pflicht, auch tot!",
-          "at": 0
-        },
-        {
-          "key": "v_rasmus_drift",
-          "who": "x_rasmus",
-          "say": "Peace, Bruder! Und Ruhe in Frieden!",
-          "text": "Peace, Bruder! Und Ruhe in Frieden!",
-          "at": 0
-        },
-        {
-          "key": "v_rasmus_item",
-          "who": "x_rasmus",
-          "say": "Hey! Das gibt Strafrunden bis zum Kollaps!",
-          "text": "Hey! Das gibt Strafrunden bis zum Kollaps!",
-          "at": 0
-        },
-        {
-          "key": "v_rasmus_pass",
-          "who": "x_rasmus",
-          "say": "Training um sieben! Beerdigung um acht!",
-          "text": "Training um sieben! Beerdigung um acht!",
-          "at": 0
-        },
-        {
-          "key": "g_manuel",
-          "who": "x_annc",
-          "say": "Achtung, der Abzwickter ist am Start! Bitte nicht überfahren!",
-          "text": "Achtung, der Abzwickter ist am Start! Bitte nicht überfahren!",
-          "at": 0
-        },
-        {
-          "key": "g_erich",
-          "who": "x_annc",
-          "say": "Achtung, Erich ist am Start. Und er hat, wie immer, Mordlaune!",
-          "text": "Achtung, Erich ist am Start. Und er hat, wie immer, Mordlaune!",
-          "at": 0
-        },
-        {
-          "key": "g_rasmus",
-          "who": "x_annc",
-          "say": "Achtung, Rasmus ist da! Er organisiert auch eure Trauerfeier!",
-          "text": "Achtung, Rasmus ist da! Er organisiert auch eure Trauerfeier!",
-          "at": 0
-        },
-        {
-          "key": "fall_0",
-          "who": "x_annc",
-          "say": "Ruhe in Frieden. Ach nein, der Retter kommt.",
-          "text": "Ruhe in Frieden. Ach nein, der Retter kommt.",
-          "at": 0
-        },
-        {
-          "key": "fall_1",
-          "who": "x_annc",
-          "say": "Kurz tot. Gleich weiter.",
-          "text": "Kurz tot. Gleich weiter.",
-          "at": 0
-        },
-        {
-          "key": "fall_2",
-          "who": "x_annc",
-          "say": "Die Versicherung zahlt das nicht.",
-          "text": "Die Versicherung zahlt das nicht.",
-          "at": 0
-        },
-        {
-          "key": "fall_3",
-          "who": "x_annc",
-          "say": "Der Bestatter war schon unterwegs.",
-          "text": "Der Bestatter war schon unterwegs.",
-          "at": 0
-        },
-        {
-          "key": "fall_4",
-          "who": "x_annc",
-          "say": "Die Crew betet. Halbherzig.",
-          "text": "Die Crew betet. Halbherzig.",
-          "at": 0
-        },
-        {
-          "key": "ann_last",
-          "who": "x_annc",
-          "say": "Letzter Platz. Die Crew hat schon Blumen bestellt.",
-          "text": "Letzter Platz. Die Crew hat schon Blumen bestellt.",
-          "at": 0
-        },
-        {
-          "key": "ann_lead",
-          "who": "x_annc",
-          "say": "Neuer Führender! Die anderen können ihr Testament schreiben.",
-          "text": "Neuer Führender! Die anderen können ihr Testament schreiben.",
-          "at": 0
-        },
-        {
-          "key": "td_1",
-          "who": "x_hero",
-          "say": "Takedown!",
-          "text": "Takedown!",
-          "at": 0
-        },
-        {
-          "key": "td_2",
-          "who": "x_hero",
-          "say": "Doppel-Takedown!",
-          "text": "Doppel-Takedown!",
-          "at": 0
-        },
-        {
-          "key": "td_3",
-          "who": "x_hero",
-          "say": "Dreifach-Massaker!",
-          "text": "Dreifach-Massaker!",
-          "at": 0
-        },
-        {
-          "key": "td_4",
-          "who": "x_hero",
-          "say": "Amoklauf!",
-          "text": "Amoklauf!",
-          "at": 0
-        }
-      ],
-      "voice": {},
-      "xtts": {
-        "x_simon_love": [
-          "Ludvig Milivoj",
-          "de"
-        ],
-        "x_patrick_fat": [
-          "Damien Black",
-          "de"
-        ],
-        "x_marco_dia": [
-          "Viktor Eka",
-          "de"
-        ],
-        "x_jonas_kater": [
-          "Torcull Diarmuid",
-          "de"
-        ],
-        "x_greisel_wb": [
-          "Dionisio Schuyler",
-          "de"
-        ],
-        "x_dajo_party": [
-          "Annmarie Nele",
-          "de"
-        ],
-        "x_taxi": [
-          "Gilberto Mathias",
-          "de"
-        ],
-        "x_coati": [
-          "Royston Min",
-          "de"
-        ],
-        "x_officer": [
-          "Baldur Sanjin",
-          "de"
-        ],
-        "x_dona": [
-          "Brenda Stern",
-          "pt"
-        ],
-        "x_guide": [
-          "Marcos Rudaski",
-          "de"
-        ],
-        "x_steward": [
-          "Gitta Nikolina",
-          "de"
-        ],
-        "x_caimanx": [
-          "Viktor Menelaos",
-          "de"
-        ],
-        "x_manuel": [
-          "Andrew Chipper",
-          "de"
-        ],
-        "x_erich": [
-          "Craig Gutsy",
-          "de"
-        ],
-        "x_rasmus": [
-          "Zacharie Aimilios",
-          "de"
-        ],
-        "x_annc": [
-          "Abrahan Mack",
-          "de"
-        ],
-        "x_hero": [
-          "Wulf Carlevaro",
-          "de"
-        ]
-      },
-      "comedy": {
-        "x_simon_love": {
-          "tempo": 1.12,
-          "pitch": 1.42,
-          "style": "nasal2"
-        },
-        "x_patrick_fat": {
-          "tempo": 1.15,
-          "pitch": 1.05,
-          "style": "opa"
-        },
-        "x_marco_dia": {
-          "tempo": 1.7,
-          "pitch": 1.6,
-          "style": "nasal"
-        },
-        "x_jonas_kater": {
-          "tempo": 1.1,
-          "pitch": 1.15,
-          "style": "sleepy"
-        },
-        "x_greisel_wb": {
-          "tempo": 1.12,
-          "pitch": 1.25
-        },
-        "x_dajo_party": {
-          "tempo": 1.42,
-          "pitch": 1.25,
-          "style": "nasal2"
-        },
-        "x_taxi": {
-          "tempo": 1.18,
-          "pitch": 1.1,
-          "style": "nasal2"
-        },
-        "x_coati": {
-          "tempo": 1.3,
-          "pitch": 1.9,
-          "style": "nasal"
-        },
-        "x_officer": {
-          "tempo": 1.15,
-          "pitch": 1.12,
-          "style": "mega"
-        },
-        "x_dona": {
-          "tempo": 1.12,
-          "pitch": 1.12,
-          "style": "opa"
-        },
-        "x_guide": {
-          "tempo": 1.14,
-          "pitch": 1.12,
-          "style": "nasal2"
-        },
-        "x_steward": {
-          "tempo": 1.06,
-          "pitch": 1.06
-        },
-        "x_caimanx": {
-          "tempo": 0.92,
-          "pitch": 0.62
-        },
-        "x_manuel": {
-          "tempo": 1.25,
-          "pitch": 1.38,
-          "style": "nasal2"
-        },
-        "x_erich": {
-          "tempo": 1.02,
-          "pitch": 0.94
-        },
-        "x_rasmus": {
-          "tempo": 1.25,
-          "pitch": 1.15
-        },
-        "x_annc": {
-          "tempo": 1.1,
-          "pitch": 1.0
-        },
-        "x_hero": {
-          "tempo": 0.92,
-          "pitch": 0.84
-        }
-      },
-      "scenes": []
     }
   },
   "sfx": {
@@ -11598,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251009a", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "⚰️", "t": "Gringo Kart: alle Sprüche neu, derb und schwarz, gesprochene Takedowns, glänzende Fahrzeuge, Treffer-Gesichter und neue Strecken-Texturen"},
     {
       "id": "n251008zb",
       "d": "2026-10-08",
@@ -12356,94 +11011,94 @@
       "f": 2
     },
     "v_jonas_over": {
-      "o": 250,
-      "dur": 1445,
-      "f": 3
+      "o": 300,
+      "dur": 2146,
+      "f": 8
     },
     "v_jonas_hit": {
-      "o": 1945,
-      "dur": 1872,
-      "f": 3
+      "o": 2746,
+      "dur": 3464,
+      "f": 8
     },
     "v_jonas_sp": {
-      "o": 4067,
-      "dur": 933,
-      "f": 3
+      "o": 6510,
+      "dur": 2206,
+      "f": 8
     },
     "v_simon_over": {
-      "o": 5250,
-      "dur": 1157,
-      "f": 3
+      "o": 20058,
+      "dur": 2391,
+      "f": 8
     },
     "v_simon_hit": {
-      "o": 6658,
-      "dur": 1469,
-      "f": 3
+      "o": 22749,
+      "dur": 2080,
+      "f": 8
     },
     "v_simon_sp": {
-      "o": 8377,
-      "dur": 1332,
-      "f": 3
+      "o": 25129,
+      "dur": 1951,
+      "f": 8
     },
     "v_patrick_over": {
-      "o": 9960,
-      "dur": 1251,
-      "f": 3
+      "o": 36898,
+      "dur": 1996,
+      "f": 8
     },
     "v_patrick_hit": {
-      "o": 11461,
-      "dur": 903,
-      "f": 3
+      "o": 39194,
+      "dur": 1519,
+      "f": 8
     },
     "v_patrick_sp": {
-      "o": 12614,
-      "dur": 967,
-      "f": 3
+      "o": 41013,
+      "dur": 1938,
+      "f": 8
     },
     "v_marco_over": {
-      "o": 13831,
-      "dur": 1084,
-      "f": 3
+      "o": 52288,
+      "dur": 2199,
+      "f": 8
     },
     "v_marco_hit": {
-      "o": 15166,
-      "dur": 1053,
-      "f": 3
+      "o": 54788,
+      "dur": 3464,
+      "f": 8
     },
     "v_marco_sp": {
-      "o": 16469,
-      "dur": 1668,
-      "f": 3
+      "o": 58552,
+      "dur": 1486,
+      "f": 8
     },
     "v_greisel_over": {
-      "o": 18387,
-      "dur": 1133,
-      "f": 3
+      "o": 70900,
+      "dur": 2089,
+      "f": 8
     },
     "v_greisel_hit": {
-      "o": 19769,
-      "dur": 1066,
-      "f": 3
+      "o": 73289,
+      "dur": 2092,
+      "f": 8
     },
     "v_greisel_sp": {
-      "o": 21085,
-      "dur": 886,
-      "f": 3
+      "o": 75681,
+      "dur": 2356,
+      "f": 8
     },
     "v_dajo_over": {
-      "o": 22221,
-      "dur": 1706,
-      "f": 3
+      "o": 89066,
+      "dur": 2169,
+      "f": 8
     },
     "v_dajo_hit": {
-      "o": 24176,
-      "dur": 1057,
-      "f": 3
+      "o": 91535,
+      "dur": 2502,
+      "f": 8
     },
     "v_dajo_sp": {
-      "o": 25484,
-      "dur": 1513,
-      "f": 3
+      "o": 94337,
+      "dur": 2557,
+      "f": 8
     },
     "t_reveillon": {
       "o": 250,
@@ -12491,699 +11146,699 @@
       "f": 4
     },
     "v_jonas_win": {
-      "o": 250,
-      "dur": 2503,
-      "f": 5
+      "o": 9016,
+      "dur": 2473,
+      "f": 8
     },
     "v_jonas_drift": {
-      "o": 3003,
-      "dur": 1450,
-      "f": 5
+      "o": 11789,
+      "dur": 2347,
+      "f": 8
     },
     "v_jonas_item": {
-      "o": 4702,
-      "dur": 2594,
-      "f": 5
+      "o": 14436,
+      "dur": 3512,
+      "f": 8
     },
     "v_jonas_pass": {
-      "o": 7546,
-      "dur": 1242,
-      "f": 5
+      "o": 18248,
+      "dur": 1509,
+      "f": 8
     },
     "v_simon_win": {
-      "o": 9039,
-      "dur": 1918,
-      "f": 5
+      "o": 27380,
+      "dur": 2500,
+      "f": 8
     },
     "v_simon_drift": {
-      "o": 11207,
-      "dur": 2410,
-      "f": 5
+      "o": 30180,
+      "dur": 2287,
+      "f": 8
     },
     "v_simon_item": {
-      "o": 13866,
-      "dur": 675,
-      "f": 5
+      "o": 32767,
+      "dur": 2412,
+      "f": 8
     },
     "v_simon_pass": {
-      "o": 14791,
-      "dur": 910,
-      "f": 5
+      "o": 35479,
+      "dur": 1119,
+      "f": 8
     },
     "v_patrick_win": {
-      "o": 15951,
-      "dur": 2365,
-      "f": 5
+      "o": 43251,
+      "dur": 2075,
+      "f": 8
     },
     "v_patrick_drift": {
-      "o": 18566,
-      "dur": 1097,
-      "f": 5
+      "o": 45626,
+      "dur": 1526,
+      "f": 8
     },
     "v_patrick_item": {
-      "o": 19915,
-      "dur": 1423,
-      "f": 5
+      "o": 47452,
+      "dur": 2125,
+      "f": 8
     },
     "v_patrick_pass": {
-      "o": 21587,
-      "dur": 1814,
-      "f": 5
+      "o": 49877,
+      "dur": 2111,
+      "f": 8
     },
     "v_marco_win": {
-      "o": 23651,
-      "dur": 2178,
-      "f": 5
+      "o": 60339,
+      "dur": 2233,
+      "f": 8
     },
     "v_marco_drift": {
-      "o": 26079,
-      "dur": 1588,
-      "f": 5
+      "o": 62872,
+      "dur": 2489,
+      "f": 8
     },
     "v_marco_item": {
-      "o": 27916,
-      "dur": 2139,
-      "f": 5
+      "o": 65661,
+      "dur": 2533,
+      "f": 8
     },
     "v_marco_pass": {
-      "o": 30305,
-      "dur": 1020,
-      "f": 5
+      "o": 68494,
+      "dur": 2107,
+      "f": 8
     },
     "v_greisel_win": {
-      "o": 31575,
-      "dur": 1975,
-      "f": 5
+      "o": 78337,
+      "dur": 2881,
+      "f": 8
     },
     "v_greisel_drift": {
-      "o": 33800,
-      "dur": 1587,
-      "f": 5
+      "o": 81518,
+      "dur": 1825,
+      "f": 8
     },
     "v_greisel_item": {
-      "o": 35637,
-      "dur": 2048,
-      "f": 5
+      "o": 83643,
+      "dur": 2449,
+      "f": 8
     },
     "v_greisel_pass": {
-      "o": 37935,
-      "dur": 1275,
-      "f": 5
+      "o": 86392,
+      "dur": 2374,
+      "f": 8
     },
     "v_dajo_win": {
-      "o": 39460,
-      "dur": 2771,
-      "f": 5
+      "o": 97194,
+      "dur": 2127,
+      "f": 8
     },
     "v_dajo_drift": {
-      "o": 42480,
-      "dur": 1352,
-      "f": 5
+      "o": 99621,
+      "dur": 2424,
+      "f": 8
     },
     "v_dajo_item": {
-      "o": 44083,
-      "dur": 1735,
-      "f": 5
+      "o": 102345,
+      "dur": 2056,
+      "f": 8
     },
     "v_dajo_pass": {
-      "o": 46068,
-      "dur": 1905,
-      "f": 5
+      "o": 104700,
+      "dur": 3196,
+      "f": 8
     },
     "v_simon_love_over": {
-      "o": 250,
-      "dur": 2535,
-      "f": 6
+      "o": 108196,
+      "dur": 2465,
+      "f": 8
     },
     "v_simon_love_hit": {
-      "o": 3035,
-      "dur": 3121,
-      "f": 6
+      "o": 110961,
+      "dur": 2564,
+      "f": 8
     },
     "v_simon_love_sp": {
-      "o": 6405,
-      "dur": 1490,
-      "f": 6
+      "o": 113826,
+      "dur": 2305,
+      "f": 8
     },
     "v_simon_love_win": {
-      "o": 8146,
-      "dur": 2608,
-      "f": 6
+      "o": 116431,
+      "dur": 2690,
+      "f": 8
     },
     "v_simon_love_drift": {
-      "o": 11004,
-      "dur": 1592,
-      "f": 6
+      "o": 119421,
+      "dur": 1921,
+      "f": 8
     },
     "v_simon_love_item": {
-      "o": 12846,
-      "dur": 2810,
-      "f": 6
+      "o": 121642,
+      "dur": 2051,
+      "f": 8
     },
     "v_simon_love_pass": {
-      "o": 15905,
-      "dur": 2589,
-      "f": 6
+      "o": 123993,
+      "dur": 3279,
+      "f": 8
     },
     "v_patrick_fat_over": {
-      "o": 18744,
-      "dur": 1507,
-      "f": 6
+      "o": 127571,
+      "dur": 2540,
+      "f": 8
     },
     "v_patrick_fat_hit": {
-      "o": 20501,
-      "dur": 3170,
-      "f": 6
+      "o": 130411,
+      "dur": 3102,
+      "f": 8
     },
     "v_patrick_fat_sp": {
-      "o": 23920,
-      "dur": 2499,
-      "f": 6
+      "o": 133813,
+      "dur": 2487,
+      "f": 8
     },
     "v_patrick_fat_win": {
-      "o": 26669,
-      "dur": 2453,
-      "f": 6
+      "o": 136600,
+      "dur": 2817,
+      "f": 8
     },
     "v_patrick_fat_drift": {
-      "o": 29372,
-      "dur": 2050,
-      "f": 6
+      "o": 139718,
+      "dur": 2396,
+      "f": 8
     },
     "v_patrick_fat_item": {
-      "o": 31673,
-      "dur": 2397,
-      "f": 6
+      "o": 142413,
+      "dur": 2579,
+      "f": 8
     },
     "v_patrick_fat_pass": {
-      "o": 34319,
-      "dur": 2430,
-      "f": 6
+      "o": 145293,
+      "dur": 3414,
+      "f": 8
     },
     "v_marco_dia_over": {
-      "o": 37000,
-      "dur": 1959,
-      "f": 6
+      "o": 149007,
+      "dur": 2494,
+      "f": 8
     },
     "v_marco_dia_hit": {
-      "o": 39208,
-      "dur": 1892,
-      "f": 6
+      "o": 151801,
+      "dur": 1452,
+      "f": 8
     },
     "v_marco_dia_sp": {
-      "o": 41351,
-      "dur": 2053,
-      "f": 6
+      "o": 153553,
+      "dur": 2310,
+      "f": 8
     },
     "v_marco_dia_win": {
-      "o": 43654,
-      "dur": 2131,
-      "f": 6
+      "o": 156163,
+      "dur": 1806,
+      "f": 8
     },
     "v_marco_dia_drift": {
-      "o": 46034,
-      "dur": 1602,
-      "f": 6
+      "o": 158269,
+      "dur": 1725,
+      "f": 8
     },
     "v_marco_dia_item": {
-      "o": 47887,
-      "dur": 1477,
-      "f": 6
+      "o": 160294,
+      "dur": 1963,
+      "f": 8
     },
     "v_marco_dia_pass": {
-      "o": 49614,
-      "dur": 1435,
-      "f": 6
+      "o": 162557,
+      "dur": 1424,
+      "f": 8
     },
     "v_jonas_kater_over": {
-      "o": 51299,
-      "dur": 2502,
-      "f": 6
+      "o": 164281,
+      "dur": 3509,
+      "f": 8
     },
     "v_jonas_kater_hit": {
-      "o": 54052,
-      "dur": 3008,
-      "f": 6
+      "o": 168090,
+      "dur": 3093,
+      "f": 8
     },
     "v_jonas_kater_sp": {
-      "o": 57310,
-      "dur": 2172,
-      "f": 6
+      "o": 171483,
+      "dur": 2452,
+      "f": 8
     },
     "v_jonas_kater_win": {
-      "o": 59732,
-      "dur": 3837,
-      "f": 6
+      "o": 174234,
+      "dur": 3529,
+      "f": 8
     },
     "v_jonas_kater_drift": {
-      "o": 63819,
-      "dur": 1416,
-      "f": 6
+      "o": 178063,
+      "dur": 2994,
+      "f": 8
     },
     "v_jonas_kater_item": {
-      "o": 65485,
-      "dur": 2243,
-      "f": 6
+      "o": 181357,
+      "dur": 2856,
+      "f": 8
     },
     "v_jonas_kater_pass": {
-      "o": 67979,
-      "dur": 4327,
-      "f": 6
+      "o": 184513,
+      "dur": 3974,
+      "f": 8
     },
     "v_greisel_wb_over": {
-      "o": 72555,
-      "dur": 2122,
-      "f": 6
+      "o": 188787,
+      "dur": 2777,
+      "f": 8
     },
     "v_greisel_wb_hit": {
-      "o": 74927,
-      "dur": 2053,
-      "f": 6
+      "o": 191864,
+      "dur": 2676,
+      "f": 8
     },
     "v_greisel_wb_sp": {
-      "o": 77231,
-      "dur": 1883,
-      "f": 6
+      "o": 194840,
+      "dur": 3294,
+      "f": 8
     },
     "v_greisel_wb_win": {
-      "o": 79364,
-      "dur": 2440,
-      "f": 6
+      "o": 198433,
+      "dur": 2792,
+      "f": 8
     },
     "v_greisel_wb_drift": {
-      "o": 82054,
-      "dur": 1389,
-      "f": 6
+      "o": 201525,
+      "dur": 2321,
+      "f": 8
     },
     "v_greisel_wb_item": {
-      "o": 83693,
-      "dur": 1782,
-      "f": 6
+      "o": 204146,
+      "dur": 3091,
+      "f": 8
     },
     "v_greisel_wb_pass": {
-      "o": 85725,
-      "dur": 1568,
-      "f": 6
+      "o": 207537,
+      "dur": 1807,
+      "f": 8
     },
     "v_dajo_party_over": {
-      "o": 87544,
-      "dur": 1852,
-      "f": 6
+      "o": 209644,
+      "dur": 2317,
+      "f": 8
     },
     "v_dajo_party_hit": {
-      "o": 89646,
-      "dur": 1727,
-      "f": 6
+      "o": 212260,
+      "dur": 2474,
+      "f": 8
     },
     "v_dajo_party_sp": {
-      "o": 91623,
-      "dur": 1500,
-      "f": 6
+      "o": 215034,
+      "dur": 1947,
+      "f": 8
     },
     "v_dajo_party_win": {
-      "o": 93373,
-      "dur": 2531,
-      "f": 6
+      "o": 217281,
+      "dur": 2088,
+      "f": 8
     },
     "v_dajo_party_drift": {
-      "o": 96153,
-      "dur": 1417,
-      "f": 6
+      "o": 219669,
+      "dur": 2043,
+      "f": 8
     },
     "v_dajo_party_item": {
-      "o": 97820,
-      "dur": 1787,
-      "f": 6
+      "o": 222012,
+      "dur": 2112,
+      "f": 8
     },
     "v_dajo_party_pass": {
-      "o": 99857,
-      "dur": 1598,
-      "f": 6
+      "o": 224424,
+      "dur": 1603,
+      "f": 8
     },
     "v_taxi_over": {
-      "o": 101705,
-      "dur": 2248,
-      "f": 6
+      "o": 226327,
+      "dur": 3925,
+      "f": 8
     },
     "v_taxi_hit": {
-      "o": 104203,
-      "dur": 2442,
-      "f": 6
+      "o": 230552,
+      "dur": 4469,
+      "f": 8
     },
     "v_taxi_sp": {
-      "o": 106894,
-      "dur": 2593,
-      "f": 6
+      "o": 235322,
+      "dur": 2414,
+      "f": 8
     },
     "v_taxi_win": {
-      "o": 109737,
-      "dur": 2164,
-      "f": 6
+      "o": 238035,
+      "dur": 2312,
+      "f": 8
     },
     "v_taxi_drift": {
-      "o": 112151,
-      "dur": 1726,
-      "f": 6
+      "o": 240647,
+      "dur": 3095,
+      "f": 8
     },
     "v_taxi_item": {
-      "o": 114127,
-      "dur": 5758,
-      "f": 6
+      "o": 244043,
+      "dur": 3189,
+      "f": 8
     },
     "v_taxi_pass": {
-      "o": 120135,
-      "dur": 2180,
-      "f": 6
+      "o": 247532,
+      "dur": 2857,
+      "f": 8
     },
     "v_coati_over": {
-      "o": 122565,
-      "dur": 1599,
-      "f": 6
+      "o": 250689,
+      "dur": 1417,
+      "f": 8
     },
     "v_coati_hit": {
-      "o": 124414,
-      "dur": 1976,
-      "f": 6
+      "o": 252406,
+      "dur": 2523,
+      "f": 8
     },
     "v_coati_sp": {
-      "o": 126640,
-      "dur": 2453,
-      "f": 6
+      "o": 255229,
+      "dur": 2155,
+      "f": 8
     },
     "v_coati_win": {
-      "o": 129344,
-      "dur": 2903,
-      "f": 6
+      "o": 257684,
+      "dur": 2363,
+      "f": 8
     },
     "v_coati_drift": {
-      "o": 132497,
-      "dur": 557,
-      "f": 6
+      "o": 260347,
+      "dur": 1758,
+      "f": 8
     },
     "v_coati_item": {
-      "o": 133303,
-      "dur": 1954,
-      "f": 6
+      "o": 262404,
+      "dur": 2993,
+      "f": 8
     },
     "v_coati_pass": {
-      "o": 135507,
-      "dur": 1505,
-      "f": 6
+      "o": 265697,
+      "dur": 3785,
+      "f": 8
     },
     "v_officer_over": {
-      "o": 137262,
-      "dur": 2246,
-      "f": 6
+      "o": 269781,
+      "dur": 3067,
+      "f": 8
     },
     "v_officer_hit": {
-      "o": 139758,
-      "dur": 2270,
-      "f": 6
+      "o": 273149,
+      "dur": 2719,
+      "f": 8
     },
     "v_officer_sp": {
-      "o": 142278,
-      "dur": 2914,
-      "f": 6
+      "o": 276168,
+      "dur": 3548,
+      "f": 8
     },
     "v_officer_win": {
-      "o": 145442,
-      "dur": 2852,
-      "f": 6
+      "o": 280016,
+      "dur": 3789,
+      "f": 8
     },
     "v_officer_drift": {
-      "o": 148544,
-      "dur": 1606,
-      "f": 6
+      "o": 284105,
+      "dur": 3257,
+      "f": 8
     },
     "v_officer_item": {
-      "o": 150401,
-      "dur": 2069,
-      "f": 6
+      "o": 287662,
+      "dur": 3245,
+      "f": 8
     },
     "v_officer_pass": {
-      "o": 152720,
-      "dur": 2224,
-      "f": 6
+      "o": 291207,
+      "dur": 3485,
+      "f": 8
     },
     "v_dona_over": {
-      "o": 155194,
-      "dur": 1189,
-      "f": 6
+      "o": 294992,
+      "dur": 1370,
+      "f": 8
     },
     "v_dona_hit": {
-      "o": 156634,
-      "dur": 1944,
-      "f": 6
+      "o": 296662,
+      "dur": 2229,
+      "f": 8
     },
     "v_dona_sp": {
-      "o": 158828,
-      "dur": 1542,
-      "f": 6
+      "o": 299191,
+      "dur": 2318,
+      "f": 8
     },
     "v_dona_win": {
-      "o": 160620,
-      "dur": 2122,
-      "f": 6
+      "o": 301809,
+      "dur": 2654,
+      "f": 8
     },
     "v_dona_drift": {
-      "o": 162992,
-      "dur": 1638,
-      "f": 6
+      "o": 304763,
+      "dur": 1817,
+      "f": 8
     },
     "v_dona_item": {
-      "o": 164880,
-      "dur": 1226,
-      "f": 6
+      "o": 306880,
+      "dur": 1950,
+      "f": 8
     },
     "v_dona_pass": {
-      "o": 166357,
-      "dur": 1643,
-      "f": 6
+      "o": 309130,
+      "dur": 1060,
+      "f": 8
     },
     "v_guide_over": {
-      "o": 168250,
-      "dur": 1706,
-      "f": 6
+      "o": 310490,
+      "dur": 3101,
+      "f": 8
     },
     "v_guide_hit": {
-      "o": 170206,
-      "dur": 2742,
-      "f": 6
+      "o": 313891,
+      "dur": 3344,
+      "f": 8
     },
     "v_guide_sp": {
-      "o": 173198,
-      "dur": 1294,
-      "f": 6
+      "o": 317534,
+      "dur": 2549,
+      "f": 8
     },
     "v_guide_win": {
-      "o": 174742,
-      "dur": 1555,
-      "f": 6
+      "o": 320383,
+      "dur": 3361,
+      "f": 8
     },
     "v_guide_drift": {
-      "o": 176547,
-      "dur": 2269,
-      "f": 6
+      "o": 324044,
+      "dur": 1683,
+      "f": 8
     },
     "v_guide_item": {
-      "o": 179066,
-      "dur": 2373,
-      "f": 6
+      "o": 326027,
+      "dur": 2541,
+      "f": 8
     },
     "v_guide_pass": {
-      "o": 181690,
-      "dur": 2338,
-      "f": 6
+      "o": 328868,
+      "dur": 2499,
+      "f": 8
     },
     "v_steward_over": {
-      "o": 184278,
-      "dur": 2307,
-      "f": 6
+      "o": 331666,
+      "dur": 3753,
+      "f": 8
     },
     "v_steward_hit": {
-      "o": 186834,
-      "dur": 2883,
-      "f": 6
+      "o": 335719,
+      "dur": 2426,
+      "f": 8
     },
     "v_steward_sp": {
-      "o": 189967,
-      "dur": 2430,
-      "f": 6
+      "o": 338445,
+      "dur": 3144,
+      "f": 8
     },
     "v_steward_win": {
-      "o": 192648,
-      "dur": 3884,
-      "f": 6
+      "o": 341889,
+      "dur": 2769,
+      "f": 8
     },
     "v_steward_drift": {
-      "o": 196782,
-      "dur": 3213,
-      "f": 6
+      "o": 344958,
+      "dur": 2027,
+      "f": 8
     },
     "v_steward_item": {
-      "o": 200244,
-      "dur": 2393,
-      "f": 6
+      "o": 347285,
+      "dur": 2659,
+      "f": 8
     },
     "v_steward_pass": {
-      "o": 202887,
-      "dur": 3826,
-      "f": 6
+      "o": 350244,
+      "dur": 2215,
+      "f": 8
     },
     "v_caimanx_over": {
-      "o": 206963,
-      "dur": 2822,
-      "f": 6
+      "o": 352760,
+      "dur": 2302,
+      "f": 8
     },
     "v_caimanx_hit": {
-      "o": 210036,
-      "dur": 2568,
-      "f": 6
+      "o": 355361,
+      "dur": 3724,
+      "f": 8
     },
     "v_caimanx_sp": {
-      "o": 212853,
-      "dur": 1424,
-      "f": 6
+      "o": 359385,
+      "dur": 2591,
+      "f": 8
     },
     "v_caimanx_win": {
-      "o": 214527,
-      "dur": 3570,
-      "f": 6
+      "o": 362276,
+      "dur": 4261,
+      "f": 8
     },
     "v_caimanx_drift": {
-      "o": 218347,
-      "dur": 1184,
-      "f": 6
+      "o": 366837,
+      "dur": 2205,
+      "f": 8
     },
     "v_caimanx_item": {
-      "o": 219781,
-      "dur": 2558,
-      "f": 6
+      "o": 369342,
+      "dur": 3417,
+      "f": 8
     },
     "v_caimanx_pass": {
-      "o": 222589,
-      "dur": 1844,
-      "f": 6
+      "o": 373059,
+      "dur": 2613,
+      "f": 8
     },
     "v_manuel_over": {
-      "o": 224683,
-      "dur": 1847,
-      "f": 6
+      "o": 375972,
+      "dur": 4365,
+      "f": 8
     },
     "v_manuel_hit": {
-      "o": 226780,
-      "dur": 2484,
-      "f": 6
+      "o": 380637,
+      "dur": 2327,
+      "f": 8
     },
     "v_manuel_sp": {
-      "o": 229514,
-      "dur": 2569,
-      "f": 6
+      "o": 383264,
+      "dur": 4150,
+      "f": 8
     },
     "v_manuel_win": {
-      "o": 232333,
-      "dur": 1775,
-      "f": 6
+      "o": 387714,
+      "dur": 2631,
+      "f": 8
     },
     "v_manuel_drift": {
-      "o": 234358,
-      "dur": 2116,
-      "f": 6
+      "o": 390645,
+      "dur": 4158,
+      "f": 8
     },
     "v_manuel_item": {
-      "o": 236724,
-      "dur": 1699,
-      "f": 6
+      "o": 395103,
+      "dur": 2885,
+      "f": 8
     },
     "v_manuel_pass": {
-      "o": 238673,
-      "dur": 2347,
-      "f": 6
+      "o": 398288,
+      "dur": 3179,
+      "f": 8
     },
     "v_erich_over": {
-      "o": 241270,
-      "dur": 2421,
-      "f": 6
+      "o": 401767,
+      "dur": 2733,
+      "f": 8
     },
     "v_erich_hit": {
-      "o": 243941,
-      "dur": 2541,
-      "f": 6
+      "o": 404801,
+      "dur": 2333,
+      "f": 8
     },
     "v_erich_sp": {
-      "o": 246732,
-      "dur": 2793,
-      "f": 6
+      "o": 407434,
+      "dur": 3150,
+      "f": 8
     },
     "v_erich_win": {
-      "o": 249776,
-      "dur": 3338,
-      "f": 6
+      "o": 410884,
+      "dur": 4731,
+      "f": 8
     },
     "v_erich_drift": {
-      "o": 253364,
-      "dur": 2643,
-      "f": 6
+      "o": 415914,
+      "dur": 2875,
+      "f": 8
     },
     "v_erich_item": {
-      "o": 256257,
-      "dur": 4373,
-      "f": 6
+      "o": 419090,
+      "dur": 3405,
+      "f": 8
     },
     "v_erich_pass": {
-      "o": 260880,
-      "dur": 2771,
-      "f": 6
+      "o": 422795,
+      "dur": 3932,
+      "f": 8
     },
     "v_rasmus_over": {
-      "o": 263901,
-      "dur": 1546,
-      "f": 6
+      "o": 427026,
+      "dur": 3149,
+      "f": 8
     },
     "v_rasmus_hit": {
-      "o": 265697,
-      "dur": 2186,
-      "f": 6
+      "o": 430476,
+      "dur": 2163,
+      "f": 8
     },
     "v_rasmus_sp": {
-      "o": 268133,
-      "dur": 1542,
-      "f": 6
+      "o": 432939,
+      "dur": 2365,
+      "f": 8
     },
     "v_rasmus_win": {
-      "o": 269925,
-      "dur": 3035,
-      "f": 6
+      "o": 435604,
+      "dur": 3801,
+      "f": 8
     },
     "v_rasmus_drift": {
-      "o": 273210,
-      "dur": 1736,
-      "f": 6
+      "o": 439706,
+      "dur": 2368,
+      "f": 8
     },
     "v_rasmus_item": {
-      "o": 275196,
-      "dur": 2355,
-      "f": 6
+      "o": 442374,
+      "dur": 3750,
+      "f": 8
     },
     "v_rasmus_pass": {
-      "o": 277801,
-      "dur": 2117,
-      "f": 6
+      "o": 446424,
+      "dur": 2684,
+      "f": 8
     },
     "g_manuel": {
-      "o": 280168,
-      "dur": 3817,
-      "f": 6
+      "o": 449407,
+      "dur": 4094,
+      "f": 8
     },
     "g_erich": {
-      "o": 284235,
-      "dur": 4667,
-      "f": 6
+      "o": 453801,
+      "dur": 4161,
+      "f": 8
     },
     "g_rasmus": {
-      "o": 289152,
-      "dur": 6021,
-      "f": 6
+      "o": 458262,
+      "dur": 4530,
+      "f": 8
     },
     "h_jonas": {
       "o": 300,
@@ -13294,6 +11949,61 @@
       "o": 38872,
       "dur": 1246,
       "f": 7
+    },
+    "fall_0": {
+      "o": 463092,
+      "dur": 3122,
+      "f": 8
+    },
+    "fall_1": {
+      "o": 466513,
+      "dur": 1628,
+      "f": 8
+    },
+    "fall_2": {
+      "o": 468442,
+      "dur": 2351,
+      "f": 8
+    },
+    "fall_3": {
+      "o": 471093,
+      "dur": 2014,
+      "f": 8
+    },
+    "fall_4": {
+      "o": 473407,
+      "dur": 2667,
+      "f": 8
+    },
+    "ann_last": {
+      "o": 476374,
+      "dur": 3763,
+      "f": 8
+    },
+    "ann_lead": {
+      "o": 480437,
+      "dur": 4246,
+      "f": 8
+    },
+    "td_1": {
+      "o": 484983,
+      "dur": 1558,
+      "f": 8
+    },
+    "td_2": {
+      "o": 486841,
+      "dur": 1982,
+      "f": 8
+    },
+    "td_3": {
+      "o": 489123,
+      "dur": 2078,
+      "f": 8
+    },
+    "td_4": {
+      "o": 491501,
+      "dur": 1754,
+      "f": 8
     }
   },
   "kartReset": "2026-10-07a"
