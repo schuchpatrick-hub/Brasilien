@@ -8266,7 +8266,7 @@ setGroup(G);
           '<button type="button" class="kr-recgo" data-t="' + r.tr.id + '">▶ ' + esc(r.tr.name) + ' fahren' + (top ? ' (mit Geist der Bestzeit)' : '') + '</button></div>' : '') + '</li>'; }).join('') + '</ul>'; }
 
   /* ---- Live-Mehrspieler (room-Fähigkeit): Lobby im Raum „gringo-kart“, Positionen über presence, Start/Treffer/Effekte als Ereignisse auf Topic „kart“ ---- */
-  const LIVE = {room: null, ok: null, peers: [], me: null, race: null, pending: null, sentAt: 0, buf: {}, lastN: {}, seq: 0, rdy: false, gp: null, autoAt: 0, emoAt: 0, pings: {}, rtt: {}, taunts: {}, cfg: null, tauntOpen: false, lpDrv: {}, lpAt: {}, lpAnn: 0, jt: 0, lpRdy: {}, lpRdyAt: {}};
+  const LIVE = {room: null, ok: null, peers: [], me: null, race: null, pending: null, sentAt: 0, buf: {}, lastN: {}, seq: 0, rdy: false, gp: null, autoAt: 0, emoAt: 0, pings: {}, rtt: {}, taunts: {}, cfg: null, tauntOpen: false, lpDrv: {}, lpAt: {}, lpAnn: 0, jt: 0, lpRdy: {}, lpRdyAt: {}, vsc: new Map()};
   let LIVEST = [];   // gespeicherte Live-Rennen (db kartlive) für die Live-Bilanz
   async function liveJoin() {
     if (LIVE.room || LIVE.ok === false || LIVE.joining) return; LIVE.joining = 1;
@@ -8396,6 +8396,7 @@ setGroup(G);
   // Einstellungen für alle: jeder darf ändern, es gilt die zuletzt geänderte (presence.cfg mit Zeitstempel)
   const CFG0 = {laps: 0, items: 'all', diff: -1, storm: 'off', ev: 'on', ts: 0};
   function liveCfg() { let c = Object.assign({}, CFG0, LIVE.cfg || {}); lobby().forEach(p0 => { const x = p0.presence.cfg; if (x && x.ts > c.ts) c = Object.assign({}, CFG0, x); }); return c; }
+  const cfgVal = c => ({laps: c.laps ? c.laps + (c.laps === 1 ? ' Runde' : ' Runden') : 'Standard', items: {all: 'alle', turbo: 'nur Turbo', off: 'aus'}[c.items], diff: c.diff < 0 ? 'Gastgeber' : ['Leicht', 'Normal', 'Schwer', 'Profi'][c.diff], storm: {off: 'nie', rnd: 'Zufall', on: 'immer'}[c.storm], ev: c.ev === 'off' ? 'aus' : 'an'});
   const cfgTxt = c => ({laps: '🔁 Runden: ' + (c.laps || 'Standard'), items: '🎁 Items: ' + {all: 'alle', turbo: 'nur 🍹 Turbo', off: 'aus'}[c.items], diff: '🤖 Gegner: ' + (c.diff < 0 ? 'je nach Gastgeber' : ['Leicht', 'Normal', 'Schwer', 'Profi'][c.diff]), storm: '⛈️ Gewitter: ' + {off: 'nie', rnd: 'Zufall', on: 'immer'}[c.storm], ev: '🎲 Ereignisse: ' + (c.ev === 'off' ? 'aus' : 'an')});
   function cfgStep(key) { const c = liveCfg(); if (key === 'laps') c.laps = (c.laps + 1) % 6; if (key === 'items') c.items = {all: 'turbo', turbo: 'off', off: 'all'}[c.items]; if (key === 'diff') c.diff = c.diff >= 3 ? -1 : c.diff + 1; if (key === 'storm') c.storm = {off: 'rnd', rnd: 'on', on: 'off'}[c.storm]; if (key === 'ev') c.ev = c.ev === 'off' ? 'on' : 'off';
     c.ts = Date.now(); LIVE.cfg = c; livePres(); liveBox(); }
@@ -8408,32 +8409,53 @@ setGroup(G);
     '{n}, wenn du verlierst, darfst du dir aussuchen, welcher Nasenbär deine Asche verstreut.', 'Ich wollte fair fahren. Dann hab ich {n} gesehen und mich umentschieden.', 'Leg schon mal die Organspende-Karte aufs Armaturenbrett, {n}.'];
   function tauntSend(i) { const others = lobby().filter(p0 => p0.peer !== LIVE.me).map(p0 => NAME(p0.presence.who)), n = others.length ? pick(others) : 'Simon'; liveEmit({t: 'taunt', txt: TAUNTS[i].replace(/\{n\}/g, n)}); }
 
-  function liveBox() { const el = menu.querySelector('.kr-live'); if (!el) return; el.hidden = MODE !== 'live'; if (MODE !== 'live') return; liveJoin();
+  // Wer spielt was (Lobby-Karten und Leiste unten): echter Name, Figur, Fahrzeug mit Bild
+  function lpInfo(p0) { const pr = p0.presence || {}, d0 = DRVS.includes(pr.drv) ? pr.drv : (DRVS.includes(pr.who) ? pr.who : 'jonas'), X = XBY[d0], vt = VEHS.some(v => v.id === pr.veh) ? pr.veh : 'kart', V0 = VEHS.find(v => v.id === vt);
+    return {pr, d0, who: NAME(p0.sameTab ? (ME || pr.who || me) : pr.who || d0), char: X && X.base ? NAME(X.base) : NAME(d0), sub: X && X.sh ? X.sh : X && X.guest ? 'Gast' : '', vt, vn: vt === 'kart' && STYK(d0) ? STN[STYK(d0)] || V0.n : V0.n, ve: V0.e}; }
+  function lpVeh(I) { const pt = Object.assign({}, I.pr.paint || {}, I.pr.parts || {}), key = I.d0 + '|' + I.vt + '|' + JSON.stringify(pt); let c = LIVE.vsc.get(key);
+    if (!c) { c = vehSprite(pt.c || (LOOK[I.d0] || {}).shirt || '#00a651', I.vt, pt, I.d0); LIVE.vsc.set(key, c); if (LIVE.vsc.size > 40) LIVE.vsc.delete(LIVE.vsc.keys().next().value); }
+    const d = document.createElement('canvas'); d.width = c.width; d.height = c.height; d.getContext('2d').drawImage(c, 0, 0); d.className = 'kr-lpv'; return d; }
+  // Leiste unten über dem Bereit-Knopf (immer sichtbar, auch beim Durchscrollen der Fahrerwahl)
+  function liveStrip() { const ft = menu.querySelector('.kr-foot'); if (!ft) return; let st = ft.querySelector('.kr-fstrip'); const on = MODE === 'live' && !!LIVE.room && LIVE.ok !== false;
+    ft.classList.toggle('live', on); if (!on) { if (st) st.remove(); return; } if (!st) { st = document.createElement('div'); st.className = 'kr-fstrip'; ft.prepend(st); }
+    const lp = lobbyP(); st.innerHTML = lp.map((p0, i) => { const I = lpInfo(p0); return '<span class="kr-fsc' + (I.pr.rdy ? ' rdy' : '') + (p0.sameTab ? ' me' : '') + '" style="--pc:' + PCOL[i % 6] + '"><i>P' + (i + 1) + '</i><span class="kr-fsi" data-d="' + esc(I.d0) + '"></span><span class="kr-fsx"><b>' + esc(I.who) + '</b><small>' + esc(I.char + (I.sub ? ' · ' + I.sub : '')) + '</small><small>' + I.ve + ' ' + esc(I.vn) + '</small></span>' + (I.pr.rdy ? '<u>✓</u>' : '') + '</span>'; }).join('') + (lp.length < 2 ? '<span class="kr-fsc kr-fse"><span class="kr-fsx"><b>Warte auf Mitspieler …</b><small>Die anderen wählen auch „👥 Live“</small></span></span>' : '');
+    st.querySelectorAll('.kr-fsi').forEach(x => { const c = portrait(x.dataset.d, 34, 40); c.className = 'kr-fsi'; x.replaceWith(c); }); }
+  function rdyTxt() { const lb = lobby(), nr = lb.filter(p0 => p0.presence.rdy).length, wait = lobbyP().filter(p0 => !p0.presence.rdy), cd = LIVE.autoAt ? Math.max(0, Math.ceil((LIVE.autoAt - performance.now()) / 1000)) : 0;
+    if (LIVE.autoAt) return ['go', '🏁 Alle bereit · Start in ' + cd + ' …'];
+    if (!LIVE.rdy) return ['no', '👍 Ich bin bereit!' + (lb.length >= 2 ? ' · ' + nr + '/' + lb.length : '')];
+    return ['yes', lb.length < 2 ? '✅ Bereit · warte auf Mitspieler' : '✅ Bereit · warte auf ' + wait.map(p0 => p0.sameTab ? 'dich' : NAME(p0.presence.who)).join(', ')]; }
+  function liveFoot() { const go = menu.querySelector('.kr-go'); if (!go) return; const on = MODE === 'live'; go.classList.toggle('kr-rdyon', false); go.classList.toggle('kr-rdygo', false); go.classList.toggle('kr-rdyno', false); if (!on) return;
+    const [rk, rt] = rdyTxt(); go.textContent = rt; go.classList.add(rk === 'yes' ? 'kr-rdyon' : rk === 'go' ? 'kr-rdygo' : 'kr-rdyno'); }
+  function liveBox() { const el = menu.querySelector('.kr-live'); if (!el) return; el.hidden = MODE !== 'live'; liveStrip(); liveFoot(); if (MODE !== 'live') return; liveJoin();
     if (LIVE.ok === false) { el.innerHTML = '<p>📡 Live geht nur, wenn die Seite auf claude.ai mit deinem Konto offen ist (als Bearbeiter eingeladen).</p>'; return; }
     if (!LIVE.room) { el.innerHTML = '<p>📡 Verbinde mit dem Live-Raum …</p>'; return; }
     const lb = lobby(), nr = lb.filter(p0 => p0.presence.rdy).length, drvs = lb.map(p0 => p0.presence.drv), vs = liveVotes(lb), gpOn = store.get('kartLiveGP') === '1', g = LIVE.gp, gpRun = g && g.i < g.list.length - 1;
-    const cd = LIVE.autoAt ? Math.max(0, Math.ceil((LIVE.autoAt - performance.now()) / 1000)) : 0;
-    // Spieler-Karten wie bei Super Smash Bros (Wunsch Patrick 09.10.): P1–P6 in festen Farben, groß die gewählte Figur, darunter wer spielt, Stempel „BEREIT!“
-    const lp = lobbyP(), tn0 = performance.now(), wait = lp.filter(p0 => !p0.presence.rdy);
+    // Spieler-Karten wie bei Super Smash Bros (Wunsch Patrick 09.10.): P1–P6 in festen Farben; oben wer spielt (echter Name), groß die Figur, darunter das Fahrzeug mit Bild, Stempel „BEREIT!“
+    const lp = lobbyP(), tn0 = performance.now();
     lp.forEach(p0 => { const r0 = p0.presence.rdy ? 1 : 0; if (LIVE.lpRdy[p0.peer] !== r0) { LIVE.lpRdy[p0.peer] = r0; LIVE.lpRdyAt[p0.peer] = tn0; } });   // Stempel nur beim Wechsel animieren (Lobby zeichnet sich oft neu)
     lp.forEach(p0 => { const d0 = p0.presence.drv, pv = LIVE.lpDrv[p0.peer]; if (pv !== undefined && pv !== d0) { LIVE.lpAt[p0.peer] = tn0; if (!p0.sameTab) { clearTimeout(LIVE.lpAnn); LIVE.lpAnn = setTimeout(() => { const q = lobby().find(x => x.peer === p0.peer); if (q && q.presence.drv === d0 && !box.hidden && MODE === 'live' && !LIVE.race) announce(d0); }, 700); } } LIVE.lpDrv[p0.peer] = d0; });
-    el.innerHTML = '<p class="kr-lbl">Im Live-Raum (' + lb.length + ') · ✅ ' + nr + '/' + lb.length + ' bereit</p><div class="kr-lsm">' + lp.map((p0, i) => { const pr = p0.presence, d0 = DRVS.includes(pr.drv) ? pr.drv : (DRVS.includes(pr.who) ? pr.who : 'jonas'), X = XBY[d0], dup = drvs.filter(x => x === pr.drv).length > 1, V0 = VEHS.find(v => v.id === pr.veh), age = tn0 - (LIVE.lpAt[p0.peer] || -1e9);
-        return '<div class="kr-lpc' + (pr.rdy ? ' rdy' : '') + (p0.sameTab ? ' me' : '') + (age < 650 ? ' new' : '') + '" style="--pc:' + PCOL[i % 6] + (age < 650 ? ';--ad:-' + Math.round(age) + 'ms' : '') + '"><span class="kr-lpn">P' + (i + 1) + '</span><span class="kr-lpi" data-d="' + esc(d0) + '"></span>' +
-          '<b>' + esc(X && X.base ? NAME(X.base) : NAME(d0)) + '</b><small>' + esc(X && X.sh ? X.sh : X && X.guest ? 'Gast' : '') + '</small><i>' + (p0.sameTab ? '🙋 du' : '🎮 ' + esc(NAME(pr.who))) + '</i><em>' + (V0 ? V0.e : '') + (TBY[pr.trk] ? ' ' + TBY[pr.trk].e : '') + (dup ? ' ⚠️' : '') + '</em>' +
-          (p0.sameTab ? '' : '<small class="kr-ping">' + pingTag(p0.peer) + '</small>') + (pr.rdy ? '<span class="kr-lpr' + (tn0 - (LIVE.lpRdyAt[p0.peer] || -1e9) < 400 ? ' pop' : '') + '">BEREIT!</span>' : '') + '</div>'; }).join('') +
-        (lp.length < 6 ? '<div class="kr-lpc kr-lpe" style="--pc:' + PCOL[lp.length % 6] + '"><span class="kr-lpn">P' + (lp.length + 1) + '</span><span class="kr-lpq">＋</span><small>frei</small></div>' : '') + '</div>' +
-      (LIVE.autoAt ? '' : lb.length >= 2 && wait.length ? '<p class="kr-live-w">⏳ Warte auf: ' + wait.map(p0 => esc(p0.sameTab ? 'dich' : NAME(p0.presence.who))).join(', ') + '</p>' : '') +
+    const [rk, rt] = rdyTxt(), c0 = liveCfg(), cv0 = cfgVal(c0), cfgT = [['laps', '🔁', 'Runden'], ['items', '🎁', 'Items'], ['diff', '💪', 'Stärke'], ['storm', '⛈️', 'Gewitter'], ['ev', '🎲', 'Ereignisse']];
+    el.innerHTML = '<p class="kr-lbl">Im Live-Raum (' + lb.length + ') · ✅ ' + nr + '/' + lb.length + ' bereit</p><div class="kr-lsm">' + lp.map((p0, i) => { const I = lpInfo(p0), pr = I.pr, dup = drvs.filter(x => x === pr.drv).length > 1, age = tn0 - (LIVE.lpAt[p0.peer] || -1e9);
+        return '<div class="kr-lpc' + (pr.rdy ? ' rdy' : '') + (p0.sameTab ? ' me' : '') + (age < 650 ? ' new' : '') + '" style="--pc:' + PCOL[i % 6] + (age < 650 ? ';--ad:-' + Math.round(age) + 'ms' : '') + '"><span class="kr-lpn"><i>P' + (i + 1) + '</i>' + esc(I.who) + '</span><span class="kr-lpi" data-d="' + esc(I.d0) + '"></span>' +
+          '<b>' + esc(I.char) + (dup ? ' ⚠️' : '') + '</b><small>' + esc(I.sub) + '</small><span class="kr-lpvr"><span class="kr-lpvs" data-p="' + esc(p0.peer) + '"></span><em>' + esc(I.vn) + '</em></span>' +
+          '<span class="kr-lpf">' + (TBY[pr.trk] ? '<span title="Stimme: ' + esc(TBY[pr.trk].name) + '">🗳️ ' + TBY[pr.trk].e + '</span>' : '<span></span>') + (p0.sameTab ? '' : '<small class="kr-ping">' + pingTag(p0.peer) + '</small>') + '</span>' +
+          (pr.rdy ? '<span class="kr-lpr' + (tn0 - (LIVE.lpRdyAt[p0.peer] || -1e9) < 400 ? ' pop' : '') + '">BEREIT!</span>' : '') + '</div>'; }).join('') +
+        (lp.length % 3 ? '<div class="kr-lpc kr-lpe" style="--pc:' + PCOL[lp.length % 6] + '"><span class="kr-lpn"><i>P' + (lp.length + 1) + '</i>frei</span><span class="kr-lpq">＋</span><small>Wer mitfährt, wählt auch „👥 Live“</small></div>' : '') + '</div>' +
+      '<button type="button" class="kr-rdybig kr-rb-' + rk + '">' + esc(rt) + '</button>' +
       (() => { const tn = performance.now(), tt = lb.map(p0 => [p0, LIVE.taunts[p0.peer]]).filter(([, t]) => t && t.until > tn); return tt.length ? '<div class="kr-taunts">' + tt.map(([p0, t]) => '<p><b>' + esc(NAME(p0.presence.who)) + ':</b> „' + esc(t.txt) + '“</p>').join('') + '</div>' : ''; })() +
       (liveRun() && LIVE.peers.some(p0 => p0.presence && p0.presence.race === liveRun().race.id) ? '<button type="button" class="kr-rjb">🔄 Zurück ins laufende Rennen (' + esc((TBY[liveRun().race.track] || {}).name || '') + ')</button>' : '') +
-      (LIVE.autoAt ? '<p class="kr-live-cd kr-rtf">🏁 Alle bereit! Start in ' + cd + ' …</p>' : '') +
-      '<div class="kr-live-btns"><button type="button" class="kr-rdy' + (LIVE.rdy ? ' on' : '') + '">' + (LIVE.rdy ? '✅ Bereit' : '⏳ Bereit?') + '</button><button type="button" class="kr-liveai">🤖 Gegner: ' + (store.get('kartLiveAI') === '0' ? 'aus' : 'an') + '</button><button type="button" class="kr-gpt' + (gpOn ? ' on' : '') + '">🏆 Pokal (3 Rennen): ' + (gpOn ? 'an' : 'aus') + '</button><button type="button" class="kr-tnt' + (LIVE.tauntOpen ? ' on' : '') + '">💬 Sprüche</button><button type="button" class="kr-ptest">📶 Verbindung testen</button></div>' +
-      (LIVE.tauntOpen ? '<div class="kr-tlist">' + TAUNTS.map((t, i) => '<button type="button" data-tn="' + i + '">' + esc(t.replace(/\{n\}/g, '…')) + '</button>').join('') + '</div>' : '') +
-      (() => { const c = liveCfg(), tx = cfgTxt(c); return '<p class="kr-lbl">Einstellungen für alle</p><div class="kr-live-btns kr-cfg">' + ['laps', 'items', 'diff', 'storm', 'ev'].map(k0 => '<button type="button" data-cfg="' + k0 + '">' + tx[k0] + '</button>').join('') + '</div>'; })() +
       (gpRun ? '<p class="kr-live-n">🏆 <b>Live-Pokal läuft:</b> nächstes Rennen ' + (g.i + 2) + '/' + g.list.length + ' ' + TBY[g.list[g.i + 1]].e + ' ' + esc(TBY[g.list[g.i + 1]].name) + ' · ' + Object.entries(g.pts).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k0, v]) => esc(g.nm[k0]) + ' ' + v).join(' · ') + '</p>' :
-        vs.length ? '<p class="kr-live-n">🗳️ Strecke: ' + vs.map(([t, n]) => TBY[t].e + ' ' + esc(TBY[t].name) + ' ' + n).join(' · ') + ' <i>(deine Stimme = gewählte Strecke unten)</i></p>' : '') +
+        vs.length ? '<div class="kr-votes"><span>🗳️ Strecke</span>' + vs.map(([t, n], j) => '<b class="' + (j === 0 ? 'top' : '') + '">' + TBY[t].e + ' ' + esc(TBY[t].name) + ' <i>' + n + '</i></b>').join('') + '<small>Deine Stimme = die Strecke, die du unten in Schritt ③ wählst.</small></div>' : '') +
+      // Einstellungen als Kacheln (Wunsch Patrick 09.10.: übersichtlicher und schöner)
+      '<p class="kr-lbl">⚙️ Einstellungen für alle</p><div class="kr-cfgg">' + cfgT.map(([k0, e0, n0]) => '<button type="button" class="kr-cfgt" data-cfg="' + k0 + '"><i>' + e0 + '</i><span>' + n0 + '</span><b>' + esc(cv0[k0]) + '</b></button>').join('') +
+        '<button type="button" class="kr-cfgt kr-liveai"><i>🤖</i><span>Computer</span><b>' + (store.get('kartLiveAI') === '0' ? 'aus' : 'füllen auf') + '</b></button>' +
+        '<button type="button" class="kr-cfgt kr-gpt' + (gpOn ? ' on' : '') + '"><i>🏆</i><span>Pokal</span><b>' + (gpOn ? '3 Rennen ✓' : 'aus') + '</b></button></div>' +
+      '<div class="kr-live-btns kr-lx"><button type="button" class="kr-tnt' + (LIVE.tauntOpen ? ' on' : '') + '">💬 Sprüche</button><button type="button" class="kr-ptest">📶 Verbindung testen</button></div>' +
+      (LIVE.tauntOpen ? '<div class="kr-tlist">' + TAUNTS.map((t, i) => '<button type="button" data-tn="' + i + '">' + esc(t.replace(/\{n\}/g, '…')) + '</button>').join('') + '</div>' : '') +
       (drvs.some((x, i) => drvs.indexOf(x) !== i) ? '<p class="kr-live-n">⚠️ Zwei fahren mit derselben Figur. Geht, aber eine andere Figur ist übersichtlicher.</p>' : '') +
-      '<p class="kr-live-n">' + (lb.length < 2 ? 'Warte auf Mitspieler: Die anderen öffnen Gringo Kart und wählen ebenfalls „👥 Live“.' : 'Das Rennen startet von selbst, sobald alle ✅ bereit sind. Wer die App wechselt, verlässt die Lobby, bis er zurück ist.') + (gpOn && !gpRun ? ' Pokal: Mehrheit der Lobby muss ihn anhaben.' : '') + '</p>' + liveBilanz();
-    el.querySelectorAll('.kr-lpi').forEach(x => { const c = portrait(x.dataset.d, 112, 132); c.className = 'kr-lpi'; x.replaceWith(c); }); }   // Porträt der gewählten Figur (vorher nur Crew-Köpfe: andere Figuren zeigten Jonas)
+      '<p class="kr-live-n">' + (lb.length < 2 ? 'Warte auf Mitspieler: Die anderen öffnen Gringo Kart und wählen ebenfalls „👥 Live“.' : 'Das Rennen startet von selbst, sobald alle ✅ bereit sind. Wer die App wechselt, verlässt die Lobby, bis er zurück ist.') + (gpOn && !gpRun ? ' Pokal: Mehrheit der Lobby muss dafür sein.' : '') + '</p>' + liveBilanz();
+    el.querySelectorAll('.kr-lpi').forEach(x => { const c = portrait(x.dataset.d, 112, 132); c.className = 'kr-lpi'; x.replaceWith(c); });   // Porträt der gewählten Figur (vorher nur Crew-Köpfe: andere Figuren zeigten Jonas)
+    el.querySelectorAll('.kr-lpvs').forEach(x => { const p0 = lp.find(q => q.peer === x.dataset.p); if (p0) x.replaceWith(lpVeh(lpInfo(p0))); }); }
   const GHOST = {mode: store.get('kartGhost') || 'off'};   // off | mine | crew
   function ghostLocal(tid) { try { return JSON.parse(localStorage.getItem('br26.kartGhost.' + tid) || 'null'); } catch (e) { return null; } }
   function ghostProg(G) { if (!G || !G.g) return; let lap = -1, hint = -1, pi = null; G.prog = G.g.map(r => { const [i] = nearest(r[0], r[1], hint); hint = i; if (pi !== null && pi > N * .85 && i < N * .15) lap++; pi = i; return lap * N + i; }); }
@@ -9700,8 +9722,7 @@ setGroup(G);
       menu.querySelector('.kr-best').textContent = vn + (MODE === 'cup' ? CUPSEL.e + ' ' + CUPSEL.n + ' · ' + DIFFS[DIFF].n : MODE === 'live' ? '👥 Live · ' + lobby().length + ' im Raum'
         : TBY[TRK].e + ' ' + TBY[TRK].name + ' · ' + DIFFS[DIFF].n + (bt[TRK] ? ' · ⏱ ' + fmt(bt[TRK]) : '')); }
     liveBox(); livePres();
-    { const go = menu.querySelector('.kr-go'), lb0 = lobby(), nr0 = lb0.filter(p0 => p0.presence.rdy).length; go.textContent = MODE === 'live' ? (LIVE.rdy ? '✅ Bereit · ' + nr0 + '/' + Math.max(2, lb0.length) : '👍 Bereit? · ' + nr0 + '/' + Math.max(2, lb0.length)) : MODE === 'cup' ? '🏆 Starten' : MODE === 'daily' ? '🎯 Fahren' : 'Los!';
-      go.classList.remove('kr-wait'); go.classList.toggle('kr-rdyon', MODE === 'live' && !!LIVE.rdy); }   // Live: der Knopf schaltet „bereit“, los geht es erst, wenn alle bereit sind
+    { const go = menu.querySelector('.kr-go'); go.textContent = MODE === 'cup' ? '🏆 Starten' : MODE === 'daily' ? '🎯 Fahren' : 'Los!'; go.classList.remove('kr-wait'); liveFoot(); }   // Live: der Knopf schaltet „bereit“, los geht es erst, wenn alle bereit sind
     const dy = daily(), lb = menu.querySelector('.kr-lb'), gh = menu.querySelector('.kr-ghost:not(.kr-diff)');
     gh.hidden = MODE !== 'single'; gh.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x.dataset.g === GHOST.mode));
     { const dc = menu.querySelector('.kr-day'); dc.hidden = MODE !== 'daily'; if (MODE !== 'daily') dc.innerHTML = ''; }
@@ -9824,12 +9845,12 @@ setGroup(G);
     const rec0 = e.target.closest('.kr-rec'); if (rec0) { RECOPEN = RECOPEN === rec0.dataset.t ? null : rec0.dataset.t; const rb = menu.querySelector('.kr-recs .kr-recb'); if (rb) rb.innerHTML = recsHtml(); return; }
     const rec = e.target.closest('.kr-recgo'); if (rec) { TRK = rec.dataset.t; store.set('kartTrack', TRK); if (lbList(LB, TRK).length) { GHOST.mode = 'crew'; store.set('kartGhost', 'crew'); } if (MODE !== 'single') menu.querySelector('.kr-mode button[data-mode="single"]').click(); else { preview(TRK); renderMenu(); } menu.querySelector('.kr-trk').scrollIntoView({behavior: 'smooth', block: 'center'}); return; }
     if (e.target.closest('.kr-tutgo')) { tutStart(); return; }
-    const cfb = e.target.closest('.kr-cfg button'); if (cfb) { cfgStep(cfb.dataset.cfg); return; }
+    const cfb = e.target.closest('.kr-cfgt[data-cfg]'); if (cfb) { SFX.pick(); cfgStep(cfb.dataset.cfg); return; }
     if (e.target.closest('.kr-tnt')) { LIVE.tauntOpen = !LIVE.tauntOpen; liveBox(); return; }
     const tnb = e.target.closest('.kr-tlist button'); if (tnb) { tauntSend(+tnb.dataset.tn); LIVE.tauntOpen = false; liveBox(); return; }
     if (e.target.closest('.kr-ptest')) { liveTest(); return; }
     if (e.target.closest('.kr-rjb')) { liveRejoin(); return; }
-    if (e.target.closest('.kr-rdy')) { LIVE.rdy = !LIVE.rdy; SFX.pick(); livePres(); renderMenu(); liveAuto(); return; }
+    if (e.target.closest('.kr-rdy, .kr-rdybig')) { LIVE.rdy = !LIVE.rdy; SFX.pick(); livePres(); renderMenu(); liveAuto(); return; }
     if (e.target.closest('.kr-gpt')) { store.set('kartLiveGP', store.get('kartLiveGP') === '1' ? '0' : '1'); livePres(); liveBox(); return; }
     if (e.target.closest('.kr-liveai')) { store.set('kartLiveAI', store.get('kartLiveAI') === '0' ? '1' : '0'); renderMenu(); return; }
     const pl0 = e.target.closest('.kr-pill'); if (pl0) { const d = menu.querySelector('.kr-' + pl0.dataset.open); if (d) { d.open = true; setTimeout(() => d.scrollIntoView({behavior: 'smooth', block: 'center'}), 30); } }
