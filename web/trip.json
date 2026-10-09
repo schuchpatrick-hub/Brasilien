@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251009n", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🔄", "t": "Gringo Kart: Fahrzeuge neu verteilt – alle starten mit 4, der Rest wird ab jetzt gekauft oder über Erfolge freigespielt"},
     {"id": "n251009m", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🛒", "t": "Gringo Kart: Fahrzeug antippen zeigt die Infos direkt darunter; 4 Fahrzeuge frei, 7 zum Kaufen, 3 nur über Erfolge"},
     {"id": "n251009l", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🔧", "t": "Gringo Kart: Werkstatt mit 6 Tuning-Teilen je Fahrzeug (Motor, Getriebe, Reifen, Fahrwerk, Turbo, Panzerung), Tuning wird jetzt sicher gespeichert; Bestenliste mit Gesamtwertung über alle Strecken"},
     {"id": "n251009k", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🦅", "t": "Gringo Kart: 4 neue Items – Urubu, Cristo-Blitz, Açaí-Bombe und Ônibus-Express; Fahrer reden öfter, neue Fahrzeuge kosten jetzt 100–290 Münzen"},
