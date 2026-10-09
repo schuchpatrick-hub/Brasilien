@@ -9228,19 +9228,30 @@ setGroup(G);
     if (S.flash > 0) { ctx.fillStyle = `rgba(255,170,120,${Math.min(.85, S.flash)})`; ctx.fillRect(0, 0, W, H); }
     if (k0.acai > 0 && S.acaiB) { const al = Math.min(1, k0.acai / 1.2) * .88; S.acaiB.b.forEach(([fx, fy, fr], j) => { const r = fr * Math.min(W, H) * (1 + .06 * Math.sin(tt * 3.3 + j)); ctx.fillStyle = `rgba(${90 + j * 6},20,${110 + j * 8},${al})`; ctx.beginPath(); ctx.arc(fx * W, fy * H, r, 0, TAU); ctx.fill(); ctx.beginPath(); ctx.arc(fx * W + r * .7, fy * H + r * .9, r * .35, 0, TAU); ctx.fill(); }); ctx.fillStyle = `rgba(255,255,255,${al * .9})`; ctx.font = '900 18px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText('🫐 Açaí im Gesicht!', W / 2, H * .3); }   // Açaí-Bombe getroffen
     if (k0.peg > .3 && !k0.done) { ctx.fillStyle = `rgba(255,120,200,${k0.peg * .08})`; ctx.fillRect(0, 0, W, H); }
-    // Bildschirm: schwebende Texte, Sprechblasen
+    // Bildschirm: schwebende Texte, Sprechblasen (weichen Tacho, ITEM-Knopf und einander aus)
+    LBL = [];
     S.fx.forEach(f => { if (!f.txt) return; const p = toScreen(f.x, f.y, sc, phi); ctx.save(); ctx.globalAlpha = clamp(1.3 - f.t, 0, 1); ctx.font = '900 20px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(0,0,0,.6)';
-      const y = p[1] - 48 - f.t * 40; ctx.strokeText(f.txt, p[0], y); ctx.fillStyle = f.col; ctx.fillText(f.txt, p[0], y); ctx.restore(); });
+      const y = dodge(p[0], p[1] - 55 - f.t * 40, ctx.measureText(f.txt).width + 8, 26) + 7; ctx.strokeText(f.txt, p[0], y); ctx.fillStyle = f.col; ctx.fillText(f.txt, p[0], y); ctx.restore(); });
     S.karts.forEach(k => { if (k.sayT <= 0) return; const p = toScreen(k.x, k.y, sc, phi); bubble(p[0], p[1] - 34 * sc, k.say, Math.min(1, k.sayT * 3)); });
     if (S.live) { const tn = performance.now(); ctx.save(); ctx.textAlign = 'center'; S.karts.forEach(k => { if (k.me || k.out) return; const p = toScreen(k.x, k.y, sc, phi); if (p[0] < -40 || p[0] > W + 40 || p[1] < -40 || p[1] > H + 40) return;
         if (k.aiIdx === undefined) { const t = NAME(k.who || k.id) + (k.lagging ? ' 📶' : ''); ctx.font = '800 12px system-ui,sans-serif'; const w = ctx.measureText(t).width + 12; ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(p[0] - w / 2, p[1] + 22 * sc, w, 18, 9) : ctx.rect(p[0] - w / 2, p[1] + 22 * sc, w, 18); ctx.fill(); ctx.fillStyle = '#9ff0b4'; ctx.fillText(t, p[0], p[1] + 22 * sc + 13); } });
-      S.karts.forEach(k => { if (!(k.emoU > tn)) return; const p = toScreen(k.x, k.y, sc, phi), a = clamp((k.emoU - tn) / 400, 0, 1), up = (2400 - (k.emoU - tn)) / 2400; ctx.globalAlpha = a; ctx.font = '40px system-ui,sans-serif'; ctx.fillText(k.emo, p[0], p[1] - 52 * sc - up * 26); ctx.globalAlpha = 1; }); ctx.restore(); }
+      S.karts.forEach(k => { if (!(k.emoU > tn)) return; const p = toScreen(k.x, k.y, sc, phi), a = clamp((k.emoU - tn) / 400, 0, 1), up = (2400 - (k.emoU - tn)) / 2400; ctx.globalAlpha = a; ctx.font = '40px system-ui,sans-serif'; ctx.fillText(k.emo, p[0], dodge(p[0], p[1] - 52 * sc - up * 26 - 14, 46, 46) + 14); ctx.globalAlpha = 1; }); ctx.restore(); }
     S.movers.forEach(m => { if (m.say > 0 && near(m.x, m.y, 500) && MVSAY[m.kind] && m.kind !== 'coati' && m.kind !== 'caiman' && m.kind !== 'monkey') { const p = toScreen(m.x, m.y, sc, phi); bubble(p[0], p[1] - 30 * sc, MVSAY[m.kind], Math.min(1, m.say)); } });
-    hud(sc);
+    itemSee(sc, phi); hud(sc);
     if (S.pod) podDraw();
   }
+  // HUD-Flächen (Tacho unten links, ITEM-Knopf) in Bildschirm-Koordinaten: schwebende Texte und Sprechblasen weichen nach oben aus
+  let HUDR = null, HUDT = 0, ITSEE = false;
+  function hudRects() { const now = performance.now(); if (HUDR && now - HUDT < 800 && HUDR.w === W && HUDR.h === H) return HUDR; HUDT = now; HUDR = [[8, H - 196, 102, H - 104]]; HUDR.w = W; HUDR.h = H; HUDR.it = null;
+    const b = itemBtn.getBoundingClientRect(), c = box.getBoundingClientRect(); if (b.width) { HUDR.it = [b.left - c.left, b.top - c.top, b.right - c.left, b.bottom - c.top]; HUDR.push([HUDR.it[0] - 6, HUDR.it[1] - 6, HUDR.it[2] + 6, HUDR.it[3] + 6]); } return HUDR; }
+  let LBL = [];   // in diesem Bild schon gesetzte Texte/Sprechblasen (weichen sich gegenseitig aus)
+  const dodge = (x, y, w, h) => { const obs = hudRects().concat(LBL); for (let n = 0; n < 8; n++) { let mv = false; obs.forEach(r => { if (x + w / 2 > r[0] && x - w / 2 < r[2] && y + h / 2 > r[1] && y - h / 2 < r[3]) { y = r[1] - h / 2 - 4; mv = true; } }); if (!mv) break; } LBL.push([x - w / 2, y - h / 2, x + w / 2, y + h / 2]); return y; };
+  // ITEM-Knopf halbdurchsichtig, solange ein Kart oder Geschoss dahinter fährt (im Hochformat sonst unsichtbare Verfolger)
+  function itemSee(sc, phi) { const it = hudRects().it; let under = false; if (it && !S.pod) { const m = 22 * sc, hit = (x, y) => { const p = toScreen(x, y, sc, phi); return p[0] > it[0] - m && p[0] < it[2] + m && p[1] > it[1] - m && p[1] < it[3] + m; };
+      under = S.karts.some(k => !k.me && hit(k.x, k.y)) || S.coatis.some(o => hit(o.x, o.y)); }
+    const now = performance.now(); if (under) S.itSee = now; const see = now - (S.itSee || -1e9) < 350; if (see !== ITSEE) { ITSEE = see; itemBtn.classList.toggle('kr-see', see); } }
   function toScreen(x, y, sc, phi) { const dx = x - S.camX, dy = y - S.camY, c = Math.cos(phi), s = Math.sin(phi); return [W / 2 + (dx * c - dy * s) * sc, camY() + (dx * s + dy * c) * sc]; }
-  function bubble(x, y, t, a) { ctx.save(); ctx.globalAlpha = a; ctx.font = '700 14px system-ui,sans-serif'; const w = ctx.measureText(t).width + 16; x = clamp(x, w / 2 + 6, W - w / 2 - 6);
+  function bubble(x, y, t, a) { ctx.save(); ctx.globalAlpha = a; ctx.font = '700 14px system-ui,sans-serif'; const w = ctx.measureText(t).width + 16; x = clamp(x, w / 2 + 6, W - w / 2 - 6); y = dodge(x, y - 17, w, 28) + 17;
     ctx.fillStyle = '#fff'; ctx.strokeStyle = '#222'; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - w / 2, y - 30, w, 26, 12) : ctx.rect(x - w / 2, y - 30, w, 26); ctx.fill(); ctx.stroke();
     ctx.fillStyle = '#222'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t, x, y - 17); ctx.restore(); }
   function hud() {
@@ -9774,7 +9785,7 @@ setGroup(G);
   }
   function toMenu() { if (LIVE.diff0 != null) { DIFF = LIVE.diff0; LIVE.diff0 = null; } TUTON = false; CUP = null; res.hidden = true; pm.hidden = true; racing(false); MUS.on = false; menu.hidden = false; preview(MODE === 'cup' ? CUPSEL.t[0] : TRK); renderMenu(); }
   openBtn.addEventListener('click', open);
-  const racing = on => box.classList.toggle('racing', on);
+  const racing = on => { box.classList.toggle('racing', on); ITSEE = false; itemBtn.classList.remove('kr-see'); HUDT = 0; };
   function pause() { if (!S || !box.classList.contains('racing') || !res.hidden) return; pm.querySelector('.kr-restart').hidden = !!S.live;
     if (S.live) { ptr.clear(); upd(); pm.hidden = false; return; }   // Live: Rennen läuft weiter, nur das Menü kommt
     S.paused = true; ptr.clear(); upd(); pm.hidden = false; if (AC) try { AC.suspend(); } catch (e) {} }
