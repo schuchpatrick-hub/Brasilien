@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251009s", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🧹", "t": "Gringo Kart aufgeräumt: die Tages-Challenge ist raus, es gibt nur noch Einzelrennen, Grand Prix und Live"},
     {"id": "n251009r", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🏁", "t": "Gringo Kart Live: großer Bereit-Knopf, Einstellungen als Kacheln, und jede Spieler-Karte zeigt wer spielt, welche Figur und welches Fahrzeug – auch unten in einer Leiste beim Auswählen"},
     {"id": "n251009q", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎮", "t": "Gringo Kart Live: Spieler-Karten P1–P6 wie bei Smash Bros, das Rennen startet erst, wenn alle bereit sind; pro Kisten-Reihe gibt es nur noch ein Item"},
     {"id": "n251009p", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "⏱️", "t": "Gringo Kart: Bestenliste zurückgesetzt – alle Strecken sind wieder frei, jetzt zählt jede Zeit"},
