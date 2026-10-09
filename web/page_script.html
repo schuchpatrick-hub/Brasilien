@@ -7253,7 +7253,8 @@ setGroup(G);
   const VEHS = [{id: 'kart', n: 'Gringo-Kart', e: '🏎️'}, {id: 'uber', n: 'Uber', e: '🚕'}, {id: 'uno', n: 'Fiat Uno', e: '🚗'}, {id: 'cart', n: 'Gepäckkarren', e: '🧳'},
     {id: 'moto', n: 'Motoboy', e: '🛵', c: 100}, {id: 'trak', n: 'Zuckerrohr-Traktor', e: '🚜', c: 120}, {id: 'sail', n: 'Strandsegler', e: '⛵', c: 140}, {id: 'coco', n: 'Kokos-Karren', e: '🥥', c: 150},
     {id: 'horse', n: 'Pferdekutsche', e: '🐎', c: 170}, {id: 'capi', n: 'Capivara', e: '🦫', c: 190}, {id: 'rocket', n: 'Raketen-Liegestuhl', e: '🚀', c: 250},
-    {id: 'wheel', n: 'Rollstuhl', e: '♿', need: ['supers', 10], t: '10 Super-Turbos'}, {id: 'trio', n: 'Trio Elétrico', e: '🔊', need: ['tds', 15], t: '15 Takedowns'}, {id: 'gold', n: 'Goldenes Kart', e: '🏆', need: ['cups', 1], t: 'einen Grand Prix gewinnen'}];
+    {id: 'wheel', n: 'Rollstuhl', e: '♿', need: ['vsup', 10], t: '10 Super-Turbos'}, {id: 'trio', n: 'Trio Elétrico', e: '🔊', need: ['vtds', 15], t: '15 Takedowns'}, {id: 'gold', n: 'Goldenes Kart', e: '🏆', need: ['vcup', 1], t: 'einen Grand Prix gewinnen'}];
+  // Neustart 09.10. abends (Wunsch Patrick: jeder nur 3–4 Fahrzeuge zu Beginn): Erfolge zählen ab jetzt (eigene Zähler vsup/vtds/vcup), Käufe in neuem Speicher br26.kartVehOwn2
   // Fahrgefühl je Fahrzeug: g = Haftung, d = Rutschen im Drift, m = Masse (Rempler), b = Turbo-Dauer, x = Beschreibung im Menü
   const VTX = {kart: {g: 1, d: 1, m: 1, b: 1, x: 'Ausgewogen, für alles gut.'}, uber: {g: 1.08, d: .8, m: 1.45, b: 1, x: 'Schwer und stabil: rempelt andere weg, driftet ungern.'},
     uno: {g: .95, d: 1.15, m: 1.1, b: 1, x: 'Zieht stark an, das Heck kommt schnell.'}, cart: {g: .85, d: 1.35, m: .9, b: 1, x: 'Rutschig wie auf Seife, aber wendig.'},
@@ -8195,7 +8196,7 @@ setGroup(G);
   /* ---- Fortschritt am Konto (db kartprog/<person>): Münzen, Tuning, Kostüme, Lack, Aufkleber, Erfolge, Statistik, eigene Bestzeiten.
      Gilt auf jedem Handy, auf dem die Person „Ich bin …“ gewählt hat. Zusammenführen: Gekauftes/Erreichtes wird vereinigt (Maximum),
      Bestzeiten Minimum, Auswahl (Fahrzeug, Kostüm, Lack, Rivale) = neuester Stand, Münzen als Zähler (Änderung seit dem letzten Abgleich). ---- */
-  const PROGK = /^kart(Coins|Tune|Cos|CosOwn|Ach|Stats|Cups|Paint|StkOwn|VehOwn|Parts|TutDone|Rival|Veh|Best|Lap\..+|Sec\..+)$/, PREFK = /^kart(Cos|Paint|Rival|Veh)$/, TIMEK = /^kart(Best|Lap\.|Sec\.)/;
+  const PROGK = /^kart(Coins|Tune|Cos|CosOwn|Ach|Stats|Cups|Paint|StkOwn|VehOwn2|Parts|TutDone|Rival|Veh|Best|Lap\..+|Sec\..+)$/, PREFK = /^kart(Cos|Paint|Rival|Veh)$/, TIMEK = /^kart(Best|Lap\.|Sec\.)/;
   let PROG = {}, progOn = false, progMute = false, progT = 0, progWR = false;
   const pj = s0 => { try { return JSON.parse(s0); } catch (e) { return null; } };
   const progKeys = () => { try { return Object.keys(localStorage).filter(k => k.indexOf('br26.') === 0 && PROGK.test(k.slice(5))).map(k => k.slice(5)); } catch (e) { return []; } };
@@ -8434,11 +8435,8 @@ setGroup(G);
   const best = () => loadJ('kartBest');
   // Einstellungen: Steuerung (Halten/Analog), Grafik (Sparsam/Normal/Hoch), Kamera (Nah/Normal/Weit)
   const SET = Object.assign({ctl: 'hold', q: 1, cam: 1, tod: 'real'}, loadJ('kartSet')), saveSet = () => store.set('kartSet', JSON.stringify(SET));
-  const stats = () => { const s0 = Object.assign({races: 0, wins: 0, ilha: 0, supers: 0, cups: 0, coinsTot: 0, rivals: 0, tracks: '', smash: 0, tds: 0}, loadJ('kartStats')); s0.tracksN = s0.tracks.split(',').filter(Boolean).length; return s0; };
-  const unlocked = v => (!v.need && !v.c) || (v.need ? stats()[v.need[0]] >= v.need[1] : false) || !!loadJ('kartVehOwn')[v.id];   // frei, Erfolg erreicht oder gekauft (früher Gekauftes bleibt)
-  // einmalig: wer die alten Bedingungen der neuen Fahrzeuge schon erfüllt hatte (galten wenige Stunden), behält sie
-  if (!store.get('kartVehMig')) { const st = stats(), OLD = {capi: ['races', 5], moto: ['rivals', 3], coco: ['coinsTot', 150], sail: ['tracksN', 6], horse: ['wins', 3], trak: ['smash', 25], rocket: ['supers', 25], wheel: ['supers', 5]}, vo = loadJ('kartVehOwn');
-    Object.entries(OLD).forEach(([id, [q, n]]) => { if (st[q] >= n) vo[id] = 1; }); store.set('kartVehOwn', JSON.stringify(vo)); store.set('kartVehMig', '1'); }
+  const stats = () => { const s0 = Object.assign({races: 0, wins: 0, ilha: 0, supers: 0, cups: 0, coinsTot: 0, rivals: 0, tracks: '', smash: 0, tds: 0, vsup: 0, vtds: 0, vcup: 0}, loadJ('kartStats')); s0.tracksN = s0.tracks.split(',').filter(Boolean).length; return s0; };
+  const unlocked = v => (!v.need && !v.c) || (v.need ? stats()[v.need[0]] >= v.need[1] : false) || !!loadJ('kartVehOwn2')[v.id];   // frei, Erfolg (seit dem Neustart) erreicht oder gekauft
   const myVeh = () => { const v = VEHS.find(x => x.id === store.get('kartVeh')); return v && unlocked(v) ? v.id : 'kart'; };
   // Münzen (auf der Strecke + Bonus), Tuning, Kostüme, Erfolge: alles pro Handy
   // Kart-Baukasten (Garage): Reifen und Flügel einzeln, ändern Aussehen und Fahrgefühl (nur das eigene Fahrzeug, nicht auf dem Boot)
@@ -9353,7 +9351,7 @@ setGroup(G);
     const mi0 = order.indexOf(mine), nbF = [order[mi0 - 1], order[mi0 + 1]].filter(o => o && o.done && mine.done && Math.abs(o.done - mine.done) < .15)[0], photo = nbF ? '📸 Fotofinish gegen ' + NAME(nbF.who || nbF.id) + ': ' + Math.round(Math.abs(nbF.done - mine.done) * 1000) + ' ms ' + (nbF.done > mine.done ? 'vorne!' : 'hinten.') + ' ' : '';
     const st0 = stats(), st1 = Object.assign({}, st0, {races: st0.races + 1, wins: st0.wins + (pl === 1 ? 1 : 0), ilha: st0.ilha + (T.id === 'ilha' ? 1 : 0), supers: st0.supers + S.supers});
     const rv = ks.find(o => o.id === S.rival), beatRival = rv && order.indexOf(mine) < order.indexOf(rv), earn = S.got + [10, 6, 4, 2, 1, 1][pl - 1] + (beatRival ? 5 : 0);
-    st1.smash = (st0.smash || 0) + (S.myBrk || 0); st1.coinsTot = st0.coinsTot + S.got; st1.rivals = st0.rivals + (beatRival ? 1 : 0); if (!st1.tracks.split(',').includes(T.id)) st1.tracks = (st1.tracks ? st1.tracks + ',' : '') + T.id; st1.tracksN = st1.tracks.split(',').filter(Boolean).length; st1.tds = (st0.tds || 0) + (S.td ? S.td.n : 0); addCoins(earn);
+    st1.smash = (st0.smash || 0) + (S.myBrk || 0); st1.coinsTot = st0.coinsTot + S.got; st1.rivals = st0.rivals + (beatRival ? 1 : 0); if (!st1.tracks.split(',').includes(T.id)) st1.tracks = (st1.tracks ? st1.tracks + ',' : '') + T.id; st1.tracksN = st1.tracks.split(',').filter(Boolean).length; st1.tds = (st0.tds || 0) + (S.td ? S.td.n : 0); st1.vtds = (st0.vtds || 0) + (S.td ? S.td.n : 0); st1.vsup = (st0.vsup || 0) + S.supers; addCoins(earn);
     { const rr = loadJ('kartRival'), mi = order.indexOf(mine), nb = order[mi + 1] || order[mi - 1]; rr[me] = beatRival ? nb.id : S.rival; store.set('kartRival', JSON.stringify(rr)); }
     store.set('kartStats', JSON.stringify(st1)); if (st1.smash >= 25) ach('smash'); const newV = VEHS.filter(v => v.need && st0[v.need[0]] < v.need[1] && st1[v.need[0]] >= v.need[1]);
     const lastCup = CUP && CUP.i === CUP.list.length - 1;
@@ -9439,7 +9437,7 @@ setGroup(G);
   // Siegerehrung nach dem Grand Prix: Podest auf dem Canvas, Tabelle im Kasten
   function ceremony() {
     const tbl = Object.entries(CUP.pts).sort((a, b) => b[1] - a[1]), myPl = tbl.findIndex(([id]) => id === me) + 1;
-    if (myPl === 1) { setTimeout(() => ach('cup'), 1200); const c = loadJ('kartCups'); c[me] = (c[me] || 0) + 1; store.set('kartCups', JSON.stringify(c)); const s1 = stats(), had = s1.cups; s1.cups++; store.set('kartStats', JSON.stringify(s1));
+    if (myPl === 1) { setTimeout(() => ach('cup'), 1200); const c = loadJ('kartCups'); c[me] = (c[me] || 0) + 1; store.set('kartCups', JSON.stringify(c)); const s1 = stats(), had = s1.vcup; s1.cups++; s1.vcup = (s1.vcup || 0) + 1; store.set('kartStats', JSON.stringify(s1));
       const ul = res.querySelector('.kr-unlock'); ul.hidden = had > 0; ul.innerHTML = had > 0 ? '' : '🔓 Neues Fahrzeug: <b>🏆 Goldenes Kart</b>'; }
     else res.querySelector('.kr-unlock').hidden = true;
     res.querySelector('.kr-res-t').textContent = CUP.e + ' ' + CUP.n;
@@ -9793,7 +9791,7 @@ setGroup(G);
     const t = e.target.closest('.kr-trk button'); if (t) { TRK = t.dataset.t; store.set('kartTrack', TRK); preview(TRK); renderMenu(); }
     const vbuy = e.target.closest('.kr-vbuy'); if (vbuy) { const V = VEHS.find(v => v.id === vbuy.dataset.v); if (!V || !V.c) return;
       if (coins() < V.c) { toast('🪙 Noch ' + (V.c - coins()) + ' Münzen, dann gehört ' + V.e + ' ' + esc(V.n) + ' dir.'); return; }
-      addCoins(-V.c); const vo = loadJ('kartVehOwn'); vo[V.id] = 1; store.set('kartVehOwn', JSON.stringify(vo)); store.set('kartVeh', V.id); VINFO = V.id; SFX.pick(); fireworks(30); toast('🎉 ' + V.e + ' <b>' + esc(V.n) + '</b> gehört jetzt dir!'); makeVehicles(); newRace(); S.paused = true; renderMenu(); return; }
+      addCoins(-V.c); const vo = loadJ('kartVehOwn2'); vo[V.id] = 1; store.set('kartVehOwn2', JSON.stringify(vo)); store.set('kartVeh', V.id); VINFO = V.id; SFX.pick(); fireworks(30); toast('🎉 ' + V.e + ' <b>' + esc(V.n) + '</b> gehört jetzt dir!'); makeVehicles(); newRace(); S.paused = true; renderMenu(); return; }
     const vlk = e.target.closest('.kr-vcar button.kr-vlk'); if (vlk) { VINFO = VINFO === vlk.dataset.v ? myVeh() : vlk.dataset.v; renderMenu(); return; }   // gesperrt: nur Infos (Preis bzw. Erfolg) zeigen
     const vb = e.target.closest('.kr-vehs:not(.kr-cos) > button:not(.kr-vlk)'); if (vb && !vb.disabled) { VINFO = vb.dataset.v; store.set('kartVeh', vb.dataset.v); makeVehicles(); newRace(); S.paused = true; renderMenu(); }
     if (e.target.closest('.kr-go')) { CUP = MODE === 'cup' ? {i: 0, pts: {}, races: [], list: CUPSEL.t, n: CUPSEL.n, e: CUPSEL.e} : null; RULE = MODE === 'daily' ? daily().rule : null; startRace(); }
