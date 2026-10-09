@@ -7952,7 +7952,7 @@ setGroup(G);
 
   /* ---- Ton: Motor, Synth-Effekte, echte Geräusche, Samba, Ansager ---- */
   let AC = null, eng = null, MG = null, FXG = null, SOUND = store.get('kartSound') !== '0', ANN = store.get('kartAnn') !== '0';
-  const BUF = {sfx: null, ann: null, ann2: null, ann3: null, ann4: null, ann5: null}; let loading = false;
+  const BUF = {sfx: null, ann: null, ann2: null, ann3: null, ann4: null, ann5: null}; let loading = false; const RAWC = {};
   function audio() {
     if (!SOUND) return null;
     try { if (!AC) { AC = new (window.AudioContext || window.webkitAudioContext)();
@@ -7968,7 +7968,7 @@ setGroup(G);
   }
   function loadBufs() {
     if (loading || !AC) return; loading = true;
-    const get = (u, k) => fetch(u).then(r => r.ok ? r.arrayBuffer() : Promise.reject()).then(b => decodeAt(AC, b, k === 'sfx' ? 32000 : 24000)).then(d => { BUF[k] = d; }).catch(() => {});   // Stimmen sind 24-kHz-Aufnahmen: halber Speicher ohne hörbaren Unterschied
+    const get = (u, k) => (RAWC[u] || (RAWC[u] = fetch(u).then(r => r.ok ? r.arrayBuffer() : Promise.reject()).catch(e => { delete RAWC[u]; throw e; }))).then(b => decodeAt(AC, b.slice(0), k === 'sfx' ? 32000 : 24000)).then(d => { BUF[k] = d; }).catch(() => {});   // MP3 bleibt im Speicher (~12 MB): nach Schließen/Öffnen nur neu entpacken, nicht neu herunterladen (Datenvolumen unterwegs)   // Stimmen sind 24-kHz-Aufnahmen: halber Speicher ohne hörbaren Unterschied
     // zuerst nur Geräusche + Haupt-Ansager; die übrigen Stimmen-Pakete erst beim ersten Rennen nacheinander (lädt nicht alles auf einmal)
     if (TRIP.sfx) { const sp = window.loadSfx && window.loadSfx(AC); if (sp) sp.then(b => { if (b) BUF.sfx = b; else get('audio/sfx.mp3', 'sfx'); }); else get('audio/sfx.mp3', 'sfx'); } if (TRIP.kartvo) get('audio/kart.mp3', 'ann'); if (TRIP.kartvo && Object.values(TRIP.kartvo).some(v => v.f === 7)) get('audio/kart7.mp3', 'ann7'); BUF.more = () => { if (BUF.moreDone) return; BUF.moreDone = 1; let w = 0; const q = (u, k) => { w += 700; setTimeout(() => get(u, k), w); }; if (TRIP.kartvo) { const get = q; if (Object.values(TRIP.kartvo).some(v => v.f === 8)) get('audio/kart8.mp3', 'ann8'); if (Object.values(TRIP.kartvo).some(v => v.f === 9)) get('audio/kart9.mp3', 'ann9'); if (Object.values(TRIP.kartvo).some(v => v.f === 6)) get('audio/kart6.mp3', 'ann6'); if (Object.values(TRIP.kartvo).some(v => v.f === 2)) get('audio/kart2.mp3', 'ann2'); if (Object.values(TRIP.kartvo).some(v => v.f === 3)) get('audio/kart3.mp3', 'ann3'); if (Object.values(TRIP.kartvo).some(v => v.f === 4)) get('audio/kart4.mp3', 'ann4'); if (Object.values(TRIP.kartvo).some(v => v.f === 5)) get('audio/kart5.mp3', 'ann5'); } };
   }
@@ -8445,7 +8445,7 @@ setGroup(G);
   let S = null, raf = 0, last = 0, me = ME || 'patrick', W = 0, H = 0, DPR = 1, MODE = ['cup', 'daily', 'live'].includes(store.get('kartMode')) ? store.get('kartMode') : 'single', TRK = TBY[store.get('kartTrack')] ? store.get('kartTrack') : 'copa', CUP = null;
   const loadJ = k => { try { return JSON.parse(store.get(k) || '{}'); } catch (e) { return {}; } };
   // Zurücksetzen aller Zeiten (Stichtag in trip.json → kartReset): lokale Bestzeiten, Rundenzeiten und eigene Geister einmalig löschen
-  if (TRIP.kartReset && store.get('kartResetSeen') !== TRIP.kartReset) { try { Object.keys(localStorage).filter(k => /^br26\.(kart(Best$|Lap\.|Ghost\.|RecSeen$)|cache\.kart(best|ghost|daily)$)/.test(k)).forEach(k => localStorage.removeItem(k)); } catch (e) {} store.set('kartResetSeen', TRIP.kartReset); }
+  if (TRIP.kartReset && store.get('kartResetSeen') !== TRIP.kartReset) { try { Object.keys(localStorage).filter(k => /^br26\.(kart(Best$|Lap\.|Sec\.|Ghost\.|RecSeen$)|cache\.kart(best|ghost|daily)$)/.test(k)).forEach(k => localStorage.removeItem(k)); } catch (e) {} store.set('kartResetSeen', TRIP.kartReset); }
   const best = () => loadJ('kartBest');
   // Einstellungen: Steuerung (Halten/Analog), Grafik (Sparsam/Normal/Hoch), Kamera (Nah/Normal/Weit)
   const SET = Object.assign({ctl: 'hold', q: 1, cam: 1, tod: 'real'}, loadJ('kartSet')), saveSet = () => store.set('kartSet', JSON.stringify(SET));
