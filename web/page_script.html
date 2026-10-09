@@ -9344,8 +9344,7 @@ setGroup(G);
     const v = VEH[id]; x.save(); x.translate(W2 / 2, H2 / 2 + 6); x.scale(1.75 * vz, 1.75 * vz); x.fillStyle = 'rgba(0,0,0,.3)'; x.beginPath(); x.ellipse(2, 4, 20, 27, 0, 0, TAU); x.fill(); if (v) x.drawImage(v, -22, -30, 44, 60); x.restore();
     const h = headImg(id); if (h) { const sz = h.width * .26 * 1.75 * (st.hs || 1) * Math.sqrt(vz); x.drawImage(h, W2 / 2 - sz / 2, H2 / 2 + 6 + (st.seat === 'none' ? 0 : 6) * vz - sz / 2 - sz * .05, sz, sz * (h.height / h.width)); }
     x.fillStyle = 'rgba(255,255,255,.75)'; x.font = '700 10px system-ui'; x.textAlign = 'center'; x.fillText(vz > 1.04 ? '⬆ groß' : vz < .96 ? '⬇ klein' : '', W2 / 2, H2 - 4); return c; }
-  let FSL = null, RSPIN = 0, WHOOPEN = false, RGRP = null, RGME = null;
-  const grpOf = id => { const X = XBY[id]; return !X ? 'crew' : X.base ? 'x' : X.guest ? 'guest' : 'npc'; };
+  let FSL = null, RSPIN = 0, WHOOPEN = false;
   const VSHORT = {kart: 'ausgewogen', uber: 'schwer, stabil', uno: 'zieht stark an', cart: 'rutschig, wendig', wheel: 'leicht, lange Turbos', gold: 'von allem mehr'};
   const sumBadge = (k, t) => { const sm = menu.querySelector('.kr-' + k + ' summary'); if (!sm) return; let b = sm.querySelector('em'); if (!b) { b = document.createElement('em'); sm.appendChild(b); } b.textContent = t; };
   function pickDrv(id) { const ch = me !== id; me = id; makeVehicles(); renderMenu(); newRace(); S.paused = true; if (ch) announce(me); }
@@ -9391,15 +9390,13 @@ setGroup(G);
   function renderMenu() {
     const pk = menu.querySelector('.kr-pick:not(.kr-whop)'); pk.innerHTML = '';
     // Fahrerauswahl im Stil von Smash Bros./Tekken: schräge Porträt-Kacheln, P1-Rahmen, Zufalls-Kachel
-    // Gruppen als Reiter (Menü-Überarbeitung 09.10.: vorher alle 22 Fahrer untereinander, sehr langer Weg nach unten); Zufall rechts im Reiter-Streifen
-    if (!RGRP || RGME !== me) { RGRP = grpOf(me); RGME = me; }
-    const GR = [['crew', 'Crew', CREW.map(c => c.id)], ['x', 'Eskaliert', XDRV.filter(x => x.base).map(x => x.id)], ['guest', 'Gäste', XDRV.filter(x => x.guest).map(x => x.id)], ['npc', 'Serie', XDRV.filter(x => x.npc && !x.guest).map(x => x.id)]];
-    menu.querySelector('.kr-rtabs').innerHTML = GR.map(([g, t, ids]) => '<button type="button" data-rg="' + g + '" aria-pressed="' + (g === RGRP) + '">' + t + ' <small>' + ids.length + '</small>' + (ids.includes(me) ? '<u></u>' : '') + '</button>').join('') + '<button type="button" class="kr-rnd" aria-label="Zufälliger Fahrer">🎲</button>';
-    const grp = (g, ids) => {
-      ids.forEach(id => { const X = XBY[id], nm = NAME(id), b = document.createElement('button'); b.type = 'button'; b.dataset.id = id; b.dataset.grp = g; b.className = 'kr-tile' + (g === RGRP ? '' : ' kr-off'); b.style.setProperty('--tc', (LOOK[id] || {}).shirt || '#00a651'); b.setAttribute('aria-pressed', id === me); b.setAttribute('aria-label', nm);
-        b.appendChild(portrait(id, 112, 132)); b.insertAdjacentHTML('beforeend', '<span lang="de">' + (X && X.base ? esc(NAME(X.base)) + '<small>' + esc(X.sh) + '</small>' : X && X.guest ? esc(X.name) + '<small>' + esc(X.sh) + '</small>' : esc(X ? X.sh : nm)) + '</span>'); if (X && !X.base && !X.guest && X.sh.length > 6) b.classList.add(X.sh.length > 8 ? 'kr-xl' : 'kr-lg'); b.insertAdjacentHTML('beforeend', ''); pk.appendChild(b); });
-    };
-    GR.forEach(([g, , ids]) => grp(g, ids));
+    // Smash-Raster (Wunsch Patrick 09.10.: wieder alle Fahrer auf einen Blick statt Reitern): Gruppen-Balken mit Anzahl, Farbleiste je Fahrer, Spezial-Item oben rechts, Auswahl-Blitz, Zufall am Ende
+    const GR = [['crew', 'Crew', CREW.map(c => c.id)], ['x', 'Crew im Ausnahmezustand', XDRV.filter(x => x.base).map(x => x.id)], ['guest', 'Gastfahrer', XDRV.filter(x => x.guest).map(x => x.id)], ['npc', 'Figuren aus der Serie', XDRV.filter(x => x.npc && !x.guest).map(x => x.id)]], pkNew = FSL !== me;
+    const grp = (g, t, ids, rnd0) => { const h = document.createElement('p'); h.className = 'kr-pgh'; h.innerHTML = esc(t) + ' <small>' + ids.length + '</small>'; pk.appendChild(h);
+      ids.forEach(id => { const X = XBY[id], nm = NAME(id), b = document.createElement('button'), sp0 = SPECIAL[id]; b.type = 'button'; b.dataset.id = id; b.dataset.grp = g; b.className = 'kr-tile' + (id === me && pkNew ? ' kr-pk' : ''); b.style.setProperty('--tc', (LOOK[id] || {}).shirt || '#00a651'); b.setAttribute('aria-pressed', id === me); b.setAttribute('aria-label', nm + (sp0 ? ', Spezial: ' + sp0.n : ''));
+        b.appendChild(portrait(id, 112, 132)); b.insertAdjacentHTML('beforeend', (sp0 ? '<i class="kr-tsp" aria-hidden="true">' + sp0.e + '</i>' : '') + '<span lang="de">' + (X && X.base ? esc(NAME(X.base)) + '<small>' + esc(X.sh) + '</small>' : X && X.guest ? esc(X.name) + '<small>' + esc(X.sh) + '</small>' : esc(X ? X.sh : nm)) + '</span>'); if (X && !X.base && !X.guest && X.sh.length > 6) b.classList.add(X.sh.length > 8 ? 'kr-xl' : 'kr-lg'); pk.appendChild(b); });
+      if (rnd0) { const b = document.createElement('button'); b.type = 'button'; b.className = 'kr-tile kr-rnd'; b.dataset.rnd = '1'; b.setAttribute('aria-label', 'Zufälliger Fahrer'); b.innerHTML = '<b>?</b><span>Zufall</span>'; pk.appendChild(b); } };
+    GR.forEach(([g, t, ids], i) => grp(g, t, ids, i === GR.length - 1));
     menu.querySelectorAll('.kr-mode button').forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === MODE));
     const cs = CS[me], bar = v => '<i style="--v:' + Math.round(20 + clamp(v, 0, 1) * 80) + '%"></i>', sp = SPECIAL[me], pg = pegel(baseOf(me));
     const fresh = FSL !== me; FSL = me; const X0 = XBY[me], gl = X0 ? (X0.base ? 'Ausnahmezustand' : X0.guest ? 'Gastfahrer' : 'Serien-Figur') : 'Crew';
@@ -9537,11 +9534,10 @@ setGroup(G);
   });
   box.addEventListener('click', e => { if (e.target.closest('.kr-menu .kr-quit, .kr-res .kr-quit')) close(); });
   menu.addEventListener('click', e => {
-    { const ui = e.target.closest('.kr-rtabs button, .kr-mode button, .kr-trk button, .kr-cups button, .kr-vcar button, .kr-ghost button, .kr-set > summary, .kr-pill'); if (ui && !ui.disabled) { const f = ui.matches('.kr-set > summary, .kr-pill') ? 660 : 990; beep(f, .035, 'triangle', .035, f * 1.25); } }   // kurzer Klick-Ton bei jeder Auswahl
-    const rt = e.target.closest('.kr-rtabs button[data-rg]'); if (rt) { RGRP = rt.dataset.rg; menu.querySelectorAll('.kr-rtabs button[data-rg]').forEach(x => x.setAttribute('aria-pressed', x === rt)); menu.querySelectorAll('.kr-roster .kr-tile').forEach(x => x.classList.toggle('kr-off', x.dataset.grp !== RGRP)); return; }
-    const rb = e.target.closest('.kr-rtabs .kr-rnd, .kr-pick:not(.kr-whop) .kr-rnd'); if (rb) { if (RSPIN) return; RSPIN = 1; menu.querySelector('.kr-roster').classList.add('kr-all'); const ids = DRVS.filter(id => id !== me), fin = pick(ids), tile = id => menu.querySelector('.kr-roster .kr-tile[data-id="' + id + '"]'); let n = 0, cur = null;
+    { const ui = e.target.closest('.kr-mode button, .kr-trk button, .kr-cups button, .kr-vcar button, .kr-ghost button, .kr-set > summary, .kr-pill'); if (ui && !ui.disabled) { const f = ui.matches('.kr-set > summary, .kr-pill') ? 660 : 990; beep(f, .035, 'triangle', .035, f * 1.25); } }   // kurzer Klick-Ton bei jeder Auswahl
+    const rb = e.target.closest('.kr-pick:not(.kr-whop) .kr-rnd'); if (rb) { if (RSPIN) return; RSPIN = 1; const ids = DRVS.filter(id => id !== me), fin = pick(ids), tile = id => menu.querySelector('.kr-roster .kr-tile[data-id="' + id + '"]'); let n = 0, cur = null;
       const spin = () => { if (cur && tile(cur)) tile(cur).classList.remove('kr-rl'); n++; cur = n >= 16 ? fin : pick(ids); const t0 = tile(cur); if (t0) t0.classList.add('kr-rl'); beep(500 + n * 40, .04, 'square', .04);
-        if (n < 16) setTimeout(spin, 40 + n * n * 1.4); else setTimeout(() => { RSPIN = 0; menu.querySelector('.kr-roster').classList.remove('kr-all'); pickDrv(fin); }, 260); }; spin(); return; }
+        if (n < 16) setTimeout(spin, 40 + n * n * 1.4); else setTimeout(() => { RSPIN = 0; pickDrv(fin); }, 260); }; spin(); return; }
     const b = e.target.closest('.kr-pick:not(.kr-whop) button[data-id]'); if (b) pickDrv(b.dataset.id);
     const m = e.target.closest('.kr-mode button'); if (m) { MODE = m.dataset.mode; store.set('kartMode', MODE); RULE = MODE === 'daily' ? daily().rule : null; preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu();
       if (MODE === 'cup' || MODE === 'daily') setTimeout(() => { const t0 = menu.querySelector('.kr-tl'); if (t0) t0.scrollIntoView({behavior: 'smooth', block: 'start'}); }, 60); }   // Pokal/Challenge: gleich zur Auswahl springen (steht unter Fahrer und Fahrzeug)
