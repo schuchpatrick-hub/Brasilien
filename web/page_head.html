@@ -1701,8 +1701,15 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
 .kart .kr-vcar button.kr-vlk{background:rgba(0,0,0,.25);border-style:dashed}.kart .kr-vcar button.kr-vlk canvas{filter:grayscale(1) brightness(.4)}.kart .kr-vcar button.kr-vlk b{color:#9fb6cc}
 .kart .kr-vcar small em{display:block;font-style:normal;font-weight:800;color:#ffd23f;margin-top:2px}
 .kart .kr-vcar button.kr-vbq{border:2px solid #ffd23f;border-style:solid;background:rgba(255,210,63,.16);animation:krVb .5s ease}@keyframes krVb{0%{transform:scale(1.08);filter:brightness(1.6)}100%{transform:none;filter:none}}.kart .kr-vcar button.kr-vbq small{color:#ffd23f;font-weight:800}
+.kart .kr-vinfo{grid-column:1/-1;position:relative;margin:2px 0 4px;padding:10px 12px 11px;border-radius:14px;background:linear-gradient(180deg,rgba(255,210,63,.16),rgba(255,255,255,.05));border:2px solid rgba(255,210,63,.55)}
+.kart .kr-vinfo::before{content:"";position:absolute;top:-9px;left:calc(var(--col,50%) - 8px);border:8px solid transparent;border-top:0;border-bottom:9px solid rgba(255,210,63,.55)}
+.kart .kr-vinfo.kr-vinfol{border-color:rgba(159,182,204,.45);background:rgba(255,255,255,.05)}.kart .kr-vinfo.kr-vinfol::before{border-bottom-color:rgba(159,182,204,.45)}
+.kart .kr-vinfo>b{display:block;font:800 .86rem system-ui,sans-serif;color:#fff;margin:0}.kart .kr-vinfo>b em{font-style:normal;font-size:.62rem;background:#1d9a5b;color:#fff;border-radius:6px;padding:1px 6px;vertical-align:middle;margin-left:4px}.kart .kr-vinfo>b em.kr-vlc{background:rgba(255,255,255,.14);color:#ffd23f}
+.kart .kr-vinfo p{margin:4px 0 7px;font-size:.72rem;line-height:1.35;color:#cfe3f5;text-align:left}.kart .kr-vinfo .kr-wsbars div{grid-template-columns:98px 1fr}.kart .kr-vinfo>small{display:block;margin-top:6px;font-size:.66rem;color:#9fb6cc;text-align:left}.kart .kr-vinfo .kr-vneed{color:#ffd23f;font-weight:700}
+.kart .kr-vcar button.kr-vbuy{display:block;width:100%;min-height:0;margin-top:8px;padding:10px;border:0;border-radius:10px;background:#ffd23f;color:#3a2500;font:900 .82rem system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 0 #b88a00}.kart .kr-vcar button.kr-vbuy:disabled{background:rgba(255,255,255,.12);color:#9fb6cc;cursor:default;box-shadow:none}
+@keyframes krVi{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
 .kart .kr-vcar .kr-lock{position:absolute;top:24px;left:50%;transform:translateX(-50%);font-style:normal;font-size:1.25rem}
-.kart .kr-vcar s{position:absolute;left:12px;right:12px;bottom:5px;height:3px;border-radius:2px;background:linear-gradient(90deg,#ffd23f var(--p),rgba(255,255,255,.15) var(--p));text-decoration:none}
+.kart .kr-vcar>button>s{position:absolute;left:12px;right:12px;bottom:5px;height:3px;border-radius:2px;background:linear-gradient(90deg,#ffd23f var(--p),rgba(255,255,255,.15) var(--p));text-decoration:none}
 .kart .kr-vcar button[aria-pressed="true"]{border-color:#ffd23f;background:radial-gradient(circle at 50% 30%,rgba(255,210,63,.32),rgba(255,210,63,.08) 62%)}
 .kart .kr-vcar button[aria-pressed="true"]::after{content:"✓";position:absolute;top:5px;right:6px;width:17px;height:17px;border-radius:50%;background:#ffd23f;color:#3a2500;font:900 .62rem/17px system-ui,sans-serif}
 .kart .kr-trk button{flex-basis:150px}
