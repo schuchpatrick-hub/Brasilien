@@ -1975,7 +1975,7 @@
     S.boxes.forEach((b, bi) => { if (b.off > 0) { b.off = Math.max(0, b.off - dt); return; } ks.forEach(k => { if (!k.remote && !(k.fall > 0) && b.off <= 0 && !(k.boxI === b.i && S.t - k.boxAt < 1.5) && Math.hypot(k.x - b.x, k.y - b.y) < 28) { b.off = 3; k.boxI = b.i; k.boxAt = S.t;   /* nur eine Kiste pro Reihe (vorher fuhr man zwischen zwei Kisten durch und bekam beide) */ if (S.live) liveEmit({t: 'box', race: S.live.id, i: bi}); for (let j = 0; j < 8; j++) S.sp.push({x: b.x, y: b.y, vx: rnd(-120, 120), vy: rnd(-120, 120), t: 0, c: '#ffd23f'}); if (!k.item && k.roll <= 0) { k.roll = .9; if (k.me) beep(660, .06, 'square', .05); } else if (k.me && k.item && !k.item2 && k.roll <= 0) { k.item2 = rollItem(k, 1); SFX.pick(); floatTxt(k, k.item2.e + ' 2. Item' + (comboOf(k.item, k.item2) ? ' · KOMBO!' : ''), '#ffd23f'); } } }); });
     // feste Hindernisse: Anprall (zurückschieben, bremsen, wackeln) statt Dreher
     S.obst.forEach(o => ks.forEach(k => { const dx = k.x - o.x, dy = k.y - o.y, d = Math.hypot(dx, dy); if (k.remote || !ground(k) || d >= o.r + 8 || d < .01 || (o.drop !== undefined && S.t - o.drop < .7)) return;
-      k.x = o.x + dx / d * (o.r + 8); k.y = o.y + dy / d * (o.r + 8); if (k.bump > 0) return; k.bump = .45; k.v *= .4; k.dr = 0; k.dt = 0; S.hl[o.kind] = (S.hl[o.kind] || 0) + 1; k.obH = (k.obH || 0) + 1; if (k.me) { S.shake = .2; SFX.land(); }
+      k.x = o.x + dx / d * (o.r + 8); k.y = o.y + dy / d * (o.r + 8); if (FALL) { const [ni, nl] = nearest(k.x, k.y, k.idx); if (Math.abs(nl) > TW / 2 - 6) { [k.x, k.y] = at(ni, Math.sign(nl) * (TW / 2 - 6)); } }   /* Abgrund-Strecken: ein Hindernis schiebt nie über den Rand */ if (k.bump > 0) return; k.bump = .45; k.v *= .4; k.dr = 0; k.dt = 0; S.hl[o.kind] = (S.hl[o.kind] || 0) + 1; k.obH = (k.obH || 0) + 1; if (k.me) { S.shake = .2; SFX.land(); }
       if (Math.random() < .5 && HITSAY[o.kind]) { k.say = HITSAY[o.kind]; k.sayT = 1.3; } }));
     S.oils = S.oils.filter(o => { o.t -= dt;
       if (o.bang) { o.bang -= dt; if (o.bang > 0) return true; const me0 = S.karts[0]; ks.forEach(k => { if (!k.air && !(k.fall > 0) && Math.hypot(k.x - o.x, k.y - o.y) < 74) hitBy(k, 'bang', o.by); });   // Böller: Zündschnur, dann Knall
@@ -2033,7 +2033,7 @@
     S.flash = Math.max(0, S.flash - dt);
     // Seitenwind auf der Brücke: Böen schieben alle zur Seite
     if (T.wind && S.t > 0) { const w0 = S.wind || (S.wind = {next: wrnd('wind', 4, 7), on: 0, dir: 1, warn: 0}); w0.next -= dt; if (w0.next < 1.2 && !w0.on) w0.warn = 1; if (w0.next < 0 && !w0.on) { w0.on = 1.6; w0.dir = wr('wind') < .5 ? -1 : 1; w0.warn = 0; noise(1.6, .12, 300); }
-      if (w0.on > 0) { w0.on -= dt; ks.forEach(k => { if (!k.air) k.vr += w0.dir * 150 * (S.windEvery ? 1.3 : 1) * dt; }); if (w0.on <= 0) { w0.on = 0; w0.next = wrnd('wind', (S.windEvery || T.wind.every)[0], (S.windEvery || T.wind.every)[1]); } } }
+      if (w0.on > 0) { w0.on -= dt; ks.forEach(k => { if (!k.air) k.vr += w0.dir * 150 * (S.windEvery ? 1.12 : 1) * dt; }); if (w0.on <= 0) { w0.on = 0; w0.next = wrnd('wind', (S.windEvery || T.wind.every)[0], (S.windEvery || T.wind.every)[1]); } } }
     // Tropengewitter: zieht auf, Regen, Blitze, Donner, rutschiger, neue Pfützen auf der Strecke
     { const st = S.storm; if (st.at > 0 && S.t > st.at) { st.f = Math.min(1, st.f + dt / 4);
         if (!st.said) { st.said = 1; say('storm', 'Tropengewitter! Achtung, rutschig!'); }
