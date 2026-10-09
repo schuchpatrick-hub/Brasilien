@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251009pm", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🚬", "t": "Gringo Kart: neue Gastfahrerin Pat’s Mum im Mama-Taxi (Lichterkette, Blumenkasten, Gartenzwerg) – Spezial „Qualm-Taxi“: Turbo, Qualmwolke für alle dahinter, und Patrick wird abgeholt"},
     {"id": "n251009z", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🗯️", "t": "Gringo Kart: viel mehr Gepöbel im Rennen – die Fahrer beschimpfen sich jetzt laufend gegenseitig (etwa 17 statt 3 Sprüche pro Minute)"},
     {"id": "n251009y", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🗺️", "t": "Gringo Kart: Strecken jetzt als Raster wie bei Smash Bros – antippen zeigt darunter einen kurzen Steckbrief (Kurven, Tempo, Chaos, Tunnel, Abgrund …), „?“ lost eine Strecke aus"},
     {"id": "n251009x", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎲", "t": "Gringo Kart Live: Zufallsrennen für alle – Würfel unten oder Einstellung „Zufallsrennen“, beim Start lost der Automat jedem Fahrer und Fahrzeug, dazu eine Strecke"},
