@@ -7249,14 +7249,11 @@ setGroup(G);
     ids.forEach(id => { CS[id] = {spd: n(id, 'TTP'), hdl: n(id, 'ORI'), acc: n(id, 'PÜN'), tgh: n(id, 'KAT')}; }); })();
   const pegel = id => Math.min(1, (((MEHUB.drinks || {})[id] || {}).today || 0) / 8);   // Drinks heute → Lenkung wackelt
   // Fahrzeuge zum Freischalten (Statistik im localStorage br26.kartStats)
-  const VEHS = [{id: 'kart', n: 'Gringo-Kart', e: '🏎️'}, {id: 'uber', n: 'Uber', e: '🚕', need: ['races', 3], t: '3 Rennen fahren'},
-    {id: 'uno', n: 'Fiat Uno', e: '🚗', need: ['wins', 1], t: '1 Rennen gewinnen'}, {id: 'cart', n: 'Gepäckkarren', e: '🧳', need: ['ilha', 1], t: 'Ilha Grande ins Ziel bringen'},
-    {id: 'wheel', n: 'Rollstuhl', e: '♿', need: ['supers', 5], t: '5 Super-Turbos'}, {id: 'gold', n: 'Goldenes Kart', e: '🏆', need: ['cups', 1], t: 'Grand Prix gewinnen'},
-    // Neue Fahrzeuge (Wunsch Patrick 09.10.: kreativ, lustig, jedes anders in Optik, Werten und Fahrgefühl); freischalten über die Bedingung ODER mit Münzen kaufen (c)
-    {id: 'capi', n: 'Capivara', e: '🦫', need: ['races', 5], t: '5 Rennen fahren', c: 190}, {id: 'moto', n: 'Motoboy', e: '🛵', need: ['rivals', 3], t: '3× den Rivalen schlagen', c: 100},
-    {id: 'coco', n: 'Kokos-Karren', e: '🥥', need: ['coinsTot', 150], t: '150 Münzen sammeln', c: 150}, {id: 'sail', n: 'Strandsegler', e: '⛵', need: ['tracksN', 6], t: '6 verschiedene Strecken', c: 140},
-    {id: 'horse', n: 'Pferdekutsche', e: '🐎', need: ['wins', 3], t: '3 Rennen gewinnen', c: 170}, {id: 'trak', n: 'Zuckerrohr-Traktor', e: '🚜', need: ['smash', 25], t: '25 Sachen am Rand zerlegen', c: 120},
-    {id: 'rocket', n: 'Raketen-Liegestuhl', e: '🚀', need: ['supers', 25], t: '25 Super-Turbos', c: 250}, {id: 'trio', n: 'Trio Elétrico', e: '🔊', need: ['tds', 15], t: '15 Takedowns', c: 290}];   // Preise (Wunsch Patrick 09.10.): mindestens 3–4 Rennen (≈ 25–30 🪙 je Rennen), lustigere teurer
+  // Fahrzeuge (Wunsch Patrick 09.10.): 4 sofort frei, der Rest ENTWEDER mit Münzen kaufen (c) ODER über einen Erfolg freischalten (need), nie beides; lustigere teurer
+  const VEHS = [{id: 'kart', n: 'Gringo-Kart', e: '🏎️'}, {id: 'uber', n: 'Uber', e: '🚕'}, {id: 'uno', n: 'Fiat Uno', e: '🚗'}, {id: 'cart', n: 'Gepäckkarren', e: '🧳'},
+    {id: 'moto', n: 'Motoboy', e: '🛵', c: 100}, {id: 'trak', n: 'Zuckerrohr-Traktor', e: '🚜', c: 120}, {id: 'sail', n: 'Strandsegler', e: '⛵', c: 140}, {id: 'coco', n: 'Kokos-Karren', e: '🥥', c: 150},
+    {id: 'horse', n: 'Pferdekutsche', e: '🐎', c: 170}, {id: 'capi', n: 'Capivara', e: '🦫', c: 190}, {id: 'rocket', n: 'Raketen-Liegestuhl', e: '🚀', c: 250},
+    {id: 'wheel', n: 'Rollstuhl', e: '♿', need: ['supers', 10], t: '10 Super-Turbos'}, {id: 'trio', n: 'Trio Elétrico', e: '🔊', need: ['tds', 15], t: '15 Takedowns'}, {id: 'gold', n: 'Goldenes Kart', e: '🏆', need: ['cups', 1], t: 'einen Grand Prix gewinnen'}];
   // Fahrgefühl je Fahrzeug: g = Haftung, d = Rutschen im Drift, m = Masse (Rempler), b = Turbo-Dauer, x = Beschreibung im Menü
   const VTX = {kart: {g: 1, d: 1, m: 1, b: 1, x: 'Ausgewogen, für alles gut.'}, uber: {g: 1.08, d: .8, m: 1.45, b: 1, x: 'Schwer und stabil: rempelt andere weg, driftet ungern.'},
     uno: {g: .95, d: 1.15, m: 1.1, b: 1, x: 'Zieht stark an, das Heck kommt schnell.'}, cart: {g: .85, d: 1.35, m: .9, b: 1, x: 'Rutschig wie auf Seife, aber wendig.'},
@@ -8438,7 +8435,10 @@ setGroup(G);
   // Einstellungen: Steuerung (Halten/Analog), Grafik (Sparsam/Normal/Hoch), Kamera (Nah/Normal/Weit)
   const SET = Object.assign({ctl: 'hold', q: 1, cam: 1, tod: 'real'}, loadJ('kartSet')), saveSet = () => store.set('kartSet', JSON.stringify(SET));
   const stats = () => { const s0 = Object.assign({races: 0, wins: 0, ilha: 0, supers: 0, cups: 0, coinsTot: 0, rivals: 0, tracks: '', smash: 0, tds: 0}, loadJ('kartStats')); s0.tracksN = s0.tracks.split(',').filter(Boolean).length; return s0; };
-  const unlocked = v => !v.need || stats()[v.need[0]] >= v.need[1] || !!loadJ('kartVehOwn')[v.id];   // Bedingung erfüllt oder mit Münzen gekauft
+  const unlocked = v => (!v.need && !v.c) || (v.need ? stats()[v.need[0]] >= v.need[1] : false) || !!loadJ('kartVehOwn')[v.id];   // frei, Erfolg erreicht oder gekauft (früher Gekauftes bleibt)
+  // einmalig: wer die alten Bedingungen der neuen Fahrzeuge schon erfüllt hatte (galten wenige Stunden), behält sie
+  if (!store.get('kartVehMig')) { const st = stats(), OLD = {capi: ['races', 5], moto: ['rivals', 3], coco: ['coinsTot', 150], sail: ['tracksN', 6], horse: ['wins', 3], trak: ['smash', 25], rocket: ['supers', 25], wheel: ['supers', 5]}, vo = loadJ('kartVehOwn');
+    Object.entries(OLD).forEach(([id, [q, n]]) => { if (st[q] >= n) vo[id] = 1; }); store.set('kartVehOwn', JSON.stringify(vo)); store.set('kartVehMig', '1'); }
   const myVeh = () => { const v = VEHS.find(x => x.id === store.get('kartVeh')); return v && unlocked(v) ? v.id : 'kart'; };
   // Münzen (auf der Strecke + Bonus), Tuning, Kostüme, Erfolge: alles pro Handy
   // Kart-Baukasten (Garage): Reifen und Flügel einzeln, ändern Aussehen und Fahrgefühl (nur das eigene Fahrzeug, nicht auf dem Boot)
@@ -9535,7 +9535,11 @@ setGroup(G);
   let FSL = null, RSPIN = 0, WHOOPEN = false;
   const VSHORT = {kart: 'ausgewogen', uber: 'schwer, stabil', uno: 'zieht stark an', cart: 'rutschig, wendig', wheel: 'leicht, lange Turbos', gold: 'von allem mehr',
     capi: 'tiefenentspannt, Gelände', moto: 'spritzig, Lücken-Turbo', coco: 'legt Kokos-Fallen', sail: 'Wind, rutschig', horse: 'kein Drift, Galopp', trak: 'Gelände egal, langsam', rocket: 'Endtempo, lenkt mies', trio: 'Bass-Stoß, riesig'};
-  let BUYV = null;   // Fahrzeug, das gerade zum Kaufen angetippt wurde (zweimal tippen = kaufen)
+  let VINFO = null;   // Fahrzeug, dessen Infos gerade aufgeklappt sind (antippen = Infos, freie Fahrzeuge werden dabei gewählt)
+  // Info-Kasten hinter die Reihe des angetippten Fahrzeugs setzen (3 bzw. 6 Spalten je nach Bildschirm), Pfeil zeigt aufs Fahrzeug
+  function placeVInfo() { const vc = menu.querySelector('.kr-vcar'), inf = vc && vc.querySelector('.kr-vinfo'); if (!inf) return; const bs = [...vc.querySelectorAll(':scope > button')], i = bs.findIndex(b => b.dataset.v === VINFO); if (i < 0) return;
+    const cols = matchMedia('(min-width:820px), (orientation:landscape) and (max-height:540px)').matches ? 6 : 3, end = Math.min(bs.length - 1, Math.floor(i / cols) * cols + cols - 1);
+    bs[end].after(inf); inf.style.setProperty('--col', ((i % cols + .5) / cols * 100) + '%'); }
   // Werkstatt: Fahrzeug wählen, Leistungsbalken (grün = Tuning), 6 Teile mit Vorher/Nachher und Preis
   let WSV = null;
   const vbase = v => { const t = VTUNE[v] || VTUNE.kart, x = VTX[v] || VTX.kart, n = (a, lo, hi) => clamp((a - lo) / (hi - lo), .04, 1); return [n(t[0], .88, 1.1), n(t[2], .7, 1.3), n(x.g, .7, 1.35), n(t[1], .75, 1.2), n(x.b, .8, 1.7), n(x.m, .5, 2.4)]; };
@@ -9611,15 +9615,23 @@ setGroup(G);
       (XBY[me] ? '<p class="kr-sp kr-xd">' + esc(XBY[me].x) + '</p>' : '') + '<p class="kr-sp">' + sp.e + ' <b>' + esc(sp.n) + '</b>: ' + esc(sp.x) + '</p>' + ((PERS[me] || {}).x ? '<p class="kr-sp kr-pp">🤖 Als Gegner: ' + esc(PERS[me].x) + '</p>' : '') + (pg > 0 ? '<p class="kr-sp">🍹 Heute schon ' + ((MEHUB.drinks || {})[baseOf(me)] || {}).today + ' Drinks: Lenkung wackelt!</p>' : '') + '</div>'; dv.querySelector('.kr-dch').replaceWith(portrait(me, 300, 300, .8)); { const bars0 = dv.querySelector('.kr-dc2 .kr-bars'); if (bars0) dv.querySelector('.kr-fst').appendChild(bars0); } { const x2 = menu.querySelector('.kr-drvx'); if (x2) { x2.innerHTML = ''; const d2 = dv.querySelector('.kr-dc2'); d2.prepend(vehPreview(me)); x2.appendChild(d2); } }
     menu.querySelectorAll('.kr-diff button').forEach(x => x.setAttribute('aria-pressed', +x.dataset.d === DIFF));
     const mv = myVeh(), vc = menu.querySelector('.kr-vcar'), st0 = stats(), pt0 = Object.assign({}, paintOf(me), partsPt()), col0 = paintOf(me).c || (LOOK[me] || {}).shirt || '#00a651';
+    if (!VINFO || !VEHS.some(v => v.id === VINFO)) VINFO = mv; const cn0 = coins();
     vc.innerHTML = VEHS.map(v0 => { const ok = unlocked(v0), nm = v0.id === 'kart' && STYK(me) ? STN[STYK(me)] || v0.n : v0.n, nd = v0.need, hv = nd ? Math.min(nd[1], +st0[nd[0]] || 0) : 0;
-      const buy = !ok && v0.c, bq = buy && BUYV === v0.id;
-      return '<button type="button" data-v="' + v0.id + '" aria-pressed="' + (v0.id === mv) + '"' + (ok ? '' : buy ? ' class="kr-vlk' + (bq ? ' kr-vbq' : '') + '"' : ' disabled') + ' aria-label="' + esc(nm + (ok ? '' : ', gesperrt: ' + v0.t + (buy ? ', oder für ' + v0.c + ' Münzen kaufen' : ''))) + '"><span class="kr-vcv"></span>' + (ok ? '' : '<i class="kr-lock">🔒</i>') + '<b>' + esc(nm) + '</b><small>' + (ok ? esc(VSHORT[v0.id] || '') : bq ? '👆 Nochmal tippen: für ' + v0.c + ' 🪙 kaufen' : esc(v0.t) + (nd[1] > 1 ? ' · ' + hv + '/' + nd[1] : '') + (buy ? '<em>oder ' + v0.c + ' 🪙</em>' : '')) + '</small>' + (ok || nd[1] < 2 || bq ? '' : '<s style="--p:' + Math.round(hv / nd[1] * 100) + '%"></s>') + '</button>'; }).join('');
+      const sub = ok ? esc(VSHORT[v0.id] || '') : v0.c ? '<em>🪙 ' + v0.c + '</em>' : '🏅 ' + esc(v0.t) + (nd[1] > 1 ? ' · ' + hv + '/' + nd[1] : ''), pr = ok ? -1 : v0.c ? Math.min(1, cn0 / v0.c) : nd[1] > 1 ? hv / nd[1] : -1;
+      return '<button type="button" data-v="' + v0.id + '" aria-pressed="' + (v0.id === mv) + '"' + (ok ? '' : ' class="kr-vlk"') + ' aria-label="' + esc(nm + (ok ? '' : v0.c ? ', kaufen für ' + v0.c + ' Münzen' : ', freischalten: ' + v0.t)) + '"><span class="kr-vcv"></span>' + (ok ? '' : '<i class="kr-lock">' + (v0.c ? '🔒' : '🏅') + '</i>') + '<b>' + esc(nm) + '</b><small>' + sub + '</small>' + (pr >= 0 ? '<s style="--p:' + Math.round(pr * 100) + '%"></s>' : '') + '</button>'; }).join('');
     vc.querySelectorAll('button').forEach(b0 => { const c = vehSprite(col0, b0.dataset.v, pt0, me), d = document.createElement('canvas'), x0 = d.getContext('2d'); d.width = c.width; d.height = c.height; x0.drawImage(c, 0, 0);
       const h = !b0.disabled && !b0.classList.contains('kr-vlk') && headImg(me), st = STY[me] || {}, vh = VHEAD[b0.dataset.v]; if (h) { const sz = h.width * (vh !== undefined ? .4 : .52) * (st.hs || 1); x0.drawImage(h, d.width / 2 - sz / 2, d.height / 2 + (vh !== undefined ? vh * 2 : st.seat === 'none' ? 0 : 7) - sz * .55, sz, sz * h.height / h.width); }   // neue Fahrzeuge: Kopf kleiner und am Sitzplatz, damit man das Fahrzeug sieht   // eigener Fahrer sitzt drin
       b0.querySelector('.kr-vcv').replaceWith(d); });
+    { const V = VEHS.find(v => v.id === VINFO) || VEHS[0], ok = unlocked(V), tu = tuneOf(V.id), bs = vbase(V.id), sumT = TKEYS.reduce((a, q) => a + tu[q], 0), nd = V.need, hv = nd ? Math.min(nd[1], +st0[nd[0]] || 0) : 0, nm = V.id === 'kart' && STYK(me) ? STN[STYK(me)] || V.n : V.n;
+      const bars = [['Tempo', bs[0], tu.m * .06], ['Beschleunigung', bs[1], tu.a * .06], ['Haftung', bs[2], tu.r * .05], ['Lenkung', bs[3], tu.s * .05], ['Turbo', bs[4], tu.t * .06], ['Nehmer', bs[5], tu.p * .06]];
+      const inf = document.createElement('div'); inf.className = 'kr-vinfo' + (ok ? '' : ' kr-vinfol');   // Infos genau unter dem angetippten Fahrzeug (Wunsch Patrick 09.10.)
+      inf.innerHTML = '<b>' + V.e + ' ' + esc(nm) + (V.id === mv ? ' <em>✓ gewählt</em>' : ok ? '' : V.c ? ' <em class="kr-vlc">🔒 🪙 ' + V.c + '</em>' : ' <em class="kr-vlc">🏅 Erfolg</em>') + '</b><p>' + esc((VTX[V.id] || VTX.kart).x) + '</p><div class="kr-wsbars">' +
+        bars.map(([n, b, ad]) => '<div><span>' + n + '</span><i><s style="width:' + Math.round(b * 100) + '%"></s><u style="width:' + Math.round(Math.min(ad, 1 - b) * 100) + '%"></u></i></div>').join('') + '</div>' +
+        (ok ? (sumT ? '<small>🔧 Tuning ' + sumT + '/30 (Werkstatt)</small>' : '') : V.c ? '<button type="button" class="kr-vbuy" data-v="' + V.id + '"' + (cn0 < V.c ? ' disabled' : '') + '>' + (cn0 < V.c ? '🪙 ' + V.c + ' · dir fehlen noch ' + (V.c - cn0) : '🛒 Für ' + V.c + ' 🪙 kaufen') + '</button>' : '<small class="kr-vneed">🏅 Freischalten: ' + esc(V.t) + (nd[1] > 1 ? ' · ' + hv + '/' + nd[1] : '') + '</small>');
+      vc.appendChild(inf); placeVInfo(); }
     const tu = tune(), own = cosOwn(), mc = cosOf(me), cn = coins();
     sumBadge('garage', '🪙 ' + cn); { const pl = menu.querySelector('.kr-prog'); if (pl) pl.innerHTML = progLine(); }
-    { const mv0 = myVeh(), V0 = VEHS.find(v => v.id === mv0) || VEHS[0], vxe = menu.querySelector('.kr-vx'); if (vxe) vxe.textContent = V0.e + ' ' + V0.n + ': ' + (VTX[mv0] || VTX.kart).x;
+    { const mv0 = myVeh(), V0 = VEHS.find(v => v.id === mv0) || VEHS[0];
       const st0 = menu.querySelector('.kr-shopt'); if (st0) st0.textContent = 'Tuning für ' + V0.e + ' ' + V0.n + ' (jedes Fahrzeug einzeln)'; }
     { const pt = paintOf(me), so = loadJ('kartStkOwn'), pe = menu.querySelector('.kr-paintb');
       if (pe) { pe.innerHTML = '<p class="kr-lbl">Lack & Aufkleber für ' + esc(NAME(me)) + '</p><div class="kr-pv"><span class="kr-pvc"></span><div class="kr-paints">' + PAINTS.map(c => '<button type="button" data-p="' + (c || '') + '" aria-pressed="' + ((pt.c || '') === (c || '')) + '" aria-label="' + (c ? 'Farbe ' + c : 'Shirt-Farbe') + '" style="--pc:' + (c || (LOOK[me] || {}).shirt || '#00a651') + '">' + (c ? '' : '👕') + '</button>').join('') + '</div></div>' +
@@ -9779,11 +9791,11 @@ setGroup(G);
     const db0 = e.target.closest('.kr-diff button'); if (db0) { DIFF = +db0.dataset.d; store.set('kartDiff', DIFF); renderMenu(); }
     const gb = e.target.closest('.kr-ghost:not(.kr-diff) button'); if (gb) { GHOST.mode = gb.dataset.g; store.set('kartGhost', GHOST.mode); renderMenu(); }
     const t = e.target.closest('.kr-trk button'); if (t) { TRK = t.dataset.t; store.set('kartTrack', TRK); preview(TRK); renderMenu(); }
-    const vlk = e.target.closest('.kr-vcar button.kr-vlk'); if (vlk) { const V = VEHS.find(v => v.id === vlk.dataset.v); if (!V || !V.c) return;
-      if (coins() < V.c) { BUYV = null; toast('🪙 Noch ' + (V.c - coins()) + ' Münzen, dann gehört ' + V.e + ' ' + esc(V.n) + ' dir. Oder: ' + esc(V.t) + '.'); renderMenu(); return; }
-      if (BUYV !== V.id) { BUYV = V.id; renderMenu(); return; }
-      addCoins(-V.c); const vo = loadJ('kartVehOwn'); vo[V.id] = 1; store.set('kartVehOwn', JSON.stringify(vo)); BUYV = null; store.set('kartVeh', V.id); SFX.pick(); fireworks(30); toast('🎉 ' + V.e + ' <b>' + esc(V.n) + '</b> gehört jetzt dir!'); makeVehicles(); newRace(); S.paused = true; renderMenu(); return; }
-    const vb = e.target.closest('.kr-vehs:not(.kr-cos) button:not(.kr-vlk)'); if (vb && !vb.disabled) { BUYV = null; store.set('kartVeh', vb.dataset.v); makeVehicles(); newRace(); S.paused = true; renderMenu(); }
+    const vbuy = e.target.closest('.kr-vbuy'); if (vbuy) { const V = VEHS.find(v => v.id === vbuy.dataset.v); if (!V || !V.c) return;
+      if (coins() < V.c) { toast('🪙 Noch ' + (V.c - coins()) + ' Münzen, dann gehört ' + V.e + ' ' + esc(V.n) + ' dir.'); return; }
+      addCoins(-V.c); const vo = loadJ('kartVehOwn'); vo[V.id] = 1; store.set('kartVehOwn', JSON.stringify(vo)); store.set('kartVeh', V.id); VINFO = V.id; SFX.pick(); fireworks(30); toast('🎉 ' + V.e + ' <b>' + esc(V.n) + '</b> gehört jetzt dir!'); makeVehicles(); newRace(); S.paused = true; renderMenu(); return; }
+    const vlk = e.target.closest('.kr-vcar button.kr-vlk'); if (vlk) { VINFO = VINFO === vlk.dataset.v ? myVeh() : vlk.dataset.v; renderMenu(); return; }   // gesperrt: nur Infos (Preis bzw. Erfolg) zeigen
+    const vb = e.target.closest('.kr-vehs:not(.kr-cos) > button:not(.kr-vlk)'); if (vb && !vb.disabled) { VINFO = vb.dataset.v; store.set('kartVeh', vb.dataset.v); makeVehicles(); newRace(); S.paused = true; renderMenu(); }
     if (e.target.closest('.kr-go')) { CUP = MODE === 'cup' ? {i: 0, pts: {}, races: [], list: CUPSEL.t, n: CUPSEL.n, e: CUPSEL.e} : null; RULE = MODE === 'daily' ? daily().rule : null; startRace(); }
   });
   res.addEventListener('click', e => {
@@ -9816,7 +9828,7 @@ setGroup(G);
   box.addEventListener('contextmenu', e => e.preventDefault());
   addEventListener('keydown', e => { if (box.hidden) return; if (e.key === 'Escape' || e.key === 'p') { if (!pm.hidden) resume(); else if (box.classList.contains('racing')) pause(); else close(); return; } INPUT.keys[e.key] = true; if (e.key === ' ') { e.preventDefault(); if (S) useItem(S.karts[0]); } if (e.key.startsWith('Arrow')) e.preventDefault(); });
   addEventListener('keyup', e => { INPUT.keys[e.key] = false; });
-  addEventListener('resize', () => { if (!box.hidden) resize(); });
+  addEventListener('resize', () => { if (!box.hidden) { resize(); placeVInfo(); } });
   document.addEventListener('visibilitychange', () => { if (document.hidden && !box.hidden) { pause(); resKeep(); } });
   // Wieder ins Spiel (Wunsch Patrick 09.10.): die claude.ai-App lädt die Seite nach einem App-Wechsel oft neu, dann war das Spiel zu.
   // Solange es offen ist, merkt sich das Handy das (br26.kartResume); beim nächsten Laden innerhalb von 30 min geht es von selbst wieder auf
