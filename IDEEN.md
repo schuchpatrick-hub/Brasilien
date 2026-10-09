@@ -116,6 +116,16 @@ Es fehlen vor allem Spielmodi außer Rennen, Langzeit-Ziele, Gruppen-Funktionen 
 - 🔗 **Mit der Seite verknüpfen**: Kart-Siege/Bestzeiten wirken auf den FIFA-Marktwert, unterwegs doppelte Münzen auf der Strecke der heutigen Station, Check-in schaltet Bonus-Variante frei.
 - 🏁 **Interlagos** (F1-Strecke in São Paulo mit dem „S do Senna“) als Bonusstrecke.
 
+**Aus der Gesamtprüfung 2 (09.10. spät), nach Nutzen sortiert**
+1. 📶 **Datensparmodus Live** (Patrick gefragt, wartet auf Ja): 10 statt 20 Meldungen/s, halbe Datenmenge, Handys rechnen dazwischen weiter.
+2. 📊 **Rennbericht nach dem Rennen**: Rundenzeiten, Takedowns, wer dich am häufigsten abgeschossen hat („Erzfeind des Rennens“), Drift-Zeit, Münzen, Abstürze – mit schwarzem Kommentar.
+3. 👀 **Zuschauen im Live-Raum**: wer die Seite offen hat, empfängt die Live-Rennen sowieso schon mit; daraus ein Zuschauer-Bild (Kamera springt zwischen den Fahrern, Emoji-Jubel) ohne zusätzliches Datenvolumen.
+4. ⏳ **Live-Nachzügler**: statt „Warte auf die anderen … 18 s“ die Namen zeigen („Warte auf Simon, Marco“), Wartezeit 30 → 20 s; wer schon im Ziel ist, kann Emojis schicken.
+5. 🔄 **Bestenliste nach jedem Rennen neu laden**, damit Rekorde anderer sofort im Ergebnis stehen (heute erst beim nächsten Öffnen).
+6. 📱 **ITEM-Knopf**: halbdurchsichtig, solange ein Kart direkt dahinter fährt (verdeckt im Hochformat die Verfolger), Sprechblasen/Texte nicht mehr über Tacho und ITEM-Knopf.
+7. 🧭 **Kipp-Lenkung** (Handy neigen) ❓ ob der claude.ai-Viewer die Lagesensoren freigibt, erst testen.
+8. 🎬 **Fotofinish-Wiederholung**: bei unter 0,15 s die letzten 2 s in Zeitlupe von der Seite.
+
 ## 💡 Vorgeschlagen, noch nicht beauftragt
 
 - Silvester-Special „Réveillon“ (Countdown, Bräuche, Ablauf, Treffpunkt, Sicherheit)
