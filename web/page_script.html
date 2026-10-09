@@ -8147,11 +8147,11 @@ setGroup(G);
     const now = performance.now(); if (!S || (!force && (now < voiceBusy || now < annBusy))) return;
     const own = !!(TRIP.kartvo && TRIP.kartvo['v_' + k.id + '_hit']), vid = own ? k.id : baseOf(k.id);   // eigene Stimme, sonst die der Person
     if (kind === 'over' && Math.random() < .5 && TRIP.kartvo && TRIP.kartvo['v_' + vid + '_pass']) kind = 'pass';
-    const X = XBY[k.id]; if (X && !own && (X.npc || Math.random() < .4)) { k.say = pick(X.l); k.sayT = 1.8; voiceBusy = now + 2200; return; }
+    const X = XBY[k.id]; if (X && !own && (X.npc || Math.random() < .4)) { k.say = pick(X.l); k.sayT = 1.8; k.lastKind = kind; voiceBusy = now + 1500; S.vc = (S.vc || 0) + 1; return; }
     let txt = {over: 0, hit: 1, sp: 2}[kind] !== undefined ? (VTXT[vid] || [])[{over: 0, hit: 1, sp: 2}[kind]] : (VTXT2[vid] || {})[kind]; if (!txt) return; let vk = 'v_' + vid + '_' + kind;
     { const ex = (VTXTX[vid] || {})[kind]; if (ex && TRIP.kartvo) { const o = pick([[vk, txt]].concat(ex.map((t, i) => [vk + '_' + (i + 2), t]).filter(q => TRIP.kartvo[q[0]]))); vk = o[0]; txt = o[1]; } }   // weitere Sprüche je Anlass (z. B. Ilkay mit mexikanischen/türkischen Ausdrücken)
-    k.say = txt; k.sayT = 1.8; voiceBusy = now + 2200;   /* Sperrzeit kürzer: Sprüche öfter (Wunsch Patrick 09.10.) */ if (kind === 'win' && S.pose && S.pose.id === k.id) S.pose.wl = txt;
-    const v = TRIP.kartvo && TRIP.kartvo[vk], vb = bufOf(v);
+    k.say = txt; k.sayT = 1.8; k.lastKind = kind; S.vc = (S.vc || 0) + 1; if (kind === 'win' && S.pose && S.pose.id === k.id) S.pose.wl = txt;
+    const v = TRIP.kartvo && TRIP.kartvo[vk], vb = bufOf(v); voiceBusy = now + Math.max(1400, (v ? v.dur : 1300) + 200);   /* Sperre = Länge des Spruchs: kein Durcheinanderreden, aber auch keine Pause dazwischen (Wunsch Patrick 09.10.: mehr Gepöbel) */
     if (v && vb && AC && SOUND) { playBuf(vb, v.o / 1000, v.dur / 1000, 1.05); if (MG) { MG.gain.setTargetAtTime(.25, AC.currentTime, .05); MG.gain.setTargetAtTime(.5, AC.currentTime + v.dur / 1000, .3); } }
   }
 
@@ -8624,9 +8624,9 @@ setGroup(G);
     if (k.spin > 0 || k.air > 0 || k.inv > 0 || k.fall > 0) return; if (k.shield > 0 && why !== 'gate') { k.shield = 0; floatTxt(k, '⛱️ geblockt!', '#7fd3ff'); if (k.me) { beep(520, .1, 'triangle', .07); vib(15); } return; } S.hl[why] = (S.hl[why] || 0) + 1; if (HBY && HBY.me && !k.me && S.t > 0) takedown(k); k.hitAt = S.t; k.hits = (k.hits || 0) + 1; k.hitE = pick(['😵', '🤕', '😱', '🥴', '😭', '🤬']); k.spin = .9 * Math.max(.45, 1.12 - (k.cs.tgh + (k.pf ? k.pf.tgh : 0)) * .3); k.vr += rnd(-60, 60); if (k.me) vib([30, 40, 30]); k.boost = 0; k.dr = 0; k.dt = 0; SFX.spin(); if (why === 'caiman') SFX.chomp(); if (k.id === 'erich') k.wut = 1;
     if (k.vtype === 'capi') k.spin *= .4; else if (k.vtype === 'rocket') k.spin *= 1.25; if (k.me && S.tu && S.tu.p) k.spin *= 1 - S.tu.p * .06; if (k.vtype === 'coco') { cocoDrop(k, -12, 24); cocoDrop(k, -12, -24); }   /* Capivara bleibt cool, Liegestuhl kippt länger, Kokos-Karren verliert Ladung */
     const l = LINES[k.id]; k.say = (HITSAY[why] && Math.random() < .55) ? HITSAY[why] : l ? pick(l) : 'Aua!'; k.sayT = 1.6; if (k.vtype === 'capi') k.say = pick(['Ganz ruhig.', 'Mir egal.', 'Capivara bleibt cool.', 'Chill mal.']);
-    if (!k.me && HBY && HBY.me && Math.random() < .35 && Math.hypot(k.x - HBY.x, k.y - HBY.y) < 900) voice(k, 'hit');   // getroffene Gegner schimpfen hörbar
+    if (!k.me && Math.random() < (HBY && HBY.me ? .65 : .45) && Math.hypot(k.x - S.karts[0].x, k.y - S.karts[0].y) < 800) voice(k, 'hit');   // getroffene Gegner in Sichtweite schimpfen hörbar (auch untereinander)
     if (k.me) { S.myHits++; if (k.coins > 0) { const n = Math.min(S.tu && S.tu.p >= 3 ? 1 : 2, k.coins); k.coins -= n; S.got = Math.max(0, S.got - n); floatTxt(k, '−' + n + ' 🪙', '#ffb0b0'); } } else if (k.coins > 0) k.coins = Math.max(0, k.coins - 2); 
-    if (k.me) { S.shake = .35; if (why === 'caiman') say('caiman', 'Vorsicht, Kaiman!'); else if (['oil', 'coati', 'ball', 'flip', 'fire', 'beer', 'coco', 'banana', 'bang', 'uru', 'bus', 'squash'].includes(why) && Math.random() < .72) voice(k, 'item'); else if (Math.random() < .6) voice(k, 'hit'); else if (Math.random() < .4) say('hit', 'Autsch, das tat weh!'); }
+    if (k.me) { S.shake = .35; if (why === 'caiman') say('caiman', 'Vorsicht, Kaiman!'); else if (['oil', 'coati', 'ball', 'flip', 'fire', 'beer', 'coco', 'banana', 'bang', 'uru', 'bus', 'squash'].includes(why) && Math.random() < .9) voice(k, 'item'); else if (Math.random() < .8) voice(k, 'hit'); else if (Math.random() < .4) say('hit', 'Autsch, das tat weh!'); }
   }
   function rollItem(k, two) { if (S.live && S.live.cfg && S.live.cfg.items === 'turbo') return ITEMS.turbo; if (SPECIAL[k.id] && Math.random() < (k.me ? .22 : .32)) return SPECIAL[k.id]; /* Gegner etwas öfter mit Spezial-Item: mehr Chaos */ const pl = place(k), tb = IW[pl === 1 ? 'front' : pl <= 3 ? 'mid' : 'back'], one = () => { let r = Math.random(); for (const [kk, p0] of Object.entries(tb)) { r -= p0; if (r < 0) return ITEMS[kk]; } return ITEMS.turbo; };
     /* dieselbe Item-Familie nicht zweimal hintereinander (einmal neu ziehen); das 2. Item (Kombo-Platz) darf gleich sein, sonst gäbe es kaum Doppel-Kombos */ let it = one(); if (!two && ifam(it) === k.lastFam) it = one(); if (!two) k.lastFam = ifam(it); return it; }
@@ -8824,7 +8824,7 @@ setGroup(G);
       k.hold = sgn && Math.abs(k.steer) > .7 ? (Math.sign(k.steer) === sgn ? k.hold + dt : 0) : 0;
       if (!k.dr && k.hold > .38 && k.v > 190 && !k.air && k.spin <= 0 && !k.done && k.vtype !== 'horse' && !(k.bus > 0)) { k.dr = sgn; k.dt = 0; if (k.me) SFX.drift(); }
       if (k.dr) { if ((k.manual === 'btn' ? !INPUT.drift : sgn !== k.dr) || k.spin > 0 || k.v < 120) { k.manual = null; const lvl = k.dt > 1.5 ? 2 : k.dt > .75 ? 1 : 0;
-          if (lvl && k.spin <= 0) { k.boost = Math.max(k.boost, lvl > 1 ? 1.0 : .55); k.pop = .3; if (k.me) { SFX.mini(lvl); floatTxt(k, lvl > 1 ? '🔥 Super-Turbo!' : '💨 Mini-Turbo!', lvl > 1 ? '#ff9a3c' : '#7fd3ff'); S.tutMini = 1; if (lvl > 1) { S.supers++; if (Math.random() < .5) voice(k, 'drift'); else say('super', 'Super-Turbo!'); } } }
+          if (lvl && k.spin <= 0) { k.boost = Math.max(k.boost, lvl > 1 ? 1.0 : .55); k.pop = .3; if (k.me) { SFX.mini(lvl); floatTxt(k, lvl > 1 ? '🔥 Super-Turbo!' : '💨 Mini-Turbo!', lvl > 1 ? '#ff9a3c' : '#7fd3ff'); S.tutMini = 1; if (lvl > 1) { S.supers++; if (Math.random() < .7) voice(k, 'drift'); else say('super', 'Super-Turbo!'); } } }
           k.dr = 0; k.dt = 0; }
         else { k.dt += dt; if (Math.random() < dt * 30) { const lvl = k.dt > 1.5 ? 2 : k.dt > .75 ? 1 : 0, bx = k.x - Math.cos(k.a) * 18, by = k.y - Math.sin(k.a) * 18;
             S.sp.push({x: bx + rnd(-8, 8), y: by + rnd(-8, 8), vx: -Math.cos(k.a) * 60 + rnd(-40, 40), vy: -Math.sin(k.a) * 60 + rnd(-40, 40), t: 0, c: ['#fff6c0', '#5ec8ff', '#ff8a2a'][lvl]}); } } }
@@ -8990,9 +8990,15 @@ setGroup(G);
     // Ansager: Führungswechsel, Überholen
     if (S.t > 4 && !ks[0].done) { const lead = ks.slice().sort((a, b) => progress(b) - progress(a))[0];
       if (S.leader && lead !== S.leader) { if (lead === ks[0] && TRIP.kartvo && TRIP.kartvo.ann_lead && Math.random() < .5) say('ann_lead', '👑 Neuer Führender! Die anderen können ihr Testament schreiben.'); else say('lead_' + lead.id, NAME(lead.id) + ' übernimmt die Führung!'); if (lead === ks[0] && performance.now() - (S.hymnAt || -1e9) > 25000) { S.hymnAt = performance.now(); hymn(lead.id); } } S.leader = lead;
-      const pl = place(ks[0]); if (pl < S.lastPlace && Math.random() < .6) { Math.random() < .66 ? voice(ks[0], 'over') : say('over', 'Überholt!'); }
-      else if (pl > S.lastPlace && Math.random() < .5) { const by = ks.find(o => o !== ks[0] && place(o) === pl - 1); if (by) voice(by, 'over'); }
+      const pl = place(ks[0]); if (pl < S.lastPlace && Math.random() < .85) { Math.random() < .8 ? voice(ks[0], 'over') : say('over', 'Überholt!'); }
+      else if (pl > S.lastPlace && Math.random() < .75) { const by = ks.find(o => o !== ks[0] && place(o) === pl - 1); if (by) voice(by, 'over'); }
       S.lastPlace = pl; }
+    // Gezänk (Wunsch Patrick 09.10.: die Figuren sollen sich die ganze Zeit beschimpfen): sobald gerade niemand redet, pöbelt alle ~2–3,5 s ein Fahrer in Sichtweite
+    // seinen nächsten Nachbarn an (meist der vordere den hinteren), bevorzugt rund um den Spieler und abwechselnd verschiedene Fahrer
+    if (S.t > 2.5 && !ks[0].done && !S.pod && S.t > (S.talkAt || 0)) { const nw = performance.now(); if (nw > voiceBusy && nw > annBusy) { S.talkAt = S.t + rnd(1.8, 3.4); const me0 = ks[0], vis = ks.filter(k => !k.done && !k.out && !(k.fall > 0) && Math.hypot(k.x - me0.x, k.y - me0.y) < 650);
+        let best = null, bd = 1e9; vis.forEach(a => vis.forEach(b => { if (a === b) return; const d = Math.hypot(a.x - b.x, a.y - b.y) + (a.me || b.me ? -120 : 0) + ((a.vAt || 0) > nw - 6000 ? 260 : 0); if (d < bd) { bd = d; best = [a, b]; } }));
+        if (best && bd < 420) { const [a, b] = best, front = progress(a) >= progress(b) ? a : b, sp = Math.random() < .7 ? front : (front === a ? b : a), ks0 = sp === front ? ['pass', 'over'] : ['drift', 'item', 'hit'], kd = pick(ks0.filter(x => x !== sp.lastKind).concat(ks0.length === 1 ? ks0 : []));
+          voice(sp, kd); sp.vAt = nw; } } }
     if (S.t > 1.2 && S.t - dt <= 1.2 && T.id === 'iguacu') { const m = S.movers[0]; if (m) say('coatis', 'Die Nasenbären sind los!'); }
     S.flash = Math.max(0, S.flash - dt);
     // Seitenwind auf der Brücke: Böen schieben alle zur Seite
