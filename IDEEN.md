@@ -85,6 +85,37 @@ nach „Umgesetzt“ verschieben.
   Crew-Aktienmarkt (Marktwert als Börsenticker), Brasilien-Bingo (eigene Karte je Person), Soundboard (beste Sprüche), „O Diário dos Gringos“ (tägliche Boulevard-Titelseite aus Live-Daten),
   Tagesheld & Tagesdepp mit Urkunde, Wanted-Plakate aus Ereignissen, Footvolley-Live-Ticker, Sprüche-Wand, „Brasilien Wrapped“ (Swipe-Statistik), Brasilien-Oscars als Cartoon-Verleihung.
 
+## 🏎️ Gringo Kart: Ideen-Analyse (09.10., Vergleich mit Mario Kart, Diddy Kong Racing, Crash Team Racing & Co.)
+
+Stand: Beim Fahren ist Gringo Kart schon auf Mario-Kart-8-Niveau (Drift + Mini-Turbo, Raketenstart, Tricks, Mehrfach-Items, Münzen, Geister,
+Pokale, Live-Rennen, Spezial-Items je Fahrer wie Double Dash, Fahrzeuge/Tuning/Teile, Takedowns wie Burnout, Schleichwege, Wetter).
+Es fehlen vor allem Spielmodi außer Rennen, Langzeit-Ziele, Gruppen-Funktionen für unterwegs und Präsentation.
+
+**Im Rennen**
+- 🎈 **Ballon-Schlacht / Caipi-Klau** (Battle-Modus Mario Kart): Strand-Arena, live mit der Crew, 3 Ballons bzw. goldenen Caipi 20 s halten.
+- ⚽ **Kart-Fußball im Maracanã** (Rocket League): 3 gegen 3 live, großer Ball, Tore, Torjubel mit Crew-Stimmen; passt zu den FIFA-Karten.
+- 🥁 **Samba-Drift im Takt** (CTR-Turbo-Kette): während des Drifts im Takt der Surdo tippen, jede Stufe stärkerer Turbo.
+- 🔁 **Strecke ändert sich je Runde** (Sonic Transformed): Copacabana Runde 3 Flut, Cristo Nebel dichter, Brücke Stau auf einer Spur, Réveillon Feuerwerk ab Runde 2.
+- 💣 **Fallen selbst auslösen** (Split/Second): Leiste durch Drift/Windschatten füllen, an markierten Stellen Container, Welle oder Obststand auf Gegner loslassen.
+- 🆕 **Neue Items**: 🚌 Ônibus-Express (Autopilot für Hintere, Bullet Bill), ⚡ Cristo-Blitz (alle anderen schrumpfen), 🟣 Açaí-Spritzer (Bild der Vorderen voll, Blooper), 🦅 Urubu (sucht den Führenden, Blue Shell), 📯 Apito (Pfeife gegen den Urubu).
+- 🪂 **Asa-Delta** (Mario Kart 7): Drachenflieger von der Pedra Bonita, nach großen Schanzen gleiten und in der Luft lenken.
+- 🎬 **Takedown-Zeitlupe** (Burnout-Crash-Cam): 0,6 s Zeitlupe mit Zoom aufs Opfer.
+- 🔤 **G-R-I-N-G-O sammeln** (CTR-Buchstaben): sechs Buchstaben je Strecke versteckt, alle in einem Rennen = Belohnung.
+- 🗣️ **Brasilianischer Kommentator** (Galvão-Bueno-Stil): „Haja coração!“, „É campeão!“ zusätzlich zum Ansager.
+- 🤖 KI-Gegner fahren auch mal die neuen Fahrzeuge (Trio-Bass von vorne, Kokosnüsse vom Gegner).
+
+**Menü und drumherum**
+- 🗺️ **Abenteuer „Die Reise“** (Diddy Kong Racing): Brasilien-Karte als Oberwelt, Strecken in Reise-Reihenfolge, Bossrennen (Nasenbär-König, Kaiman, Kontrolleur), Endboss.
+- 🥇 **Medaillen** (CTR-Relikte, Mario-Kart-Entwicklergeister): Bronze/Silber/Gold/Platin je Strecke gegen feste Geister, Platin = Geist vom Taxifahrer.
+- ⚔️ **Duell-Herausforderung** (asynchron): eigene Zeit + Geist an jemanden aus der Crew schicken, Münz-Einsatz, Hinweis auf der Seite.
+- 🍻 **Party-Modus „Handy rumreichen“** (Micro Machines/Hot Seat) für die Bar: jeder fährt eine Runde, Verlierer dreht das Strafen-Glücksrad.
+- 🏆 **Turnier-Baum** für Crew + Gäste (K.-o.-System) und 👥 **Team-Rennen** (Schwaben Augsburg mit Jonas, Greisel, Marco, Erich, Rasmus gegen den Rest).
+- ✏️ **Streckenbauer** (ModNation/Trackmania): Strecke mit dem Finger malen, Thema wählen, mit der Crew teilen, eigene Bestzeiten.
+- 📸 **Siegerfoto** zum Speichern/Teilen (Podest mit Köpfen, Zeit, Strecke) und 🎞️ **Wiederholung** mit TV-Kameras.
+- 🪪 **Karriere/Führerschein** (Gran Turismo): Fahrschüler → Uber-Fahrer → Taxi-Profi → Ayrton, Statistik je Person.
+- 🔗 **Mit der Seite verknüpfen**: Kart-Siege/Bestzeiten wirken auf den FIFA-Marktwert, unterwegs doppelte Münzen auf der Strecke der heutigen Station, Check-in schaltet Bonus-Variante frei.
+- 🏁 **Interlagos** (F1-Strecke in São Paulo mit dem „S do Senna“) als Bonusstrecke.
+
 ## 💡 Vorgeschlagen, noch nicht beauftragt
 
 - Silvester-Special „Réveillon“ (Countdown, Bräuche, Ablauf, Treffpunkt, Sicherheit)

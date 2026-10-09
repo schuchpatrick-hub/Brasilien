@@ -10252,8 +10252,10 @@
     ]
   },
   "news": [
+    {"id": "n251009j", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🔊", "t": "Gringo Kart: 8 neue Fahrzeuge mit eigener Fahrweise – Capivara, Motoboy, Kokos-Karren, Strandsegler, Pferdekutsche, Zuckerrohr-Traktor, Raketen-Liegestuhl und Trio Elétrico; freischalten oder mit Münzen kaufen"},
+    {"id": "n251009i", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎲", "t": "Gringo Kart: Items gerechter verteilt (weniger Flip-Flops, kaum noch zweimal dasselbe), „Bestzeiten“ statt „Crew-Rekorde“, Gastfahrer heißt jetzt Ritchi"},
     {"id": "n251009h", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🔁", "t": "Gringo Kart: Nach einem App-Wechsel geht das Spiel jetzt von selbst wieder auf, Live-Rennen laufen automatisch weiter"},
-    {"id": "n251009g", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "⛳", "t": "Gringo Kart: neuer Gastfahrer Felix alias Röddels im Golfcart – meckert über alles und schlägt mit „Hole-in-One“ den Führenden ab"},
+    {"id": "n251009g", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "⛳", "t": "Gringo Kart: neuer Gastfahrer Ritchi Reddels (Felix) im Golfcart – meckert über alles und schlägt mit „Hole-in-One“ den Führenden ab"},
     {"id": "n251009f", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🤬", "t": "Gringo Kart: Taco legt nach – derbe Mutter-Sprüche auf Mexikanisch und Türkisch"},
     {"id": "n251009e", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🌶️", "t": "Gringo Kart: Taco flucht jetzt auf Mexikanisch und Türkisch – 14 neue Sprüche von „¡Pinche cabrón!“ bis „Siktir git!“"},
     {"id": "n251009d", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🌮", "t": "Gringo Kart: neuer Gastfahrer Ilkay alias Taco im Taco-Döner-Truck, Spezial-Item „Scharf mit alles“ mit eigener Stimme; Takedown jetzt richtig englisch"},
@@ -10875,7 +10877,7 @@
       "f": 9
     },
     "v_felix_sp": {
-      "o": 74196,
+      "o": 74195,
       "dur": 1947,
       "f": 9
     },
@@ -10901,47 +10903,47 @@
     },
     "v_felix_over_2": {
       "o": 87834,
-      "dur": 3188,
+      "dur": 3393,
       "f": 9
     },
     "v_felix_hit_2": {
-      "o": 91322,
+      "o": 91527,
       "dur": 3402,
       "f": 9
     },
     "v_felix_sp_2": {
-      "o": 95024,
+      "o": 95229,
       "dur": 2649,
       "f": 9
     },
     "v_felix_win_2": {
-      "o": 97972,
-      "dur": 3526,
+      "o": 98178,
+      "dur": 3033,
       "f": 9
     },
     "v_felix_drift_2": {
-      "o": 101799,
+      "o": 101511,
       "dur": 2010,
       "f": 9
     },
     "v_felix_item_2": {
-      "o": 104108,
+      "o": 103821,
       "dur": 2670,
       "f": 9
     },
     "v_felix_pass_2": {
-      "o": 107078,
+      "o": 106791,
       "dur": 2318,
       "f": 9
     },
     "g_felix": {
-      "o": 109695,
-      "dur": 5556,
+      "o": 109409,
+      "dur": 4749,
       "f": 9
     },
     "h_felix": {
       "o": 74199,
-      "dur": 1222,
+      "dur": 996,
       "f": 7
     },
     "v_ilkay_over_4": {
