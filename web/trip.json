@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251009di", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "📋", "t": "Gringo Kart: alle Infos zum Fahrer stehen jetzt oben unter dem großen Bild – tippst du einen Fahrer weiter unten an, springt das Menü zu seinen Werten hoch"},
     {"id": "n251009ga", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "👤", "t": "Gringo Kart: als Gast spielen – im Kasten „Wer spielt?“ gibt es jetzt eine Gäste-Reihe (Manuel, Erich, Rasmus, Ilkay, Ritchi, Pat’s Mum oder „Anderer Gast“ mit Vornamen). Auch Kommentatoren fahren live mit, ihre Bestzeiten landen in der Bestenliste, sobald jemand aus der Crew die Seite offen hat"},
     {"id": "n251009pv", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🗣️", "t": "Gringo Kart: Pat’s Mum hat jetzt ihre eigene Stimme – 12 Sprüche, Ansage beim Start und Smash-Ansage bei der Fahrerwahl"},
     {"id": "n251009pm", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🚬", "t": "Gringo Kart: neue Gastfahrerin Pat’s Mum im Mama-Taxi (Lichterkette, Blumenkasten, Gartenzwerg) – Spezial „Qualm-Taxi“: Turbo, Qualmwolke für alle dahinter, und Patrick wird abgeholt"},
