@@ -1772,6 +1772,13 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
 .kart .kr-vcar small em{display:block;font-style:normal;font-weight:800;color:#ffd23f;margin-top:2px}
 .kart .kr-vcar button.kr-vbq{border:2px solid #ffd23f;border-style:solid;background:rgba(255,210,63,.16);animation:krVb .5s ease}@keyframes krVb{0%{transform:scale(1.08);filter:brightness(1.6)}100%{transform:none;filter:none}}.kart .kr-vcar button.kr-vbq small{color:#ffd23f;font-weight:800}
 .kart .kr-vnote{margin:6px 2px 0;padding:7px 10px;border-radius:10px;background:rgba(95,211,255,.12);border:1px solid rgba(95,211,255,.35);font-size:.8rem;line-height:1.35;color:#d8f3ff}
+.kart .kr-fst .kr-bx{margin:6px 0 0;font:600 .68rem/1.35 system-ui,sans-serif;color:#e6f1fb;text-align:right;text-shadow:0 1px 4px rgba(0,0,0,.8)}
+.kart .kr-roster .kr-dinfo{grid-column:1/-1;position:relative;margin:4px 0 6px;padding:9px 10px 10px;border-radius:14px;background:linear-gradient(180deg,rgba(255,210,63,.16),rgba(255,255,255,.05));border:2px solid rgba(255,210,63,.55);animation:krdin .22s ease-out}
+.kart .kr-roster .kr-dinfo::before{content:"";position:absolute;top:-9px;left:calc(var(--col,50%) - 8px);border:8px solid transparent;border-top:0;border-bottom:9px solid rgba(255,210,63,.55)}
+.kart .kr-roster .kr-dinfo>b{display:block;font:italic 900 .86rem system-ui,sans-serif;text-transform:uppercase;color:#fff;margin:0 0 6px}.kart .kr-roster .kr-dinfo>b em{font-style:normal;font-size:.6rem;text-transform:none;background:rgba(255,255,255,.14);color:#ffd23f;border-radius:6px;padding:1px 6px;vertical-align:middle;margin-left:4px}
+.kart .kr-roster .kr-dinfo .kr-dc2{background:none;border:0;padding:0}
+@keyframes krdin{from{opacity:0;transform:translateY(-4px)}}
+@media (prefers-reduced-motion:reduce){.kart .kr-roster .kr-dinfo{animation:none}}
 .kart .kr-vinfo{grid-column:1/-1;position:relative;margin:2px 0 4px;padding:10px 12px 11px;border-radius:14px;background:linear-gradient(180deg,rgba(255,210,63,.16),rgba(255,255,255,.05));border:2px solid rgba(255,210,63,.55)}
 .kart .kr-vinfo::before{content:"";position:absolute;top:-9px;left:calc(var(--col,50%) - 8px);border:8px solid transparent;border-top:0;border-bottom:9px solid rgba(255,210,63,.55)}
 .kart .kr-vinfo.kr-vinfol{border-color:rgba(159,182,204,.45);background:rgba(255,255,255,.05)}.kart .kr-vinfo.kr-vinfol::before{border-bottom-color:rgba(159,182,204,.45)}
