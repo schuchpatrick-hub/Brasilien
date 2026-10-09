@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251009d", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🌮", "t": "Gringo Kart: neuer Gastfahrer Ilkay alias Taco im Taco-Döner-Truck, Spezial-Item „Scharf mit alles“ mit eigener Stimme; Takedown jetzt richtig englisch"},
     {"id": "n251009c", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎮", "t": "Gringo Kart: neues Menü in vier Schritten – Fahrer nach Gruppen, Fahrzeuge mit deinem Fahrer drin und Freischalt-Fortschritt, Streckenkarten mit Crew-Rekord, Startleiste mit deiner Auswahl"},
     {"id": "n251009b", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "✈️", "t": "Gringo Kart: aufgeräumte Rennanzeige, Flieger am Flughafen, Zuckerhut und Schiffe an der Brücke, Strandleben an der Lopes Mendes, Gegner sammeln jetzt auch Münzen und Normal ist etwas kniffliger"},
     {"id": "n251009a", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "⚰️", "t": "Gringo Kart: alle Sprüche neu, derb und schwarz, gesprochene Takedowns, glänzende Fahrzeuge, Treffer-Gesichter und neue Strecken-Texturen"},
@@ -10859,6 +10860,51 @@
     }
   ],
   "kartvo": {
+    "v_ilkay_over": {
+      "o": 43535,
+      "dur": 2453,
+      "f": 7
+    },
+    "v_ilkay_hit": {
+      "o": 46288,
+      "dur": 3564,
+      "f": 7
+    },
+    "v_ilkay_sp": {
+      "o": 50152,
+      "dur": 3380,
+      "f": 7
+    },
+    "v_ilkay_win": {
+      "o": 53832,
+      "dur": 3306,
+      "f": 7
+    },
+    "v_ilkay_drift": {
+      "o": 57438,
+      "dur": 3330,
+      "f": 7
+    },
+    "v_ilkay_item": {
+      "o": 61068,
+      "dur": 3277,
+      "f": 7
+    },
+    "v_ilkay_pass": {
+      "o": 64645,
+      "dur": 2961,
+      "f": 7
+    },
+    "g_ilkay": {
+      "o": 67906,
+      "dur": 4042,
+      "f": 7
+    },
+    "h_ilkay": {
+      "o": 72248,
+      "dur": 1651,
+      "f": 7
+    },
     "lead_jonas": {
       "o": 250,
       "dur": 2059
