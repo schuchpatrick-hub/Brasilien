@@ -8155,15 +8155,10 @@ setGroup(G);
     if (v && vb && AC && SOUND) { playBuf(vb, v.o / 1000, v.dur / 1000, 1.05); if (MG) { MG.gain.setTargetAtTime(.25, AC.currentTime, .05); MG.gain.setTargetAtTime(.5, AC.currentTime + v.dur / 1000, .3); } }
   }
 
-  /* ---- Tages-Challenge (Stufe 4): jeden Tag eine Strecke mit Sonderregel, gleich für alle ---- */
-  const RULES = [{k: 'night', e: '🌙', n: 'Nachtfahrt', x: 'nur dein Scheinwerfer leuchtet'}, {k: 'rev', e: '🔄', n: 'Rückwärts', x: 'Strecke in Gegenrichtung'},
-    {k: 'slip', e: '🧊', n: 'Rutschpartie', x: 'alles rutschig wie Iguaçu im Regen'}, {k: 'turbo', e: '🍹', n: 'Caipi-Wahnsinn', x: 'aus jeder Kiste ein Turbo'},
-    {k: 'coati', e: '🦝', n: 'Nasenbär-Chaos', x: 'Nasenbären überall, alle Items sind Nasenbären'}, {k: 'mirror', e: '🪞', n: 'Spiegelverkehrt', x: 'links ist rechts'}];
+  // Tages-Challenge entfernt (Wunsch Patrick 09.10.: benutzt keiner, Menü übersichtlicher); dayKey bleibt für die Reise-Kostüme mit Datum
   const dayKey = () => new Intl.DateTimeFormat('en-CA', {timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
-  function daily() { const d = dayKey(); let h = 7; for (const c of d) h = (h * 31 + c.charCodeAt(0)) % 100003; return {d, track: TRACKS[h % TRACKS.length], rule: RULES[(h >> 3) % RULES.length]}; }
-  let RULE = null;   // aktive Sonderregel (nur in der Tages-Challenge)
-  /* ---- Crew-Bestenliste und Geister (db: kartbest/<strecke>__<person>, kartghost/<…>, kartdaily/<datum>__<person>; schreiben nur mit Schreibrecht) ---- */
-  let LB = {}, LBD = {}, WR = false, DB = null;
+  /* ---- Crew-Bestenliste und Geister (db: kartbest/<strecke>__<person>, kartghost/<…>; schreiben nur mit Schreibrecht) ---- */
+  let LB = {}, WR = false, DB = null;
   const player = () => ME || me;   // wer am Handy spielt („Ich bin …“), sonst der gewählte Fahrer
   function lbInit() {
     if (DB !== null) return; DB = false;
@@ -8173,7 +8168,6 @@ setGroup(G);
       db.collection('kartusers').onSnapshot(sn => { USERS = {}; sn.docs.forEach(d => { if (d.exists) USERS[d.id] = d.data().who; }); accSync(); board(); }, () => {});
       db.collection('kartprog').onSnapshot(sn => { PROG = {}; sn.docs.forEach(d => { if (d.exists) PROG[d.id] = d.data(); }); progOn = true; progSync(true); }, () => {});
       db.collection('kartlive').onSnapshot(sn => { LIVEST = []; sn.docs.forEach(d => { if (d.exists) LIVEST.push(d.data()); }); if (!box.hidden && !menu.hidden && MODE === 'live') liveBox(); }, () => {});
-      db.collection('kartdaily').onSnapshot(sn => { LBD = {}; sn.docs.forEach(d => { if (d.exists) LBD[d.id] = d.data(); }); if (!box.hidden && !menu.hidden) renderMenu(); }, () => {});
     }).catch(() => {});
     canWrite().then(w => { WR = w !== false; progWR = WR;   // null = Plattform sagt nichts: trotzdem eintragen (abgelehnte Schreibversuche meldet die Warteschlange unten links)
       progSync(true); if (!box.hidden && !menu.hidden) renderMenu(); }).catch(() => {});
@@ -8201,8 +8195,7 @@ setGroup(G);
     if (v.dev) p.push(v.dev); if (v.ts) p.push(when(v.ts)); return p.join(' · '); }
   function saveLB(pd) { const who = ME; if (!who || !DB || !(pd.ms > 15000)) return;   /* unmögliche Zeiten nie in die Crew-Bestenliste */
     if (pd.kind === 'best') { const id = pd.track + '__' + who, old = LB[id]; if (old && old.ms <= pd.ms) return; const doc = {track: pd.track, who, drv: pd.drv, veh: pd.veh, ms: pd.ms, ts: Date.now(), uid: UID, dev: devName()};
-      DB.doc('kartbest/' + id).set(doc).catch(() => {}); DB.doc('kartghost/' + id).set({g: pd.g, ms: pd.ms}).catch(() => {}); LB[id] = doc; }
-    else { const id = pd.d + '__' + who, old = LBD[id]; if (old && old.ms <= pd.ms) return; const doc = {d: pd.d, who, drv: pd.drv, ms: pd.ms, ts: Date.now(), uid: UID, dev: devName()}; DB.doc('kartdaily/' + id).set(doc).catch(() => {}); LBD[id] = doc; } }
+      DB.doc('kartbest/' + id).set(doc).catch(() => {}); DB.doc('kartghost/' + id).set({g: pd.g, ms: pd.ms}).catch(() => {}); LB[id] = doc; } }
   /* ---- Fortschritt am Konto (db kartprog/<person>): Münzen, Tuning, Kostüme, Lack, Aufkleber, Erfolge, Statistik, eigene Bestzeiten.
      Gilt auf jedem Handy, auf dem die Person „Ich bin …“ gewählt hat. Zusammenführen: Gekauftes/Erreichtes wird vereinigt (Maximum),
      Bestzeiten Minimum, Auswahl (Fahrzeug, Kostüm, Lack, Rivale) = neuester Stand, Münzen als Zähler (Änderung seit dem letzten Abgleich). ---- */
@@ -8477,7 +8470,7 @@ setGroup(G);
   const DIFFS = [{n: 'Leicht', s: [.86, .92], rb: .45, line: .4, mis: 1.3}, {n: 'Normal', s: [.94, .995], rb: .32, line: .85, mis: 1}, {n: 'Schwer', s: [.97, 1.015], rb: .18, line: 1, mis: .75}, {n: 'Profi', s: [1.005, 1.04], rb: .1, line: 1, mis: .4}];
   let DIFF = +(store.get('kartDiff') || 1); if (!DIFFS[DIFF]) DIFF = 1;
   const vib = ms => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) {} };
-  let S = null, raf = 0, last = 0, me = ME || 'patrick', W = 0, H = 0, DPR = 1, MODE = ['cup', 'daily', 'live'].includes(store.get('kartMode')) ? store.get('kartMode') : 'single', TRK = TBY[store.get('kartTrack')] ? store.get('kartTrack') : 'copa', CUP = null;
+  let S = null, raf = 0, last = 0, me = ME || 'patrick', W = 0, H = 0, DPR = 1, MODE = ['cup', 'live'].includes(store.get('kartMode')) ? store.get('kartMode') : 'single', TRK = TBY[store.get('kartTrack')] ? store.get('kartTrack') : 'copa', CUP = null;
   const loadJ = k => { try { return JSON.parse(store.get(k) || '{}'); } catch (e) { return {}; } };
   // Zurücksetzen aller Zeiten (Stichtag in trip.json → kartReset): lokale Bestzeiten, Rundenzeiten und eigene Geister einmalig löschen
   if (TRIP.kartReset && store.get('kartResetSeen') !== TRIP.kartReset) { try { Object.keys(localStorage).filter(k => /^br26\.(kart(Best$|Lap\.|Sec\.|Ghost\.|RecSeen$)|cache\.kart(best|ghost|daily)$)/.test(k)).forEach(k => localStorage.removeItem(k)); } catch (e) {} store.set('kartResetSeen', TRIP.kartReset); }
@@ -8570,7 +8563,7 @@ setGroup(G);
     if (CUT) { const SQ = secretOf(), dx0 = CUT.b[0] - CUT.a[0], dy0 = CUT.b[1] - CUT.a[1], l0 = Math.hypot(dx0, dy0), nx0 = -dy0 / l0, ny0 = dx0 / l0;
       [[.3, -1], [.52, 1], [.74, -1]].forEach(([u, sd]) => obst.push({x: CUT.a[0] + dx0 * u + nx0 * sd * CUT.w * .24, y: CUT.a[1] + dy0 * u + ny0 * sd * CUT.w * .24, kind: SQ[1], r: 17, secret: 1})); }
     const birds = []; (T.birds || []).forEach(f => { const l0 = rnd(-40, 40); for (let j = 0; j < 5; j++) { const [x, y] = at(f * N + rnd(-4, 4), l0 + rnd(-22, 22)); birds.push({x0: x, y0: y, x, y, f: 0, vx: 0, vy: 0, a: rnd(0, TAU)}); } });
-    const movers = []; (T.movers || []).concat(RULE && RULE.k === 'coati' ? [{f: .2, range: TW * .6, speed: 60, kind: 'coati', n: 2}, {f: .55, range: TW * .6, speed: 70, kind: 'coati', n: 2}, {f: .85, range: TW * .6, speed: 55, kind: 'coati'}] : []).forEach(m => { for (let j = 0; j < (m.n || 1); j++) movers.push({i: wrap(m.f * N + j * 14), l: rnd(-m.range, m.range), dir: Math.random() < .5 ? 1 : -1, range: m.range, speed: m.speed * rnd(.85, 1.15), kind: m.kind, say: 0, x: 0, y: 0}); });
+    const movers = []; (T.movers || []).forEach(m => { for (let j = 0; j < (m.n || 1); j++) movers.push({i: wrap(m.f * N + j * 14), l: rnd(-m.range, m.range), dir: Math.random() < .5 ? 1 : -1, range: m.range, speed: m.speed * rnd(.85, 1.15), kind: m.kind, say: 0, x: 0, y: 0}); });
     const puddles = (T.puddles || []).map(([f, l, r]) => { const [x, y] = at(f * N, l); return {x, y, r, r0: r}; });
     const gates = (T.gates || []).map(g => ({i: wrap(g.f * N), period: g.period, closed: g.closed, kind: g.kind, ph: rnd(0, g.period)}));
     const coinsT = []; [.13, .38, .63, .88].forEach((f, n) => { const l0 = [-40, 30, -20, 40][n]; for (let j = 0; j < 5; j++) { const i = wrap(f * N + j * 5), [x, y] = at(i, l0 + Math.sin(j) * 8); coinsT.push({x, y, off: 0}); } });
@@ -8579,7 +8572,7 @@ setGroup(G);
     if (LP) LP.forEach(x => { const pr = x.pr, id = pr.drv || pr.who || 'jonas', pt = pr.paint || {}; VEH['r:' + x.peer] = vehSprite(pt.c || (LOOK[id] || {}).shirt || '#00a651', T.veh === 'boat' ? 'boat' : (pr.veh || 'kart'), Object.assign({}, pt, pr.parts || {}), id);
       const kk = karts.find(q => q.vkey === 'r:' + x.peer), vt0 = T.veh === 'boat' ? 'boat' : (pr.veh || 'kart'); if (kk) { kk.vtype = vt0; kk.vsz = VSZ[vt0] || (vt0 === 'kart' && (STY[id] || {}).vs) || 1; kk.fw = vt0 === 'kart' && STYK(id) ? FWS[STYK(id)] || null : undefined; } });   // Mitspieler zeigen ihr gewähltes Fahrzeug (auch auf Ilha Grande)
     const dolphins = (T.dolphins || []).map(f => { const l = rnd(-40, 40), [x, y] = at(f * N, l); return {x, y, i: wrap(f * N), t: rnd(0, 3), cd: 0}; });
-    S = {brk: makeBrk(), brkP: [], deb: [], storm: {at: !RULE && T.id !== 'cristo' && Math.random() < .33 ? rnd(22, 40) : -1, f: 0, next: 0, pud: 0}, karts, boxes, obst, birds, movers, puddles, dolphins, gates, fwT: 1, cutSaid: -1, coins: coinsT, got: 0, myHits: 0, rival, rivalAhead: true, rivalSaid: 0, tu: tune(), oils: [], coatis: [], fx: [], sp: [], marks: [], fw: [], drops: [], t: -4.1, cd: 4, over: 0, slow: 0, press: null, leader: null, lastPlace: 6,
+    S = {brk: makeBrk(), brkP: [], deb: [], storm: {at: T.id !== 'cristo' && Math.random() < .33 ? rnd(22, 40) : -1, f: 0, next: 0, pud: 0}, karts, boxes, obst, birds, movers, puddles, dolphins, gates, fwT: 1, cutSaid: -1, coins: coinsT, got: 0, myHits: 0, rival, rivalAhead: true, rivalSaid: 0, tu: tune(), oils: [], coatis: [], fx: [], sp: [], marks: [], fw: [], drops: [], t: -4.1, cd: 4, over: 0, slow: 0, press: null, leader: null, lastPlace: 6,
       wave: {next: rnd(9, 13), on: 0, warn: 0, h: 0}, flood: 0, hl: {}, flash: 0, supers: 0, rec: [], ghost: null, lapMsg: null, zoom: 1, camT: 0, camA: karts[0].a, camX: karts[0].x, camY: karts[0].y, shake: 0};
   }
   // Fahrzeug-Gefühl plus Masse des Fahrers (vollgefressen = schwer) und Baukasten-Teile (nur eigener Fahrer)
@@ -8626,7 +8619,7 @@ setGroup(G);
     if (k.me) { S.myHits++; if (k.coins > 0) { const n = Math.min(S.tu && S.tu.p >= 3 ? 1 : 2, k.coins); k.coins -= n; S.got = Math.max(0, S.got - n); floatTxt(k, '−' + n + ' 🪙', '#ffb0b0'); } } else if (k.coins > 0) k.coins = Math.max(0, k.coins - 2); 
     if (k.me) { S.shake = .35; if (why === 'caiman') say('caiman', 'Vorsicht, Kaiman!'); else if (['oil', 'coati', 'ball', 'flip', 'fire', 'beer', 'coco', 'banana', 'bang', 'uru', 'bus', 'squash'].includes(why) && Math.random() < .72) voice(k, 'item'); else if (Math.random() < .6) voice(k, 'hit'); else if (Math.random() < .4) say('hit', 'Autsch, das tat weh!'); }
   }
-  function rollItem(k, two) { if ((RULE && RULE.k === 'turbo') || (S.live && S.live.cfg && S.live.cfg.items === 'turbo')) return ITEMS.turbo; if (RULE && RULE.k === 'coati') return ITEMS.coati; if (SPECIAL[k.id] && Math.random() < (k.me ? .22 : .32)) return SPECIAL[k.id]; /* Gegner etwas öfter mit Spezial-Item: mehr Chaos */ const pl = place(k), tb = IW[pl === 1 ? 'front' : pl <= 3 ? 'mid' : 'back'], one = () => { let r = Math.random(); for (const [kk, p0] of Object.entries(tb)) { r -= p0; if (r < 0) return ITEMS[kk]; } return ITEMS.turbo; };
+  function rollItem(k, two) { if (S.live && S.live.cfg && S.live.cfg.items === 'turbo') return ITEMS.turbo; if (SPECIAL[k.id] && Math.random() < (k.me ? .22 : .32)) return SPECIAL[k.id]; /* Gegner etwas öfter mit Spezial-Item: mehr Chaos */ const pl = place(k), tb = IW[pl === 1 ? 'front' : pl <= 3 ? 'mid' : 'back'], one = () => { let r = Math.random(); for (const [kk, p0] of Object.entries(tb)) { r -= p0; if (r < 0) return ITEMS[kk]; } return ITEMS.turbo; };
     /* dieselbe Item-Familie nicht zweimal hintereinander (einmal neu ziehen); das 2. Item (Kombo-Platz) darf gleich sein, sonst gäbe es kaum Doppel-Kombos */ let it = one(); if (!two && ifam(it) === k.lastFam) it = one(); if (!two) k.lastFam = ifam(it); return it; }
   /* ---- Zufallsereignisse mitten im Rennen (im Live-Rennen über den gemeinsamen Zufall bei allen gleich) ---- */
   const EVK = [{k: 'police', e: '🚔', n: 'Polizeikontrolle', x: 'langsam!'}, {k: 'parade', e: '💃', n: 'Karnevalsumzug', x: 'Tänzer queren!'},
@@ -8789,7 +8782,7 @@ setGroup(G);
       if (k.done) target = 0;
       else if (k.me) { const kb = (INPUT.keys.ArrowLeft || INPUT.keys.a ? -1 : 0) + (INPUT.keys.ArrowRight || INPUT.keys.d ? 1 : 0);
         k.brk = !!(INPUT.brake || INPUT.keys.ArrowDown || INPUT.keys.s || (SET.ctl !== 'analog' && INPUT.L && INPUT.R));
-        target = SET.ctl === 'analog' && INPUT.ax !== null ? INPUT.ax : kb || ((INPUT.L ? -1 : 0) + (INPUT.R ? 1 : 0)); if (RULE && RULE.k === 'mirror') target = -target;
+        target = SET.ctl === 'analog' && INPUT.ax !== null ? INPUT.ax : kb || ((INPUT.L ? -1 : 0) + (INPUT.R ? 1 : 0));
         // Drift sofort: Doppeltipp auf eine Seite (Halten) oder Drift-Knopf (Analog)
         if (!k.dr && k.v > 150 && !k.air && k.spin <= 0 && !k.done) { const dt0 = INPUT.dtap && performance.now() - INPUT.dtap.t < 380;
           if ((INPUT.drift && Math.abs(target) > .25) || dt0) { k.dr = INPUT.drift ? Math.sign(target) : INPUT.dtap.s; k.dt = 0; k.manual = INPUT.drift ? 'btn' : 'tap'; INPUT.dtap = null; SFX.drift(); vib(10); } } }
@@ -8870,7 +8863,7 @@ setGroup(G);
       const dA = turn * (k.me ? STEERS[STEER][1] : 2.7) * (.94 + k.cs.hdl * .12) * k.vt[1] * (k.me ? 1 + S.tu.s * .03 : 1) * (k.dr ? 1.14 : 1) * (k.boost > 0 ? k.pf.bs : 1) * dt * sf;
       k.a += dA;
       // Querbewegung: Schwung bleibt beim Einlenken erhalten und wird über die Haftung abgebaut (Drift = wenig Haftung = Rutschen)
-      const grip0 = (RULE && RULE.k === 'slip' ? Math.min(T.grip, 3.2) : T.grip) * (1 - S.storm.f * .2), lg = k.air ? .4 : k.spin > 0 ? 1.5 : k.dr ? Math.min(grip0, 2.4) : grip0 * (offT ? .8 : 1) * (k.me ? 1 + S.tu.r * .04 : 1) * k.vx.g;
+      const grip0 = T.grip * (1 - S.storm.f * .2), lg = k.air ? .4 : k.spin > 0 ? 1.5 : k.dr ? Math.min(grip0, 2.4) : grip0 * (offT ? .8 : 1) * (k.me ? 1 + S.tu.r * .04 : 1) * k.vx.g;
       k.vr = (k.vr - k.v * dA * .92 + (k.dr ? -k.dr * k.v * .55 * k.vx.d * dt : 0)) * Math.exp(-lg * dt);
       k.vr = clamp(k.vr, -k.v * .8 - 20, k.v * .8 + 20);
       const ca = Math.cos(k.a), sa = Math.sin(k.a);
@@ -8901,10 +8894,10 @@ setGroup(G);
       k.onCut = cqp !== false;   // Schranken, Pfeile, Schanze, Gepäckbänder liegen auf der normalen Strecke, nicht auf dem Schleichweg
       if (k.idx > N * .4 && k.idx < N * .6) k.half = true;
       // Zwischenzeiten: zwei Messpunkte pro Runde (1/3, 2/3), Vergleich mit der eigenen besten Zwischenzeit
-      if (k.me && !k.done && k.lap >= 0 && S.t > 0) [1, 2].forEach(j => { const bi = Math.round(N * j / 3); if (prev < bi && k.idx >= bi && k.idx - prev < 40) { const st = S.t - k.lapT0, key = 'kartSec.' + T.id + (RULE ? '@' + RULE.k : ''); let bs = []; try { bs = JSON.parse(store.get(key) || '[]'); } catch (e) {}
+      if (k.me && !k.done && k.lap >= 0 && S.t > 0) [1, 2].forEach(j => { const bi = Math.round(N * j / 3); if (prev < bi && k.idx >= bi && k.idx - prev < 40) { const st = S.t - k.lapT0, key = 'kartSec.' + T.id; let bs = []; try { bs = JSON.parse(store.get(key) || '[]'); } catch (e) {}
         const d = bs[j - 1] ? st - bs[j - 1] / 1000 : null; S.secMsg = {t: 'Zwischenzeit ' + j + ': ' + fmt(st * 1000), d, until: performance.now() + 2200}; if (!bs[j - 1] || st * 1000 < bs[j - 1]) { bs[j - 1] = Math.round(st * 1000); store.set(key, JSON.stringify(bs)); } } });
       if (prev > N * .85 && k.idx < N * .15 && k.half) { k.lap++; k.half = false;
-        if (k.me && k.lap >= 1) { const lt = S.t - k.lapT0, key = 'kartLap.' + T.id + (RULE ? '@' + RULE.k : ''), bl = +store.get(key) || 0; S.lapMsg = {t: 'Runde ' + k.lap + ': ' + fmt(lt * 1000), d: bl ? lt - bl / 1000 : null, until: performance.now() + 2800};
+        if (k.me && k.lap >= 1) { const lt = S.t - k.lapT0, key = 'kartLap.' + T.id, bl = +store.get(key) || 0; S.lapMsg = {t: 'Runde ' + k.lap + ': ' + fmt(lt * 1000), d: bl ? lt - bl / 1000 : null, until: performance.now() + 2800};
           if (!bl || lt * 1000 < bl) store.set(key, Math.round(lt * 1000)); if (k.lap < LAPS && place(k) === S.karts.length && S.karts.length > 2) say('ann_last', '💐 Letzter Platz. Die Crew hat schon Blumen bestellt.', 1); }
         k.lapT0 = S.t;
         if (k.lap >= LAPS && !k.done) { k.done = S.t; if (k.me) { const wn = S.karts.filter(o => o.done).sort((x, y) => x.done - y.done)[0] || k; S.pose = {id: wn.id, t0: performance.now(), me: wn === k, live: !!S.live}; if (!S.live) setTimeout(() => { if (S) voice(wn, 'win', 1); }, 700); SFX.finish(); S.over = 3.4; S.slow = 1.6; say('finish', 'Zielflagge!', 1); fireworks(place(k) <= 3 ? 70 : 25); } }
@@ -9223,7 +9216,7 @@ setGroup(G);
       ctx.fillStyle = 'rgba(30,60,80,.12)'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
     if (T.mist) { const dm = Math.hypot(k0.x - T.mist.x, k0.y - T.mist.y), f = clamp(1 - (dm - T.mist.r * .4) / T.mist.r, 0, 1) * .6;
       if (f > .02) { const g = ctx.createRadialGradient(W / 2, camY(), 60, W / 2, camY(), Math.max(W, H) * .8); g.addColorStop(0, `rgba(240,250,255,${f * .25})`); g.addColorStop(1, `rgba(240,250,255,${f})`); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); } }
-    { const ni = (RULE && RULE.k === 'night') || (S.ev && S.ev.cur && S.ev.cur.k === 'blackout') ? 1 : T.night ? .78 : S.tod === 'night' ? .7 : 0;
+    { const ni = (S.ev && S.ev.cur && S.ev.cur.k === 'blackout') ? 1 : T.night ? .78 : S.tod === 'night' ? .7 : 0;
       if (ni > 0) darkness(ni >= 1 ? .97 : ni > .75 ? .86 : .8, sc, phi);
       else if (S.tod === 'dusk') { ctx.fillStyle = 'rgba(255,120,40,.16)'; ctx.fillRect(0, 0, W, H); } else if (S.tod === 'dawn') { ctx.fillStyle = 'rgba(255,170,190,.12)'; ctx.fillRect(0, 0, W, H); }
       if (T.fog) { const g = ctx.createRadialGradient(W / 2, camY(), 80, W / 2, camY(), Math.max(W, H) * .6); g.addColorStop(0, 'rgba(235,240,245,.05)'); g.addColorStop(1, 'rgba(235,240,245,.72)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); } }
@@ -9259,7 +9252,6 @@ setGroup(G);
       ord.forEach((o, i) => { const y = top + 150 + i * 17; if (o.out) ctx.globalAlpha = .45; ctx.fillStyle = o.me ? '#ffd23f' : o.aiIdx !== undefined ? 'rgba(255,255,255,.7)' : '#9ff0b4'; ctx.fillText((i + 1) + '. ' + (o.me ? 'Du' : NAME(o.who || o.id)) + (o.aiIdx !== undefined ? ' 🤖' : '') + (o.out ? ' 📴' : o.lagging ? ' 📶' : '') + (o.done ? ' 🏁' : ''), W - 14, y); ctx.globalAlpha = 1; }); ctx.restore(); }
     if (S.live && LIVE.gp) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fillText('🏆 Live-Pokal · Rennen ' + (LIVE.gp.i + 1) + '/' + LIVE.gp.list.length + ' · ' + T.e + ' ' + T.name, W / 2, top + 98, W - 236); }
     else if (CUP) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fillText(CUP.e + ' ' + CUP.n + ' · Rennen ' + (CUP.i + 1) + '/' + CUP.list.length + ' · ' + T.e + ' ' + T.name, W / 2, top + 98, W - 236); }
-    else if (RULE) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fillText('🎯 Tages-Challenge · ' + RULE.e + ' ' + RULE.n, W / 2, top + 98, W - 236); }
     else if (S.ghost) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fillText('👻 Geist: ' + NAME(S.ghost.who) + ' · ' + fmt(S.ghost.ms), W / 2, top + 98, W - 236); }
     // Ansager-Zeile
     // Ansager-Zeile ganz oben zwischen Pause-Knopf und rechtem Rand (dort liegt sonst nichts; vorher über Abständen/Rivale)
@@ -9395,18 +9387,15 @@ setGroup(G);
   function finish() {
     if (S.live && S.pose) { const wk = S.karts.find(o => o.id === S.pose.id); if (wk) voice(wk, 'win', 1); }
     const ks = S.karts; ks.forEach(k => { if (!k.done) k.est = k.out ? 1e6 : S.t + (LAPS * N - progress(k)) * 6 / (VMAX * .9); });
-    const order = ks.slice().sort((a, b) => (a.done || a.est) - (b.done || b.est)), mine = ks[0], bkey = T.id + (RULE ? '@' + RULE.k : ''), b = best(), prev = b[bkey], ok = !!mine.done && mine.done > 15 && !mine.out, rec = ok && (!prev || mine.done * 1000 < prev), ms = Math.round((mine.done || 0) * 1000);   /* nie eine unmögliche Zeit (abgebrochen/Test) speichern */
-    if (rec) { b[bkey] = ms; store.set('kartBest', JSON.stringify(b)); if (!RULE) try { localStorage.setItem('br26.kartGhost.' + T.id, JSON.stringify({ms, drv: me, g: S.rec})); } catch (e) {} }
-    // Crew-Bestenliste / Tages-Challenge (nur mit Schreibrecht)
+    const order = ks.slice().sort((a, b) => (a.done || a.est) - (b.done || b.est)), mine = ks[0], bkey = T.id, b = best(), prev = b[bkey], ok = !!mine.done && mine.done > 15 && !mine.out, rec = ok && (!prev || mine.done * 1000 < prev), ms = Math.round((mine.done || 0) * 1000);   /* nie eine unmögliche Zeit (abgebrochen/Test) speichern */
+    if (rec) { b[bkey] = ms; store.set('kartBest', JSON.stringify(b)); try { localStorage.setItem('br26.kartGhost.' + T.id, JSON.stringify({ms, drv: me, g: S.rec})); } catch (e) {} }
+    // Crew-Bestenliste (nur mit Schreibrecht)
     let crewMsg = ''; PEND = null;
     if (TUTON) { TUTON = false; if (!store.get('kartTutDone')) { store.set('kartTutDone', '1'); addCoins(20); setTimeout(() => toast('🎓 <b>Fahrschule bestanden!</b><br>+20 🪙'), 600); } }
     else if (!ok) { /* abgebrochen: nichts eintragen */ }
-    else if (!RULE) { const top = lbList(LB, T.id)[0], mineLB = LB[T.id + '__' + player()];
+    else { const top = lbList(LB, T.id)[0], mineLB = LB[T.id + '__' + player()];
       if (WR && DB) { const pd = {kind: 'best', track: T.id, drv: me, veh: vehOf(me), ms, g: S.rec}; if (ME) saveLB(pd); else PEND = pd; }
       crewMsg = !top || ms < top.ms ? (WR ? '👑 Neue Crew-Bestzeit auf ' + T.name + '!' : '👑 Schneller als die Crew-Bestzeit, aber nur eingeladene Bearbeiter kommen in die Bestenliste.') : '⏱ Crew-Bestzeit: ' + NAME(top.who) + ' ' + fmt(top.ms); }
-    else { const dk = daily().d + '__' + player(), mineD = LBD[dk];
-      if (WR && DB) { const pd = {kind: 'daily', d: daily().d, drv: me, ms}; if (ME) saveLB(pd); else PEND = pd; }
-      const day = lbList(LBD, daily().d); crewMsg = day.length ? '🎯 Heute vorne: ' + NAME(day[0].who) + ' ' + fmt(day[0].ms) : ''; }
     const pl = order.indexOf(mine) + 1;
     let msg = pl === 1 ? ['Campeão! 🏆', 'Der Pokal geht nach Hause!'] : pl === 6 ? ['Rote Laterne 🏮', 'Immerhin heil angekommen.'] : pl <= 3 ? ['Podium! ' + (pl === 2 ? '🥈' : '🥉'), 'Stark gefahren.'] : ['Mittelfeld', 'Nächstes Mal mehr Caipi-Turbo.'];
     if (CUP) { order.forEach((k, i) => { CUP.pts[k.id] = (CUP.pts[k.id] || 0) + PTS[i]; }); CUP.races.push(order.map(k => k.id)); }
@@ -9692,7 +9681,7 @@ setGroup(G);
       vc.appendChild(inf); placeVInfo(); }
     // Hinweis, wenn die gewählte Strecke ein anderes Fahrzeug verlangt (nur der Amazonas: Boot für alle)
     { let vn = vc.nextElementSibling; if (!vn || !vn.classList.contains('kr-vnote')) { vn = document.createElement('p'); vn.className = 'kr-vnote'; vc.after(vn); }
-      const tl = MODE === 'cup' ? CUPSEL.t : MODE === 'daily' ? [daily().track.id] : [TRK], bo = tl.filter(id => TBY[id] && TBY[id].veh === 'boat'), mvn = mv === 'kart' && STYK(me) ? STN[STYK(me)] || 'Gringo-Kart' : VEHS.find(v => v.id === mv).n;
+      const tl = MODE === 'cup' ? CUPSEL.t : [TRK], bo = tl.filter(id => TBY[id] && TBY[id].veh === 'boat'), mvn = mv === 'kart' && STYK(me) ? STN[STYK(me)] || 'Gringo-Kart' : VEHS.find(v => v.id === mv).n;
       vn.hidden = !bo.length; vn.textContent = !bo.length ? '' : tl.length > 1 ? '🛶 Auf dem Amazonas fahren alle Boot, in den anderen Pokal-Rennen fährst du: ' + mvn + '.' : '🛶 Auf dem Amazonas fahren alle Boot. Dein Fahrzeug (' + mvn + ') fährst du auf allen anderen Strecken.'; }
     const tu = tune(), own = cosOwn(), mc = cosOf(me), cn = coins();
     sumBadge('garage', '🪙 ' + cn); { const pl = menu.querySelector('.kr-prog'); if (pl) pl.innerHTML = progLine(); }
@@ -9713,7 +9702,7 @@ setGroup(G);
     tr.innerHTML = TRACKS.map(t => '<button type="button" data-t="' + t.id + '" aria-pressed="' + (t.id === TRK) + '"><i>' + t.e + '</i>' + (bt[t.id] ? '<em>⏱ ' + fmt(bt[t.id]) + '</em>' : '') + '<b>' + esc(t.name) + '</b><small>' + esc(t.sub) + '</small><span class="kr-tm" title="Runden, Fahrtrichtung">🔁 ' + (t.laps || 3) + ' · ' + (t.id === 'minhocao' ? '∞ Acht' : CWT[t.id] ? '↻ rechts' : '↺ links') + ((t.tunnels || TUNT[t.id]) ? ' · 🚇' : '') + (FALLT[t.id] ? ' · ⚠️' : '') + '</span>' + ((r0 => r0 ? '<span class="kr-trec">👑 Bestzeit ' + fmt(r0.ms) + ' · ' + esc(NAME(r0.who)) + '</span>' : '<span class="kr-trec kr-no">👑 Bestzeit noch frei</span>')(lbList(LB, t.id)[0])) + '</button>').join('');
     tr.querySelectorAll('button').forEach(b0 => { const c = thumb(TBY[b0.dataset.t]), d = document.createElement('canvas'); d.width = c.width; d.height = c.height; d.getContext('2d').drawImage(c, 0, 0); b0.prepend(d); });
     requestAnimationFrame(() => { const sel = tr.querySelector('[aria-pressed="true"]'); if (sel && tr.scrollWidth > tr.clientWidth) tr.scrollLeft = sel.offsetLeft - (tr.clientWidth - sel.clientWidth) / 2; });
-    menu.querySelector('.kr-tl').innerHTML = '<em>3</em> ' + (MODE === 'cup' ? 'Pokal' : MODE === 'daily' ? 'Heutige Challenge' : 'Strecke');
+    menu.querySelector('.kr-tl').innerHTML = '<em>3</em> ' + (MODE === 'cup' ? 'Pokal' : 'Strecke');
     menu.querySelector('.kr-pc').textContent = coins(); menu.querySelector('.kr-pa').textContent = Object.keys(achs()).length + '/' + ACH.length;
     const cups = loadJ('kartCups'), cw = cups[me] || 0, cx = menu.querySelector('.kr-cupx'); cx.hidden = MODE !== 'cup';
     cx.textContent = CUPSEL.t.map(id => TBY[id].e + ' ' + TBY[id].name).join(' · ') + '. Punkte 10-8-6-5-4-3, am Ende Siegerehrung.' + (cw ? ' Deine Grand-Prix-Siege: ' + cw + ' 🏆' : '');
@@ -9722,16 +9711,10 @@ setGroup(G);
       menu.querySelector('.kr-best').textContent = vn + (MODE === 'cup' ? CUPSEL.e + ' ' + CUPSEL.n + ' · ' + DIFFS[DIFF].n : MODE === 'live' ? '👥 Live · ' + lobby().length + ' im Raum'
         : TBY[TRK].e + ' ' + TBY[TRK].name + ' · ' + DIFFS[DIFF].n + (bt[TRK] ? ' · ⏱ ' + fmt(bt[TRK]) : '')); }
     liveBox(); livePres();
-    { const go = menu.querySelector('.kr-go'); go.textContent = MODE === 'cup' ? '🏆 Starten' : MODE === 'daily' ? '🎯 Fahren' : 'Los!'; go.classList.remove('kr-wait'); liveFoot(); }   // Live: der Knopf schaltet „bereit“, los geht es erst, wenn alle bereit sind
-    const dy = daily(), lb = menu.querySelector('.kr-lb'), gh = menu.querySelector('.kr-ghost:not(.kr-diff)');
+    { const go = menu.querySelector('.kr-go'); go.textContent = MODE === 'cup' ? '🏆 Starten' : 'Los!'; go.classList.remove('kr-wait'); liveFoot(); }   // Live: der Knopf schaltet „bereit“, los geht es erst, wenn alle bereit sind
+    const lb = menu.querySelector('.kr-lb'), gh = menu.querySelector('.kr-ghost:not(.kr-diff)');
     gh.hidden = MODE !== 'single'; gh.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', x.dataset.g === GHOST.mode));
-    { const dc = menu.querySelector('.kr-day'); dc.hidden = MODE !== 'daily'; if (MODE !== 'daily') dc.innerHTML = ''; }
-    if (MODE === 'daily') { const bd = bt[dy.track.id + '@' + dy.rule.k], dc = menu.querySelector('.kr-day');
-      menu.querySelector('.kr-best').textContent = (dy.track.veh === 'boat' ? '🛶 Boot' : (mv === 'kart' && STYK(me) ? STN[STYK(me)] : (VEHS.find(v => v.id === mv) || VEHS[0]).n)) + ' · ' + dy.track.e + ' ' + dy.track.name + ' · ' + dy.rule.e + ' ' + dy.rule.n + (bd ? ' · ⏱ ' + fmt(bd) : '');
-      dc.innerHTML = '<span class="kr-dayc"></span><div><small>🎯 Heute, ' + dy.d.split('-').reverse().slice(0, 2).join('.') + '. · für alle gleich</small><b>' + dy.track.e + ' ' + esc(dy.track.name) + '</b><p><i>' + dy.rule.e + ' ' + esc(dy.rule.n) + '</i> ' + esc(dy.rule.x) + '</p>' + (bd ? '<p class="kr-dayb">⏱ Deine Bestzeit heute: ' + fmt(bd) + '</p>' : '') + '</div>';
-      { const c = thumb(dy.track), d = document.createElement('canvas'); d.width = c.width; d.height = c.height; d.getContext('2d').drawImage(c, 0, 0); dc.querySelector('.kr-dayc').replaceWith(d); }
-      lb.innerHTML = lbHtml(lbList(LBD, dy.d), '🎯 Tageswertung'); }
-    else if (MODE === 'single') lb.innerHTML = lbHtml(lbList(LB, TRK), '⏱️ Bestzeiten ' + TBY[TRK].name);
+    if (MODE === 'single') lb.innerHTML = lbHtml(lbList(LB, TRK), '⏱️ Bestzeiten ' + TBY[TRK].name);
     else lb.innerHTML = '';
     lb.hidden = MODE === 'cup';
     menu.querySelector('.kr-wr').textContent = WR ? 'Deine Zeiten landen als ' + NAME(player()) + ' in der Crew-Bestenliste' + (ME ? '' : ' (wähle oben auf der Seite „Ich bin …“)') + '.' : 'Bestenliste nur ansehen: Eintragen können nur eingeladene Bearbeiter, deine Zeiten bleiben auf diesem Handy.';
@@ -9741,18 +9724,18 @@ setGroup(G);
       : '<p class="kr-wholn"><span>🙋 <b>' + esc(NAME(ME)) + '</b> spielt · Zeiten zählen für die Crew-Bestenliste</span><button type="button" class="kr-whochg">ändern</button></p>'; whoHeads(wb);
     const rc = menu.querySelector('.kr-recs'); rc.querySelector('.kr-recb').innerHTML = recsHtml(); sumBadge('recs', TRACKS.filter(x => lbList(LB, x.id).length).length + '/' + TRACKS.length);
   }
-  function preview(id) { loadTrack(id, RULE && RULE.k === 'rev'); newRace(); S.paused = true; }
+  function preview(id) { loadTrack(id); newRace(); S.paused = true; }
   const TIPS = ['Gewitter? Pfützen meiden, früher bremsen.', 'Mehrfach-Items (×2, ×3): mehrmals antippen! 🥥 Kokos-Trio kreist um dich und wehrt Geschosse ab, 🍌 Bananen hinten auch.', 'Brücke, Minhocão, Cristo und Iguaçu haben keine Bande: Wer über den Rand fährt, stürzt ab und verliert gut 2 Sekunden.', '⛱️ Schirm blockt einen Treffer, 🩴 Flip-Flop fliegt geradeaus, 🦜 Papagei verdreht den Vorderleuten die Lenkung.', '🌶️ Pimenta: langer Turbo, wer direkt hinter dir fährt, verbrennt sich.', 'Doppeltipp und halten = sofort driften. Länger driften = blauer, dann oranger Turbo.', 'Beide Seiten gleichzeitig halten = bremsen.', 'Bei der 1 tippen = Raketenstart.',
     'Auf der Schanze tippen = Trick und Turbo bei der Landung.', 'Rot-weiße Pfeiltafeln warnen vor scharfen Kurven.', 'Abkürzungen sind holprig, aber mit Turbo-Pfeil in der Mitte.',
     'Schranken öffnen im Takt. Kurz warten lohnt sich manchmal.', 'Im Pause-Menü: Steuerung „Analog“ für stufenloses Lenken.', 'Wer hinten liegt, bekommt bessere Items.',
     'Delfine auf dem Amazonas geben Turbo.', 'Im Nebel helfen die Kurven-Schilder.', 'Die Tageszeit im Spiel folgt der Uhrzeit in Rio.'];
   function showLoad(id, fn) { const L = box.querySelector('.kr-load'), tr = TBY[id] || TRACKS[0]; L.querySelector('.kr-load-t').textContent = tr.e + ' ' + tr.name; L.querySelector('.kr-load-s').textContent = tr.sub;
     L.querySelector('.kr-load-tip').textContent = '💡 ' + pick(TIPS); L.hidden = false; const t0 = performance.now(); setTimeout(() => { fn(); setTimeout(() => { L.hidden = true; }, Math.max(0, 900 - (performance.now() - t0))); }, 40); }
-  function startRace() { if (MODE === 'live' && !LIVE.pending) { liveGo(); return; } const tid = CUP ? CUP.list[CUP.i] : RULE ? daily().track.id : TRK; menu.hidden = true; res.hidden = true; pm.hidden = true; racing(true); if (S) S.paused = true; showLoad(tid, startRace0); }
+  function startRace() { if (MODE === 'live' && !LIVE.pending) { liveGo(); return; } const tid = CUP ? CUP.list[CUP.i] : TRK; menu.hidden = true; res.hidden = true; pm.hidden = true; racing(true); if (S) S.paused = true; showLoad(tid, startRace0); }
   function startRace0() {
     setTimeout(() => { if (BUF.more) BUF.more(); }, 1200); 
     menu.hidden = true; res.hidden = true; pm.hidden = true; racing(true);
-    if (CUP) { RULE = null; loadTrack(CUP.list[CUP.i]); } else if (RULE) loadTrack(daily().track.id, RULE.k === 'rev'); else loadTrack(TRK);
+    if (CUP) loadTrack(CUP.list[CUP.i]); else loadTrack(TRK);
     if (LIVE.pending) { LIVE.race = LIVE.pending; LIVE.pending = null; } else if (MODE !== 'live') LIVE.race = null;
     const LR0 = LIVE.race, CF = LR0 && LR0.cfg || {}; if (LR0 && CF.laps) LAPS = CF.laps;
     makeVehicles(); { const MR = Math.random; if (LR0 && LR0.seed) Math.random = mulberry(hashS(LR0.seed)); if (LR0 && CF.diff >= 0) { if (LIVE.diff0 == null) LIVE.diff0 = DIFF; DIFF = CF.diff; } try { newRace(); } finally { Math.random = MR; } }
@@ -9760,8 +9743,8 @@ setGroup(G);
     S.ev = {next: wrnd('ev', 15, 24), cur: null}; S.evOn = !TUTON && (LR0 ? CF.ev !== 'off' : SET.ev !== 'off');
     if (TUTON) { S.tut = {i: 0, ok: 0}; S.karts.length = 1; LAPS = 2; S.storm.at = -1; S.rival = null; }
     if (LIVE.race) { S.live = LIVE.race; S.live.t0p = LIVE.race.delay && LIVE.race.rt ? LIVE.race.rt + LIVE.race.delay : performance.now() + clamp(LIVE.race.at - Date.now(), 500, 6000); S.t = clamp((performance.now() - S.live.t0p) / 1000, -6, -.5); LIVE.buf = {}; LIVE.lastN = {}; S.live.curHost = S.live.host; liveRejoinRestore(); liveClockSync(); } box.classList.toggle('live', !!S.live); S.tod = T.night || SET.tod === 'day' ? 'day' : (h => h >= 19 || h < 6 ? 'night' : h >= 17 ? 'dusk' : h < 7 ? 'dawn' : 'day')(+new Intl.DateTimeFormat('en-GB', {timeZone: 'America/Sao_Paulo', hour: 'numeric', hour12: false}).format(new Date()) % 24);
-    if (!CUP && !RULE && GHOST.mode !== 'off') { const tid = T.id, s0 = S; ghostFor(tid).then(g => { if (S === s0 && g) { S.ghost = g; ghostProg(g); } }); } audio(); MUS.on = false; MUS.fast = false; MUS.step = 0; MUS.next = 0; banner = null; last = 0; if (MG && AC) MG.gain.value = .5;
-    setTimeout(() => { if (S && S.tod === 'night' && !T.night) setTimeout(() => say('night', 'Es wird Nacht! Licht an!'), 2600); if (S && S.t < 0) say('t_' + T.id, RULE ? 'Tages-Challenge: ' + RULE.n + '!' : 'Willkommen in ' + T.name + '!', 1); }, 150);
+    if (!CUP && GHOST.mode !== 'off') { const tid = T.id, s0 = S; ghostFor(tid).then(g => { if (S === s0 && g) { S.ghost = g; ghostProg(g); } }); } audio(); MUS.on = false; MUS.fast = false; MUS.step = 0; MUS.next = 0; banner = null; last = 0; if (MG && AC) MG.gain.value = .5;
+    setTimeout(() => { if (S && S.tod === 'night' && !T.night) setTimeout(() => say('night', 'Es wird Nacht! Licht an!'), 2600); if (S && S.t < 0) say('t_' + T.id, 'Willkommen in ' + T.name + '!', 1); }, 150);
     // Gastfahrer im Feld: eigene Ansage (Aufnahme g_<id> in kart6.mp3, sonst Handy-Stimme)
     { const gx = S.karts.map(k => XBY[k.id]).find(x => x && x.guest && x.ann); if (gx) setTimeout(() => { if (!S || S.t > 0) return; const gv = TRIP.kartvo && TRIP.kartvo['g_' + gx.id]; say(gv ? 'g_' + gx.id : 'guest', gx.ann, 1); if (gv && BUF['ann' + (gv.f > 1 ? gv.f : '')]) return; if (SOUND && ANN && window.speechSynthesis) try { const u = new SpeechSynthesisUtterance(gx.ann); u.lang = 'de-DE'; u.rate = 1.1; u.pitch = .7; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {} }, 2500); }
   }
@@ -9770,7 +9753,7 @@ setGroup(G);
     if (box.parentElement !== document.body) document.body.appendChild(box);   // Kapitel hat content-visibility, sonst unsichtbar
     box.hidden = false; document.body.style.overflow = 'hidden'; document.documentElement.classList.add('kart-on'); resize();
     // kein echtes Vollbild mehr: Chrome blendet dabei jedes Mal „… claudeusercontent.com – zum Beenden des Vollbildmodus …“ ein (Wunsch Patrick 08.10.); das Overlay füllt den Bildschirm auch so
-    CUP = null; S = null; RULE = MODE === 'daily' ? daily().rule : null; lbInit(); progSync(true); { const s0 = {}; TRACKS.forEach(tr => { const top = lbList(LB, tr.id)[0]; if (top) s0[tr.id] = top.who; }); if (Object.keys(s0).length) store.set('kartRecSeen', JSON.stringify(s0)); } preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); setTimeout(renderMenu, 900); menu.hidden = false; res.hidden = true; pm.hidden = true; racing(false);
+    CUP = null; S = null; lbInit(); progSync(true); { const s0 = {}; TRACKS.forEach(tr => { const top = lbList(LB, tr.id)[0]; if (top) s0[tr.id] = top.who; }); if (Object.keys(s0).length) store.set('kartRecSeen', JSON.stringify(s0)); } preview(MODE === 'cup' ? CUPSEL.t[0] : TRK); renderMenu(); setTimeout(renderMenu, 900); menu.hidden = false; res.hidden = true; pm.hidden = true; racing(false);
     cancelAnimationFrame(raf); raf = requestAnimationFrame(loop);
     audio(); loadBufs(); mmStart(); resKeep();
   }
@@ -9780,7 +9763,7 @@ setGroup(G);
     if (LIVE.diff0 != null) { DIFF = LIVE.diff0; LIVE.diff0 = null; } liveLeave(); cancelAnimationFrame(raf); S = null; MUS.on = false; box.hidden = true; if (LIVE.room) livePres(); teaser(); board(); document.body.style.overflow = ''; document.documentElement.classList.remove('kart-on');
     engOff(); try { if (document.fullscreenElement) document.exitFullscreen(); } catch (e) {}
   }
-  function toMenu() { if (LIVE.diff0 != null) { DIFF = LIVE.diff0; LIVE.diff0 = null; } TUTON = false; CUP = null; RULE = MODE === 'daily' ? daily().rule : null; res.hidden = true; pm.hidden = true; racing(false); MUS.on = false; menu.hidden = false; preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu(); }
+  function toMenu() { if (LIVE.diff0 != null) { DIFF = LIVE.diff0; LIVE.diff0 = null; } TUTON = false; CUP = null; res.hidden = true; pm.hidden = true; racing(false); MUS.on = false; menu.hidden = false; preview(MODE === 'cup' ? CUPSEL.t[0] : TRK); renderMenu(); }
   openBtn.addEventListener('click', open);
   const racing = on => box.classList.toggle('racing', on);
   function pause() { if (!S || !box.classList.contains('racing') || !res.hidden) return; pm.querySelector('.kr-restart').hidden = !!S.live;
@@ -9824,8 +9807,8 @@ setGroup(G);
       const spin = () => { if (cur && tile(cur)) tile(cur).classList.remove('kr-rl'); n++; cur = n >= 16 ? fin : pick(ids); const t0 = tile(cur); if (t0) t0.classList.add('kr-rl'); beep(500 + n * 40, .04, 'square', .04);
         if (n < 16) setTimeout(spin, 40 + n * n * 1.4); else setTimeout(() => { RSPIN = 0; pickDrv(fin); }, 260); }; spin(); return; }
     const b = e.target.closest('.kr-pick:not(.kr-whop) button[data-id]'); if (b) pickDrv(b.dataset.id);
-    const m = e.target.closest('.kr-mode button'); if (m) { MODE = m.dataset.mode; store.set('kartMode', MODE); RULE = MODE === 'daily' ? daily().rule : null; preview(MODE === 'cup' ? CUPSEL.t[0] : MODE === 'daily' ? daily().track.id : TRK); renderMenu();
-      if (MODE === 'cup' || MODE === 'daily') setTimeout(() => { const t0 = menu.querySelector('.kr-tl'); if (t0) t0.scrollIntoView({behavior: 'smooth', block: 'start'}); }, 60); }   // Pokal/Challenge: gleich zur Auswahl springen (steht unter Fahrer und Fahrzeug)
+    const m = e.target.closest('.kr-mode button'); if (m) { MODE = m.dataset.mode; store.set('kartMode', MODE); preview(MODE === 'cup' ? CUPSEL.t[0] : TRK); renderMenu();
+      if (MODE === 'cup') setTimeout(() => { const t0 = menu.querySelector('.kr-tl'); if (t0) t0.scrollIntoView({behavior: 'smooth', block: 'start'}); }, 60); }   // Pokal: gleich zur Auswahl springen (steht unter Fahrer und Fahrzeug)
     const cb = e.target.closest('.kr-cups button'); if (cb) { CUPSEL = CUPS.find(c => c.id === cb.dataset.c) || CUPS[0]; store.set('kartCup', CUPSEL.id); preview(CUPSEL.t[0]); renderMenu(); }
     const pb = e.target.closest('.kr-paints button'); if (pb) { const all = loadJ('kartPaint'), pt = paintOf(me); pt.c = pb.dataset.p || null; all[me] = pt; store.set('kartPaint', JSON.stringify(all)); makeVehicles(); renderMenu(); return; }
     const skb = e.target.closest('.kr-stks button'); if (skb && !skb.disabled) { const id0 = skb.dataset.s, X = STK.find(x0 => x0.id === id0), so = loadJ('kartStkOwn'), all = loadJ('kartPaint'), pt = paintOf(me);
@@ -9863,7 +9846,7 @@ setGroup(G);
     const vlk = e.target.closest('.kr-vcar button.kr-vlk'); if (vlk) { VINFO = VINFO === vlk.dataset.v ? myVeh() : vlk.dataset.v; renderMenu(); return; }   // gesperrt: nur Infos (Preis bzw. Erfolg) zeigen
     const vb = e.target.closest('.kr-vehs:not(.kr-cos) > button:not(.kr-vlk)'); if (vb && !vb.disabled) { VINFO = vb.dataset.v; store.set('kartVeh', vb.dataset.v); makeVehicles(); newRace(); S.paused = true; renderMenu(); }
     if (e.target.closest('.kr-go') && MODE === 'live') { LIVE.rdy = !LIVE.rdy; SFX.pick(); livePres(); renderMenu(); liveAuto(); return; }
-    if (e.target.closest('.kr-go')) { CUP = MODE === 'cup' ? {i: 0, pts: {}, races: [], list: CUPSEL.t, n: CUPSEL.n, e: CUPSEL.e} : null; RULE = MODE === 'daily' ? daily().rule : null; startRace(); }
+    if (e.target.closest('.kr-go')) { CUP = MODE === 'cup' ? {i: 0, pts: {}, races: [], list: CUPSEL.t, n: CUPSEL.n, e: CUPSEL.e} : null; startRace(); }
   });
   res.addEventListener('click', e => {
     if (e.target.closest('.kr-again')) {
@@ -9933,7 +9916,7 @@ setGroup(G);
   window.__kart = {toMenu: () => toMenu(), mm: () => ({on: MM.on, step: MM.step}), mmRender: async (sec, song) => { const A0 = AC, G0 = MM.g, D0 = MM.dl, S0 = MM.song, oc = new OfflineAudioContext(1, 44100 * sec, 44100); AC = oc; MM.g = null; MM.song = song || S0 || 'phonk'; mmGraph(); MM.g.gain.value = .8 * SONGS[MM.song].v; MM.dl.delayTime.value = 60 / SONGS[MM.song].bpm * .75; const sp = 60 / SONGS[MM.song].bpm / 4; for (let st = 0, t = 0; t < sec; st++, t += sp) mmNote(st, t);
     const buf = await oc.startRendering(); AC = A0; MM.g = G0; MM.dl = D0; MM.song = S0; const d = buf.getChannelData(0); let pk = 0, ss = 0; for (let i = 0; i < d.length; i++) { pk = Math.max(pk, Math.abs(d[i])); ss += d[i] * d[i]; }
     const pcm = new Int16Array(d.length); for (let i = 0; i < d.length; i++) pcm[i] = Math.max(-1, Math.min(1, d[i])) * 32767; let bin = ''; const u8 = new Uint8Array(pcm.buffer); for (let i = 0; i < u8.length; i += 8192) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 8192));
-    return {peak: pk, rms: Math.sqrt(ss / d.length), pcm: btoa(bin)}; }, song: () => MM.song, ls: pr => liveSample(pr, q => q), hitK0: (i, w) => hit(S.karts[i], w), give: (i, k) => { const kk = S.karts[i]; kk.item = ITEMS[k] || Object.values(SPECIAL).find(q => q && q.k === k); kk.icntFor = null; kk.roll = 0; }, use: i => useItem(S.karts[i]), icnt: i => icnt(S.karts[i]), hymn: id => hymn(id), cut: () => CUT, live: () => LIVE, liveGo: a => liveGo(a), emo: e => { const b = [...box.querySelectorAll('.kr-emol button')].find(x => x.textContent === e); if (b) b.click(); }, hitK: (i, why) => hit(S.karts[i], why), open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, LBD, WR], daily, tracks: TRACKS.map(t => t.id)};
+    return {peak: pk, rms: Math.sqrt(ss / d.length), pcm: btoa(bin)}; }, song: () => MM.song, ls: pr => liveSample(pr, q => q), hitK0: (i, w) => hit(S.karts[i], w), give: (i, k) => { const kk = S.karts[i]; kk.item = ITEMS[k] || Object.values(SPECIAL).find(q => q && q.k === k); kk.icntFor = null; kk.roll = 0; }, use: i => useItem(S.karts[i]), icnt: i => icnt(S.karts[i]), hymn: id => hymn(id), cut: () => CUT, live: () => LIVE, liveGo: a => liveGo(a), emo: e => { const b = [...box.querySelectorAll('.kr-emol button')].find(x => x.textContent === e); if (b) b.click(); }, hitK: (i, why) => hit(S.karts[i], why), open, pause, resume, state: () => S, input: INPUT, step: dt => step(dt), draw: () => draw(), finish: () => finish(), say, bufs: () => BUF, load: id => preview(id), cup: () => CUP, lb: () => [LB, WR], tracks: TRACKS.map(t => t.id)};
 })();
 /*@@END*/
 </script>
