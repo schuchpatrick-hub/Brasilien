@@ -10252,6 +10252,8 @@
     ]
   },
   "news": [
+    {"id": "n251009ww", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "⛔", "t": "Gringo Kart: fährst du verkehrt herum, steht nach gut einer Sekunde groß „FALSCHE RICHTUNG!“ im Bild, mit Pfeil, wie du am schnellsten wendest"},
+    {"id": "n251009vi", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🚗", "t": "Gringo Kart: die Infos zum Fahrzeug stehen jetzt fest über dem Raster (mit Bild, Werten, Kaufen bzw. direkt zur Werkstatt) – nichts verrutscht mehr beim Antippen"},
     {"id": "n251009hb", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "⛰️", "t": "Gringo Kart: Höhen und Tiefen – Guarujá neu über den Morro mit Kuppe, Brücke über die Schlucht und Tunnel; GRU mit Abflugebene, Lopes Mendes über den Dschungelhügel mit Holzbrücke, Cristo hoch und runter, Buckel auf der Ponte. Bergauf langsamer, bergab schneller. Neue Bestenlisten für diese fünf Strecken"},
     {"id": "n251009dr", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🔥", "t": "Gringo Kart: Driften neu – der Drift schlägt nicht mehr sofort viel zu steil ein. Richtung halten = enger Bogen, beide Seiten = mittel, andere Seite = weiter Bogen; erst ganz loslassen zündet den Turbo"},
     {"id": "n251009tn", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🔢", "t": "Gringo Kart: Strecken haben jetzt Nummern (1–14 in Reise-Reihenfolge), die Infos stehen fest über dem Raster – nichts verrutscht mehr beim Antippen"},
