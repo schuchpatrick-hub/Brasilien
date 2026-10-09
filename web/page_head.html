@@ -1489,8 +1489,10 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
 .kart .kr-sgrid .kr-st.kr-rl{border-color:#fff;box-shadow:0 0 16px #fff}
 .kart .kr-sgrid .kr-strnd{background:repeating-linear-gradient(45deg,#2a2f45 0 8px,#1b1f30 8px 16px)}
 .kart .kr-sgrid .kr-strnd b{position:absolute;inset:0 0 14px;display:grid;place-items:center;font:italic 900 1.9rem system-ui,sans-serif;color:#ffd23f;transform:skewX(6deg);text-shadow:0 0 12px rgba(255,210,63,.7)}
-.kart .kr-tinfo{grid-column:1/-1;position:relative;margin:4px 0 6px;padding:10px 11px;border-radius:14px;background:linear-gradient(180deg,rgba(255,210,63,.12),rgba(255,255,255,.04));border:1.5px solid rgba(255,210,63,.55);text-align:left;animation:krTi .22s ease}
-.kart .kr-tinfo::before{content:"";position:absolute;top:-9px;left:calc(var(--col,50%) - 9px);border:9px solid transparent;border-top:0;border-bottom-color:rgba(255,210,63,.7)}
+.kart .kr-tinfo{position:relative;margin:0 0 10px;padding:10px 11px;border-radius:14px;background:linear-gradient(180deg,rgba(255,210,63,.12),rgba(255,255,255,.04));border:1.5px solid rgba(255,210,63,.55);text-align:left;box-sizing:border-box}.kart .kr-tinfo.in{animation:krTi .22s ease}
+.kart .kr-sn{display:inline-grid;place-items:center;min-width:1.35em;height:1.35em;padding:0 .25em;box-sizing:border-box;border-radius:999px;background:rgba(5,9,18,.8);border:1px solid rgba(255,210,63,.75);color:#ffd23f;font:900 .62rem/1 system-ui,sans-serif;font-style:normal;text-transform:none}
+.kart .kr-sgrid .kr-st .kr-sn{position:absolute;top:4px;right:7px;transform:skewX(6deg);box-shadow:0 1px 3px rgba(0,0,0,.6)}
+.kart .kr-tih .kr-sn{margin-right:6px;font-size:.74rem;vertical-align:2px}
 @keyframes krTi{from{opacity:0;transform:translateY(-4px)}}
 .kr-tih{display:flex;gap:10px;align-items:center}
 .kr-tic canvas{width:104px;height:66px;border-radius:8px;display:block;box-shadow:0 3px 8px rgba(0,0,0,.4)}
@@ -1503,7 +1505,7 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
 .kart .kr-tch{display:flex;flex-wrap:wrap;gap:4px;margin:8px 0 4px!important}
 .kr-tch i{font-style:normal;font-size:.66rem;font-weight:700;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);border-radius:999px;padding:2px 7px;color:#e6f0fa}
 .kart .kr-tbt{margin:3px 0 0!important;font-size:.72rem!important;color:#ffd23f}
-@media (prefers-reduced-motion:reduce){.kart .kr-tinfo{animation:none}}
+@media (prefers-reduced-motion:reduce){.kart .kr-tinfo.in{animation:none}}
 .kart .kr-cups{grid-template-columns:repeat(3,1fr);gap:7px}
 .kart .kr-cups button,.kart .kr-shop button{background:rgba(255,255,255,.06);border:2px solid rgba(255,255,255,.1);color:#fff;box-shadow:none;border-radius:14px;padding:10px 4px}
 .kart .kr-cups button small,.kart .kr-shop button small{color:#9fb6cc}

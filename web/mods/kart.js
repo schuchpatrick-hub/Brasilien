@@ -2,7 +2,7 @@
    Rennspiel von oben, Canvas. Sechs Strecken entlang der Reise (TRACKS: Guarujá, Copacabana, Iguaçu, Amazonas, Paraty, Ilha Grande),
    Einzelrennen oder Grand Prix (alle sechs, Punkte 10/8/6/5/4/3, Siegerehrung). 6 Fahrer mit Crew-Köpfen, 3 Runden.
    Gas automatisch, Daumen links/rechts lenkt, ITEM (oder Item-Fenster) zündet das Item (🍹 Turbo, 🧴 Sonnencreme-Öl, 🦝 Nasenbär).
-   Lange in eine Richtung lenken = Drift mit Funken, Loslassen = Mini-Turbo (blau) bzw. Super-Turbo (orange).
+   Lange in eine Richtung lenken (oder Doppeltipp) = Drift mit Funken; Richtung halten = enger Bogen, Gegenseite = weiter Bogen, ganz loslassen = Mini-Turbo (blau) bzw. Super-Turbo (orange).
    Raketenstart: bei „1“ tippen. Boost-Pfeile, Schanze (in der Luft tippen = Trick). Je Strecke eigene Gefahren (Mover, Hindernisse, Pfützen, Welle, Regen, Nebel, Delfine).
    Ton: Samba-Rennmusik (Web Audio), echte Geräusche aus audio/sfx.mp3, Ansager aus audio/kart.mp3 + audio/kart2.mp3 (TRIP.kartvo, f = Datei).
    Kamera dreht mit (Fahrtrichtung immer nach oben). Bestzeiten pro Strecke im localStorage (br26.kartBest), Grand-Prix-Siege (br26.kartCups). */
@@ -1190,7 +1190,7 @@
     livePres({race: LIVE.race.id, rj: LIVE.race.rjFrom || undefined, n: ++LIVE.seq, tm: +S.t.toFixed(3), x: Math.round(k.x), y: Math.round(k.y), a: +k.a.toFixed(3), v: Math.round(k.v), lap: k.lap, idx: k.idx, lat: Math.round(k.lat), done: k.done ? +k.done.toFixed(3) : 0, b: k.boost > 0 ? 1 : 0, sp: k.spin > 0 ? 1 : 0, st: +k.steer.toFixed(2), sh: k.shield > 0 ? 1 : 0, fl: k.fall > 0 ? +k.fall.toFixed(2) : 0, bu: k.bus > 0 ? 1 : 0, zp: k.zap > 0 ? 1 : 0, ai: S.karts.filter(o => o.aiIdx !== undefined && !o.remote).map(o => [Math.round(o.x), Math.round(o.y), +o.a.toFixed(3), Math.round(o.v), o.lap, o.idx, o.done ? +o.done.toFixed(3) : 0, o.boost > 0 ? 1 : 0, o.spin > 0 ? 1 : 0, Math.round(o.lat), o.fall > 0 ? +o.fall.toFixed(2) : 0])}); }
   // Fahrschule: eine geführte Runde allein auf Guarujá
   const TUT = [{t: 'Lenken: links oder rechts halten (Analog: Daumen-Position).', ok: k => (S.tut.st = (S.tut.st || 0) + (Math.abs(k.steer) > .6 ? 1 / 60 : 0)) > .8},
-    {t: 'Driften: in der Kurve doppelt tippen und halten, Funken sammeln, dann loslassen = Turbo!', ok: () => S.tutMini},
+    {t: 'Driften: in der Kurve doppelt tippen und halten. Zu eng? Andere Seite dazu = weiterer Bogen. Funken sammeln, dann ganz loslassen = Turbo!', ok: () => S.tutMini},
     {t: 'Bremsen: beide Seiten gleichzeitig halten.', ok: k => (S.tut.br = (S.tut.br || 0) + (k.brk ? 1 / 60 : 0)) > .4},
     {t: 'Fahr durch eine ?-Kiste (gelbe Würfel auf der Strecke).', ok: k => k.item || k.roll > 0},
     {t: 'Tippe unten auf ITEM, um es zu benutzen.', ok: () => S.tutUsed},
@@ -1655,11 +1655,12 @@
       let target = 0;
       if (k.done) target = 0;
       else if (k.me) { const kb = (INPUT.keys.ArrowLeft || INPUT.keys.a ? -1 : 0) + (INPUT.keys.ArrowRight || INPUT.keys.d ? 1 : 0);
-        k.brk = !!(INPUT.brake || INPUT.keys.ArrowDown || INPUT.keys.s || (SET.ctl !== 'analog' && INPUT.L && INPUT.R));
+        k.brk = !!(INPUT.brake || INPUT.keys.ArrowDown || INPUT.keys.s || (SET.ctl !== 'analog' && INPUT.L && INPUT.R && !k.dr));   // im Drift heißt „beide Seiten“ nicht bremsen, sondern mittlerer Bogen
         target = SET.ctl === 'analog' && INPUT.ax !== null ? INPUT.ax : kb || ((INPUT.L ? -1 : 0) + (INPUT.R ? 1 : 0));
+        k.inp = SET.ctl === 'analog' && INPUT.ax !== null ? Math.abs(INPUT.ax) > .12 : !!(kb || INPUT.L || INPUT.R);   // irgendein Finger/irgendeine Taste am Lenken
         // Drift sofort: Doppeltipp auf eine Seite (Halten) oder Drift-Knopf (Analog)
         if (!k.dr && k.v > 150 && !k.air && k.spin <= 0 && !k.done) { const dt0 = INPUT.dtap && performance.now() - INPUT.dtap.t < 380;
-          if ((INPUT.drift && Math.abs(target) > .25) || dt0) { k.dr = INPUT.drift ? Math.sign(target) : INPUT.dtap.s; k.dt = 0; k.manual = INPUT.drift ? 'btn' : 'tap'; INPUT.dtap = null; SFX.drift(); vib(10); } } }
+          if ((INPUT.drift && Math.abs(target) > .25) || dt0) { k.dr = INPUT.drift ? Math.sign(target) : INPUT.dtap.s; k.dt = 0; k.drIn = 0; k.drRel = 0; k.drS = 0; k.manual = INPUT.drift ? 'btn' : 'tap'; INPUT.dtap = null; SFX.drift(); vib(10); } } }
       else { k.laneT -= dt; if (k.laneT < 0) { k.laneT = rnd(1.5, 4); k.lane = rnd(-TW * .25, TW * .25); }
         const la = 14 + k.v / 30; let lane = k.lane, haz = null, hd = 170;
         S.obst.concat(S.oils, S.puddles).forEach(o => { const dx = o.x - k.x, dy = o.y - k.y, d = Math.hypot(dx, dy); if (d < hd && dx * Math.cos(k.a) + dy * Math.sin(k.a) > 0) { hd = d; haz = o; } });
@@ -1682,18 +1683,24 @@
       if (k.shield > 0) k.shield -= dt;
       if (k.fire > 0) { k.fire -= dt; S.karts.forEach(o => { if (o !== k && !o.air && Math.hypot(o.x - (k.x - Math.cos(k.a) * 40), o.y - (k.y - Math.sin(k.a) * 40)) < 26) hitBy(o, 'fire', k); }); if (Math.random() < dt * 30) S.sp.push({x: k.x - Math.cos(k.a) * 26, y: k.y - Math.sin(k.a) * 26, vx: -Math.cos(k.a) * 120 + rnd(-40, 40), vy: -Math.sin(k.a) * 120 + rnd(-40, 40), t: 0, c: pick(['#ff5a1f', '#ffb21f', '#ff2a2a']), big: 1}); }
       if (k.air > 0) target *= .25;
-      const rate = k.me ? (SET.ctl === 'analog' ? 6 : target ? 3.2 : 6) : 7;   // Spieler: Lenkeinschlag baut sich weich auf, Loslassen geht schnell zurück
+      const rate = k.me ? (SET.ctl === 'analog' ? 6 : k.dr ? 5.5 : target ? 3.2 : 6) : 7;   // Spieler: Lenkeinschlag baut sich weich auf, Loslassen geht schnell zurück; im Drift reagiert der Bogen schneller auf die Gegenseite
       k.steer += clamp(target - k.steer, -rate * dt, rate * dt);
-      // Drift: lange in eine Richtung lenken → rutschen, Funken; Loslassen → Mini-/Super-Turbo
+      // Drift: lange in eine Richtung lenken → rutschen, Funken; Loslassen → Mini-/Super-Turbo.
+      // Neu (Feedback Patrick 09.10.: Drift schlug sofort viel zu steil ein, man flog beim Aufladen von der Strecke, deshalb driftete keiner):
+      // Bogen lässt sich steuern wie bei Mario Kart: Richtung halten = eng, beide Seiten = mittel, Gegenseite = weiter Bogen (beendet den Drift nicht mehr),
+      // erst ganz loslassen (0,13 s ohne Lenken) zündet den Turbo. Einschlag baut sich über 0,3 s auf statt sofort.
       const sgn = Math.sign(target);
       k.hold = sgn && Math.abs(k.steer) > .7 ? (Math.sign(k.steer) === sgn ? k.hold + dt : 0) : 0;
-      if (!k.dr && k.hold > .38 && k.v > 190 && !k.air && k.spin <= 0 && !k.done && k.vtype !== 'horse' && !(k.bus > 0)) { k.dr = sgn; k.dt = 0; if (k.me) SFX.drift(); }
-      if (k.dr) { if ((k.manual === 'btn' ? !INPUT.drift : sgn !== k.dr) || k.spin > 0 || k.v < 120) { k.manual = null; const lvl = k.dt > 1.5 ? 2 : k.dt > .75 ? 1 : 0;
+      if (!k.dr && k.hold > .38 && k.v > 190 && !k.air && k.spin <= 0 && !k.done && k.vtype !== 'horse' && !(k.bus > 0)) { k.dr = sgn; k.dt = 0; k.drIn = 0; k.drRel = 0; k.drS = 0; if (k.me) SFX.drift(); }
+      if (k.dr) { k.drRel = k.me && k.manual !== 'btn' && !k.inp ? (k.drRel || 0) + dt : 0;
+        const stop = k.manual === 'btn' ? !INPUT.drift : k.me ? k.drRel > .13 : sgn !== k.dr;
+        if (stop || k.spin > 0 || k.v < 120 || k.done) { k.manual = null; const lvl = k.dt > 1.5 ? 2 : k.dt > .75 ? 1 : 0;
           if (lvl && k.spin <= 0) { k.boost = Math.max(k.boost, lvl > 1 ? 1.0 : .55); k.pop = .3; if (k.me) { SFX.mini(lvl); floatTxt(k, lvl > 1 ? '🔥 Super-Turbo!' : '💨 Mini-Turbo!', lvl > 1 ? '#ff9a3c' : '#7fd3ff'); S.tutMini = 1; if (lvl > 1) { S.supers++; if (Math.random() < .7) voice(k, 'drift'); else say('super', 'Super-Turbo!'); } } }
           k.dr = 0; k.dt = 0; }
-        else { k.dt += dt; if (Math.random() < dt * 30) { const lvl = k.dt > 1.5 ? 2 : k.dt > .75 ? 1 : 0, bx = k.x - Math.cos(k.a) * 18, by = k.y - Math.sin(k.a) * 18;
+        else { k.drS = clamp(k.steer * k.dr, -1, 1); k.dt += dt * (1 + .2 * k.drS);   // eng lädt etwas schneller, weit etwas langsamer
+          if (Math.random() < dt * 30) { const lvl = k.dt > 1.5 ? 2 : k.dt > .75 ? 1 : 0, bx = k.x - Math.cos(k.a) * 18, by = k.y - Math.sin(k.a) * 18;
             S.sp.push({x: bx + rnd(-8, 8), y: by + rnd(-8, 8), vx: -Math.cos(k.a) * 60 + rnd(-40, 40), vy: -Math.sin(k.a) * 60 + rnd(-40, 40), t: 0, c: ['#fff6c0', '#5ec8ff', '#ff8a2a'][lvl]}); } } }
-      k.yaw += ((k.dr ? k.dr * .42 : 0) - k.yaw) * Math.min(1, dt * 8);
+      k.yaw += ((k.dr ? k.dr * (.3 + .12 * Math.max(0, k.drS || 0)) * (k.drIn || 0) : 0) - k.yaw) * Math.min(1, dt * 8);
       // Tempo
       const cq = onCut(k.x, k.y), edge = cq !== false ? -50 : Math.abs(k.lat) - TW / 2, offT = edge > -4 && !k.air, me1 = ks[0], deep = clamp((edge + 4) / 22, 0, 1);
       // Randsteine: rütteln, leicht bremsen
@@ -1731,14 +1738,15 @@
       k.v += (vmax - k.v) * Math.min(1, dt * (k.v < vmax ? (k.boost > 0 ? 4 : 1.6 * (.86 + k.cs.acc * .28) * k.vt[2] * k.pf.acc * (k.me ? 1 + S.tu.a * .05 : 1)) : 4));
       k.wallC = Math.max(0, (k.wallC || 0) - dt); k.inv = Math.max(0, k.inv - dt); k.glow = Math.max(0, k.glow - dt); k.blind = Math.max(0, k.blind - dt); k.slowT = Math.max(0, k.slowT - dt);
       k.boost = Math.max(0, k.boost - dt / ((k.me ? 1 + S.tu.t * .07 : 1) * k.vx.b)); k.wet = Math.max(0, k.wet - dt);
-      const turn = k.dr ? clamp(k.dr * .7 + k.steer * .55, -1.25, 1.25) : k.steer;
+      let turn = k.steer;   // Drift-Bogen als Anteil am vollen Lenkeinschlag: innen 1,02, mittel 0,62, außen 0,26 (vorher immer 1,25 × 1,14 ≈ 200° in 1,5 s)
+      if (k.dr) { const s0 = k.drS || 0, dT = k.dr * (s0 >= 0 ? .62 + .4 * s0 : .62 + .36 * s0); k.drIn = Math.min(1, (k.drIn || 0) + dt / .3); turn = k.steer + (dT - k.steer) * k.drIn; }
       // Lenkung: im Stand wenig, bei Höchsttempo etwas weniger als in der Mitte
       const sf = k.v < 120 ? Math.max(0, k.v) / 120 : 1 - clamp((k.v - 260) / 420, 0, .2);
-      const dA = turn * (k.me ? STEERS[STEER][1] : 2.7) * (.94 + k.cs.hdl * .12) * k.vt[1] * (k.me ? 1 + S.tu.s * .03 : 1) * (k.dr ? 1.14 : 1) * (k.boost > 0 ? k.pf.bs : 1) * dt * sf;
+      const dA = turn * (k.me ? STEERS[STEER][1] : 2.7) * (.94 + k.cs.hdl * .12) * k.vt[1] * (k.me ? 1 + S.tu.s * .03 : 1) * (k.boost > 0 ? k.pf.bs : 1) * dt * sf;
       k.a += dA;
       // Querbewegung: Schwung bleibt beim Einlenken erhalten und wird über die Haftung abgebaut (Drift = wenig Haftung = Rutschen)
-      const grip0 = T.grip * (1 - S.storm.f * .2), lg = k.air ? .4 : k.spin > 0 ? 1.5 : k.dr ? Math.min(grip0, 2.4) : grip0 * (offT ? .8 : 1) * (k.me ? 1 + S.tu.r * .04 : 1) * k.vx.g;
-      k.vr = (k.vr - k.v * dA * .92 + (k.dr ? -k.dr * k.v * .55 * k.vx.d * dt : 0)) * Math.exp(-lg * dt);
+      const grip0 = T.grip * (1 - S.storm.f * .2), lg = k.air ? .4 : k.spin > 0 ? 1.5 : k.dr ? Math.min(grip0, 4.5) : grip0 * (offT ? .8 : 1) * (k.me ? 1 + S.tu.r * .04 : 1) * k.vx.g;
+      k.vr = (k.vr - k.v * dA * .92 + (k.dr ? -k.dr * k.v * .3 * (k.drIn || 0) * k.vx.d * dt : 0)) * Math.exp(-lg * dt);
       k.vr = clamp(k.vr, -k.v * .8 - 20, k.v * .8 + 20);
       const ca = Math.cos(k.a), sa = Math.sin(k.a);
       k.x = clamp(k.x + (ca * k.v - sa * k.vr) * dt, 20, WW - 20); k.y = clamp(k.y + (sa * k.v + ca * k.vr) * dt, 20, Math.min(WH - 20, shore(k.x) - 10));
@@ -2508,12 +2516,17 @@
     const chips = ['🔁 ' + lp + (lp === 1 ? ' Runde' : ' Runden'), t.id === 'minhocao' ? '∞ Acht' : CWT[t.id] ? '↻ rechtsherum' : '↺ linksherum', (t.tunnels || TUNT[t.id]) && '🚇 Tunnel', FALLT[t.id] && '⚠️ Abgrund', t.rain && '🌧️ Regen', t.fog && '🌫️ Nebel',
       (t.id === 'manaus' || t.id === 'reveillon') && '🌙 Nacht', t.wave && '🌊 Welle', t.wind && '💨 Seitenwind', t.flood && '🌊 Flut', t.belts && '🧳 Gepäckbänder', t.gates && '🚧 Schranke', t.veh === 'boat' && '🛶 alle im Boot', t.veh === 'cart' && '🧳 Gegner im Gepäckkarren', SECRET[t.id] && t.cut !== false && '🤫 Schleichweg'].filter(Boolean);
     const el = document.createElement('div'); el.className = 'kr-tinfo';
-    el.innerHTML = '<div class="kr-tih"><span class="kr-tic"></span><div><b>' + t.e + ' ' + esc(t.name) + '</b><small>' + esc(t.sub) + '</small></div></div><p class="kr-tix">' + esc(x) + '</p><div class="kr-tim"><span><b>Kurven</b>' + dots(ku) + '</span><span><b>Tempo</b>' + dots(te) + '</span><span><b>Chaos</b>' + dots(ch) + '</span></div>' +
+    el.innerHTML = '<div class="kr-tih"><span class="kr-tic"></span><div><b><em class="kr-sn">' + (TRACKS.indexOf(t) + 1) + '</em>' + t.e + ' ' + esc(t.name) + '</b><small>' + esc(t.sub) + '</small></div></div><p class="kr-tix">' + esc(x) + '</p><div class="kr-tim"><span><b>Kurven</b>' + dots(ku) + '</span><span><b>Tempo</b>' + dots(te) + '</span><span><b>Chaos</b>' + dots(ch) + '</span></div>' +
       '<p class="kr-tch">' + chips.map(c => '<i>' + c + '</i>').join('') + '</p><p class="kr-tbt">' + (r0 ? '👑 Bestzeit ' + fmt(r0.ms) + ' · ' + esc(NAME(r0.who)) : '👑 Bestzeit noch frei') + (bt && bt[t.id] ? ' · ⏱ deine ' + fmt(bt[t.id]) : '') + '</p>';
     const c = thumb(t), d = document.createElement('canvas'); d.width = c.width; d.height = c.height; d.getContext('2d').drawImage(c, 0, 0); el.querySelector('.kr-tic').appendChild(d); return el; }
-  function placeTInfo() { const tr = menu.querySelector('.kr-sgrid'), inf = tr && tr.querySelector('.kr-tinfo'); if (!inf) return; const bs = [...tr.querySelectorAll(':scope > button')], i = bs.findIndex(b => b.dataset.t === TRK); if (i < 0) return;
-    const cols = Math.max(1, getComputedStyle(tr).gridTemplateColumns.split(' ').filter(Boolean).length), end = Math.min(bs.length - 1, Math.floor(i / cols) * cols + cols - 1);
-    bs[end].after(inf); inf.style.setProperty('--col', ((i % cols + .5) / cols * 100) + '%'); }
+  /* Strecken-Infos stehen fest über dem Raster (Wunsch Patrick 09.10. spät: unter der Reihe der Strecke verschob sich das Raster bei jedem Antippen,
+     man fand die nächste Strecke nicht oder traf aus Versehen eine andere). Der Kasten wird nie kleiner (TIH), damit das Raster darunter ruhig bleibt. */
+  let TIH = 0, TIL = null;   // TIL = Strecke, deren Kasten zuletzt eingeblendet wurde (Animation nur beim Wechsel)
+  function tinfoTop(inf) { const tr = menu.querySelector('.kr-sgrid'); menu.querySelectorAll('.kr-tinfo').forEach(x => { if (x !== inf) x.remove(); }); if (!tr || !inf) return; tr.before(inf);
+    inf.style.minHeight = ''; const h = inf.offsetHeight; if (h > TIH) TIH = h; if (TIH) inf.style.minHeight = TIH + 'px'; }
+  // nach dem Antippen zurück zum Info-Kasten, falls er (fast) ganz aus dem Bild gescrollt ist; ist er noch teilweise zu sehen, bleibt alles stehen
+  function showTop(el) { requestAnimationFrame(() => { if (!el) return; const r = el.getBoundingClientRect(), mr = menu.getBoundingClientRect();
+    if (r.bottom < Math.max(0, mr.top) + Math.min(160, r.height * .6)) el.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'}); }); }
   // Info-Kasten hinter die Reihe des angetippten Fahrzeugs setzen (Spaltenzahl aus dem CSS-Raster), Pfeil zeigt aufs Fahrzeug
   function placeVInfo() { const vc = menu.querySelector('.kr-vcar'), inf = vc && vc.querySelector('.kr-vinfo'); if (!inf) return; const bs = [...vc.querySelectorAll(':scope > button')], i = bs.findIndex(b => b.dataset.v === VINFO); if (i < 0) return;
     const cols = Math.max(1, getComputedStyle(vc).gridTemplateColumns.split(' ').filter(Boolean).length), end = Math.min(bs.length - 1, Math.floor(i / cols) * cols + cols - 1);
@@ -2646,9 +2659,9 @@
     menu.querySelector('.kr-ach').innerHTML = ACH.map(x => '<span class="' + (ah[x.id] ? 'on' : '') + '"><i>' + (ah[x.id] ? x.e : '🔒') + '</i><b>' + esc(x.n) + '</b>' + (x.x ? '<small>' + esc(x.x) + '</small>' : '') + '</span>').join('');
     const bt = best(), tr = menu.querySelector('.kr-tracks:not(.kr-cups)'); tr.hidden = MODE !== 'single' && MODE !== 'live'; lbInit();
     const cu = menu.querySelector('.kr-cups'); cu.hidden = MODE !== 'cup'; cu.innerHTML = CUPS.map(c => '<button type="button" data-c="' + c.id + '" aria-pressed="' + (c === CUPSEL) + '"><i>' + c.e + '</i><b>' + esc(c.n) + '</b><small>' + c.t.map(id => TBY[id].e).join('') + '</small><small>' + c.t.length + ' Strecken</small></button>').join('');
-    tr.innerHTML = TRACKS.map(t => '<button type="button" class="kr-st' + (t.name.length > 15 ? ' kr-lg' : '') + '" data-t="' + t.id + '" aria-pressed="' + (t.id === TRK) + '" aria-label="' + esc(t.name) + '"><i>' + t.e + '</i><span>' + esc(t.name) + '</span></button>').join('') + '<button type="button" class="kr-st kr-strnd" aria-label="Zufällige Strecke"><b>?</b><span>Zufall</span></button>';
+    tr.innerHTML = TRACKS.map((t, n) => '<button type="button" class="kr-st' + (t.name.length > 15 ? ' kr-lg' : '') + '" data-t="' + t.id + '" aria-pressed="' + (t.id === TRK) + '" aria-label="' + (n + 1) + '. ' + esc(t.name) + '"><i>' + t.e + '</i><em class="kr-sn">' + (n + 1) + '</em><span>' + esc(t.name) + '</span></button>').join('') + '<button type="button" class="kr-st kr-strnd" aria-label="Zufällige Strecke"><b>?</b><span>Zufall</span></button>';
     tr.querySelectorAll('button[data-t]').forEach(b0 => { const c = thumb(TBY[b0.dataset.t]), d = document.createElement('canvas'); d.width = c.width; d.height = c.height; d.getContext('2d').drawImage(c, 0, 0); b0.prepend(d); });
-    if (MODE !== 'cup') { tr.appendChild(tinfo(TBY[TRK] || TRACKS[0], bt)); placeTInfo(); }
+    if (MODE !== 'cup') { const ti = tinfo(TBY[TRK] || TRACKS[0], bt); if (TIL !== TRK) { ti.classList.add('in'); TIL = TRK; } tinfoTop(ti); } else menu.querySelectorAll('.kr-tinfo').forEach(x => x.remove());   // Nummer je Strecke (1–14 in Reise-Reihenfolge), Info oben über dem Raster
     menu.querySelector('.kr-tl').innerHTML = '<em>3</em> ' + (MODE === 'cup' ? 'Pokal' : 'Strecke');
     menu.querySelector('.kr-pc').textContent = coins(); menu.querySelector('.kr-pa').textContent = Object.keys(achs()).length + '/' + ACH.length;
     const cups = loadJ('kartCups'), cw = cups[me] || 0, cx = menu.querySelector('.kr-cupx'); cx.hidden = MODE !== 'cup';
@@ -2674,7 +2687,7 @@
     const rc = menu.querySelector('.kr-recs'); rc.querySelector('.kr-recb').innerHTML = recsHtml(); sumBadge('recs', '🏁 ' + TRACKS.filter(x => lbList(LB, x.id).length).length + '/' + TRACKS.length);
   }
   function preview(id) { loadTrack(id); newRace(); S.paused = true; }
-  const TIPS = ['Gewitter? Pfützen meiden, früher bremsen.', 'Mehrfach-Items (×2, ×3): mehrmals antippen! 🥥 Kokos-Trio kreist um dich und wehrt Geschosse ab, 🍌 Bananen hinten auch.', 'Brücke, Minhocão, Cristo und Iguaçu haben keine Bande: Wer über den Rand fährt, stürzt ab und verliert gut 2 Sekunden.', '⛱️ Schirm blockt einen Treffer, 🩴 Flip-Flop fliegt geradeaus, 🦜 Papagei verdreht den Vorderleuten die Lenkung.', '🌶️ Pimenta: langer Turbo, wer direkt hinter dir fährt, verbrennt sich.', 'Doppeltipp und halten = sofort driften. Länger driften = blauer, dann oranger Turbo.', 'Beide Seiten gleichzeitig halten = bremsen.', 'Bei der 1 tippen = Raketenstart.',
+  const TIPS = ['Gewitter? Pfützen meiden, früher bremsen.', 'Mehrfach-Items (×2, ×3): mehrmals antippen! 🥥 Kokos-Trio kreist um dich und wehrt Geschosse ab, 🍌 Bananen hinten auch.', 'Brücke, Minhocão, Cristo und Iguaçu haben keine Bande: Wer über den Rand fährt, stürzt ab und verliert gut 2 Sekunden.', '⛱️ Schirm blockt einen Treffer, 🩴 Flip-Flop fliegt geradeaus, 🦜 Papagei verdreht den Vorderleuten die Lenkung.', '🌶️ Pimenta: langer Turbo, wer direkt hinter dir fährt, verbrennt sich.', 'Doppeltipp und halten = sofort driften. Länger driften = blauer, dann oranger Turbo.', 'Drift zu eng? Andere Seite dazutippen = weiterer Bogen, beide Seiten = mittel. Erst ganz loslassen zündet den Turbo.', 'Beide Seiten gleichzeitig halten = bremsen.', 'Bei der 1 tippen = Raketenstart.',
     'Auf der Schanze tippen = Trick und Turbo bei der Landung.', 'Rot-weiße Pfeiltafeln warnen vor scharfen Kurven.', 'Abkürzungen sind holprig, aber mit Turbo-Pfeil in der Mitte.',
     'Schranken öffnen im Takt. Kurz warten lohnt sich manchmal.', 'Im Pause-Menü: Steuerung „Analog“ für stufenloses Lenken.', 'Wer hinten liegt, bekommt bessere Items.',
     'Delfine auf dem Amazonas geben Turbo.', 'Im Nebel helfen die Kurven-Schilder.', 'Die Tageszeit im Spiel folgt der Uhrzeit in Rio.'];
@@ -2789,10 +2802,10 @@
     const pl0 = e.target.closest('.kr-pill'); if (pl0) { const d = menu.querySelector('.kr-' + pl0.dataset.open); if (d) { d.open = true; setTimeout(() => d.scrollIntoView({behavior: 'smooth', block: 'center'}), 30); } }
     const db0 = e.target.closest('.kr-diff button'); if (db0) { DIFF = +db0.dataset.d; store.set('kartDiff', DIFF); renderMenu(); }
     const gb = e.target.closest('.kr-ghost:not(.kr-diff) button'); if (gb) { GHOST.mode = gb.dataset.g; store.set('kartGhost', GHOST.mode); renderMenu(); }
-    const t = e.target.closest('.kr-sgrid button[data-t]'); if (t) { TRK = t.dataset.t; store.set('kartTrack', TRK); preview(TRK); renderMenu(); }
+    const t = e.target.closest('.kr-sgrid button[data-t]'); if (t) { TRK = t.dataset.t; store.set('kartTrack', TRK); preview(TRK); renderMenu(); showTop(menu.querySelector('.kr-tinfo')); }
     const sr = e.target.closest('.kr-sgrid .kr-strnd'); if (sr) { if (RSPIN) return; RSPIN = 1; const ids = TRACKS.map(t0 => t0.id).filter(id => id !== TRK), fin = pick(ids), tile = id => menu.querySelector('.kr-sgrid .kr-st[data-t="' + id + '"]'); let n = 0, cur = null;   // Zufalls-Kachel: Lauflicht über die Strecken
       const spin = () => { if (cur && tile(cur)) tile(cur).classList.remove('kr-rl'); n++; cur = n >= 14 ? fin : pick(ids); const t0 = tile(cur); if (t0) t0.classList.add('kr-rl'); beep(500 + n * 40, .04, 'square', .04);
-        if (n < 14) setTimeout(spin, 40 + n * n * 1.6); else setTimeout(() => { RSPIN = 0; TRK = fin; store.set('kartTrack', TRK); preview(TRK); renderMenu(); }, 260); }; spin(); }
+        if (n < 14) setTimeout(spin, 40 + n * n * 1.6); else setTimeout(() => { RSPIN = 0; TRK = fin; store.set('kartTrack', TRK); preview(TRK); renderMenu(); showTop(menu.querySelector('.kr-tinfo')); }, 260); }; spin(); }
     const vbuy = e.target.closest('.kr-vbuy'); if (vbuy) { const V = VEHS.find(v => v.id === vbuy.dataset.v); if (!V || !V.c) return;
       if (coins() < V.c) { toast('🪙 Noch ' + (V.c - coins()) + ' Münzen, dann gehört ' + V.e + ' ' + esc(V.n) + ' dir.'); return; }
       addCoins(-V.c); const vo = loadJ('kartVehOwn2'); vo[V.id] = 1; store.set('kartVehOwn2', JSON.stringify(vo)); store.set('kartVeh', V.id); VINFO = V.id; SFX.pick(); fireworks(30); toast('🎉 ' + V.e + ' <b>' + esc(V.n) + '</b> gehört jetzt dir!'); makeVehicles(); newRace(); S.paused = true; renderMenu(); return; }
@@ -2832,7 +2845,7 @@
   box.addEventListener('contextmenu', e => e.preventDefault());
   addEventListener('keydown', e => { if (box.hidden) return; if (e.key === 'Escape' || e.key === 'p') { if (!pm.hidden) resume(); else if (box.classList.contains('racing')) pause(); else close(); return; } INPUT.keys[e.key] = true; if (e.key === ' ') { e.preventDefault(); if (S) useItem(S.karts[0]); } if (e.key.startsWith('Arrow')) e.preventDefault(); });
   addEventListener('keyup', e => { INPUT.keys[e.key] = false; });
-  addEventListener('resize', () => { if (!box.hidden) { resize(); placeVInfo(); placeTInfo(); } });
+  addEventListener('resize', () => { if (!box.hidden) { resize(); placeVInfo(); TIH = 0; tinfoTop(menu.querySelector('.kr-tinfo')); } });
   document.addEventListener('visibilitychange', () => { visAt = performance.now(); if (document.hidden && !box.hidden) { pause(); resKeep(); } beat(document.hidden); if (LIVE.room && !LIVE.race) livePres(); });
   function beat(clean) { try { if (box.hidden) { localStorage.removeItem('br26.kartBeat'); return; } store.set('kartBeat', JSON.stringify({ts: Date.now(), clean: clean ? 1 : 0, trk: T ? T.id : null, mode: MODE, veh: myVeh(), drv: me, race: !!(S && box.classList.contains('racing') && res.hidden), live: !!(S && S.live), t: S && isFinite(S.t) ? Math.round(S.t) : null,
     mem: performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1e6) : null, q: SET.q, fps: PERF.n ? Math.round(PERF.n / Math.max(.01, PERF.acc)) : null, v: (typeof MODV === 'object' && MODV.kart) || ''})); } catch (e) {} }
