@@ -1219,7 +1219,7 @@
     try { const r0 = window.claude && window.claude.use ? await window.claude.use('room') : null; if (!r0) { LIVE.ok = false; if (!box.hidden) renderMenu(); return; }
       const r = await r0.join('gringo-kart'); LIVE.room = r; LIVE.ok = true;
       r.onPeers(ch => { LIVE.peers = ch.peers; const mine = ch.peers.find(p0 => p0.sameTab); if (mine) LIVE.me = mine.peer; liveRecv(ch.peers); pqRecv(ch.peers); gRelay(ch.peers); ch.peers.forEach(p0 => { const pr = p0.presence; if (pr && pr.gn && typeof pr.who === 'string' && pr.who.indexOf('gast_') === 0) GNM[pr.who] = String(pr.gn).slice(0, 20); });
-        if (gpMerge(ch.peers)) LIVE.sig = ''; const sig = JSON.stringify(lobby().map(p0 => [p0.peer, p0.presence.who, p0.presence.drv, p0.presence.veh, p0.presence.rdy, p0.presence.trk, (p0.presence.gpP || {}).k, p0.presence.jt, (p0.presence.cfg || {}).ts])); liveAuto();
+        if (gpMerge(ch.peers)) { LIVE.sig = ''; gpResSync(); } const sig = JSON.stringify(lobby().map(p0 => [p0.peer, p0.presence.who, p0.presence.drv, p0.presence.veh, p0.presence.rdy, p0.presence.trk, (p0.presence.gpP || {}).k, p0.presence.jt, (p0.presence.cfg || {}).ts])); liveAuto();
         if (sig !== LIVE.sig) { LIVE.sig = sig; if (!box.hidden && !menu.hidden && MODE === 'live') renderMenu(); } gpResUpd(); }, () => { LIVE.ok = false; });
       r.on('kart', liveMsg, () => {}); livePres();
     } catch (e) { LIVE.ok = false; if (!box.hidden && !menu.hidden) renderMenu(); } finally { LIVE.joining = 0; } }
@@ -1319,7 +1319,8 @@
     if (rnd && ai.length) { const ub = new Set(used.map(baseOf).concat(lb.map(p0 => baseOf(p0.presence.who || '')))); ai = []; for (const id of DRVS.slice().sort(() => Math.random() - .5)) { if (ai.length >= nAI) break; if (ub.has(baseOf(id))) continue; ub.add(baseOf(id)); ai.push(id); } }   // Zufallsrennen: Computer-Gegner ebenfalls bunt gemischt, aber nie eine Person, die gerade echt mitspielt (sonst zweimal „Simon“ in der Liste)
     const vs = liveVotes(lb), top = vs.filter(v => v[1] === (vs[0] || [0, 0])[1]).map(v => v[0]); let track = rnd ? pick(TRACKS).id : top.length ? pick(top) : TRK, gp = null;
     // Live-Grand-Prix: laufenden fortsetzen (nächstes Rennen = Anzahl gewerteter Rennen), sonst neuen anfangen, wenn „🏆 Grand Prix“ gewählt ist; Computer-Gegner bleiben über den ganzen Pokal dieselben
-    const G0 = gpLive(), ub0 = used.map(baseOf);
+    const G0 = gpLive(), ub0 = used.map(baseOf).concat(G0 ? Object.keys(G0.pts || {}).filter(k0 => k0[0] === 'p').map(k0 => baseOf(k0.slice(2).split('#')[0])) : []);
+    if (G0 && ai.some(id => ub0.includes(baseOf(id)))) { const ub = new Set(ub0.concat(ai.map(baseOf).filter(b0 => !ub0.includes(b0)))); ai = ai.filter(id => !ub0.includes(baseOf(id))); for (const id of DRVS.slice().sort(() => Math.random() - .5)) { if (ai.length >= nAI) break; if (ub.has(baseOf(id))) continue; ub.add(baseOf(id)); ai.push(id); } }   // fehlt ein Mitfahrer, fährt keine Computer-Fassung derselben Person für ihn
     if (G0 && G0.ai && ai.length) { const keep = G0.ai.filter(id => DRVS.includes(id) && !ub0.includes(baseOf(id))).slice(0, nAI), ub1 = new Set(ub0.concat(keep.map(baseOf))); ai = keep.concat(ai.filter(id => !ub1.has(baseOf(id)))).slice(0, nAI); }
     if (G0) { gp = Object.assign({}, gpPack(), {i: Math.min(G0.k || 0, G0.list.length - 1)}); track = gp.list[gp.i]; }
     else if (cf.gp && cf.gp !== 'off') { const c = lgpc(cf.gp) || LGPC[0], cu = CUPS.find(x => x.id === c.id), rest = TRACKS.map(t => t.id).filter(t => t !== track).sort(() => Math.random() - .5);
@@ -1459,6 +1460,9 @@
     w.innerHTML = '<p class="kr-lbl">Bereit fürs nächste Rennen?</p><div>' + lp.map((p0, i) => '<span class="' + (p0.presence.rdy ? 'ok' : '') + '" style="--pc:' + PCOL[i % 6] + '"><i>P' + (i + 1) + '</i>' + esc(p0.sameTab ? 'Du' : NAME(p0.presence.who)) + ' ' + (p0.presence.rdy ? '✅' : '⏳') + '</span>').join('') +
       away.map(p0 => '<span class="aw">' + esc(NAME(p0.presence.who)) + (p0.presence.race ? ' 🏁 fährt noch' : ' 💤 App im Hintergrund') + '</span>').join('') + '</div>' +
       (away.length && all && wt > 8000 ? '<button type="button" class="kr-gpgo">▶ Ohne ' + esc(away.map(p0 => NAME(p0.presence.who)).join(', ')) + ' starten</button>' : ''); }
+  function gpResSync() { const g = LIVE.gp; if (res.hidden || MODE !== 'live' || LIVE.race || !g || !g.pts || g.cer) return; const st = res.querySelector('.kr-stand'); if (!st || st.hidden) return;
+    st.innerHTML = g.end ? '<p class="kr-gpnx">✖ Der Grand Prix wurde abgebrochen.</p>' : gpCard(g, 1) + (g.done ? '' : '<p class="kr-gpnx">▶ Nächstes Rennen ' + ((g.k || 0) + 1) + '/' + g.list.length + ': ' + esc((TBY[g.list[g.k]] || {}).e || '') + ' ' + esc((TBY[g.list[g.k]] || {}).name || '') + '</p>'); gpHeads(st);
+    if (g.done || g.end) { const w = res.querySelector('.kr-gpw'), ag = res.querySelector('.kr-again'); if (w) w.hidden = true; ['no', 'yes', 'go'].forEach(x => ag.classList.remove('kr-gr-' + x)); ag.textContent = g.done && !g.end && !g.cer ? '🏆 Zur Siegerehrung' : '👥 Zur Lobby'; res.querySelector('.kr-res .kr-back').hidden = true; } else gpResUpd(); }
   // Punktetabelle des Live-Grand-Prix in der Lobby: Strecken mit Haken, je Teilnehmer Platz, Kopf, Plätze je Rennen, Punkte, Auf-/Abstieg seit dem letzten Rennen
   function gpCard(g, inRes) { const tb = gpTable(g), done = !!g.done, nx = Math.min(g.k || 0, g.list.length - 1), pv = g.prev || {}, ga = g.gain || {};
     return '<div class="kr-gpc' + (done ? ' done' : '') + '"><div class="kr-gph"><b>' + esc((g.e || '🏆') + ' ' + (g.n || 'Grand Prix')) + '</b><small>' + (done ? '🏁 Endstand nach ' + g.list.length + ' Rennen' : (g.k || 0) ? 'Stand nach Rennen ' + g.k + ' von ' + g.list.length : 'Grand Prix · ' + g.list.length + ' Rennen') + '</small></div>' +
@@ -2658,7 +2662,8 @@
     { const w0 = res.querySelector('.kr-gpw'); if (w0) w0.hidden = true; ['no', 'yes', 'go'].forEach(x => res.querySelector('.kr-again').classList.remove('kr-gr-' + x)); }
     if (S.live) { const g = LIVE.gp && LIVE.gp.pts && !LIVE.gp.end ? LIVE.gp : null; res.querySelector('.kr-again').textContent = g ? (g.done ? '🏆 Zur Siegerehrung' : '👍 Bereit') : '🔁 Revanche (bereit)'; } else res.querySelector('.kr-again').textContent = CUP ? (lastCup ? '🏆 Zur Siegerehrung' : '▶ Nächstes Rennen: ' + TBY[CUP.list[CUP.i + 1]].e + ' ' + TBY[CUP.list[CUP.i + 1]].name) : 'Nochmal';
     res.querySelector('.kr-rnd2').hidden = !(RNDR && !S.live && !CUP);
-    res.querySelector('.kr-res .kr-back').textContent = CUP ? '☰ Menü (Grand Prix abbrechen)' : S.live ? '👥 Zur Lobby' : '☰ Zurück ins Menü'; if (S.live && gpLive()) { res.querySelector('.kr-res .kr-back').textContent = '👥 Lobby · Fahrer wechseln'; LIVE.rdy = false; liveLeave(); gpResUpd(); clearInterval(LIVE.gpResT); LIVE.gpResT = setInterval(() => { if (box.hidden || MODE !== 'live' || !gpLive() || LIVE.race || (res.hidden && (!S || !S.pod))) { clearInterval(LIVE.gpResT); return; } gpResUpd(); }, 1000); }   /* Grand Prix: Zwischenstand, man zählt ab jetzt zur Lobby (nicht bereit) */
+    res.querySelector('.kr-res .kr-back').textContent = CUP ? '☰ Menü (Grand Prix abbrechen)' : S.live ? '👥 Zur Lobby' : '☰ Zurück ins Menü'; if (S.live && LIVE.gp && LIVE.gp.done && !LIVE.gp.end) { LIVE.rdy = false; liveLeave(); }   /* letztes Rennen: Endstand sofort an alle */
+    if (S.live && gpLive()) { res.querySelector('.kr-res .kr-back').textContent = '👥 Lobby · Fahrer wechseln'; LIVE.rdy = false; liveLeave(); gpResUpd(); clearInterval(LIVE.gpResT); LIVE.gpResT = setInterval(() => { if (box.hidden || MODE !== 'live' || !gpLive() || LIVE.race || (res.hidden && (!S || !S.pod))) { clearInterval(LIVE.gpResT); return; } gpResUpd(); }, 1000); }   /* Grand Prix: Zwischenstand, man zählt ab jetzt zur Lobby (nicht bereit) */
     S.paused = true; MUS.on = false; racing(false); engOff();
     if (TUTON || order.length < 2) { res.hidden = false; return; }
     // Siegerehrung auf der Strecke: Podest, Sekt, Konfetti, Hymne des Siegers, der Letzte hält den Eimer; antippen = überspringen
@@ -3209,7 +3214,7 @@
       else if (MODE === 'live') { const g = LIVE.gp && LIVE.gp.pts && !LIVE.gp.end ? LIVE.gp : null;
         if (g && g.done && !g.cer) { liveCeremony(); return; }
         if (gpLive() && !LIVE.race) { LIVE.rdy = !LIVE.rdy; SFX.pick(); vib(15); livePres(); gpResUpd(); return; }   /* Grand Prix: im Zwischenstand bereit melden (nochmal tippen = doch nicht) */
-        liveLeave(); LIVE.rdy = !g; toMenu(); if (g) gpToLobby(); }
+        liveLeave(); LIVE.rdy = !(LIVE.gp && LIVE.gp.pts); toMenu(); if (g) gpToLobby(); }
       else startRace(); }
     if (e.target.closest('.kr-res .kr-back')) { liveLeave(); LIVE.rdy = false; toMenu(); if (MODE === 'live' && LIVE.gp) gpToLobby(); }
   });
