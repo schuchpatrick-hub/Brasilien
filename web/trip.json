@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251010ls", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🛣️", "t": "Gringo Kart: 4 Langstrecken! Je Runde doppelt so lang wie die bisherigen (jetzt „Kurzstrecken“): Serra do Mar (São Paulo → Guarujá über die Imigrantes), Rio Grande Tour (Copacabana, Lagoa, Corcovado, Maracanã), Cataratas (Grenzbrücke, Holzsteg an der Garganta do Diabo) und Costa Verde (Paraty, Serra, Fähre nach Ilha Grande, Lopes Mendes). Dazu der Langstrecken-Pokal; der Zufallsknopf lost aus allen 18 Strecken"},
     {"id": "n251010ks", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "💋", "t": "Gringo Kart: Luftkuss von Simon verliebt (und Dona Rosa) und Simons Sonnenbrand-Blitz abgeschwächt – man kann schneller wieder normal lenken"},
     {"id": "n251010gp", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🏆", "t": "Gringo Kart: Live-Grand-Prix! In der Lobby „🏆 Grand Prix“ und einen Pokal wählen, dann fahrt ihr mehrere Rennen gegeneinander mit Punktetabelle. Nach jedem Rennen kommt der Zwischenstand, das nächste startet erst, wenn alle wieder „Bereit“ gedrückt haben. Am Ende gibt’s eine Siegerehrung"},
     {"id": "n251010zk", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🎲", "t": "Gringo Kart: Der Zufallsautomat lost jetzt auch die Klasse (100, 150 oder 200 ccm) – einzeln und live für alle („🎲 Zufallsrennen für alle“ in der Lobby). Und bei der Startaufstellung fallen die Karts erst nach der Auslosung vom Himmel in ihre Startbox"},
