@@ -7246,11 +7246,18 @@ setGroup(G);
     uru: {k: 'uru', e: '🦅', n: 'Urubu'}, blitz: {k: 'blitz', e: '⚡', n: 'Cristo-Blitz'}, acai: {k: 'acai', e: '🫐', n: 'Açaí-Bombe'}, bus: {k: 'bus', e: '🚌', n: 'Ônibus-Express'},
     // Neue Items (Wunsch Patrick 10.10.: ganz andere Wirkungen als die bisherigen): unsichtbar + Item klauen, Vorderleute zurückspulen, Platztausch, falsche Kiste, Abschleppseil mit Schleuder, Glücksspiel
     saci: {k: 'saci', e: '🌪️', n: 'Saci-Pererê'}, tape: {k: 'tape', e: '📼', n: 'Fita K7'}, swap: {k: 'swap', e: '🔀', n: 'Troca-Troca'}, fake: {k: 'fake', e: '🎁', n: 'Falsche Kiste'}, tow: {k: 'tow', e: '🪝', n: 'Reboque'}, slot: {k: 'slot', e: '🎰', n: 'Caça-Níquel'}}, ILIST = Object.values(ITEMS);
+  const IDESC = {turbo: 'Kurzer Turbo – am besten vor einer Geraden', turbo3: '3× antippen = 3 Turbos', pimenta: 'Langer Turbo, Feuer verbrennt Verfolger', oil: 'Legt eine Pfütze hinter dich', banana3: '3 Schalen hängen hinten · antippen = ablegen',
+    boller3: '3 Böller ablegen · knallen nach 1 s', flip: 'Fliegt geradeaus nach vorn', flip2: '2 Würfe geradeaus nach vorn', coati: 'Jagt das Kart direkt vor dir', coco3: 'Kreisen als Schutz · antippen = werfen',
+    parrot: 'Vorderleute: Lenkung wackelt, langsamer', shield: 'Blockt einen Treffer (8 s)', acai: 'Lila Matsch für alle vor dir', uru: 'Jagt den Führenden', blitz: 'Alle anderen schrumpfen + werden langsam',
+    bus: 'Autopilot, unverwundbar, mäht alles um', saci: 'Kurz unsichtbar, schneller, klaut ein Item', tape: 'Spult alle vor dir 1,5 s zurück', swap: 'Platztausch mit dem Kart vor dir',
+    fake: 'Falsche Kiste hinter dich legen', tow: 'Seil zum Vordermann, dann Schleuder', slot: 'Glücksspiel: Jackpot, Turbo oder Niete'};
   // Item-Wahrscheinlichkeit nach Platz: vorne Verteidigung, hinten Aufholen. Ausgeglichen (Wunsch Patrick 09.10.: Flip-Flop kam zu oft, vorher 18–20 % mit Paar):
   // jede Item-Familie höchstens ~15 %, alle 12 Items kommen überall vor (gleich verteilt wären gut 8 %)
-  const IW = {front: {oil: .11, shield: .11, banana3: .11, coco3: .09, boller3: .08, flip: .08, turbo: .08, parrot: .08, coati: .08, flip2: .04, turbo3: .05, pimenta: .05, acai: .04, fake: .08, slot: .04, saci: .03},
-    mid: {turbo: .10, oil: .08, coati: .10, flip: .07, shield: .07, parrot: .08, pimenta: .07, turbo3: .08, flip2: .04, coco3: .07, banana3: .07, boller3: .08, acai: .05, uru: .03, blitz: .01, fake: .04, slot: .05, saci: .05, tape: .03, swap: .03, tow: .05},
-    back: {turbo: .08, coati: .10, pimenta: .11, parrot: .09, flip: .04, shield: .04, turbo3: .12, flip2: .03, coco3: .06, boller3: .07, oil: .03, banana3: .04, acai: .06, uru: .05, blitz: .03, bus: .05, fake: .02, slot: .05, saci: .05, tape: .05, swap: .04, tow: .06}};   // je Tabelle auf 1 normiert (rollItem)
+  // Item-Balance 10.10. spät (Wunsch Patrick: mehr Balance, gemessen mit g3/ival.py): vorne Verteidigung, Mitte gemischt, hinten Aufholen; jede Tabelle wird normiert.
+  // Welche Tabelle gilt, hängt nicht mehr nur vom Platz ab, sondern stufenlos von Platz + Abstand zum Führenden (itemTable): knapp hinter dem Ersten gibt es noch kaum Angriffs-Items, weit abgeschlagen fast nur Aufhol-Items.
+  const IW = {front: {oil: .10, banana3: .11, shield: .10, fake: .09, coco3: .09, boller3: .06, flip: .07, flip2: .03, coati: .06, parrot: .05, turbo: .07, turbo3: .03, pimenta: .03, acai: .03, slot: .05, saci: .03},
+    mid: {turbo: .09, oil: .06, coati: .09, flip: .07, shield: .05, parrot: .05, pimenta: .06, turbo3: .07, flip2: .04, coco3: .06, banana3: .05, boller3: .05, acai: .05, uru: .03, blitz: .01, fake: .04, slot: .05, saci: .05, tape: .03, swap: .03, tow: .04},
+    back: {turbo: .07, coati: .08, pimenta: .09, parrot: .05, flip: .03, shield: .02, turbo3: .10, flip2: .03, coco3: .05, boller3: .04, oil: .02, banana3: .02, acai: .06, uru: .05, blitz: .02, bus: .04, fake: .01, slot: .05, saci: .05, tape: .05, swap: .05, tow: .07}};
   const ifam = it => it.k.replace(/\d+$/, '');   // Item-Familie: turbo3 → turbo, flip2 → flip
   const icnt = k => !k.item || !k.item.cnt ? (k.item ? 1 : 0) : k.icntFor === k.item ? k.icnt : (k.icntFor = k.item, k.icnt = k.item.cnt);   // Restanzahl des Mehrfach-Items
   // Spezial-Item je Person (Stufe 3)
@@ -9067,7 +9074,11 @@ setGroup(G);
     if (k.me) { S.myHits++; if (k.coins > 0) { const n = Math.min(S.tu && S.tu.p >= 3 ? 1 : 2, k.coins); k.coins -= n; S.got = Math.max(0, S.got - n); floatTxt(k, '−' + n + ' 🪙', '#ffb0b0'); } } else if (k.coins > 0) k.coins = Math.max(0, k.coins - 2); 
     if (k.me) { S.shake = .35; if (why === 'caiman') say('caiman', 'Vorsicht, Kaiman!'); else if (['oil', 'coati', 'ball', 'flip', 'fire', 'beer', 'coco', 'banana', 'bang', 'uru', 'bus', 'squash'].includes(why) && Math.random() < .9) voice(k, 'item'); else if (Math.random() < .8) voice(k, 'hit'); else if (Math.random() < .4) say('hit', 'Autsch, das tat weh!'); }
   }
-  function rollItem(k, two) { if (S.live && S.live.cfg && S.live.cfg.items === 'turbo') return ITEMS.turbo; if (SPECIAL[k.id] && Math.random() < (k.me ? .22 : .32)) return SPECIAL[k.id]; /* Gegner etwas öfter mit Spezial-Item: mehr Chaos */ const pl = place(k), tb = IW[pl === 1 ? 'front' : pl <= 3 ? 'mid' : 'back'], one = () => { let r = Math.random() * Object.values(tb).reduce((a, b) => a + b, 0); for (const [kk, p0] of Object.entries(tb)) { r -= p0; if (r < 0) return ITEMS[kk]; } return ITEMS.turbo; };
+  // stufenlose Item-Tabelle: f = 0 (Führender) … 1 (weit abgeschlagen) aus Platz und Abstand zum Führenden, dazwischen werden die Tabellen gemischt
+  function itemTable(k) { const ks = S.karts.filter(o => !o.out), n = Math.max(2, ks.length), pl = place(k); if (pl === 1) return IW.front;
+    const ld = ks.reduce((a, o) => Math.max(a, progress(o)), -1e9), gap = Math.max(0, ld - progress(k)), f = clamp(.08 + .45 * (pl - 1) / (n - 1) + .55 * gap / 450, 0, 1), A = f < .5 ? IW.front : IW.mid, B = f < .5 ? IW.mid : IW.back, u = f < .5 ? f / .5 : (f - .5) / .5, out = {};
+    new Set(Object.keys(A).concat(Object.keys(B))).forEach(key => { const w = (A[key] || 0) * (1 - u) + (B[key] || 0) * u; if (w > .002) out[key] = w; }); return out; }
+  function rollItem(k, two) { if (S.live && S.live.cfg && S.live.cfg.items === 'turbo') return ITEMS.turbo; if (SPECIAL[k.id] && Math.random() < (k.me ? .22 : .26)) return SPECIAL[k.id]; /* Gegner etwas öfter mit Spezial-Item: mehr Chaos */ const tb = itemTable(k), one = () => { let r = Math.random() * Object.values(tb).reduce((a, b) => a + b, 0); for (const [kk, p0] of Object.entries(tb)) { r -= p0; if (r < 0) return ITEMS[kk]; } return ITEMS.turbo; };
     /* dieselbe Item-Familie nicht zweimal hintereinander (einmal neu ziehen); das 2. Item (Kombo-Platz) darf gleich sein, sonst gäbe es kaum Doppel-Kombos */ let it = one(); if (!two && ifam(it) === k.lastFam) it = one(); if (!two) k.lastFam = ifam(it); return it; }
   /* ---- Zufallsereignisse mitten im Rennen (im Live-Rennen über den gemeinsamen Zufall bei allen gleich) ---- */
   const EVK = [{k: 'police', e: '🚔', n: 'Polizeikontrolle', x: 'langsam!'}, {k: 'parade', e: '💃', n: 'Karnevalsumzug', x: 'Tänzer queren!'},
@@ -9161,7 +9172,7 @@ setGroup(G);
   function newDraw(k, tt, phi, up) {   // Item-Effekte am Kart (Saci-Wirbel, Spielautomat, Regenwolke, Videoband, Tausch, Seil)
     const ux = -Math.sin(phi), uy = -Math.cos(phi), lx = -Math.cos(phi), ly = Math.sin(phi);
     if (k.saci > 0) { ctx.save(); ctx.translate(k.x, k.y); ctx.rotate(tt * 11); ctx.lineCap = 'round'; for (let j = 0; j < 3; j++) { ctx.strokeStyle = `rgba(235,228,210,${.6 - j * .14})`; ctx.lineWidth = 4 - j; ctx.beginPath(); ctx.arc(0, 0, 16 + j * 9, j * 2.1, j * 2.1 + 2.5); ctx.stroke(); } ctx.restore(); up(k.x + ux * 34 - lx * 14, k.y + uy * 34 - ly * 14, E('🌪️', 22), .9); }
-    if (k.slot) { const sl = k.slot, cx = k.x + ux * 46, cy = k.y + uy * 46, win = sl.st === 3 && sl.t > 1.25, bl = win && sl.res !== 'bad' && Math.floor(tt * 10) % 2; ctx.save(); ctx.translate(cx, cy); ctx.rotate(-phi);
+    if (k.slm && !k.me) { const sl = k.slm, cx = k.x + ux * 46, cy = k.y + uy * 46, win = sl.st === 3 && sl.t > 1.25, bl = win && sl.res !== 'bad' && Math.floor(tt * 10) % 2; ctx.save(); ctx.translate(cx, cy); ctx.rotate(-phi);
       ctx.fillStyle = 'rgba(40,12,55,.9)'; ctx.strokeStyle = bl ? '#fff' : '#ffd23f'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-35, -15, 70, 30, 7) : ctx.rect(-35, -15, 70, 30); ctx.fill(); ctx.stroke();
       for (let j = 0; j < 3; j++) { const stop = j < sl.st, sym = stop ? sl.r[j] : SLOTSY[Math.floor(tt * 24 + j * 2) % SLOTSY.length], im = E(sym, 16); ctx.fillStyle = win && sl.res === 'bad' ? '#cfd6e0' : '#fff'; ctx.fillRect(-32 + j * 22, -12, 20, 24); ctx.drawImage(im, -31 + j * 22, -9 + (stop ? 0 : (tt * 260) % 9 - 4.5), 18, 18); }
       ctx.restore(); }
@@ -9193,8 +9204,8 @@ setGroup(G);
         if (got && got.k === 'saci') got = ITEMS.turbo;
         if (got) { if (!k.item) k.item = got; else if (k.me && !k.item2) k.item2 = got; if (!k.me) k.useAt = rnd(1.4, 3); (S.fly || (S.fly = [])).push({x: v.x, y: v.y, to: k, e: got.e, t: 0}); } } }
     if (it.k === 'tape') { floatTxt(k, '📼 Fita K7: Zurückspulen!', '#ffd23f'); if (nearMe(k)) tapeSnd(); if (k.me) vib(20);   // alle vor dir springen 1,6 s zurück (jedes Handy spult sein eigenes Kart zurück)
-      S.karts.forEach(o => { if (o === k || o.done || o.fall > 0 || o.out || progress(o) <= progress(k) || progress(o) - progress(k) > 1200) return; if (o.remote) fxTo(o, {rewQ: 1.6}); else o.rewQ = 1.6; }); }
-    if (it.k === 'swap') { const o = aheadOf(k, 260, o => o.lap === k.lap && !(o.air > 0) && !(o.saci > 0) && !(o.bus > 0));   // Platztausch mit dem Kart direkt vor dir (gleiche Runde)
+      S.karts.forEach(o => { if (o === k || o.done || o.fall > 0 || o.out || progress(o) <= progress(k) || progress(o) - progress(k) > 1200) return; if (o.remote) fxTo(o, {rewQ: 1.5}); else o.rewQ = 1.5; }); }
+    if (it.k === 'swap') { const o = aheadOf(k, 150, o => o.lap === k.lap && !(o.air > 0) && !(o.saci > 0) && !(o.bus > 0));   // Platztausch mit dem Kart direkt vor dir (gleiche Runde)
       if (!o || k.air > 0) { k.boost = Math.max(k.boost, 1); floatTxt(k, '🔀 Keiner in Reichweite – Trost-Turbo', '#bfe8ff'); return; }
       if (o.shield > 0 || (o.inv > 0 && !o.remote)) { if (!o.remote) o.shield = 0; floatTxt(o, '⛱️ Tausch geblockt', '#7fd3ff'); return; }
       const mine = [Math.round(k.x), Math.round(k.y), +k.a.toFixed(3), k.idx, Math.round(k.lat)];
@@ -9204,15 +9215,29 @@ setGroup(G);
     if (it.k === 'fake') { const [x, y] = [k.x - Math.cos(k.a) * 40, k.y - Math.sin(k.a) * 40]; S.oils.push({x, y, t: 25, by: k, fake: 1, ph: Math.random() * 6}); SFX.oil(); floatTxt(k, '🎁 Falsche Kiste gelegt', '#ffd23f'); }
     if (it.k === 'tow') { const o = aheadOf(k, 240, o => Math.hypot(o.x - k.x, o.y - k.y) < 760 && !(o.saci > 0));   // Abschleppseil: Haken an den Vordermann, mitziehen lassen, kurz vor ihm Schleuder-Turbo, er wird zurückgerissen
       if (!o) { k.boost = Math.max(k.boost, 1); floatTxt(k, '🪝 Keiner da – Trost-Turbo', '#bfe8ff'); return; }
-      k.tow = {o, t: 2.6}; k.dr = 0; floatTxt(k, '🪝 Reboque!', '#ffd23f'); SFX.throw(); if (o.me) say('tow', '🪝 Jemand hängt an deiner Stoßstange!', 1); else if (!o.remote && nearMe(o)) { o.say = pick(['Lass los, du Parasit!', 'Bin ich der Abschleppdienst?!', 'Ey, mein Auspuff!']); o.sayT = 1.4; } }
-    if (it.k === 'slot') { const r = Math.random(), res = r < .15 ? 'jack' : r < .6 ? 'two' : 'bad';   // Glücksspiel: Jackpot / zwei gleiche / Niete
+      k.tow = {o, t: 3}; k.dr = 0; floatTxt(k, '🪝 Reboque!', '#ffd23f'); SFX.throw(); if (o.me) say('tow', '🪝 Jemand hängt an deiner Stoßstange!', 1); else if (!o.remote && nearMe(o)) { o.say = pick(['Lass los, du Parasit!', 'Bin ich der Abschleppdienst?!', 'Ey, mein Auspuff!']); o.sayT = 1.4; } }
+    if (it.k === 'slot') { const r = Math.random(), res = r < .2 ? 'jack' : r < .7 ? 'two' : 'bad';   // 20 % Jackpot, 50 % zwei gleiche, 30 % Niete   // Glücksspiel: Jackpot / zwei gleiche / Niete
       let reels; if (res === 'jack') { const s0 = pick(['7️⃣', '🍹']); reels = [s0, s0, s0]; } else if (res === 'two') { const a = pick(SLOTSY); let b = pick(SLOTSY); while (b === a) b = pick(SLOTSY); reels = shuf([a, a, b]); } else reels = shuf(SLOTSY).slice(0, 3);
-      k.slot = {t: 0, r: reels, res, st: 0}; floatTxt(k, '🎰 Caça-Níquel …', '#ffd23f'); if (k.me) { vib(15); beep(880, .06, 'square', .04); } }
+      k.slm = {t: 0, r: reels, res, st: 0}; floatTxt(k, '🎰 Caça-Níquel …', '#ffd23f'); if (k.me) { vib(15); beep(880, .06, 'square', .04); } }
   }
   // Computerfahrer heben Seil, Tausch und Kassette auf, bis jemand in Reichweite vor ihnen ist (höchstens 12 s, dann trotzdem)
-  const aiHold = k => { const it = k.item && k.item.k; if (!['tow', 'swap', 'tape'].includes(it) || (k.holdT || 0) > 12) return false;
+  // Computerfahrer setzen Items sinnvoll ein (Item-Überarbeitung 10.10.): Ablegen erst, wenn jemand dicht dahinter ist; Geschosse, wenn jemand vor ihnen ist; Schirm bei Gefahr;
+  // Turbos auf Geraden. Nach einer Höchstwartezeit wird trotzdem benutzt (sonst blockiert ein Item ewig den Platz).
+  const ISTR = k => { for (let j = 5; j < 50; j += 5) if (Math.abs(SCURV[wrap(k.idx + j)] || 0) > 1 / 380) return false; return true; };
+  const IBEH = (k, r) => S.karts.some(o => o !== k && !o.done && !o.out && progress(k) - progress(o) > 0 && progress(k) - progress(o) < r);
+  const aiHold = k => { const it = k.item && k.item.k, h = k.holdT || 0; if (!it) return false;
+    if (['oil', 'banana3', 'fake', 'boller3', 'beer', 'stink', 'puke'].includes(it)) return h < 7 && !IBEH(k, 45);
+    if (it === 'shield') return h < 9 && !IBEH(k, 25) && !S.coatis.some(c => c.tgt === k && Math.hypot(c.x - k.x, c.y - k.y) < 520);
+    if (['flip', 'flip2', 'trolley'].includes(it)) return h < 5 && !aheadOf(k, 90, o => Math.abs(o.lat - k.lat) < 45);
+    if (['coati', 'coco3', 'ball', 'caiman', 'steal'].includes(it)) return h < 5 && !aheadOf(k, 300);
+    if (['parrot', 'meter', 'bill'].includes(it)) return h < 6 && !aheadOf(k, 200);
+    if (['acai', 'blitz'].includes(it)) return h < 6 && !aheadOf(k, 700);
+    if (['uru', 'golf'].includes(it)) return h < 6 && place(k) === 1;
+    if (['turbo', 'turbo3', 'pimenta', 'bus', 'wheel', 'taco', 'mum'].includes(it)) return h < 3 && !ISTR(k);
+    if (it === 'saci') return h < 6 && !aheadOf(k, 420, o => o.remote || o.item);
+    if (!['tow', 'swap', 'tape'].includes(it) || h > 12) return false;
     if (it === 'tow') return !aheadOf(k, 240, o => Math.hypot(o.x - k.x, o.y - k.y) < 700 && !(o.saci > 0));
-    if (it === 'swap') return !aheadOf(k, 260, o => o.lap === k.lap && !(o.air > 0) && !(o.saci > 0) && !(o.bus > 0) && progress(o) - progress(k) > 40);
+    if (it === 'swap') return !aheadOf(k, 150, o => o.lap === k.lap && !(o.air > 0) && !(o.saci > 0) && !(o.bus > 0) && progress(o) - progress(k) > 40);
     return !aheadOf(k, 1200); };
   function swapTo(k, q) { k.x = q[0]; k.y = q[1]; k.a = k.mv = q[2]; k.idx = wrap(Math.round(q[3])); k.lat = q[4] || 0; k.half = k.idx > N * .4; k.kx = k.ky = 0; k.vr = 0; k.dr = 0; k.lost = 0; k.wwT = 0; k.hist = []; k.swapFx = .9; k.tow = null;
     if (k.me) { S.flash = Math.max(S.flash || 0, .25); S.camX = k.x; S.camY = k.y; S.camA = k.a; } for (let j = 0; j < 14; j++) { const an = j / 14 * TAU; S.sp.push({x: k.x, y: k.y, vx: Math.cos(an) * 160, vy: Math.sin(an) * 160, t: 0, c: pick(['#ffd23f', '#3ccf6e', '#3fa7ff', '#fff'])}); } }
@@ -9224,7 +9249,7 @@ setGroup(G);
   function fakePop(o, k) { hitBy(k, 'fake', o.by); floatTxt(k, '🥊 PEGADINHA!', '#ff7ab8'); (S.glove || (S.glove = [])).push({x: o.x, y: o.y, t: 0});   // falsche Kiste: Boxhandschuh springt raus, Lacher vom Band wie bei den Pegadinhas im Fernsehen
     for (let j = 0; j < 16; j++) { const an = j / 16 * TAU; S.sp.push({x: o.x, y: o.y, vx: Math.cos(an) * rnd(90, 220), vy: Math.sin(an) * rnd(90, 220), t: 0, c: pick(['#ff5fa2', '#ffd23f', '#fff', '#7a3cff'])}); }
     if (nearMe(k)) { beep(260, .3, 'sine', .08, 980); real('laugh', .45); } if (k.me) { S.shake = Math.max(S.shake, .25); vib([20, 30, 50]); } }
-  function towSling(k, o) { k.boost = Math.max(k.boost, 1.15); floatTxt(k, '🪝 Schleuder!', '#ffd23f'); if (nearMe(k)) { beep(300, .2, 'sawtooth', .05, 1400); real('squeak', .5); } if (k.me) vib(25);
+  function towSling(k, o) { k.boost = Math.max(k.boost, 1.4); floatTxt(k, '🪝 Schleuder!', '#ffd23f'); if (nearMe(k)) { beep(300, .2, 'sawtooth', .05, 1400); real('squeak', .5); } if (k.me) vib(25);
     if (o.remote) fxTo(o, {slowT: .6, slowE: '🪝'}); else if (!(o.inv > 0)) { o.slowT = Math.max(o.slowT, .6); o.slowE = '🪝'; if (nearMe(o)) { o.say = pick(['Mein Auspuff ist ab!', 'Danke fürs Mitnehmen, du Arsch!', 'Das war mein Windschatten!']); o.sayT = 1.3; } } }
   function newStep(k, dt) {   // je Kart: wartende Effekte (auch per Live-Nachricht), Saci, Seil, Spielautomat, Regenwolke
     if (k.stolen) { k.stolen = 0; floatTxt(k, '🌪️ Saci hat dein Item geklaut!', '#ffb0b0'); if (k.me) { vib(30); say('saci_hit', '🌪️ Der Saci hat dir das Item geklaut!', 1); } else if (nearMe(k)) { k.say = pick(['Wo ist mein Item?!', 'Saci, du Dieb!', 'Hey! Das war meins!']); k.sayT = 1.3; } }
@@ -9233,12 +9258,12 @@ setGroup(G);
     if (k.swapQ) { const q = k.swapQ; k.swapQ = null; swapTo(k, q); floatTxt(k, '🔀 Troca-Troca!', '#ffd23f'); if (k.me) { vib([15, 30, 15]); say('swap_hit', '🔀 Platz getauscht! Wie bist du hierher gekommen?', 1); } }
     if (k.saci > 0) { k.saci -= dt; if (k.saci <= 0 && k.me) floatTxt(k, '👀 Wieder sichtbar', '#fff'); if (Math.random() < dt * 18 && nearMe(k)) S.fx.push({x: k.x + rnd(-14, 14), y: k.y + rnd(-14, 14), dust: 1, t: 0, c: '210,200,180'}); }
     if (k.swapFx > 0) k.swapFx -= dt; if (k.rewFx > 0) k.rewFx -= dt;
-    if (k.slot) { const sl = k.slot; sl.t += dt; const stops = [.55, .85, 1.15]; if (sl.st < 3 && sl.t >= stops[sl.st]) { sl.st++; if (k.me) beep(sl.st === 3 && sl.res !== 'bad' ? 1320 : 990, .07, 'square', .05); }
+    if (k.slm) { const sl = k.slm; sl.t += dt; const stops = [.55, .85, 1.15]; if (sl.st < 3 && sl.t >= stops[sl.st]) { sl.st++; if (k.me) beep(sl.st === 3 && sl.res !== 'bad' ? 1320 : 990, .07, 'square', .05); }
       if (sl.st === 3 && !sl.done && sl.t >= 1.25) { sl.done = 1;
         if (sl.res === 'jack') { k.boost = Math.max(k.boost, 2.6); k.inv = Math.max(k.inv, 2.6); floatTxt(k, '🎰 JACKPOT!' + (k.me ? ' +5 🪙' : ''), '#ffd23f'); if (k.me) { S.got += 5; k.coins += 5; SFX.turbo(); real('cheer', .5); vib([30, 30, 30, 30, 60]); say('jackpot', '🎰 JACKPOT! Sieben, sieben, sieben!', 1); } for (let j = 0; j < 24; j++) { const an = j / 24 * TAU; S.sp.push({x: k.x, y: k.y, vx: Math.cos(an) * rnd(120, 260), vy: Math.sin(an) * rnd(120, 260), t: 0, c: pick(['#ffd23f', '#fff6a8', '#ff5fa2', '#3ccf6e']), big: 1}); } }
         else if (sl.res === 'two') { k.boost = Math.max(k.boost, 1.4); floatTxt(k, '🎰 Zwei gleiche: Turbo!', '#bfe8ff'); if (k.me) SFX.turbo(); }
-        else { k.cloud = 2.6; floatTxt(k, '🌧️ Niete! Regenwolke', '#9fc3ff'); if (k.me) { vib(40); say('slot_bad', '🌧️ Niete! Der Automat gewinnt immer.', 1); } if (nearMe(k)) real('laugh', .35); } }
-      if (sl.t > 2.1) k.slot = null; }
+        else { k.cloud = 2; floatTxt(k, '🌧️ Niete! Regenwolke', '#9fc3ff'); if (k.me) { vib(40); say('slot_bad', '🌧️ Niete! Der Automat gewinnt immer.', 1); } if (nearMe(k)) real('laugh', .35); } }
+      if (sl.t > 2.1) k.slm = null; }
     if (k.cloud > 0) k.cloud -= dt;
     if (k.tow) { const w = k.tow, o = w.o, dx = o.x - k.x, dy = o.y - k.y, d = Math.hypot(dx, dy); w.t -= dt;
       if (o.done || o.fall > 0 || o.out || d > 900 || w.t <= 0 || d < 62 || k.spin > 0 || k.fall > 0 || k.air > 0 || k.done || (FALL && Math.abs(k.lat) > TW / 2 - 30)) { if (d < 80 && !(k.spin > 0) && !(k.fall > 0)) towSling(k, o); k.tow = null; } } }
@@ -9297,12 +9322,12 @@ setGroup(G);
     if (it.k === 'oil') { const [x, y] = [k.x - Math.cos(k.a) * 34, k.y - Math.sin(k.a) * 34]; S.oils.push({x, y, t: 12, by: k}); SFX.oil(); }
     if (it.k === 'coati') { const ahead = S.karts.filter(o => o !== k && !o.done && progress(o) > progress(k)).sort((a, b) => progress(a) - progress(b))[0];
       S.coatis.push({i: k.idx + 6, l: k.lat, tgt: ahead || null, t: 5, by: k, x: k.x, y: k.y}); SFX.throw(); if (ahead && ahead.me) say('coati', 'Nasenbär-Alarm!'); }
-    if (it.k === 'parrot') { S.karts.forEach(o => { if (o !== k && !o.done && o.inv <= 0 && progress(o) > progress(k) && progress(o) - progress(k) < 140) { if (o.shield > 0) { o.shield = 0; floatTxt(o, '⛱️ geblockt'); return; } o.parrot = 1.1; o.say = 'Papagei im Gesicht!'; o.sayT = 1.2; } }); beep(1800, .08, 'square', .05, 2600); setTimeout(() => beep(2200, .08, 'square', .05, 1500), 90); floatTxt(k, '🦜 Kraaah!'); }
+    if (it.k === 'parrot') { S.karts.forEach(o => { if (o !== k && !o.done && o.inv <= 0 && progress(o) > progress(k) && progress(o) - progress(k) < 220) { if (o.shield > 0) { o.shield = 0; floatTxt(o, '⛱️ geblockt'); return; } o.parrot = 1.8; o.say = 'Papagei im Gesicht!'; o.sayT = 1.2; } }); beep(1800, .08, 'square', .05, 2600); setTimeout(() => beep(2200, .08, 'square', .05, 1500), 90); floatTxt(k, '🦜 Kraaah!'); }
     if (it.k === 'pimenta') { k.boost = Math.max(k.boost, 2.6); k.fire = 2.6; if (k.me) { SFX.turbo(); vib(30); } floatTxt(k, '🌶️ Scharf!', '#ff5a3a'); }
     if (it.k === 'flip') { S.coatis.push({i: k.idx + 5, l: k.lat, tgt: null, t: 3.2, by: k, x: k.x, y: k.y, flip: 1}); SFX.throw(); }
     // Mehrfach-Items
     const n0 = k.item === it ? icnt(k) : 0, nn = it.cnt ? ' ' + (it.cnt - n0) + '/' + it.cnt : '';
-    if (it.k === 'turbo3') { k.boost = Math.max(k.boost, 1.25); if (k.me) SFX.turbo(); floatTxt(k, '🍹 Prost!' + nn); }
+    if (it.k === 'turbo3') { k.boost = Math.max(k.boost, 1.3); if (k.me) SFX.turbo(); floatTxt(k, '🍹 Prost!' + nn); }
     if (it.k === 'flip2') { S.coatis.push({i: k.idx + 5, l: k.lat, tgt: null, t: 3.2, by: k, x: k.x, y: k.y, flip: 1}); SFX.throw(); }
     if (it.k === 'coco3') { const ahead = S.karts.filter(o => o !== k && !o.done && progress(o) > progress(k) && progress(o) - progress(k) < 260).sort((a, b) => progress(a) - progress(b))[0];
       S.coatis.push({i: k.idx + 5, l: k.lat, tgt: ahead || null, t: 3.5, by: k, x: k.x, y: k.y, coco: 1}); SFX.throw(); }
@@ -9312,10 +9337,10 @@ setGroup(G);
     if (it.k === 'uru') { const ld = S.karts.filter(o => o !== k && !o.done).sort((a, b) => progress(b) - progress(a))[0];   // Urubu: fliegt über alle hinweg auf den Führenden (bist du vorne, auf den Zweiten)
       S.coatis.push({i: k.idx + 6, l: k.lat, tgt: ld || null, t: 8, by: k, x: k.x, y: k.y, golf: 1, uru: 1}); floatTxt(k, '🦅 Urubu, hol ihn dir!', '#ffd23f'); beep(380, .25, 'sawtooth', .05, 900); if (ld && ld.me) say('uru', 'Ein Urubu kreist über dir!'); }
     if (it.k === 'blitz') { S.flash = Math.max(S.flash, k.me ? .3 : .55); noise(1.6, .22, 0, 0, 0, 90); floatTxt(k, '⚡ Cristo-Blitz!', '#fff7a8');   // alle anderen schrumpfen, werden langsamer und verlieren ihr Item; wer vor dir ist, länger
-      S.karts.forEach(o => { if (o === k || o.done || o.inv > 0) return; if (o.shield > 0) { o.shield = 0; floatTxt(o, '⛱️ geblockt'); return; } o.zap = progress(o) > progress(k) ? 4 : 2.6; o.zapOn = 0; }); }
+      S.karts.forEach(o => { if (o === k || o.done || o.inv > 0) return; if (o.shield > 0) { o.shield = 0; floatTxt(o, '⛱️ geblockt'); return; } o.zap = progress(o) > progress(k) ? 3 : 2; o.zapOn = 0; }); }
     if (it.k === 'acai') { floatTxt(k, '🫐 Açaí-Bombe!', '#c9a0ff'); noise(.35, .14, 600);   // alle vor dir: Matsch auf der Scheibe (Spieler: Bildschirm, Gegner: eiern)
       S.karts.forEach(o => { if (o === k || o.done || o.inv > 0 || progress(o) <= progress(k) || progress(o) - progress(k) > 700) return; if (o.shield > 0) { o.shield = 0; floatTxt(o, '⛱️ geblockt'); return; } o.acai = 4; o.say = pick(['Ich seh nix!', 'Wer hat mit Açaí geworfen?!', 'Lila! Alles lila!']); o.sayT = 1.3; }); }
-    if (it.k === 'bus') { k.bus = 4.5; k.inv = Math.max(k.inv, 4.6); k.dr = 0; floatTxt(k, '🚌 Ônibus-Express!', '#ffd23f'); if (k.me) { SFX.turbo(); vib(40); say('bus', 'Der Ônibus kommt! Aus dem Weg!'); } beep(330, .35, 'square', .07); setTimeout(() => beep(262, .45, 'square', .07), 380); }
+    if (it.k === 'bus') { k.bus = 3.6; k.inv = Math.max(k.inv, 3.7); k.dr = 0; floatTxt(k, '🚌 Ônibus-Express!', '#ffd23f'); if (k.me) { SFX.turbo(); vib(40); say('bus', 'Der Ônibus kommt! Aus dem Weg!'); } beep(330, .35, 'square', .07); setTimeout(() => beep(262, .45, 'square', .07), 380); }
     if (['saci', 'tape', 'swap', 'fake', 'tow', 'slot'].includes(it.k)) useNew(k, it);
     // Spezial-Items
     const near0 = Math.hypot(k.x - S.karts[0].x, k.y - S.karts[0].y) < 700;
@@ -9515,7 +9540,7 @@ setGroup(G);
       k.str = clamp((k.str || 0) + (Math.abs(k.steer) < .18 && !offT && !k.dr && k.spin <= 0 ? dt * .45 : -dt * 2.2), 0, 1);
       if (SLP && !k.air && !k.onCut) vmax *= 1 - clamp(slp(k.idx) * 15, -.15, .15) * (k.vx.m > 1.2 ? 1.2 : 1);   // Berg: hoch langsamer, runter schneller (schwere Fahrzeuge stärker)
       // Neue Items: Bus (Autopilot, schnell, mäht um), Cristo-Blitz (klein + langsam), Açaí (Matsch)
-      if (k.bus > 0) { k.bus -= dt; vmax *= 1.55; k.vr *= Math.exp(-6 * dt); k.dr = 0; if (k.bus <= 0) { k.boost = Math.max(k.boost, .5); floatTxt(k, '🚌 Endstation!', '#ffd23f'); }
+      if (k.bus > 0) { k.bus -= dt; vmax *= 1.45; k.vr *= Math.exp(-6 * dt); k.dr = 0; if (k.bus <= 0) { k.boost = Math.max(k.boost, .5); floatTxt(k, '🚌 Endstation!', '#ffd23f'); }
         S.karts.forEach(o => { if (o !== k && !o.done && !o.air && !(o.fall > 0) && !(o.inv > 0) && Math.hypot(o.x - k.x, o.y - k.y) < 40) hitBy(o, 'bus', k); }); }
       if (k.zap > 0) { if (!k.zapOn) { k.zapOn = 1; if (k.item && !k.remote) { k.item = null; k.icntFor = null; } k.spin = Math.max(k.spin, .25); if (k.me) { S.flash = Math.max(S.flash, .5); vib([20, 30, 20]); } } k.zap -= dt; vmax *= .8; if (k.zap <= 0) { k.zapOn = 0; if (k.me) floatTxt(k, '⬆️ Wieder groß!', '#fff7a8'); } }
       if (k.acai > 0) { k.acai -= dt; if (!k.me) vmax *= .92; else if (!S.acaiB || S.acaiB.k !== k.acaiT) { k.acaiT = (k.acaiT || 0) + 1; S.acaiB = {k: k.acaiT, b: Array.from({length: 9}, () => [Math.random(), .15 + Math.random() * .7, .08 + Math.random() * .12])}; vib(25); } }
@@ -9540,7 +9565,7 @@ setGroup(G);
       if (k.pop > 0) k.pop -= dt;
       if (k.spin > 0) { k.spin -= dt; k.rot += dt * 14; vmax *= .25; if (k.spin <= 0 && k.wut) { k.wut = 0; k.boost = Math.max(k.boost, .9); floatTxt(k, '💢 Jetzt reicht’s!', '#ff6b6b'); } } else k.rot *= Math.max(0, 1 - dt * 10);
       if (k.stall > 0) { k.stall -= dt; vmax = 0; }
-      if (k.cloud > 0) vmax *= .86; if (k.tow) vmax = Math.max(vmax, Math.min(FALL ? 360 : 470, Math.max(k.tow.o.v * 1.25 + 60, 300)) * (Math.abs(k.lat) > TW / 2 ? .6 : 1));   // Regenwolke (Niete) bremst, Seil zieht
+      if (k.cloud > 0) vmax *= .9; if (k.parrot > 0) vmax *= .9; if (k.saci > 0) vmax *= 1.12; if (k.tow) vmax = Math.max(vmax, Math.min(FALL ? 380 : 500, Math.max(k.tow.o.v * 1.45 + 80, 340)) * (Math.abs(k.lat) > TW / 2 ? .6 : 1));   // Regenwolke + Papagei bremsen, Saci-Wirbel schneller, Seil zieht   // Regenwolke (Niete) bremst, Seil zieht
       k.v += (vmax - k.v) * Math.min(1, dt * (k.v < vmax ? (k.boost > 0 || k.tow ? 4 : 1.6 * (.86 + k.cs.acc * .28) * k.vt[2] * k.pf.acc * (k.me ? 1 + S.tu.a * .05 : 1)) : 4));
       k.wallC = Math.max(0, (k.wallC || 0) - dt); k.inv = Math.max(0, k.inv - dt); k.glow = Math.max(0, k.glow - dt); k.blind = Math.max(0, k.blind - dt); k.slowT = Math.max(0, k.slowT - dt);
       k.boost = Math.max(0, k.boost - dt / ((k.me ? 1 + S.tu.t * .07 : 1) * k.vx.b)); k.wet = Math.max(0, k.wet - dt);
@@ -9609,7 +9634,7 @@ setGroup(G);
       if (k.air > 0) { k.air -= dt; if (k.me && k.trick === 0 && anyInput() && k.airT - k.air > .08) { k.trick = 1; SFX.trick(); ach('trick'); }
         if (k.air <= 0) { k.air = 0; k.squash = .3; if (k.pf.land) { k.boost = Math.max(k.boost, .9); if (k.me) floatTxt(k, "🏄 Surf-Landung!", "#7fd3ff"); } for (let j = 0; j < 10; j++) { const an = j / 10 * TAU; S.fx.push({x: k.x + Math.cos(an) * 14, y: k.y + Math.sin(an) * 14, dust: 1, t: 0, c: '210,190,150'}); } if (k.me) { SFX.land(); vib(25); } if (k.trick) { k.boost = Math.max(k.boost, .7); if (k.me) { floatTxt(k, '🤸 Trick!', '#7fffa5'); say('trick', 'Was für ein Trick!'); } } } }
       // Item-Roulette
-      if (k.roll > 0) { k.roll -= dt; if (k.roll <= 0) { k.item = rollItem(k); k.icntFor = null; if (k.item.cnt && k.me) floatTxt(k, k.item.e + ' ' + k.item.n + ' ×' + k.item.cnt, '#ffd23f'); k.useAt = rnd(.8, 3) * (k.pp ? k.pp.item : 1) * (k.item.orb || k.item.trail ? 2.5 : 1); if (k.me) SFX.pick(); } }
+      if (k.roll > 0) { k.roll -= dt; if (k.roll <= 0) { k.item = rollItem(k); k.icntFor = null; if (k.me) S.itInfo = {it: k.item, until: performance.now() + 2800}; if (k.item.cnt && k.me) floatTxt(k, k.item.e + ' ' + k.item.n + ' ×' + k.item.cnt, '#ffd23f'); k.useAt = rnd(.8, 3) * (k.pp ? k.pp.item : 1) * (k.item.orb || k.item.trail ? 2.5 : 1); if (k.me) SFX.pick(); } }
       k.squash = Math.max(0, k.squash - dt * 1.6); k.icd = Math.max(0, (k.icd || 0) - dt);
       if (k.mini > 0) { k.mini -= dt; if (k.mini <= 0) { k.vsz = k.vsz0 || 1; floatTxt(k, '👋 Wieder da!'); } }
       if (k.sayT > 0) k.sayT -= dt; k.dol = Math.max(0, k.dol - dt); k.bump = Math.max(0, (k.bump || 0) - dt); if (k.obT > 0) k.obT -= dt;
@@ -9637,7 +9662,7 @@ setGroup(G);
     S.bumpT = Math.max(0, (S.bumpT || 0) - dt); S.bumpSent = Math.max(0, (S.bumpSent || 0) - dt); S.wallT = Math.max(0, (S.wallT || 0) - dt); S.fade = Math.max(0, (S.fade || 0) - dt);
     const ground = k => !k.air && !(k.fall > 0);
     // Kisten, Hindernisse, Öl, Nasenbären
-    S.boxes.forEach((b, bi) => { if (b.off > 0) { b.off = Math.max(0, b.off - dt); if (b.off <= 0) b.popAt = S.t; return; } ks.forEach(k => { if (!k.remote && !(k.fall > 0) && b.off <= 0 && !(k.boxI === b.i && S.t - k.boxAt < 1.5) && Math.hypot(k.x - b.x, k.y - b.y) < 28) { b.off = 3; k.boxI = b.i; k.boxAt = S.t;   /* nur eine Kiste pro Reihe (vorher fuhr man zwischen zwei Kisten durch und bekam beide) */ if (S.live) liveEmit({t: 'box', race: S.live.id, i: bi}); for (let j = 0; j < 14; j++) { const an = j / 14 * TAU + rnd(-.2, .2), sp = rnd(90, 210); S.sp.push({x: b.x, y: b.y, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp, t: 0, c: pick(['#1faa5a', '#ffce28', '#2a6ee1', '#fff'])}); } (S.brg || (S.brg = [])).push({x: b.x, y: b.y, t: 0}); if (!k.item && k.roll <= 0) { k.roll = .9; if (k.me) beep(660, .06, 'square', .05); } else if (k.me && k.item && !k.item2 && k.roll <= 0) { k.item2 = rollItem(k, 1); SFX.pick(); floatTxt(k, k.item2.e + ' 2. Item' + (comboOf(k.item, k.item2) ? ' · KOMBO!' : ''), '#ffd23f'); } } }); });
+    S.boxes.forEach((b, bi) => { if (b.off > 0) { b.off = Math.max(0, b.off - dt); if (b.off <= 0) b.popAt = S.t; return; } ks.forEach(k => { if (!k.remote && !(k.fall > 0) && b.off <= 0 && !(k.boxI === b.i && S.t - k.boxAt < 1.5) && Math.hypot(k.x - b.x, k.y - b.y) < 28) { b.off = 3; k.boxI = b.i; k.boxAt = S.t;   /* nur eine Kiste pro Reihe (vorher fuhr man zwischen zwei Kisten durch und bekam beide) */ if (S.live) liveEmit({t: 'box', race: S.live.id, i: bi}); for (let j = 0; j < 14; j++) { const an = j / 14 * TAU + rnd(-.2, .2), sp = rnd(90, 210); S.sp.push({x: b.x, y: b.y, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp, t: 0, c: pick(['#1faa5a', '#ffce28', '#2a6ee1', '#fff'])}); } (S.brg || (S.brg = [])).push({x: b.x, y: b.y, t: 0}); if (!k.item && k.roll <= 0) { k.roll = .9; if (k.me) { beep(660, .06, 'square', .05); const tb0 = itemTable(k); k.rollL = Object.keys(tb0).map(q => ITEMS[q]).filter(Boolean).concat(SPECIAL[k.id] ? [SPECIAL[k.id]] : []); } } else if (k.me && k.item && !k.item2 && k.roll <= 0) { k.item2 = rollItem(k, 1); SFX.pick(); floatTxt(k, k.item2.e + ' 2. Item' + (comboOf(k.item, k.item2) ? ' · KOMBO!' : ''), '#ffd23f'); S.itInfo = {it: k.item2, until: performance.now() + 2600, two: 1}; } } }); });
     // feste Hindernisse: schräg = abgleiten (wenig Tempoverlust, Drift bleibt), frontal = Anprall (−45 %) mit Schubs zur freien Seite (Wunsch Patrick 10.10.: vorher kostete
     // jede Berührung 60 % Tempo, auch Streifen, und frontal wurde man gerade zurückgeschoben und stand bis ~0,9 s davor). h = Anteil der Fahrt aufs Hindernis zu (1 = frontal).
     const obSide = (o, k, tx, ty) => { const room = s0 => { const px = o.x + tx * s0 * (o.r + 30), py = o.y + ty * s0 * (o.r + 30); let m = TW / 2 - Math.abs(nearest(px, py, k.idx)[1]); S.obst.forEach(q => { if (q !== o) m = Math.min(m, Math.hypot(px - q.x, py - q.y) - q.r - 12); }); return m; }, a = room(1), b = room(-1); return Math.abs(a - b) > 6 ? (a > b ? 1 : -1) : (k.steer ? Math.sign(k.steer) * Math.sign(tx * -Math.sin(k.a) + ty * Math.cos(k.a)) || 1 : 1); };
@@ -9650,7 +9675,7 @@ setGroup(G);
       S.hl[o.kind] = (S.hl[o.kind] || 0) + 1; k.obH = (k.obH || 0) + 1; if (k.me) { S.shake = Math.max(S.shake, .05 + .15 * h); if (h > .45) SFX.land(); else noise(.06, .07, 0, 0, 0, 700); vib(Math.round(8 + 22 * h)); for (let q = 0; q < 4; q++) S.sp.push({x: k.x - nx * 12, y: k.y - ny * 12, vx: tx * 120 + rnd(-80, 80), vy: ty * 120 + rnd(-80, 80), t: 0, c: '#ffe08a'}); }
       if (h > .45 && Math.random() < .5 && HITSAY[o.kind]) { k.say = HITSAY[o.kind]; k.sayT = 1.3; } }));
     S.oils = S.oils.filter(o => { o.t -= dt;
-      if (o.bang) { o.bang -= dt; if (o.bang > 0) return true; const me0 = S.karts[0]; ks.forEach(k => { if (!k.air && !(k.fall > 0) && Math.hypot(k.x - o.x, k.y - o.y) < 74) hitBy(k, 'bang', o.by); });   // Böller: Zündschnur, dann Knall
+      if (o.bang) { o.bang -= dt; if (o.bang > 0) return true; const me0 = S.karts[0]; ks.forEach(k => { if (!k.air && !(k.fall > 0) && Math.hypot(k.x - o.x, k.y - o.y) < 62) hitBy(k, 'bang', o.by); });   // Böller: Zündschnur, dann Knall
         if (Math.hypot(me0.x - o.x, me0.y - o.y) < 600) { noise(.35, .22, 0, 0, 0, 260); S.shake = Math.max(S.shake, .25); } for (let j = 0; j < 22; j++) { const an = j / 22 * TAU, sp = rnd(80, 240); S.sp.push({x: o.x, y: o.y, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp, t: 0, c: pick(['#ffd23f', '#ff5a1f', '#fff', '#ff2a6a'])}); } return false; }
       if (o.stink) { ks.forEach(k => { if (ground(k) && o.by !== k && !k.remote && Math.hypot(k.x - o.x, k.y - o.y) < 58) { if (k.slowT < .45) { k.slowT = .45; k.slowE = '💨'; if (!k.sayT) { k.say = pick(['Wer war das?!', 'Boah, Marco!', 'Ich krieg keine Luft!']); k.sayT = 1.2; } } } }); return o.t > 0; }
       if (o.fake) { ks.forEach(k => { if (o.t > 0 && ground(k) && !k.remote && Math.hypot(k.x - o.x, k.y - o.y) < 28 && !(o.by === k && o.t > 23.5)) { o.t = 0; fakePop(o, k); } }); return o.t > 0; }
@@ -9660,8 +9685,9 @@ setGroup(G);
     S.brk.forEach(b => { if (b.dead >= 0) { if (S.t - b.dead > 20) b.dead = -1; return; } const k = ks.find(k0 => ground(k0) && !k0.remote && Math.hypot(k0.x - b.x, k0.y - b.y) < 26); if (k) brkBreak(b, k); });
     S.brkP = S.brkP.filter(q => { q.t += dt; const fr = Math.exp(-3.5 * dt); q.x += q.vx * dt; q.y += q.vy * dt; q.vx *= fr; q.vy *= fr; q.r += q.vr * dt; q.vr *= fr; return q.t < 2.2; });
     S.deb = S.deb.filter(d => { d.t -= dt; ks.forEach(k => { if (ground(k) && !k.remote && Math.hypot(k.x - d.x, k.y - d.y) < 22 && k.slowT < .3) { k.slowT = .3; k.slowE = d.e; } }); return d.t > 0; });
-    S.coatis = S.coatis.filter(c => { c.t -= dt; c.i += (c.uru ? 880 : c.golf ? 1250 : c.ball ? 1000 : c.flip ? 1150 : 560) / 6 * dt; const tl = c.tgt ? c.tgt.lat : c.l; c.l += clamp(tl - c.l, -90 * dt, 90 * dt);
-      if (c.tgt && c.i > c.tgt.idx + (c.tgt.lap - c.by.lap) * N - 4) { c.x += (c.tgt.x - c.x) * Math.min(1, dt * 8); c.y += (c.tgt.y - c.y) * Math.min(1, dt * 8); } else [c.x, c.y] = at(c.i, c.l);
+    S.coatis = S.coatis.filter(c => { c.t -= dt; c.i += (c.uru ? 880 : c.golf ? 1250 : c.ball ? 1000 : c.flip ? 1150 : 560) / 6 * dt; const tl = c.tgt ? c.tgt.lat : c.l; c.l += clamp(tl - c.l, -(c.tgt ? 170 : 90) * dt, (c.tgt ? 170 : 90) * dt);
+      if (c.tgt && c.i > c.tgt.idx + (c.tgt.lap - c.by.lap) * N - 4) { const hx = c.tgt.x - c.x, hy = c.tgt.y - c.y, hd = Math.hypot(hx, hy) || 1, sp = Math.min(hd, (c.uru ? 520 : c.golf ? 700 : 620) * dt); c.x += hx / hd * sp; c.y += hy / hd * sp; }   /* zielsuchend mit festem Tempo (vorher Annäherung in Prozent: lief dem Ziel mit ~31 px Abstand hinterher, mehr als der Trefferradius) */
+      else [c.x, c.y] = at(c.i, c.l);
       const v = c.golf ? (c.tgt && ground(c.tgt) && Math.hypot(c.tgt.x - c.x, c.tgt.y - c.y) < 30 ? c.tgt : null) : ks.find(k => k !== c.by && ground(k) && Math.hypot(k.x - c.x, k.y - c.y) < 26); /* Golfball fliegt über alle hinweg, trifft nur das Ziel */ if (v) { hitBy(v, c.uru ? 'uru' : c.ball ? 'ball' : c.coco ? 'coco' : c.tro ? 'trolley' : c.flip ? 'flip' : c.cai ? 'caiman' : 'coati', c.by); return false; }
       // Kokos-Trio (kreisend) und Bananen (hinten) fangen Geschosse ab und verbrauchen dabei eins
       const gd = !c.golf && ks.find(k => k !== c.by && !k.remote && k.item && (k.item.orb || k.item.trail) && k.roll <= 0 && Math.hypot(k.x - c.x, k.y - c.y) < 46);
@@ -10084,12 +10110,24 @@ setGroup(G);
     if (S.ev && S.ev.cur && S.ev.cur.k === 'police' && !k.done) { const d = wrap(S.ev.cur.i - k.idx); if (d < 160 && Math.floor(now / 250) % 2) { ctx.font = '900 18px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = Math.hypot(k.v, k.vr) > 165 ? '#ff5a4a' : '#9dffb4'; ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 6; ctx.fillText('🚔 Kontrolle voraus: ' + (Math.hypot(k.v, k.vr) > 165 ? 'BREMSEN!' : 'gut so'), W / 2, top + 226); ctx.shadowBlur = 0; } }
     // Item-Fenster
     const ix = W - 70, iy = top + 44; ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = 3; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(ix, iy, 58, 58, 14) : ctx.rect(ix, iy, 58, 58); ctx.fill(); ctx.stroke();
-    const show = k.roll > 0 ? ILIST[Math.floor(now / 90) % ILIST.length] : k.item, sn = k.roll > 0 || !show ? 1 : icnt(k);
+    const RL = k.rollL && k.rollL.length ? k.rollL : ILIST, show = k.roll > 0 ? RL[Math.floor(now / 90) % RL.length] : k.item, sn = k.roll > 0 || !show ? 1 : icnt(k);
     if (show && sn > 1) { for (let j = sn - 1; j >= 0; j--) ctx.drawImage(E(show.e, 36), ix + 29 - 17 + (j - (sn - 1) / 2) * 12, iy + 29 - 17 - j * 3, 34, 34);   // Mehrfach-Item: Stapel + ×n
       ctx.font = '900 13px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = '#ffd23f'; ctx.strokeStyle = '#000'; ctx.lineWidth = 3; ctx.strokeText('×' + sn, ix + 46, iy + 52); ctx.fillText('×' + sn, ix + 46, iy + 52); }
     else if (show) ctx.drawImage(E(show.e, 36), ix + 29 - 23, iy + 29 - 23, 46, 46);
     if (k.item || k.item2) { const jx = ix - 44, jy = iy + 14; ctx.fillStyle = 'rgba(0,0,0,.45)'; ctx.strokeStyle = 'rgba(255,210,63,.6)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(jx, jy, 36, 36, 10) : ctx.rect(jx, jy, 36, 36); ctx.fill(); ctx.stroke(); if (k.item2) ctx.drawImage(E(k.item2.e, 28), jx + 4, jy + 4, 28, 28);
       const cb = comboOf(k.item, k.item2); if (cb) { ctx.font = '900 12px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = Math.floor(now / 200) % 2 ? '#ff7ae0' : '#fff'; ctx.shadowColor = 'rgba(0,0,0,.8)'; ctx.shadowBlur = 4; ctx.fillText(cb.e + ' KOMBO', ix + 6, iy + 70); ctx.shadowBlur = 0; } }
+    // Item-Erklärung beim Aufheben (Item-Überarbeitung 10.10.: bei so vielen Items wusste man oft nicht, was man gerade hat): Pille über dem ITEM-Knopf
+    if (S.itInfo && now < S.itInfo.until && !k.done) { const it = S.itInfo.it, ds = IDESC[it.k] || it.x || '', al = clamp((S.itInfo.until - now) / 350, 0, 1), ir = hudRects().it, cy = ir ? ir[1] - 26 : H - 170;
+      ctx.save(); ctx.globalAlpha = al; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '900 14px system-ui,sans-serif'; const t1 = (S.itInfo.two ? '2. Item: ' : '') + it.e + ' ' + it.n; ctx.font = '600 12px system-ui,sans-serif'; const w2 = ctx.measureText(ds).width; ctx.font = '900 14px system-ui,sans-serif';
+      const bw = Math.min(W - 24, Math.max(ctx.measureText(t1).width, w2) + 26); ctx.fillStyle = 'rgba(20,10,40,.86)'; ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(W / 2 - bw / 2, cy - 22, bw, ds ? 42 : 26, 13) : ctx.rect(W / 2 - bw / 2, cy - 22, bw, ds ? 42 : 26); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#ffd23f'; ctx.fillText(t1, W / 2, cy - 10, bw - 16); if (ds) { ctx.font = '600 12px system-ui,sans-serif'; ctx.fillStyle = '#fff'; ctx.fillText(ds, W / 2, cy + 8, bw - 16); } ctx.restore(); }
+    // Glücksautomat groß im Bild (Caça-Níquel): drei Walzen, darunter die Regeln bzw. das Ergebnis
+    if (k.slm) { const sl = k.slm, cx = Math.max(W / 2, W - 110), cy = top + 248, rw = 50, done = sl.st === 3 && sl.t > 1.25, win = done && sl.res !== 'bad', fl = win && Math.floor(now / 120) % 2; ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = 'rgba(40,10,60,.92)'; ctx.strokeStyle = fl ? '#fff' : '#ffd23f'; ctx.lineWidth = 3; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(cx - 98, cy - 46, 196, 104, 16) : ctx.rect(cx - 98, cy - 46, 196, 104); ctx.fill(); ctx.stroke();
+      ctx.font = '900 12px system-ui,sans-serif'; ctx.fillStyle = '#ffd23f'; ctx.fillText('🎰 CAÇA-NÍQUEL', cx, cy - 34);
+      for (let j = 0; j < 3; j++) { const x0 = cx - 78 + j * 54, stop = j < sl.st, sym = stop ? sl.r[j] : SLOTSY[Math.floor(now / 70 + j * 2) % SLOTSY.length]; ctx.fillStyle = done && sl.res === 'bad' ? '#cfd6e0' : '#fff'; ctx.fillRect(x0, cy - 24, rw, 44); ctx.drawImage(E(sym, 30), x0 + 8, cy - 19 + (stop ? 0 : (now / 4) % 10 - 5), 34, 34); }
+      ctx.font = '800 11px system-ui,sans-serif'; ctx.fillStyle = '#fff'; const rt = !done ? '3 gleiche = Jackpot · 2 gleiche = Turbo · sonst Niete' : sl.res === 'jack' ? '🚀 JACKPOT! Mega-Turbo + 5 🪙' : sl.res === 'two' ? '⚡ Zwei gleiche: Turbo!' : '🌧️ Niete! Regenwolke bremst dich';
+      ctx.fillStyle = done ? (sl.res === 'bad' ? '#9fc3ff' : '#ffd23f') : '#e6d8ff'; ctx.font = done ? '900 13px system-ui,sans-serif' : '700 10.5px system-ui,sans-serif'; ctx.fillText(rt, cx, cy + 38, 186); ctx.restore(); }
     // Kurven-Warnung: scharfe Kurve voraus
     if (S.t > 0 && !k.done && SCURV.length) { let w = 0; for (let j = 25; j < 120; j += 5) { const c = SCURV[wrap(k.idx + j)]; if (Math.abs(c) > 1 / 330) { w = c; break; } }
       if (w) { const hard = Math.abs(w) > 1 / 250 && k.v > 230, txt = (w > 0 ? '↱ ' : '↰ ') + (hard ? 'Bremsen!' : w > 0 ? 'Rechtskurve' : 'Linkskurve');
@@ -10558,18 +10596,18 @@ setGroup(G);
     ['flip2', 'throw', 'Zwei Flip-Flops für zwei Schüsse. Daneben? Gleich nochmal werfen.'],
     ['coati', 'home', 'Der Nasenbär sucht sich den Kart direkt vor dir und bringt ihn ins Schleudern. Zielen unnötig.'],
     ['coco3', 'orbit', 'Drei Kokosnüsse kreisen um dich: rammen Gegner neben dir und blocken Geschosse. Antippen = Kokosnuss jagt den Vordermann.'],
-    ['parrot', 'area', 'Alle knapp vor dir bekommen den Papagei ins Gesicht: Ihre Lenkung wackelt ein paar Sekunden.'],
+    ['parrot', 'area', 'Alle knapp vor dir bekommen den Papagei ins Gesicht: Ihre Lenkung wackelt knapp 2 Sekunden und sie werden langsamer.'],
     ['shield', 'shield', 'Schirm auf: 8 Sekunden Schutz, blockt genau einen Treffer.'],
     ['acai', 'area', 'Açaí-Bombe: Alle vor dir kriegen lila Matsch ins Gesicht. Gegner eiern herum; erwischt es dich, ist dein Bildschirm ein paar Sekunden voller Açaí.'],
     ['uru', 'home', 'Der Urubu (Rabengeier) fliegt über alle hinweg und stürzt sich auf den Führenden. Nur ein Schirm hilft. Bist du selbst vorne, trifft er den Zweiten.'],
     ['blitz', 'area', 'Cristo-Blitz: Alle anderen schrumpfen, werden langsamer und verlieren ihr Item. Wer klein ist, wird beim Rammen plattgefahren. Wer vor dir liegt, bleibt länger klein.'],
-    ['bus', 'boost', 'Ônibus-Express: Du wirst 4,5 s lang zum Bus, fährst von selbst, bist unverwundbar und mähst alles um. Gibt es nur weiter hinten.'],
-    ['saci', 'ghost', 'Saci-Pererê: Du wirst 3 s zum Wirbelwind, fast unsichtbar und unverwundbar, fährst durch andere Karts hindurch und klaust dem nächsten Kart vor dir sein Item.'],
-    ['tape', 'rew', 'Fita K7: Spult alle vor dir 1,6 Sekunden zurück, genau dorthin, wo sie gerade waren (nie über die Ziellinie). Schirm oder Unverwundbarkeit schützen.'],
+    ['bus', 'boost', 'Ônibus-Express: Du wirst 3,6 s lang zum Bus, fährst von selbst, bist unverwundbar und mähst alles um. Gibt es nur weit hinten.'],
+    ['saci', 'ghost', 'Saci-Pererê: Du wirst 3 s zum Wirbelwind, fast unsichtbar, unverwundbar und etwas schneller, fährst durch andere Karts hindurch und klaust dem nächsten Kart vor dir sein Item.'],
+    ['tape', 'rew', 'Fita K7: Spult alle vor dir 1,5 Sekunden zurück, genau dorthin, wo sie gerade waren (nie über die Ziellinie). Schirm oder Unverwundbarkeit schützen.'],
     ['swap', 'swap', 'Troca-Troca: Du tauschst sofort den Platz mit dem Kart direkt vor dir (gleiche Runde). Ist keiner in Reichweite, gibt es einen Trost-Turbo.'],
     ['fake', 'fake', 'Falsche Kiste: Sieht aus wie eine echte ❓-Kiste, nur das Fragezeichen steht kopf und ist rot. Wer reinfährt: Boxhandschuh, Dreher, Lacher vom Band.'],
     ['tow', 'tow', 'Reboque: Ein Haken fliegt an den Vordermann und das Seil zieht dich mit. Kurz vor ihm gibt es einen Schleuder-Turbo, und er wird zurückgerissen.'],
-    ['slot', 'slot', 'Caça-Níquel: Über deinem Kart dreht ein Spielautomat. Drei gleiche = Jackpot (Mega-Turbo, unverwundbar, +5 Münzen), zwei gleiche = Turbo, Niete = Regenwolke, die dich bremst.']];
+    ['slot', 'slot', 'Caça-Níquel (Glücksspiel): Nach dem Antippen dreht groß im Bild ein Spielautomat. Drei gleiche (20 %) = Jackpot: Mega-Turbo, unverwundbar, +5 Münzen. Zwei gleiche (50 %) = Turbo. Niete (30 %) = 2 s Regenwolke, die dich etwas bremst.']];
   const GANI = {mum: 'boost', golf: 'home', taco: 'fire', mini: 'boost', grant: 'area', polo: 'area', bill: 'area', burn: 'area', wheel: 'boost', ball: 'home', beer: 'drop', snack: 'area', kiss: 'area', burp: 'area', stink: 'drop', puke: 'drop', disco: 'area', meter: 'area', steal: 'home', ticket: 'area', caiman: 'home', trolley: 'throw', chomp: 'area'};
   const GCOMBO = {'oil+pimenta': 'Langer Turbo, hinter dir brennt der Asphalt.', 'coati+parrot': 'Drei Nasenbären jagen die drei Karts vor dir.', 'turbo+turbo': 'Extra langer Turbo und kurz unverwundbar.',
     'pimenta+turbo': 'Längster Turbo im Spiel, mit Feuer am Heck.', 'flip+flip': 'Drei Flip-Flops gleichzeitig im Fächer.', 'oil+oil': 'Drei Pfützen hintereinander.', 'shield+shield': '16 Sekunden Schirm.', 'coati+coati': 'Zwei Nasenbären für die zwei vor dir.'};
