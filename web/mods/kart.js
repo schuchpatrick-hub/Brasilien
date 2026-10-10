@@ -336,7 +336,7 @@
     copa: [{r: 2, e: '🌊', t: 'Die Wellen werden höher!', wave: [6, 9], wh: 1.15}, {r: 'last', e: '🌊', t: 'Springflut! Die Strandstraße säuft ab', wave: [4, 6], wh: 1.35}],
     reveillon: [{r: 2, e: '🍾', t: 'Mitternacht! Feliz Ano Novo!', fw: 3, obst: [[.1, 30, 'champ'], [.33, -30, 'champ'], [.58, 25, 'champ'], [.88, -28, 'champ']]}, {r: 'last', e: '🌊', t: 'Alle springen über sieben Wellen!', wave: [3, 4.5], wh: 1.2}],
     cristo: [{r: 'last', e: '🌫️', t: 'Der Nebel wird dichter … und die Affen frecher', fog: 1.3, mov: [[.15, 'monkey', 90, 55], [.88, 'monkey', 90, 50]]}],
-    bridge: [{r: 'last', e: '🚗', t: 'Stau auf der Ponte! Eine Spur ist dicht', wind: [3, 5], obst: [[.3, 38, 'car'], [.325, 38, 'van'], [.35, 38, 'car'], [.62, -38, 'car'], [.645, -38, 'car'], [.67, -38, 'van']]}],
+    bridge: [{r: 'last', e: '🚗', t: 'Stau auf der Ponte! Eine Spur ist dicht', wind: [3, 5], obst: [[.3, 44, 'car'], [.325, 44, 'van'], [.35, 44, 'car'], [.62, -44, 'car'], [.645, -44, 'car'], [.67, -44, 'van']]}],
     iguacu: [{r: 'last', e: '⛈️', t: 'Wolkenbruch! Pfützen überall', rain: 2, pud: [[.1, -25, 30], [.35, 25, 32], [.6, -20, 30], [.9, 22, 32]]}],
     amazon: [{r: 'last', e: '🐊', t: 'Die Kaimane haben Hunger!', mov: [[.05, 'caiman', 80, 26], [.55, 'caiman', 80, 24]], dol: [.4, .92]}],
     manaus: [{r: 'last', e: '🏗️', t: 'Der Kran lässt Container fallen!', obst: [[.12, 35, 'crate'], [.3, -35, 'crate'], [.55, 30, 'crate'], [.7, -30, 'crate'], [.92, 35, 'crate']]}],
@@ -344,7 +344,7 @@
     ilha: [{r: 2, e: '🧳', t: 'Koffer fallen vom Karren!', obst: [[.1, 30, 'suitcase'], [.35, -30, 'suitcase'], [.65, 28, 'suitcase']]}, {r: 'last', e: '🐕', t: 'Die Inselhunde wollen mitspielen!', mov: [[.25, 'dog', 95, 45], [.75, 'dog', 95, 40]]}],
     costa: [{r: 'last', e: '⛴️', t: 'Die Fähre ist da! Koffer auf dem Anleger, Touristen-Ansturm in Abraão, Springflut in Paraty', pud: [[.03, -25, 34], [.06, 25, 36], [.97, 20, 34]], mov: [[.53, 'jogger', 90, 55], [.56, 'dog', 90, 50], [.78, 'jogger', 90, 60]], obst: [[.435, 30, 'suitcase'], [.462, -30, 'suitcase']]}],
     cataratas: [{r: 'last', e: '⛈️', t: 'Wolkenbruch über den Fällen! Die Nasenbären-Bande räumt die Trilha ab', rain: 1, pud: [[.15, -25, 34], [.33, 25, 34], [.66, -25, 36], [.82, 25, 34]], mov: [[.25, 'coati', 100, 75], [.62, 'coati', 100, 75], [.9, 'coati', 100, 75]]}],
-    serra: [{r: 'last', e: '🌧️', t: 'Regen über der Serra … und Lkw auf der Imigrantes!', rain: 1, obst: [[.2, 38, 'van'], [.28, -38, 'car'], [.37, 38, 'van']], mov: [[.84, 'monkey', 95, 55]]}],
+    serra: [{r: 'last', e: '🌧️', t: 'Regen über der Serra … und Lkw auf der Imigrantes!', rain: 1, obst: [[.2, 44, 'van'], [.28, -44, 'car'], [.37, 44, 'van']], mov: [[.84, 'monkey', 95, 55]]}],
     riotour: [{r: 'last', e: '🥁', t: 'Bloco de Carnaval! Die Avenida gehört den Tänzern', mov: [[.02, 'jogger', 95, 60], [.08, 'skate', 95, 80], [.97, 'bike', 95, 85]], obst: [[.6, 35, 'stall'], [.76, -35, 'stall']]}],
     lopes: [{r: 2, e: '⚽', t: 'Footvolley-Turnier! Bälle überall', mov: [[.1, 'soccer', 100, 85], [.6, 'soccer', 100, 95]]}, {r: 'last', e: '🌊', t: 'Die Flut kommt!', wave: [5, 7], wh: 1.2}]};
   const OBR = {crate: 22, umbrella: 24, log: 26, suitcase: 20, stone: 18, nut: 20, cone: 16, champ: 16, car: 26, van: 28, stall: 22};
