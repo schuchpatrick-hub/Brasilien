@@ -1781,7 +1781,7 @@
     const near0 = Math.hypot(k.x - S.karts[0].x, k.y - S.karts[0].y) < 700;
     if (SPECIAL[k.id] && it === SPECIAL[k.id]) { if (k.me || near0) voice(k, 'sp'); floatTxt(k, it.e + ' ' + it.n + '!', '#fff'); }
     if (it.k === 'bill') { S.karts.forEach(o => { if (o !== k && !o.done && progress(o) > progress(k) && o.inv <= 0) { o.slowT = 1.4; o.slowE = '🧾'; o.say = 'Zahlungserinnerung?!'; o.sayT = 1.4; } }); beep(880, .1, 'square', .06); setTimeout(() => beep(660, .2, 'square', .06), 110); }
-    if (it.k === 'burn') { k.glow = 2; S.karts.forEach(o => { if (o !== k && o.inv <= 0 && Math.hypot(o.x - k.x, o.y - k.y) < 280) { o.blind = 1.3; if (o.me) S.flash = .7; } }); noise(.5, .12, 300); }
+    if (it.k === 'burn') { k.glow = 2; S.karts.forEach(o => { if (o !== k && o.inv <= 0 && Math.hypot(o.x - k.x, o.y - k.y) < 260) { o.blind = Math.max(o.blind || 0, .9); if (o.me) S.flash = .55; } });   /* abgeschwächt 10.10. (vorher 1,3 s, Umkreis 280) */ noise(.5, .12, 300); }
     if (it.k === 'wheel') { k.boost = Math.max(k.boost, 2.3); k.inv = 2.3; SFX.turbo(); }
     if (it.k === 'golf') { const ld = S.karts.filter(o => o !== k && !o.done).sort((a, b) => progress(b) - progress(a))[0];
       S.coatis.push({i: k.idx + 6, l: k.lat, tgt: ld || null, t: 7, by: k, x: k.x, y: k.y, ball: 1, golf: 1}); floatTxt(k, '⛳ FORE!', '#9dffb4'); real('kick', .5) || beep(520, .08, 'triangle', .08, 900); }
@@ -1791,7 +1791,7 @@
     // Spezial-Items der Zusatz-Fahrer
     const nearK = (r, f) => S.karts.filter(o => o !== k && !o.done && o.inv <= 0 && Math.hypot(o.x - k.x, o.y - k.y) < r && (!f || f(o)));
     const shielded = o => { if (o.shield > 0) { o.shield = 0; floatTxt(o, '⛱️ geblockt'); return true; } return false; };
-    if (it.k === 'kiss') { nearK(320).forEach(o => { if (shielded(o)) return; o.kiss = 1.8; o.say = pick(['Verknallt!', 'Ich bin verliebt …', 'Was für ein Kuss!']); o.sayT = 1.3; }); floatTxt(k, '💋 Muah!', '#ff5fa2'); beep(1300, .12, 'sine', .06, 700); }
+    if (it.k === 'kiss') { nearK(280).forEach(o => { if (shielded(o)) return; o.kiss = 1.1;   /* abgeschwächt 10.10. (vorher 1,8 s, Umkreis 320) */ o.say = pick(['Verknallt!', 'Ich bin verliebt …', 'Was für ein Kuss!']); o.sayT = 1.3; }); floatTxt(k, '💋 Muah!', '#ff5fa2'); beep(1300, .12, 'sine', .06, 700); }
     if (it.k === 'burp') { nearK(220).forEach(o => { if (shielded(o)) return; const dx = o.x - k.x, dy = o.y - k.y, d = Math.hypot(dx, dy) || 1, pu = 46 * (1 - d / 260) + 10; if (o.remote) { if (S.live && o.aiIdx === undefined) liveEmit({t: 'bump', race: S.live.id, to: o.peer, nx: -dx / d, ny: -dy / d, p: 12}); } else { o.x += dx / d * pu; o.y += dy / d * pu; o.vr += (dx / d * -Math.sin(o.a) + dy / d * Math.cos(o.a)) * pu * 4; } o.slowT = .9; o.slowE = '🤢'; o.say = 'Was hast du gegessen?!'; o.sayT = 1.2; });
       if (k.me || Math.hypot(k.x - S.karts[0].x, k.y - S.karts[0].y) < 300) S.shake = Math.max(S.shake, .4); noise(.6, .2, 140); for (let j = 0; j < 16; j++) { const an = j / 16 * TAU; S.fx.push({x: k.x + Math.cos(an) * 30, y: k.y + Math.sin(an) * 30, dust: 1, t: 0, c: '150,200,90'}); } }
     if (it.k === 'stink') { const [x, y] = [k.x - Math.cos(k.a) * 50, k.y - Math.sin(k.a) * 50]; S.oils.push({x, y, t: 9, by: k, stink: 1}); noise(.7, .12, 90); }
@@ -1928,9 +1928,9 @@
       if (k.peg > 0 && !k.done) target = clamp(target + Math.sin(S.t * 2.3 + k.idx * .01) * k.peg * .45, -1, 1);   // Pegel vom Vorabend
       if (k.bus > 0) { const [tx, ty] = at(k.idx + Math.round(20 + k.v / 12), 0); target = clamp(angd(Math.atan2(ty - k.y, tx - k.x), k.a) * 2.4, -1, 1); }   // Ônibus-Express: Autopilot auf der Mitte
       else if (k.acai > 0 && !k.me) target = clamp(target + Math.sin(S.t * 9 + k.idx) * .5, -1, 1);   // Gegner mit Açaí im Gesicht eiern
-      if (k.blind > 0) target = clamp(target + Math.sin(S.t * 13) * .8, -1, 1);
+      if (k.blind > 0) target = clamp(target + Math.sin(S.t * 13) * .65, -1, 1);
       if (k.parrot > 0) { k.parrot -= dt; target = clamp(target * .8 + Math.sin(S.t * 6) * .45, -1, 1); }
-      if (k.kiss > 0) { k.kiss -= dt; target = k.me ? -target * .9 + Math.sin(S.t * 4) * .2 : clamp(target * .5 + Math.sin(S.t * 5 + k.idx) * .7, -1, 1); }
+      if (k.kiss > 0) { k.kiss -= dt; const kf = clamp(k.kiss / .4, 0, 1), kt = k.me ? -target * .85 + Math.sin(S.t * 4) * .2 : clamp(target * .5 + Math.sin(S.t * 5 + k.idx) * .6, -1, 1); target = target + (kt - target) * kf; }   /* in den letzten 0,4 s kommt die Lenkung schrittweise zurück */
       if (k.shield > 0) k.shield -= dt;
       if (k.fire > 0) { k.fire -= dt; S.karts.forEach(o => { if (o !== k && !o.air && Math.hypot(o.x - (k.x - Math.cos(k.a) * 40), o.y - (k.y - Math.sin(k.a) * 40)) < 26) hitBy(o, 'fire', k); }); if (Math.random() < dt * 30) S.sp.push({x: k.x - Math.cos(k.a) * 26, y: k.y - Math.sin(k.a) * 26, vx: -Math.cos(k.a) * 120 + rnd(-40, 40), vy: -Math.sin(k.a) * 120 + rnd(-40, 40), t: 0, c: pick(['#ff5a1f', '#ffb21f', '#ff2a2a']), big: 1}); }
       if (k.air > 0) target *= .25;
