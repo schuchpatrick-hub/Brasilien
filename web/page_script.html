@@ -9578,7 +9578,7 @@ setGroup(G);
   }
   // HUD-Flächen (Tacho unten links, ITEM-Knopf) in Bildschirm-Koordinaten: schwebende Texte und Sprechblasen weichen nach oben aus
   let HUDR = null, HUDT = 0, ITSEE = false;
-  function hudRects() { const now = performance.now(); if (HUDR && now - HUDT < 800 && HUDR.w === W && HUDR.h === H) return HUDR; HUDT = now; HUDR = [[8, H - 196, 102, H - 104]]; HUDR.w = W; HUDR.h = H; HUDR.it = null;
+  function hudRects() { const now = performance.now(); if (HUDR && now - HUDT < 800 && HUDR.w === W && HUDR.h === H) return HUDR; HUDT = now; HUDR = [[8, H - 196, 102, H - 104]].concat(RKR ? [RKR.slice()] : []); HUDR.w = W; HUDR.h = H; HUDR.it = null;
     const b = itemBtn.getBoundingClientRect(), c = box.getBoundingClientRect(); if (b.width) { HUDR.it = [b.left - c.left, b.top - c.top, b.right - c.left, b.bottom - c.top]; HUDR.push([HUDR.it[0] - 6, HUDR.it[1] - 6, HUDR.it[2] + 6, HUDR.it[3] + 6]); } return HUDR; }
   let LBL = [];   // in diesem Bild schon gesetzte Texte/Sprechblasen (weichen sich gegenseitig aus)
   const dodge = (x, y, w, h) => { const obs = hudRects().concat(LBL); for (let n = 0; n < 8; n++) { let mv = false; obs.forEach(r => { if (x + w / 2 > r[0] && x - w / 2 < r[2] && y + h / 2 > r[1] && y - h / 2 < r[3]) { y = r[1] - h / 2 - 4; mv = true; } }); if (!mv) break; } LBL.push([x - w / 2, y - h / 2, x + w / 2, y + h / 2]); return y; };
@@ -9590,6 +9590,22 @@ setGroup(G);
   function bubble(x, y, t, a) { ctx.save(); ctx.globalAlpha = a; ctx.font = '700 14px system-ui,sans-serif'; const w = ctx.measureText(t).width + 16; x = clamp(x, w / 2 + 6, W - w / 2 - 6); y = dodge(x, y - 17, w, 28) + 17;
     ctx.fillStyle = '#fff'; ctx.strokeStyle = '#222'; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - w / 2, y - 30, w, 26, 12) : ctx.rect(x - w / 2, y - 30, w, 26); ctx.fill(); ctx.stroke();
     ctx.fillStyle = '#222'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t, x, y - 17); ctx.restore(); }
+  // Platzierungsleiste (Wunsch Patrick 10.10.: immer sehen, wer auf welchem Platz ist und wann jemand überholt): links unter der Minikarte (Querformat daneben),
+  // je Fahrer Platz + Kopf, eigener Platz gelb, Plätze gleiten beim Überholen weich an die neue Stelle, kurz ▲ grün / ▼ rot; live mit 🤖/📴/📶, im Ziel 🏁
+  let RKR = null;
+  function standings(mh) { if (S.tut || S.pose || S.karts.length < 2) { RKR = null; return; } const n = S.karts.length, now = performance.now(), land = W > H, rh = land ? 22 : 29, hs = land ? 18 : 24, x0 = land ? 12 + 92 + 14 : 8, y0 = land ? 58 : 12 + 50 + mh + 8 + 51 + 10, w = hs + 34;
+    const ord = S.karts.slice().sort((a, b) => place(a) - place(b)), R = S.rk || (S.rk = {}), dt0 = Math.min(.1, (now - (R.t || now)) / 1000); R.t = now;
+    ctx.save(); ctx.textBaseline = 'middle';
+    ord.forEach((o, r) => { const i = S.karts.indexOf(o), q = R[i] || (R[i] = {y: r, r, at: 0, d: 0}); if (q.r !== r) { q.d = q.r - r; q.at = now; q.r = r; } q.y += (r - q.y) * Math.min(1, dt0 * 9); });   // Wechsel merken, Position weich nachziehen
+    ord.slice().sort((a, b) => (a.me ? 1 : 0) - (b.me ? 1 : 0)).forEach(o => { const i = S.karts.indexOf(o), q = R[i], y = y0 + q.y * rh, fl = now - q.at < 1100 && S.t > 1 ? 1 - (now - q.at) / 1100 : 0, up = q.d > 0;
+      ctx.globalAlpha = o.out ? .45 : 1; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y, w, rh - 3, (rh - 3) / 2) : ctx.rect(x0, y, w, rh - 3);
+      ctx.fillStyle = o.me ? (fl > .35 ? (up ? '#3fd47a' : '#ff5a5a') : 'rgba(255,210,63,.95)') : 'rgba(0,0,0,.45)'; ctx.fill();   // nur die eigene Reihe färbt sich (grün = überholt, rot = überholt worden), bei den anderen nur Pfeile
+      if (o.me) { ctx.strokeStyle = fl ? (up ? '#2ecc71' : '#ff4a4a') : 'rgba(255,255,255,.9)'; ctx.lineWidth = fl ? 2.5 : 1.5; ctx.stroke(); }
+      ctx.textAlign = 'center'; ctx.font = 'italic 900 ' + (land ? 11 : 13) + 'px system-ui,sans-serif'; ctx.fillStyle = o.me ? '#1a1a1a' : q.r === 0 ? '#ffd23f' : '#fff'; ctx.fillText(String(q.r + 1), x0 + 10, y + (rh - 3) / 2 + 1);
+      const hd = HEAD[o.id]; if (hd) ctx.drawImage(hd, x0 + 20, y + (rh - 3 - hs) / 2, hs, hs); else { ctx.fillStyle = (LOOK[o.id] || {}).shirt || '#888'; ctx.beginPath(); ctx.arc(x0 + 20 + hs / 2, y + (rh - 3) / 2, hs / 2, 0, TAU); ctx.fill(); }
+      const tag = o.done ? '🏁' : o.out ? '📴' : o.lagging ? '📶' : o.aiIdx !== undefined && S.live ? '🤖' : ''; if (tag) { ctx.font = (land ? 9 : 11) + 'px system-ui,sans-serif'; ctx.fillText(tag, x0 + w - 7, y + (rh - 3) / 2 + 1); }
+      if (fl) { ctx.globalAlpha = Math.min(1, fl * 2); ctx.font = '900 ' + (land ? 12 : 14) + 'px system-ui,sans-serif'; ctx.fillStyle = up ? '#4cff8a' : '#ff6b6b'; ctx.fillText(up ? '▲' : '▼', x0 + w + 9, y + (rh - 3) / 2 + 1); } });
+    ctx.restore(); ctx.globalAlpha = 1; RKR = [x0, y0, x0 + w + 18, y0 + n * rh]; }
   function hud() {
     if (S.intro) { introHud(); return; }
     if (S.grid) { gridHud(); return; }
@@ -9597,8 +9613,6 @@ setGroup(G);
     ctx.save(); ctx.textBaseline = 'top'; ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 6;
     ctx.fillStyle = pl === 1 ? '#ffd23f' : '#fff'; ctx.font = '900 44px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText(pl + '.', W / 2, top + 30);
     ctx.font = '700 14px system-ui,sans-serif'; ctx.fillStyle = '#fff'; ctx.fillText('Runde ' + clamp(k.lap + 1, 1, LAPS) + '/' + LAPS + ' · ' + fmt(Math.max(0, (k.done || S.t)) * 1000), W / 2, top + 78, W - 236);   // schmale Handys: nicht in Minikarte/Item-Fenster
-    if (S.live) { const ord = S.karts.slice().sort((a, b) => place(a) - place(b)); ctx.save(); ctx.textAlign = 'right'; ctx.font = '700 12px system-ui,sans-serif'; ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 4;
-      ord.forEach((o, i) => { const y = top + 150 + i * 17; if (o.out) ctx.globalAlpha = .45; ctx.fillStyle = o.me ? '#ffd23f' : o.aiIdx !== undefined ? 'rgba(255,255,255,.7)' : '#9ff0b4'; ctx.fillText((i + 1) + '. ' + (o.me ? 'Du' : NAME(o.who || o.id)) + (o.aiIdx !== undefined ? ' 🤖' : '') + (o.out ? ' 📴' : o.lagging ? ' 📶' : '') + (o.done ? ' 🏁' : ''), W - 14, y); ctx.globalAlpha = 1; }); ctx.restore(); }
     if (S.live && LIVE.gp) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fillText('🏆 Live-Pokal · Rennen ' + (LIVE.gp.i + 1) + '/' + LIVE.gp.list.length + ' · ' + T.e + ' ' + T.name, W / 2, top + 98, W - 236); }
     else if (CUP) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.85)'; ctx.fillText(CUP.e + ' ' + CUP.n + ' · Rennen ' + (CUP.i + 1) + '/' + CUP.list.length + ' · ' + T.e + ' ' + T.name, W / 2, top + 98, W - 236); }
     else if (S.ghost) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.9)'; ctx.fillText('👻 Geist: ' + NAME(S.ghost.who) + ' · ' + fmt(S.ghost.ms), W / 2, top + 98, W - 236); }
@@ -9669,6 +9683,7 @@ setGroup(G);
       ctx.font = '700 11px system-ui,sans-serif'; ctx.textBaseline = 'top'; if (rows.length) { ctx.fillStyle = 'rgba(0,0,0,.42)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(8, top + 50 + mh + 8, mw + 8, rows.length * 15 + 6, 7) : ctx.rect(8, top + 50 + mh + 8, mw + 8, rows.length * 15 + 6); ctx.fill(); }
       ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 4;
       rows.forEach((r, i) => { const y = top + 50 + mh + 12 + i * 15; ctx.textAlign = 'left'; ctx.fillStyle = '#fff'; let t0 = r[0]; while (t0.length > 4 && ctx.measureText(t0).width > 64) t0 = t0.slice(0, -2) + '…'; ctx.fillText(t0, 10, y); ctx.textAlign = 'right'; ctx.fillStyle = r[2]; ctx.fillText(r[1], 108, y); }); ctx.shadowBlur = 0; ctx.textAlign = 'center'; }
+    standings(mh);
     if (S.live && S.liveWait > 0) { ctx.font = '800 16px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = '#fff'; ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 6; ctx.fillText('⏳ Warte auf die anderen … ' + Math.ceil(30 - S.liveWait) + ' s', W / 2, H * .25); ctx.shadowBlur = 0; }
     // Fahrschule: Aufgabe oben einblenden
     if (S.tut) { const st = TUT[Math.min(S.tut.i, TUT.length - 1)], fresh = performance.now() - S.tut.ok < 900; ctx.save(); const bw = Math.min(W - 24, 420), bx = (W - bw) / 2, by = H - (W > H ? 180 : 250);
