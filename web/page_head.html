@@ -1749,6 +1749,30 @@ html.kart-on .fab,html.kart-on #net{display:none!important}
 @keyframes kgRing{0%,10%{width:0;height:0;opacity:1}55%{width:110px;height:110px;opacity:0}100%{opacity:0}}
 @keyframes kgShake{0%,25%{transform:rotate(0)}30%{transform:rotate(-15deg)}35%{transform:rotate(15deg)}40%{transform:rotate(-15deg)}45%{transform:rotate(15deg)}50%,100%{transform:rotate(0)}}
 @keyframes kgBlock{0%,10%{opacity:0;transform:translateX(0)}12%{opacity:1}38%{opacity:1;transform:translateX(56px) rotate(400deg)}55%{opacity:0;transform:translateX(18px) translateY(-14px) rotate(-200deg)}100%{opacity:0}}
+.kg-ghost .kg-k{animation:kgGhost 3s linear infinite}.kg-ghost .kg-t{left:58px}.kg-ghost .kg-p{left:62px;top:4px;animation:kgSteal 3s linear infinite}
+.kg-rew .kg-t{left:48px;animation:kgRew 3s linear infinite}.kg-rew .kg-x{left:74px;top:0;font-size:15px;opacity:0;animation:kgBlink 3s linear infinite}
+.kg-swap .kg-k{left:16px;animation:kgSwA 3s linear infinite}.kg-swap .kg-t{left:80px;animation:kgSwB 3s linear infinite}.kg-swap .kg-x{left:14px;top:2px;font-size:15px;opacity:0;animation:kgBlink2 3s linear infinite}.kg-swap .kg-x2{left:84px}
+.kg-fake .kg-k{animation:kgPass 3s linear infinite}.kg-fake .kg-p{left:46px;animation:kgLay 3s linear infinite}.kg-fake .kg-t{left:-24px;animation:kgVictim 3s linear infinite}.kg-fake .kg-x{left:42px;top:0;font-size:24px;opacity:0;animation:kgPop 3s linear infinite}
+.kg-tow .kg-k{animation:kgTow 3s ease-in infinite}.kg-tow .kg-k b{opacity:0;animation:kgTowF 3s linear infinite}.kg-tow .kg-t{left:72px;animation:kgYank 3s linear infinite}.kg-rope{left:30px!important;top:23px!important;height:0;border-top:3px solid #c08a4a;width:0;animation:kgRope 3s ease-in infinite}
+.kg-slot .kg-k{animation:kgSlotRun 3s ease-in infinite}.kg-slot .kg-k b{opacity:0;animation:kgTowF 3s linear infinite}.kg-sl{left:10px!important;top:1px!important;font-size:9px!important;background:#2b0c3a;border:1px solid #ffd23f;border-radius:4px;padding:0 1px;animation:kgSlotBox 3s linear infinite}
+.kg-sl b{display:inline-block;font-weight:400}.kg-sl b:nth-child(1){animation:kgR1 3s linear infinite}.kg-sl b:nth-child(2){animation:kgR2 3s linear infinite}.kg-sl b:nth-child(3){animation:kgR3 3s linear infinite}
+@keyframes kgGhost{0%{transform:translateX(0);opacity:1}18%{opacity:.25}70%{transform:translateX(92px);opacity:.25}82%{transform:translateX(92px);opacity:1}100%{transform:translateX(92px);opacity:0}}
+@keyframes kgSteal{0%,30%{opacity:0;transform:translate(0,0)}36%{opacity:1;transform:translate(0,-8px)}70%{opacity:1;transform:translate(36px,-8px)}76%,100%{opacity:0;transform:translate(36px,-8px)}}
+@keyframes kgRew{0%{transform:translateX(0)}45%{transform:translateX(46px);filter:none}50%{transform:translateX(46px);filter:hue-rotate(180deg) saturate(3)}58%{transform:translateX(4px);filter:hue-rotate(180deg) saturate(3)}62%{filter:none}100%{transform:translateX(46px)}}
+@keyframes kgBlink{0%,45%{opacity:0}48%,60%{opacity:1}63%,100%{opacity:0}}
+@keyframes kgSwA{0%,45%{transform:translateX(0)}50%,100%{transform:translateX(64px)}}
+@keyframes kgSwB{0%,45%{transform:translateX(0)}50%,100%{transform:translateX(-64px)}}
+@keyframes kgBlink2{0%,44%{opacity:0}48%{opacity:1;transform:scale(1.4)}60%,100%{opacity:0}}
+@keyframes kgPop{0%,57%{opacity:0;transform:translateY(0) scale(.4)}61%{opacity:1;transform:translateY(-10px) scale(1.3)}80%{opacity:1;transform:translateY(-12px) scale(1.1)}86%,100%{opacity:0}}
+@keyframes kgTow{0%,14%{transform:translateX(0)}58%{transform:translateX(42px)}75%,92%{transform:translateX(96px)}93%,100%{transform:translateX(96px);opacity:0}}
+@keyframes kgTowF{0%,58%{opacity:0}60%,75%{opacity:1}77%,100%{opacity:0}}
+@keyframes kgYank{0%,57%{transform:translateX(0)}62%{transform:translateX(-10px) rotate(-12deg)}75%,100%{transform:translateX(-10px)}}
+@keyframes kgRope{0%,6%{width:0;left:30px;opacity:1}14%{width:42px;left:30px;opacity:1}58%{width:0;left:72px;opacity:1}59%,100%{opacity:0}}
+@keyframes kgSlotRun{0%,55%{transform:translateX(0)}90%{transform:translateX(88px)}91%,100%{transform:translateX(88px);opacity:0}}
+@keyframes kgSlotBox{0%,62%{opacity:1}68%,100%{opacity:0}}
+@keyframes kgR1{0%,24%{filter:blur(1.5px);transform:translateY(-2px)}25%,100%{filter:none;transform:none}}
+@keyframes kgR2{0%,36%{filter:blur(1.5px);transform:translateY(2px)}37%,100%{filter:none;transform:none}}
+@keyframes kgR3{0%,48%{filter:blur(1.5px);transform:translateY(-2px)}49%,100%{filter:none;transform:none}}
 .kg-cb{display:grid;gap:4px}.kg-cb div{display:grid;background:rgba(255,255,255,.05);border-radius:9px;padding:5px 8px}.kg-cb b{font-size:.76rem;color:#fff}.kg-cb small{font-size:.68rem;color:#9fb6cc}
 @media (prefers-reduced-motion:reduce){.kg-st *{animation:none!important}.kg-st .kg-p{opacity:1}}.kart .kr-ach span.on{background:rgba(255,210,63,.16);color:#fff}
 .kart .btn{border-radius:14px;font-weight:800}
