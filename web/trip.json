@@ -10252,6 +10252,8 @@
     ]
   },
   "news": [
+    {"id": "n251010pl", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "📊", "t": "Gringo Kart: Platzierung flackert nicht mehr bei Kopf-an-Kopf-Rennen, der Rennbericht zählt Überholmanöver jetzt richtig, Bestenliste nach Kurz- und Langstrecken getrennt"},
+    {"id": "n251010dr", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🌀", "t": "Gringo Kart: Drift lässt sich jetzt auch durch Gegenlenken beenden (Gegenseite kurz halten) – kein ungewolltes Weiterrutschen in die Bande mehr"},
     {"id": "n251010lz", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "⚡", "t": "Gringo Kart: Langstrecken laden deutlich schneller – Auswahl im Menü reagiert sofort, und beim Start (Auslosung der Plätze) hängt nichts mehr"},
     {"id": "n251010ls", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🛣️", "t": "Gringo Kart: 4 Langstrecken! Je Runde doppelt so lang wie die bisherigen (jetzt „Kurzstrecken“): Serra do Mar (São Paulo → Guarujá über die Imigrantes), Rio Grande Tour (Copacabana, Lagoa, Corcovado, Maracanã), Cataratas (Grenzbrücke, Holzsteg an der Garganta do Diabo) und Costa Verde (Paraty, Serra, Fähre nach Ilha Grande, Lopes Mendes). Dazu der Langstrecken-Pokal; der Zufallsknopf lost aus allen 18 Strecken"},
     {"id": "n251010ks", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "💋", "t": "Gringo Kart: Luftkuss von Simon verliebt (und Dona Rosa) und Simons Sonnenbrand-Blitz abgeschwächt – man kann schneller wieder normal lenken"},
