@@ -1352,8 +1352,8 @@
     const tab = Object.keys(pts).sort((a, b) => pts[b] - pts[a] || (cnt[b] || 0) - (cnt[a] || 0)), med = i => ['🥇', '🥈', '🥉'][i] || (i + 1) + '.';
     // Gesamtwertung über alle Strecken (Wunsch Patrick 09.10.: „gesamthafte Bestenliste“): Punkte je Strecke nach Platz in der Bestenliste
     const ges = tab.length ? '<p class="kr-lbl">🏆 Gesamtwertung · alle Strecken' + (RV !== 150 ? ' · ' + CCN[RV] : '') + '</p><ol class="kr-gw">' + tab.map((w, i) => '<li' + (w === PME() ? ' class="me"' : '') + '><i>' + med(i) + '</i><b>' + esc(NAME(w)) + '</b><span>' + (cnt[w] ? '👑 ' + cnt[w] + ' · ' : '') + nT[w] + '/' + TRACKS.length + ' Strecken</span><em>' + pts[w] + ' P</em></li>').join('') + '</ol><p class="kr-rkx">Punkte je Strecke nach Platz: 10 · 8 · 6 · 5 · 4 · 3 · 2 · 1 · 👑 = Bestzeiten</p>' : '<p class="kr-rk">Noch keine Bestzeit, die Strecken warten!</p>';
-    return ccTabs + ges + '<p class="kr-lbl">⏱ Alle Strecken <small>(antippen = alle Zeiten)</small></p><p class="kr-rkx">⏱ schnellstes ganzes Rennen · 🔁 deine schnellste Runde</p><ul class="kr-recl">' + rows.map(r => { const top = r.list[0], op = RECOPEN === r.tr.id;
-      return '<li><button type="button" class="kr-rec' + (op ? ' on' : '') + '" data-t="' + r.tr.id + '" aria-expanded="' + op + '"><i>' + r.tr.e + '</i><b>' + esc(r.tr.name) + '</b>' +
+    return ccTabs + ges + '<p class="kr-lbl">⏱ Alle Strecken <small>(antippen = alle Zeiten)</small></p><p class="kr-rkx">⏱ schnellstes ganzes Rennen · 🔁 deine schnellste Runde</p><ul class="kr-recl">' + rows.map((r, ri) => { const top = r.list[0], op = RECOPEN === r.tr.id;
+      return (r.tr.long && !(rows[ri - 1] || {tr: {}}).tr.long ? '<li class="kr-rech">🛣️ Langstrecken</li>' : ri === 0 ? '<li class="kr-rech">🏁 Kurzstrecken</li>' : '') + '<li><button type="button" class="kr-rec' + (op ? ' on' : '') + '" data-t="' + r.tr.id + '" aria-expanded="' + op + '"><i>' + r.tr.e + '</i><b>' + esc(r.tr.name) + '</b>' +
         (top ? '<span' + (top.who === PME() ? ' class="me"' : '') + '>' + esc(NAME(top.who)) + '</span><em>' + fmt(top.ms) + '</em>' : '<span class="no">frei</span><em>–</em>') + ((l0 => '<small>' + (l0 ? '🔁 ' + fmt(l0) : '') + '</small>')(+store.get('kartLap.' + tkey(r.tr.id, RV)) || 0)) + '</button>' +
         (op ? '<div class="kr-recx">' + (r.list.length ? '<ol>' + r.list.map((v, i) => '<li' + (v.who === PME() ? ' class="me"' : '') + '><span>' + med(i) + ' ' + esc(NAME(v.who)) + '<small>' + esc(byline(v)) + '</small></span><i>' + fmt(v.ms) + (i ? '<u>+' + ((v.ms - top.ms) / 1000).toFixed(2) + ' s</u>' : '') + '</i></li>').join('') + '</ol>' : '<p class="kr-rkx">Noch keine Zeit. Sei der Erste!</p>') +
           '<button type="button" class="kr-recgo" data-t="' + r.tr.id + '" data-rcc="' + RV + '">▶ ' + esc(r.tr.name) + ' fahren' + (RV !== 150 ? ' · ' + CCN[RV] : '') + (top ? ' (mit Geist der Bestzeit)' : '') + '</button></div>' : '') + '</li>'; }).join('') + '</ul>'; }
@@ -1811,6 +1811,13 @@
   const gateShut = g => ((S.t + g.ph) % g.period) < g.closed;
   function progress(k) { return k.lap * N + k.idx; }
   function place(k) { return S.karts.filter(o => o !== k && (o.done ? (!k.done || o.done < k.done) : !k.done && progress(o) > progress(k))).length + 1; }
+  // Beruhigte Reihenfolge (Gesamtprüfung 3, 10.10.): fahren zwei Seite an Seite, wechselt place() jedes Bild hin und her (live noch mehr durch das Vorausrechnen); ein Wechsel gilt erst nach 0,45 s (Zieleinlauf sofort).
+  // Vorher zählte der Rennbericht z. B. 44 „Überholmanöver“ in einem Live-Rennen, die Platzierungsleiste flackerte und es gab Überhol-Sprüche im Sekundentakt.
+  function sorder() { const raw = S.karts.slice().sort((a, b) => place(a) - place(b)), key = raw.map(k => S.karts.indexOf(k) + (k.done ? 'd' : '')).join(',');
+    if (!S.sord || S.t <= 0) { S.sord = raw; S.sordK = S.sordC = key; S.sordAt = S.t; return; }
+    if (key !== S.sordC) { S.sordC = key; S.sordAt = S.t; }
+    if (key !== S.sordK && (S.t - S.sordAt >= .45 || (key.match(/d/g) || []).length !== (S.sordK.match(/d/g) || []).length)) { S.sord = raw; S.sordK = key; } }
+  const placeS = k => S.sord ? S.sord.indexOf(k) + 1 || place(k) : place(k);
   function floatTxt(k, t, c) { S.fx.push({x: k.x, y: k.y, txt: t, col: c || '#ffd23f', t: 0}); }
   const HITSAY = {jogger: 'Jogger umgenietet! Sorry!', bike: 'Radfahrer! Wieso hier?!', skate: 'Skateboard unterm Kart!', car: 'Stau! Hupe kaputt?!', van: 'Lieferwagen im Weg!', stall: 'Melone im Gesicht!', uru: 'Vom Urubu gepickt!', squash: 'Plattgefahren wie ein Pfannkuchen!', banana: 'Auf der Bananenschale ausgerutscht!', bang: 'Böller! Meine Ohren!', trolley: 'Vom Servierwagen überrollt!', puke: 'Igitt, Kotze!', parade: 'In den Sambazug gekracht!', coco: 'Kokosnuss auf die Birne!', tug: 'Vom Gepäckwagen erwischt!', fork: 'Gabelstapler!', bus: 'Der Bus! Der Bus!', soccer: 'Ball an den Kopf!', crate: 'Container!', flip: 'Flip-Flop ins Gesicht!', fire: 'Heiß, heiß, heiß!', tram: 'Von der Straßenbahn erwischt!', moto: 'Motoboy!!', monkey: 'Der Affe hat mein Item geklaut!', cone: 'Baustelle!', champ: 'Sekt verschüttet!', gate: 'Schranke zu!', ball: 'Fernschuss ins Gesicht!', beer: 'Alles voller Schaum!', coati: 'Dieser Nasenbär!!', vendor: 'Ich wollte nur einen Caipi!', corn: 'Mein Mais!', caiman: 'Der Kaiman hat mich gebissen!', horse: 'Pferd hat Vorfahrt?!', dog: 'Guter Hund … AUA!', log: 'Baumstamm!', umbrella: 'Sonnenschirm-Treffer!', suitcase: 'Wessen Koffer ist das?!'};
   // Takedown (Burnout-Stil, Wunsch Patrick: mehr Spaß, schwarzer Humor): eigener Treffer mit Item = große Einblendung, Münze, Serien (Doppel/Dreifach)
@@ -1999,7 +2006,7 @@
     if (DECK) add(DECK.i0 + 20, '🛣️', 'Hochstraße über die Kreuzung');
     if (T.wave) { const cx = (T.wave.x0 + T.wave.x1) / 2; add(nearest(cx, shore(cx) - 90, -1)[0] - 20, '🌊', 'Hier schwappt die Welle über die Straße'); }
     if (S.dolphins.length) add(S.dolphins[0].i - 10, '🐬', 'Delfine: durchfahren = Turbo');
-    const MVN = {vendor: 'Caipi-Verkäufer läuft quer', corn: 'Maisverkäufer auf der Strecke', coati: 'Nasenbären! Nicht anfahren', caiman: 'Kaimane im Fluss', horse: 'Pferdekutsche hat Vorfahrt', dog: 'Streunende Hunde', tram: 'Straßenbahn kreuzt', moto: 'Motoboys drängeln', monkey: 'Affen klauen dein Item!', tug: 'Gepäckschlepper', fork: 'Gabelstapler', bus: 'Bus auf der Brücke', soccer: 'Fußball fliegt quer'}, mvs = {};
+    const MVN = {vendor: 'Caipi-Verkäufer läuft quer', corn: 'Maisverkäufer auf der Strecke', coati: 'Nasenbären! Nicht anfahren', caiman: 'Kaimane im Fluss', horse: 'Pferdekutsche hat Vorfahrt', dog: 'Streunende Hunde', tram: 'Straßenbahn kreuzt', moto: 'Motoboys drängeln', monkey: 'Affen klauen dein Item!', tug: 'Gepäckschlepper', fork: 'Gabelstapler', bus: T.id === 'bridge' ? 'Bus auf der Brücke' : 'Bus kreuzt die Straße', soccer: 'Fußball fliegt quer', jogger: 'Jogger auf der Strecke', bike: 'Radfahrer queren', skate: 'Skater queren'}, mvs = {};
     S.movers.forEach(m => { if (mvs[m.kind] || !MVN[m.kind]) return; mvs[m.kind] = 1; add(m.i - 12, MVE[m.kind] || '⚠️', MVN[m.kind]); });
     if (T.wind) add(i0 + N * .03, '💨', 'Seitenwind-Böen: gegenlenken!'); if (T.rain) add(i0 + N * .02, '🌧️', 'Regen: rutschig, früh bremsen'); if (T.fog) add(i0 + N * .02, '🌫️', 'Nebel: Kurven kommen plötzlich');
     mk.sort((a, b) => a.u - b.u); const out = []; mk.forEach(m => { if (!out.length || m.u - out[out.length - 1].u > .045) out.push(m); });   // zu dicht beieinander: nur der erste
@@ -2071,7 +2078,7 @@
         k.inp = SET.ctl === 'analog' && INPUT.ax !== null ? Math.abs(INPUT.ax) > .12 : !!(kb || INPUT.L || INPUT.R);   // irgendein Finger/irgendeine Taste am Lenken
         // Drift sofort: Doppeltipp auf eine Seite (Halten) oder Drift-Knopf (Analog)
         if (!k.dr && k.v > 150 * CCV && !k.air && k.spin <= 0 && !k.done) { const dt0 = INPUT.dtap && performance.now() - INPUT.dtap.t < 380;
-          if ((INPUT.drift && Math.abs(target) > .25) || dt0) { k.dr = INPUT.drift ? Math.sign(target) : INPUT.dtap.s; k.dt = 0; k.drIn = 0; k.drRel = 0; k.drS = 0; k.manual = INPUT.drift ? 'btn' : 'tap'; INPUT.dtap = null; SFX.drift(); vib(10); } } }
+          if ((INPUT.drift && Math.abs(target) > .25) || dt0) { k.dr = INPUT.drift ? Math.sign(target) : INPUT.dtap.s; k.dt = 0; k.drIn = 0; k.drRel = 0; k.drOpp = 0; k.drS = 0; k.manual = INPUT.drift ? 'btn' : 'tap'; INPUT.dtap = null; SFX.drift(); vib(10); } } }
       else { k.laneT -= dt; if (k.laneT < 0) { k.laneT = rnd(1.5, 4); k.lane = rnd(-TW * .25, TW * .25); }
         const la = 14 + k.v / 30; let lane = k.lane, haz = null, hd = 170 + k.v * .25;   // je schneller, desto früher ausweichen (vorher fest 170 px: Koffer & Co. wurden oft mitgenommen)
         S.obst.concat(S.oils, S.puddles).forEach(o => { if (o.drop !== undefined && S.t - o.drop < .7) return; const dx = o.x - k.x, dy = o.y - k.y, d = Math.hypot(dx, dy); if (d < hd && dx * Math.cos(k.a) + dy * Math.sin(k.a) > 0) { hd = d; haz = o; } });
@@ -2103,12 +2110,16 @@
       // erst ganz loslassen (0,13 s ohne Lenken) zündet den Turbo. Einschlag baut sich über 0,3 s auf statt sofort.
       const sgn = Math.sign(target);
       k.hold = sgn && Math.abs(k.steer) > .7 ? (Math.sign(k.steer) === sgn ? k.hold + dt : 0) : 0;
-      if (!k.dr && k.hold > .38 && k.v > 190 * CCV && !k.air && k.spin <= 0 && !k.done && k.vtype !== 'horse' && !(k.bus > 0)) { k.dr = sgn; k.dt = 0; k.drIn = 0; k.drRel = 0; k.drS = 0; if (k.me) SFX.drift(); }
+      if (k.drCd > 0) k.drCd -= dt;   // nach einem Drift kurz kein neuer Auto-Drift (wer zum Beenden gegenlenkt, soll nicht gleich in die andere Richtung driften)
+      if (!k.dr && k.hold > .38 && !(k.drCd > 0) && k.v > 190 * CCV && !k.air && k.spin <= 0 && !k.done && k.vtype !== 'horse' && !(k.bus > 0)) { k.dr = sgn; k.dt = 0; k.drIn = 0; k.drRel = 0; k.drOpp = 0; k.drS = 0; if (k.me) SFX.drift(); }
       if (k.dr) { k.drRel = k.me && k.manual !== 'btn' && !k.inp ? (k.drRel || 0) + dt : 0;
-        const stop = k.manual === 'btn' ? !INPUT.drift : k.me ? k.drRel > .13 : sgn !== k.dr;
+        // Gegenlenken beendet den Drift (Feedback Patrick 10.10.: „manchmal kann man den Drift nicht stoppen und fährt in die Bande“): vorher endete er nur, wenn gar kein Finger mehr lag;
+        // wer mit dem Daumen direkt von links nach rechts wechselte, bekam nur einen weiteren Bogen in die alte Richtung. Kurz antippen formt den Bogen weiter, 0,25 s halten beendet ihn (mit Turbo).
+        k.drOpp = k.me && k.manual !== 'btn' && sgn === -k.dr && !(INPUT.L && INPUT.R) ? (k.drOpp || 0) + dt : 0;
+        const stop = k.manual === 'btn' ? !INPUT.drift : k.me ? k.drRel > .13 || k.drOpp > .25 : sgn !== k.dr;
         if (stop || k.spin > 0 || k.v < 120 * CCV || k.done) { k.manual = null; const lvl = k.dt > 1.5 ? 2 : k.dt > .75 ? 1 : 0;
           if (lvl && k.spin <= 0) { k.boost = Math.max(k.boost, lvl > 1 ? 1.0 : .55); k.pop = .3; if (k.me) { SFX.mini(lvl); floatTxt(k, lvl > 1 ? '🔥 Super-Turbo!' : '💨 Mini-Turbo!', lvl > 1 ? '#ff9a3c' : '#7fd3ff'); S.tutMini = 1; if (S.rep && lvl === 1) S.rep.mini++; if (lvl > 1) { S.supers++; if (Math.random() < .7) voice(k, 'drift'); else say('super', 'Super-Turbo!'); } } }
-          k.dr = 0; k.dt = 0; }
+          k.dr = 0; k.dt = 0; k.drOpp = 0; k.drCd = k.me ? .45 : 0; }
         else { k.drS = clamp(k.steer * k.dr, -1, 1); k.dt += dt * (1 + .2 * k.drS);   // eng lädt etwas schneller, weit etwas langsamer
           if (Math.random() < dt * 30) { const lvl = k.dt > 1.5 ? 2 : k.dt > .75 ? 1 : 0, bx = k.x - Math.cos(k.a) * 18, by = k.y - Math.sin(k.a) * 18;
             S.sp.push({x: bx + rnd(-8, 8), y: by + rnd(-8, 8), vx: -Math.cos(k.a) * 60 + rnd(-40, 40), vy: -Math.sin(k.a) * 60 + rnd(-40, 40), t: 0, c: ['#fff6c0', '#5ec8ff', '#ff8a2a'][lvl]}); } } }
@@ -2289,11 +2300,12 @@
       if (wv.next <= 0 && !wv.on) { wv.on = 3.2; SFX.splash(); }
       if (wv.on > 0) { wv.on -= dt; const k2 = 1 - Math.abs(wv.on - 1.6) / 1.6; wv.h = 260 * (S.waveH || 1) * Math.sqrt(clamp(k2, 0, 1)); if (wv.on <= 0) { wv.on = 0; wv.h = 0; const ev0 = S.waveEvery || T.wave.every; wv.next = ev0 ? wrnd('wave', ev0[0], ev0[1]) : wrnd('wave', 12, 18); } }
       if (wv.h > 10) ks.forEach(k => { if (ground(k) && k.x > T.wave.x0 && k.x < T.wave.x1 && k.y > shore(k.x) - wv.h) { if (!k.wet && k.me) SFX.splash(); if (!k.wet) for (let j = 0; j < 6; j++) S.sp.push({x: k.x, y: k.y, vx: rnd(-90, 90), vy: rnd(-90, 90), t: 0, c: '#bff3ff'}); k.wet = .35; } }); }
+    sorder();
     // Ansager: Führungswechsel, Überholen
-    if (S.t > 4 && !ks[0].done) { const lead = ks.slice().sort((a, b) => progress(b) - progress(a))[0];
+    if (S.t > 4 && !ks[0].done) { const lead = S.sord ? S.sord[0] : ks.slice().sort((a, b) => progress(b) - progress(a))[0];
       if (S.leader && lead !== S.leader) { if (lead === ks[0] && TRIP.kartvo && TRIP.kartvo.ann_lead && Math.random() < .5) say('ann_lead', '👑 Neuer Führender! Die anderen können ihr Testament schreiben.'); else say('lead_' + lead.id, NAME(lead.id) + ' übernimmt die Führung!'); if (lead === ks[0] && performance.now() - (S.hymnAt || -1e9) > 25000) { S.hymnAt = performance.now(); hymn(lead.id); } } S.leader = lead;
-      const pl = place(ks[0]); if (pl < S.lastPlace && S.rep) S.rep.ov += S.lastPlace - pl; if (pl < S.lastPlace && Math.random() < .85) { Math.random() < .8 ? voice(ks[0], 'over') : say('over', 'Überholt!'); }
-      else if (pl > S.lastPlace && Math.random() < .75) { const by = ks.find(o => o !== ks[0] && place(o) === pl - 1); if (by) voice(by, 'over'); }
+      const pl = placeS(ks[0]); if (pl < S.lastPlace && S.rep) S.rep.ov += S.lastPlace - pl; if (pl < S.lastPlace && Math.random() < .85) { Math.random() < .8 ? voice(ks[0], 'over') : say('over', 'Überholt!'); }
+      else if (pl > S.lastPlace && Math.random() < .75) { const by = S.sord && S.sord[pl - 2]; if (by && by !== ks[0]) voice(by, 'over'); }
       S.lastPlace = pl; }
     // Gezänk (Wunsch Patrick 09.10.: die Figuren sollen sich die ganze Zeit beschimpfen): sobald gerade niemand redet, pöbelt alle ~2–3,5 s ein Fahrer in Sichtweite
     // seinen nächsten Nachbarn an (meist der vordere den hinteren), bevorzugt rund um den Spieler und abwechselnd verschiedene Fahrer
@@ -2599,7 +2611,7 @@
   // je Fahrer Platz + Kopf, eigener Platz gelb, Plätze gleiten beim Überholen weich an die neue Stelle, kurz ▲ grün / ▼ rot; live mit 🤖/📴/📶, im Ziel 🏁
   let RKR = null;
   function standings(mh) { if (S.tut || S.pose || S.karts.length < 2) { RKR = null; return; } const n = S.karts.length, now = performance.now(), land = W > H, rh = land ? 22 : 29, hs = land ? 18 : 24, x0 = land ? 12 + 92 + 14 : 8, y0 = land ? 58 : 12 + 50 + mh + 8 + 51 + 10, w = hs + 34;
-    const ord = S.karts.slice().sort((a, b) => place(a) - place(b)), R = S.rk || (S.rk = {}), dt0 = Math.min(.1, (now - (R.t || now)) / 1000); R.t = now;
+    const ord = S.sord && S.sord.length === S.karts.length ? S.sord : S.karts.slice().sort((a, b) => place(a) - place(b)), R = S.rk || (S.rk = {}), dt0 = Math.min(.1, (now - (R.t || now)) / 1000); R.t = now;
     ctx.save(); ctx.textBaseline = 'middle';
     ord.forEach((o, r) => { const i = S.karts.indexOf(o), q = R[i] || (R[i] = {y: r, r, at: 0, d: 0}); if (q.r !== r) { q.d = q.r - r; q.at = now; q.r = r; } q.y += (r - q.y) * Math.min(1, dt0 * 9); });   // Wechsel merken, Position weich nachziehen
     ord.slice().sort((a, b) => (a.me ? 1 : 0) - (b.me ? 1 : 0)).forEach(o => { const i = S.karts.indexOf(o), q = R[i], y = y0 + q.y * rh, fl = now - q.at < 1100 && S.t > 1 ? 1 - (now - q.at) / 1100 : 0, up = q.d > 0;
@@ -2614,7 +2626,7 @@
   function hud() {
     if (S.intro) { introHud(); return; }
     if (S.grid) { gridHud(); return; }
-    const k = S.karts[0], pl = place(k), top = 12, now = performance.now();
+    const k = S.karts[0], pl = placeS(k), top = 12, now = performance.now();
     ctx.save(); ctx.textBaseline = 'top'; ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 6;
     ctx.fillStyle = pl === 1 ? '#ffd23f' : '#fff'; ctx.font = '900 44px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText(pl + '.', W / 2, top + 30);
     ctx.font = '700 14px system-ui,sans-serif'; ctx.fillStyle = '#fff'; ctx.fillText('Runde ' + clamp(k.lap + 1, 1, LAPS) + '/' + LAPS + ' · ' + fmt(Math.max(0, (k.done || S.t)) * 1000), W / 2, top + 78, W - 236);   // schmale Handys: nicht in Minikarte/Item-Fenster
@@ -2859,7 +2871,7 @@
       R.wall ? [['🧱', R.wall, 'Bandenkontakte']] : [], offP ? [['🌴', offP + ' %', 'neben der Strecke']] : [], falls ? [['🪂', falls, 'Abstürze']] : [], ww ? [['⛔', ww, 'Falschfahrten']] : [], smash ? [['💥', smash, 'Deko zerlegt']] : []);
     return '<summary><b>📊 Rennbericht</b><span>' + (foe ? '😈 ' + esc(NAME(foe[0])) + ' · ' : '') + (bl ? '⏱ ' + fmt(bl * 1000) + ' · ' : '') + Math.round(R.top) + ' km/h</span></summary><div class="kr-repb">' +
       '<div class="kr-repc">' + C.slice(0, 2).map(x => '<p>' + esc(x[1]) + '</p>').join('') + '<small>– die Rennleitung</small></div>' +
-      (foe ? '<p class="kr-foe">😈 <b>Erzfeind des Rennens:</b> ' + esc(NAME(foe[0])) + ' (' + foe[1] + '× abgeschossen)</p>' : '') + (vic ? '<p class="kr-foe kr-vic">🎯 <b>Lieblingsopfer:</b> ' + esc(NAME(vic[0])) + ' (' + vic[1] + '× erledigt)</p>' : '') +
+      (foe ? '<p class="kr-foe">😈 <b>Erzfeind des Rennens:</b> ' + esc(NAME(foe[0])) + ' (' + foe[1] + '× abgeschossen)</p>' : '') + (vic ? '<p class="kr-foe kr-vict">🎯 <b>Lieblingsopfer:</b> ' + esc(NAME(vic[0])) + ' (' + vic[1] + '× erledigt)</p>' : '') +
       '<div class="kr-rept">' + T0.map(([e0, v0, l0]) => '<div><i>' + e0 + '</i><b>' + esc(String(v0)) + '</b><small>' + esc(l0) + '</small></div>').join('') + '</div>' +
       (laps.length ? '<p class="kr-lbl">Rundenzeiten' + (R.lap0 ? ' · deine beste vorher ' + fmt(R.lap0) : '') + '</p><div class="kr-laps">' + laps.map((t0, i) => '<div' + (i === bi ? ' class="b"' : '') + '><span>R' + (i + 1) + '</span><i><u style="width:' + Math.round(clamp(100 - (t0 - bl) / bl * 400, 30, 100)) + '%"></u></i><b>' + fmt(t0 * 1000) + (i === bi ? ' ⭐' : '') + '</b></div>').join('') + '</div>' : '') + '</div>'; }
   function podEnd() { clearTimeout(podT); if (!S || !S.pod) return; S.pod = null; res.hidden = false; gpResUpd(); }
@@ -3406,7 +3418,9 @@
   addEventListener('keydown', e => { if (box.hidden) return; if (e.key === 'Escape' || e.key === 'p') { if (!pm.hidden) resume(); else if (box.classList.contains('racing')) pause(); else close(); return; } INPUT.keys[e.key] = true; if (e.key === ' ') { e.preventDefault(); if (S) useItem(S.karts[0]); } if (e.key.startsWith('Arrow')) e.preventDefault(); });
   addEventListener('keyup', e => { INPUT.keys[e.key] = false; });
   addEventListener('resize', () => { if (!box.hidden) { resize(); VIH = 0; placeVInfo(); TIH = 0; tinfoTop(menu.querySelector('.kr-tinfo')); } });
-  document.addEventListener('visibilitychange', () => { visAt = performance.now(); if (document.hidden && !box.hidden) { pause(); resKeep(); } beat(document.hidden); if (LIVE.room && !LIVE.race) livePres(); });
+  const ptrClear = () => { ptr.clear(); upd(); INPUT.drift = false; INPUT.dtap = null; Object.keys(INPUT.keys).forEach(k0 => { INPUT.keys[k0] = false; }); };   // Finger, deren Loslassen nie ankam (App-Wechsel), hängen sonst als „gedrückt“ fest
+  addEventListener('blur', ptrClear);
+  document.addEventListener('visibilitychange', () => { visAt = performance.now(); ptrClear(); if (document.hidden && !box.hidden) { pause(); resKeep(); } beat(document.hidden); if (LIVE.room && !LIVE.race) livePres(); });
   function beat(clean) { try { if (box.hidden) { localStorage.removeItem('br26.kartBeat'); return; } store.set('kartBeat', JSON.stringify({ts: Date.now(), clean: clean ? 1 : 0, trk: T ? T.id : null, mode: MODE, veh: myVeh(), drv: me, race: !!(S && box.classList.contains('racing') && res.hidden), live: !!(S && S.live), t: S && isFinite(S.t) ? Math.round(S.t) : null,
     mem: performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1e6) : null, q: SET.q, fps: PERF.n ? Math.round(PERF.n / Math.max(.01, PERF.acc)) : null, v: (typeof MODV === 'object' && MODV.kart) || ''})); } catch (e) {} }
   setInterval(() => { if (!document.hidden) beat(false); }, 4000); addEventListener('pagehide', () => beat(true));
