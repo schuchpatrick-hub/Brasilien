@@ -2238,7 +2238,7 @@
       if (k.roll > 0) { k.roll -= dt; if (k.roll <= 0) { k.item = rollItem(k); k.icntFor = null; if (k.item.cnt && k.me) floatTxt(k, k.item.e + ' ' + k.item.n + ' ×' + k.item.cnt, '#ffd23f'); k.useAt = rnd(.8, 3) * (k.pp ? k.pp.item : 1) * (k.item.orb || k.item.trail ? 2.5 : 1); if (k.me) SFX.pick(); } }
       k.squash = Math.max(0, k.squash - dt * 1.6); k.icd = Math.max(0, (k.icd || 0) - dt);
       if (k.mini > 0) { k.mini -= dt; if (k.mini <= 0) { k.vsz = k.vsz0 || 1; floatTxt(k, '👋 Wieder da!'); } }
-      if (k.sayT > 0) k.sayT -= dt; k.dol = Math.max(0, k.dol - dt); k.bump = Math.max(0, (k.bump || 0) - dt);
+      if (k.sayT > 0) k.sayT -= dt; k.dol = Math.max(0, k.dol - dt); k.bump = Math.max(0, (k.bump || 0) - dt); if (k.obT > 0) k.obT -= dt;
     });
     // Kart gegen Kart: leichter Abprall wie beim Autoscooter (Wunsch Patrick 09.10.: vorher klebten Karts aneinander, weil alle auf dieselbe Ideallinie drücken
     // und jedes Bild mit Berührung 3 % Tempo kostete; gemessen sackten zwei Karts Seite an Seite in 1 s von 250 auf 100–150 ab). Jetzt: Stoß entlang der Verbindungslinie
@@ -2264,10 +2264,17 @@
     const ground = k => !k.air && !(k.fall > 0);
     // Kisten, Hindernisse, Öl, Nasenbären
     S.boxes.forEach((b, bi) => { if (b.off > 0) { b.off = Math.max(0, b.off - dt); return; } ks.forEach(k => { if (!k.remote && !(k.fall > 0) && b.off <= 0 && !(k.boxI === b.i && S.t - k.boxAt < 1.5) && Math.hypot(k.x - b.x, k.y - b.y) < 28) { b.off = 3; k.boxI = b.i; k.boxAt = S.t;   /* nur eine Kiste pro Reihe (vorher fuhr man zwischen zwei Kisten durch und bekam beide) */ if (S.live) liveEmit({t: 'box', race: S.live.id, i: bi}); for (let j = 0; j < 8; j++) S.sp.push({x: b.x, y: b.y, vx: rnd(-120, 120), vy: rnd(-120, 120), t: 0, c: '#ffd23f'}); if (!k.item && k.roll <= 0) { k.roll = .9; if (k.me) beep(660, .06, 'square', .05); } else if (k.me && k.item && !k.item2 && k.roll <= 0) { k.item2 = rollItem(k, 1); SFX.pick(); floatTxt(k, k.item2.e + ' 2. Item' + (comboOf(k.item, k.item2) ? ' · KOMBO!' : ''), '#ffd23f'); } } }); });
-    // feste Hindernisse: Anprall (zurückschieben, bremsen, wackeln) statt Dreher
+    // feste Hindernisse: schräg = abgleiten (wenig Tempoverlust, Drift bleibt), frontal = Anprall (−45 %) mit Schubs zur freien Seite (Wunsch Patrick 10.10.: vorher kostete
+    // jede Berührung 60 % Tempo, auch Streifen, und frontal wurde man gerade zurückgeschoben und stand bis ~0,9 s davor). h = Anteil der Fahrt aufs Hindernis zu (1 = frontal).
+    const obSide = (o, k, tx, ty) => { const room = s0 => { const px = o.x + tx * s0 * (o.r + 30), py = o.y + ty * s0 * (o.r + 30); let m = TW / 2 - Math.abs(nearest(px, py, k.idx)[1]); S.obst.forEach(q => { if (q !== o) m = Math.min(m, Math.hypot(px - q.x, py - q.y) - q.r - 12); }); return m; }, a = room(1), b = room(-1); return Math.abs(a - b) > 6 ? (a > b ? 1 : -1) : (k.steer ? Math.sign(k.steer) * Math.sign(tx * -Math.sin(k.a) + ty * Math.cos(k.a)) || 1 : 1); };
     S.obst.forEach(o => ks.forEach(k => { const dx = k.x - o.x, dy = k.y - o.y, d = Math.hypot(dx, dy); if (k.remote || !ground(k) || d >= o.r + 8 || d < .01 || (o.drop !== undefined && S.t - o.drop < .7)) return;
-      k.x = o.x + dx / d * (o.r + 8); k.y = o.y + dy / d * (o.r + 8); if (FALL) { const [ni, nl] = nearest(k.x, k.y, k.idx); if (Math.abs(nl) > TW / 2 - 6) { [k.x, k.y] = at(ni, Math.sign(nl) * (TW / 2 - 6)); } }   /* Abgrund-Strecken: ein Hindernis schiebt nie über den Rand */ if (k.bump > 0) return; k.bump = .45; k.v *= .4; k.dr = 0; k.dt = 0; S.hl[o.kind] = (S.hl[o.kind] || 0) + 1; k.obH = (k.obH || 0) + 1; if (k.me) { S.shake = .2; SFX.land(); }
-      if (Math.random() < .5 && HITSAY[o.kind]) { k.say = HITSAY[o.kind]; k.sayT = 1.3; } }));
+      const nx = dx / d, ny = dy / d; k.x = o.x + nx * (o.r + 8); k.y = o.y + ny * (o.r + 8); if (FALL) { const [ni, nl] = nearest(k.x, k.y, k.idx); if (Math.abs(nl) > TW / 2 - 6) { [k.x, k.y] = at(ni, Math.sign(nl) * (TW / 2 - 6)); } }   /* Abgrund-Strecken: ein Hindernis schiebt nie über den Rand */
+      if (k.obT > 0) return; const [vx, vy] = kvel(k), sp = Math.hypot(vx, vy), vn = vx * nx + vy * ny; if (vn > -10 || sp < 25) return;
+      const h = clamp(-vn / sp, 0, 1), tx0 = -ny, ty0 = nx, vt = vx * tx0 + vy * ty0, sd = Math.abs(vt) > sp * .12 ? Math.sign(vt) : obSide(o, k, tx0, ty0), tx = tx0 * sd, ty = ty0 * sd;
+      k.obT = .35; k.v *= 1 - .45 * h * h; kkick(k, tx * 220 * h * h + nx * 25, ty * 220 * h * h + ny * 25); k.bump = Math.max(k.bump || 0, .12 + .33 * h * h);
+      if (h > .45) { k.dr = 0; k.dt = 0; } if (!k.me && h > .3) { const l0 = tx * NX[k.idx] + ty * NY[k.idx]; k.avS = l0 >= 0 ? 1 : -1; k.avT = .8; }
+      S.hl[o.kind] = (S.hl[o.kind] || 0) + 1; k.obH = (k.obH || 0) + 1; if (k.me) { S.shake = Math.max(S.shake, .05 + .15 * h); if (h > .45) SFX.land(); else noise(.06, .07, 0, 0, 0, 700); vib(Math.round(8 + 22 * h)); for (let q = 0; q < 4; q++) S.sp.push({x: k.x - nx * 12, y: k.y - ny * 12, vx: tx * 120 + rnd(-80, 80), vy: ty * 120 + rnd(-80, 80), t: 0, c: '#ffe08a'}); }
+      if (h > .45 && Math.random() < .5 && HITSAY[o.kind]) { k.say = HITSAY[o.kind]; k.sayT = 1.3; } }));
     S.oils = S.oils.filter(o => { o.t -= dt;
       if (o.bang) { o.bang -= dt; if (o.bang > 0) return true; const me0 = S.karts[0]; ks.forEach(k => { if (!k.air && !(k.fall > 0) && Math.hypot(k.x - o.x, k.y - o.y) < 74) hitBy(k, 'bang', o.by); });   // Böller: Zündschnur, dann Knall
         if (Math.hypot(me0.x - o.x, me0.y - o.y) < 600) { noise(.35, .22, 0, 0, 0, 260); S.shake = Math.max(S.shake, .25); } for (let j = 0; j < 22; j++) { const an = j / 22 * TAU, sp = rnd(80, 240); S.sp.push({x: o.x, y: o.y, vx: Math.cos(an) * sp, vy: Math.sin(an) * sp, t: 0, c: pick(['#ffd23f', '#ff5a1f', '#fff', '#ff2a6a'])}); } return false; }
