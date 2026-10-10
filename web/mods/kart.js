@@ -1239,7 +1239,7 @@
     if (d.t === 'start') { if (!LIVE.me || !(d.players || []).includes(LIVE.me) || LIVE.race || box.hidden) return; const trk0 = TRK; LIVE.pending = Object.assign({rt: performance.now()}, d); TRK = d.track; LIVE.rdy = false; LIVE.autoAt = 0;
       if (d.gp) { if (!LIVE.gp || LIVE.gp.id !== d.gp.id) LIVE.gp = {id: d.gp.id, list: d.gp.list, i: d.gp.i, pts: {}, nm: {}, seen: {}}; else LIVE.gp.i = d.gp.i; } else LIVE.gp = null;
       const rr = d.rnd && d.rnd[LIVE.me]; if (rr && DRVS.includes(rr[0])) { const base = RNDR || {me0: me, trk0}, tr = TBY[d.track] || TRACKS[0];   // Zufallsrennen für alle: eigener Fahrer + Fahrzeug vom Starter gelost, erst der Spielautomat, dann los (Start ist dafür 3,6 s später)
-        RNDR = {me0: base.me0, trk0: base.trk0, veh: VEHS.some(v => v.id === rr[1]) ? rr[1] : 'kart'}; me = rr[0]; makeVehicles(); livePres(); const pk = LIVE.pending; slotShow(me, tr, VEHS.find(v => v.id === RNDR.veh), tr.veh === 'boat', true, () => { if (LIVE.pending === pk) startRace(); }); return; }
+        RNDR = {me0: base.me0, trk0: base.trk0, veh: VEHS.some(v => v.id === rr[1]) ? rr[1] : 'kart'}; me = rr[0]; makeVehicles(); livePres(); const pk = LIVE.pending; slotShow(me, tr, VEHS.find(v => v.id === RNDR.veh), tr.veh === 'boat', true, () => { if (LIVE.pending === pk) startRace(); }, +((d.cfg || {}).cc) || 150); return; }
       startRace(); return; }
     if (d.t === 'ping' && !m.sameTab) { liveEmit({t: 'pong', id: d.id, to: d.from, by: LIVE.me}); return; }
     if (d.t === 'pong' && d.to === LIVE.me) { const t0 = LIVE.pings[d.id]; if (t0) { const r = performance.now() - t0, o = LIVE.rtt[d.by]; LIVE.rtt[d.by] = o ? o * .6 + r * .4 : r; if (d.id[0] === 't') (LIVE.test || []).push([d.by, r]); if (!menu.hidden && MODE === 'live') liveBox(); } return; }
@@ -1308,7 +1308,7 @@
     const vs = liveVotes(lb), top = vs.filter(v => v[1] === (vs[0] || [0, 0])[1]).map(v => v[0]); let track = rnd ? pick(TRACKS).id : top.length ? pick(top) : TRK, gp = null;
     if (LIVE.gp && LIVE.gp.i < LIVE.gp.list.length - 1) { gp = {id: LIVE.gp.id, list: LIVE.gp.list, i: LIVE.gp.i + 1}; track = gp.list[gp.i]; }
     else if (lb.filter(p0 => p0.presence.gpv).length * 2 >= lb.length && lb.some(p0 => p0.presence.gpv)) { const rest = TRACKS.map(t => t.id).filter(t => t !== track).sort(() => Math.random() - .5); gp = {id: Date.now().toString(36), list: [track, rest[0], rest[1]], i: 0}; }
-    const dl = rnd ? 10100 : 6500;   /* +2 s für die Auslosung der Startplätze */ liveEmit({t: 'start', id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), track, at: Date.now() + dl, delay: dl, players: lb.map(p0 => p0.peer), host: LIVE.me, ai, gp, auto: auto ? 1 : 0, seed: Math.random().toString(36).slice(2, 10), cfg: cf, rnd: rnd || undefined}); }
+    const dl = rnd ? 10700 : 6500, cfS = rnd ? Object.assign({}, cf, {cc: pick(CCS)}) : cf;   /* +2 s für die Auslosung der Startplätze; Zufallsrennen: Klasse wird für alle mit ausgelost (+0,6 s Walze) */ liveEmit({t: 'start', id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), track, at: Date.now() + dl, delay: dl, players: lb.map(p0 => p0.peer), host: LIVE.me, ai, gp, auto: auto ? 1 : 0, seed: Math.random().toString(36).slice(2, 10), cfg: cfS, rnd: rnd || undefined}); }
   // Auto-Start: sind alle in der Lobby (mindestens 2) bereit, startet das Rennen nach 3 s von selbst (gesendet vom „Anführer“ = kleinste Peer-Kennung)
   function liveAuto() { const lb = lobby(), all = lb.length >= 2 && lb.every(p0 => p0.presence.rdy);
     if (!all || LIVE.race || box.hidden || MODE !== 'live') { if (LIVE.autoAt) { LIVE.autoAt = 0; if (!menu.hidden) liveBox(); } return; }
@@ -1355,7 +1355,7 @@
   // Einstellungen für alle: jeder darf ändern, es gilt die zuletzt geänderte (presence.cfg mit Zeitstempel)
   const CFG0 = {laps: 0, items: 'all', diff: -1, storm: 'off', ev: 'on', rnd: 'off', cc: 150, ts: 0};
   function liveCfg() { let c = Object.assign({}, CFG0, LIVE.cfg || {}); lobby().forEach(p0 => { const x = p0.presence.cfg; if (x && x.ts > c.ts) c = Object.assign({}, CFG0, x); }); return c; }
-  const cfgVal = c => ({laps: c.laps ? c.laps + (c.laps === 1 ? ' Runde' : ' Runden') : 'Standard', items: {all: 'alle', turbo: 'nur Turbo', off: 'aus'}[c.items], diff: c.diff < 0 ? 'Gastgeber' : ['Leicht', 'Normal', 'Schwer', 'Profi'][c.diff], storm: {off: 'nie', rnd: 'Zufall', on: 'immer'}[c.storm], ev: c.ev === 'off' ? 'aus' : 'an', rnd: c.rnd === 'on' ? 'an' : 'aus', cc: CCN[c.cc] || '150 ccm'});
+  const cfgVal = c => ({laps: c.laps ? c.laps + (c.laps === 1 ? ' Runde' : ' Runden') : 'Standard', items: {all: 'alle', turbo: 'nur Turbo', off: 'aus'}[c.items], diff: c.diff < 0 ? 'Gastgeber' : ['Leicht', 'Normal', 'Schwer', 'Profi'][c.diff], storm: {off: 'nie', rnd: 'Zufall', on: 'immer'}[c.storm], ev: c.ev === 'off' ? 'aus' : 'an', rnd: c.rnd === 'on' ? 'an' : 'aus', cc: c.rnd === 'on' ? '🎲 Zufall' : CCN[c.cc] || '150 ccm'});
   const cfgTxt = c => ({laps: '🔁 Runden: ' + (c.laps || 'Standard'), items: '🎁 Items: ' + {all: 'alle', turbo: 'nur 🍹 Turbo', off: 'aus'}[c.items], diff: '🤖 Gegner: ' + (c.diff < 0 ? 'je nach Gastgeber' : ['Leicht', 'Normal', 'Schwer', 'Profi'][c.diff]), storm: '⛈️ Gewitter: ' + {off: 'nie', rnd: 'Zufall', on: 'immer'}[c.storm], ev: '🎲 Ereignisse: ' + (c.ev === 'off' ? 'aus' : 'an')});
   function cfgStep(key) { const c = liveCfg(); if (key === 'laps') c.laps = (c.laps + 1) % 6; if (key === 'items') c.items = {all: 'turbo', turbo: 'off', off: 'all'}[c.items]; if (key === 'diff') c.diff = c.diff >= 3 ? -1 : c.diff + 1; if (key === 'storm') c.storm = {off: 'rnd', rnd: 'on', on: 'off'}[c.storm]; if (key === 'ev') c.ev = c.ev === 'off' ? 'on' : 'off'; if (key === 'rnd') c.rnd = c.rnd === 'on' ? 'off' : 'on'; if (key === 'cc') c.cc = {150: 200, 200: 100, 100: 150}[c.cc] || 150;
     c.ts = Date.now(); LIVE.cfg = c; livePres(); liveBox(); }
@@ -1393,7 +1393,7 @@
     const lp = lobbyP(), tn0 = performance.now();
     lp.forEach(p0 => { const r0 = p0.presence.rdy ? 1 : 0; if (LIVE.lpRdy[p0.peer] !== r0) { LIVE.lpRdy[p0.peer] = r0; LIVE.lpRdyAt[p0.peer] = tn0; } });   // Stempel nur beim Wechsel animieren (Lobby zeichnet sich oft neu)
     lp.forEach(p0 => { const d0 = p0.presence.drv, pv = LIVE.lpDrv[p0.peer]; if (pv !== undefined && pv !== d0) { LIVE.lpAt[p0.peer] = tn0; if (!p0.sameTab) { clearTimeout(LIVE.lpAnn); LIVE.lpAnn = setTimeout(() => { const q = lobby().find(x => x.peer === p0.peer); if (q && q.presence.drv === d0 && !box.hidden && MODE === 'live' && !LIVE.race) announce(d0); }, 700); } } LIVE.lpDrv[p0.peer] = d0; });
-    const [rk, rt] = rdyTxt(), c0 = liveCfg(), cv0 = cfgVal(c0), cfgT = [['rnd', '🎲', 'Zufallsrennen'], ['cc', '🏎️', 'Klasse'], ['laps', '🔁', 'Runden'], ['items', '🎁', 'Items'], ['diff', '💪', 'Stärke'], ['storm', '⛈️', 'Gewitter'], ['ev', '🎲', 'Ereignisse']];
+    const [rk, rt] = rdyTxt(), c0 = liveCfg(), cv0 = cfgVal(c0), cfgT = [['cc', '🏎️', 'Klasse'], ['laps', '🔁', 'Runden'], ['items', '🎁', 'Items'], ['diff', '💪', 'Stärke'], ['storm', '⛈️', 'Gewitter'], ['ev', '🎲', 'Ereignisse']];
     el.innerHTML = '<p class="kr-lbl">Im Live-Raum (' + lb.length + ') · ✅ ' + nr + '/' + lb.length + ' bereit</p><div class="kr-lsm">' + lp.map((p0, i) => { const I = lpInfo(p0), pr = I.pr, dup = drvs.filter(x => x === pr.drv).length > 1, age = tn0 - (LIVE.lpAt[p0.peer] || -1e9);
         return '<div class="kr-lpc' + (pr.rdy ? ' rdy' : '') + (p0.sameTab ? ' me' : '') + (age < 650 ? ' new' : '') + '" style="--pc:' + PCOL[i % 6] + (age < 650 ? ';--ad:-' + Math.round(age) + 'ms' : '') + '"><span class="kr-lpn"><i>P' + (i + 1) + '</i>' + esc(I.who) + '</span><span class="kr-lpi" data-d="' + esc(I.d0) + '"></span>' +
           '<b>' + esc(I.char) + (dup ? ' ⚠️' : '') + '</b><small>' + esc(I.sub) + '</small><span class="kr-lpvr"><span class="kr-lpvs" data-p="' + esc(p0.peer) + '"></span><em>' + esc(I.vn) + '</em></span>' +
@@ -1401,10 +1401,11 @@
           (pr.rdy ? '<span class="kr-lpr' + (tn0 - (LIVE.lpRdyAt[p0.peer] || -1e9) < 400 ? ' pop' : '') + '">BEREIT!</span>' : '') + '</div>'; }).join('') +
         (lp.length % 3 ? '<div class="kr-lpc kr-lpe" style="--pc:' + PCOL[lp.length % 6] + '"><span class="kr-lpn"><i>P' + (lp.length + 1) + '</i>frei</span><span class="kr-lpq">＋</span><small>Wer mitfährt, wählt auch „👥 Live“</small></div>' : '') + '</div>' +
       '<button type="button" class="kr-rdybig kr-rb-' + rk + '">' + esc(rt) + '</button>' +
+      '<button type="button" class="kr-rndtog' + (c0.rnd === 'on' ? ' on' : '') + '" aria-pressed="' + (c0.rnd === 'on') + '"><b>🎲 Zufallsrennen für alle: ' + (c0.rnd === 'on' ? 'AN' : 'aus') + '</b><small>' + (c0.rnd === 'on' ? 'Fahrer, Fahrzeug (nur freigeschaltete), Strecke und Klasse werden ausgelost. Eure Auswahl unten zählt diesmal nicht · antippen = aus' : 'antippen: der Automat lost jedem Fahrer und Fahrzeug zu, dazu Strecke und Klasse') + '</small></button>' +
       (() => { const tn = performance.now(), tt = lb.map(p0 => [p0, LIVE.taunts[p0.peer]]).filter(([, t]) => t && t.until > tn); return tt.length ? '<div class="kr-taunts">' + tt.map(([p0, t]) => '<p><b>' + esc(NAME(p0.presence.who)) + ':</b> „' + esc(t.txt) + '“</p>').join('') + '</div>' : ''; })() +
       (liveRun() && LIVE.peers.some(p0 => p0.presence && p0.presence.race === liveRun().race.id) ? '<button type="button" class="kr-rjb">🔄 Zurück ins laufende Rennen (' + esc((TBY[liveRun().race.track] || {}).name || '') + ')</button>' : '') +
       (gpRun ? '<p class="kr-live-n">🏆 <b>Live-Pokal läuft:</b> nächstes Rennen ' + (g.i + 2) + '/' + g.list.length + ' ' + TBY[g.list[g.i + 1]].e + ' ' + esc(TBY[g.list[g.i + 1]].name) + ' · ' + Object.entries(g.pts).sort((a, b) => b[1] - a[1]).slice(0, 3).map(([k0, v]) => esc(g.nm[k0]) + ' ' + v).join(' · ') + '</p>' :
-        c0.rnd === 'on' ? '<div class="kr-rndban">🎲 <b>Zufallsrennen für alle</b> · beim Start lost der Automat für jeden Fahrer und Fahrzeug (nur freigeschaltete) und eine Strecke. Eure Auswahl unten zählt diesmal nicht.</div>' :
+        c0.rnd === 'on' ? '' :
         vs.length ? '<div class="kr-votes"><span>🗳️ Strecke</span>' + vs.map(([t, n], j) => '<b class="' + (j === 0 ? 'top' : '') + '">' + TBY[t].e + ' ' + esc(TBY[t].name) + ' <i>' + n + '</i></b>').join('') + '<small>Deine Stimme = die Strecke, die du unten in Schritt ③ wählst.</small></div>' : '') +
       // Einstellungen als Kacheln (Wunsch Patrick 09.10.: übersichtlicher und schöner)
       '<p class="kr-lbl">⚙️ Einstellungen für alle</p><div class="kr-cfgg">' + cfgT.map(([k0, e0, n0]) => '<button type="button" class="kr-cfgt" data-cfg="' + k0 + '"><i>' + e0 + '</i><span>' + n0 + '</span><b>' + esc(cv0[k0]) + '</b></button>').join('') +
@@ -1523,7 +1524,8 @@
     store.set('kartSlot', String(s0[0])); return s0; }
   const gQuip = (s, n) => s === 0 ? 'Pole-Position! Jetzt bloß nicht direkt in die Bande.' : s === n - 1 ? 'Letzte Reihe. Wie im echten Leben.' : s === 1 ? 'Erste Reihe. Der Pokal riecht schon nach dir.' : s === n - 2 ? 'Fast ganz hinten. Beste Sicht auf das Gemetzel.' : ['Mittelfeld. Genau da, wo die Unfälle passieren.', 'Genug Leute vor dir zum Abschießen.'][s % 2];
   // Auslosung zeigen: Einzelrennen/Pokal 3 s (Rennuhr steht, Antippen überspringt), live in der Wartezeit vor dem Countdown (Uhr läuft weiter)
-  function gridMake(live) { const dur = live ? clamp(-S.t - 3.15, .9, 2.6) : 3, f = live ? clamp((dur - .7) / 1.4, .35, 1) : 1; return {t: 0, dur, live, lk: S.karts.map(k => (.3 + k.slot * .22) * f), ok: {}}; }
+  function gridMake(live) { const dur = live ? clamp(-S.t - 3.15, .9, 2.6) : 3, f = live ? clamp((dur - .7) / 1.4, .35, 1) : 1; return {t: 0, dur, live, lk: S.karts.map(k => (.3 + k.slot * .22) * f), ok: {}, ld: {}}; }
+  const GDROP = .45, GBOX = {};   // Fallzeit aus der Höhe in die Startbox, Nummern-Schilder
   function gridHud() { const g = S.grid, t = g.t, n = S.karts.length, now = performance.now(), a = Math.min(clamp(t / .25, 0, 1), clamp((g.dur - t) / .3, 0, 1)), me = S.karts[0], lockMe = t >= g.lk[0];
     S.karts.forEach((k, i) => { if (g.ok[i] || t < g.lk[i]) return; g.ok[i] = 1; if (k.me) { beep(988, .12, 'triangle', .07); beep(1319, .18, 'triangle', .05); vib(15); } else beep(560 + k.slot * 45, .045, 'square', .035); });   // Klick je eingerastetem Platz
     const tw = Math.min(172, (W - 44) / 2), th = 44, gap = 8, rows = Math.ceil(n / 2), gh = rows * (th + gap) + th / 2, x0 = W / 2 - tw - 5, x1 = W / 2 + 5, y0 = H - 34 - gh;
@@ -1577,7 +1579,7 @@
     const dolphins = (T.dolphins || []).map(f => { const l = rnd(-40, 40), [x, y] = at(f * N, l); return {x, y, i: wrap(f * N), t: rnd(0, 3), cd: 0}; });
     S = {brk: makeBrk(), brkP: [], deb: [], storm: {at: T.id !== 'cristo' && Math.random() < .33 ? rnd(22, 40) : -1, f: 0, next: 0, pud: 0}, karts, boxes, obst, birds, movers, puddles, dolphins, gates, fwT: 1, cutSaid: -1, coins: coinsT, got: 0, myHits: 0, rival, rivalAhead: true, rivalSaid: 0, tu: tune(), oils: [], coatis: [], fx: [], sp: [], marks: [], fw: [], drops: [], t: -4.1, cd: 4, over: 0, slow: 0, press: null, leader: null, lastPlace: SL[0] + 1,
       lx: 0, lxMsg: null, rep: {laps: [], by: {}, vic: {}, hits: 0, items: 0, wall: 0, mini: 0, ov: 0, drT: 0, tT: 0, offT: 0, top: 0, leadT: 0, bestPl: 9, lap0: 0},
-      cc: LP ? (CCS.includes(+((LIVE.race && LIVE.race.cfg) || {}).cc) ? +LIVE.race.cfg.cc : 150) : TUTON ? 150 : CC,
+      cc: LP ? (CCS.includes(+((LIVE.race && LIVE.race.cfg) || {}).cc) ? +LIVE.race.cfg.cc : 150) : TUTON ? 150 : RNDR && RNDR.cc ? RNDR.cc : CC,
       wave: {next: rnd(9, 13), on: 0, warn: 0, h: 0}, flood: 0, hl: {}, flash: 0, supers: 0, rec: [], ghost: null, lapMsg: null, zoom: 1, camT: 0, camA: karts[0].a, camX: karts[0].x, camY: karts[0].y, shake: 0};
   }
   // Fahrzeug-Gefühl plus Masse des Fahrers (vollgefressen = schwer) und Baukasten-Teile (nur eigener Fahrer)
@@ -1831,7 +1833,8 @@
   let CCF = 1, CCV = 1;   // Klasse im laufenden Rennen: Tempo-Faktor und (für Drift-Schwellen) höchstens 1
   function step(dt) {
     if (S.intro) { S.intro.t += dt; if (S.intro.t >= S.intro.dur) { S.intro = null; if (!S.grid) box.classList.remove('kr-intro'); } return; }   // Vorschau läuft: Rennuhr steht, danach Countdown
-    if (S.grid) { S.grid.t += dt; const end = S.grid.t >= S.grid.dur || (S.grid.live && S.t > -3.1); if (end) { S.grid = null; box.classList.remove('kr-intro'); } else if (!S.grid.live) return; }   // Startaufstellung: Einzelrennen/Pokal mit stehender Uhr
+    if (S.grid) { S.grid.t += dt; S.karts.forEach((k, i) => { if (S.grid.ld[i] || S.grid.t < S.grid.lk[i] + GDROP) return; S.grid.ld[i] = 1; if (k.me) { SFX.land(); S.shake = Math.max(S.shake, .18); vib(25); } else noise(.09, .07, 0, 0, 0, 180); });   // Kart setzt in seiner Startbox auf
+      const end = S.grid.t >= S.grid.dur || (S.grid.live && S.t > -3.1); if (end) { S.grid = null; box.classList.remove('kr-intro'); } else if (!S.grid.live) return; }   // Startaufstellung: Einzelrennen/Pokal mit stehender Uhr
     S.t += dt; S.shake = Math.max(0, S.shake - dt); CCF = ccF(S.cc || 150); CCV = Math.min(1, CCF);
     if (S.live && S.live.t0p && !(S.slow > 0)) { const w = (performance.now() - S.live.t0p) / 1000; if (w - S.t > .25) S.t = w; }   // Live: gemeinsame Rennuhr (nach App-Wechsel/Ruckeln aufholen)
     if (S.t < 0) { const c = Math.ceil(-S.t); if (c !== S.cd) { S.cd = c; if (c <= 3) SFX.count(1); } if (S.press === null && S.t > -3.05 && anyInput()) S.press = S.t; return; }
@@ -2314,12 +2317,18 @@
       else if (k.item && !k.me && k.roll <= 0) up(k.x, k.y, E(k.item.e, 20), .7);
     };
     // Absturz: kleiner + blasser beim Fallen, beim Zurückbringen groß (hoch oben) am Seil unter dem Retter
-    const KDF = k => { if (!(k.fall > 0)) return KD(k); const f = k.fall;
+    // Startaufstellung (Wunsch Patrick 10.10.): vor dem Einrasten ist der Platz leer, dann fällt das Kart aus der Höhe in seine Box (Schatten wächst, Staubring beim Aufsetzen)
+    const KDG = k => { const g = S.grid, i = S.karts.indexOf(k), u = (g.t - g.lk[i]) / GDROP; if (u < 0) return; if (u >= 1) { KD(k); const w = (u - 1) * GDROP; if (w < .5) { ctx.save(); ctx.globalAlpha = (1 - w / .5) * .7; ctx.fillStyle = 'rgb(220,205,170)'; for (let j = 0; j < 10; j++) { const an = j / 10 * TAU, rr = 18 + w * 70; ctx.beginPath(); ctx.arc(k.x + Math.cos(an) * rr, k.y + Math.sin(an) * rr, 7 + w * 10, 0, TAU); ctx.fill(); } ctx.restore(); } return; }
+      const e = u * u, sc0 = 1 + 2.4 * (1 - e); ctx.save(); ctx.fillStyle = `rgba(0,0,0,${.08 + e * .28})`; ctx.beginPath(); ctx.ellipse(k.x + 3, k.y + 4, 8 + e * 14, 10 + e * 18, k.a + Math.PI / 2, 0, TAU); ctx.fill();
+      ctx.globalAlpha = Math.min(1, u * 4); ctx.translate(k.x, k.y); ctx.scale(sc0, sc0); ctx.rotate((1 - e) * .5); ctx.translate(-k.x, -k.y); KD(k); ctx.restore(); };
+    const KDF = k => { if (S.grid) return KDG(k); if (!(k.fall > 0)) return KD(k); const f = k.fall;
       if (f < 1.1) { const p = f / 1.1; ctx.save(); ctx.globalAlpha = Math.max(0, 1 - p * .95); ctx.translate(k.x, k.y); ctx.scale(1 - p * .8, 1 - p * .8); ctx.translate(-k.x, -k.y); KD(k); ctx.restore(); return; }
       const p = clamp((f - 1.1) / 1.4, 0, 1), e = 1 - (1 - p) * (1 - p), hgt = (1 - e) * 1, h = 70 + hgt * 160, sw = Math.sin(tt * 5) * 8 * (1 - e), rx = k.x - h * Math.sin(phi) + sw * Math.cos(phi), ry = k.y - h * Math.cos(phi) - sw * Math.sin(phi);
       ctx.strokeStyle = 'rgba(40,40,40,.85)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(k.x, k.y); ctx.lineTo(rx, ry); ctx.stroke();
       ctx.save(); ctx.translate(k.x, k.y); ctx.scale(1 + hgt * .45, 1 + hgt * .45); ctx.translate(-k.x, -k.y); KD(k); ctx.restore();
       up(rx, ry, E(FALL ? FALL.e : '🚁', 60), 1.05 + Math.sin(tt * 20) * .02); };
+    if (S.grid) S.karts.forEach(k => { const lb = 'P' + (k.slot + 1), sp = GBOX[lb] || (GBOX[lb] = sprite(64, 34, (x, w, h) => { x.fillStyle = 'rgba(0,0,0,.45)'; x.beginPath(); x.roundRect(4, 4, w - 8, h - 8, 9); x.fill(); x.fillStyle = '#fff'; x.font = 'italic 900 19px system-ui,sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(lb, w / 2, h / 2 + 1); }));   // leere Startboxen mit Nummer
+      ctx.save(); ctx.translate(k.x, k.y); ctx.rotate(k.a + Math.PI / 2); ctx.strokeStyle = 'rgba(255,255,255,.85)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(-17, -24); ctx.lineTo(-17, 22); ctx.lineTo(17, 22); ctx.lineTo(17, -24); ctx.stroke(); ctx.restore(); if (S.grid.t < S.grid.lk[S.karts.indexOf(k)] + GDROP) up(k.x, k.y, sp, .9); });
     KORD.filter(k => !onDeck(k)).forEach(KDF); if (DECK) drawDeck(phi); KORD.filter(onDeck).forEach(KDF); drawTunnels(tt, phi);
     S.coatis.forEach(c => c.uru ? (ctx.fillStyle = 'rgba(0,0,0,.18)', ctx.beginPath(), ctx.ellipse(c.x + 18, c.y + 22, 14, 6, 0, 0, TAU), ctx.fill(), up(c.x, c.y - 10 + Math.sin(tt * 14) * 3, E('🦅', 38), 1 + Math.sin(tt * 18) * .08)) : up(c.x, c.y, E(c.golf ? '⚪' : c.ball ? '⚽' : c.coco ? '🥥' : c.tro ? '🛒' : c.flip ? '🩴' : c.cai ? '🐊' : '🦝', c.tro || c.cai ? 38 : c.ball || c.flip ? 26 : 34), 1));
     // Geist: halbdurchsichtig, ohne Zusammenstoß
@@ -2352,7 +2361,7 @@
     S.fx.forEach(f => { if (!f.txt) return; const p = toScreen(f.x, f.y, sc, phi); ctx.save(); ctx.globalAlpha = clamp(1.3 - f.t, 0, 1); ctx.font = '900 20px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(0,0,0,.6)';
       const y = dodge(p[0], p[1] - 55 - f.t * 40, ctx.measureText(f.txt).width + 8, 26) + 7; ctx.strokeText(f.txt, p[0], y); ctx.fillStyle = f.col; ctx.fillText(f.txt, p[0], y); ctx.restore(); });
     S.karts.forEach(k => { if (k.sayT <= 0) return; const p = toScreen(k.x, k.y, sc, phi); bubble(p[0], p[1] - 34 * sc, k.say, Math.min(1, k.sayT * 3)); });
-    if (S.grid) { ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; S.karts.forEach((k, i) => { if (S.grid.t < S.grid.lk[i] || k.out) return; const p = toScreen(k.x, k.y, sc, phi), tx = 'P' + (k.slot + 1) + (k.me ? ' · DU' : ''), y = p[1] - 40 * sc;   // Startplatz über dem Kart
+    if (S.grid) { ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; S.karts.forEach((k, i) => { if (S.grid.t < S.grid.lk[i] + GDROP || k.out) return; const p = toScreen(k.x, k.y, sc, phi), tx = 'P' + (k.slot + 1) + (k.me ? ' · DU' : ''), y = p[1] - 40 * sc;   // Startplatz über dem Kart
       ctx.font = 'italic 900 ' + (k.me ? 15 : 13) + 'px system-ui,sans-serif'; const w = ctx.measureText(tx).width + 14; ctx.fillStyle = k.me ? '#ffd23f' : 'rgba(0,0,0,.62)'; ctx.beginPath(); ctx.roundRect(p[0] - w / 2, y - 11, w, 22, 11); ctx.fill(); ctx.fillStyle = k.me ? '#1a1a1a' : '#fff'; ctx.fillText(tx, p[0], y + 1); }); ctx.restore(); }
     if (S.live) { const tn = performance.now(); ctx.save(); ctx.textAlign = 'center'; S.karts.forEach(k => { if (k.me || k.out) return; const p = toScreen(k.x, k.y, sc, phi); if (p[0] < -40 || p[0] > W + 40 || p[1] < -40 || p[1] > H + 40) return;
         if (k.aiIdx === undefined) { const t = NAME(k.who || k.id) + (k.lagging ? ' 📶' : ''); ctx.font = '800 12px system-ui,sans-serif'; const w = ctx.measureText(t).width + 12; ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(p[0] - w / 2, p[1] + 22 * sc, w, 18, 9) : ctx.rect(p[0] - w / 2, p[1] + 22 * sc, w, 18); ctx.fill(); ctx.fillStyle = '#9ff0b4'; ctx.fillText(t, p[0], p[1] + 22 * sc + 13); } });
@@ -2848,22 +2857,23 @@
   let ANNSRC = null;
   // Zufallsrennen (Einzelrennen): Fahrer, Fahrzeug und Strecke laufen wie an einem Spielautomaten durch, halten nacheinander an, dann geht es sofort los
   const slot = document.createElement('div'); slot.className = 'kr-slot'; slot.hidden = true; box.appendChild(slot); let SLOTRUN = false;
-  function slotShow(d, t, v, boat, live, then) { SLOTRUN = true; const pick = a => a[Math.floor(Math.random() * a.length)], vs = VEHS.filter(unlocked);
+  function slotShow(d, t, v, boat, live, then, cc) { SLOTRUN = true; cc = CCS.includes(cc) ? cc : 150; const pick = a => a[Math.floor(Math.random() * a.length)], vs = VEHS.filter(unlocked);
     const dEmo = id => (XBY[id] && XBY[id].e) || (SPECIAL[id] || {}).e || '🙂', vName = (v0, id) => v0.id === 'kart' && STYK(id) ? STN[STYK(id)] || v0.n : v0.n;
-    slot.innerHTML = '<div class="kr-slotc" role="dialog" aria-label="Zufallsrennen"><p class="kr-slott">🎲 Zufallsrennen' + (live ? ' für alle' : '') + '</p><div class="kr-reels">' + ['Fahrer', 'Fahrzeug', 'Strecke'].map(n => '<div class="kr-reel spin"><small>' + n + '</small><span class="kr-rv"></span><b></b></div>').join('') + '</div><p class="kr-slotx">' + (live ? 'Der Automat lost für jeden …' : 'Der Automat entscheidet …') + '</p></div>';
-    slot.hidden = false; res.hidden = true; const R = [...slot.querySelectorAll('.kr-reel')], t0 = performance.now(), STOP = [950, 1550, 2150], done = [0, 0, 0];
+    slot.innerHTML = '<div class="kr-slotc" role="dialog" aria-label="Zufallsrennen"><p class="kr-slott">🎲 Zufallsrennen' + (live ? ' für alle' : '') + '</p><div class="kr-reels">' + ['Fahrer', 'Fahrzeug', 'Strecke', 'Klasse'].map(n => '<div class="kr-reel spin"><small>' + n + '</small><span class="kr-rv"></span><b></b></div>').join('') + '</div><p class="kr-slotx">' + (live ? 'Der Automat lost für jeden …' : 'Der Automat entscheidet …') + '</p></div>';
+    slot.hidden = false; res.hidden = true; const R = [...slot.querySelectorAll('.kr-reel')], t0 = performance.now(), STOP = [950, 1550, 2150, 2750], done = [0, 0, 0, 0];
     const show = (r, emo, nm) => { R[r].querySelector('.kr-rv').textContent = emo; R[r].querySelector('b').textContent = nm; };
     const fin = r => { done[r] = 1; const el = R[r]; el.classList.remove('spin'); el.classList.add('stop'); const rv = el.querySelector('.kr-rv'); rv.textContent = ''; try { SFX.pick(); } catch (e) {}
       if (r === 0) { rv.appendChild(portrait(d, 92, 92, .9)); el.querySelector('b').textContent = NAME(d); try { announce(d); } catch (e) {} }
       if (r === 1) { if (boat || !v) show(1, '🛶', 'Boot (Amazonas)'); else { const c = vehSprite(paintOf(d).c || (LOOK[d] || {}).shirt || '#00a651', v.id, Object.assign({}, paintOf(d), partsPt()), d), cv = document.createElement('canvas'); cv.width = c.width; cv.height = c.height; cv.getContext('2d').drawImage(c, 0, 0); cv.className = 'kr-rveh'; rv.appendChild(cv); el.querySelector('b').textContent = vName(v, d); } }
-      if (r === 2) { const c = thumb(t), cv = document.createElement('canvas'); cv.width = c.width; cv.height = c.height; cv.getContext('2d').drawImage(c, 0, 0); rv.appendChild(cv); el.querySelector('b').textContent = t.e + ' ' + t.name; slot.querySelector('.kr-slotx').textContent = '🏁 Los geht’s!'; } };
+      if (r === 2) { const c = thumb(t), cv = document.createElement('canvas'); cv.width = c.width; cv.height = c.height; cv.getContext('2d').drawImage(c, 0, 0); rv.appendChild(cv); el.querySelector('b').textContent = t.e + ' ' + t.name; }
+      if (r === 3) { show(3, CCE[cc], CCN[cc]); slot.querySelector('.kr-slotx').textContent = cc === 200 ? '🚀 Vollgas! Los geht’s!' : cc === 100 ? '🐢 Gemütlich … los geht’s!' : '🏁 Los geht’s!'; } };
     const iv = setInterval(() => { const el = performance.now() - t0; if (box.hidden) { clearInterval(iv); slot.hidden = true; SLOTRUN = false; return; }
-      [0, 1, 2].forEach(r => { if (done[r]) return; if (el >= STOP[r]) return fin(r); if (r === 0) { const q = pick(DRVS); show(0, dEmo(q), NAME(q)); } else if (r === 1) { const q = pick(vs); show(1, q.e, q.n); } else { const q = pick(TRACKS); show(2, q.e, q.name); } });
-      if (!done[2]) try { beep(1500 + Math.random() * 500, .018, 'square', .018); } catch (e) {}
-      if (done[2]) { clearInterval(iv); setTimeout(() => { slot.hidden = true; SLOTRUN = false; if (!box.hidden) then(); }, 1200); } }, 75); }
+      [0, 1, 2, 3].forEach(r => { if (done[r]) return; if (el >= STOP[r]) return fin(r); if (r === 0) { const q = pick(DRVS); show(0, dEmo(q), NAME(q)); } else if (r === 1) { const q = pick(vs); show(1, q.e, q.n); } else if (r === 2) { const q = pick(TRACKS); show(2, q.e, q.name); } else { const q = pick(CCS); show(3, CCE[q], CCN[q]); } });
+      if (!done[3]) try { beep(1500 + Math.random() * 500, .018, 'square', .018); } catch (e) {}
+      if (done[3]) { clearInterval(iv); setTimeout(() => { slot.hidden = true; SLOTRUN = false; if (!box.hidden) then(); }, 1200); } }, 75); }
   function randomRace() { if (SLOTRUN || MODE !== 'single') return; const pick = a => a[Math.floor(Math.random() * a.length)];
-    const d = pick(DRVS), t = pick(TRACKS), boat = t.veh === 'boat', v = pick(VEHS.filter(unlocked)), base = RNDR || {me0: me, trk0: TRK};
-    slotShow(d, t, v, boat, false, () => { RNDR = {me0: base.me0, trk0: base.trk0, veh: boat ? myVeh0() : v.id}; me = d; TRK = t.id; makeVehicles(); startRace(); }); }
+    const d = pick(DRVS), t = pick(TRACKS), boat = t.veh === 'boat', v = pick(VEHS.filter(unlocked)), cc = pick(CCS), base = RNDR || {me0: me, trk0: TRK};   // Klasse wird mit ausgelost (Wunsch Patrick 10.10.), gilt nur für dieses Zufallsrennen
+    slotShow(d, t, v, boat, false, () => { RNDR = {me0: base.me0, trk0: base.trk0, veh: boat ? myVeh0() : v.id, cc}; me = d; TRK = t.id; makeVehicles(); startRace(); }, cc); }
   const myVeh0 = () => { const r = RNDR; RNDR = null; const v = myVeh(); RNDR = r; return v; };
   function announce(id) { try { SFX.pick(); noise(.22, .08, 2400); beep(120, .35, 'sawtooth', .07, 50); } catch (e) {}
     const hv = TRIP.kartvo && TRIP.kartvo['h_' + id], hb = hv && BUF['ann' + (hv.f > 1 ? hv.f : '')];
@@ -3067,7 +3077,7 @@
     if (e.target.closest('.kr-back')) { liveLeave(); toMenu(); }
     if (e.target.closest('.kr-quit')) { pm.hidden = true; close(); }
   });
-  box.addEventListener('click', e => { if (e.target.closest('.kr-menu .kr-dice')) { if (MODE === 'live') { SFX.pick(); cfgStep('rnd'); toast(liveCfg().rnd === 'on' ? '🎲 <b>Zufallsrennen für alle: an</b><br>Beim Start lost der Automat Fahrer, Fahrzeug und Strecke.' : '🎲 Zufallsrennen: aus'); } else randomRace(); } if (e.target.closest('.kr-menu .kr-quit, .kr-res .kr-quit')) close(); });
+  box.addEventListener('click', e => { if (e.target.closest('.kr-menu .kr-dice, .kr-menu .kr-rndtog')) { if (MODE === 'live') { SFX.pick(); cfgStep('rnd'); toast(liveCfg().rnd === 'on' ? '🎲 <b>Zufallsrennen für alle: an</b><br>Beim Start lost der Automat Fahrer, Fahrzeug, Strecke und Klasse.' : '🎲 Zufallsrennen: aus'); } else randomRace(); } if (e.target.closest('.kr-menu .kr-quit, .kr-res .kr-quit')) close(); });
   menu.addEventListener('click', e => {
     { const ui = e.target.closest('.kr-mode button, .kr-sgrid button, .kr-cups button, .kr-vcar button, .kr-ghost button, .kr-set > summary, .kr-pill'); if (ui && !ui.disabled) { const f = ui.matches('.kr-set > summary, .kr-pill') ? 660 : 990; beep(f, .035, 'triangle', .035, f * 1.25); } }   // kurzer Klick-Ton bei jeder Auswahl
     const rb = e.target.closest('.kr-pick:not(.kr-whop) .kr-rnd'); if (rb) { if (RSPIN) return; RSPIN = 1; const ids = DRVS.filter(id => id !== me), fin = pick(ids), tile = id => menu.querySelector('.kr-roster .kr-tile[data-id="' + id + '"]'); let n = 0, cur = null;
