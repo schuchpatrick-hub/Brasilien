@@ -7217,7 +7217,7 @@ setGroup(G);
    Rennspiel von oben, Canvas. Sechs Strecken entlang der Reise (TRACKS: Guarujá, Copacabana, Iguaçu, Amazonas, Paraty, Ilha Grande),
    Einzelrennen oder Grand Prix (alle sechs, Punkte 10/8/6/5/4/3, Siegerehrung). 6 Fahrer mit Crew-Köpfen, 3 Runden.
    Gas automatisch, Daumen links/rechts lenkt, ITEM (oder Item-Fenster) zündet das Item (🍹 Turbo, 🧴 Sonnencreme-Öl, 🦝 Nasenbär).
-   Lange in eine Richtung lenken (oder Doppeltipp) = Drift mit Funken; Richtung halten = enger Bogen, Gegenseite = weiter Bogen, ganz loslassen = Mini-Turbo (blau) bzw. Super-Turbo (orange).
+   Lange in eine Richtung lenken (oder Doppeltipp) = Drift mit Funken; Richtung halten = enger Bogen, beide Seiten = mittel, Gegenseite kurz = weiter Bogen, ganz loslassen oder Gegenseite 0,25 s halten = Mini-Turbo (blau) bzw. Super-Turbo (orange).
    Raketenstart: bei „1“ tippen. Boost-Pfeile, Schanze (in der Luft tippen = Trick). Je Strecke eigene Gefahren (Mover, Hindernisse, Pfützen, Welle, Regen, Nebel, Delfine).
    Ton: Samba-Rennmusik (Web Audio), echte Geräusche aus audio/sfx.mp3, Ansager aus audio/kart.mp3 + audio/kart2.mp3 (TRIP.kartvo, f = Datei).
    Kamera dreht mit (Fahrtrichtung immer nach oben). Bestzeiten pro Strecke im localStorage (br26.kartBest), Grand-Prix-Siege (br26.kartCups). */
@@ -8672,7 +8672,7 @@ setGroup(G);
     livePres({race: LIVE.race.id, rj: LIVE.race.rjFrom || undefined, n: ++LIVE.seq, tm: +S.t.toFixed(3), x: Math.round(k.x), y: Math.round(k.y), a: +k.a.toFixed(3), v: Math.round(k.v), lap: k.lap, idx: k.idx, lat: Math.round(k.lat), done: k.done ? +k.done.toFixed(3) : 0, b: k.boost > 0 ? 1 : 0, sp: k.spin > 0 ? 1 : 0, st: +k.steer.toFixed(2), sh: k.shield > 0 ? 1 : 0, fl: k.fall > 0 ? +k.fall.toFixed(2) : 0, bu: k.bus > 0 ? 1 : 0, zp: k.zap > 0 ? 1 : 0, ai: S.karts.filter(o => o.aiIdx !== undefined && !o.remote).map(o => [Math.round(o.x), Math.round(o.y), +o.a.toFixed(3), Math.round(o.v), o.lap, o.idx, o.done ? +o.done.toFixed(3) : 0, o.boost > 0 ? 1 : 0, o.spin > 0 ? 1 : 0, Math.round(o.lat), o.fall > 0 ? +o.fall.toFixed(2) : 0])}); }
   // Fahrschule: eine geführte Runde allein auf Guarujá
   const TUT = [{t: 'Lenken: links oder rechts halten (Analog: Daumen-Position).', ok: k => (S.tut.st = (S.tut.st || 0) + (Math.abs(k.steer) > .6 ? 1 / 60 : 0)) > .8},
-    {t: 'Driften: in der Kurve doppelt tippen und halten. Zu eng? Andere Seite dazu = weiterer Bogen. Funken sammeln, dann ganz loslassen = Turbo!', ok: () => S.tutMini},
+    {t: 'Driften: in der Kurve doppelt tippen und halten. Zu eng? Andere Seite dazu = weiterer Bogen. Funken sammeln, dann loslassen (oder nur die Gegenseite halten) = Turbo!', ok: () => S.tutMini},
     {t: 'Bremsen: beide Seiten gleichzeitig halten.', ok: k => (S.tut.br = (S.tut.br || 0) + (k.brk ? 1 / 60 : 0)) > .4},
     {t: 'Fahr durch eine ?-Kiste (gelbe Würfel auf der Strecke).', ok: k => k.item || k.roll > 0},
     {t: 'Tippe unten auf ITEM, um es zu benutzen.', ok: () => S.tutUsed},
@@ -9321,7 +9321,7 @@ setGroup(G);
       k.steer += clamp(target - k.steer, -rate * dt, rate * dt);
       // Drift: lange in eine Richtung lenken → rutschen, Funken; Loslassen → Mini-/Super-Turbo.
       // Neu (Feedback Patrick 09.10.: Drift schlug sofort viel zu steil ein, man flog beim Aufladen von der Strecke, deshalb driftete keiner):
-      // Bogen lässt sich steuern wie bei Mario Kart: Richtung halten = eng, beide Seiten = mittel, Gegenseite = weiter Bogen (beendet den Drift nicht mehr),
+      // Bogen lässt sich steuern wie bei Mario Kart: Richtung halten = eng, beide Seiten = mittel, Gegenseite kurz = weiter Bogen, Gegenseite halten beendet ihn (seit 10.10.),
       // erst ganz loslassen (0,13 s ohne Lenken) zündet den Turbo. Einschlag baut sich über 0,3 s auf statt sofort.
       const sgn = Math.sign(target);
       k.hold = sgn && Math.abs(k.steer) > .7 ? (Math.sign(k.steer) === sgn ? k.hold + dt : 0) : 0;
@@ -10459,7 +10459,7 @@ setGroup(G);
   }
   function preview(id) { if (!T || T.id !== id || !BG) loadTrack(id); else LAPS = T.laps || 3; newRace(); S.paused = true; }   // gleiche Strecke schon geladen: nicht neu zeichnen
   let PVT = 0; function previewSoon(id) { const n = ++PVT; requestAnimationFrame(() => setTimeout(() => { if (n !== PVT || TRK !== id || !menu || menu.hidden) return; if (!T || T.id !== id) preview(id); }, 0)); }   // erst zeichnen lassen, dann laden; schnelles Weitertippen lädt nur die letzte
-  const TIPS = ['Gewitter? Pfützen meiden, früher bremsen.', 'Mehrfach-Items (×2, ×3): mehrmals antippen! 🥥 Kokos-Trio kreist um dich und wehrt Geschosse ab, 🍌 Bananen hinten auch.', 'Brücke, Minhocão, Cristo und Iguaçu haben keine Bande: Wer über den Rand fährt, stürzt ab und verliert gut 2 Sekunden.', '⛱️ Schirm blockt einen Treffer, 🩴 Flip-Flop fliegt geradeaus, 🦜 Papagei verdreht den Vorderleuten die Lenkung.', '🌶️ Pimenta: langer Turbo, wer direkt hinter dir fährt, verbrennt sich.', 'Doppeltipp und halten = sofort driften. Länger driften = blauer, dann oranger Turbo.', 'Drift zu eng? Andere Seite dazutippen = weiterer Bogen, beide Seiten = mittel. Erst ganz loslassen zündet den Turbo.', 'Bergauf wird jeder langsamer, bergab schneller: Turbo am Gipfel zünden. Auf der Kuppe kurz in der Luft: tippen = Trick.', 'Auf Brücken ist das Geländer dicht an der Fahrbahn: lieber sauber durch als an der Bande schleifen.', 'Beide Seiten gleichzeitig halten = bremsen.', 'Bei der 1 tippen = Raketenstart.',
+  const TIPS = ['Gewitter? Pfützen meiden, früher bremsen.', 'Mehrfach-Items (×2, ×3): mehrmals antippen! 🥥 Kokos-Trio kreist um dich und wehrt Geschosse ab, 🍌 Bananen hinten auch.', 'Brücke, Minhocão, Cristo und Iguaçu haben keine Bande: Wer über den Rand fährt, stürzt ab und verliert gut 2 Sekunden.', '⛱️ Schirm blockt einen Treffer, 🩴 Flip-Flop fliegt geradeaus, 🦜 Papagei verdreht den Vorderleuten die Lenkung.', '🌶️ Pimenta: langer Turbo, wer direkt hinter dir fährt, verbrennt sich.', 'Doppeltipp und halten = sofort driften. Länger driften = blauer, dann oranger Turbo.', 'Drift zu eng? Andere Seite dazu (beide Seiten) = weiterer Bogen. Beenden: ganz loslassen oder nur die Gegenseite kurz halten – beides zündet den Turbo.', 'Bergauf wird jeder langsamer, bergab schneller: Turbo am Gipfel zünden. Auf der Kuppe kurz in der Luft: tippen = Trick.', 'Auf Brücken ist das Geländer dicht an der Fahrbahn: lieber sauber durch als an der Bande schleifen.', 'Beide Seiten gleichzeitig halten = bremsen.', 'Bei der 1 tippen = Raketenstart.',
     'Auf der Schanze tippen = Trick und Turbo bei der Landung.', 'Rot-weiße Pfeiltafeln warnen vor scharfen Kurven.', 'Abkürzungen sind holprig, aber mit Turbo-Pfeil in der Mitte.',
     'Schranken öffnen im Takt. Kurz warten lohnt sich manchmal.', 'Im Pause-Menü: Steuerung „Analog“ für stufenloses Lenken.', 'Wer hinten liegt, bekommt bessere Items.',
     'Delfine auf dem Amazonas geben Turbo.', 'Im Nebel helfen die Kurven-Schilder.', 'Die Tageszeit im Spiel folgt der Uhrzeit in Rio.'];
