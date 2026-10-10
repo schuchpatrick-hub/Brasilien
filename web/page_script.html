@@ -7847,12 +7847,11 @@ setGroup(G);
       if (id === 'bridge') { const ro = FALL ? FALL.m - 3 : 10; [-1, 1].forEach(sd => { x.strokeStyle = '#d8dde3'; x.lineWidth = 5; if (FALL) x.setLineDash([60, 90]); x.beginPath(); P.forEach((p0, i) => { const X = p0[0] + NX[i] * sd * (TW / 2 + ro), Y = p0[1] + NY[i] * sd * (TW / 2 + ro); i ? x.lineTo(X, Y) : x.moveTo(X, Y); }); x.closePath(); x.stroke(); x.setLineDash([]); });
         for (let i = 0; i < N; i += 40) [-1, 1].forEach(sd => { const X = P[i][0] + NX[i] * sd * (TW / 2 + ro), Y = P[i][1] + NY[i] * sd * (TW / 2 + ro); x.fillStyle = '#9aa3ad'; x.fillRect(X - 6, Y - 6, 12, 12); }); }
       if (id === 'manaus') for (let i = 10; i < N; i += 55) { const X = P[i][0] + NX[i] * (TW / 2 + 30), Y = P[i][1] + NY[i] * (TW / 2 + 30); const g = x.createRadialGradient(X, Y, 4, X, Y, 120); g.addColorStop(0, 'rgba(255,220,140,.55)'); g.addColorStop(1, 'rgba(255,220,140,0)'); x.fillStyle = g; x.fillRect(X - 120, Y - 120, 240, 240); x.fillStyle = '#ffe9a8'; x.beginPath(); x.arc(X, Y, 6, 0, TAU); x.fill(); }
-      // Abkürzung: Schotterweg mit Schild und Turbo-Pfeil
+      // Abkürzung: Schotterweg (ohne Namensschild davor, Wunsch Patrick 10.10.: braucht man nicht)
       if (CUT) { x.save(); x.lineCap = 'round'; x.strokeStyle = 'rgba(0,0,0,.2)'; x.lineWidth = CUT.w + 14; x.beginPath(); x.moveTo(CUT.a[0], CUT.a[1]); x.lineTo(CUT.b[0], CUT.b[1]); x.stroke();
         const SQ = secretOf(); x.strokeStyle = SQ[2]; x.lineWidth = CUT.w; x.stroke();
         if (SQ[3]) { const dx0 = CUT.b[0] - CUT.a[0], dy0 = CUT.b[1] - CUT.a[1], l0 = Math.hypot(dx0, dy0), nx0 = -dy0 / l0, ny0 = dx0 / l0; x.strokeStyle = 'rgba(60,35,15,.45)'; x.lineWidth = 2; x.beginPath(); for (let q = 8; q < l0; q += 16) { const cx0 = CUT.a[0] + dx0 / l0 * q, cy0 = CUT.a[1] + dy0 / l0 * q; x.moveTo(cx0 - nx0 * CUT.w / 2, cy0 - ny0 * CUT.w / 2); x.lineTo(cx0 + nx0 * CUT.w / 2, cy0 + ny0 * CUT.w / 2); } x.stroke(); }
         else { x.strokeStyle = 'rgba(255,255,255,.35)'; x.lineWidth = 3; x.setLineDash([14, 14]); x.stroke(); x.setLineDash([]); }
-        { x.save(); x.translate(CUT.a[0], CUT.a[1]); x.fillStyle = 'rgba(20,20,30,.82)'; x.font = '900 22px system-ui,sans-serif'; const tx0 = '🤫 ' + SQ[0], tw0 = x.measureText(tx0).width + 20; x.fillRect(-tw0 / 2, -64, tw0, 32); x.fillStyle = '#ffd23f'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(tx0, 0, -48); x.restore(); }
         for (let q = 0; q < 140; q++) { const u = Math.random(), v = (Math.random() - .5) * CUT.w * .8, dx = CUT.b[0] - CUT.a[0], dy = CUT.b[1] - CUT.a[1], l = Math.hypot(dx, dy); x.fillStyle = 'rgba(70,45,20,.35)'; x.fillRect(CUT.a[0] + dx * u - dy / l * v, CUT.a[1] + dy * u + dx / l * v, 4, 4); }
         { const dx = CUT.b[0] - CUT.a[0], dy = CUT.b[1] - CUT.a[1], l = Math.hypot(dx, dy); for (let q = .2; q < .85; q += .16) { x.fillStyle = 'rgba(90,60,30,.55)'; x.beginPath(); x.ellipse(CUT.a[0] + dx * q, CUT.a[1] + dy * q, CUT.w * .42, CUT.w * .26, Math.atan2(dy, dx), 0, TAU); x.fill(); x.fillStyle = 'rgba(160,120,70,.35)'; x.beginPath(); x.ellipse(CUT.a[0] + dx * q - 6, CUT.a[1] + dy * q - 4, CUT.w * .16, CUT.w * .08, 0, 0, TAU); x.fill(); } } x.restore();
       }
@@ -8697,7 +8696,8 @@ setGroup(G);
     if (G0) { gp = Object.assign({}, gpPack(), {i: Math.min(G0.k || 0, G0.list.length - 1)}); track = gp.list[gp.i]; }
     else if (cf.gp && cf.gp !== 'off') { const c = lgpc(cf.gp) || LGPC[0], cu = CUPS.find(x => x.id === c.id), rest = TRACKS.map(t => t.id).filter(t => t !== track).sort(() => Math.random() - .5);
       gp = {id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), cup: c.id, e: c.e, n: c.n, list: cu ? cu.t.slice() : TRACKS.map(t => t.id).sort(() => Math.random() - .5).slice(0, 4), i: 0, k: 0, pts: {}, nm: {}, pl: {}, dr: {}, ai: ai.slice(), ts: Date.now()}; track = gp.list[0]; }
-    const dl = rnd ? 10700 : 6500, cfS = rnd ? Object.assign({}, cf, {cc: pick(CCS)}) : cf;   /* +2 s für die Auslosung der Startplätze; Zufallsrennen: Klasse wird für alle mit ausgelost (+0,6 s Walze) */ liveEmit({t: 'start', id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), track, at: Date.now() + dl, delay: dl, players: lb.map(p0 => p0.peer), host: LIVE.me, ai, gp, auto: auto ? 1 : 0, seed: Math.random().toString(36).slice(2, 10), cfg: cfS, rnd: rnd || undefined}); }
+    const itr = SET.intro !== 'off' && track !== LIVE.lastTrk ? ((TRACKS.find(t0 => t0.id === track) || {}).long ? 10 : 7) : 0;   /* Strecken-Vorschau für alle, nicht bei Revanche auf derselben Strecke */
+    const dl = (rnd ? 10700 : 6500) + itr * 1000, cfS = rnd ? Object.assign({}, cf, {cc: pick(CCS)}) : cf;   /* +2 s für die Auslosung der Startplätze; Zufallsrennen: Klasse wird für alle mit ausgelost (+0,6 s Walze) */ liveEmit({t: 'start', id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), track, at: Date.now() + dl, delay: dl, players: lb.map(p0 => p0.peer), host: LIVE.me, ai, gp, auto: auto ? 1 : 0, seed: Math.random().toString(36).slice(2, 10), cfg: cfS, rnd: rnd || undefined, intro: itr || undefined}); }
   // Auto-Start: sind alle in der Lobby (mindestens 2) bereit, startet das Rennen nach 3 s von selbst (gesendet vom „Anführer“ = kleinste Peer-Kennung)
   // Grand Prix: Mitfahrer, die gerade nicht in der Lobby sind (App im Hintergrund, fährt noch), werden höchstens 60 s abgewartet; „▶ Ohne … starten“ (Nachricht gpgo) überspringt
   const GPWAIT = 60000;
@@ -9206,9 +9206,10 @@ setGroup(G);
   const anyInput = () => INPUT.L || INPUT.R || INPUT.keys.ArrowLeft || INPUT.keys.ArrowRight || INPUT.keys.a || INPUT.keys.d;
   /* Strecken-Vorschau (Wunsch Patrick 09.10. spät, Idee 5): vor dem Countdown fliegt die Kamera eine Runde über die Strecke (wie im TV), mit Name, Bestzeit,
      Runden/Richtung/Klasse und Hinweisen an den Stellen (Tunnel, Brücke, Berg, Kuppe, Schanze, Schranke, Schleichweg, Welle …). Antippen = überspringen.
-     Nur Einzelrennen/Grand Prix, je Strecke einmal pro Sitzung (INTROSEEN), Schalter in den Einstellungen (SET.intro). */
-  let INTROSEEN = {};
+     Bei jedem Start außer „Nochmal“/Neustart (INTROSKIP), live mit eingeplantem Vorlauf (start.intro), Schalter in den Einstellungen (SET.intro). */
+  let INTROSKIP = false;
   const introU = t => { const u = clamp((t - .9) / 5.3, 0, 1); return u * u * (3 - 2 * u); }, introZoom = t => t < .9 ? 1 - .45 * clamp(t / .9, 0, 1) : t > 6.2 ? .55 + .45 * clamp((t - 6.2) / .8, 0, 1) : .55;
+  const introS = it => it.t * 7 / it.dur;   // Ablauf ist auf 7 s gebaut: Langstrecken (10 s) und live gekürzte Vorschauen werden gestreckt bzw. gestaucht
   function introMake() { const i0 = S.karts[0].idx, mk = [], add = (i, e, t0) => mk.push({u: wrap(Math.round(i) - i0) / N, e, t: t0});
     TUN.forEach(q => add(q.i0, '🚇', q.nm || 'Tunnel'));
     BRG.forEach(q => add(q.i0, '🌉', q.nm || 'Brücke'));
@@ -9238,7 +9239,7 @@ setGroup(G);
     ctx.font = '800 12px system-ui,sans-serif'; ctx.fillStyle = '#fff'; ctx.fillText(tf, x0, y0 + 76, W - 36);
     ctx.fillStyle = '#ffd23f'; ctx.fillText(r0 ? '👑 Bestzeit ' + fmt(r0.ms) + ' · ' + NAME(r0.who) + (bt0 ? ' · ⏱ deine ' + fmt(bt0) : '') : '👑 Bestzeit noch frei: hol sie dir!', x0, y0 + 96, W - 36);
     // Hinweis an der aktuellen Stelle (oben, unter dem Balken)
-    const u = introU(t); let cur = null; it.mk.forEach(m => { if (u >= m.u - .005 && u < m.u + .07) cur = m; });
+    const u = introU(introS(it)); let cur = null; it.mk.forEach(m => { if (u >= m.u - .005 && u < m.u + .07) cur = m; });
     if (cur && t > .9 && t < 6.3) { const ca = clamp(Math.min((u - cur.u + .005) / .015, (cur.u + .07 - u) / .015), 0, 1); ctx.globalAlpha = a * ca; ctx.shadowBlur = 0; ctx.font = '800 15px system-ui,sans-serif'; const tw0 = Math.min(W - 36, ctx.measureText(cur.e + '  ' + cur.t).width + 28), y1 = lb + 22;
       ctx.beginPath(); ctx.roundRect(W / 2 - tw0 / 2, y1, tw0, 36, 18); ctx.fillStyle = 'rgba(8,18,38,.88)'; ctx.fill(); ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = 2; ctx.stroke(); ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(cur.e + '  ' + cur.t, W / 2, y1 + 18, tw0 - 20); }
     // Fortschritt + Überspringen
@@ -9265,8 +9266,9 @@ setGroup(G);
     beep(660, .12, 'square', .05, 990); setTimeout(() => beep(880, .16, 'square', .05, 1320), 140); vib([20, 40, 20]); }
   let CCF = 1, CCV = 1;   // Klasse im laufenden Rennen: Tempo-Faktor und (für Drift-Schwellen) höchstens 1
   function step(dt) {
-    if (S.intro) { S.intro.t += dt; if (S.intro.t >= S.intro.dur) { S.intro = null; if (!S.grid) box.classList.remove('kr-intro'); } return; }   // Vorschau läuft: Rennuhr steht, danach Countdown
-    if (S.grid) { S.grid.t += dt; S.karts.forEach((k, i) => { if (S.grid.ld[i] || S.grid.t < S.grid.lk[i] + GDROP) return; S.grid.ld[i] = 1; if (k.me) { SFX.land(); S.shake = Math.max(S.shake, .18); vib(25); } else noise(.09, .07, 0, 0, 0, 180); });   // Kart setzt in seiner Startbox auf
+    if (S.intro) { S.intro.t += dt; if (S.live && S.live.t0p && S.intro.s0 != null) S.intro.t = Math.max(S.intro.t, (performance.now() - S.live.t0p) / 1000 - S.intro.s0);   // live an der gemeinsamen Uhr (langsames Handy schneidet sonst das Ende ab)
+      if (S.intro.t >= S.intro.dur || (S.live && S.t > -6.2)) { S.intro = null; if (!S.grid) box.classList.remove('kr-intro'); } if (!S.live) return; }   // Vorschau läuft: Rennuhr steht, danach Countdown
+    if (S.grid && !S.intro) { S.grid.t += dt; S.karts.forEach((k, i) => { if (S.grid.ld[i] || S.grid.t < S.grid.lk[i] + GDROP) return; S.grid.ld[i] = 1; if (k.me) { SFX.land(); S.shake = Math.max(S.shake, .18); vib(25); } else noise(.09, .07, 0, 0, 0, 180); });   // Kart setzt in seiner Startbox auf
       const end = S.grid.t >= S.grid.dur || (S.grid.live && S.t > -3.1); if (end) { S.grid = null; box.classList.remove('kr-intro'); } else if (!S.grid.live) return; }   // Startaufstellung: Einzelrennen/Pokal mit stehender Uhr
     S.t += dt; S.shake = Math.max(0, S.shake - dt); CCF = ccF(S.cc || 150); CCV = Math.min(1, CCF);
     if (S.live && S.live.t0p && !(S.slow > 0)) { const w = (performance.now() - S.live.t0p) / 1000; if (w - S.t > .25) S.t = w; }   // Live: gemeinsame Rennuhr (nach App-Wechsel/Ruckeln aufholen)
@@ -9613,11 +9615,11 @@ setGroup(G);
   const MVSAY = {jogger: 'Bom dia!', bike: 'Trimm trimm!', skate: 'Radical!', tug: 'Gepäck kommt!', fork: 'Bip bip bip!', bus: 'Fiiiip!', soccer: 'Gooool!', tram: 'Plim plim!', moto: 'Saaai da frente!', monkey: 'Uh uh uh!', vendor: 'Olha o Caipi! 🍹', corn: 'Milho verde! 🌽', horse: 'Ôa, ôa!', dog: 'Wuff!', caiman: '…', coati: '!!'};
   function draw() {
     const k0 = S.karts[0], nowT = performance.now() / 1000, cdt = clamp(nowT - (S.camT || nowT), 0, .05); S.camT = nowT;
-    const spd = Math.hypot(k0.v, k0.vr), zt = S.intro ? introZoom(S.intro.t) : S.grid ? .82 : 1 - clamp((spd - 250) / 700, 0, .14) - (k0.boost > 0 ? .03 : 0) - hgt(k0.idx) * .1;   /* oben auf dem Berg etwas mehr Weitblick; Vorschau = weit raus */ S.zoom += (zt - S.zoom) * (1 - Math.exp(-cdt * (S.intro ? 6 : 3)));
+    const spd = Math.hypot(k0.v, k0.vr), zt = S.intro ? introZoom(introS(S.intro)) : S.grid ? .82 : 1 - clamp((spd - 250) / 700, 0, .14) - (k0.boost > 0 ? .03 : 0) - hgt(k0.idx) * .1;   /* oben auf dem Berg etwas mehr Weitblick; Vorschau = weit raus */ S.zoom += (zt - S.zoom) * (1 - Math.exp(-cdt * (S.intro ? 6 : 3)));
     const sc = Math.min(W, H) / (W > H ? 380 : 390) * S.zoom * [1.12, 1, .86][SET.cam] * (window.__kzoom || 1);   // __kzoom nur für Tests (Nahaufnahme)
     // Kamera folgt weich: Blickrichtung zwischen Nase und Fahrtrichtung, Vorausblick in Fahrtrichtung
     const la = k0.done ? 0 : 1, wantA = k0.a + angd(k0.mv, k0.a) * .45, kr = 1 - Math.exp(-cdt * 6), kp = 1 - Math.exp(-cdt * 14);
-    if (S.intro) { const it = S.intro, i = it.i0 + introU(it.t) * N, [x, y] = at(i, 0), [xa, ya] = at(i - 8, 0), [xb, yb] = at(i + 16, 0), q = 1 - Math.exp(-cdt * 9);   // Strecken-Vorschau: Kamera fliegt eine Runde ab
+    if (S.intro) { const it = S.intro, i = it.i0 + introU(introS(it)) * N, [x, y] = at(i, 0), [xa, ya] = at(i - 8, 0), [xb, yb] = at(i + 16, 0), q = 1 - Math.exp(-cdt * 9);   // Strecken-Vorschau: Kamera fliegt eine Runde ab
       S.camA += angd(Math.atan2(yb - ya, xb - xa), S.camA) * (1 - Math.exp(-cdt * 3.5)); S.camX += (x - S.camX) * q; S.camY += (y - S.camY) * q; }
     else if (S.grid) { let cx = 0, cy = 0; S.karts.forEach(k => { cx += k.x; cy += k.y; }); cx /= S.karts.length; cy /= S.karts.length; const off = H * .17 / sc;   // Auslosung: ganzes Startfeld in der oberen Bildhälfte (unten steht die Tafel)
       S.camA += angd(k0.a, S.camA) * kr; S.camX += (cx - Math.cos(k0.a) * off - S.camX) * kp; S.camY += (cy - Math.sin(k0.a) * off - S.camY) * kp; }
@@ -9801,7 +9803,7 @@ setGroup(G);
     bubbles(sc, phi);
     if (S.grid) { ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; S.karts.forEach((k, i) => { if (S.grid.t < S.grid.lk[i] + GDROP || k.out) return; const p = toScreen(k.x, k.y, sc, phi), tx = 'P' + (k.slot + 1) + (k.me ? ' · DU' : ''), y = p[1] - 40 * sc;   // Startplatz über dem Kart
       ctx.font = 'italic 900 ' + (k.me ? 15 : 13) + 'px system-ui,sans-serif'; const w = ctx.measureText(tx).width + 14; ctx.fillStyle = k.me ? '#ffd23f' : 'rgba(0,0,0,.62)'; ctx.beginPath(); ctx.roundRect(p[0] - w / 2, y - 11, w, 22, 11); ctx.fill(); ctx.fillStyle = k.me ? '#1a1a1a' : '#fff'; ctx.fillText(tx, p[0], y + 1); }); ctx.restore(); }
-    if (S.live) { const tn = performance.now(); ctx.save(); ctx.textAlign = 'center'; S.karts.forEach(k => { if (k.me || k.out) return; const p = toScreen(k.x, k.y, sc, phi); if (p[0] < -40 || p[0] > W + 40 || p[1] < -40 || p[1] > H + 40) return;
+    if (S.live) { const tn = performance.now(); ctx.save(); ctx.textAlign = 'center'; S.karts.forEach((k, ki) => { if (k.me || k.out || S.intro || (S.grid && !S.grid.ld[ki])) return; const p = toScreen(k.x, k.y, sc, phi);   /* Namensschild erst, wenn das Kart in seiner Startbox gelandet ist */ if (p[0] < -40 || p[0] > W + 40 || p[1] < -40 || p[1] > H + 40) return;
         if (k.aiIdx === undefined) { const t = NAME(k.who || k.id) + (k.lagging ? ' 📶' : ''); ctx.font = '800 12px system-ui,sans-serif'; const w = ctx.measureText(t).width + 12; ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(p[0] - w / 2, p[1] + 22 * sc, w, 18, 9) : ctx.rect(p[0] - w / 2, p[1] + 22 * sc, w, 18); ctx.fill(); ctx.fillStyle = '#9ff0b4'; ctx.fillText(t, p[0], p[1] + 22 * sc + 13); } });
       S.karts.forEach(k => { if (!(k.emoU > tn)) return; const p = toScreen(k.x, k.y, sc, phi), a = clamp((k.emoU - tn) / 400, 0, 1), up = (2400 - (k.emoU - tn)) / 2400; ctx.globalAlpha = a; ctx.font = '40px system-ui,sans-serif'; ctx.fillText(k.emo, p[0], dodge(p[0], p[1] - 52 * sc - up * 26 - 14, 46, 46) + 14); ctx.globalAlpha = 1; }); ctx.restore(); }
     S.movers.forEach(m => { if (m.say > 0 && near(m.x, m.y, 500) && MVSAY[m.kind] && m.kind !== 'coati' && m.kind !== 'caiman' && m.kind !== 'monkey') { const p = toScreen(m.x, m.y, sc, phi); bubble(p[0], p[1] - 30 * sc, MVSAY[m.kind], Math.min(1, m.say)); } });
@@ -10503,8 +10505,12 @@ setGroup(G);
     S.ev = {next: wrnd('ev', 15, 24), cur: null}; S.evOn = !TUTON && (LR0 ? CF.ev !== 'off' : SET.ev !== 'off');
     if (TUTON) { S.tut = {i: 0, ok: 0}; S.karts.length = 1; LAPS = 2; S.storm.at = -1; S.rival = null; }
     S.rep.lap0 = +store.get('kartLap.' + tkey(T.id)) || 0; Object.values(VUSE).forEach(U => { U.last = null; });   // neues Rennen: Reihenfolge der Sprüche läuft weiter, nur die Sperre „gerade gesagt“ fällt weg   // beste Runde vor diesem Rennen (für den Rennbericht)
-    if (!LIVE.race && !TUTON && SET.intro !== 'off' && !INTROSEEN[T.id]) { INTROSEEN[T.id] = 1; S.intro = introMake(); box.classList.add('kr-intro'); } else box.classList.remove('kr-intro');   // Strecken-Vorschau (einmal je Strecke und Sitzung)
-    if (LIVE.race) { S.live = LIVE.race; S.live.t0p = LIVE.race.delay && LIVE.race.rt ? LIVE.race.rt + LIVE.race.delay : performance.now() + clamp(LIVE.race.at - Date.now(), 500, 6000); S.t = clamp((performance.now() - S.live.t0p) / 1000, -6, -.5); LIVE.buf = {}; LIVE.lastN = {}; S.live.curHost = S.live.host; liveRejoinRestore(); liveClockSync(); } if (!TUTON && !(S.live && S.t > -3.4)) { S.grid = gridMake(!!S.live); box.classList.add('kr-intro'); } box.classList.toggle('live', !!S.live); S.tod = T.night || SET.tod === 'day' ? 'day' : (h => h >= 19 || h < 6 ? 'night' : h >= 17 ? 'dusk' : h < 7 ? 'dawn' : 'day')(+new Intl.DateTimeFormat('en-GB', {timeZone: 'America/Sao_Paulo', hour: 'numeric', hour12: false}).format(new Date()) % 24);
+    // Strecken-Vorschau (Feedback Patrick 10.10.: „man sieht die Voransicht nicht mehr“: sie kam nur einmal je Strecke und Sitzung und nie live):
+    // jetzt bei jedem Start, nur nicht bei „Nochmal“/Neustart auf derselben Strecke (INTROSKIP); live, wenn der Starter sie in den Vorlauf eingeplant hat (start.intro)
+    if (!TUTON && SET.intro !== 'off' && (LIVE.race ? LIVE.race.intro > 0 : !INTROSKIP)) { S.intro = introMake(); box.classList.add('kr-intro'); } else box.classList.remove('kr-intro'); INTROSKIP = false;
+    if (LIVE.race) { S.live = LIVE.race; S.live.t0p = LIVE.race.delay && LIVE.race.rt ? LIVE.race.rt + LIVE.race.delay : performance.now() + clamp(LIVE.race.at - Date.now(), 500, 6000); S.t = clamp((performance.now() - S.live.t0p) / 1000, -7 - (LIVE.race.intro || 0), -.5); LIVE.buf = {}; LIVE.lastN = {}; S.live.curHost = S.live.host; liveRejoinRestore(); liveClockSync(); LIVE.lastTrk = T.id;
+      if (S.intro) { const room = -6.3 - S.t; if (room < 2.5) S.intro = null; else { S.intro.dur = Math.min(S.intro.dur, room); S.intro.s0 = S.t; } } }   // live: Vorschau endet, wenn die Startaufstellung dran ist (später Eingestiegene sehen sie kürzer oder gar nicht)
+    if (!TUTON && !(S.live && S.t > -3.4)) { S.grid = gridMake(!!S.live); box.classList.add('kr-intro'); } if (!S.intro && !S.grid) box.classList.remove('kr-intro'); box.classList.toggle('live', !!S.live); S.tod = T.night || SET.tod === 'day' ? 'day' : (h => h >= 19 || h < 6 ? 'night' : h >= 17 ? 'dusk' : h < 7 ? 'dawn' : 'day')(+new Intl.DateTimeFormat('en-GB', {timeZone: 'America/Sao_Paulo', hour: 'numeric', hour12: false}).format(new Date()) % 24);
     if (!CUP && GHOST.mode !== 'off') { const tid = T.id, s0 = S; ghostFor(tid).then(g => { if (S === s0 && g) { S.ghost = g; ghostProg(g); } }); } audio(); MUS.on = false; MUS.fast = false; MUS.step = 0; MUS.next = 0; banner = null; last = 0; if (MG && AC) MG.gain.value = .5;
     setTimeout(() => { if (S && S.tod === 'night' && !T.night) setTimeout(() => say('night', 'Es wird Nacht! Licht an!'), 2600); if (S && S.t < 0) say('t_' + T.id, 'Willkommen in ' + T.name + '!', 1); }, 150);
     // Gastfahrer im Feld: eigene Ansage (Aufnahme g_<id> in kart6.mp3, sonst Handy-Stimme)
@@ -10549,7 +10555,7 @@ setGroup(G);
     if (e.target.closest('.kr-cam')) { SET.cam = (SET.cam + 1) % 3; saveSet(); }
     if (e.target.closest('.kr-tod')) { SET.tod = SET.tod === 'day' ? 'real' : 'day'; saveSet(); }
     if (e.target.closest('.kr-evt')) { SET.ev = SET.ev === 'off' ? 'on' : 'off'; saveSet(); }
-    if (e.target.closest('.kr-intb')) { SET.intro = SET.intro === 'off' ? 'on' : 'off'; saveSet(); if (SET.intro !== 'off') INTROSEEN = {}; }
+    if (e.target.closest('.kr-intb')) { SET.intro = SET.intro === 'off' ? 'on' : 'off'; saveSet(); }
     if (e.target.closest('.kr-hd')) { SET.hd = ((SET.hd === undefined ? 1 : SET.hd) + 1) % 3; saveSet(); }
     if (e.target.closest('.kr-bub')) { SET.bub = SET.bub === 'off' ? 'few' : SET.bub === 'all' ? 'off' : 'all'; saveSet(); }
     if (e.target.closest('.kr-mm')) { SET.mm = SET.mm === 'off' ? 'on' : 'off'; saveSet(); audio(); mmTick(); }
@@ -10562,7 +10568,7 @@ setGroup(G);
       const now = performance.now(); if (now - LIVE.emoAt < 1200) return; LIVE.emoAt = now; liveEmit({t: 'emo', race: S.live.id, e: b.textContent}); const k0 = S.karts[0]; k0.emo = b.textContent; k0.emoU = now + 2400; }); } }
   pm.addEventListener('click', e => {
     if (e.target.closest('.kr-resume')) resume();
-    if (e.target.closest('.kr-restart')) { pm.hidden = true; startRace(); }
+    if (e.target.closest('.kr-restart')) { pm.hidden = true; INTROSKIP = true; startRace(); }
     if (e.target.closest('.kr-back')) { liveLeave(); toMenu(); }
     if (e.target.closest('.kr-quit')) { pm.hidden = true; close(); }
   });
@@ -10634,7 +10640,7 @@ setGroup(G);
         if (g && g.done && !g.cer) { liveCeremony(); return; }
         if (gpLive() && !LIVE.race) { LIVE.rdy = !LIVE.rdy; SFX.pick(); vib(15); livePres(); gpResUpd(); return; }   /* Grand Prix: im Zwischenstand bereit melden (nochmal tippen = doch nicht) */
         liveLeave(); LIVE.rdy = !(LIVE.gp && LIVE.gp.pts); toMenu(); if (g) gpToLobby(); }
-      else startRace(); }
+      else { INTROSKIP = true; startRace(); } }   /* „Nochmal“: gleiche Strecke, ohne Vorschau */
     if (e.target.closest('.kr-res .kr-back')) { liveLeave(); LIVE.rdy = false; toMenu(); if (MODE === 'live' && LIVE.gp) gpToLobby(); }
   });
   // Steuerung: Daumen links/rechts, Item-Knopf; Tastatur
