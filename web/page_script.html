@@ -9843,7 +9843,14 @@ setGroup(G);
   // Platzierungsleiste (Wunsch Patrick 10.10.: immer sehen, wer auf welchem Platz ist und wann jemand überholt): links unter der Minikarte (Querformat daneben),
   // je Fahrer Platz + Kopf, eigener Platz gelb, Plätze gleiten beim Überholen weich an die neue Stelle, kurz ▲ grün / ▼ rot; live mit 🤖/📴/📶, im Ziel 🏁
   let RKR = null;
-  function standings(mh) { if (S.tut || S.pose || S.karts.length < 2) { RKR = null; return; } const n = S.karts.length, now = performance.now(), land = W > H, rh = land ? 22 : 29, hs = land ? 18 : 24, x0 = land ? 12 + 92 + 14 : 8, y0 = land ? 58 : 12 + 50 + mh + 8 + 51 + 10, w = hs + 34;
+  // Namen in der Leiste (Wunsch Patrick 10.10.: bei 6 Fahrern erkennt man an den kleinen Köpfen nicht, wer wer ist): kurz gehalten, Ausnahmezustand = Name der Person,
+  // lange Serien-Figuren mit Kurznamen, live bei echten Mitspielern der Spieler selbst; Spalte so breit wie der längste Name (max. 74 px, sonst „…“), Zwischenspeicher S.rkN
+  const rkName = o => { if (S.live && o.me) return NAME(PME()) || NAME(o.id); if (S.live && o.who && o.aiIdx === undefined) return NAME(o.who); const X = XBY[o.id];
+    if (X && X.base && !X.npc) return NAME(X.base); if (X && X.npc && X.sh && (X.name || '').length > 11) return X.sh; return NAME(o.id) || '?'; };
+  function standings(mh) { if (S.tut || S.pose || S.karts.length < 2) { RKR = null; return; } const n = S.karts.length, now = performance.now(), land = W > H, rh = land ? 22 : 29, hs = land ? 18 : 24, x0 = land ? 12 + 92 + 14 : 8, y0 = land ? 58 : 12 + 50 + mh + 8 + 51 + 10;
+    const nf = '800 ' + (land ? 10 : 11.5) + 'px system-ui,sans-serif', cap = land ? 62 : 74; ctx.save(); ctx.font = nf; const NM = S.rkN || (S.rkN = {});
+    S.karts.forEach((o, i) => { const t0 = rkName(o); if (NM[i] && NM[i].k === t0) return; let t = t0; while (t.length > 2 && ctx.measureText(t).width > cap) t = t.slice(0, -1); if (t !== t0) t = t.trim() + '…'; NM[i] = {k: t0, t, w: ctx.measureText(t).width}; });
+    ctx.restore(); const nw = Math.ceil(Math.max(...S.karts.map((o, i) => NM[i].w))), w = hs + 38 + nw;
     const ord = S.sord && S.sord.length === S.karts.length ? S.sord : S.karts.slice().sort((a, b) => place(a) - place(b)), R = S.rk || (S.rk = {}), dt0 = Math.min(.1, (now - (R.t || now)) / 1000); R.t = now;
     ctx.save(); ctx.textBaseline = 'middle';
     ord.forEach((o, r) => { const i = S.karts.indexOf(o), q = R[i] || (R[i] = {y: r, r, at: 0, d: 0}); if (q.r !== r) { q.d = q.r - r; q.at = now; q.r = r; } q.y += (r - q.y) * Math.min(1, dt0 * 9); });   // Wechsel merken, Position weich nachziehen
@@ -9853,6 +9860,7 @@ setGroup(G);
       if (o.me) { ctx.strokeStyle = fl ? (up ? '#2ecc71' : '#ff4a4a') : 'rgba(255,255,255,.9)'; ctx.lineWidth = fl ? 2.5 : 1.5; ctx.stroke(); }
       ctx.textAlign = 'center'; ctx.font = 'italic 900 ' + (land ? 11 : 13) + 'px system-ui,sans-serif'; ctx.fillStyle = o.me ? '#1a1a1a' : q.r === 0 ? '#ffd23f' : '#fff'; ctx.fillText(String(q.r + 1), x0 + 10, y + (rh - 3) / 2 + 1);
       const hd = HEAD[o.id]; if (hd) ctx.drawImage(hd, x0 + 20, y + (rh - 3 - hs) / 2, hs, hs); else { ctx.fillStyle = (LOOK[o.id] || {}).shirt || '#888'; ctx.beginPath(); ctx.arc(x0 + 20 + hs / 2, y + (rh - 3) / 2, hs / 2, 0, TAU); ctx.fill(); }
+      ctx.textAlign = 'left'; ctx.font = nf; ctx.fillStyle = o.me ? '#1a1a1a' : '#fff'; ctx.fillText(NM[i].t, x0 + 24 + hs, y + (rh - 3) / 2 + 1); ctx.textAlign = 'center';
       const tag = o.done ? '🏁' : o.out ? '📴' : o.lagging ? '📶' : o.aiIdx !== undefined && S.live ? '🤖' : ''; if (tag) { ctx.font = (land ? 9 : 11) + 'px system-ui,sans-serif'; ctx.fillText(tag, x0 + w - 7, y + (rh - 3) / 2 + 1); }
       if (fl) { ctx.globalAlpha = Math.min(1, fl * 2); ctx.font = '900 ' + (land ? 12 : 14) + 'px system-ui,sans-serif'; ctx.fillStyle = up ? '#4cff8a' : '#ff6b6b'; ctx.fillText(up ? '▲' : '▼', x0 + w + 9, y + (rh - 3) / 2 + 1); } });
     ctx.restore(); ctx.globalAlpha = 1; RKR = [x0, y0, x0 + w + 18, y0 + n * rh]; }

@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251010rn", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🏷️", "t": "Gringo Kart: Die Platzierungsleiste links zeigt jetzt auch die Namen – im Live-Rennen die echten Mitspieler"},
     {"id": "n251010bb", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "💬", "t": "Gringo Kart: Sprechblasen sind kleiner und es stehen höchstens 2 gleichzeitig im Bild – im Pulk sieht man wieder die Strecke (Einstellungen: wenige / alle / aus)"},
     {"id": "n251010pl", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "📊", "t": "Gringo Kart: Platzierung flackert nicht mehr bei Kopf-an-Kopf-Rennen, der Rennbericht zählt Überholmanöver jetzt richtig, Bestenliste nach Kurz- und Langstrecken getrennt"},
     {"id": "n251010dr", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🌀", "t": "Gringo Kart: Drift lässt sich jetzt auch durch Gegenlenken beenden (Gegenseite kurz halten) – kein ungewolltes Weiterrutschen in die Bande mehr"},
