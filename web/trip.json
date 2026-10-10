@@ -10252,6 +10252,8 @@
     ]
   },
   "news": [
+    {"id": "n251010pl", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "📋", "t": "Gringo Kart: Links im Rennen siehst du jetzt immer live, wer auf Platz 1 bis 6 liegt – mit kleinen Köpfen; überholst du jemand, leuchtet deine Reihe grün, wirst du überholt, rot"},
+    {"id": "n251010tk", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🤪", "t": "Gringo Kart: 100 neue Sprüche – jede Figur hat 4 zusätzliche, diesmal mehr lustig als tödlich (Marco hat sich eingeschissen, Pat’s Mum geht die Zigarette aus …), und dieselben Sprüche kommen viel seltener"},
     {"id": "n251010sg", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🎲", "t": "Gringo Kart: Die Startplätze werden vor jedem Rennen ausgelost – mal Pole-Position, mal letzte Reihe, nie zweimal hintereinander derselbe Platz. Live losen alle Handys gleich aus, echte Mitspieler starten nicht mehr übereinander"},
     {"id": "n251009kb", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎢", "t": "Gringo Kart: Karts kleben nicht mehr aneinander – bei Remplern prallen sie jetzt leicht ab wie beim Autoscooter, und ein Rempler kostet kaum noch Tempo"},
     {"id": "n251009vr", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🗣️", "t": "Gringo Kart: kein Fahrer sagt mehr zweimal hintereinander denselben Spruch – die Sprüche wechseln sich jetzt reihum ab"},
@@ -10898,6 +10900,506 @@
     }
   ],
   "kartvo": {
+    "v_jonas_talk": {
+      "o": 250,
+      "dur": 3142,
+      "f": 11
+    },
+    "v_jonas_talk_2": {
+      "o": 3642,
+      "dur": 2611,
+      "f": 11
+    },
+    "v_jonas_talk_3": {
+      "o": 6503,
+      "dur": 3004,
+      "f": 11
+    },
+    "v_jonas_talk_4": {
+      "o": 9757,
+      "dur": 2750,
+      "f": 11
+    },
+    "v_simon_talk": {
+      "o": 12757,
+      "dur": 3353,
+      "f": 11
+    },
+    "v_simon_talk_2": {
+      "o": 16360,
+      "dur": 3027,
+      "f": 11
+    },
+    "v_simon_talk_3": {
+      "o": 19637,
+      "dur": 3721,
+      "f": 11
+    },
+    "v_simon_talk_4": {
+      "o": 23607,
+      "dur": 3476,
+      "f": 11
+    },
+    "v_patrick_talk": {
+      "o": 27333,
+      "dur": 2135,
+      "f": 11
+    },
+    "v_patrick_talk_2": {
+      "o": 29718,
+      "dur": 3473,
+      "f": 11
+    },
+    "v_patrick_talk_3": {
+      "o": 33441,
+      "dur": 3336,
+      "f": 11
+    },
+    "v_patrick_talk_4": {
+      "o": 37027,
+      "dur": 2696,
+      "f": 11
+    },
+    "v_marco_talk": {
+      "o": 39973,
+      "dur": 2012,
+      "f": 11
+    },
+    "v_marco_talk_2": {
+      "o": 42236,
+      "dur": 3316,
+      "f": 11
+    },
+    "v_marco_talk_3": {
+      "o": 45801,
+      "dur": 3817,
+      "f": 11
+    },
+    "v_marco_talk_4": {
+      "o": 49869,
+      "dur": 3453,
+      "f": 11
+    },
+    "v_greisel_talk": {
+      "o": 53572,
+      "dur": 3535,
+      "f": 11
+    },
+    "v_greisel_talk_2": {
+      "o": 57356,
+      "dur": 2441,
+      "f": 11
+    },
+    "v_greisel_talk_3": {
+      "o": 60047,
+      "dur": 2549,
+      "f": 11
+    },
+    "v_greisel_talk_4": {
+      "o": 62846,
+      "dur": 2220,
+      "f": 11
+    },
+    "v_dajo_talk": {
+      "o": 65316,
+      "dur": 4364,
+      "f": 11
+    },
+    "v_dajo_talk_2": {
+      "o": 69930,
+      "dur": 2664,
+      "f": 11
+    },
+    "v_dajo_talk_3": {
+      "o": 72844,
+      "dur": 2825,
+      "f": 11
+    },
+    "v_dajo_talk_4": {
+      "o": 75918,
+      "dur": 3634,
+      "f": 11
+    },
+    "v_simon_love_talk": {
+      "o": 79803,
+      "dur": 5149,
+      "f": 11
+    },
+    "v_simon_love_talk_2": {
+      "o": 85201,
+      "dur": 3127,
+      "f": 11
+    },
+    "v_simon_love_talk_3": {
+      "o": 88579,
+      "dur": 3666,
+      "f": 11
+    },
+    "v_simon_love_talk_4": {
+      "o": 92495,
+      "dur": 3087,
+      "f": 11
+    },
+    "v_patrick_fat_talk": {
+      "o": 95832,
+      "dur": 3064,
+      "f": 11
+    },
+    "v_patrick_fat_talk_2": {
+      "o": 99146,
+      "dur": 2494,
+      "f": 11
+    },
+    "v_patrick_fat_talk_3": {
+      "o": 101890,
+      "dur": 2928,
+      "f": 11
+    },
+    "v_patrick_fat_talk_4": {
+      "o": 105068,
+      "dur": 3241,
+      "f": 11
+    },
+    "v_marco_dia_talk": {
+      "o": 108559,
+      "dur": 2073,
+      "f": 11
+    },
+    "v_marco_dia_talk_2": {
+      "o": 110882,
+      "dur": 1808,
+      "f": 11
+    },
+    "v_marco_dia_talk_3": {
+      "o": 112940,
+      "dur": 2203,
+      "f": 11
+    },
+    "v_marco_dia_talk_4": {
+      "o": 115393,
+      "dur": 2733,
+      "f": 11
+    },
+    "v_jonas_kater_talk": {
+      "o": 118376,
+      "dur": 5191,
+      "f": 11
+    },
+    "v_jonas_kater_talk_2": {
+      "o": 123817,
+      "dur": 3243,
+      "f": 11
+    },
+    "v_jonas_kater_talk_3": {
+      "o": 127310,
+      "dur": 3795,
+      "f": 11
+    },
+    "v_jonas_kater_talk_4": {
+      "o": 131355,
+      "dur": 4712,
+      "f": 11
+    },
+    "v_greisel_wb_talk": {
+      "o": 136317,
+      "dur": 3452,
+      "f": 11
+    },
+    "v_greisel_wb_talk_2": {
+      "o": 140018,
+      "dur": 2617,
+      "f": 11
+    },
+    "v_greisel_wb_talk_3": {
+      "o": 142885,
+      "dur": 3030,
+      "f": 11
+    },
+    "v_greisel_wb_talk_4": {
+      "o": 146165,
+      "dur": 3258,
+      "f": 11
+    },
+    "v_dajo_party_talk": {
+      "o": 149672,
+      "dur": 1904,
+      "f": 11
+    },
+    "v_dajo_party_talk_2": {
+      "o": 151827,
+      "dur": 2419,
+      "f": 11
+    },
+    "v_dajo_party_talk_3": {
+      "o": 154496,
+      "dur": 2124,
+      "f": 11
+    },
+    "v_dajo_party_talk_4": {
+      "o": 156869,
+      "dur": 3779,
+      "f": 11
+    },
+    "v_taxi_talk": {
+      "o": 160898,
+      "dur": 3682,
+      "f": 11
+    },
+    "v_taxi_talk_2": {
+      "o": 164830,
+      "dur": 4230,
+      "f": 11
+    },
+    "v_taxi_talk_3": {
+      "o": 169311,
+      "dur": 3489,
+      "f": 11
+    },
+    "v_taxi_talk_4": {
+      "o": 173050,
+      "dur": 5149,
+      "f": 11
+    },
+    "v_coati_talk": {
+      "o": 178448,
+      "dur": 2181,
+      "f": 11
+    },
+    "v_coati_talk_2": {
+      "o": 180880,
+      "dur": 2772,
+      "f": 11
+    },
+    "v_coati_talk_3": {
+      "o": 183902,
+      "dur": 3504,
+      "f": 11
+    },
+    "v_coati_talk_4": {
+      "o": 187656,
+      "dur": 2563,
+      "f": 11
+    },
+    "v_officer_talk": {
+      "o": 190469,
+      "dur": 3485,
+      "f": 11
+    },
+    "v_officer_talk_2": {
+      "o": 194204,
+      "dur": 4301,
+      "f": 11
+    },
+    "v_officer_talk_3": {
+      "o": 198754,
+      "dur": 3465,
+      "f": 11
+    },
+    "v_officer_talk_4": {
+      "o": 202470,
+      "dur": 2384,
+      "f": 11
+    },
+    "v_dona_talk": {
+      "o": 205103,
+      "dur": 1914,
+      "f": 11
+    },
+    "v_dona_talk_2": {
+      "o": 207268,
+      "dur": 2134,
+      "f": 11
+    },
+    "v_dona_talk_3": {
+      "o": 209652,
+      "dur": 2916,
+      "f": 11
+    },
+    "v_dona_talk_4": {
+      "o": 212818,
+      "dur": 1612,
+      "f": 11
+    },
+    "v_guide_talk": {
+      "o": 214680,
+      "dur": 5911,
+      "f": 11
+    },
+    "v_guide_talk_2": {
+      "o": 220841,
+      "dur": 3711,
+      "f": 11
+    },
+    "v_guide_talk_3": {
+      "o": 224802,
+      "dur": 3510,
+      "f": 11
+    },
+    "v_guide_talk_4": {
+      "o": 228562,
+      "dur": 3293,
+      "f": 11
+    },
+    "v_steward_talk": {
+      "o": 232104,
+      "dur": 2828,
+      "f": 11
+    },
+    "v_steward_talk_2": {
+      "o": 235182,
+      "dur": 5260,
+      "f": 11
+    },
+    "v_steward_talk_3": {
+      "o": 240693,
+      "dur": 3669,
+      "f": 11
+    },
+    "v_steward_talk_4": {
+      "o": 244611,
+      "dur": 3429,
+      "f": 11
+    },
+    "v_caimanx_talk": {
+      "o": 248291,
+      "dur": 4867,
+      "f": 11
+    },
+    "v_caimanx_talk_2": {
+      "o": 253408,
+      "dur": 4206,
+      "f": 11
+    },
+    "v_caimanx_talk_3": {
+      "o": 257864,
+      "dur": 4912,
+      "f": 11
+    },
+    "v_caimanx_talk_4": {
+      "o": 263026,
+      "dur": 5724,
+      "f": 11
+    },
+    "v_manuel_talk": {
+      "o": 269000,
+      "dur": 2925,
+      "f": 11
+    },
+    "v_manuel_talk_2": {
+      "o": 272174,
+      "dur": 3711,
+      "f": 11
+    },
+    "v_manuel_talk_3": {
+      "o": 276135,
+      "dur": 2850,
+      "f": 11
+    },
+    "v_manuel_talk_4": {
+      "o": 279235,
+      "dur": 2567,
+      "f": 11
+    },
+    "v_erich_talk": {
+      "o": 282052,
+      "dur": 5707,
+      "f": 11
+    },
+    "v_erich_talk_2": {
+      "o": 288009,
+      "dur": 6370,
+      "f": 11
+    },
+    "v_erich_talk_3": {
+      "o": 294628,
+      "dur": 3834,
+      "f": 11
+    },
+    "v_erich_talk_4": {
+      "o": 298712,
+      "dur": 3502,
+      "f": 11
+    },
+    "v_rasmus_talk": {
+      "o": 302464,
+      "dur": 2916,
+      "f": 11
+    },
+    "v_rasmus_talk_2": {
+      "o": 305631,
+      "dur": 2245,
+      "f": 11
+    },
+    "v_rasmus_talk_3": {
+      "o": 308125,
+      "dur": 3265,
+      "f": 11
+    },
+    "v_rasmus_talk_4": {
+      "o": 311641,
+      "dur": 3430,
+      "f": 11
+    },
+    "v_ilkay_talk": {
+      "o": 315320,
+      "dur": 2638,
+      "f": 11
+    },
+    "v_ilkay_talk_2": {
+      "o": 318208,
+      "dur": 4706,
+      "f": 11
+    },
+    "v_ilkay_talk_3": {
+      "o": 323164,
+      "dur": 2855,
+      "f": 11
+    },
+    "v_ilkay_talk_4": {
+      "o": 326269,
+      "dur": 3715,
+      "f": 11
+    },
+    "v_felix_talk": {
+      "o": 330234,
+      "dur": 3039,
+      "f": 11
+    },
+    "v_felix_talk_2": {
+      "o": 333523,
+      "dur": 3782,
+      "f": 11
+    },
+    "v_felix_talk_3": {
+      "o": 337556,
+      "dur": 2907,
+      "f": 11
+    },
+    "v_felix_talk_4": {
+      "o": 340712,
+      "dur": 3784,
+      "f": 11
+    },
+    "v_patmum_talk": {
+      "o": 344747,
+      "dur": 3139,
+      "f": 11
+    },
+    "v_patmum_talk_2": {
+      "o": 348136,
+      "dur": 2986,
+      "f": 11
+    },
+    "v_patmum_talk_3": {
+      "o": 351371,
+      "dur": 4225,
+      "f": 11
+    },
+    "v_patmum_talk_4": {
+      "o": 355847,
+      "dur": 4326,
+      "f": 11
+    },
     "v_felix_over": {
       "o": 67316,
       "dur": 2737,
