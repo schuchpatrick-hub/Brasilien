@@ -3180,7 +3180,6 @@
     const lmb = e.target.closest('.kr-lmode [data-lm]'); if (lmb) { SFX.pick(); cfgStep('gp:' + (lmb.dataset.lm === 'gp' ? (lgpc(store.get('kartLiveCup')) ? store.get('kartLiveCup') : 'r4') : 'off')); return; }
     const lcb = e.target.closest('.kr-lcups [data-lc]'); if (lcb) { SFX.pick(); cfgStep('gp:' + lcb.dataset.lc); return; }
     if (e.target.closest('.kr-gpx')) { if (!LIVE.gpX) { LIVE.gpX = 1; liveBox(); setTimeout(() => { LIVE.gpX = 0; if (!menu.hidden && MODE === 'live') liveBox(); }, 4000); return; } LIVE.gpX = 0; if (LIVE.gp) { LIVE.gp.end = Date.now(); LIVE.gp.ts = Date.now(); gpSave(); } livePres(); liveBox(); toast('✖ Grand Prix abgebrochen.'); return; }
-    if (e.target.closest('.kr-gpgo')) { const g = gpLive(); if (g) { liveEmit({t: 'gpgo', id: g.id}); LIVE.gpGo = g.id; liveAuto(); gpResUpd(); } return; }
     if (e.target.closest('.kr-gphide')) { if (LIVE.gp) LIVE.gp.hid = 1; liveBox(); return; }
     if (e.target.closest('.kr-liveai')) { store.set('kartLiveAI', store.get('kartLiveAI') === '0' ? '1' : '0'); renderMenu(); return; }
     const pl0 = e.target.closest('.kr-pill'); if (pl0) { const d = menu.querySelector('.kr-' + pl0.dataset.open); if (d) { d.open = true; setTimeout(() => d.scrollIntoView({behavior: 'smooth', block: 'center'}), 30); } }
@@ -3201,6 +3200,7 @@
     if (e.target.closest('.kr-go')) { CUP = MODE === 'cup' ? {i: 0, pts: {}, races: [], list: CUPSEL.t, n: CUPSEL.n, e: CUPSEL.e} : null; startRace(); }
   });
   res.addEventListener('click', e => {
+    if (e.target.closest('.kr-gpgo')) { const g = gpLive(); if (g) { SFX.pick(); liveEmit({t: 'gpgo', id: g.id}); LIVE.gpGo = g.id; liveAuto(); gpResUpd(); } return; }   // Grand Prix: ohne die Abwesenden starten (Zwischenstand liegt im Ergebnis-Kasten)
     if (e.target.closest('.kr-rnd2')) { randomRace(); return; }
     if (e.target.closest('.kr-again')) {
       if (CUP && CUP.done) { CUP = {i: 0, pts: {}, races: [], list: CUPSEL.t, n: CUPSEL.n, e: CUPSEL.e}; startRace(); }
