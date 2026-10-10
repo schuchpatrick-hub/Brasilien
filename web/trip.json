@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251010is", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🎰", "t": "Gringo Kart: Item-System überarbeitet – keine Walzen mehr über allen Fahrern (Fehler behoben), Nasenbär & Co. treffen zuverlässig, ausgewogenere Items je nach Abstand zum Führenden, Gegner setzen Items klüger ein, beim Aufheben steht kurz da, was das Item macht, und der Glücksautomat dreht groß im Bild"},
     {"id": "n251010g4", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🛠️", "t": "Gringo Kart durchgecheckt: kleine Fehler behoben (Kisten, Fahrzeugnamen im Querformat, Kamera beim Platztausch, Live-Pokaltabelle), Computergegner setzen die neuen Items schlauer ein"},
     {"id": "n251010it", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🎁", "t": "Gringo Kart: 6 neue Items – Saci-Pererê (unsichtbar + Item klauen), Fita K7 (Vorderleute zurückspulen), Troca-Troca (Platztausch), Falsche Kiste, Reboque (Abschleppseil mit Schleuder) und Caça-Níquel (Spielautomat). Alles erklärt in „📖 Items & Kurzanleitung“"},
     {"id": "n251010bx", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "💎", "t": "Gringo Kart: Neue Item-Kisten – schwebende, leuchtende Kristall-Würfel in Brasilien-Farben statt gelber Würfel"},
