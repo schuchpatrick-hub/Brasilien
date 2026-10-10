@@ -10252,9 +10252,10 @@
     ]
   },
   "news": [
+    {"id": "n251010g4", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🛠️", "t": "Gringo Kart durchgecheckt: kleine Fehler behoben (Kisten, Fahrzeugnamen im Querformat, Kamera beim Platztausch, Live-Pokaltabelle), Computergegner setzen die neuen Items schlauer ein"},
     {"id": "n251010it", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🎁", "t": "Gringo Kart: 6 neue Items – Saci-Pererê (unsichtbar + Item klauen), Fita K7 (Vorderleute zurückspulen), Troca-Troca (Platztausch), Falsche Kiste, Reboque (Abschleppseil mit Schleuder) und Caça-Níquel (Spielautomat). Alles erklärt in „📖 Items & Kurzanleitung“"},
     {"id": "n251010bx", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "💎", "t": "Gringo Kart: Neue Item-Kisten – schwebende, leuchtende Kristall-Würfel in Brasilien-Farben statt gelber Würfel"},
-    {"id": "n251010fs", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🚦", "t": "Gringo Kart: Fehlstart mit Show – bei der „2“ zu früh = Burnout im Reifenqualm, schon bei der „3“ = Motor abgewürgt, der Anlasser orgelt, bis er mit Knall anspringt. Auch Computerfahrer patzen manchmal"},
+    {"id": "n251010fs", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🚦", "t": "Gringo Kart: Start mit Show – richtig ist ein Tipper während der „1“. Vor der 1 = zu früh: Burnout im Reifenqualm; erst nach der 1 = zu spät: Motor abgewürgt, der Anlasser orgelt, bis er mit Knall anspringt. Auch Computerfahrer patzen manchmal"},
     {"id": "n251010ob", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🚧", "t": "Gringo Kart: An Hindernissen (Stau-Autos, Kisten, Koffer …) gleitet man jetzt ab – Streifen kostet kaum Tempo, frontal gibt’s einen Schubs zur freien Seite statt Feststecken"},
     {"id": "n251010ds", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "📶", "t": "Gringo Kart: Neue Live-Einstellung „Daten: Sparsam“ – halbiert ungefähr den Datenverbrauch im Live-Rennen, ohne dass man es beim Fahren merkt (Standard bleibt Normal)"},
     {"id": "n251010iv", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🎬", "t": "Gringo Kart: Die Strecken-Vorschau kommt jetzt vor jedem Rennen – auch im Live-Rennen für alle gleichzeitig (antippen = überspringen). Die Schilder vor den Abkürzungen sind weg"},
