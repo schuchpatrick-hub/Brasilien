@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251010sg", "d": "2026-10-10", "tab": "kart-tab", "to": "kartsec", "e": "🎲", "t": "Gringo Kart: Die Startplätze werden vor jedem Rennen ausgelost – mal Pole-Position, mal letzte Reihe, nie zweimal hintereinander derselbe Platz. Live losen alle Handys gleich aus, echte Mitspieler starten nicht mehr übereinander"},
     {"id": "n251009kb", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🎢", "t": "Gringo Kart: Karts kleben nicht mehr aneinander – bei Remplern prallen sie jetzt leicht ab wie beim Autoscooter, und ein Rempler kostet kaum noch Tempo"},
     {"id": "n251009vr", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "🗣️", "t": "Gringo Kart: kein Fahrer sagt mehr zweimal hintereinander denselben Spruch – die Sprüche wechseln sich jetzt reihum ab"},
     {"id": "n251009rb", "d": "2026-10-09", "tab": "kart-tab", "to": "kartsec", "e": "📊", "t": "Gringo Kart: Rennbericht nach jedem Rennen – Rundenzeiten, Top-Speed, Drift-Anteil, Takedowns, dein Erzfeind (wer dich am öftesten abgeschossen hat) und ein bissiger Kommentar der Rennleitung"},

@@ -8518,7 +8518,7 @@ setGroup(G);
     const vs = liveVotes(lb), top = vs.filter(v => v[1] === (vs[0] || [0, 0])[1]).map(v => v[0]); let track = rnd ? pick(TRACKS).id : top.length ? pick(top) : TRK, gp = null;
     if (LIVE.gp && LIVE.gp.i < LIVE.gp.list.length - 1) { gp = {id: LIVE.gp.id, list: LIVE.gp.list, i: LIVE.gp.i + 1}; track = gp.list[gp.i]; }
     else if (lb.filter(p0 => p0.presence.gpv).length * 2 >= lb.length && lb.some(p0 => p0.presence.gpv)) { const rest = TRACKS.map(t => t.id).filter(t => t !== track).sort(() => Math.random() - .5); gp = {id: Date.now().toString(36), list: [track, rest[0], rest[1]], i: 0}; }
-    const dl = rnd ? 8100 : 4500; liveEmit({t: 'start', id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), track, at: Date.now() + dl, delay: dl, players: lb.map(p0 => p0.peer), host: LIVE.me, ai, gp, auto: auto ? 1 : 0, seed: Math.random().toString(36).slice(2, 10), cfg: cf, rnd: rnd || undefined}); }
+    const dl = rnd ? 10100 : 6500;   /* +2 s für die Auslosung der Startplätze */ liveEmit({t: 'start', id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), track, at: Date.now() + dl, delay: dl, players: lb.map(p0 => p0.peer), host: LIVE.me, ai, gp, auto: auto ? 1 : 0, seed: Math.random().toString(36).slice(2, 10), cfg: cf, rnd: rnd || undefined}); }
   // Auto-Start: sind alle in der Lobby (mindestens 2) bereit, startet das Rennen nach 3 s von selbst (gesendet vom „Anführer“ = kleinste Peer-Kennung)
   function liveAuto() { const lb = lobby(), all = lb.length >= 2 && lb.every(p0 => p0.presence.rdy);
     if (!all || LIVE.race || box.hidden || MODE !== 'live') { if (LIVE.autoAt) { LIVE.autoAt = 0; if (!menu.hidden) liveBox(); } return; }
@@ -8721,6 +8721,40 @@ setGroup(G);
       const em = E(C.e, 64), sz = C.eye ? R * 1.5 : C.side ? R * 1 : R * 1.5; x.drawImage(em, C.side ? w / 2 + R * .25 : w / 2 - sz / 2, C.eye ? hh / 2 - sz * .42 : C.side ? 60 - sz * .1 : 60 - sz * .62, sz, sz); }); }
   const fmt = ms => { const s = ms / 1000; return Math.floor(s / 60) + ':' + (s % 60).toFixed(1).padStart(4, '0'); };
 
+  // Startaufstellung wird ausgelost (Wunsch Patrick 10.10.: immer von verschiedenen Positionen starten, vorher ausgelost). Einzelrennen/Pokal: Zufall, der eigene Startplatz nie zweimal
+  // hintereinander gleich (br26.kartSlot); live: dieselbe Auslosung auf allen Handys aus dem Start-Seed (vorher stellte jedes Handy sein eigenes Kart auf die Pole, echte Mitspieler starteten übereinander)
+  function gridSlots(order, LP, LAI) { const n = order.length;
+    if (TUTON) return order.map((_, k) => k === 0 ? 2 : k <= 2 ? k - 1 : k);
+    if (LP) { const r = mulberry(hashS(String(LIVE.race.seed || LIVE.race.id) + ':grid')), perm = LIVE.race.players.concat(LAI.map((_, j) => 'ai' + j)).map(e => [r(), e]).sort((a, b) => a[0] - b[0]).map(x => x[1]);
+      const sl = order.map((_, k) => perm.indexOf(k === 0 ? LIVE.me : k <= LP.length ? LP[k - 1].peer : 'ai' + (k - LP.length - 1)));
+      if (sl.some(x => x < 0) || new Set(sl).size !== n) return order.map((_, k) => k);   /* Notfall (z. B. Wiedereinstieg mit neuer Kennung): alte Reihenfolge */ return sl; }
+    const s0 = [...Array(n).keys()]; for (let i = n - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [s0[i], s0[j]] = [s0[j], s0[i]]; }
+    const last = +store.get('kartSlot'); if (n > 1 && s0[0] === last) { const j = 1 + Math.floor(Math.random() * (n - 1)); [s0[0], s0[j]] = [s0[j], s0[0]]; }
+    store.set('kartSlot', String(s0[0])); return s0; }
+  const gQuip = (s, n) => s === 0 ? 'Pole-Position! Jetzt bloß nicht direkt in die Bande.' : s === n - 1 ? 'Letzte Reihe. Wie im echten Leben.' : s === 1 ? 'Erste Reihe. Der Pokal riecht schon nach dir.' : s === n - 2 ? 'Fast ganz hinten. Beste Sicht auf das Gemetzel.' : ['Mittelfeld. Genau da, wo die Unfälle passieren.', 'Genug Leute vor dir zum Abschießen.'][s % 2];
+  // Auslosung zeigen: Einzelrennen/Pokal 3 s (Rennuhr steht, Antippen überspringt), live in der Wartezeit vor dem Countdown (Uhr läuft weiter)
+  function gridMake(live) { const dur = live ? clamp(-S.t - 3.15, .9, 2.6) : 3, f = live ? clamp((dur - .7) / 1.4, .35, 1) : 1; return {t: 0, dur, live, lk: S.karts.map(k => (.3 + k.slot * .22) * f), ok: {}}; }
+  function gridHud() { const g = S.grid, t = g.t, n = S.karts.length, now = performance.now(), a = Math.min(clamp(t / .25, 0, 1), clamp((g.dur - t) / .3, 0, 1)), me = S.karts[0], lockMe = t >= g.lk[0];
+    S.karts.forEach((k, i) => { if (g.ok[i] || t < g.lk[i]) return; g.ok[i] = 1; if (k.me) { beep(988, .12, 'triangle', .07); beep(1319, .18, 'triangle', .05); vib(15); } else beep(560 + k.slot * 45, .045, 'square', .035); });   // Klick je eingerastetem Platz
+    const tw = Math.min(172, (W - 44) / 2), th = 44, gap = 8, rows = Math.ceil(n / 2), gh = rows * (th + gap) + th / 2, x0 = W / 2 - tw - 5, x1 = W / 2 + 5, y0 = H - 34 - gh;
+    ctx.save(); ctx.globalAlpha = a;
+    { const gr = ctx.createLinearGradient(0, y0 - 96, 0, H); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(.25, 'rgba(0,0,0,.62)'); gr.addColorStop(1, 'rgba(0,0,0,.86)'); ctx.fillStyle = gr; ctx.fillRect(0, y0 - 96, W, H - y0 + 96); }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 8;
+    ctx.font = '900 12px system-ui,sans-serif'; ctx.fillStyle = '#ffd23f'; ctx.fillText('🎲 STARTAUFSTELLUNG' + (CUP ? ' · RENNEN ' + (CUP.i + 1) + '/' + CUP.list.length : ''), W / 2, y0 - 62);
+    ctx.font = 'italic 900 26px system-ui,sans-serif'; ctx.fillStyle = '#fff'; ctx.fillText(lockMe ? 'Du startest von Platz ' + (me.slot + 1) : 'Wird ausgelost …', W / 2, y0 - 34, W - 30);
+    if (lockMe) { ctx.font = '700 12px system-ui,sans-serif'; ctx.fillStyle = '#d6e6f5'; ctx.fillText(g.q || (g.q = gQuip(me.slot, n)), W / 2, y0 - 14, W - 30); }
+    ctx.shadowBlur = 0;
+    S.karts.forEach((k, i) => { const s = k.slot, col = s % 2, row = Math.floor(s / 2), x = col ? x1 : x0, y = y0 + row * (th + gap) + col * th / 2, lk = t >= g.lk[i], pop = lk ? clamp(1 - (t - g.lk[i]) / .2, 0, 1) : 0, hi = lk && k.me;
+      ctx.save(); ctx.translate(x + tw / 2, y + th / 2); ctx.scale(1 + pop * .12, 1 + pop * .12); ctx.translate(-tw / 2, -th / 2);
+      ctx.beginPath(); ctx.roundRect(0, 0, tw, th, 10); ctx.fillStyle = hi ? 'rgba(255,210,63,.96)' : 'rgba(8,18,38,.9)'; ctx.fill(); ctx.lineWidth = 2; ctx.strokeStyle = hi ? '#fff' : s === 0 ? '#ffd23f' : 'rgba(255,255,255,.25)'; ctx.stroke();
+      ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.font = 'italic 900 18px system-ui,sans-serif'; ctx.fillStyle = hi ? '#1a1a1a' : s === 0 ? '#ffd23f' : '#fff'; ctx.fillText('P' + (s + 1), 8, th / 2 + 1);
+      const hd = HEAD[lk ? k.id : S.karts[Math.floor(now / 70 + i * 2) % n].id]; if (hd) ctx.drawImage(hd, 42, (th - 32) / 2, 32, 32);   // vor dem Einrasten laufen die Köpfe durch
+      const sub = !lk ? '' : k.me ? 'DU' : S.live ? (k.aiIdx !== undefined ? '🤖 Computer' : k.who ? NAME(k.who) : '') : '';
+      ctx.font = '800 12px system-ui,sans-serif'; ctx.fillStyle = hi ? '#1a1a1a' : '#fff'; ctx.fillText(lk ? NAME(k.id) : '???', 80, sub ? th / 2 - 7 : th / 2, tw - 86);
+      if (sub) { ctx.font = '800 10px system-ui,sans-serif'; ctx.fillStyle = hi ? 'rgba(0,0,0,.65)' : 'rgba(255,255,255,.65)'; ctx.fillText(sub, 80, th / 2 + 8, tw - 86); }
+      ctx.restore(); });
+    if (!g.live) { ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '700 11px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.7)'; ctx.fillText('Antippen = überspringen', W / 2, H - 16); }
+    ctx.restore(); }
   function newRace() {
     const LP = LIVE.race && LIVE.race.players ? LIVE.race.players.filter(pl => pl !== LIVE.me).map(pl => ({peer: pl, pr: ((LIVE.peers.find(p0 => p0.peer === pl) || {}).presence) || {}})) : null;
     const LAI = LP ? (LIVE.race.ai || []) : [], HOST = LP && LIVE.race.host === LIVE.me;
@@ -8730,10 +8764,11 @@ setGroup(G);
       const rv0 = loadJ('kartRival')[me]; if (rv0 && DRVS.includes(rv0) && !used.has(baseOf(rv0))) { mix.push(rv0); used.add(baseOf(rv0)); }   // gespeicherter Rivale fährt immer mit
       for (const id of pool) { if (mix.length >= 5) break; if (used.has(baseOf(id))) continue; used.add(baseOf(id)); mix.push(id); }
       order.splice(1, order.length - 1, ...mix.sort(() => Math.random() - .5)); }
-    // Startfeld: versetzte Zweierreihen mit Abstand; im Einzelrennen startet man aus Reihe 2 (live bleibt die Reihenfolge, damit alle Handys gleich rechnen)
-    const karts = order.map((id, k) => { const sl = LP ? k : (k === 0 ? 2 : k <= 2 ? k - 1 : k), row = Math.floor(sl / 2), lat = (sl % 2 ? 1 : -1) * Math.min(42, TW * .26), i = N - 10 - row * 14 - (sl % 2) * 5, [x, y] = at(i, lat);
+    // Startfeld: versetzte Zweierreihen mit Abstand; Startplätze werden ausgelost (gridSlots), live auf allen Handys gleich
+    const SL = gridSlots(order, LP, LAI);
+    const karts = order.map((id, k) => { const sl = SL[k], row = Math.floor(sl / 2), lat = (sl % 2 ? 1 : -1) * Math.min(42, TW * .26), i = N - 10 - row * 14 - (sl % 2) * 5, [x, y] = at(i, lat);
       const a = Math.atan2(P[(i + 1) % N][1] - P[i][1], P[(i + 1) % N][0] - P[i][0]);
-      return {id, me: k === 0, x, y, a, mv: a, v: 0, steer: 0, idx: i, lat, lap: -1, half: true, done: 0, spin: 0, rot: 0, boost: 0, item: null, roll: 0, useAt: 0,
+      return {id, me: k === 0, slot: sl, x, y, a, mv: a, v: 0, steer: 0, idx: i, lat, lap: -1, half: true, done: 0, spin: 0, rot: 0, boost: 0, item: null, roll: 0, useAt: 0,
         skill: id === me ? 1 : rnd(DIFFS[DIFF].s[0], DIFFS[DIFF].s[1]), vr: 0, lost: 0, rumble: 0, squash: 0, lapT0: 0, lane: rnd(-35, 35), laneT: 0, say: null, sayT: 0, dust: 0, hold: 0, dr: 0, dt: 0, yaw: 0, air: 0, airT: 0, trick: 0, stall: 0, pad: 0, wet: 0, dol: 0, inv: 0, glow: 0, blind: 0, slowT: 0, slowE: '', bump: 0, cs: Object.assign({}, CS[id] || {spd: .5, hdl: .5, acc: .5, tgh: .5}), pf: k === 0 ? partsFx() : PF0, vt: VTUNE[id === me ? vehOf(id) : 'kart'] || VTUNE.kart, vtype: vehOf(id), vsz: VSZ[vehOf(id)] || (STY[id] || {}).vs || 1, voff: VOFF[vehOf(id)] || 1, fw: vehOf(id) === 'kart' && STYK(id) ? FWS[STYK(id)] || null : FW[vehOf(id)], vx: xvx(id, k === 0), brk: false, manual: null, peg: pegel(baseOf(id)),
         rocket: !LP && id !== me && !(PERS[id] || {}).noRocket && Math.random() < .45, remote: LP && k > 0 && (k <= LP.length || !HOST) ? 1 : 0, peer: LP && k > 0 ? (k <= LP.length ? LP[k - 1].peer : LIVE.race.host) : null, aiIdx: LP && k > LP.length ? k - LP.length - 1 : undefined, vkey: LP && k > 0 && k <= LP.length ? 'r:' + LP[k - 1].peer : null, who: LP && k > 0 && k <= LP.length ? LP[k - 1].pr.who : null, coins: 0, pp: PERS[id] || PERS0, misT: rnd(6, 14), misK: null, misD: 0, burstT: rnd(8, 18)}; });
     const boxes = [], bo = Math.round(Math.min(54, TW * .33)); (T.boxes || []).forEach(f => [-bo, 0, bo].forEach(l => {   /* Kisten weiter auseinander (vorher ±42), Wunsch Patrick 09.10. */ const i = Math.round(f * N); boxes.push({i, l, x: at(i, l)[0], y: at(i, l)[1], off: 0}); }));
@@ -8750,7 +8785,7 @@ setGroup(G);
     if (LP) LP.forEach(x => { const pr = x.pr, rr = RND[x.peer], id = rr ? rr[0] : pr.drv || pr.who || 'jonas', pt = rr ? {} : pr.paint || {}, pv = rr ? rr[1] : pr.veh; VEH['r:' + x.peer] = vehSprite(pt.c || (LOOK[id] || {}).shirt || '#00a651', T.veh === 'boat' ? 'boat' : (pv || 'kart'), Object.assign({}, pt, pr.parts || {}), id);
       const kk = karts.find(q => q.vkey === 'r:' + x.peer), vt0 = T.veh === 'boat' ? 'boat' : (pv || 'kart'); if (kk) { kk.vtype = vt0; kk.vsz = VSZ[vt0] || (vt0 === 'kart' && (STY[id] || {}).vs) || 1; kk.fw = vt0 === 'kart' && STYK(id) ? FWS[STYK(id)] || null : undefined; } });   // Mitspieler zeigen ihr gewähltes Fahrzeug (auch auf Ilha Grande)
     const dolphins = (T.dolphins || []).map(f => { const l = rnd(-40, 40), [x, y] = at(f * N, l); return {x, y, i: wrap(f * N), t: rnd(0, 3), cd: 0}; });
-    S = {brk: makeBrk(), brkP: [], deb: [], storm: {at: T.id !== 'cristo' && Math.random() < .33 ? rnd(22, 40) : -1, f: 0, next: 0, pud: 0}, karts, boxes, obst, birds, movers, puddles, dolphins, gates, fwT: 1, cutSaid: -1, coins: coinsT, got: 0, myHits: 0, rival, rivalAhead: true, rivalSaid: 0, tu: tune(), oils: [], coatis: [], fx: [], sp: [], marks: [], fw: [], drops: [], t: -4.1, cd: 4, over: 0, slow: 0, press: null, leader: null, lastPlace: 6,
+    S = {brk: makeBrk(), brkP: [], deb: [], storm: {at: T.id !== 'cristo' && Math.random() < .33 ? rnd(22, 40) : -1, f: 0, next: 0, pud: 0}, karts, boxes, obst, birds, movers, puddles, dolphins, gates, fwT: 1, cutSaid: -1, coins: coinsT, got: 0, myHits: 0, rival, rivalAhead: true, rivalSaid: 0, tu: tune(), oils: [], coatis: [], fx: [], sp: [], marks: [], fw: [], drops: [], t: -4.1, cd: 4, over: 0, slow: 0, press: null, leader: null, lastPlace: SL[0] + 1,
       lx: 0, lxMsg: null, rep: {laps: [], by: {}, vic: {}, hits: 0, items: 0, wall: 0, mini: 0, ov: 0, drT: 0, tT: 0, offT: 0, top: 0, leadT: 0, bestPl: 9, lap0: 0},
       cc: LP ? (CCS.includes(+((LIVE.race && LIVE.race.cfg) || {}).cc) ? +LIVE.race.cfg.cc : 150) : TUTON ? 150 : CC,
       wave: {next: rnd(9, 13), on: 0, warn: 0, h: 0}, flood: 0, hl: {}, flash: 0, supers: 0, rec: [], ghost: null, lapMsg: null, zoom: 1, camT: 0, camA: karts[0].a, camX: karts[0].x, camY: karts[0].y, shake: 0};
@@ -9005,7 +9040,8 @@ setGroup(G);
     beep(660, .12, 'square', .05, 990); setTimeout(() => beep(880, .16, 'square', .05, 1320), 140); vib([20, 40, 20]); }
   let CCF = 1, CCV = 1;   // Klasse im laufenden Rennen: Tempo-Faktor und (für Drift-Schwellen) höchstens 1
   function step(dt) {
-    if (S.intro) { S.intro.t += dt; if (S.intro.t >= S.intro.dur) { S.intro = null; box.classList.remove('kr-intro'); } return; }   // Vorschau läuft: Rennuhr steht, danach Countdown
+    if (S.intro) { S.intro.t += dt; if (S.intro.t >= S.intro.dur) { S.intro = null; if (!S.grid) box.classList.remove('kr-intro'); } return; }   // Vorschau läuft: Rennuhr steht, danach Countdown
+    if (S.grid) { S.grid.t += dt; const end = S.grid.t >= S.grid.dur || (S.grid.live && S.t > -3.1); if (end) { S.grid = null; box.classList.remove('kr-intro'); } else if (!S.grid.live) return; }   // Startaufstellung: Einzelrennen/Pokal mit stehender Uhr
     S.t += dt; S.shake = Math.max(0, S.shake - dt); CCF = ccF(S.cc || 150); CCV = Math.min(1, CCF);
     if (S.live && S.live.t0p && !(S.slow > 0)) { const w = (performance.now() - S.live.t0p) / 1000; if (w - S.t > .25) S.t = w; }   // Live: gemeinsame Rennuhr (nach App-Wechsel/Ruckeln aufholen)
     if (S.t < 0) { const c = Math.ceil(-S.t); if (c !== S.cd) { S.cd = c; if (c <= 3) SFX.count(1); } if (S.press === null && S.t > -3.05 && anyInput()) S.press = S.t; return; }
@@ -9346,12 +9382,14 @@ setGroup(G);
   const MVSAY = {jogger: 'Bom dia!', bike: 'Trimm trimm!', skate: 'Radical!', tug: 'Gepäck kommt!', fork: 'Bip bip bip!', bus: 'Fiiiip!', soccer: 'Gooool!', tram: 'Plim plim!', moto: 'Saaai da frente!', monkey: 'Uh uh uh!', vendor: 'Olha o Caipi! 🍹', corn: 'Milho verde! 🌽', horse: 'Ôa, ôa!', dog: 'Wuff!', caiman: '…', coati: '!!'};
   function draw() {
     const k0 = S.karts[0], nowT = performance.now() / 1000, cdt = clamp(nowT - (S.camT || nowT), 0, .05); S.camT = nowT;
-    const spd = Math.hypot(k0.v, k0.vr), zt = S.intro ? introZoom(S.intro.t) : 1 - clamp((spd - 250) / 700, 0, .14) - (k0.boost > 0 ? .03 : 0) - hgt(k0.idx) * .1;   /* oben auf dem Berg etwas mehr Weitblick; Vorschau = weit raus */ S.zoom += (zt - S.zoom) * (1 - Math.exp(-cdt * (S.intro ? 6 : 3)));
+    const spd = Math.hypot(k0.v, k0.vr), zt = S.intro ? introZoom(S.intro.t) : S.grid ? .82 : 1 - clamp((spd - 250) / 700, 0, .14) - (k0.boost > 0 ? .03 : 0) - hgt(k0.idx) * .1;   /* oben auf dem Berg etwas mehr Weitblick; Vorschau = weit raus */ S.zoom += (zt - S.zoom) * (1 - Math.exp(-cdt * (S.intro ? 6 : 3)));
     const sc = Math.min(W, H) / (W > H ? 380 : 390) * S.zoom * [1.12, 1, .86][SET.cam] * (window.__kzoom || 1);   // __kzoom nur für Tests (Nahaufnahme)
     // Kamera folgt weich: Blickrichtung zwischen Nase und Fahrtrichtung, Vorausblick in Fahrtrichtung
     const la = k0.done ? 0 : 1, wantA = k0.a + angd(k0.mv, k0.a) * .45, kr = 1 - Math.exp(-cdt * 6), kp = 1 - Math.exp(-cdt * 14);
     if (S.intro) { const it = S.intro, i = it.i0 + introU(it.t) * N, [x, y] = at(i, 0), [xa, ya] = at(i - 8, 0), [xb, yb] = at(i + 16, 0), q = 1 - Math.exp(-cdt * 9);   // Strecken-Vorschau: Kamera fliegt eine Runde ab
       S.camA += angd(Math.atan2(yb - ya, xb - xa), S.camA) * (1 - Math.exp(-cdt * 3.5)); S.camX += (x - S.camX) * q; S.camY += (y - S.camY) * q; }
+    else if (S.grid) { let cx = 0, cy = 0; S.karts.forEach(k => { cx += k.x; cy += k.y; }); cx /= S.karts.length; cy /= S.karts.length; const off = H * .17 / sc;   // Auslosung: ganzes Startfeld in der oberen Bildhälfte (unten steht die Tafel)
+      S.camA += angd(k0.a, S.camA) * kr; S.camX += (cx - Math.cos(k0.a) * off - S.camX) * kp; S.camY += (cy - Math.sin(k0.a) * off - S.camY) * kp; }
     else { S.camA += angd(wantA, S.camA) * kr;
     S.camX += (k0.x + Math.cos(k0.mv) * spd * .12 * la - S.camX) * kp; S.camY += (k0.y + Math.sin(k0.mv) * spd * .12 * la - S.camY) * kp; }
     const phi = -Math.PI / 2 - S.camA, sh = S.shake > 0 ? S.shake * 18 : 0, tt = performance.now() / 1000;
@@ -9524,6 +9562,8 @@ setGroup(G);
     S.fx.forEach(f => { if (!f.txt) return; const p = toScreen(f.x, f.y, sc, phi); ctx.save(); ctx.globalAlpha = clamp(1.3 - f.t, 0, 1); ctx.font = '900 20px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.lineWidth = 5; ctx.strokeStyle = 'rgba(0,0,0,.6)';
       const y = dodge(p[0], p[1] - 55 - f.t * 40, ctx.measureText(f.txt).width + 8, 26) + 7; ctx.strokeText(f.txt, p[0], y); ctx.fillStyle = f.col; ctx.fillText(f.txt, p[0], y); ctx.restore(); });
     S.karts.forEach(k => { if (k.sayT <= 0) return; const p = toScreen(k.x, k.y, sc, phi); bubble(p[0], p[1] - 34 * sc, k.say, Math.min(1, k.sayT * 3)); });
+    if (S.grid) { ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; S.karts.forEach((k, i) => { if (S.grid.t < S.grid.lk[i] || k.out) return; const p = toScreen(k.x, k.y, sc, phi), tx = 'P' + (k.slot + 1) + (k.me ? ' · DU' : ''), y = p[1] - 40 * sc;   // Startplatz über dem Kart
+      ctx.font = 'italic 900 ' + (k.me ? 15 : 13) + 'px system-ui,sans-serif'; const w = ctx.measureText(tx).width + 14; ctx.fillStyle = k.me ? '#ffd23f' : 'rgba(0,0,0,.62)'; ctx.beginPath(); ctx.roundRect(p[0] - w / 2, y - 11, w, 22, 11); ctx.fill(); ctx.fillStyle = k.me ? '#1a1a1a' : '#fff'; ctx.fillText(tx, p[0], y + 1); }); ctx.restore(); }
     if (S.live) { const tn = performance.now(); ctx.save(); ctx.textAlign = 'center'; S.karts.forEach(k => { if (k.me || k.out) return; const p = toScreen(k.x, k.y, sc, phi); if (p[0] < -40 || p[0] > W + 40 || p[1] < -40 || p[1] > H + 40) return;
         if (k.aiIdx === undefined) { const t = NAME(k.who || k.id) + (k.lagging ? ' 📶' : ''); ctx.font = '800 12px system-ui,sans-serif'; const w = ctx.measureText(t).width + 12; ctx.fillStyle = 'rgba(0,0,0,.55)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(p[0] - w / 2, p[1] + 22 * sc, w, 18, 9) : ctx.rect(p[0] - w / 2, p[1] + 22 * sc, w, 18); ctx.fill(); ctx.fillStyle = '#9ff0b4'; ctx.fillText(t, p[0], p[1] + 22 * sc + 13); } });
       S.karts.forEach(k => { if (!(k.emoU > tn)) return; const p = toScreen(k.x, k.y, sc, phi), a = clamp((k.emoU - tn) / 400, 0, 1), up = (2400 - (k.emoU - tn)) / 2400; ctx.globalAlpha = a; ctx.font = '40px system-ui,sans-serif'; ctx.fillText(k.emo, p[0], dodge(p[0], p[1] - 52 * sc - up * 26 - 14, 46, 46) + 14); ctx.globalAlpha = 1; }); ctx.restore(); }
@@ -9547,6 +9587,7 @@ setGroup(G);
     ctx.fillStyle = '#222'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t, x, y - 17); ctx.restore(); }
   function hud() {
     if (S.intro) { introHud(); return; }
+    if (S.grid) { gridHud(); return; }
     const k = S.karts[0], pl = place(k), top = 12, now = performance.now();
     ctx.save(); ctx.textBaseline = 'top'; ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 6;
     ctx.fillStyle = pl === 1 ? '#ffd23f' : '#fff'; ctx.font = '900 44px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillText(pl + '.', W / 2, top + 30);
@@ -10161,7 +10202,7 @@ setGroup(G);
     if (TUTON) { S.tut = {i: 0, ok: 0}; S.karts.length = 1; LAPS = 2; S.storm.at = -1; S.rival = null; }
     S.rep.lap0 = +store.get('kartLap.' + tkey(T.id)) || 0; Object.values(VUSE).forEach(U => { U.last = null; });   // neues Rennen: Reihenfolge der Sprüche läuft weiter, nur die Sperre „gerade gesagt“ fällt weg   // beste Runde vor diesem Rennen (für den Rennbericht)
     if (!LIVE.race && !TUTON && SET.intro !== 'off' && !INTROSEEN[T.id]) { INTROSEEN[T.id] = 1; S.intro = introMake(); box.classList.add('kr-intro'); } else box.classList.remove('kr-intro');   // Strecken-Vorschau (einmal je Strecke und Sitzung)
-    if (LIVE.race) { S.live = LIVE.race; S.live.t0p = LIVE.race.delay && LIVE.race.rt ? LIVE.race.rt + LIVE.race.delay : performance.now() + clamp(LIVE.race.at - Date.now(), 500, 6000); S.t = clamp((performance.now() - S.live.t0p) / 1000, -6, -.5); LIVE.buf = {}; LIVE.lastN = {}; S.live.curHost = S.live.host; liveRejoinRestore(); liveClockSync(); } box.classList.toggle('live', !!S.live); S.tod = T.night || SET.tod === 'day' ? 'day' : (h => h >= 19 || h < 6 ? 'night' : h >= 17 ? 'dusk' : h < 7 ? 'dawn' : 'day')(+new Intl.DateTimeFormat('en-GB', {timeZone: 'America/Sao_Paulo', hour: 'numeric', hour12: false}).format(new Date()) % 24);
+    if (LIVE.race) { S.live = LIVE.race; S.live.t0p = LIVE.race.delay && LIVE.race.rt ? LIVE.race.rt + LIVE.race.delay : performance.now() + clamp(LIVE.race.at - Date.now(), 500, 6000); S.t = clamp((performance.now() - S.live.t0p) / 1000, -6, -.5); LIVE.buf = {}; LIVE.lastN = {}; S.live.curHost = S.live.host; liveRejoinRestore(); liveClockSync(); } if (!TUTON && !(S.live && S.t > -3.4)) { S.grid = gridMake(!!S.live); box.classList.add('kr-intro'); } box.classList.toggle('live', !!S.live); S.tod = T.night || SET.tod === 'day' ? 'day' : (h => h >= 19 || h < 6 ? 'night' : h >= 17 ? 'dusk' : h < 7 ? 'dawn' : 'day')(+new Intl.DateTimeFormat('en-GB', {timeZone: 'America/Sao_Paulo', hour: 'numeric', hour12: false}).format(new Date()) % 24);
     if (!CUP && GHOST.mode !== 'off') { const tid = T.id, s0 = S; ghostFor(tid).then(g => { if (S === s0 && g) { S.ghost = g; ghostProg(g); } }); } audio(); MUS.on = false; MUS.fast = false; MUS.step = 0; MUS.next = 0; banner = null; last = 0; if (MG && AC) MG.gain.value = .5;
     setTimeout(() => { if (S && S.tod === 'night' && !T.night) setTimeout(() => say('night', 'Es wird Nacht! Licht an!'), 2600); if (S && S.t < 0) say('t_' + T.id, 'Willkommen in ' + T.name + '!', 1); }, 150);
     // Gastfahrer im Feld: eigene Ansage (Aufnahme g_<id> in kart6.mp3, sonst Handy-Stimme)
@@ -10291,7 +10332,7 @@ setGroup(G);
   const upd = () => { const v = [...ptr.values()]; INPUT.L = v.some(o => o.s === 'L'); INPUT.R = v.some(o => o.s === 'R');
     if (SET.ctl === 'analog') { INPUT.brake = v.length >= 2; const o = v[v.length - 1]; if (!o) INPUT.ax = null; else { const r = (o.x - W / 2) / (W * .3); INPUT.ax = Math.abs(r) < .08 ? 0 : clamp(r, -1, 1); } }
     else { INPUT.ax = null; INPUT.brake = false; } };
-  cv.addEventListener('pointerdown', e => { e.preventDefault(); if (S && S.pod) { podEnd(); return; } if (S && S.intro) { S.intro.t = Math.max(S.intro.t, S.intro.dur - .7); return; }   // Vorschau überspringen
+  cv.addEventListener('pointerdown', e => { e.preventDefault(); if (S && S.pod) { podEnd(); return; } if (S && S.intro) { S.intro.t = Math.max(S.intro.t, S.intro.dur - .7); return; } if (S && S.grid && !S.grid.live) { S.grid.t = Math.max(S.grid.t, S.grid.dur - .35); return; }   // Vorschau überspringen
     const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top; if (px > W - 80 && py > 46 && py < 124) { if (S) useItem(S.karts[0]); return; }   // Item-Fenster oben rechts antippen = Item benutzen
     try { cv.setPointerCapture(e.pointerId); } catch (x) {} const sd = px < W / 2 ? 'L' : 'R', now = performance.now();
     if (SET.ctl !== 'analog' && now - lastTap[sd] < 300) INPUT.dtap = {s: sd === 'L' ? -1 : 1, t: now}; lastTap[sd] = now;
