@@ -5236,7 +5236,7 @@ function wavB64(buf) {
 
 /* ---------- Nachladen (Tempo): Samba-Show, Serie und Gringo Kart liegen in eigenen Dateien mods/<name>.js (build.py schneidet die
    Blöcke zwischen den @@MOD-Markierungen heraus). Geladen wird beim Hinscrollen, beim ersten Antippen oder im Leerlauf nach dem Start. ---------- */
-const MODV = {"samba": "dc362a53e0", "serie": "f625a0821d", "kart": "4a608a0c50"}, MODS = {};
+const MODV = {"samba": "dc362a53e0", "serie": "f625a0821d", "kart": "601dc13272"}, MODS = {};
 // Spielerporträts: Knöpfe sofort freischalten (nicht erst, wenn mods/serie.js geladen ist; der Klick lädt das Modul dann nach)
 (function () { const S0 = (TRIP.series || {}), ids = Object.keys(S0).filter(k => S0[k] && S0[k].portrait), mark = l => l.forEach(id => document.documentElement.classList.add('port-' + id));
   mark(ids.filter(k => !S0[k].admin)); if (ids.some(k => S0[k].admin) && typeof canWrite === 'function') canWrite().then(w => { if (w !== false) mark(ids); }).catch(() => {}); })();

@@ -8627,7 +8627,7 @@ setGroup(G);
   function rdyTxt() { const lb = lobby(), nr = lb.filter(p0 => p0.presence.rdy).length, wait = lobbyP().filter(p0 => !p0.presence.rdy), cd = LIVE.autoAt ? Math.max(0, Math.ceil((LIVE.autoAt - performance.now()) / 1000)) : 0;
     const g = gpLive(), gr = g ? ' für Rennen ' + (Math.min(g.k || 0, g.list.length - 1) + 1) + '/' + g.list.length : '', pend = gpAway(), pw = LIVE.gpW0 ? Math.max(0, Math.ceil((LIVE.gpW0 + GPWAIT - performance.now()) / 1000)) : 0;
     if (LIVE.autoAt) return ['go', '🏁 Alle bereit · Start in ' + cd + ' …'];
-    if (!LIVE.rdy) return ['no', '👍 Ich bin bereit' + gr + '!' + (lb.length >= 2 ? ' · ' + nr + '/' + lb.length : '')];
+    if (!LIVE.rdy) return ['no', (g ? '👍 Bereit' + gr : '👍 Ich bin bereit!') + (lb.length >= 2 ? ' · ' + nr + '/' + lb.length : '')];
     if (!wait.length && pend.length) return ['yes', '✅ Bereit · warte auf ' + pend.map(p0 => NAME(p0.presence.who)).join(', ') + (pw ? ' (max. ' + pw + ' s)' : '')];
     return ['yes', lb.length < liveMin() ? '✅ Bereit · warte auf Mitspieler' : '✅ Bereit · warte auf ' + wait.map(p0 => p0.sameTab ? 'dich' : NAME(p0.presence.who)).join(', ')]; }
   function liveFoot() { const go = menu.querySelector('.kr-go'); if (!go) return; const on = MODE === 'live'; { const dc = menu.querySelector('.kr-dice'); if (dc) { const ro = on && liveCfg().rnd === 'on'; dc.setAttribute('aria-pressed', ro); dc.querySelector('small').textContent = ro ? 'Zufall ✓' : 'Zufall'; } } go.classList.toggle('kr-rdyon', false); go.classList.toggle('kr-rdygo', false); go.classList.toggle('kr-rdyno', false); if (!on) return;
