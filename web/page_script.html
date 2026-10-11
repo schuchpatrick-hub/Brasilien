@@ -7547,7 +7547,7 @@ setGroup(G);
       side: [[.877, .127, 1, 'fence', 120, 30], [.877, .127, -1, 'fence', 120, 30], [.14, .3, 1, 'tree', 200, 40], [.33, .42, -1, 'palm', 220, 40], [.62, .73, 1, 'tree', 170, 40], [.62, .73, -1, 'tree', 190, 40], [.79, .86, 1, 'palm', 220, 40]],
       pads: [[.11, 0], [.22, -30], [.34, 30], [.52, 0], [.64, -30], [.78, 30], [.925, 0]], ramp: null, boxes: [.025, .18, .32, .46, .62, .76, .89], music: {bpm: 120, root: .92, style: 'forest'},
       obst: [[.13, 40, 'cupim'], [.21, -35, 'cupim'], [.36, 35, 'log'], [.43, -35, 'cupim'], [.58, 35, 'log'], [.68, -35, 'cupim'], [.8, 35, 'cupim'], [.86, -35, 'log']],
-      movers: [{f: .155, range: 95, speed: 28, kind: 'capy', n: 3}, {f: .3, range: 100, speed: 55, kind: 'ema'}, {f: .51, range: 90, speed: 28, kind: 'caiman'}, {f: .56, range: 95, speed: 28, kind: 'capy', n: 3}, {f: .76, range: 100, speed: 60, kind: 'ema'}],
+      movers: [{f: .155, range: 95, speed: 28, kind: 'capy', n: 2}, {f: .3, range: 100, speed: 55, kind: 'ema'}, {f: .51, range: 90, speed: 28, kind: 'caiman'}, {f: .56, range: 95, speed: 28, kind: 'capy', n: 2}, {f: .76, range: 100, speed: 60, kind: 'ema'}],
       birds: [.2, .45, .66, .95], spect: [[.02, 1], [.32, -1]],
       hills: [[.205, .245, .25, {pl: .1, jump: 1, n: 'Aterro'}]], tunnels: [[.74, .765, 'Túnel Verde']],
       bridges: [[.905, .917, 'Ponte 12', 'water', {wood: 1, rick: 1, soft: 1, ext: [140, 140], wc: ['#6f8f3c', '#4f97a0', '#2c6f78']}], [.945, .957, 'Ponte 47', 'water', {wood: 1, rick: 1, soft: 1, ext: [140, 140], wc: ['#6f8f3c', '#4f97a0', '#2c6f78']}], [.035, .047, 'Ponte 88', 'water', {wood: 1, rick: 1, soft: 1, ext: [140, 140], wc: ['#6f8f3c', '#4f97a0', '#2c6f78']}],
@@ -7572,7 +7572,7 @@ setGroup(G);
       sea: x => 3800 + 26 * Math.sin(x / 200) + 12 * Math.sin(x / 66), off: .5, grip: 12, veh: 'kart', bg: 'pelo',
       zones: [{th: 'pelo', r: [[0, 0], [5600, 0], [5600, 4200], [0, 4200]]}, {th: 'copa', r: ZB(5600, 3180, 9e3, 50)}],
       cp: [[2880, 3524], [2962, 3523], [3126, 3520], [3290, 3518], [3454, 3516], [3618, 3514], [3782, 3512], [3946, 3510], [4111, 3508], [4275, 3506], [4439, 3503], [4547, 3484], [4643, 3429], [4715, 3347], [4757, 3245], [4790, 3095], [4824, 2944], [4857, 2794], [4863, 2707], [4844, 2621], [4801, 2545], [4738, 2485], [4608, 2391], [4478, 2298], [4347, 2205], [4274, 2128], [4235, 2029], [4236, 1922], [4267, 1767], [4298, 1611], [4329, 1456], [4360, 1300], [4363, 1213], [4339, 1128], [4291, 1055], [4221, 1001], [4095, 931], [3969, 861], [3843, 791], [3717, 721], [3620, 687], [3516, 688], [3420, 724], [3341, 791], [3230, 924], [3120, 1057], [3079, 1125], [3062, 1203], [3070, 1283], [3104, 1355], [3185, 1477], [3266, 1599], [3298, 1668], [3308, 1744], [3294, 1819], [3258, 1887], [3203, 1941], [3064, 2040], [2925, 2139], [2849, 2177], [2765, 2188], [2683, 2171], [2609, 2129], [2553, 2065], [2477, 1943], [2400, 1820], [2324, 1698], [2247, 1575], [2215, 1497], [2211, 1412], [2231, 1251], [2251, 1090], [2271, 929], [2266, 835], [2228, 749], [2162, 683], [2076, 644], [1924, 606], [1772, 568], [1684, 560], [1599, 580], [1524, 625], [1466, 691], [1432, 772], [1392, 933], [1351, 1095], [1311, 1256], [1296, 1298], [1275, 1337], [1181, 1478], [1088, 1618], [994, 1758], [962, 1826], [951, 1900], [961, 1975], [992, 2043], [1082, 2183], [1172, 2323], [1262, 2463], [1299, 2553], [1304, 2651], [1274, 2744], [1206, 2874], [1137, 3004], [1069, 3134], [1040, 3225], [1043, 3321], [1078, 3410], [1142, 3482], [1226, 3529], [1321, 3544], [1485, 3542], [1649, 3540], [1813, 3537], [1977, 3535], [2141, 3533], [2305, 3531], [2469, 3529], [2634, 3527], [2798, 3525]],
-      rollers: {a: .238, b: .296, lanes: [-42, 8, 46], per: 3.6, v: 250}, roda: [.385], lift: [.69, .715],
+      rollers: {a: .238, b: .296, lanes: [-40, 40], per: 4.2, v: 210}, roda: [.385], lift: [.69, .715],
       wave: {x0: 1600, x1: 3900},
       lakes: [{p: [[0, 0], [560, 0], [600, 400], [520, 900], [640, 1400], [560, 1900], [620, 2400], [520, 2900], [430, 3300], [0, 3300]], c1: '#2fa3c9', c2: '#0c5f8a', shore: '#d8c49a', boats: 9},
         {e: [3000, 2850, 330, 220], c1: '#4fa8b8', c2: '#1b6a7e', shore: '#9a8a6a', orixa: 1}],
@@ -7662,7 +7662,7 @@ setGroup(G);
     lencois: [{r: 2, e: '🌪️', t: 'Ventania! Neue Wanderdünen ziehen über die Piste', xt: {dunes: [[.06, 15], [.34, 18], [.6, 17]]}, wind: [4, 7]}, {r: 'last', e: '🌧️', t: 'Regenzeit! Die Lagunen laufen über', xt: {ford: 1.8}, pud: [[.2, 25, 34], [.48, -25, 34], [.75, 20, 32]]}],
     pantanal: [{r: 2, e: '🌊', t: 'Cheia! Das Wasser steigt, die Schlammlöcher wachsen', xt: {mud: 1.4}, pud: [[.18, -25, 34], [.62, 25, 36], [.88, -20, 34]]}, {r: 'last', e: '🐂', t: 'Estouro da boiada! Noch zwei Herden queren', xt: {herd: [[.3, -1, 13, 4], [.82, 1, 14, 7]]}}],
     brasilia: [{r: 2, e: '📮', t: 'Bürokratie-Offensive! Mehr Stempel auf der Esplanada', xt: {stamps: [[.343, -20, 3.6, .7], [.361, 20, 3.6, 2.1]]}}, {r: 'last', e: '📸', t: 'Blitzmarathon! Radar jetzt schon ab 95 km/h', xt: {lim: 95}, mov: [[.5, 'politico', 110, 45]]}],
-    salvador: [{r: 2, e: '🥁', t: 'Olodum! Noch mehr Trommeln rollen die Ladeira runter', xt: {roll: [-14]}}, {r: 'last', e: '💃', t: 'Lavagem do Bonfim! Baianas waschen die Straße', mov: [[.4, 'baiana', 95, 45], [.6, 'baiana', 95, 50]], pud: [[.38, 20, 34], [.55, -20, 34], [.62, 25, 32]]}]};
+    salvador: [{r: 2, e: '🥁', t: 'Olodum! Noch mehr Trommeln rollen die Ladeira runter', xt: {roll: [0]}}, {r: 'last', e: '💃', t: 'Lavagem do Bonfim! Baianas waschen die Straße', mov: [[.4, 'baiana', 95, 45], [.6, 'baiana', 95, 50]], pud: [[.38, 20, 34], [.55, -20, 34], [.62, 25, 32]]}]};
   const OBR = {crate: 22, umbrella: 24, log: 26, suitcase: 20, stone: 18, nut: 20, cone: 16, champ: 16, car: 26, van: 28, stall: 22, cupim: 21};
   const FALLT = {bridge: {m: 30, e: '🚁', n: 'Rettungshubschrauber', t: 'Ab in die Guanabara-Bucht!', w: 1, rim: '#8d949c'}, minhocao: {m: 26, e: '🏗️', n: 'Baukran', t: 'Vom Minhocão gestürzt!', rim: '#8a8a86'},
     cristo: {m: 34, e: '🦅', n: 'Urubu', t: 'Den Corcovado runter!', rim: '#6d655c'}, iguacu: {m: 38, e: '🦜', n: 'Riesen-Arara', t: 'Ab in die Teufelsschlucht!', w: 1, rim: '#4d3a2c'}};
@@ -7740,7 +7740,8 @@ setGroup(G);
         if (ii < Q.i0 - 6) continue; const [x, y] = at(ii, l + 7 * Math.sin(tt * 3 + j)); R.drums.push({x, y, tt, j, ii}); } }); }
     if (X.onca) R.jag = X.onca.map(q => { const c = Math.floor((t + q.ph) / q.per), tau = (t + q.ph) - c * q.per, sd = q.s * (c % 2 ? -1 : 1), L0 = TW / 2 + 52, st = tau < q.per - 2.2 ? 0 : tau < q.per - .6 ? 1 : 2, p = st === 2 ? (tau - (q.per - .6)) / .6 : 0;
         const l = st === 2 ? sd * L0 * (1 - 2 * p) : sd * L0, [x, y] = at(q.i, l); return {x, y, st, p, sd, i: q.i}; });
-    if (X.roda) X.roda.forEach(q => { q.th = t * 2.5 + q.i; });
+    if (X.roda) X.roda.forEach(q => { const P = 3.4, u = Math.max(0, t) / P + (q.i % 7) * .13, c = Math.floor(u), f = u - c, c2 = Math.floor(u + .6 / P);   // Meia-lua: das Bein tritt abwechselnd über die linke und die rechte Straßenhälfte, dazwischen eingezogen (die andere Hälfte ist frei)
+      q.sd = c % 2 ? -1 : 1; q.sd2 = c2 % 2 ? -1 : 1; q.ext = clamp(Math.min(f / .14, (1 - f) / .14), 0, 1); q.th = Math.atan2(NY[q.i], NX[q.i]) + (c % 2) * Math.PI + (f * 2 - 1) * 1.15; });
     if (R.stamps) R.stamps.forEach(q => { q.tau = xtPh(t, q.per, q.ph); q.h = xtStampH(q.tau); }); }
   // Tempo-Faktor je Kart: Wanderdüne, Lagunen-Furt, Schlammloch
   function xtV(k) { const R = S.xt, X = XT; k.xIn = ''; if (!R || k.air > 0 || k.onCut) { k.xIn0 = ''; return 1; } let f = 1;
@@ -7776,10 +7777,11 @@ setGroup(G);
     const gk = k => !k.remote && !k.air && !(k.fall > 0) && !k.done;
     if (R.dunes) R.dunes.forEach(d => haz.push({x: d.x, y: d.y, r: 50}));
     if (X.mud) X.mud.forEach(m => haz.push({x: m.x, y: m.y, r: m.r * R.mudX}));
-    if (R.drums) R.drums.forEach(d => { haz.push({x: d.x, y: d.y, r: 24}); ks.forEach(k => { if (gk(k) && Math.hypot(k.x - d.x, k.y - d.y) < 24) hit(k, 'drum'); }); });
+    if (R.drums) R.drums.forEach(d => { haz.push({x: d.x, y: d.y, r: 34}); ks.forEach(k => { if (gk(k) && Math.hypot(k.x - d.x, k.y - d.y) < 21) hit(k, 'drum'); }); });
     if (R.jag) { R.jag.forEach(g => { if (g.st !== 2 || g.p < .12 || g.p > .88) return; ks.forEach(k => { if (gk(k) && Math.hypot(k.x - g.x, k.y - g.y) < 32 && !(k.spin > 0)) { const had = k.item; hit(k, 'onca'); if (k.spin > 0 && had) { k.item = null; k.icntFor = null; if (k.me) floatTxt(k, '🐆 Item gefressen!', '#ffb0b0'); } } }); }); }
-    if (X.roda) X.roda.forEach(q => { const th = q.th, Lr = TW / 2 + 8, ex = q.x + Math.cos(th) * Lr, ey = q.y + Math.sin(th) * Lr;
-      ks.forEach(k => { if (!gk(k) || k.spin > 0) return; const dx = ex - q.x, dy = ey - q.y, u = clamp(((k.x - q.x) * dx + (k.y - q.y) * dy) / (Lr * Lr), 0, 1), d = Math.hypot(k.x - q.x - dx * u, k.y - q.y - dy * u); if (u > .25 && d < 18) hit(k, 'roda'); }); });
+    if (X.roda) X.roda.forEach(q => { if (q.th === undefined) return; { const [hx, hy] = at(q.i, q.sd2 * TW / 4); haz.push({x: hx, y: hy, r: TW / 4 + 24}); }   // Computerfahrer nehmen die Hälfte, die beim Ankommen frei ist
+      if (q.ext < .6) return; const th = q.th, Lr = (TW / 2 - 6) * q.ext, ex = q.x + Math.cos(th) * Lr, ey = q.y + Math.sin(th) * Lr;
+      ks.forEach(k => { if (!gk(k) || k.spin > 0) return; const dx = ex - q.x, dy = ey - q.y, u = clamp(((k.x - q.x) * dx + (k.y - q.y) * dy) / (Lr * Lr), 0, 1), d = Math.hypot(k.x - q.x - dx * u, k.y - q.y - dy * u); if (u > .25 && d < 15) hit(k, 'roda'); }); });
     if (R.stamps) R.stamps.forEach((q, qi) => { const tau = q.tau, ca = Math.cos(q.a), sa = Math.sin(q.a);
       if (tau < 1.9) haz.push({x: q.x, y: q.y, r: 52});
       if (tau >= 1.08 && tau < 1.3 && q.slam !== Math.floor((t + q.ph) / q.per)) {   /* nur der echte Aufprall (nicht beim Rennstart mitten in der Phase) */ q.slam = Math.floor((t + q.ph) / q.per); const m0 = ks[0]; R.ink.push({x: q.x, y: q.y, a: q.a, t0: t, txt: XINK[(q.slam + qi) % XINK.length]}); if (R.ink.length > 10) R.ink.shift();
@@ -7967,18 +7969,25 @@ setGroup(G);
           for (let j = 0; j < 4; j++) { x.fillStyle = '#4c9a3a'; x.beginPath(); x.arc(X0 + rnd(-r0 * .6, r0 * .6), Y0 + rnd(-r0 * .4, r0 * .4), rnd(5, 9), .3, TAU - .3); x.fill(); } }
         for (let q = 0; q < 210 * DF; q++) { const X0 = rnd(zb[0], zb[2]), Y0 = rnd(zb[1], zb[3]); if (!free(X0, Y0, 40)) continue; Math.random() < .3 ? palm(x, X0, Y0, q) : canopy(x, X0, Y0, rnd(22, 46), q); }
         for (let q = 0; q < 90 * DF; q++) { const X0 = rnd(zb[0], zb[2]), Y0 = rnd(zb[1], zb[3]); if (!free(X0, Y0, 30)) continue; if (q % 3) { x.fillStyle = 'rgba(0,0,0,.2)'; x.beginPath(); x.ellipse(X0 + 4, Y0 + 4, 9, 7, 0, 0, TAU); x.fill(); x.fillStyle = '#a3683e'; x.beginPath(); x.arc(X0, Y0, 8, 0, TAU); x.fill(); x.fillStyle = '#c08454'; x.beginPath(); x.arc(X0 - 2, Y0 - 2, 3.5, 0, TAU); x.fill(); } else { x.fillStyle = '#fff'; x.beginPath(); x.ellipse(X0, Y0, 5, 3, .4, 0, TAU); x.fill(); x.fillStyle = '#ffd23f'; x.fillRect(X0 + 4, Y0 - 1, 3, 1.5); } }
-      } else if (id === 'capital') {   // Brasília: gemähter Rasen, Superquadras (weiße Wohnblöcke auf Stelzen), Baumreihen
-        x.fillStyle = '#8cbf5c'; x.fillRect(zb[0], zb[1], zb[2] - zb[0], zb[3] - zb[1]); for (let X = zb[0] - zb[0] % 80; X < zb[2]; X += 80) { x.fillStyle = 'rgba(255,255,255,.07)'; x.fillRect(X, zb[1], 40, zb[3] - zb[1]); }
+      } else if (id === 'capital') {   // Brasília: gemähter Rasen, Superquadras (weiße Wohnblöcke auf Stelzen), Baumreihen; gleiche Teile je ein Pfad (schnell im Zonen-Zuschnitt)
+        x.fillStyle = '#8cbf5c'; x.fillRect(zb[0], zb[1], zb[2] - zb[0], zb[3] - zb[1]); { const st = new Path2D(); for (let X = zb[0] - zb[0] % 80; X < zb[2]; X += 80) st.rect(X, zb[1], 40, zb[3] - zb[1]); x.fillStyle = 'rgba(255,255,255,.07)'; x.fill(st); }
         noise(1600, 'rgba(40,80,20,.15)', 'rgba(255,255,255,.12)');
-        for (let X = 30; X < WW; X += 320) for (let Y = 30; Y < WH; Y += 320) { if (X > zb[2] || X + 300 < zb[0] || Y > zb[3] || Y + 300 < zb[1]) continue; if (!free(X + 140, Y + 140, 130)) continue; x.strokeStyle = 'rgba(160,160,165,.8)'; x.lineWidth = 10; x.strokeRect(X, Y, 280, 280);
-          for (let b = 0; b < 4; b++) { const bx = X + 30 + (b % 2) * 130, by = Y + 40 + (b >> 1) * 120, hor = (b + (X / 320 | 0)) % 2; const w = hor ? 110 : 34, h = hor ? 34 : 100; x.fillStyle = 'rgba(0,0,0,.25)'; x.fillRect(bx + 10, by + 12, w, h); x.fillStyle = '#f2efe6'; x.fillRect(bx, by, w, h); x.fillStyle = 'rgba(90,140,170,.55)'; for (let q = 4; q < (hor ? w : h) - 4; q += 8) hor ? x.fillRect(bx + q, by + 6, 4, h - 12) : x.fillRect(bx + 6, by + q, w - 12, 4); }
-          for (let q = 0; q < 6; q++) canopy(x, X + rnd(10, 270), Y + rnd(10, 270), rnd(12, 20), q); }
-      } else if (id === 'cerrado') {   // Cerrado: rote Erde, trockenes Gras, krumme Sträucher, gelbe Ipê-Bäume, Termitenhügel
+        const pO = new Path2D(), pS = new Path2D(), pB = new Path2D(), pW = new Path2D(), trees = [];
+        for (let X = 30; X < WW; X += 320) for (let Y = 30; Y < WH; Y += 320) { if (X > zb[2] || X + 300 < zb[0] || Y > zb[3] || Y + 300 < zb[1]) continue; if (!free(X + 140, Y + 140, 130)) continue; pO.rect(X, Y, 280, 280);
+          for (let b = 0; b < 4; b++) { const bx = X + 30 + (b % 2) * 130, by = Y + 40 + (b >> 1) * 120, hor = (b + (X / 320 | 0)) % 2; const w = hor ? 110 : 34, h = hor ? 34 : 100; pS.rect(bx + 10, by + 12, w, h); pB.rect(bx, by, w, h); for (let q = 4; q < (hor ? w : h) - 4; q += 8) hor ? pW.rect(bx + q, by + 6, 4, h - 12) : pW.rect(bx + 6, by + q, w - 12, 4); }
+          for (let q = 0; q < 6; q++) trees.push([X + rnd(10, 270), Y + rnd(10, 270), rnd(12, 20), q]); }
+        x.strokeStyle = 'rgba(160,160,165,.8)'; x.lineWidth = 10; x.stroke(pO); x.fillStyle = 'rgba(0,0,0,.25)'; x.fill(pS); x.fillStyle = '#f2efe6'; x.fill(pB); x.fillStyle = 'rgba(90,140,170,.55)'; x.fill(pW);
+        trees.forEach(([X, Y, r, q]) => canopy(x, X, Y, r, q));
+      } else if (id === 'cerrado') {   // Cerrado: rote Erde, trockenes Gras, krumme Sträucher, gelbe Ipê-Bäume, Termitenhügel (gleiche Farben je ein Pfad: schnell im Zonen-Zuschnitt)
         x.fillStyle = '#bb7a45'; x.fillRect(zb[0], zb[1], zb[2] - zb[0], zb[3] - zb[1]); noise(3000, 'rgba(90,40,10,.2)', 'rgba(255,220,170,.15)');
-        for (let q = 0; q < 140 * DF; q++) { x.fillStyle = 'rgba(205,185,105,.45)'; x.beginPath(); x.ellipse(rnd(zb[0], zb[2]), rnd(zb[1], zb[3]), rnd(40, 130), rnd(25, 70), rnd(0, 3), 0, TAU); x.fill(); }
-        for (let q = 0; q < 260 * DF; q++) { const X0 = rnd(zb[0], zb[2]), Y0 = rnd(zb[1], zb[3]); if (!free(X0, Y0, 30)) continue; x.fillStyle = 'rgba(0,0,0,.18)'; x.beginPath(); x.arc(X0 + 4, Y0 + 5, 11, 0, TAU); x.fill(); x.fillStyle = pick(['#4d6b2a', '#5d7a32', '#3f5a24']); for (let j = 0; j < 3; j++) { x.beginPath(); x.arc(X0 + rnd(-7, 7), Y0 + rnd(-6, 6), rnd(5, 9), 0, TAU); x.fill(); } }
-        for (let q = 0; q < 22 * DF; q++) { const X0 = rnd(zb[0], zb[2]), Y0 = rnd(zb[1], zb[3]); if (!free(X0, Y0, 50)) continue; x.fillStyle = 'rgba(0,0,0,.2)'; x.beginPath(); x.arc(X0 + 7, Y0 + 9, 32, 0, TAU); x.fill(); x.fillStyle = '#5d7a32'; x.beginPath(); x.arc(X0, Y0, 30, 0, TAU); x.fill(); for (let j = 0; j < 9; j++) { const a0 = j * 2.4, r0 = 8 + (j % 3) * 7; x.fillStyle = j % 2 ? '#ffd84a' : '#f2b81c'; x.beginPath(); x.arc(X0 + Math.cos(a0) * r0, Y0 + Math.sin(a0) * r0, 9, 0, TAU); x.fill(); } }
-        for (let q = 0; q < 70 * DF; q++) { const X0 = rnd(zb[0], zb[2]), Y0 = rnd(zb[1], zb[3]); if (!free(X0, Y0, 30)) continue; x.fillStyle = 'rgba(0,0,0,.2)'; x.beginPath(); x.ellipse(X0 + 4, Y0 + 4, 10, 8, 0, 0, TAU); x.fill(); x.fillStyle = '#9a5a30'; x.beginPath(); x.arc(X0, Y0, 9, 0, TAU); x.fill(); x.fillStyle = '#b8754a'; x.beginPath(); x.arc(X0 - 2, Y0 - 3, 4, 0, TAU); x.fill(); }
+        const C = (p, X, Y, r) => { p.moveTo(X + r, Y); p.arc(X, Y, r, 0, TAU); }, fillP = (p, c) => { x.fillStyle = c; x.fill(p); };
+        { const g = new Path2D(); for (let q = 0; q < 140 * DF; q++) { const X = rnd(zb[0], zb[2]), Y = rnd(zb[1], zb[3]), rx = rnd(40, 130), ry = rnd(25, 70), a0 = rnd(0, 3); g.moveTo(X + Math.cos(a0) * rx, Y + Math.sin(a0) * rx); g.ellipse(X, Y, rx, ry, a0, 0, TAU); } fillP(g, 'rgba(205,185,105,.45)'); }
+        { const sh = new Path2D(), lv = [new Path2D(), new Path2D(), new Path2D()]; for (let q = 0; q < 260 * DF; q++) { const X0 = rnd(zb[0], zb[2]), Y0 = rnd(zb[1], zb[3]); if (!free(X0, Y0, 30)) continue; C(sh, X0 + 4, Y0 + 5, 11); const p = lv[q % 3]; for (let j = 0; j < 3; j++) C(p, X0 + rnd(-7, 7), Y0 + rnd(-6, 6), rnd(5, 9)); }
+          fillP(sh, 'rgba(0,0,0,.18)'); fillP(lv[0], '#4d6b2a'); fillP(lv[1], '#5d7a32'); fillP(lv[2], '#3f5a24'); }
+        { const sh = new Path2D(), cr = new Path2D(), b1 = new Path2D(), b2 = new Path2D(); for (let q = 0; q < 22 * DF; q++) { const X0 = rnd(zb[0], zb[2]), Y0 = rnd(zb[1], zb[3]); if (!free(X0, Y0, 50)) continue; C(sh, X0 + 7, Y0 + 9, 32); C(cr, X0, Y0, 30); for (let j = 0; j < 9; j++) { const a0 = j * 2.4, r0 = 8 + (j % 3) * 7; C(j % 2 ? b1 : b2, X0 + Math.cos(a0) * r0, Y0 + Math.sin(a0) * r0, 9); } }
+          fillP(sh, 'rgba(0,0,0,.2)'); fillP(cr, '#5d7a32'); fillP(b2, '#f2b81c'); fillP(b1, '#ffd84a'); }
+        { const sh = new Path2D(), m1 = new Path2D(), m2 = new Path2D(); for (let q = 0; q < 70 * DF; q++) { const X0 = rnd(zb[0], zb[2]), Y0 = rnd(zb[1], zb[3]); if (!free(X0, Y0, 30)) continue; sh.moveTo(X0 + 14, Y0 + 4); sh.ellipse(X0 + 4, Y0 + 4, 10, 8, 0, 0, TAU); C(m1, X0, Y0, 9); C(m2, X0 - 2, Y0 - 3, 4); }
+          fillP(sh, 'rgba(0,0,0,.2)'); fillP(m1, '#9a5a30'); fillP(m2, '#b8754a'); }
       } else if (id === 'pelo') {   // Pelourinho: bunte Kolonialhäuser schräg von oben (Pastell-Fassade + Ziegeldach), Kopfsteinpflaster, kleine Plätze mit Palmen
         x.fillStyle = '#b9a383'; x.fillRect(zb[0], zb[1], zb[2] - zb[0], zb[3] - zb[1]); noise(3200, 'rgba(90,70,40,.22)', 'rgba(255,245,220,.2)');
         for (let X = 14; X < WW; X += 92) for (let Y = 14; Y < WH; Y += 100) { if (X > zb[2] || X + 90 < zb[0] || Y > zb[3] || Y + 96 < zb[1]) continue; if (!free(X + 40, Y + 42, 56) || Y > shore(X) - 150) continue;
@@ -9414,7 +9423,7 @@ setGroup(G);
     if (X.roda) X.roda.forEach(q => { if (!near(q.x, q.y) || q.th === undefined) return; const clap = Math.abs(Math.sin(tt * 6)) * 3;
       for (let j = 0; j < 7; j++) [-1, 1].forEach(sd => { const [x, y] = at(q.i - 21 + j * 7, sd * (TW / 2 + 26 + (j % 2) * 10)); ctx.fillStyle = 'rgba(0,0,0,.2)'; ctx.beginPath(); ctx.arc(x + 2, y + 3, 8, 0, TAU); ctx.fill(); ctx.fillStyle = '#f4f4f4'; ctx.beginPath(); ctx.arc(x, y, 7, 0, TAU); ctx.fill(); ctx.fillStyle = ['#8d5524', '#c68642', '#5a3a22'][j % 3]; ctx.beginPath(); ctx.arc(x, y - clap * (j % 2 ? 1 : -1) * .5, 4.5, 0, TAU); ctx.fill(); });
       { const [x, y] = at(q.i + 26, TW / 2 + 32); up(x, y, E('🪕', 26), 1); }
-      const Lr = TW / 2 + 8, th = q.th; ctx.save(); ctx.translate(q.x, q.y); for (let s0 = 1; s0 <= 3; s0++) { ctx.strokeStyle = `rgba(255,255,255,${.22 - s0 * .06})`; ctx.lineWidth = 12; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(th - s0 * .16) * Lr, Math.sin(th - s0 * .16) * Lr); ctx.stroke(); }
+      const Lr = (TW / 2 - 6) * (q.ext === undefined ? 1 : q.ext), th = q.th; ctx.save(); ctx.translate(q.x, q.y); for (let s0 = 1; s0 <= 3; s0++) { ctx.strokeStyle = `rgba(255,255,255,${.22 - s0 * .06})`; ctx.lineWidth = 12; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(th - s0 * .16) * Lr, Math.sin(th - s0 * .16) * Lr); ctx.stroke(); }
       ctx.strokeStyle = '#f7f7f2'; ctx.lineWidth = 11; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(th) * Lr, Math.sin(th) * Lr); ctx.stroke(); ctx.strokeStyle = '#ffd23f'; ctx.lineWidth = 4; ctx.beginPath(); ctx.moveTo(Math.cos(th) * 10, Math.sin(th) * 10); ctx.lineTo(Math.cos(th) * 16, Math.sin(th) * 16); ctx.stroke();
       ctx.fillStyle = '#5a3a22'; ctx.beginPath(); ctx.arc(Math.cos(th) * Lr, Math.sin(th) * Lr, 7, 0, TAU); ctx.fill(); ctx.fillStyle = '#f7f7f2'; ctx.beginPath(); ctx.arc(0, 0, 16, 0, TAU); ctx.fill(); ctx.fillStyle = '#7a4a2a'; ctx.beginPath(); ctx.arc(Math.cos(th + Math.PI) * 4, Math.sin(th + Math.PI) * 4, 9, 0, TAU); ctx.fill(); ctx.lineCap = 'butt'; ctx.restore();
       ctx.save(); ctx.translate(q.x, q.y); ctx.rotate(th + Math.PI / 2); ctx.drawImage(E('🤸', 34), -20, -20, 40, 40); ctx.restore(); });
@@ -9474,7 +9483,7 @@ setGroup(G);
     if (R.stamps && R.stamps.length) cand(R.stamps[0].i, '📮 Carimbo-Zone: nicht unter den Stempel!', '#ff8a8a');
     if (X.radar) X.radar.forEach(q => { const lim = R.lim || q.lim; cand(q.i, '📸 Radar ' + lim + ' km/h · du ' + kmh, kmh > lim ? '#ff6a6a' : '#9dffb4', kmh > lim); });
     if (X.roll) cand(X.roll.i0, '🥁 Olodum-Trommeln rollen dir entgegen!', '#ffd23f');
-    if (X.roda) X.roda.forEach(q => cand(q.i, '🤸 Capoeira! Aufs Bein achten', '#fff'));
+    if (X.roda) X.roda.forEach(q => cand(q.i, '🤸 Capoeira! Auf die freie Seite', '#fff'));
     if (X.lift) cand(X.lift.i0, '🛗 Elevador Lacerda: Expresso nach unten', '#ffe9a8');
     ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     if (best) { ctx.font = '900 14px system-ui,sans-serif'; const w0 = Math.min(W - 24, ctx.measureText(best.txt).width + 22); ctx.fillStyle = best.bl && Math.floor(now / 260) % 2 ? 'rgba(150,0,0,.7)' : 'rgba(0,0,0,.5)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(W / 2 - w0 / 2, top + 140, w0, 24, 12) : ctx.rect(W / 2 - w0 / 2, top + 140, w0, 24); ctx.fill(); ctx.fillStyle = best.col; ctx.fillText(best.txt, W / 2, top + 152, W - 36); }
@@ -9500,7 +9509,7 @@ setGroup(G);
     if (X.stamps) add(X.stamps[0].i - 10, '📮', 'Carimbos: Riesen-Stempel knallen runter, Schatten = Gefahr');
     if (X.radar) X.radar.forEach(q => add(q.i - 10, '📸', 'Pardal-Blitzer: über ' + q.lim + ' km/h kostet Münzen, drunter gibt’s eine'));
     if (X.roll) add(X.roll.i0 - 10, '🥁', 'Ladeira: Olodum-Trommeln rollen dir entgegen');
-    if (X.roda) add(X.roda[0].i - 10, '🤸', 'Capoeira-Roda: das Bein kreist über die ganze Straße');
+    if (X.roda) add(X.roda[0].i - 10, '🤸', 'Capoeira-Roda: das Bein tritt abwechselnd links und rechts aus, nimm die freie Seite');
     if (X.lift) add(X.lift.i0 - 6, '🛗', 'Elevador Lacerda: Fahrstuhl runter, unten Expresso-Turbo'); }
   function progress(k) { return k.lap * N + k.idx; }
   function place(k) { return S.karts.filter(o => o !== k && (o.done ? (!k.done || o.done < k.done) : !k.done && progress(o) > progress(k))).length + 1; }
@@ -9950,7 +9959,7 @@ setGroup(G);
           if ((INPUT.drift && Math.abs(target) > .25) || dt0) { k.dr = INPUT.drift ? Math.sign(target) : INPUT.dtap.s; k.dt = 0; k.drIn = 0; k.drRel = 0; k.drOpp = 0; k.drS = 0; k.manual = INPUT.drift ? 'btn' : 'tap'; INPUT.dtap = null; SFX.drift(); vib(10); } } }
       else { k.laneT -= dt; if (k.laneT < 0) { k.laneT = rnd(1.5, 4); k.lane = rnd(-TW * .25, TW * .25); }
         const la = 14 + k.v / 30; let lane = k.lane, haz = null, hd = 170 + k.v * .25;   // je schneller, desto früher ausweichen (vorher fest 170 px: Koffer & Co. wurden oft mitgenommen)
-        S.obst.concat(S.oils, S.puddles, S.xt ? S.xt.haz : []).forEach(o => { if (o.drop !== undefined && S.t - o.drop < .7) return; if (o.fake && k.skill < .985) return;   /* falsche Kiste: die meisten Computerfahrer fallen drauf rein */ const dx = o.x - k.x, dy = o.y - k.y, d = Math.hypot(dx, dy); if (d < hd && dx * Math.cos(k.a) + dy * Math.sin(k.a) > 0) { hd = d; haz = o; } });
+        S.obst.concat(S.oils, S.puddles, S.xt ? S.xt.haz : []).forEach(o => { if (o.drop !== undefined && S.t - o.drop < .7) return; if (o.fake && k.skill < .985) return; if (o.kind === 'roda') return;   /* Capoeira: Ausweichen über die Gefahr „Bein“ in S.xt.haz */   /* falsche Kiste: die meisten Computerfahrer fallen drauf rein */ const dx = o.x - k.x, dy = o.y - k.y, d = Math.hypot(dx, dy); if (d < hd && dx * Math.cos(k.a) + dy * Math.sin(k.a) > 0) { hd = d; haz = o; } });
         if (haz) { const nl = nearest(haz.x, haz.y, k.idx)[1], gap = (haz.r || (haz.beer ? 44 : haz.stink ? 50 : 24)) + 34 * k.pp.care; lane = nl > 0 ? nl - gap : nl + gap; }
         else { const bx = S.boxes.find(b => b.off <= 0 && !k.item && k.roll <= 0 && b.i > k.idx && b.i - k.idx < 40); if (bx) lane = bx.l;
           const pd = PADS.find(p => p.i > k.idx && p.i - k.idx < 35); if (pd && k.skill > .93) lane = pd.l; }
