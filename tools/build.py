@@ -74,7 +74,7 @@ def build_ics(trip, group):
             else:
                 when = [f"DTSTART;VALUE=DATE:{e['date']}", f"DTEND;VALUE=DATE:{next_day(e['date'])}"]
             ev.append([f'UID:{uid}', *when, f"SUMMARY:{ics_escape(e['summary'])}",
-                       f"DESCRIPTION:{ics_escape(e.get('desc', '') + ' – Brasilien 26/27')}"])
+                       f"DESCRIPTION:{ics_escape((e['desc'] + ' – ' if e.get('desc') else '') + 'Brasilien 26/27')}"])
     for s in trip['stays']:
         if not mine(s['g']):
             continue

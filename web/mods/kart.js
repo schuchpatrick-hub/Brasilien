@@ -1585,7 +1585,7 @@
   }
 
   // Tages-Challenge entfernt (Wunsch Patrick 09.10.: benutzt keiner, Menü übersichtlicher); dayKey bleibt für die Reise-Kostüme mit Datum
-  const dayKey = () => new Intl.DateTimeFormat('en-CA', {timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
+  const dayKey = () => IDF('en-CA', {timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
   /* ---- Crew-Bestenliste und Geister (db: kartbest/<strecke>__<person>, kartghost/<…>; schreiben nur mit Schreibrecht) ---- */
   let LB = {}, WR = false, DB = null;
   /* Als Gast spielen (Wunsch Patrick 09.10.): Gäste wie Pat's Mum oder Manuel (auf der Seite nur Kommentatoren) wählen sich im Kart selbst aus.
@@ -4392,6 +4392,7 @@
     if (e.target.closest('.kr-whochg')) { WHOOPEN = true; renderMenu(); } });
   box.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('kr-gname')) { e.preventDefault(); const b = e.target.parentNode.querySelector('.kr-gok'); if (b) b.click(); } });
   window.__kartAt = (i, l) => at(i, l); window.__kartBG = () => [BGD[0], BGD[1], WW, WH]; window.__kartTiles = () => BGT; window.__kartBGimg = w => { const c = document.createElement("canvas"); c.width = w; c.height = Math.round(w * WH / WW); const x = c.getContext("2d"), f = w / WW; BGT.forEach(t => x.drawImage(t.c, t.x * f, t.y * f, t.w * f, t.h * f)); return c.toDataURL("image/jpeg", .8); }; window.__kartTW = () => TW; window.__kartDeck = () => DECK && {i0: DECK.i0, len: DECK.len, under: DECK.under}; window.__kartCut = () => CUT && {i1: CUT.i1, i2: CUT.i2, f: +CUT.f.toFixed(3)}; window.__kartTun = () => TUN.map(u => ({i0: u.i0, len: u.len, nm: u.nm})); window.__kartN = () => N;
+  document.querySelectorAll('[data-ktn]').forEach(e => { e.textContent = TRACKS.length; });   // Streckenzahl auf der Seite immer aktuell
   window.__kart = {toMenu: () => toMenu(), voice: (i, kd) => { voice(S.karts[i], kd, 1); return S.karts[i].say; }, mm: () => ({on: MM.on, step: MM.step}), mmRender: async (sec, song) => { const A0 = AC, G0 = MM.g, D0 = MM.dl, S0 = MM.song, oc = new OfflineAudioContext(1, 44100 * sec, 44100); AC = oc; MM.g = null; MM.song = song || S0 || 'phonk'; mmGraph(); MM.g.gain.value = .8 * SONGS[MM.song].v; MM.dl.delayTime.value = 60 / SONGS[MM.song].bpm * .75; const sp = 60 / SONGS[MM.song].bpm / 4; for (let st = 0, t = 0; t < sec; st++, t += sp) mmNote(st, t);
     const buf = await oc.startRendering(); AC = A0; MM.g = G0; MM.dl = D0; MM.song = S0; const d = buf.getChannelData(0); let pk = 0, ss = 0; for (let i = 0; i < d.length; i++) { pk = Math.max(pk, Math.abs(d[i])); ss += d[i] * d[i]; }
     const pcm = new Int16Array(d.length); for (let i = 0; i < d.length; i++) pcm[i] = Math.max(-1, Math.min(1, d[i])) * 32767; let bin = ''; const u8 = new Uint8Array(pcm.buffer); for (let i = 0; i < u8.length; i += 8192) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 8192));

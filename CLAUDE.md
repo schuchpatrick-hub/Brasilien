@@ -470,6 +470,19 @@ GIG/SDU im Ausschnitt leicht versetzt neben Rio.
 - Küstenlinien in `gen_map.py` per Douglas-Peucker vereinfacht (`rdp`, Toleranz ≈ 0,5 px) und als relative Pfade geschrieben.
 - Kleine Knöpfe/Links haben einen unsichtbaren `::before`-Rand als größere Tippfläche (Liste am Ende von `page_head.html`);
   neue kleine Bedienelemente dort ergänzen, dafür kein `::before` verwenden.
+- **Seiten-Prüfung (11.10., Wunsch Patrick: die ganze Seite auf Fehler, Tempo und Bedienung prüfen):** zwei Runden bei 390 und 1280 px, hell und dunkel; jeder Bereich wurde bedient (Suche, Karte + Reise-Film, Tage, Flüge, Sprachführer, Rechner, Packlisten, Crew/Karten, Kino, Kalender, Zeitkapsel bis zum Versiegeln, Spiele mit Platzierungen, Kartenwerte, Drinks + Rückgängig, Check-in, Downloads), Reisetage für beide Gruppen simuliert (26.12. bis 22.01.), dazu das Ende der Reise mit vielen Daten (900 Drinks, 120 Partien, Check-ins, Kartenwerte) bei 4× gedrosselter CPU, außerdem PDF, Kalenderdateien und Links. Ergebnis: keine JS-Fehler, kein seitliches Scrollen, keine doppelten IDs, CLS 0,003. Behoben bzw. verbessert:
+  (1) **Datumsformate:** `new Intl.DateTimeFormat` kostet auf dem Handy viel, und die Seite legte beim Laden Hunderte davon an. Jetzt gibt es `IDF(loc, opt)` (Zwischenspeicher je Format) und `rioDay(ts)` (Datum in Rio, je Stunde zwischengespeichert). Neue Stellen bitte darüber bauen, nicht `new Intl.DateTimeFormat`/`toLocaleString` in Schleifen. Drinks werden je Person und Tag einmal gruppiert (`BWD`), Zahlen über `NF1`/`NF2`. Einen Drink eintragen dauert bei 900 Drinks jetzt 0,3 s statt 1,1 s (4× gedrosselt).
+  (2) **Real-Rechner:** nach Schnellwahl oder Richtungswechsel ersetzt die erste Taste den Betrag (`fxFresh`). Vorher wurde aus „125“ beim Tippen von „50“ „50125“.
+  (3) **Flug-Karussell:** Als „nächster Flug“ zählt ein späteres Datum oder ein Flug heute, dessen Uhrzeit noch nicht vorbei ist. Vorher blieb z. B. die Landung um 06:10 bis Mitternacht vorne.
+  (4) **Serie:** Die Wetter-Verläufe hießen wie die Szenen-Verläufe (`se-dusk`/`se-dawn`), dadurch zeigten Abend- und Morgenrot den falschen Verlauf. Jetzt heißen sie `se-wdusk`/`se-wdawn`. Die Lidfarbe wird mit einem `getImageData` statt acht gelesen (Chrome-Warnung).
+  (5) **Filme vorladen:** Die Module bauen alle Szenen am Stück auf, auf dem Handy 0,4–0,8 s lang. Deshalb lädt die Seite sie im Leerlauf erst, wenn 2,5 s lang niemand gescrollt oder getippt hat (`quiet()`). Das Kart lädt weiter nach 2,5 s.
+  (6) **Zeitkapsel:** Eine Auswahl speichert die Antwort jetzt auch bei `change` ohne vorheriges `input` (manche WebViews).
+  (7) **Barrierefreiheit/Tippen:** Auswahlfelder in Zeitkapsel, Spielen und Kartenwerten haben `aria-label`. „⭐ Tipps & Infos“, „Alle n Fakten“ und „💡 Faustregeln“ haben größere Tippflächen (Liste oben).
+  (8) Die Streckenzahl des Karts auf der Seite (`[data-ktn]`, Kachel, Kapiteltext, Startkachel) setzt das Kart-Modul aus `TRACKS.length`. Vorher stand dort noch „14 Strecken“.
+  (9) Kalenderdateien: Termine ohne Beschreibung haben keinen führenden Gedankenstrich mehr.
+  (10) Das Crew-Karussell misst erst im nächsten Bild (`requestAnimationFrame(mark)`).
+  (11) In der leeren Spiele-Rangliste steht kein Schlaf-Gag mehr über Greisel.
+  Gemessen und so gelassen: Die erste Layout-Berechnung (~5300 Elemente) kostet bei 4× gedrosselter CPU ~0,35 s. Die Konsolenfehler im Test stammen nur von Google Fonts (Zertifikat im Testcontainer) und vom fehlenden favicon des lokalen Servers. Prüfskripte im Scratchpad: `g6/audit.py` (Fehler, Ladezeit, Überlauf, Barrieren), `interact.py`, `dates.py`, `bigdata.py`, `flows2.py` + `pre_gm3.py`/`pre_ka2.py`, `tap.py`, `modprof.py`.
 
 ## Regeln
 

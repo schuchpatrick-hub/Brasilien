@@ -2,6 +2,10 @@
 /* TRIP wird von tools/build.py aus web/trip.json eingesetzt. */
 const TRIP = %%TRIP%%;
 const TZ = 'America/Sao_Paulo';
+// Datumsformate zwischenspeichern (Prüfung 11.10.: jedes „new Intl.DateTimeFormat“ kostet auf dem Handy spürbar, die Seite legte beim Laden Hunderte an)
+const IDF = (loc, opt) => { const k = loc + '|' + JSON.stringify(opt || {}); return IDF.c[k] || (IDF.c[k] = new Intl.DateTimeFormat(loc, opt)); }; IDF.c = {};
+// Datum (Rio) eines Zeitstempels, je Stunde zwischengespeichert (Zeitzonen wechseln nur zur vollen Stunde)
+const rioDay = (() => { const F = new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}), C = new Map(); return ts => { const h = Math.floor(ts / 3600000); let v = C.get(h); if (v === undefined) { v = F.format(new Date(h * 3600000)); C.set(h, v); } return v; }; })();
 const PEOPLE = ['Jonas', 'Patrick', 'Simon', 'Marco', 'Daijo', 'Greisel', 'Alle'];
 const PRINT = location.hash === '#print';
 /* Schwächere Geräte: Glas-Effekte (backdrop-filter) und Animationen sparen */
@@ -217,12 +221,12 @@ function showFab() {
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 
 function isoToday() {
-  return new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
+  return IDF('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
 }
 function dateObj(iso) { return new Date(iso + 'T12:00:00Z'); }
 function fmtDay(iso) {
   const d = dateObj(iso);
-  const wd = new Intl.DateTimeFormat('de-DE', {weekday: 'short', timeZone: 'UTC'}).format(d).replace('.', '');
+  const wd = IDF('de-DE', {weekday: 'short', timeZone: 'UTC'}).format(d).replace('.', '');
   return {wd, dm: String(d.getUTCDate()).padStart(2, '0') + '.' + String(d.getUTCMonth() + 1).padStart(2, '0') + '.'};
 }
 function daysBetween(a, b) { return Math.round((dateObj(b) - dateObj(a)) / 864e5); }
@@ -249,7 +253,7 @@ function sceneHtml(place) {
   return '<div class="today-img" aria-hidden="true">' + h + '</div>';
 }
 function setSkyTime() {
-  const hr = +new Intl.DateTimeFormat('en-GB', {timeZone: TZ, hour: '2-digit', hour12: false}).format(new Date()) % 24;
+  const hr = +IDF('en-GB', {timeZone: TZ, hour: '2-digit', hour12: false}).format(new Date()) % 24;
   const t = hr >= 5 && hr < 8 ? 'morning' : hr >= 8 && hr < 17 ? 'day' : hr >= 17 && hr < 20 ? 'sunset' : 'night';
   const h = document.querySelector('header'); if (h) h.dataset.time = t;
 }
@@ -451,7 +455,9 @@ function renderFlights() {
       (f.note ? '<p class="pass-note">' + esc(f.note) + '</p>' : '') + links + '</article></li>';
   }).join('');
   document.getElementById('fl-note').textContent = TRIP.flightsNote.text;
-  if (!PRINT) { const tdy2 = isoToday(); let st = list.findIndex(f => f.date >= tdy2); if (st < 0) st = list.length - 1;
+  if (!PRINT) { const tdy2 = isoToday(), hm = IDF('en-GB', {timeZone: TZ, hour: '2-digit', minute: '2-digit', hourCycle: 'h23'}).format(new Date());
+    // nächster Flug: späteres Datum oder heute mit Uhrzeit noch nicht vorbei (vorher blieb z. B. die Ankunft um 06:10 bis Mitternacht „nächster Flug“)
+    let st = list.findIndex(f => f.date > tdy2 || (f.date === tdy2 && !((String(f.time).match(/\d\d:\d\d/) || [''])[0] && (String(f.time).match(/\d\d:\d\d/) || [''])[0] <= hm))); if (st < 0) st = list.length - 1;
     slider(document.getElementById('fl-list'), list.map(f => { const d = fmtDay(f.date); return '<i class="dot st-' + f.status + '"></i>' + d.dm.replace(/\.$/, '') + ' ' + esc(f.from) + '→' + esc(f.to); }), {start: st, top: true}); }
 }
 
@@ -603,7 +609,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     tabs.forEach(b => b.addEventListener('click', () => show(b.dataset.ci === 'learn' ? 'learn' : +b.dataset.ci, true)));
     // Start: heute selbst gewählt → das; unterwegs nach Uhrzeit in Rio (abends Party, mittags/abends Restaurant); sonst zuletzt gewähltes
     let start = store.get('phCat'); const manual = store.get('phCatDay') === today;
-    if (!manual && today >= '2026-12-27' && today <= '2027-01-21') { let h = 12; try { h = +new Intl.DateTimeFormat('en-GB', {timeZone: 'America/Sao_Paulo', hour: 'numeric', hour12: false}).format(new Date()); } catch (e) {}
+    if (!manual && today >= '2026-12-27' && today <= '2027-01-21') { let h = 12; try { h = +IDF('en-GB', {timeZone: 'America/Sao_Paulo', hour: 'numeric', hour12: false}).format(new Date()); } catch (e) {}
       start = String(h >= 21 || h < 4 ? catOf(/Party/) : (h >= 11 && h < 15) || (h >= 18 && h < 21) ? catOf(/Restaurant/) : h >= 15 ? catOf(/Strand/) : catOf(/Grundlagen/)); }
     show(start === 'learn' ? 'learn' : start !== null && TRIP.phrases[+start] ? +start : 0, false);
     // Aussprache bei Antippen des Satzes
@@ -716,7 +722,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     el.addEventListener('toggle', fit, true); if ('ResizeObserver' in window) new ResizeObserver(fit).observe(el);
     nav.querySelector('.cn-prev').onclick = () => go(cur() - 1); nav.querySelector('.cn-next').onclick = () => go(cur() + 1);
     nav.querySelectorAll('.cn-dots button').forEach((b, k) => b.onclick = () => go(k));
-    el.addEventListener('scroll', () => { clearTimeout(el.__t); el.__t = setTimeout(mark, 80); }, {passive: true}); mark();
+    el.addEventListener('scroll', () => { clearTimeout(el.__t); el.__t = setTimeout(mark, 80); }, {passive: true}); requestAnimationFrame(mark);   // erst im nächsten Bild messen (sonst erzwungene Layout-Berechnung mitten im Seitenaufbau)
     window.crewShow = id => { const k = ids.indexOf(id); if (k >= 0) { jump('crew-list', true); setTimeout(() => go(k), 350); } };
   }
   const short = r => (r || '').split(/ & |\. /)[0].replace(/\.$/, '');
@@ -763,11 +769,13 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   const byId = Object.fromEntries(CREW.map(p => [p.id, p]));
   const $ = id => document.getElementById(id);
   const avatar = (p, cls) => '<span class="' + (cls || 'av') + '">' + (p.photo && !PRINT ? '<img src="' + esc(p.photo) + '" alt="" loading="lazy" decoding="async">' : esc(p.name[0])) + '</span>';
-  const fmt1 = n => n.toLocaleString('de-DE', {minimumFractionDigits: 1, maximumFractionDigits: 1});
-  const fmt2 = n => n.toLocaleString('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const NF1 = new Intl.NumberFormat('de-DE', {minimumFractionDigits: 1, maximumFractionDigits: 1}), NF2 = new Intl.NumberFormat('de-DE', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+  const fmt1 = n => NF1.format(n), fmt2 = n => NF2.format(n);
   const grams = d => d.ml * d.abv / 100 * 0.789;
-  const dayOf = ts => new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date(ts));
-  const timeOf = ts => new Intl.DateTimeFormat('de-DE', {timeZone: TZ, hour: '2-digit', minute: '2-digit'}).format(new Date(ts));
+  // Tag/Uhrzeit eines Drinks: Formate einmal anlegen, Tag je Stunde zwischenspeichern (Prüfung 11.10.: bei 900 Drinks rechnete die Tagestabelle ~280.000 Datumsformate, ~1 s auf dem Handy)
+  const DFD = new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}), DFT = new Intl.DateTimeFormat('de-DE', {timeZone: TZ, hour: '2-digit', minute: '2-digit'}), DOC = new Map();
+  const dayOf = ts => { const h = Math.floor(ts / 3600000); let v = DOC.get(h); if (v === undefined) { v = DFD.format(new Date(h * 3600000)); DOC.set(h, v); } return v; };
+  const timeOf = ts => DFT.format(new Date(ts));
 
   let drinks = [];            // [{id, who, cat, name, ml, abv, ts}]
   const body = {};            // id -> {sex, kg} (Overrides aus db)
@@ -952,11 +960,12 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     const days = [...new Set(drinks.map(d => dayOf(d.ts)))].sort().reverse();
     const head = '<thead><tr><th>Tag</th>' + CREW.map(p => '<th class="pp">' + avatar(p, 'mini') + '<br>' + esc(p.name) + '</th>').join('') + '</tr></thead>';
     if (!days.length) { $('dr-daytable').innerHTML = head + '<tbody><tr><td colspan="' + (CREW.length + 1) + '" class="z">Noch keine Einträge. Das ändert sich spätestens am 27.12.</td></tr></tbody>'; return; }
+    const BWD = {}; drinks.forEach(d => { (BWD[d.who + '|' + dayOf(d.ts)] = BWD[d.who + '|' + dayOf(d.ts)] || []).push(d); });   // einmal gruppieren statt je Tag × Person alle Drinks durchzugehen
     $('dr-daytable').innerHTML = head + '<tbody>' + days.map(k => {
       const f = fmtDay(k);
       return '<tr><td class="d">' + f.wd + ' ' + f.dm + '</td>' + CREW.map(p => {
-        const n = drinks.filter(d => d.who === p.id && dayOf(d.ts) === k).length, pk = tl[p.id].peaks[k] || 0;
-        return n ? '<td class="pp" title="' + esc(drinks.filter(d => d.who === p.id && dayOf(d.ts) === k).map(d => d.name).join(', ')) + '">' + n + ' · ' + fmt1(pk) + ' ‰</td>' : '<td class="pp z">–</td>';
+        const L = BWD[p.id + '|' + k] || [], n = L.length, pk = tl[p.id].peaks[k] || 0;
+        return n ? '<td class="pp" title="' + esc(L.map(d => d.name).join(', ')) + '">' + n + ' · ' + fmt1(pk) + ' ‰</td>' : '<td class="pp z">–</td>';
       }).join('') + '</tr>';
     }).join('') + '</tbody>';
   }
@@ -1074,7 +1083,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
     });
     const last = checkins[0];
     let txt;
-    if (last) txt = '📍 Zuletzt eingecheckt: ' + (last.label || 'ohne Ortsname') + ', ' + fmtDay(new Date(last.ts).toISOString().slice(0, 10)).dm + ' ' + new Intl.DateTimeFormat('de-DE', {timeZone: TZ, hour: '2-digit', minute: '2-digit'}).format(new Date(last.ts));
+    if (last) txt = '📍 Zuletzt eingecheckt: ' + (last.label || 'ohne Ortsname') + ', ' + fmtDay(new Date(last.ts).toISOString().slice(0, 10)).dm + ' ' + IDF('de-DE', {timeZone: TZ, hour: '2-digit', minute: '2-digit'}).format(new Date(last.ts));
     else if (here) txt = '📍 Hier sind wir laut Plan: ' + here;
     else if (t < '2026-12-27') txt = '🏠 Noch zu Hause. Abflug am 27.12.';
     else if (t > '2027-01-21') txt = '🏁 Reise geschafft.';
@@ -1101,7 +1110,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   }
   function renderList() {
     $('ci-list').innerHTML = checkins.slice(0, 30).map(c => '<li data-id="' + esc(c.id) + '"><span class="t">' + fmtDay(new Date(c.ts).toISOString().slice(0, 10)).dm + ' ' +
-      new Intl.DateTimeFormat('de-DE', {timeZone: TZ, hour: '2-digit', minute: '2-digit'}).format(new Date(c.ts)) + '</span><span>' + esc(c.label || '–') +
+      IDF('de-DE', {timeZone: TZ, hour: '2-digit', minute: '2-digit'}).format(new Date(c.ts)) + '</span><span>' + esc(c.label || '–') +
       ' <a href="https://www.google.com/maps/search/?api=1&query=' + c.lat + ',' + c.lon + '" target="_blank" rel="noopener">' + c.lat.toFixed(4) + ', ' + c.lon.toFixed(4) + '</a></span>' +
       (canCheck ? '<button type="button" class="del" aria-label="Check-in löschen">×</button>' : '<span></span>') + '</li>').join('');
   }
@@ -1222,18 +1231,20 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   }
   const reduceMotionFx = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   $('fx-quick').innerHTML = M.quick.map(q => '<button type="button" data-v="' + q + '">' + q + '</button>').join('');
-  $('fx-quick').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; amt.value = b.dataset.v; render(true); });
+  let fxFresh = true;   // Betrag kommt von Vorgabe/Schnellwahl/Richtungswechsel: die nächste Ziffer fängt neu an
+  $('fx-quick').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; amt.value = b.dataset.v; fxFresh = true; render(true); });
   document.querySelector('.fx-dir').addEventListener('click', e => {
     const b = e.target.closest('button'); if (!b || b.dataset.dir === dir) return;
     const v = parseFloat(amt.value) || 0;
     amt.value = String(Math.round((dir === 'brl' ? parseFloat(String(amt.value).replace(',', '.')) / rate || 0 : (parseFloat(String(amt.value).replace(',', '.')) || 0) * rate) * 100) / 100).replace('.', ',');
-    dir = b.dataset.dir; store.set('fx.dir', dir); render(true);
+    dir = b.dataset.dir; store.set('fx.dir', dir); fxFresh = true; render(true);
   });
   // eigenes Tastenfeld statt Handy-Tastatur
   const pad = $('fx-pad');
   pad.innerHTML = ['1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '0', '⌫'].map(k => '<button type="button" data-k="' + k + '">' + k + '</button>').join('') + '<button type="button" data-k="C" class="c">Löschen</button>';
   pad.addEventListener('click', e => {
     const b = e.target.closest('button[data-k]'); if (!b) return; let v = String(amt.value).replace('.', ','); const k = b.dataset.k;
+    if (fxFresh && k !== '⌫') v = ''; fxFresh = false;   // erste Taste ersetzt den vorgegebenen Betrag (vorher wurde aus „125“ → „50125“)
     if (k === 'C') v = ''; else if (k === '⌫') v = v.slice(0, -1); else if (k === ',') { if (!v.includes(',')) v = (v || '0') + ','; }
     else if (v.replace(',', '').length < 7 && !(v.includes(',') && v.split(',')[1].length >= 2)) v = v === '0' ? k : v + k;
     amt.value = v; amt.dispatchEvent(new Event('input'));
@@ -1252,7 +1263,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   const A = TRIP.advent; const feat = document.getElementById('adv-feature'); if (!A || !feat || PRINT) return;
   const CAT = {fact: 'Fun Fact', word: 'Portugiesisch', song: 'Song des Tages', crew: 'Crew-Wahrheit', food: 'Essen & Trinken', task: 'Aufgabe', place: 'Vorschau', special: 'Spezial'};
   const COLORS = ['#00843d', '#ffcf1f', '#1f3f8f', '#ffffff', '#3ccf7f'];
-  const berlinToday = () => new Intl.DateTimeFormat('en-CA', {timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
+  const berlinToday = () => IDF('en-CA', {timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
   let opened; try { opened = new Set(JSON.parse(store.get('adv.open') || '[]')); } catch (e) { opened = new Set(); }
   const save = () => store.set('adv.open', JSON.stringify([...opened]));
   let sel = null;
@@ -1354,8 +1365,8 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   function input(q) {
     const v = draft[q.id], dis = writable ? '' : ' disabled';
     let f = '';
-    if (q.type === 'crew') f = '<select data-q="' + q.id + '"' + dis + '><option value="">– wählen –</option>' + CREW.map(p => '<option value="' + p.id + '"' + (v === p.id ? ' selected' : '') + '>' + esc(p.name) + '</option>').join('') + '</select>';
-    else if (q.type === 'choice') f = '<select data-q="' + q.id + '"' + dis + '><option value="">– wählen –</option>' + q.options.map(o => '<option' + (v === o ? ' selected' : '') + '>' + esc(o) + '</option>').join('') + '</select>';
+    if (q.type === 'crew') f = '<select data-q="' + q.id + '" aria-label="' + esc(q.t || q.q || 'Antwort') + '"' + dis + '><option value="">– wählen –</option>' + CREW.map(p => '<option value="' + p.id + '"' + (v === p.id ? ' selected' : '') + '>' + esc(p.name) + '</option>').join('') + '</select>';
+    else if (q.type === 'choice') f = '<select data-q="' + q.id + '" aria-label="' + esc(q.t || q.q || 'Antwort') + '"' + dis + '><option value="">– wählen –</option>' + q.options.map(o => '<option' + (v === o ? ' selected' : '') + '>' + esc(o) + '</option>').join('') + '</select>';
     // Zahlen per Plus/Minus statt Tastatur (Zahlenfelder ließen die Seite im claude.ai-Viewer hängen)
     else if (q.type === 'number') f = '<span class="ka-step" data-q="' + q.id + '">' + [-10, -1].map(d => '<button type="button" data-d="' + d + '"' + dis + '>' + (d === -1 ? '−' : '−10') + '</button>').join('') +
       '<output>' + (v === undefined || v === '' ? '–' : v) + '</output>' + [1, 10].map(d => '<button type="button" data-d="' + d + '"' + dis + '>' + (d === 1 ? '+' : '+10') + '</button>').join('') + '<span class="u">' + esc(q.unit || '') + '</span></span>';
@@ -1504,7 +1515,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
   function advance() { const at = step; setTimeout(() => { if (step === at && step < Q.length) { step++; render(); } }, 380); }
   box.addEventListener('toggle', e => { if (e.target.classList && e.target.classList.contains('ka-form')) formOpen = e.target.open; }, true);
   box.addEventListener('change', async e => {
-    if (e.target.tagName === 'SELECT' && e.target.dataset.q && e.target.value) { advance(); return; }
+    if (e.target.tagName === 'SELECT' && e.target.dataset.q && e.target.value) { draft[e.target.dataset.q] = e.target.value; advance(); return; }   // auch ohne vorheriges „input“ (manche WebViews)
     const q = e.target.dataset.s; if (!q || !writable || !dbK) return;
     const def = Q.find(x => x.id === q); let v = e.target.value;
     if (v === '') { delete sol[q]; } else sol[q] = def.type === 'number' ? Number(v) : def.type === 'yesno' ? v === '1' : v;
@@ -1599,7 +1610,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       types().map(x => '<button type="button" data-f="' + esc(x.id) + '" aria-pressed="' + (filter === x.id) + '">' + x.emoji + ' ' + esc(x.name) + '</button>').join('') + '</div>' +
       (rows.length ? '<ol class="gm-board">' + rows.map(p => '<li><span class="pl">' + place(p) + '.</span>' + av(p.id) + '<span class="nm"><b>' + esc(p.name) + (place(p) === 1 ? ' 👑' : '') + '</b><span class="bar"><i style="width:' + (st[p.id].w / maxW * 100) + '%"></i></span></span>' +
         '<span class="val">' + st[p.id].w + ' ' + (st[p.id].w === 1 ? 'Sieg' : 'Siege') + '<small>' + st[p.id].g + ' ' + (st[p.id].g === 1 ? 'Spiel' : 'Spiele') + ' · ' + Math.round(st[p.id].w / st[p.id].g * 100) + ' % · ' + st[p.id].l + '× Letzter</small></span></li>').join('') + '</ol>' + lantern(rows, st)
-        : '<p class="gm-empty">Noch keine Partie' + (t ? ' ' + esc(t.name) : '') + ' eingetragen. Bisher hat also jeder eine weiße Weste – und Greisel ist sogar ungeschlagen im Schlafen. Die erste Runde entscheidet, wer vorlegt.</p>') +
+        : '<p class="gm-empty">Noch keine Partie' + (t ? ' ' + esc(t.name) : '') + ' eingetragen. Bisher hat also jeder eine weiße Weste – und Greisel ist sogar ungeschlagen im Weißbier-Exen. Die erste Runde entscheidet, wer vorlegt.</p>') +
       (lw + ll + ld ? '<div class="gm-vs">⚽ Crew gegen Einheimische: <b>' + lw + (lw === 1 ? ' Sieg' : ' Siege') + ' · ' + ll + (ll === 1 ? ' Niederlage' : ' Niederlagen') + (ld ? ' · ' + ld + ' Unentschieden' : '') + '</b></div>' : '') +
       '<div class="sub">' + list.length + ' ' + (list.length === 1 ? 'Partie' : 'Partien') + ' gewertet' + (filter === 'all' ? ' · Platz nach Siegen, bei Gleichstand zählt die Siegquote' : '') + '</div></div>';
   }
@@ -1646,7 +1657,7 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
         h += '<div class="eyebrow">2. Wer spielt mit?</div>' + pick(f.players, 'pl');
         const ps = CREW.filter(p => f.players.has(p.id));
         if (t.mode === 'points' && ps.length) h += '<div class="eyebrow">3. ' + esc(t.unit || 'Punkte') + ' am Ende</div><div class="gm-rows">' + ps.map(p => '<div class="gm-row">' + av(p.id) + '<b>' + esc(p.name) + '</b>' + stepper('data-pts="' + p.id + '"', f.scores[p.id] ?? '', {min: -999, steps: [1, 10], dis: !writable}) + '</div>').join('') + '</div>';
-        if (t.mode === 'rank' && ps.length) h += '<div class="eyebrow">3. Platzierung</div><div class="gm-rows">' + ps.map(p => '<div class="gm-row">' + av(p.id) + '<b>' + esc(p.name) + '</b><select data-place="' + p.id + '"' + (writable ? '' : ' disabled') + '><option value="">Platz …</option>' +
+        if (t.mode === 'rank' && ps.length) h += '<div class="eyebrow">3. Platzierung</div><div class="gm-rows">' + ps.map(p => '<div class="gm-row">' + av(p.id) + '<b>' + esc(p.name) + '</b><select data-place="' + p.id + '" aria-label="Platz von ' + esc(p.name) + '"' + (writable ? '' : ' disabled') + '><option value="">Platz …</option>' +
           ps.map((x, i) => '<option value="' + (i + 1) + '"' + (+f.places[p.id] === i + 1 ? ' selected' : '') + '>' + (i + 1) + '.' + (i === 0 ? ' 🏆' : i === ps.length - 1 ? ' 💀' : '') + '</option>').join('') + '</select></div>').join('') + '</div>';
         if (t.mode === 'winner' && ps.length) h += '<div class="eyebrow">3. Wer hat gewonnen?</div><div class="gm-pick">' + ps.map(p => '<button type="button" role="checkbox" data-wn="' + p.id + '" aria-checked="' + f.win.has(p.id) + '">' + av(p.id) + esc(p.name) + '</button>').join('') + '</div>';
         if (t.mode === 'wizard') h += '<p class="gm-hint">3 bis 6 Spieler. Danach erscheint oben der Rundenblock, Runde für Runde eintragen.</p>';
@@ -1836,10 +1847,10 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       o.players.forEach(id => { if (!s[id]) return; s[id].g++; const r = o.winners.includes(id) ? 'W' : o.losers.includes(id) ? 'L' : 'D'; if (r === 'W') s[id].w++; if (r === 'L') s[id].l++; s[id].form.push(r); }); });
     return s;
   }
-  const dayOfTs = ts => new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date(ts));
+  const dayOfTs = ts => rioDay(ts);
   // Marktwert: täglicher Zufallskurs (fest pro Tag und Person) plus Siege, letzte Plätze und Drinks des Tages
   const MW_START = '2026-10-01';
-  const dayOf = ts => new Intl.DateTimeFormat('en-CA', {timeZone: TZ, year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date(ts));
+  const dayOf = ts => rioDay(ts);
   const addDay = (iso, n) => { const d = dateObj(iso); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };
   const rnd = key => { let h = 2166136261; for (const ch of key) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967296; };
   // Ereignis gut oder schlecht? Bei GRI/SCH/MEK ist mehr schlechter
@@ -1943,8 +1954,8 @@ document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filte
       (canEdit ? '<p class="gm-hint">Wer hat was gemacht? Vorlage antippen oder eigenen Wert setzen. Die Karte ändert sich sofort für alle, der Marktwert zieht mit.</p>' : '<p class="gm-lock">🔒 Anpassen nur für Eingeladene (Patrick lädt ein). Petzen per WhatsApp ist erlaubt.</p>') +
       '<div class="gm-pick">' + CREW.map(p => '<button type="button" data-ew="' + p.id + '" aria-checked="' + (ed.who === p.id) + '" role="radio"' + dis + '><span class="av">' + (p.photo ? '<img src="' + esc(p.photo) + '" alt="">' : esc(p.name[0])) + '</span>' + esc(p.name) + '</button>').join('') + '</div>' +
       '<div class="fc-pre">' + PRESETS.map((x, i) => '<button type="button" data-ep="' + i + '" aria-pressed="' + (ed.preset === i) + '"' + dis + '>' + x.e + ' ' + esc(x.t) + ' <small>' + x.s + ' ' + (x.d > 0 ? '+' : '−') + Math.abs(x.d) + '</small></button>').join('') + '</div>' +
-      '<div class="fc-own"><select data-es' + dis + '>' + STATS.map(k => '<option value="' + k + '"' + (ed.stat === k ? ' selected' : '') + '>' + k + ' ' + esc(LBL[k] || '') + '</option>').join('') + '</select>' +
-      '<select data-ed' + dis + '>' + [-10, -8, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 8, 10].map(n => '<option value="' + n + '"' + (ed.d === n ? ' selected' : '') + '>' + (n > 0 ? '+' : '−') + Math.abs(n) + '</option>').join('') + '</select>' +
+      '<div class="fc-own"><select data-es aria-label="Wert"' + dis + '>' + STATS.map(k => '<option value="' + k + '"' + (ed.stat === k ? ' selected' : '') + '>' + k + ' ' + esc(LBL[k] || '') + '</option>').join('') + '</select>' +
+      '<select data-ed aria-label="Änderung"' + dis + '>' + [-10, -8, -6, -5, -4, -3, -2, -1, 1, 2, 3, 4, 5, 6, 8, 10].map(n => '<option value="' + n + '"' + (ed.d === n ? ' selected' : '') + '>' + (n > 0 ? '+' : '−') + Math.abs(n) + '</option>').join('') + '</select>' +
       '<input type="text" data-ey maxlength="60" placeholder="Grund, z. B. 40 min zu spät" value="' + esc(ed.why) + '"' + dis + '></div>' +
       '<div class="gm-go"><button type="button" class="btn" data-eact="save"' + (canEdit && ed.who ? '' : ' disabled') + '>Eintragen</button><span class="gm-msg">' + esc(msgE) + '</span></div></details>';
   }
@@ -2821,7 +2832,7 @@ function wavB64(buf) {
   let STAGE = 'default', sceneTick = () => {};
   function stageToday() {
     if (window.__danceStage) return window.__danceStage;
-    let d = ''; try { d = new Intl.DateTimeFormat('en-CA', {timeZone: 'America/Sao_Paulo'}).format(new Date()).replace(/-/g, ''); } catch (e) { return 'default'; }
+    let d = ''; try { d = IDF('en-CA', {timeZone: 'America/Sao_Paulo'}).format(new Date()).replace(/-/g, ''); } catch (e) { return 'default'; }
     if (d === '20261231' || d === '20270101') return 'silvester';
     const st = (TRIP.stays || []).find(s => (s.g === 'all' || s.g === G) && d >= s.from && d < s.to) || (TRIP.stays || []).find(s => d >= s.from && d < s.to);
     if (!st) return 'default';
@@ -3612,7 +3623,7 @@ function wavB64(buf) {
         const e = mk('ellipse', {cx: ex, cy: eyY - 1, rx: 10.5, ry: 7.5, fill: SKIN}, o.lid);
         mk('path', {d: `M${ex - 10.5},${eyY + 1} Q${ex},${eyY + 7} ${ex + 10.5},${eyY + 1}`, fill: 'none', stroke: INK, 'stroke-width': 2.5, 'stroke-linecap': 'round'}, o.lid); return e; });
       if (p.photo) { const im = new Image(); im.onload = () => { try { const cv = document.createElement('canvas'), N = 48; cv.width = cv.height = N; const cx = cv.getContext('2d'); cx.drawImage(im, 0, 0, N, N);
-        const px = [], take = (u, v) => { const d = cx.getImageData(Math.round(u * N), Math.round(v * N), 1, 1).data; px.push([d[0], d[1], d[2]]); };
+        const D = cx.getImageData(0, 0, N, N).data, px = [], take = (u, v) => { const i = (Math.min(N - 1, Math.max(0, Math.round(v * N))) * N + Math.min(N - 1, Math.max(0, Math.round(u * N)))) * 4; px.push([D[i], D[i + 1], D[i + 2]]); };   // einmal lesen statt 8× (Chrome-Warnung)
         [-1, 1].forEach(k => [0, .02].forEach(dx => [.06, .09].forEach(dy => take(.5 + k * (f.ex || .13) + dx * k, (f.e || .5) + dy))));
         const med = j => px.map(q => q[j]).sort((a, b) => a - b)[px.length >> 1], col = `rgb(${med(0)},${med(1)},${med(2)})`;
         lids.concat(palmFill).forEach(e => e.setAttribute('fill', col)); } catch (e) {} }; im.src = p.photo; }
@@ -5063,8 +5074,8 @@ function wavB64(buf) {
   // HUD: Ort, Untertitel, Abblende
   // Wetter und Tageszeit über dem Bild (META.wx): Regen, Hitzeflimmern, Abendlicht, Morgenrot, Nebel, Sonnenstrahlen
   const wxG = mk('g', {opacity: 0}, hud), WXE = {};
-  defs.insertAdjacentHTML('beforeend', '<linearGradient id="se-dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a3c"/><stop offset=".55" stop-color="#ff5f6d" stop-opacity=".5"/><stop offset="1" stop-color="#3a1f6b"/></linearGradient>' +
-    '<linearGradient id="se-dawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb3c7"/><stop offset=".6" stop-color="#ffd59a" stop-opacity=".3"/><stop offset="1" stop-color="#ffd59a" stop-opacity="0"/></linearGradient>' +
+  defs.insertAdjacentHTML('beforeend', '<linearGradient id="se-wdusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a3c"/><stop offset=".55" stop-color="#ff5f6d" stop-opacity=".5"/><stop offset="1" stop-color="#3a1f6b"/></linearGradient>' +
+    '<linearGradient id="se-wdawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb3c7"/><stop offset=".6" stop-color="#ffd59a" stop-opacity=".3"/><stop offset="1" stop-color="#ffd59a" stop-opacity="0"/></linearGradient>' +
     '<radialGradient id="se-mist"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>' +
     '<linearGradient id="se-ray" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6c8" stop-opacity=".9"/><stop offset="1" stop-color="#fff6c8" stop-opacity="0"/></linearGradient>' +
     '<linearGradient id="se-water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fd3ff"/><stop offset=".25" stop-color="#1d8aa8"/><stop offset="1" stop-color="#0b4f6c"/></linearGradient>');
@@ -5072,8 +5083,8 @@ function wavB64(buf) {
   WXE.drops = mk('path', {d: Array.from({length: 90}, (_, k) => { const x = hash(k, 91) * (W + 120) - 60, y = hash(k, 92) * H * 2 - H; return `M${x.toFixed(0)},${y.toFixed(0)} l-7,24`; }).join(''), stroke: '#cfe6ff', 'stroke-width': 1.6, opacity: .55, 'stroke-linecap': 'round'}, WXE.rain);
   WXE.heat = mk('g', {opacity: 0}, wxG); mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: '#ffb14a', opacity: .12}, WXE.heat);
   WXE.waves = Array.from({length: 5}, (_, k) => mk('path', {d: `M-40,0 ${Array.from({length: 18}, (_, j) => `q25,${j % 2 ? 6 : -6} 50,0`).join(' ')}`, fill: 'none', stroke: '#fff', 'stroke-width': 3, opacity: .1}, WXE.heat));
-  WXE.dusk = mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: 'url(#se-dusk)', opacity: 0}, wxG);
-  WXE.dawn = mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: 'url(#se-dawn)', opacity: 0}, wxG);
+  WXE.dusk = mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: 'url(#se-wdusk)', opacity: 0}, wxG);
+  WXE.dawn = mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: 'url(#se-wdawn)', opacity: 0}, wxG);
   WXE.mist = mk('g', {opacity: 0}, wxG); WXE.fog = [0, 1, 2, 3].map(k => mk('ellipse', {rx: 330, ry: 80, fill: 'url(#se-mist)', opacity: .55}, WXE.mist));
   WXE.rays = mk('g', {opacity: 0}, wxG); WXE.beams = [0, 1, 2, 3].map(k => mk('path', {d: `M${80 + k * 150},-20 l70,0 l${180 + k * 30},${H + 40} l-${150 + k * 20},0Z`, fill: 'url(#se-ray)'}, WXE.rays));
   function weather(sc, L, t) {
@@ -6997,7 +7008,10 @@ function loadMod(n) {
   // Kart zuerst (Bestenliste, Live-Hinweis „… wartet im Live-Raum“), danach die Filme
   // Spiel war offen, als die Handy-App die Seite neu geladen hat: Kart sofort laden, das Modul öffnet sich dann selbst wieder (br26.kartResume)
   try { const r = JSON.parse(store.get('kartResume') || 'null'); if (r && Date.now() - r.ts < 30 * 60000) loadMod('kart'); } catch (e) {}
-  const pre = () => { setTimeout(() => idle(() => loadMod('kart')), 2500); setTimeout(() => idle(() => loadMod('samba').then(() => loadMod('serie'))), 7000); };
+  // Filme bauen beim Laden alle Szenen auf (auf dem Handy ~0,4–0,8 s am Stück): nur vorladen, wenn gerade niemand scrollt oder tippt (Prüfung 11.10.)
+  let act = 0; ['scroll', 'touchstart', 'pointerdown', 'wheel', 'keydown'].forEach(ev => addEventListener(ev, () => { act = performance.now(); }, {passive: true, capture: true}));
+  const quiet = f => performance.now() - act > 2500 ? idle(f) : setTimeout(() => quiet(f), 1500);
+  const pre = () => { setTimeout(() => idle(() => loadMod('kart')), 2500); setTimeout(() => quiet(() => loadMod('samba').then(() => quiet(() => loadMod('serie')))), 7000); };
   if (document.readyState === 'complete') pre(); else window.addEventListener('load', pre);
   // Antippen, bevor der Teil geladen ist: erst laden, dann denselben Klick wiederholen
   document.addEventListener('click', e => { const t = e.target; if (!t.closest) return;
@@ -7151,7 +7165,7 @@ setGroup(G);
 (function () {
   const hint = (id, txt) => { const e = document.querySelector('[data-hint="' + id + '"]'); if (e && txt) { e.textContent = txt; e.classList.add('live'); } };
   const day = d => Date.UTC(+d.slice(0, 4), +d.slice(5, 7) - 1, +d.slice(8, 10));
-  let today = ''; try { today = new Intl.DateTimeFormat('en-CA', {timeZone: 'Europe/Berlin'}).format(new Date()); } catch (e) {}
+  let today = ''; try { today = IDF('en-CA', {timeZone: 'Europe/Berlin'}).format(new Date()); } catch (e) {}
   if (today) {
     const n = Math.round((day('2026-12-27') - day(today)) / 864e5), k = Math.round((day(today) - day('2026-12-27')) / 864e5) + 1;
     hint('tage-tab', n > 1 ? 'Noch ' + n + ' Tage bis Abflug' : n === 1 ? 'Morgen geht’s los! ✈️' : k <= 25 ? 'Heute: Tag ' + k + ' von 25' : '');
@@ -8800,7 +8814,7 @@ setGroup(G);
   }
 
   // Tages-Challenge entfernt (Wunsch Patrick 09.10.: benutzt keiner, Menü übersichtlicher); dayKey bleibt für die Reise-Kostüme mit Datum
-  const dayKey = () => new Intl.DateTimeFormat('en-CA', {timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
+  const dayKey = () => IDF('en-CA', {timeZone: 'Europe/Berlin', year: 'numeric', month: '2-digit', day: '2-digit'}).format(new Date());
   /* ---- Crew-Bestenliste und Geister (db: kartbest/<strecke>__<person>, kartghost/<…>; schreiben nur mit Schreibrecht) ---- */
   let LB = {}, WR = false, DB = null;
   /* Als Gast spielen (Wunsch Patrick 09.10.): Gäste wie Pat's Mum oder Manuel (auf der Seite nur Kommentatoren) wählen sich im Kart selbst aus.
@@ -11607,6 +11621,7 @@ setGroup(G);
     if (e.target.closest('.kr-whochg')) { WHOOPEN = true; renderMenu(); } });
   box.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('kr-gname')) { e.preventDefault(); const b = e.target.parentNode.querySelector('.kr-gok'); if (b) b.click(); } });
   window.__kartAt = (i, l) => at(i, l); window.__kartBG = () => [BGD[0], BGD[1], WW, WH]; window.__kartTiles = () => BGT; window.__kartBGimg = w => { const c = document.createElement("canvas"); c.width = w; c.height = Math.round(w * WH / WW); const x = c.getContext("2d"), f = w / WW; BGT.forEach(t => x.drawImage(t.c, t.x * f, t.y * f, t.w * f, t.h * f)); return c.toDataURL("image/jpeg", .8); }; window.__kartTW = () => TW; window.__kartDeck = () => DECK && {i0: DECK.i0, len: DECK.len, under: DECK.under}; window.__kartCut = () => CUT && {i1: CUT.i1, i2: CUT.i2, f: +CUT.f.toFixed(3)}; window.__kartTun = () => TUN.map(u => ({i0: u.i0, len: u.len, nm: u.nm})); window.__kartN = () => N;
+  document.querySelectorAll('[data-ktn]').forEach(e => { e.textContent = TRACKS.length; });   // Streckenzahl auf der Seite immer aktuell
   window.__kart = {toMenu: () => toMenu(), voice: (i, kd) => { voice(S.karts[i], kd, 1); return S.karts[i].say; }, mm: () => ({on: MM.on, step: MM.step}), mmRender: async (sec, song) => { const A0 = AC, G0 = MM.g, D0 = MM.dl, S0 = MM.song, oc = new OfflineAudioContext(1, 44100 * sec, 44100); AC = oc; MM.g = null; MM.song = song || S0 || 'phonk'; mmGraph(); MM.g.gain.value = .8 * SONGS[MM.song].v; MM.dl.delayTime.value = 60 / SONGS[MM.song].bpm * .75; const sp = 60 / SONGS[MM.song].bpm / 4; for (let st = 0, t = 0; t < sec; st++, t += sp) mmNote(st, t);
     const buf = await oc.startRendering(); AC = A0; MM.g = G0; MM.dl = D0; MM.song = S0; const d = buf.getChannelData(0); let pk = 0, ss = 0; for (let i = 0; i < d.length; i++) { pk = Math.max(pk, Math.abs(d[i])); ss += d[i] * d[i]; }
     const pcm = new Int16Array(d.length); for (let i = 0; i < d.length; i++) pcm[i] = Math.max(-1, Math.min(1, d[i])) * 32767; let bin = ''; const u8 = new Uint8Array(pcm.buffer); for (let i = 0; i < u8.length; i += 8192) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 8192));

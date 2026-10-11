@@ -84,7 +84,7 @@
   let STAGE = 'default', sceneTick = () => {};
   function stageToday() {
     if (window.__danceStage) return window.__danceStage;
-    let d = ''; try { d = new Intl.DateTimeFormat('en-CA', {timeZone: 'America/Sao_Paulo'}).format(new Date()).replace(/-/g, ''); } catch (e) { return 'default'; }
+    let d = ''; try { d = IDF('en-CA', {timeZone: 'America/Sao_Paulo'}).format(new Date()).replace(/-/g, ''); } catch (e) { return 'default'; }
     if (d === '20261231' || d === '20270101') return 'silvester';
     const st = (TRIP.stays || []).find(s => (s.g === 'all' || s.g === G) && d >= s.from && d < s.to) || (TRIP.stays || []).find(s => d >= s.from && d < s.to);
     if (!st) return 'default';
