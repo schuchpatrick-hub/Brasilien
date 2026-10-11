@@ -123,6 +123,7 @@ Es fehlen vor allem Spielmodi außer Rennen, Langzeit-Ziele, Gruppen-Funktionen 
 - Sehr hoch: 20 📐 Verfolger-Kamera in Pseudo-3D (Mode 7, Prototyp zuerst) · 21 🧊 echtes 3D (WebGL) · 22 ✏️ Streckenbauer · 23 🌆 offene Welt „Rio Livre“ mit Missionen
 
 **Ideen-Runde 3 (11.10., nach Wetter und Langstrecken 2; Party-Modus gestrichen)**
+⭐ Gemerkt von Patrick (11.10.): Wetterumschwung + Reifenwahl, Chaos-Rennen mit Mutatoren, Minispiel-Arena, Amphibien-Abschnitte (⏳ in Arbeit, zusammen mit Gleiter-Flug vom Berg), Beifahrer-Tiere.
 - 🌦️ **Wetterumschwung + Reifenwahl**: Wetter kann mitten im Rennen kippen (Sonne → Wolkenbruch, Nebel zieht auf), vor dem Start Wetterbericht mit Wahrscheinlichkeit, Reifen Slick/Regen/Spikes wählen; auf Langstrecken Boxengasse zum Wechseln.
 - 🎲 **Chaos-Rennen mit Mutatoren**: je Runde ein neuer Zufalls-Effekt (Riesenköpfe, Mini-Karts, Mond-Schwerkraft mit Riesensprüngen, nur Bananen, Dauer-Turbo, Strecke gespiegelt, Spiegelei-Glätte), angesagt mit Glücksrad-Einblendung.
 - 🏟️ **Minispiel-Arena**: kurze Runden mit eigener Crew-Bestenliste: Schanzen-Weitsprung, Zielbremsung auf der Linie, Kokosnuss-Bowling, Drift-König (längster Drift), Slalom um Nasenbären.
