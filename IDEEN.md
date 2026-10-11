@@ -108,7 +108,7 @@ Es fehlen vor allem Spielmodi außer Rennen, Langzeit-Ziele, Gruppen-Funktionen 
 - 🗺️ **Abenteuer „Die Reise“** (Diddy Kong Racing): Brasilien-Karte als Oberwelt, Strecken in Reise-Reihenfolge, Bossrennen (Nasenbär-König, Kaiman, Kontrolleur), Endboss.
 - 🥇 **Medaillen** (CTR-Relikte, Mario-Kart-Entwicklergeister): Bronze/Silber/Gold/Platin je Strecke gegen feste Geister, Platin = Geist vom Taxifahrer.
 - ⚔️ **Duell-Herausforderung** (asynchron): eigene Zeit + Geist an jemanden aus der Crew schicken, Münz-Einsatz, Hinweis auf der Seite.
-- 🍻 **Party-Modus „Handy rumreichen“** (Micro Machines/Hot Seat) für die Bar: jeder fährt eine Runde, Verlierer dreht das Strafen-Glücksrad.
+- ~~🍻 **Party-Modus „Handy rumreichen“**~~ (gestrichen 11.10., Patrick: „aktuell nicht“)
 - 🏆 **Turnier-Baum** für Crew + Gäste (K.-o.-System) und 👥 **Team-Rennen** (Schwaben Augsburg mit Jonas, Greisel, Marco, Erich, Rasmus gegen den Rest).
 - ✏️ **Streckenbauer** (ModNation/Trackmania): Strecke mit dem Finger malen, Thema wählen, mit der Crew teilen, eigene Bestzeiten.
 - 📸 **Siegerfoto** zum Speichern/Teilen (Podest mit Köpfen, Zeit, Strecke) und 🎞️ **Wiederholung** mit TV-Kameras.
@@ -118,9 +118,25 @@ Es fehlen vor allem Spielmodi außer Rennen, Langzeit-Ziele, Gruppen-Funktionen 
 
 **Ideen-Runde 2 (09.10. spät, nach Aufwand; Patrick hat 1, 2, 5, 13 gewählt ✅)**
 - Klein: 1 ✅ Rennbericht · 2 ✅ Klassen 100/150/200 ccm · 3 🪞 Spiegel-Modus (jede Strecke seitenverkehrt, eigene Bestenliste) · 4 👻 Geist frei wählen (Bestfahrt von Simon, Marco …) · 5 ✅ Strecken-Vorschau · 6 🔙 Rückspiegel-Streifen oben · 7 ⏳ Live-Nachzügler mit Namen
-- Mittel: 8 🥇 Medaillen je Strecke (Bronze–Platin gegen feste Geister aus dem Test-Bot) · 9 🍻 Party-Modus „Handy rumreichen“ + Strafen-Glücksrad (ohne Netz) · 10 👥 Team-Rennen Schwaben Augsburg gegen den Rest · 11 🎬 Wiederholung mit TV-Kameras + Takedown-Zeitlupe · 12 🗣️ brasilianischer TV-Kommentator (XTTS) · 13 ✅ Strecke ändert sich je Runde · 14 🔗 Kopplung an die Reise (doppelte Münzen an der Station des Tages, Marktwert)
+- Mittel: 8 🥇 Medaillen je Strecke (Bronze–Platin gegen feste Geister aus dem Test-Bot) · 9 ~~🍻 Party-Modus~~ (gestrichen 11.10.) · 10 👥 Team-Rennen Schwaben Augsburg gegen den Rest · 11 🎬 Wiederholung mit TV-Kameras + Takedown-Zeitlupe · 12 🗣️ brasilianischer TV-Kommentator (XTTS) · 13 ✅ Strecke ändert sich je Runde · 14 🔗 Kopplung an die Reise (doppelte Münzen an der Station des Tages, Marktwert)
 - Groß: 15 🎈 Battle-Modus „Caipi-Klau“ · 16 📹 Highlight-Clip für WhatsApp (❓ MediaRecorder im Viewer testen) · 17 🤖 Crew-KI aus echten Bestfahrten (wie Forza-Drivatare) · 18 🗺️ Abenteuer „Die Reise“ mit Boss-Rennen · 19 ⚽ Kart-Fußball im Maracanã
 - Sehr hoch: 20 📐 Verfolger-Kamera in Pseudo-3D (Mode 7, Prototyp zuerst) · 21 🧊 echtes 3D (WebGL) · 22 ✏️ Streckenbauer · 23 🌆 offene Welt „Rio Livre“ mit Missionen
+
+**Ideen-Runde 3 (11.10., nach Wetter und Langstrecken 2; Party-Modus gestrichen)**
+⭐ Gemerkt von Patrick (11.10.): Wetterumschwung + Reifenwahl, Chaos-Rennen mit Mutatoren, Minispiel-Arena, Amphibien-Abschnitte (⏳ in Arbeit, zusammen mit Gleiter-Flug vom Berg), Beifahrer-Tiere.
+- 🌦️ **Wetterumschwung + Reifenwahl**: Wetter kann mitten im Rennen kippen (Sonne → Wolkenbruch, Nebel zieht auf), vor dem Start Wetterbericht mit Wahrscheinlichkeit, Reifen Slick/Regen/Spikes wählen; auf Langstrecken Boxengasse zum Wechseln.
+- 🎲 **Chaos-Rennen mit Mutatoren**: je Runde ein neuer Zufalls-Effekt (Riesenköpfe, Mini-Karts, Mond-Schwerkraft mit Riesensprüngen, nur Bananen, Dauer-Turbo, Strecke gespiegelt, Spiegelei-Glätte), angesagt mit Glücksrad-Einblendung.
+- 🏟️ **Minispiel-Arena**: kurze Runden mit eigener Crew-Bestenliste: Schanzen-Weitsprung, Zielbremsung auf der Linie, Kokosnuss-Bowling, Drift-König (längster Drift), Slalom um Nasenbären.
+- 🏆 **Reise-Liga 27.12.–21.01.**: jeden Tag ein „Renntag“ auf der Strecke der heutigen Station, Punkte für alle aus der Crew, Tabelle auf der Seite, Meister am Ende mit Pokal + Bonus auf der FIFA-Karte.
+- 🎯 **Missionen der Woche**: Aufgaben in normalen Rennen („Triff Simon 3× mit Kokosnüssen“, „Gewinne bei Schnee“, „5 Super-Turbos in einem Rennen“), Münzen + Abzeichen.
+- 🌊 **Amphibien-Abschnitte**: an Copacabana/Amazonas/Ilha fährt man ins Wasser, Kart wird zum Boot (Mario Kart 7), Abkürzungen übers Meer.
+- 👮 **Pega-Pega (Fangen) live**: einer ist der Kontrolleur, wer erwischt wird, wird selbst Kontrolleur; Punkte für Zeit ohne Erwischtwerden.
+- 👑 **König der Strecke** live: Krone tragen bringt Punkte, Treffer klaut die Krone.
+- 🐒 **Beifahrer-Tiere**: Nasenbär, Papagei, Capivara, Kaiman-Baby auf dem Rücksitz, kommentieren, werfen ab und zu etwas, kleine Boni; im Garage-Menü sammelbar.
+- 📯 **Hupe je Fahrer**: Hup-Knopf mit eigenem Ton (Vuvuzela, La-Cucaracha, Ziege, Rentner-Fahrradklingel), Gegner direkt davor wackeln kurz.
+- 🛸 **Boss-Event**: Riesen-Nasenbär-König oder Riesen-Kaiman jagt das ganze Feld, wer zuletzt ist, wird gefressen.
+- 📰 **Kart-Schlagzeilen auf der Seite**: automatisch aus den Rennen („Marco crasht 12× im Pantanal“, „Greisel holt Schnee-Gold“) im Kart-Kapitel.
+- 🎤 **Siegerinterview**: nach dem Sieg 3 Antworten zur Wahl (frech/arrogant/demütig), landet als Zitat in den Schlagzeilen.
 
 **Aus der Gesamtprüfung 2 (09.10. spät), nach Nutzen sortiert**
 1. 📶 **Datensparmodus Live** (Patrick gefragt, wartet auf Ja): 10 statt 20 Meldungen/s, halbe Datenmenge, Handys rechnen dazwischen weiter.
