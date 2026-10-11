@@ -168,7 +168,7 @@ Object.assign(TRIP.series, {"ep1": {"title": "Ab in den Süden", "n": 1, "lines"
         const e = mk('ellipse', {cx: ex, cy: eyY - 1, rx: 10.5, ry: 7.5, fill: SKIN}, o.lid);
         mk('path', {d: `M${ex - 10.5},${eyY + 1} Q${ex},${eyY + 7} ${ex + 10.5},${eyY + 1}`, fill: 'none', stroke: INK, 'stroke-width': 2.5, 'stroke-linecap': 'round'}, o.lid); return e; });
       if (p.photo) { const im = new Image(); im.onload = () => { try { const cv = document.createElement('canvas'), N = 48; cv.width = cv.height = N; const cx = cv.getContext('2d'); cx.drawImage(im, 0, 0, N, N);
-        const px = [], take = (u, v) => { const d = cx.getImageData(Math.round(u * N), Math.round(v * N), 1, 1).data; px.push([d[0], d[1], d[2]]); };
+        const D = cx.getImageData(0, 0, N, N).data, px = [], take = (u, v) => { const i = (Math.min(N - 1, Math.max(0, Math.round(v * N))) * N + Math.min(N - 1, Math.max(0, Math.round(u * N)))) * 4; px.push([D[i], D[i + 1], D[i + 2]]); };   // einmal lesen statt 8× (Chrome-Warnung)
         [-1, 1].forEach(k => [0, .02].forEach(dx => [.06, .09].forEach(dy => take(.5 + k * (f.ex || .13) + dx * k, (f.e || .5) + dy))));
         const med = j => px.map(q => q[j]).sort((a, b) => a - b)[px.length >> 1], col = `rgb(${med(0)},${med(1)},${med(2)})`;
         lids.concat(palmFill).forEach(e => e.setAttribute('fill', col)); } catch (e) {} }; im.src = p.photo; }
@@ -1619,8 +1619,8 @@ Object.assign(TRIP.series, {"ep1": {"title": "Ab in den Süden", "n": 1, "lines"
   // HUD: Ort, Untertitel, Abblende
   // Wetter und Tageszeit über dem Bild (META.wx): Regen, Hitzeflimmern, Abendlicht, Morgenrot, Nebel, Sonnenstrahlen
   const wxG = mk('g', {opacity: 0}, hud), WXE = {};
-  defs.insertAdjacentHTML('beforeend', '<linearGradient id="se-dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a3c"/><stop offset=".55" stop-color="#ff5f6d" stop-opacity=".5"/><stop offset="1" stop-color="#3a1f6b"/></linearGradient>' +
-    '<linearGradient id="se-dawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb3c7"/><stop offset=".6" stop-color="#ffd59a" stop-opacity=".3"/><stop offset="1" stop-color="#ffd59a" stop-opacity="0"/></linearGradient>' +
+  defs.insertAdjacentHTML('beforeend', '<linearGradient id="se-wdusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a3c"/><stop offset=".55" stop-color="#ff5f6d" stop-opacity=".5"/><stop offset="1" stop-color="#3a1f6b"/></linearGradient>' +
+    '<linearGradient id="se-wdawn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb3c7"/><stop offset=".6" stop-color="#ffd59a" stop-opacity=".3"/><stop offset="1" stop-color="#ffd59a" stop-opacity="0"/></linearGradient>' +
     '<radialGradient id="se-mist"><stop offset="0" stop-color="#fff" stop-opacity=".9"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>' +
     '<linearGradient id="se-ray" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff6c8" stop-opacity=".9"/><stop offset="1" stop-color="#fff6c8" stop-opacity="0"/></linearGradient>' +
     '<linearGradient id="se-water" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fd3ff"/><stop offset=".25" stop-color="#1d8aa8"/><stop offset="1" stop-color="#0b4f6c"/></linearGradient>');
@@ -1628,8 +1628,8 @@ Object.assign(TRIP.series, {"ep1": {"title": "Ab in den Süden", "n": 1, "lines"
   WXE.drops = mk('path', {d: Array.from({length: 90}, (_, k) => { const x = hash(k, 91) * (W + 120) - 60, y = hash(k, 92) * H * 2 - H; return `M${x.toFixed(0)},${y.toFixed(0)} l-7,24`; }).join(''), stroke: '#cfe6ff', 'stroke-width': 1.6, opacity: .55, 'stroke-linecap': 'round'}, WXE.rain);
   WXE.heat = mk('g', {opacity: 0}, wxG); mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: '#ffb14a', opacity: .12}, WXE.heat);
   WXE.waves = Array.from({length: 5}, (_, k) => mk('path', {d: `M-40,0 ${Array.from({length: 18}, (_, j) => `q25,${j % 2 ? 6 : -6} 50,0`).join(' ')}`, fill: 'none', stroke: '#fff', 'stroke-width': 3, opacity: .1}, WXE.heat));
-  WXE.dusk = mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: 'url(#se-dusk)', opacity: 0}, wxG);
-  WXE.dawn = mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: 'url(#se-dawn)', opacity: 0}, wxG);
+  WXE.dusk = mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: 'url(#se-wdusk)', opacity: 0}, wxG);
+  WXE.dawn = mk('rect', {x: -10, y: -10, width: W + 20, height: H + 20, fill: 'url(#se-wdawn)', opacity: 0}, wxG);
   WXE.mist = mk('g', {opacity: 0}, wxG); WXE.fog = [0, 1, 2, 3].map(k => mk('ellipse', {rx: 330, ry: 80, fill: 'url(#se-mist)', opacity: .55}, WXE.mist));
   WXE.rays = mk('g', {opacity: 0}, wxG); WXE.beams = [0, 1, 2, 3].map(k => mk('path', {d: `M${80 + k * 150},-20 l70,0 l${180 + k * 30},${H + 40} l-${150 + k * 20},0Z`, fill: 'url(#se-ray)'}, WXE.rays));
   function weather(sc, L, t) {
