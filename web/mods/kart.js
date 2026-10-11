@@ -385,7 +385,7 @@
   let CUPSEL = CUPS.find(c => c.id === store.get('kartCup')) || CUPS[0];
 
   // aktuelle Strecke (wird von loadTrack gesetzt)
-  let CURV = [], LINE = [], SCURV = [], CUT = null, T = TRACKS[1], P = [], NX = [], NY = [], N = 0, TW = 150, WW = 2400, WH = 1750, PADS = [], RAMP = -1, SPECT = [], BG = null, MINI = null;
+  let CURV = [], LINE = [], SCURV = [], CUT = null, T = TRACKS[1], P = [], NX = [], NY = [], N = 0, TW = 150, WW = 2400, WH = 1750, PADS = [], RAMP = -1, SPECT = [], BG = null, BGT = [], BGD = [0, 0], MINI = null;
   const shore = x => T.sea ? T.sea(x) : 1e9;
   // Geheimwege: die Abkürzung je Strecke als Schleichweg mit eigenem Belag, Schild und Hindernissen (schneller als außen herum, wenn man ausweicht)
   const SECRET = {serra: ['Trilha da Serra', 'stone', '#8a7a62'], cataratas: ['Trilha do Macuco', 'log', '#8a4a2a', 1], costa: ['Steg der Fischer', 'crate', '#9a6a3a', 1], riotour: ['Steg über die Lagoa', 'crate', '#9a6a3a', 1], gru: ['Gepäckhalle', 'suitcase', '#b9bec6'], guaruja: ['Strandbar', 'umbrella', '#e8cf8f'], sp: ['Markthalle', 'stall', '#8d8778'], copa: ['Hotelfoyer', 'table', '#ddd5c6'],
@@ -1107,6 +1107,11 @@
       const zone = (z, ph) => { x0.save(); x0.beginPath(); z.r.forEach((p0, j) => j ? x0.lineTo(p0[0], p0[1]) : x0.moveTo(p0[0], p0[1])); x0.closePath(); x0.clip();
         ZBOX = z.r.reduce((a, p0) => [Math.max(0, Math.min(a[0], p0[0])), Math.max(0, Math.min(a[1], p0[1])), Math.min(WW, Math.max(a[2], p0[0])), Math.min(WH, Math.max(a[3], p0[1]))], [1e9, 1e9, -1e9, -1e9]); try { paintBG(x0, z.th, ph); } finally { ZBOX = null; x0.restore(); } };
       const id0 = T.bg || Z[0].th; Z.forEach(z => zone(z, 1)); paintBG(x0, id0, 2); Z.forEach(z => zone(z, 4)); paintBG(x0, id0, 8); Z.forEach(z => zone(z, 16)); paintBG(x0, id0, 32); });
+    // In Kacheln zerlegen (Prüfung 11.10.): das ganze Bild als Vorlage für jedes Bild kostete auf den Langstrecken (10 Mio. Pixel) ~7 ms je Bild, Kacheln von 1024 px nur die sichtbaren
+    BGT = []; const bw = BG.width, bh = BG.height, kx = WW / bw, ky = WH / bh, TS = 1024, OV = 2;   // 2 px Überlappung, sonst blitzen an den Kachelkanten feine Linien
+    for (let y = 0; y < bh; y += TS) for (let x = 0; x < bw; x += TS) { const x0 = Math.max(0, x - OV), y0 = Math.max(0, y - OV), c = document.createElement('canvas'); c.width = Math.min(bw, x + TS + OV) - x0; c.height = Math.min(bh, y + TS + OV) - y0;
+      c.getContext('2d').drawImage(BG, x0, y0, c.width, c.height, 0, 0, c.width, c.height); BGT.push({c, x: x0 * kx, y: y0 * ky, w: c.width * kx, h: c.height * ky}); }
+    BGD = [bw, bh]; BG.width = BG.height = 1;   // großes Bild freigeben (Speicher), BG bleibt nur als Merker „Strecke geladen“
   }
 
   /* ---- Fahrer: Kopf- und Fahrzeug-Sprites ---- */
@@ -1800,7 +1805,7 @@
     if (d.t === 'taunt') { LIVE.taunts[m.sameTab ? LIVE.me : m.peer] = {txt: String(d.txt || '').slice(0, 160), until: performance.now() + 6000}; if (!m.sameTab) beep(990, .07, 'triangle', .05); if (!menu.hidden && MODE === 'live') { liveBox(); setTimeout(() => { if (!menu.hidden && MODE === 'live') liveBox(); }, 6100); } return; }
     if (d.t === 'rj' && !m.sameTab && S && S.live && S.live.id === d.race && !S.karts[0].done) { liveEmit({t: 'rjs', race: d.race, to: d.from, st: +S.t.toFixed(3)}); return; }
     if (d.t === 'rjs' && d.to === LIVE.me && LIVE.rjWait && LIVE.rjWait.race.id === d.race && !LIVE.race) { const sv = LIVE.rjWait; LIVE.rjWait = null; liveRejoinGo(sv, d.st); return; }
-    if (d.t === 'cs' && !m.sameTab && S && S.live && S.live.id === d.race && d.to === LIVE.me) { liveEmit({t: 'csr', race: d.race, id: d.id, to: d.from, th: +S.t.toFixed(4)}); return; }
+    if (d.t === 'cs' && !m.sameTab && S && S.live && S.live.id === d.race && d.to === LIVE.me) { liveEmit({t: 'csr', race: d.race, id: d.id, to: d.from, th: +lc().toFixed(4)}); return; }
     if (d.t === 'csr' && d.to === LIVE.me && S && S.live && S.live.id === d.race) { liveClockReply(d); return; }
     if (!S || !LIVE.race || d.race !== LIVE.race.id) return; const k0 = S.karts[0];
     if (d.t === 'brk' && !m.sameTab) { const b = S.brk && S.brk[d.i]; if (b && b.dead < 0) brkBreak(b, null, 1); return; }
@@ -1827,7 +1832,7 @@
     const out = Object.assign({}, last, {age: now - lb.t}), st = lb.q.tm;
     // Alter der Meldung = Laufzeit übers Netz + seit dem Empfang vergangene Zeit (ohne st: geschätzt)
     const age = clamp((st !== undefined ? S.t - st : (now - lb.t) / 1000 + .08), 0, .8);
-    if (last.done || last.sp || !(last.v > 5)) return out;
+    if (last.sp || !(last.v > 5)) return out;   // auch nach dem Ziel weiter vorausrechnen (sonst blieben fertige Karts kurz stehen)
     if (last.lat !== undefined && Math.abs(last.lat) < TW && last.idx !== undefined && onCut(last.x, last.y) === false) { const i2 = last.idx + last.v * age / 6, [x, y] = at(i2, last.lat); out.x = x; out.y = y; out.a = tdir(i2) + angd(last.a, tdir(last.idx)); }
     else { out.x += Math.cos(last.a) * last.v * age; out.y += Math.sin(last.a) * last.v * age; }
     return out; }
@@ -1835,7 +1840,8 @@
   function liveRemote(k, dt) { const conv = k.aiIdx !== undefined ? q => { const r0 = (q.ai || [])[k.aiIdx]; return r0 ? {x: r0[0], y: r0[1], a: r0[2], v: r0[3], lap: r0[4], idx: r0[5], done: r0[6], b: r0[7], sp: r0[8], lat: r0[9], fl: r0[10]} : null; } : q => q;
     const q = liveSample(k.peer, conv), stale = !q || (q.age > 6000 && !q.done);
     if (stale) { k.gone = (k.gone || 0) + dt; k.lagging = 1; if (k.gone > 6 && !k.done) { k.out = 1; k.lap = -5; } return; } k.gone = 0; k.out = 0; k.lagging = q.age > 1200 ? 1 : 0;
-    if (k.x0 === undefined || Math.hypot(q.x - k.x, q.y - k.y) > 160) { k.x = q.x; k.y = q.y; k.a = q.a; } const f = Math.min(1, dt * 14); k.x += (q.x - k.x) * f; k.y += (q.y - k.y) * f; k.x0 = 1;
+    if (k.x0 === undefined || Math.hypot(q.x - k.x, q.y - k.y) > 160) { k.x = q.x; k.y = q.y; k.a = q.a; } else if (!q.sp && q.v > 5) { k.x += Math.cos(q.a) * q.v * dt; k.y += Math.sin(q.a) * q.v * dt; }   // mit dem Tempo mitfahren, dann sanft auf die Vorhersage ziehen (ohne Mitfahren hing das Kart ~70 ms zurück)
+    const f = Math.min(1, dt * 14); k.x += (q.x - k.x) * f; k.y += (q.y - k.y) * f; k.x0 = 1;
     k.a += angd(q.a, k.a) * f; k.v = q.v; k.lap = q.lap; k.idx = q.idx; k.lat = q.lat || 0; k.done = q.done || 0; k.boost = q.b ? .2 : 0; k.spin = q.sp ? .2 : 0; k.rot = q.sp ? k.rot + dt * 14 : 0; k.steer = q.st || 0; k.shield = q.sh ? 1 : 0; k.fall = q.fl || 0; k.bus = q.bu ? .3 : 0; k.zap = q.zp ? .3 : 0; k.saci = q.sc ? .3 : 0; k.towTo = q.tw || null; }
   /* Datensparmodus (Wunsch Patrick 10.10.: nur wenn man ihn in der Lobby aktiv wählt, Standard bleibt wie bisher): Einstellung „📶 Daten“ (cfg.data 'save'), gilt für alle im Rennen.
      Statt 20 nur 10 Meldungen pro Sekunde (die anderen Handys rechnen dazwischen wie bisher vorwärts), im Ziel 2–3 pro Sekunde, kürzere Zahlen, Null-Werte und
@@ -1903,12 +1909,16 @@
     const ids = Object.keys(r).sort((a, b) => (w[b] || 0) - (w[a] || 0) || r[b] - r[a]); if (!ids.length) return '';
     return '<p class="kr-live-b">📊 <b>Live-Bilanz</b> (' + LIVEST.filter(d => !d.fin).length + ' Rennen): ' + ids.slice(0, 6).map((id, i) => (i === 0 && w[id] ? '👑 ' : '') + esc(NAME(id)) + ' ' + (w[id] || 0) + '/' + r[id] + (gw[id] ? ' 🏆' + gw[id] : '')).join(' · ') + '</p>'; }
   function liveLeave() { if (LIVE.race) { LIVE.race = null; livePres(); } }
-  // Uhrabgleich im Countdown: Rennuhr an die des Starters angleichen (hin und zurück messen, halbe Laufzeit, kürzeste Messung zählt)
-  function liveClockSync() { const L = S && S.live; if (!L || !L.host || L.host === LIVE.me) return; L.cs = {sent: {}, best: null};
-    for (let i = 0; i < 6; i++) setTimeout(() => { if (!S || S.live !== L) return; const id = Math.random().toString(36).slice(2, 7); L.cs.sent[id] = S.t; liveEmit({t: 'cs', race: L.id, id, from: LIVE.me, to: L.host}); }, 120 + i * 180); }
-  function liveClockReply(d) { const L = S.live, cs = L.cs, tc = cs && cs.sent[d.id]; if (tc === undefined) return; delete cs.sent[d.id]; const tr = S.t, rtt = tr - tc;
-    if (rtt < 0 || rtt > 2 || (cs.best && cs.best.rtt <= rtt)) return; const off = d.th + rtt / 2 - tr; cs.best = {rtt, off};
-    if (Math.abs(off) > .008) { L.t0p -= off * 1000; S.t += off; } L.rtt = rtt; }
+  // Uhrabgleich: Rennuhr an die des Starters angleichen (hin und zurück messen, halbe Laufzeit, kürzeste Messung der letzten 30 s zählt).
+  // Gemessen wird mit der stetigen Uhr lc() (S.t springt nur bildweise); im Countdown 6 Messungen, im Rennen alle 3 s eine (Prüfung 11.10.: die Uhren lagen sonst bis ±70 ms auseinander)
+  const lc = () => S && S.live && S.live.t0p ? (performance.now() - S.live.t0p) / 1000 : (S ? S.t : 0);
+  function liveClockPing() { const L = S && S.live; if (!L || !L.host || L.host === LIVE.me || !L.cs) return; const id = Math.random().toString(36).slice(2, 7); if (Object.keys(L.cs.sent).length > 20) L.cs.sent = {}; L.cs.sent[id] = lc(); L.cs.at = performance.now(); liveEmit({t: 'cs', race: L.id, id, from: LIVE.me, to: L.host}); }
+  function liveClockSync() { const L = S && S.live; if (!L || !L.host || L.host === LIVE.me) return; L.cs = {sent: {}, s: [], at: 0, n: 0};
+    for (let i = 0; i < 6; i++) setTimeout(() => { if (S && S.live === L) liveClockPing(); }, 120 + i * 180); }
+  function liveClockReply(d) { const L = S.live, cs = L.cs, tc = cs && cs.sent[d.id]; if (tc === undefined) return; delete cs.sent[d.id]; const tr = lc(), rtt = tr - tc, now = performance.now();
+    if (rtt < 0 || rtt > 2) return; cs.n++; cs.s = cs.s.filter(q => now - q.at < 30000).concat([{rtt, off: d.th + rtt / 2 - tr, at: now}]); if (cs.s.length > 12) cs.s.shift();
+    const b = cs.s.reduce((a, q) => q.rtt < a.rtt ? q : a), adj = cs.n <= 6 ? b.off : clamp(b.off, -.025, .025);   // im Rennen höchstens 25 ms je Schritt, kein Ruck
+    if (Math.abs(adj) > .004) { L.t0p -= adj * 1000; cs.s.forEach(q => { q.off -= adj; }); if (S.t < 0) S.t += adj; } L.rtt = b.rtt; }
   // Gastgeber-Wechsel: fällt der Gastgeber (rechnet die Computer-Gegner) aus, übernimmt der nächste lebende Spieler (gleiche Regel auf allen Handys)
   function liveHostCheck() { const L = S.live; if (!L || !(L.ai || []).length || S.t < 3) return; const now = performance.now(); if (now - (LIVE.hcT || 0) < 500) return; LIVE.hcT = now;
     const alive = pr => pr === LIVE.me || (b => b && b.length && (now - b[b.length - 1].t < 3500 || b[b.length - 1].q.done))(LIVE.buf[pr]);
@@ -2378,7 +2388,10 @@
   // Takedown (Burnout-Stil, Wunsch Patrick: mehr Spaß, schwarzer Humor): eigener Treffer mit Item = große Einblendung, Münze, Serien (Doppel/Dreifach)
   let HBY = null; const hitBy = (k, why, by) => { HBY = by; hit(k, why); HBY = null; };
   const TDTXT = ['💀 {n} ist raus. Blumen bitte an die Eltern.', '⚰️ {n} wurde fachgerecht entsorgt.', '🪦 {n}: gefahren, getroffen, vergessen.', '💥 Volltreffer! {n} sieht jetzt die Oma. Die tote.',
-    '🩸 {n} braucht jetzt einen Priester.', '🚑 Für {n} kommt jede Hilfe zu spät.', '☠️ {n} hat das Rennen verlassen. Innerlich.', '🧹 {n} wird später zusammengekehrt.'];
+    '🩸 {n} braucht jetzt einen Priester.', '🚑 Für {n} kommt jede Hilfe zu spät.', '☠️ {n} hat das Rennen verlassen. Innerlich.', '🧹 {n} wird später zusammengekehrt.',
+    '🧾 {n}: Die Rechnung für die Beerdigung geht per Splitwise raus.', '🦴 Von {n} ist nur die Sonnenbrille übrig.', '🪦 Hier ruht {n}. Bremste nie, lebte kurz.', '🚮 {n} wurde dem Recycling zugeführt.',
+    '🦅 Über {n} kreisen schon die Urubus.', '🌹 {n} hinterlässt eine Lücke. Ungefähr so groß wie ein Kart.', '⚱️ {n} passt jetzt in eine Caipi-Dose.', '🛐 {n} trifft gleich Cristo persönlich.',
+    '📞 Bestattungen Copacabana: Für {n} ist noch ein Platz frei.', '🎻 Für {n} spielt jetzt nur noch die Geige.', '🧯 {n} wurde gelöscht. Endgültig.', '🍖 {n} ist jetzt gut durch. Medium rare war gestern.'];
   function takedown(v) { const t0 = S.t, td = S.td || (S.td = {n: 0, last: -9, chain: 0}); td.n++; if (S.rep && v) S.rep.vic[v.id] = (S.rep.vic[v.id] || 0) + 1; td.chain = t0 - td.last < 4 ? td.chain + 1 : 1; td.last = t0; addCoins(1);
     if (v && !v.me) { ach('td1'); if (td.chain >= 3) ach('td3'); } const big = ['', '💀 TAKEDOWN!', '💀💀 DOUBLE TAKEDOWN!', '💀💀💀 DREIFACH-MASSAKER!', '☠️ AMOKLAUF!'][Math.min(4, td.chain)];
     say('td_' + Math.min(4, td.chain), big, 1, 1); S.tdMsg = {t: big, sub: pick(TDTXT).replace(/\{n\}/g, NAME(v.id)), until: performance.now() + 1700}; if (td.chain >= 2) S.shake = Math.max(S.shake || 0, .3); vib(td.chain >= 2 ? [20, 30, 20, 30, 40] : 25); beep(td.chain >= 2 ? 1200 : 900, .12, 'square', .06, td.chain >= 2 ? 1800 : 1400); }
@@ -2844,7 +2857,8 @@
     if (S.grid && !S.intro) { S.grid.t += dt; S.karts.forEach((k, i) => { if (S.grid.ld[i] || S.grid.t < S.grid.lk[i] + GDROP) return; S.grid.ld[i] = 1; if (k.me) { SFX.land(); S.shake = Math.max(S.shake, .18); vib(25); } else noise(.09, .07, 0, 0, 0, 180); });   // Kart setzt in seiner Startbox auf
       const end = S.grid.t >= S.grid.dur || (S.grid.live && S.t > -3.1); if (end) { S.grid = null; box.classList.remove('kr-intro'); } else if (!S.grid.live) return; }   // Startaufstellung: Einzelrennen/Pokal mit stehender Uhr
     S.t += dt; S.shake = Math.max(0, S.shake - dt); CCF = ccF(S.cc || 150); CCV = Math.min(1, CCF);
-    if (S.live && S.live.t0p && !(S.slow > 0)) { const w = (performance.now() - S.live.t0p) / 1000; if (w - S.t > .25) S.t = w; }   // Live: gemeinsame Rennuhr (nach App-Wechsel/Ruckeln aufholen)
+    if (S.live && S.live.t0p && !(S.slow > 0)) { const w = (performance.now() - S.live.t0p) / 1000; if (w > S.t || S.t - w > .3) S.t = w; else S.t -= Math.min(S.t - w, dt * .5);   // Live: Rennuhr = gemeinsame Uhr (nach Ruckeln sofort aufholen, nach dem Uhrabgleich sanft zurück)
+      if (S.t > 1 && S.live.cs && performance.now() - S.live.cs.at > 3000) liveClockPing(); }
     if (S.t < 0) { if (S.xt) xtMove(); const c = Math.ceil(-S.t); if (c !== S.cd) { S.cd = c; if (c <= 3) SFX.count(1); } if (S.press === null && S.t > -3.05 && anyInput()) { S.press = S.t; if (S.t < -1) fsStart(S.karts[0], 'over'); }   // vor der „1“ = zu früh
       S.karts.forEach(k => { if (k.fsPlan && k.fsPlan.k === 'over' && !k.fs && S.t >= k.fsPlan.at) fsStart(k, 'over'); }); fsStep(dt); return; }
     if (S.cd !== 0) { S.cd = 0; SFX.count(0); MUS.on = true;
@@ -3236,7 +3250,7 @@
     // außerhalb der Karte: passende Fläche
     const outer = {carnaval: '#26283a', lencois: '#f2e9d5', pantanal: '#86a74c', brasilia: '#bb7a45', salvador: '#1694b8', gru: '#c4c8ce', bridge: '#0b4a6e', manaus: '#34383d', lopes: '#f6ead0', guaruja: '#f1d9a2', copa: '#f1d9a2', reveillon: '#f1d9a2', ilha: '#ecd7a4', iguacu: '#2d6b35', amazon: '#1e5a2c', paraty: '#b9b1a3', sp: '#7d8187', cristo: '#2f7a3a'}[T.id];
     ctx.fillStyle = outer; ctx.fillRect(-3000, -3000, WW + 6000, WH + 6000); if (T.sea) { ctx.fillStyle = '#1694b8'; ctx.fillRect(-3000, shore(0) - 20, WW + 6000, WH + 3000); }
-    ctx.drawImage(BG, 0, 0, WW, WH);
+    { const cy0 = camY(), r = Math.max(Math.hypot(W / 2, cy0), Math.hypot(W / 2, H - cy0)) / sc + 40; BGT.forEach(t => { if (t.x > S.camX + r || t.x + t.w < S.camX - r || t.y > S.camY + r || t.y + t.h < S.camY - r) return; ctx.drawImage(t.c, t.x, t.y, t.w, t.h); }); }   // nur sichtbare Hintergrund-Kacheln
     const nz = Math.max(1, 1 / S.zoom), near = (x, y, r) => Math.abs(x - S.camX) < (r || 760) * nz && Math.abs(y - S.camY) < (r || 760) * nz;   // weiter rausgezoomt (Vorschau): größerer Sichtbereich
     // Brandung (bewegt, nur im Sichtbereich)
     if (T.sea) { const vx0 = S.camX - 700; ctx.strokeStyle = 'rgba(255,255,255,.75)'; ctx.lineWidth = 4;
@@ -3570,12 +3584,12 @@
     // Abstände: Vordermann, Hintermann, Geist (Sekunden)
     if (S.t > 0 && !k.done) { const all = S.karts.filter(o => o !== k && !o.done).sort((x, y) => progress(y) - progress(x)), pk = progress(k), v = Math.max(k.v, 90);
       const ah = all.filter(o => progress(o) > pk).pop(), bh = all.find(o => progress(o) < pk), rows = [];
-      if (ah && progress(ah) - pk < N) rows.push(['▲ ' + NAME(ah.who || ah.id), '+' + ((progress(ah) - pk) * 6 / v).toFixed(1) + ' s', '#ff9a8a']);
-      if (bh && pk - progress(bh) < N) rows.push(['▼ ' + NAME(bh.who || bh.id), '−' + ((pk - progress(bh)) * 6 / v).toFixed(1) + ' s', '#9dffb4']);
+      if (ah && progress(ah) - pk < N) rows.push(['▲ ' + rkName(ah), '+' + ((progress(ah) - pk) * 6 / v).toFixed(1) + ' s', '#ff9a8a']);
+      if (bh && pk - progress(bh) < N) rows.push(['▼ ' + rkName(bh), '−' + ((pk - progress(bh)) * 6 / v).toFixed(1) + ' s', '#9dffb4']);
       const gg = S.ghost ? ghostGap(pk) : null; if (gg !== null) rows.push(['👻 Geist', (gg > 0 ? '+' : '−') + Math.abs(gg).toFixed(1) + ' s', gg > 0 ? '#ff9a8a' : '#9dffb4']);
       ctx.font = '700 11px system-ui,sans-serif'; ctx.textBaseline = 'top'; if (rows.length) { ctx.fillStyle = 'rgba(0,0,0,.42)'; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(8, top + 50 + mh + 8, mw + 8, rows.length * 15 + 6, 7) : ctx.rect(8, top + 50 + mh + 8, mw + 8, rows.length * 15 + 6); ctx.fill(); }
       ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 4;
-      rows.forEach((r, i) => { const y = top + 50 + mh + 12 + i * 15; ctx.textAlign = 'left'; ctx.fillStyle = '#fff'; let t0 = r[0]; while (t0.length > 4 && ctx.measureText(t0).width > 64) t0 = t0.slice(0, -2) + '…'; ctx.fillText(t0, 10, y); ctx.textAlign = 'right'; ctx.fillStyle = r[2]; ctx.fillText(r[1], 108, y); }); ctx.shadowBlur = 0; ctx.textAlign = 'center'; }
+      rows.forEach((r, i) => { const y = top + 50 + mh + 12 + i * 15; ctx.textAlign = 'left'; ctx.fillStyle = '#fff'; let t0 = r[0]; if (ctx.measureText(t0).width > 64) { while (t0.length > 4 && ctx.measureText(t0 + '…').width > 64) t0 = t0.slice(0, -1); t0 = t0.trim() + '…'; } ctx.fillText(t0, 10, y); ctx.textAlign = 'right'; ctx.fillStyle = r[2]; ctx.fillText(r[1], 108, y); }); ctx.shadowBlur = 0; ctx.textAlign = 'center'; }
     standings(mh);
     if (S.live && S.liveWait > 0) { ctx.font = '800 16px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.fillStyle = '#fff'; ctx.shadowColor = 'rgba(0,0,0,.7)'; ctx.shadowBlur = 6; ctx.fillText('⏳ Warte auf die anderen … ' + Math.ceil(30 - S.liveWait) + ' s', W / 2, H * .25); ctx.shadowBlur = 0; }
     // Fahrschule: Aufgabe oben einblenden
@@ -3724,13 +3738,22 @@
   function repHtml(mine, pl, n) { const R = S.rep; if (!R || R.tT < 3) return '';
     const pc = x => Math.round(100 * x / Math.max(1, R.tT)), drP = pc(R.drT), offP = pc(R.offT), leadP = pc(R.leadT), top = (o) => Object.entries(o).sort((a, b) => b[1] - a[1])[0];
     const foe0 = top(R.by), foe = foe0 && foe0[1] >= 2 ? foe0 : null, vic = top(R.vic), td = S.td ? S.td.n : 0, falls = mine.falls || 0, ww = S.wwN || 0, smash = S.myBrk || 0, sup = S.supers || 0, laps = R.laps, bl = laps.length ? Math.min(...laps) : 0, bi = laps.indexOf(bl);   // Balken: beste Runde voll, je 1 % langsamer 4 % kürzer
-    const C = [], c = (p, t) => C.push([p, t]);
-    if (foe && foe[1] >= 3) c(9, '😈 ' + NAME(foe[0]) + ' hat dich ' + foe[1] + '× abgeschossen. Das ist keine Rivalität mehr, das ist Stalking.');
+    const C = [], c = (p, t) => C.push([p, Array.isArray(t) ? t[Math.floor(Math.random() * t.length)] : t]);   // mehrere Fassungen: bei jedem Rennen eine andere
+    const dn = S.karts.filter(o => o.done).map(o => o.done).sort((a, b) => a - b), mar = pl === 1 && dn.length > 1 ? dn[1] - mine.done : 0;
+    if (foe && foe[1] >= 3) c(9, ['😈 ' + NAME(foe[0]) + ' hat dich ' + foe[1] + '× abgeschossen. Das ist keine Rivalität mehr, das ist Stalking.', '😈 ' + foe[1] + '× von ' + NAME(foe[0]) + ' erwischt. Das Kontaktverbot ist beantragt.']);
+    if (pl === 1 && mar > 0 && mar < .3) c(9, '📸 Fotofinish! ' + mar.toFixed(2) + ' s Vorsprung. Die Zielkamera musste sich danach hinlegen.');
+    if (pl === 1 && mar > 8) c(6, ['🏖️ ' + Math.round(mar) + ' s Vorsprung. Du hättest unterwegs noch einen Caipi trinken können.', '🏖️ ' + Math.round(mar) + ' s Vorsprung. Die anderen haben dich nur noch auf der Minikarte gesehen.']);
+    if (pl === 1 && S.snow) c(8, '❄️ Im Schnee gewonnen. In Brasilien. Das glaubt dir zu Hause keiner.');
+    if (vic && vic[1] >= 3) c(7, ['🎯 ' + NAME(vic[0]) + ' ' + vic[1] + '× erledigt. ' + NAME(vic[0]) + ' hat bereits einen Anwalt eingeschaltet.', '🎯 ' + vic[1] + '× auf ' + NAME(vic[0]) + '. Das ist kein Rennen mehr, das ist Mobbing mit Motor.']);
     if (falls) c(8, '🪂 ' + falls + (falls > 1 ? ' Abstürze' : ' Absturz') + '. Die Rettungsflieger kennen dich inzwischen beim Vornamen.');
     if (ww) c(8, '⛔ Falschfahrer-Alarm! Die Polizei sucht noch nach deinem Kennzeichen.');
     if (R.hits >= 6) c(7, '🩹 ' + R.hits + ' Treffer kassiert. Dein Kart sieht aus wie Patricks Leber nach Silvester.');
     if (td >= 3) c(7, '💀 ' + td + ' Takedowns. Die Rennleitung prüft, ob das noch Sport ist oder schon Vorsatz.');
-    if (pl === n && n > 2) c(6, '🪣 Letzter. Wenigstens hattest du die beste Aussicht auf alle anderen.');
+    if (pl === n && n > 2) c(6, ['🪣 Letzter. Wenigstens hattest du die beste Aussicht auf alle anderen.', '🪣 Letzter. Der Kotzeimer gehört jetzt offiziell dir.', '🪣 Letzter. Die Familie wurde informiert, sie hat aufgelegt.']);
+    if (pl === 2 && n > 2) c(5, ['🥈 Zweiter. Der erste Verlierer. Mit bester Sicht auf den Auspuff des Siegers.', '🥈 Zweiter. Silber ist auch nur Gold, das aufgegeben hat.']);
+    if (R.top >= 200) c(5, '🚀 ' + Math.round(R.top) + ' km/h. Der Blitzer in Rio hat dich gesehen und direkt gekündigt.');
+    if (!R.items && R.tT > 30) c(5, ['🕊️ Kein einziges Item benutzt. Pazifist oder Handy falsch rum gehalten?', '🕊️ Null Items. Du sammelst die nur, oder? Wie andere Leute Kronkorken.']);
+    if (!td && !R.hits && R.tT > 40) c(4, '😇 Keine Treffer, keine Takedowns. Ihr wart heute alle sehr lieb. Langweilig, aber lieb.');
     if (R.wall >= 8) c(6, '🧱 ' + R.wall + '× in der Bande. Die Leitplanke hat sich einen Anwalt genommen.');
     if (offP >= 15) c(5, '🌴 ' + offP + ' % neben der Strecke. Der Strand gehört nicht zur Strecke, Gringo.');
     if (!td && R.items >= 4) c(5, '🎯 ' + R.items + ' Items verballert, null Takedowns. Zielwasser vergessen?');
@@ -3740,7 +3763,7 @@
     if (pl === 1 && leadP < 15) c(4, '🦊 Nur ' + Math.round(R.leadT) + ' s in Führung, aber genau die richtigen. Taktik oder Glück? Egal.');
     if (R.ov >= 8) c(3, '⬆️ ' + R.ov + ' Überholmanöver. Die anderen haben sich dein Kennzeichen notiert.');
     if (smash >= 5) c(3, '💥 ' + smash + ' Sachen zerlegt. Die Rechnung kommt per Splitwise.');
-    if (!C.length) c(0, '✅ Sauberes Rennen. Niemand ist gestorben. Diesmal.');
+    if (!C.length) c(0, ['✅ Sauberes Rennen. Niemand ist gestorben. Diesmal.', '😐 Nichts passiert. Die Rennleitung ist enttäuscht und geht schlafen.', '📺 Keine Unfälle, keine Toten. Kein Sender will das übertragen.']);
     C.sort((a, b) => b[0] - a[0]);
     const T0 = [['⏱', bl ? fmt(bl * 1000) : '–', 'beste Runde' + (bl && R.lap0 && bl * 1000 < R.lap0 ? ' · 🆕 Rekord' : '')], ['🏎️', Math.round(R.top) + ' km/h', 'Top-Speed'], ['🔥', drP + ' %', 'Drift · ' + sup + ' Super, ' + R.mini + ' Mini'],
       ['💀', td, 'Takedowns' + (vic ? ' · meist ' + NAME(vic[0]) : '')], ['🎯', R.hits, 'mal getroffen'], ['⬆️', R.ov, 'Überholmanöver'], ['👑', Math.round(R.leadT) + ' s', 'in Führung'], ['🎁', R.items, 'Items benutzt']].concat(
@@ -3756,7 +3779,11 @@
     'Für {n} wird eine Schweigeminute eingelegt. Mehr ist es nicht wert.', '{n} hat die Rente vor dem Ziel erreicht.', 'Sogar der Kaiman hatte Mitleid mit {n}. Und der frisst Kinder.',
     '{n} fährt wie er lebt: ohne Ziel und ohne Hoffnung.', 'Organspender-Ausweis für {n} wäre jetzt eine gute Idee.', 'Der Bestatter hat {n} schon mal vermessen.',
     '{n}: Selbst die Schnecke im Hostel ist enttäuscht.', 'Die Crew hat für {n} gesammelt. Für den Sarg.', '{n} wurde vom Pfarrer überholt. Auf dem Weg zur eigenen Beerdigung.',
-    'Wenn {n} so weiterfährt, reicht ein Urnengrab.', 'Mama von {n} schaut zu. Und weint.', '{n} muss die nächste Runde zahlen. Und die Beerdigung.'];
+    'Wenn {n} so weiterfährt, reicht ein Urnengrab.', 'Mama von {n} schaut zu. Und weint.', '{n} muss die nächste Runde zahlen. Und die Beerdigung.',
+    '{n} kam ins Ziel, als die Zuschauer schon beim Frühstück saßen.', 'Für {n} liegt die Rettungsdecke bereit. Mit Schleife.', '{n} wurde von einer Capivara überrundet. Die hat dabei geschlafen.',
+    'Selbst der Leichenwagen hat {n} angehupt.', 'Das Kart von {n} hat während des Rennens Rente beantragt.', 'An der Ziellinie wird für {n} schon ein Gedenkstein gemeißelt.',
+    '{n}: letzter Platz, aber erster Platz im Herzen des Bestatters.', 'Das Navi von {n} sagt nur noch: „Gib auf.“', 'Der Kaiman hat {n} angeschaut und ist Vegetarier geworden.',
+    '{n} hat nicht verloren. {n} wurde nur sehr gründlich besiegt.'];
   // Schwarzhumorige Untertitel in der Fahrer-Vorschau (Wunsch Patrick: Ansage nur der Name wie bei Smash, Witz als Text)
   const TAGS = {jonas: 'Rechnet nach jedem Unfall sofort ab. Auch mit den Hinterbliebenen.', simon: 'Leuchtet im Dunkeln. Sonnenbrand Stufe Hautkrebs.',
     patrick: 'Fährt jedes Rennen, als wäre es sein letztes. Statistisch gesehen bald richtig.', marco: 'Schwächster Fahrer im Feld. Hat trotzdem einen Führerschein. Keiner weiß, wie.',
@@ -4364,7 +4391,7 @@
       if (!sl) { toast('✍️ Bitte erst deinen Vornamen eintippen.'); ip.focus(); return; } WHOOPEN = false; setGuest('gast_' + sl, nm); }
     if (e.target.closest('.kr-whochg')) { WHOOPEN = true; renderMenu(); } });
   box.addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.classList && e.target.classList.contains('kr-gname')) { e.preventDefault(); const b = e.target.parentNode.querySelector('.kr-gok'); if (b) b.click(); } });
-  window.__kartAt = (i, l) => at(i, l); window.__kartBG = () => [BG.width, BG.height, WW, WH]; window.__kartBGimg = w => { const c = document.createElement("canvas"); c.width = w; c.height = Math.round(w * BG.height / BG.width); c.getContext("2d").drawImage(BG, 0, 0, c.width, c.height); return c.toDataURL("image/jpeg", .8); }; window.__kartTW = () => TW; window.__kartDeck = () => DECK && {i0: DECK.i0, len: DECK.len, under: DECK.under}; window.__kartCut = () => CUT && {i1: CUT.i1, i2: CUT.i2, f: +CUT.f.toFixed(3)}; window.__kartTun = () => TUN.map(u => ({i0: u.i0, len: u.len, nm: u.nm})); window.__kartN = () => N;
+  window.__kartAt = (i, l) => at(i, l); window.__kartBG = () => [BGD[0], BGD[1], WW, WH]; window.__kartTiles = () => BGT; window.__kartBGimg = w => { const c = document.createElement("canvas"); c.width = w; c.height = Math.round(w * WH / WW); const x = c.getContext("2d"), f = w / WW; BGT.forEach(t => x.drawImage(t.c, t.x * f, t.y * f, t.w * f, t.h * f)); return c.toDataURL("image/jpeg", .8); }; window.__kartTW = () => TW; window.__kartDeck = () => DECK && {i0: DECK.i0, len: DECK.len, under: DECK.under}; window.__kartCut = () => CUT && {i1: CUT.i1, i2: CUT.i2, f: +CUT.f.toFixed(3)}; window.__kartTun = () => TUN.map(u => ({i0: u.i0, len: u.len, nm: u.nm})); window.__kartN = () => N;
   window.__kart = {toMenu: () => toMenu(), voice: (i, kd) => { voice(S.karts[i], kd, 1); return S.karts[i].say; }, mm: () => ({on: MM.on, step: MM.step}), mmRender: async (sec, song) => { const A0 = AC, G0 = MM.g, D0 = MM.dl, S0 = MM.song, oc = new OfflineAudioContext(1, 44100 * sec, 44100); AC = oc; MM.g = null; MM.song = song || S0 || 'phonk'; mmGraph(); MM.g.gain.value = .8 * SONGS[MM.song].v; MM.dl.delayTime.value = 60 / SONGS[MM.song].bpm * .75; const sp = 60 / SONGS[MM.song].bpm / 4; for (let st = 0, t = 0; t < sec; st++, t += sp) mmNote(st, t);
     const buf = await oc.startRendering(); AC = A0; MM.g = G0; MM.dl = D0; MM.song = S0; const d = buf.getChannelData(0); let pk = 0, ss = 0; for (let i = 0; i < d.length; i++) { pk = Math.max(pk, Math.abs(d[i])); ss += d[i] * d[i]; }
     const pcm = new Int16Array(d.length); for (let i = 0; i < d.length; i++) pcm[i] = Math.max(-1, Math.min(1, d[i])) * 32767; let bin = ''; const u8 = new Uint8Array(pcm.buffer); for (let i = 0; i < u8.length; i += 8192) bin += String.fromCharCode.apply(null, u8.subarray(i, i + 8192));
