@@ -10252,6 +10252,7 @@
     ]
   },
   "news": [
+    {"id": "n251011mv", "d": "2026-10-11", "tab": "kart-tab", "to": "kartsec", "e": "💼", "t": "Gringo Kart: Neuer Gastfahrer Marvin „Il Banchiere“ – montags Millionen verwalten, am Wochenende den Hotelpool. Fährt das Bonus-Cabrio mit Schampus-Kühler und Pool-Flamingo, hat immer ein bisschen Promille in der Lenkung und kassiert mit seinem Spezial „Verwaltungsgebühr“ alle Gegner in der Nähe ab. Ein Achtel Italiener, sieben Achtel Assi"},
     {"id": "n251011am", "d": "2026-10-11", "tab": "kart-tab", "to": "kartsec", "e": "🪂", "t": "Gringo Kart: Amphibien-Abschnitte und Gleitflug auf den Langstrecken Rio Grande, Cataratas, Costa Verde und Serra do Mar – mit Schwimmern und Propeller quer durch Lagoa, Iguaçu, Saco do Mamanguá und Rio Itapanhaú (Wellen = kleine Sprünge), und mit dem Asa-Delta vom Berg: durch die goldenen Ringe fliegen = Turbo + Münze, mittig landen = Lande-Turbo, sonst Bruchlandung"},
     {"id": "n251011wx", "d": "2026-10-11", "tab": "kart-tab", "to": "kartsec", "e": "🌦️", "t": "Gringo Kart: Wetter! Jedes Rennen bekommt per Zufall eine von 8 Wetterlagen – Sonnig, Morgenrot, Abendrot, Nacht, Regen, Gewitter, Nebel oder Schnee (mit Glatteis). Das typische Wetter der Strecke kommt am häufigsten. Fest wählbar im Menü unter „Rennen“, und der Zufalls-Automat lost das Wetter jetzt mit"},
     {"id": "n251011lx", "d": "2026-10-11", "tab": "kart-tab", "to": "kartsec", "e": "🧭", "t": "Gringo Kart: 5 neue Langstrecken (19–23) mit ganz neuen Gags – Sambódromo (Bateria-Felder im Takt = Turbo, Umzugswagen fahren mit, Selarón-Treppe), Lençóis (Wanderdünen, Lagunen, „Com emoção?“-Kuppen), Pantanal (Kuhherde quert, Onça frisst dein Item, Schlamm, Wackelbrücken), Brasília (Riesen-Stempel, Blitzer mit Beweisfoto, Politiker mit Geldkoffer) und Salvador (rollende Olodum-Trommeln, Capoeira-Roda, Elevador Lacerda). Dazu der neue Expeditions-Pokal"},
@@ -10920,6 +10921,111 @@
     }
   ],
   "kartvo": {
+    "v_marvin_over": {
+      "o": 250,
+      "dur": 2544,
+      "f": 12
+    },
+    "v_marvin_hit": {
+      "o": 3044,
+      "dur": 7403,
+      "f": 12
+    },
+    "v_marvin_sp": {
+      "o": 10697,
+      "dur": 5609,
+      "f": 12
+    },
+    "v_marvin_win": {
+      "o": 16556,
+      "dur": 5802,
+      "f": 12
+    },
+    "v_marvin_drift": {
+      "o": 22609,
+      "dur": 3813,
+      "f": 12
+    },
+    "v_marvin_item": {
+      "o": 26672,
+      "dur": 5231,
+      "f": 12
+    },
+    "v_marvin_pass": {
+      "o": 32153,
+      "dur": 4721,
+      "f": 12
+    },
+    "v_marvin_over_2": {
+      "o": 37124,
+      "dur": 4495,
+      "f": 12
+    },
+    "v_marvin_over_3": {
+      "o": 41869,
+      "dur": 3383,
+      "f": 12
+    },
+    "v_marvin_hit_2": {
+      "o": 45501,
+      "dur": 5611,
+      "f": 12
+    },
+    "v_marvin_hit_3": {
+      "o": 51362,
+      "dur": 3027,
+      "f": 12
+    },
+    "v_marvin_pass_2": {
+      "o": 54640,
+      "dur": 2776,
+      "f": 12
+    },
+    "v_marvin_win_2": {
+      "o": 57666,
+      "dur": 4253,
+      "f": 12
+    },
+    "v_marvin_item_2": {
+      "o": 62169,
+      "dur": 3590,
+      "f": 12
+    },
+    "v_marvin_drift_2": {
+      "o": 66009,
+      "dur": 3572,
+      "f": 12
+    },
+    "v_marvin_talk": {
+      "o": 69831,
+      "dur": 6971,
+      "f": 12
+    },
+    "v_marvin_talk_2": {
+      "o": 77051,
+      "dur": 7338,
+      "f": 12
+    },
+    "v_marvin_talk_3": {
+      "o": 84639,
+      "dur": 3590,
+      "f": 12
+    },
+    "v_marvin_talk_4": {
+      "o": 88479,
+      "dur": 7260,
+      "f": 12
+    },
+    "g_marvin": {
+      "o": 95989,
+      "dur": 8786,
+      "f": 12
+    },
+    "h_marvin": {
+      "o": 105025,
+      "dur": 1162,
+      "f": 12
+    },
     "v_jonas_talk": {
       "o": 250,
       "dur": 3142,
