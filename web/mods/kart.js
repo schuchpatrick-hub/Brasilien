@@ -2181,22 +2181,27 @@
   // Gischt bei Regen, Schneestaub bei Schnee hinter schnellen Karts
   function wxStep(dt, ks) { const w = S.wx; if (w !== 'rain' && w !== 'storm' && w !== 'snow') return; ks.forEach(k => { if (k.remote || k.air > 0 || k.v < 140 || Math.random() > dt * 14) return; const b = k.x - Math.cos(k.a) * 18, c = k.y - Math.sin(k.a) * 18;
       S.sp.push({x: b + rnd(-7, 7), y: c + rnd(-7, 7), vx: -Math.cos(k.a) * 60 + rnd(-50, 50), vy: -Math.sin(k.a) * 60 + rnd(-50, 50), t: 0, c: w === 'snow' ? '#ffffff' : '#cfeaff'}); }); }
-  // Wetter im Bild: Sonnenstrahlen bei Morgen-/Abendrot, Schnee mit Frost-Schleier, Nebelbänke
+  // Wetter im Bild: Morgen-/Abendrot (Farbton, Himmel-Verlauf, Sonnenstrahlen, Sonne), Schnee (Frost-Schleier + Flocken), Nebelbänke.
+  // Die großen Schichten werden in 35 % Auflösung vorgezeichnet (alle 0,1–1 s neu) und nur noch drübergelegt: Mischmodi über den ganzen Bildschirm kosteten 10–25 % Bildrate
+  let WXL = null;
+  function wxLayer(key, every, draw) { const sc = .35, w = Math.max(1, Math.round(W * sc)), h = Math.max(1, Math.round(H * sc)), now = performance.now();
+    if (!WXL || WXL.c.width !== w || WXL.c.height !== h) { const c = document.createElement('canvas'); c.width = w; c.height = h; WXL = {c, t: -1e9}; }
+    if (WXL.key !== key || now - WXL.t > every) { const x = WXL.c.getContext('2d'); x.setTransform(sc, 0, 0, sc, 0, 0); x.clearRect(0, 0, W, H); draw(x, now / 1000); WXL.key = key; WXL.t = now; }
+    ctx.drawImage(WXL.c, 0, 0, W, H); }
   function wxDraw(tt) { const w = S.wx; if (!w) return;
-    if (S.tod === 'dawn' || S.tod === 'dusk') { const dn = S.tod === 'dawn', col = dn ? '255,214,160' : '255,140,60', dir = dn ? 1 : -1, sh = H * .55; ctx.save();   // Morgen-/Abendrot: warmer Farbton (weiches Licht), Himmel-Verlauf, Sonnenstrahlen, Sonne in der Ecke
-      ctx.globalCompositeOperation = 'soft-light'; ctx.fillStyle = dn ? 'rgba(255,165,185,.75)' : 'rgba(255,95,25,.8)'; ctx.fillRect(0, 0, W, H); ctx.globalCompositeOperation = 'source-over';
-      const v = ctx.createLinearGradient(0, 0, 0, H); v.addColorStop(0, dn ? 'rgba(255,214,170,.26)' : 'rgba(255,130,50,.24)'); v.addColorStop(.5, 'rgba(255,200,150,0)'); v.addColorStop(1, dn ? 'rgba(130,100,170,.16)' : 'rgba(70,24,80,.4)'); ctx.fillStyle = v; ctx.fillRect(0, 0, W, H);
-      ctx.globalCompositeOperation = 'lighter';
-      for (let j = 0; j < 5; j++) { const x0 = (dir > 0 ? W * (-.15 + j * .24) : W * (1.15 - j * .24)) + Math.sin(tt * .25 + j * 1.3) * 24, wd = 46 + (j % 3) * 34, a = .1 + .05 * Math.sin(tt * .6 + j * 1.7);
-        const g = ctx.createLinearGradient(x0, 0, x0 + dir * sh, H); g.addColorStop(0, `rgba(${col},${a * 1.6})`); g.addColorStop(.7, `rgba(${col},${a * .45})`); g.addColorStop(1, `rgba(${col},0)`); ctx.fillStyle = g;
-        ctx.beginPath(); ctx.moveTo(x0, -10); ctx.lineTo(x0 + wd, -10); ctx.lineTo(x0 + wd * 1.6 + dir * sh, H + 10); ctx.lineTo(x0 + dir * sh, H + 10); ctx.closePath(); ctx.fill(); }
-      const sx = dir > 0 ? W * .1 : W * .9, sy = H * .05, g2 = ctx.createRadialGradient(sx, sy, 6, sx, sy, Math.max(W, H) * .5); g2.addColorStop(0, `rgba(${col},.6)`); g2.addColorStop(.2, `rgba(${col},.16)`); g2.addColorStop(1, `rgba(${col},0)`); ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H); ctx.restore(); }
-    if (w === 'snow') { ctx.save(); ctx.globalCompositeOperation = 'saturation'; ctx.fillStyle = 'rgba(128,128,128,.6)'; ctx.fillRect(0, 0, W, H); ctx.globalCompositeOperation = 'source-over';   // Winter: Farben entsättigt, weißer Frost-Schleier (am Rand dichter), Schneeflocken
-      const g = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .25, W / 2, H / 2, Math.max(W, H) * .75); g.addColorStop(0, 'rgba(232,242,255,.3)'); g.addColorStop(1, 'rgba(246,251,255,.62)'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-      const n = [55, 95, 140][SET.q], dim = S.tod === 'night' ? .6 : 1; ctx.fillStyle = `rgba(255,255,255,${.92 * dim})`; ctx.beginPath();
+    if (S.tod === 'dawn' || S.tod === 'dusk') wxLayer(S.tod, 100, (x, t) => { const dn = S.tod === 'dawn', col = dn ? '255,214,160' : '255,140,60', dir = dn ? 1 : -1, sh = H * .55;
+      x.fillStyle = dn ? 'rgba(255,160,185,.2)' : 'rgba(255,105,35,.24)'; x.fillRect(0, 0, W, H);
+      const v = x.createLinearGradient(0, 0, 0, H); v.addColorStop(0, dn ? 'rgba(255,214,170,.3)' : 'rgba(255,130,50,.28)'); v.addColorStop(.5, 'rgba(255,200,150,0)'); v.addColorStop(1, dn ? 'rgba(130,100,170,.18)' : 'rgba(70,24,80,.42)'); x.fillStyle = v; x.fillRect(0, 0, W, H);
+      for (let j = 0; j < 5; j++) { const x0 = (dir > 0 ? W * (-.15 + j * .24) : W * (1.15 - j * .24)) + Math.sin(t * .25 + j * 1.3) * 24, wd = 46 + (j % 3) * 34, a = .1 + .05 * Math.sin(t * .6 + j * 1.7);
+        const g = x.createLinearGradient(x0, 0, x0 + dir * sh, H); g.addColorStop(0, `rgba(${col},${a * 1.8})`); g.addColorStop(.7, `rgba(${col},${a * .5})`); g.addColorStop(1, `rgba(${col},0)`); x.fillStyle = g;
+        x.beginPath(); x.moveTo(x0, -10); x.lineTo(x0 + wd, -10); x.lineTo(x0 + wd * 1.6 + dir * sh, H + 10); x.lineTo(x0 + dir * sh, H + 10); x.closePath(); x.fill(); }
+      const sx = dir > 0 ? W * .1 : W * .9, sy = H * .05, g2 = x.createRadialGradient(sx, sy, 6, sx, sy, Math.max(W, H) * .5); g2.addColorStop(0, `rgba(${col},.65)`); g2.addColorStop(.2, `rgba(${col},.18)`); g2.addColorStop(1, `rgba(${col},0)`); x.fillStyle = g2; x.fillRect(0, 0, W, H); });
+    if (w === 'snow') { wxLayer('snow', 1000, x => { x.fillStyle = 'rgba(226,232,240,.34)'; x.fillRect(0, 0, W, H);   // Winter: Farben ausgewaschen, weißer Frost-Schleier (am Rand dichter)
+        const g = x.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .25, W / 2, H / 2, Math.max(W, H) * .75); g.addColorStop(0, 'rgba(236,244,255,.12)'); g.addColorStop(1, 'rgba(248,252,255,.6)'); x.fillStyle = g; x.fillRect(0, 0, W, H); });
+      ctx.save(); const n = [55, 95, 140][SET.q], dim = S.tod === 'night' ? .6 : 1; ctx.fillStyle = `rgba(255,255,255,${.92 * dim})`; ctx.beginPath();
       for (let j = 0; j < n; j++) { const sz = 1.4 + (j % 4) * 1, sp = 45 + (j % 5) * 20 + sz * 16, x = (((j * 97.3 + Math.sin(tt * .9 + j) * 28 + tt * 22) % (W + 40)) + W + 40) % (W + 40) - 20, y = ((j * 53.7 + tt * sp) % (H + 40)) - 20; ctx.moveTo(x + sz, y); ctx.arc(x, y, sz, 0, TAU); }
       ctx.fill(); ctx.restore(); }
-    if (w === 'fog') { ctx.save(); for (let j = 0; j < 3; j++) { const x = ((tt * (14 + j * 6) + j * W * .55) % (W * 1.8)) - W * .4, y = H * (.22 + .28 * j), r0 = Math.max(W, H) * .42, g = ctx.createRadialGradient(x, y, 10, x, y, r0); g.addColorStop(0, 'rgba(238,242,246,.28)'); g.addColorStop(1, 'rgba(238,242,246,0)'); ctx.fillStyle = g; ctx.fillRect(x - r0, y - r0, r0 * 2, r0 * 2); } ctx.restore(); } }
+    if (w === 'fog') wxLayer('fog', 100, (x, t) => { for (let j = 0; j < 3; j++) { const px = ((t * (14 + j * 6) + j * W * .55) % (W * 1.8)) - W * .4, py = H * (.22 + .28 * j), r0 = Math.max(W, H) * .42, g = x.createRadialGradient(px, py, 10, px, py, r0); g.addColorStop(0, 'rgba(238,242,246,.3)'); g.addColorStop(1, 'rgba(238,242,246,0)'); x.fillStyle = g; x.fillRect(px - r0, py - r0, r0 * 2, r0 * 2); } }); }
   // ---- Zeichnen der neuen Streckenelemente ----
   const XFLT = [['#1d9a8a', '#ffd23f', '🦚'], ['#d62828', '#ffd23f', '🐉'], ['#7b2fbe', '#ff7ae0', '👑'], ['#1b7fd6', '#7ff0ea', '🐬'], ['#1d9a5b', '#ffd23f', '🦜'], ['#ff8a00', '#fff3a0', '🌞']], XOLO = ['#d62828', '#ffd23f', '#1d9a5b', '#111'];
   const upF = (x, y, img, s, phi, flip) => { ctx.save(); ctx.translate(x, y); ctx.rotate(-phi); if (flip) ctx.scale(-1, 1); ctx.drawImage(img, -img.width * s / 2, -img.height * s / 2, img.width * s, img.height * s); ctx.restore(); };
@@ -3290,8 +3295,7 @@
     if (S.storm.f > 0) { ctx.save(); ctx.fillStyle = `rgba(10,20,40,${.38 * S.storm.f})`; ctx.fillRect(0, 0, W, H); ctx.strokeStyle = `rgba(200,225,255,${.5 * S.storm.f})`; ctx.lineWidth = 1.5; ctx.beginPath(); for (let j = 0; j < [50, 90, 130][SET.q] * S.storm.f; j++) { const x = (j * 97 + tt * 520) % (W + 60) - 30, y = (j * 53 + tt * 1100) % (H + 40) - 20; ctx.moveTo(x, y); ctx.lineTo(x - 8, y + 20); } ctx.stroke();
       if (S.storm.bolt > 0) { ctx.strokeStyle = 'rgba(255,255,240,.95)'; ctx.lineWidth = 3; ctx.beginPath(); let bx = W * (.2 + ((S.t * 7) % 1) * .6), by = 0; ctx.moveTo(bx, by); while (by < H * .45) { bx += rnd(-30, 30); by += rnd(20, 45); ctx.lineTo(bx, by); } ctx.stroke(); } ctx.restore(); }
     if (S.rainW || S.rainX || (T.rain && !S.wx)) { ctx.save(); ctx.strokeStyle = 'rgba(200,225,255,.45)'; ctx.lineWidth = 1.5; ctx.beginPath(); for (let j = 0; j < [40, 70, 90][SET.q] * (S.rainX > 1 ? 1.6 : 1); j++) { const x = (j * 97 + tt * 420) % (W + 60) - 30, y = (j * 53 + tt * 900) % (H + 40) - 20; ctx.moveTo(x, y); ctx.lineTo(x - 6, y + 16); } ctx.stroke();
-      ctx.globalCompositeOperation = 'saturation'; ctx.fillStyle = 'rgba(128,128,128,.35)'; ctx.fillRect(0, 0, W, H); ctx.globalCompositeOperation = 'source-over';   // trüber Regentag: etwas entsättigt und dunkler
-      ctx.fillStyle = S.rainX > 1 ? 'rgba(30,50,70,.26)' : 'rgba(30,55,75,.2)'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
+      ctx.fillStyle = S.rainX > 1 ? 'rgba(60,72,86,.32)' : 'rgba(70,82,96,.26)'; ctx.fillRect(0, 0, W, H); ctx.restore(); }   // trüber Regentag: grau und dunkler
     if (T.mist) { const dm = Math.hypot(k0.x - T.mist.x, k0.y - T.mist.y), f = clamp(1 - (dm - T.mist.r * .4) / T.mist.r, 0, 1) * .6;
       if (f > .02) { const g = ctx.createRadialGradient(W / 2, camY(), 60, W / 2, camY(), Math.max(W, H) * .8); g.addColorStop(0, `rgba(240,250,255,${f * .25})`); g.addColorStop(1, `rgba(240,250,255,${f})`); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); } }
     { const ni = (S.ev && S.ev.cur && S.ev.cur.k === 'blackout') ? 1 : S.tod === 'night' ? (T.night ? .78 : .7) : T.night && !S.wx ? .78 : 0;   // Nacht kommt jetzt aus dem Wetter (auch auf den Nachtstrecken kann Tag sein)
