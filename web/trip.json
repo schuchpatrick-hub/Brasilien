@@ -11196,7 +11196,7 @@
     },
     "v_patrick_talk_4": {
       "o": 28550,
-      "dur": 3760,
+      "dur": 3448,
       "f": 13
     },
     "v_marco_talk": {
@@ -11280,22 +11280,22 @@
       "f": 11
     },
     "v_patrick_fat_talk": {
-      "o": 55760,
+      "o": 53934,
       "dur": 2900,
       "f": 13
     },
     "v_patrick_fat_talk_2": {
-      "o": 58910,
-      "dur": 3760,
+      "o": 57084,
+      "dur": 3728,
       "f": 13
     },
     "v_patrick_fat_talk_3": {
-      "o": 62920,
+      "o": 61062,
       "dur": 2620,
       "f": 13
     },
     "v_patrick_fat_talk_4": {
-      "o": 65790,
+      "o": 63932,
       "dur": 4240,
       "f": 13
     },
@@ -12313,37 +12313,37 @@
       "f": 8
     },
     "v_patrick_fat_over": {
-      "o": 32560,
+      "o": 32248,
       "dur": 3710,
       "f": 13
     },
     "v_patrick_fat_hit": {
-      "o": 36520,
+      "o": 36208,
       "dur": 2420,
       "f": 13
     },
     "v_patrick_fat_sp": {
-      "o": 39190,
+      "o": 38878,
       "dur": 2800,
       "f": 13
     },
     "v_patrick_fat_win": {
-      "o": 42240,
-      "dur": 3660,
+      "o": 41928,
+      "dur": 3378,
       "f": 13
     },
     "v_patrick_fat_drift": {
-      "o": 46150,
+      "o": 45556,
       "dur": 2750,
       "f": 13
     },
     "v_patrick_fat_item": {
-      "o": 49150,
-      "dur": 3500,
+      "o": 48556,
+      "dur": 2268,
       "f": 13
     },
     "v_patrick_fat_pass": {
-      "o": 52900,
+      "o": 51074,
       "dur": 2610,
       "f": 13
     },
