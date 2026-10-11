@@ -1578,6 +1578,14 @@
      unter <strecke>@<ccm> (150 ohne Zusatz, damit alle alten Zeiten weiter gelten). Im Rennen gilt S.cc (live für alle gleich aus cfg.cc), im Menü CC. */
   const CCS = [100, 150, 200], CCN = {100: '100 ccm', 150: '150 ccm', 200: '200 ccm'}, CCE = {100: '🐢', 150: '🏎️', 200: '🚀'}, ccF = c => c === 200 ? 1.2 : c === 100 ? .86 : 1;
   let CC = CCS.includes(+store.get('kartCC')) ? +store.get('kartCC') : 150;
+  // Wetter je Rennen (Wunsch Patrick 11.10.): das Standardwetter der Strecke zu 50 %, sonst eine der anderen sieben Wetterlagen; Wahl im Menü: Zufall (Standard), Standard der Strecke oder fest
+  const WXS = ['day', 'dawn', 'dusk', 'night', 'rain', 'storm', 'fog', 'snow'], WXN = {day: 'Sonnig', dawn: 'Morgenrot', dusk: 'Abendrot', night: 'Nacht', rain: 'Regen', storm: 'Gewitter', fog: 'Nebel', snow: 'Schnee'},
+    WXE = {day: '☀️', dawn: '🌅', dusk: '🌇', night: '🌙', rain: '🌧️', storm: '⛈️', fog: '🌫️', snow: '❄️'}, WXTOD = {dawn: 'dawn', dusk: 'dusk', night: 'night'}, WXSELS = ['rnd', 'std'].concat(WXS);
+  const wxStd = t => t && t.night ? 'night' : t && t.rain ? 'rain' : t && t.fog ? 'fog' : 'day';
+  const wxRoll = (t, r) => { const s0 = wxStd(t); if (r() < .5) return s0; const o = WXS.filter(w => w !== s0); return o[Math.min(o.length - 1, Math.floor(r() * o.length))]; };
+  let WXSEL = WXSELS.includes(store.get('kartWx')) ? store.get('kartWx') : 'rnd';
+  const wxSelTxt = w => w === 'rnd' ? '🎲 Zufall' : w === 'std' ? '🏁 Standard' : WXE[w] + ' ' + WXN[w];
+  const WXSAY = {day: '☀️ Sonne pur! Wer hat die Sonnencreme?', dawn: '🌅 Morgenrot! Die Crew ist noch gar nicht richtig wach …', dusk: '🌇 Abendrot! Gleich gibt’s Caipi!', rain: '🌧️ Regen! Rutschig, früh bremsen!', fog: '🌫️ Nebel! Man sieht die eigene Hand nicht …', snow: '❄️ Schnee in Brasilien?! Glatteis auf der Piste!'};
   const ccNow = () => { try { return (S && S.cc) || CC; } catch (e) { return CC; } };
   const TV = {guaruja: 2, gru: 2, lopes: 2, cristo: 2, bridge: 2}, tkey = (id, cc) => { const c = cc || ccNow(); return (TV[id] ? id + '~' + TV[id] : id) + (c !== 150 ? '@' + c : ''); }, tbase = k0 => String(k0 || '').split(/[~@]/)[0], tcc = k0 => +(String(k0 || '').split('@')[1] || 150);
   const lbList = (src, pre, cc) => Object.entries(src).filter(([id]) => id.indexOf(tkey(pre, cc) + '__') === 0).map(([, v]) => v).filter(v => v && v.ms).sort((a, b) => a.ms - b.ms);
@@ -1754,7 +1762,7 @@
       if (d.gp && d.gp.pts) { const o = d.gp, g = LIVE.gp; if (!g || g.id !== o.id || (o.k || 0) >= (g.k || 0)) LIVE.gp = Object.assign({}, o, {seen: Object.assign({}, g && g.id === o.id ? g.seen : {})}); LIVE.gp.i = o.i; LIVE.gp.in = 1; gpSave(); }   // Stand des Starters übernehmen (alle Tabellen gleich)
       else { LIVE.gp = null; gpSave(); }
       const rr = d.rnd && d.rnd[LIVE.me]; if (rr && DRVS.includes(rr[0])) { const base = RNDR || {me0: me, trk0}, tr = TBY[d.track] || TRACKS[0];   // Zufallsrennen für alle: eigener Fahrer + Fahrzeug vom Starter gelost, erst der Spielautomat, dann los (Start ist dafür 3,6 s später)
-        RNDR = {me0: base.me0, trk0: base.trk0, veh: VEHS.some(v => v.id === rr[1]) ? rr[1] : 'kart'}; me = rr[0]; makeVehicles(); livePres(); const pk = LIVE.pending; slotShow(me, tr, VEHS.find(v => v.id === RNDR.veh), tr.veh === 'boat', true, () => { if (LIVE.pending === pk) startRace(); }, +((d.cfg || {}).cc) || 150); return; }
+        RNDR = {me0: base.me0, trk0: base.trk0, veh: VEHS.some(v => v.id === rr[1]) ? rr[1] : 'kart'}; me = rr[0]; makeVehicles(); livePres(); const pk = LIVE.pending; slotShow(me, tr, VEHS.find(v => v.id === RNDR.veh), tr.veh === 'boat', true, () => { if (LIVE.pending === pk) startRace(); }, +((d.cfg || {}).cc) || 150, (d.cfg || {}).wxv); return; }
       startRace(); return; }
     if (d.t === 'gpgo') { const g = gpLive(); if (g && d.id === g.id) { LIVE.gpGo = g.id; liveAuto(); gpResUpd(); if (!menu.hidden && MODE === 'live') liveBox(); } return; }
     if (d.t === 'ping' && !m.sameTab) { liveEmit({t: 'pong', id: d.id, to: d.from, by: LIVE.me}); return; }
@@ -1835,7 +1843,7 @@
     else if (cf.gp && cf.gp !== 'off') { const c = lgpc(cf.gp) || LGPC[0], cu = CUPS.find(x => x.id === c.id), rest = TRACKS.map(t => t.id).filter(t => t !== track).sort(() => Math.random() - .5);
       gp = {id: Date.now().toString(36) + Math.random().toString(36).slice(2, 5), cup: c.id, e: c.e, n: c.n, list: cu ? cu.t.slice() : TRACKS.map(t => t.id).sort(() => Math.random() - .5).slice(0, 4), i: 0, k: 0, pts: {}, nm: {}, pl: {}, dr: {}, ai: ai.slice(), ts: Date.now()}; track = gp.list[0]; }
     const itr = SET.intro !== 'off' && track !== LIVE.lastTrk ? ((TRACKS.find(t0 => t0.id === track) || {}).long ? 10 : 7) : 0;   /* Strecken-Vorschau für alle, nicht bei Revanche auf derselben Strecke */
-    const dl = (rnd ? 10700 : 6500) + itr * 1000, cfS = rnd ? Object.assign({}, cf, {cc: pick(CCS)}) : cf;   /* +2 s für die Auslosung der Startplätze; Zufallsrennen: Klasse wird für alle mit ausgelost (+0,6 s Walze) */ liveEmit({t: 'start', id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), track, at: Date.now() + dl, delay: dl, players: lb.map(p0 => p0.peer), host: LIVE.me, ai, gp, auto: auto ? 1 : 0, seed: Math.random().toString(36).slice(2, 10), cfg: cfS, rnd: rnd || undefined, intro: itr || undefined}); }
+    const dl = (rnd ? 10700 : 6500) + itr * 1000, cfS = Object.assign({}, cf, rnd ? {cc: pick(CCS)} : {}, (tO => ({wxv: cf.wx === 'std' ? wxStd(tO) : WXS.includes(cf.wx) ? cf.wx : wxRoll(tO, Math.random)}))(TRACKS.find(x => x.id === track)));   /* Wetter für alle gleich: der Starter lost (Standard der Strecke zu 50 %) */   /* +2 s für die Auslosung der Startplätze; Zufallsrennen: Klasse wird für alle mit ausgelost (+0,6 s Walze) */ liveEmit({t: 'start', id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), track, at: Date.now() + dl, delay: dl, players: lb.map(p0 => p0.peer), host: LIVE.me, ai, gp, auto: auto ? 1 : 0, seed: Math.random().toString(36).slice(2, 10), cfg: cfS, rnd: rnd || undefined, intro: itr || undefined}); }
   // Auto-Start: sind alle in der Lobby (mindestens 2) bereit, startet das Rennen nach 3 s von selbst (gesendet vom „Anführer“ = kleinste Peer-Kennung)
   // Grand Prix: Mitfahrer, die gerade nicht in der Lobby sind (App im Hintergrund, fährt noch), werden höchstens 60 s abgewartet; „▶ Ohne … starten“ (Nachricht gpgo) überspringt
   const GPWAIT = 60000;
@@ -1893,12 +1901,12 @@
       toast('📶 <b>Verbindungstest</b><br>' + (rows.length ? rows.join('<br>') : 'Keine Antwort von den anderen 😬')); }, 3200); }
   const pingTag = p0 => { const r = LIVE.rtt[p0]; return r === undefined ? '' : (r < 180 ? '🟢' : r < 400 ? '🟡' : '🔴') + ' ' + Math.round(r) + ' ms'; };
   // Einstellungen für alle: jeder darf ändern, es gilt die zuletzt geänderte (presence.cfg mit Zeitstempel)
-  const CFG0 = {laps: 0, items: 'all', diff: -1, storm: 'off', ev: 'on', rnd: 'off', cc: 150, gp: 'off', data: 'norm', ts: 0};
+  const CFG0 = {laps: 0, items: 'all', diff: -1, storm: 'off', wx: 'rnd', ev: 'on', rnd: 'off', cc: 150, gp: 'off', data: 'norm', ts: 0};
   const LGPC = [{id: 'r4', e: '🎲', n: 'Zufalls-Pokal', x: '4 zufällige Strecken'}].concat(CUPS.map(c => ({id: c.id, e: c.e, n: c.n, x: c.t.length + ' Strecken'}))), lgpc = id => LGPC.find(c => c.id === id);
   function liveCfg() { let c = Object.assign({}, CFG0, LIVE.cfg || {}); lobby().forEach(p0 => { const x = p0.presence.cfg; if (x && x.ts > c.ts) c = Object.assign({}, CFG0, x); }); return c; }
-  const cfgVal = c => ({laps: c.laps ? c.laps + (c.laps === 1 ? ' Runde' : ' Runden') : 'Standard', items: {all: 'alle', turbo: 'nur Turbo', off: 'aus'}[c.items], diff: c.diff < 0 ? 'Gastgeber' : ['Leicht', 'Normal', 'Schwer', 'Profi'][c.diff], storm: {off: 'nie', rnd: 'Zufall', on: 'immer'}[c.storm], ev: c.ev === 'off' ? 'aus' : 'an', rnd: c.rnd === 'on' ? 'an' : 'aus', cc: c.rnd === 'on' ? '🎲 Zufall' : CCN[c.cc] || '150 ccm', data: c.data === 'save' ? 'Sparsam' : 'Normal'});
-  const cfgTxt = c => ({laps: '🔁 Runden: ' + (c.laps || 'Standard'), items: '🎁 Items: ' + {all: 'alle', turbo: 'nur 🍹 Turbo', off: 'aus'}[c.items], diff: '🤖 Gegner: ' + (c.diff < 0 ? 'je nach Gastgeber' : ['Leicht', 'Normal', 'Schwer', 'Profi'][c.diff]), storm: '⛈️ Gewitter: ' + {off: 'nie', rnd: 'Zufall', on: 'immer'}[c.storm], ev: '🎲 Ereignisse: ' + (c.ev === 'off' ? 'aus' : 'an'), data: '📶 Daten: ' + (c.data === 'save' ? 'Sparsam (etwa halb so viele Daten)' : 'Normal')});
-  function cfgStep(key) { const c = liveCfg(); if (key === 'laps') c.laps = (c.laps + 1) % 6; if (key === 'items') c.items = {all: 'turbo', turbo: 'off', off: 'all'}[c.items]; if (key === 'diff') c.diff = c.diff >= 3 ? -1 : c.diff + 1; if (key === 'storm') c.storm = {off: 'rnd', rnd: 'on', on: 'off'}[c.storm]; if (key === 'ev') c.ev = c.ev === 'off' ? 'on' : 'off'; if (key === 'rnd') c.rnd = c.rnd === 'on' ? 'off' : 'on'; if (key === 'cc') c.cc = {150: 200, 200: 100, 100: 150}[c.cc] || 150; if (key === 'data') c.data = c.data === 'save' ? 'norm' : 'save'; if (key.indexOf('gp:') === 0) { c.gp = key.slice(3); if (c.gp !== 'off') store.set('kartLiveCup', c.gp); }
+  const cfgVal = c => ({laps: c.laps ? c.laps + (c.laps === 1 ? ' Runde' : ' Runden') : 'Standard', items: {all: 'alle', turbo: 'nur Turbo', off: 'aus'}[c.items], diff: c.diff < 0 ? 'Gastgeber' : ['Leicht', 'Normal', 'Schwer', 'Profi'][c.diff], storm: {off: 'nie', rnd: 'Zufall', on: 'immer'}[c.storm], wx: wxSelTxt(WXSELS.includes(c.wx) ? c.wx : 'rnd'), ev: c.ev === 'off' ? 'aus' : 'an', rnd: c.rnd === 'on' ? 'an' : 'aus', cc: c.rnd === 'on' ? '🎲 Zufall' : CCN[c.cc] || '150 ccm', data: c.data === 'save' ? 'Sparsam' : 'Normal'});
+  const cfgTxt = c => ({laps: '🔁 Runden: ' + (c.laps || 'Standard'), items: '🎁 Items: ' + {all: 'alle', turbo: 'nur 🍹 Turbo', off: 'aus'}[c.items], diff: '🤖 Gegner: ' + (c.diff < 0 ? 'je nach Gastgeber' : ['Leicht', 'Normal', 'Schwer', 'Profi'][c.diff]), storm: '⛈️ Gewitter: ' + {off: 'nie', rnd: 'Zufall', on: 'immer'}[c.storm], wx: '🌦️ Wetter: ' + wxSelTxt(WXSELS.includes(c.wx) ? c.wx : 'rnd'), ev: '🎲 Ereignisse: ' + (c.ev === 'off' ? 'aus' : 'an'), data: '📶 Daten: ' + (c.data === 'save' ? 'Sparsam (etwa halb so viele Daten)' : 'Normal')});
+  function cfgStep(key) { const c = liveCfg(); if (key === 'laps') c.laps = (c.laps + 1) % 6; if (key === 'items') c.items = {all: 'turbo', turbo: 'off', off: 'all'}[c.items]; if (key === 'diff') c.diff = c.diff >= 3 ? -1 : c.diff + 1; if (key === 'storm') c.storm = {off: 'rnd', rnd: 'on', on: 'off'}[c.storm]; if (key === 'wx') c.wx = WXSELS[(WXSELS.indexOf(WXSELS.includes(c.wx) ? c.wx : 'rnd') + 1) % WXSELS.length]; if (key === 'ev') c.ev = c.ev === 'off' ? 'on' : 'off'; if (key === 'rnd') c.rnd = c.rnd === 'on' ? 'off' : 'on'; if (key === 'cc') c.cc = {150: 200, 200: 100, 100: 150}[c.cc] || 150; if (key === 'data') c.data = c.data === 'save' ? 'norm' : 'save'; if (key.indexOf('gp:') === 0) { c.gp = key.slice(3); if (c.gp !== 'off') store.set('kartLiveCup', c.gp); }
     c.ts = Date.now(); LIVE.cfg = c; livePres(); liveBox(); }
   // Schnellsprüche in der Lobby (derb, schwarz, Crew war einverstanden); {n} = zufälliger Mitspieler
   const TAUNTS = ['{n}, ich fahr dich platter als deine letzte Beziehung.', 'Wer Letzter wird, zahlt die nächste Runde. Und die Beerdigung.', '{n} fährt, wie er trinkt: viel zu lang und am Ende gegen die Wand.',
@@ -1936,7 +1944,7 @@
     const lp = lobbyP(), tn0 = performance.now();
     lp.forEach(p0 => { const r0 = p0.presence.rdy ? 1 : 0; if (LIVE.lpRdy[p0.peer] !== r0) { LIVE.lpRdy[p0.peer] = r0; LIVE.lpRdyAt[p0.peer] = tn0; } });   // Stempel nur beim Wechsel animieren (Lobby zeichnet sich oft neu)
     lp.forEach(p0 => { const d0 = p0.presence.drv, pv = LIVE.lpDrv[p0.peer]; if (pv !== undefined && pv !== d0) { LIVE.lpAt[p0.peer] = tn0; if (!p0.sameTab) { clearTimeout(LIVE.lpAnn); LIVE.lpAnn = setTimeout(() => { const q = lobby().find(x => x.peer === p0.peer); if (q && q.presence.drv === d0 && !box.hidden && MODE === 'live' && !LIVE.race) announce(d0); }, 700); } } LIVE.lpDrv[p0.peer] = d0; });
-    const [rk, rt] = rdyTxt(), c0 = liveCfg(), cv0 = cfgVal(c0), cfgT = [['cc', '🏎️', 'Klasse'], ['laps', '🔁', 'Runden'], ['items', '🎁', 'Items'], ['diff', '💪', 'Stärke'], ['storm', '⛈️', 'Gewitter'], ['ev', '🎲', 'Ereignisse'], ['data', '📶', 'Daten']];
+    const [rk, rt] = rdyTxt(), c0 = liveCfg(), cv0 = cfgVal(c0), cfgT = [['cc', '🏎️', 'Klasse'], ['laps', '🔁', 'Runden'], ['items', '🎁', 'Items'], ['diff', '💪', 'Stärke'], ['wx', '🌦️', 'Wetter'], ['ev', '🎲', 'Ereignisse'], ['data', '📶', 'Daten']];
     el.innerHTML = (g ? gpCard(g) : '') + '<p class="kr-lbl">Im Live-Raum (' + lb.length + ') · ✅ ' + nr + '/' + lb.length + ' bereit</p><div class="kr-lsm">' + lp.map((p0, i) => { const I = lpInfo(p0), pr = I.pr, dup = drvs.filter(x => x === pr.drv).length > 1, age = tn0 - (LIVE.lpAt[p0.peer] || -1e9);
         return '<div class="kr-lpc' + (pr.rdy ? ' rdy' : '') + (p0.sameTab ? ' me' : '') + (age < 650 ? ' new' : '') + '" style="--pc:' + PCOL[i % 6] + (age < 650 ? ';--ad:-' + Math.round(age) + 'ms' : '') + '"><span class="kr-lpn"><i>P' + (i + 1) + '</i>' + esc(I.who) + '</span><span class="kr-lpi" data-d="' + esc(I.d0) + '"></span>' +
           '<b>' + esc(I.char) + (dup ? ' ⚠️' : '') + '</b><small>' + esc(I.sub) + '</small><span class="kr-lpvr"><span class="kr-lpvs" data-p="' + esc(p0.peer) + '"></span><em>' + esc(I.vn) + '</em></span>' +
@@ -2027,7 +2035,7 @@
       {id: 'jet', e: '🚀', n: 'Raketen-Heck', x: 'Turbos halten länger, im Turbo lenkt es schwammig', c: 55, f: {b: 1.3, bs: .82}}]};
   const partsOf = () => { const o = loadJ('kartParts'); return {tire: PARTS.tire.some(p0 => p0.id === o.tire) ? o.tire : 'std', wing: PARTS.wing.some(p0 => p0.id === o.wing) ? o.wing : 'none', own: o.own || {}}; };
   function partsFx() { const P0 = {v: 1, g: 1, d: 1, m: 1, acc: 1, tgh: 0, off: 1, air: 1, land: 0, b: 1, bs: 1}; if (typeof T !== 'undefined' && T && T.veh === 'boat') return P0; const pp = partsOf();
-    [PARTS.tire.find(x => x.id === pp.tire), PARTS.wing.find(x => x.id === pp.wing)].forEach(X => Object.entries((X && X.f) || {}).forEach(([k, v]) => { if (k === 'wet') { if (T && (T.rain || (S && (S.rainX || (S.storm && S.storm.f > .3))))) P0.g *= v; } else if (k === 'tgh' || k === 'land') P0[k] += v; else P0[k] *= v; })); return P0; }
+    [PARTS.tire.find(x => x.id === pp.tire), PARTS.wing.find(x => x.id === pp.wing)].forEach(X => Object.entries((X && X.f) || {}).forEach(([k, v]) => { if (k === 'wet') { if (T && ((S && S.wx ? S.rainW || S.snow : T.rain) || (S && (S.rainX || (S.storm && S.storm.f > .3))))) P0.g *= v; } else if (k === 'tgh' || k === 'land') P0[k] += v; else P0[k] *= v; })); return P0; }
   const coins = () => +(store.get('kartCoins') || 0), addCoins = n => store.set('kartCoins', String(Math.max(0, coins() + n)));
   // Werkstatt (Tuning 2.0, Wunsch Patrick 09.10.): je Fahrzeug 6 Teile à 5 Stufen; Wirkung spürbar, aber klein genug für die Balance (Gegner ziehen etwas mit)
   const TUNE = [{k: 'm', e: '⚙️', n: 'Motor', x: 'mehr Endtempo', f: l => '+' + l + ' % Endtempo'}, {k: 'a', e: '⚡', n: 'Getriebe', x: 'schneller auf Tempo (Start, nach Treffern)', f: l => '+' + l * 5 + ' % Beschleunigung'},
@@ -2055,7 +2063,7 @@
     {id: 'net', e: '🦟', n: 'Moskitonetz', from: '2027-01-09', fl: 'ab Dschungel 09.01.'}];
   const ACH = [{id: 'cc200', e: '🚀', n: 'Lichtgeschwindigkeit', x: 'ein Rennen in 200 ccm gewonnen'}, {id: 'cc100', e: '🐢', n: 'Sonntagsfahrer', x: 'ein Rennen in 100 ccm gewonnen'}, {id: 'td1', e: '💀', n: 'Erster Abschuss', x: 'einen Gegner mit einem Item erledigt'}, {id: 'td3', e: '☠️', n: 'Dreifach-Massaker', x: 'drei Takedowns in Folge'}, {id: 'combo', e: '💥', n: 'Erste Item-Kombo'}, {id: 'police', e: '👮', n: 'Brav durch die Polizeikontrolle'}, {id: 'first', e: '🏁', n: 'Erstes Rennen'}, {id: 'win', e: '🥇', n: 'Erster Sieg'}, {id: 'rocket', e: '🚀', n: 'Raketenstart'}, {id: 'trick', e: '🤸', n: 'Trick auf der Schanze'},
     {id: 'cut', e: '⤴', n: 'Abkürzung gefunden'}, {id: 'dolphin', e: '🐬', n: 'Delfin-Turbo'}, {id: 'nohit', e: '😇', n: 'Fehlerfrei', x: 'ein Rennen ohne Treffer'}, {id: 'super10', e: '🔥', n: 'Turbo-Junkie', x: '10 Super-Turbos'},
-    {id: 'coins100', e: '🪙', n: 'Sparschwein', x: '100 Münzen gesammelt'}, {id: 'night', e: '🌙', n: 'Nachtfahrer', x: 'Rennen bei Nacht'}, {id: 'sp', e: '🏙️', n: 'Stau-Sieger', x: 'São Paulo gewinnen'},
+    {id: 'coins100', e: '🪙', n: 'Sparschwein', x: '100 Münzen gesammelt'}, {id: 'night', e: '🌙', n: 'Nachtfahrer', x: 'Rennen bei Nacht'}, {id: 'snow', e: '⛄', n: 'Brasilianischer Winter', x: 'Rennen im Schnee gewinnen'}, {id: 'wxall', e: '🌦️', n: 'Wetterfrosch', x: 'bei allen 8 Wetterlagen gefahren'}, {id: 'sp', e: '🏙️', n: 'Stau-Sieger', x: 'São Paulo gewinnen'},
     {id: 'reveillon', e: '🎆', n: 'Feliz Ano Novo', x: 'Réveillon gewinnen'}, {id: 'cristo', e: '⛰️', n: 'Gipfelstürmer', x: 'Cristo gewinnen'}, {id: 'all', e: '🗺️', n: 'Weltenbummler', x: 'alle Strecken gefahren'},
     {id: 'cup', e: '🏆', n: 'Pokalsieger', x: 'einen Grand Prix gewinnen'}, {id: 'rival5', e: '⚔️', n: 'Erzfeind', x: '5 Rivalen-Duelle gewonnen'}, {id: 'tuned', e: '🛠', n: 'Voll getunt', x: 'ein Teil auf Stufe 5'}, {id: 'smash', e: '💥', n: 'Abrissbirne', x: '25 Dinge am Streckenrand zerlegt'},
     {id: 'samba', e: '🥁', n: 'Mestre de Bateria', x: 'vier Bateria-Felder im Takt getroffen'}, {id: 'radar', e: '📸', n: 'Beweisfoto', x: 'vom Pardal geblitzt'}, {id: 'emocao', e: '🎢', n: 'Com muita emoção', x: 'drei Kuppen mit drei Tricks in den Lençóis'}];
@@ -2142,7 +2150,7 @@
     if (LP) LP.forEach(x => { const pr = x.pr, rr = RND[x.peer], id = rr ? rr[0] : pr.drv || pr.who || 'jonas', pt = rr ? {} : pr.paint || {}, pv = rr ? rr[1] : pr.veh; VEH['r:' + x.peer] = vehSprite(pt.c || (LOOK[id] || {}).shirt || '#00a651', T.veh === 'boat' ? 'boat' : (pv || 'kart'), Object.assign({}, pt, pr.parts || {}), id);
       const kk = karts.find(q => q.vkey === 'r:' + x.peer), vt0 = T.veh === 'boat' ? 'boat' : (pv || 'kart'); if (kk) { kk.vtype = vt0; kk.vsz = VSZ[vt0] || (vt0 === 'kart' && (STY[id] || {}).vs) || 1; kk.fw = vt0 === 'kart' && STYK(id) ? FWS[STYK(id)] || null : undefined; } });   // Mitspieler zeigen ihr gewähltes Fahrzeug (auch auf Ilha Grande)
     const dolphins = (T.dolphins || []).map(f => { const l = rnd(-40, 40), [x, y] = at(f * N, l); return {x, y, i: wrap(f * N), t: rnd(0, 3), cd: 0}; });
-    S = {brk: makeBrk(), brkP: [], deb: [], storm: {at: T.id !== 'cristo' && Math.random() < .33 ? rnd(22, 40) : -1, f: 0, next: 0, pud: 0}, karts, boxes, obst, birds, movers, puddles, dolphins, gates, fwT: 1, cutSaid: -1, coins: coinsT, got: 0, myHits: 0, rival, rivalAhead: true, rivalSaid: 0, tu: tune(), oils: [], coatis: [], fx: [], sp: [], marks: [], fw: [], drops: [], t: -4.1, cd: 4, over: 0, slow: 0, press: null, leader: null, lastPlace: SL[0] + 1,
+    S = {brk: makeBrk(), brkP: [], deb: [], storm: {at: -1, f: 0, next: 0, pud: 0}, karts, boxes, obst, birds, movers, puddles, dolphins, gates, fwT: 1, cutSaid: -1, coins: coinsT, got: 0, myHits: 0, rival, rivalAhead: true, rivalSaid: 0, tu: tune(), oils: [], coatis: [], fx: [], sp: [], marks: [], fw: [], drops: [], t: -4.1, cd: 4, over: 0, slow: 0, press: null, leader: null, lastPlace: SL[0] + 1,
       lx: 0, lxMsg: null, rep: {laps: [], by: {}, vic: {}, hits: 0, items: 0, wall: 0, mini: 0, ov: 0, drT: 0, tT: 0, offT: 0, top: 0, leadT: 0, bestPl: 9, lap0: 0},
       cc: LP ? (CCS.includes(+((LIVE.race && LIVE.race.cfg) || {}).cc) ? +LIVE.race.cfg.cc : 150) : TUTON ? 150 : RNDR && RNDR.cc ? RNDR.cc : CC,
       wave: {next: rnd(9, 13), on: 0, warn: 0, h: 0}, flood: 0, hl: {}, flash: 0, supers: 0, rec: [], ghost: null, lapMsg: null, zoom: 1, camT: 0, camA: karts[0].a, camX: karts[0].x, camY: karts[0].y, shake: 0};
@@ -2164,6 +2172,36 @@
   const PF0 = {v: 1, g: 1, d: 1, m: 1, acc: 1, tgh: 0, off: 1, air: 1, land: 0, b: 1, bs: 1};
   const xvx = (id, mine) => { const v = Object.assign({}, VTX[vehOf(id)] || VTX.kart), X = XBY[id]; if (X && X.m) v.m *= X.m; if (mine) { const pp = partsFx(); v.g *= pp.g; v.d *= pp.d; v.m *= pp.m * (1 + tune().p * .05); v.b *= pp.b; } return v; };
   const gateShut = g => ((S.t + g.ph) % g.period) < g.closed;
+  // Wetter für dieses Rennen festlegen: live vom Starter (cfg.wxv), Zufallsrennen aus der Walze, sonst nach Menü-Wahl (Zufall = Standard zu 50 %)
+  function wxSet(LR0, CF) { const w = TUTON ? 'day' : LR0 ? (WXS.includes(CF.wxv) ? CF.wxv : wxRoll(T, () => wr('wx'))) : RNDR && WXS.includes(RNDR.wx) ? RNDR.wx : WXSEL === 'std' ? wxStd(T) : WXS.includes(WXSEL) ? WXSEL : wxRoll(T, Math.random);
+    S.wx = w; S.tod = WXTOD[w] || 'day'; S.rainW = w === 'rain' ? 1 : 0; S.fogW = w === 'fog' ? 1 : 0; S.snow = w === 'snow' ? 1 : 0;
+    S.storm.at = w === 'storm' ? .01 : -1; S.storm.f = w === 'storm' ? .85 : 0;
+    // Regen: Pfützen, Schnee: Glatteis-Flecken, an festen Stellen (live auf allen Handys gleich)
+    if (w === 'rain' || w === 'snow') [.12, .3, .47, .63, .81, .95].forEach((f, j) => { if (w === 'rain' && j % 2) return; const [x, y] = at(Math.round(f * N), (j % 2 ? 1 : -1) * TW * .17); S.puddles.push({x, y, r: w === 'snow' ? 34 : 32, r0: w === 'snow' ? 34 : 32, ice: w === 'snow' ? 1 : 0}); }); }
+  // Gischt bei Regen, Schneestaub bei Schnee hinter schnellen Karts
+  function wxStep(dt, ks) { const w = S.wx; if (w !== 'rain' && w !== 'storm' && w !== 'snow') return; ks.forEach(k => { if (k.remote || k.air > 0 || k.v < 140 || Math.random() > dt * 14) return; const b = k.x - Math.cos(k.a) * 18, c = k.y - Math.sin(k.a) * 18;
+      S.sp.push({x: b + rnd(-7, 7), y: c + rnd(-7, 7), vx: -Math.cos(k.a) * 60 + rnd(-50, 50), vy: -Math.sin(k.a) * 60 + rnd(-50, 50), t: 0, c: w === 'snow' ? '#ffffff' : '#cfeaff'}); }); }
+  // Wetter im Bild: Morgen-/Abendrot (Farbton, Himmel-Verlauf, Sonnenstrahlen, Sonne), Schnee (Frost-Schleier + Flocken), Nebelbänke.
+  // Die großen Schichten werden in 35 % Auflösung vorgezeichnet (alle 0,1–1 s neu) und nur noch drübergelegt: Mischmodi über den ganzen Bildschirm kosteten 10–25 % Bildrate
+  let WXL = null;
+  function wxLayer(key, every, draw) { const sc = .35, w = Math.max(1, Math.round(W * sc)), h = Math.max(1, Math.round(H * sc)), now = performance.now();
+    if (!WXL || WXL.c.width !== w || WXL.c.height !== h) { const c = document.createElement('canvas'); c.width = w; c.height = h; WXL = {c, t: -1e9}; }
+    if (WXL.key !== key || now - WXL.t > every) { const x = WXL.c.getContext('2d'); x.setTransform(sc, 0, 0, sc, 0, 0); x.clearRect(0, 0, W, H); draw(x, now / 1000); WXL.key = key; WXL.t = now; }
+    ctx.drawImage(WXL.c, 0, 0, W, H); }
+  function wxDraw(tt) { const w = S.wx; if (!w) return;
+    if (S.tod === 'dawn' || S.tod === 'dusk') wxLayer(S.tod, 100, (x, t) => { const dn = S.tod === 'dawn', col = dn ? '255,214,160' : '255,140,60', dir = dn ? 1 : -1, sh = H * .55;
+      x.fillStyle = dn ? 'rgba(255,160,185,.2)' : 'rgba(255,105,35,.24)'; x.fillRect(0, 0, W, H);
+      const v = x.createLinearGradient(0, 0, 0, H); v.addColorStop(0, dn ? 'rgba(255,214,170,.3)' : 'rgba(255,130,50,.28)'); v.addColorStop(.5, 'rgba(255,200,150,0)'); v.addColorStop(1, dn ? 'rgba(130,100,170,.18)' : 'rgba(70,24,80,.42)'); x.fillStyle = v; x.fillRect(0, 0, W, H);
+      for (let j = 0; j < 5; j++) { const x0 = (dir > 0 ? W * (-.15 + j * .24) : W * (1.15 - j * .24)) + Math.sin(t * .25 + j * 1.3) * 24, wd = 46 + (j % 3) * 34, a = .1 + .05 * Math.sin(t * .6 + j * 1.7);
+        const g = x.createLinearGradient(x0, 0, x0 + dir * sh, H); g.addColorStop(0, `rgba(${col},${a * 1.8})`); g.addColorStop(.7, `rgba(${col},${a * .5})`); g.addColorStop(1, `rgba(${col},0)`); x.fillStyle = g;
+        x.beginPath(); x.moveTo(x0, -10); x.lineTo(x0 + wd, -10); x.lineTo(x0 + wd * 1.6 + dir * sh, H + 10); x.lineTo(x0 + dir * sh, H + 10); x.closePath(); x.fill(); }
+      const sx = dir > 0 ? W * .1 : W * .9, sy = H * .05, g2 = x.createRadialGradient(sx, sy, 6, sx, sy, Math.max(W, H) * .5); g2.addColorStop(0, `rgba(${col},.65)`); g2.addColorStop(.2, `rgba(${col},.18)`); g2.addColorStop(1, `rgba(${col},0)`); x.fillStyle = g2; x.fillRect(0, 0, W, H); });
+    if (w === 'snow') { wxLayer('snow', 1000, x => { x.fillStyle = 'rgba(226,232,240,.34)'; x.fillRect(0, 0, W, H);   // Winter: Farben ausgewaschen, weißer Frost-Schleier (am Rand dichter)
+        const g = x.createRadialGradient(W / 2, H / 2, Math.min(W, H) * .25, W / 2, H / 2, Math.max(W, H) * .75); g.addColorStop(0, 'rgba(236,244,255,.12)'); g.addColorStop(1, 'rgba(248,252,255,.6)'); x.fillStyle = g; x.fillRect(0, 0, W, H); });
+      ctx.save(); const n = [55, 95, 140][SET.q], dim = S.tod === 'night' ? .6 : 1; ctx.fillStyle = `rgba(255,255,255,${.92 * dim})`; ctx.beginPath();
+      for (let j = 0; j < n; j++) { const sz = 1.4 + (j % 4) * 1, sp = 45 + (j % 5) * 20 + sz * 16, x = (((j * 97.3 + Math.sin(tt * .9 + j) * 28 + tt * 22) % (W + 40)) + W + 40) % (W + 40) - 20, y = ((j * 53.7 + tt * sp) % (H + 40)) - 20; ctx.moveTo(x + sz, y); ctx.arc(x, y, sz, 0, TAU); }
+      ctx.fill(); ctx.restore(); }
+    if (w === 'fog') wxLayer('fog', 100, (x, t) => { for (let j = 0; j < 3; j++) { const px = ((t * (14 + j * 6) + j * W * .55) % (W * 1.8)) - W * .4, py = H * (.22 + .28 * j), r0 = Math.max(W, H) * .42, g = x.createRadialGradient(px, py, 10, px, py, r0); g.addColorStop(0, 'rgba(238,242,246,.3)'); g.addColorStop(1, 'rgba(238,242,246,0)'); x.fillStyle = g; x.fillRect(px - r0, py - r0, r0 * 2, r0 * 2); } }); }
   // ---- Zeichnen der neuen Streckenelemente ----
   const XFLT = [['#1d9a8a', '#ffd23f', '🦚'], ['#d62828', '#ffd23f', '🐉'], ['#7b2fbe', '#ff7ae0', '👑'], ['#1b7fd6', '#7ff0ea', '🐬'], ['#1d9a5b', '#ffd23f', '🦜'], ['#ff8a00', '#fff3a0', '🌞']], XOLO = ['#d62828', '#ffd23f', '#1d9a5b', '#111'];
   const upF = (x, y, img, s, phi, flip) => { ctx.save(); ctx.translate(x, y); ctx.rotate(-phi); if (flip) ctx.scale(-1, 1); ctx.drawImage(img, -img.width * s / 2, -img.height * s / 2, img.width * s, img.height * s); ctx.restore(); };
@@ -2663,7 +2701,7 @@
     if (S.dolphins.length) add(S.dolphins[0].i - 10, '🐬', 'Delfine: durchfahren = Turbo');
     const MVN = {vendor: 'Caipi-Verkäufer läuft quer', corn: 'Maisverkäufer auf der Strecke', coati: 'Nasenbären! Nicht anfahren', caiman: 'Kaimane im Fluss', horse: 'Pferdekutsche hat Vorfahrt', dog: 'Streunende Hunde', tram: 'Straßenbahn kreuzt', moto: 'Motoboys drängeln', monkey: 'Affen klauen dein Item!', tug: 'Gepäckschlepper', fork: 'Gabelstapler', bus: T.id === 'bridge' ? 'Bus auf der Brücke' : 'Bus kreuzt die Straße', soccer: 'Fußball fliegt quer', jogger: 'Jogger auf der Strecke', bike: 'Radfahrer queren', skate: 'Skater queren', folia: 'Foliões tanzen über die Straße', goat: 'Ziegen auf der Piste', buggy: 'Dünen-Buggys kreuzen', capy: 'Capivara-Familie quert', ema: 'Emas rennen quer', politico: 'Politiker mit Geldkoffer: rammen = Münzen!', baiana: 'Baianas drehen sich auf der Straße'}, mvs = {};
     S.movers.forEach(m => { if (mvs[m.kind] || !MVN[m.kind]) return; mvs[m.kind] = 1; add(m.i - 12, MVE[m.kind] || '⚠️', MVN[m.kind]); });
-    if (T.wind) add(i0 + N * .03, '💨', 'Seitenwind-Böen: gegenlenken!'); if (T.rain) add(i0 + N * .02, '🌧️', 'Regen: rutschig, früh bremsen'); if (T.fog) add(i0 + N * .02, '🌫️', 'Nebel: Kurven kommen plötzlich');
+    if (T.wind) add(i0 + N * .03, '💨', 'Seitenwind-Böen: gegenlenken!'); if (S.rainW) add(i0 + N * .02, '🌧️', 'Regen: rutschig, früh bremsen'); if (S.fogW) add(i0 + N * .02, '🌫️', 'Nebel: Kurven kommen plötzlich'); if (S.snow) add(i0 + N * .02, '❄️', 'Schnee: rutschig, Glatteis-Flecken meiden'); if (S.wx === 'storm') add(i0 + N * .02, '⛈️', 'Gewitter: Blitze, Pfützen, rutschig'); if (S.wx === 'night') add(i0 + N * .02, '🌙', 'Nacht: nur so weit, wie die Scheinwerfer reichen');
     xtIntro(add);
     mk.sort((a, b) => a.u - b.u); const out = []; mk.forEach(m => { if (!out.length || m.u - out[out.length - 1].u > .045) out.push(m); });   // zu dicht beieinander: nur der erste
     return {t: 0, dur: T.long ? 10 : 7, i0, mk: out}; }
@@ -2686,7 +2724,7 @@
     ctx.globalAlpha = a; ctx.shadowBlur = 0; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '700 11px system-ui,sans-serif'; ctx.fillStyle = 'rgba(255,255,255,.75)'; ctx.fillText('Antippen = überspringen', W / 2, H - lb / 2);
     ctx.fillStyle = 'rgba(255,255,255,.18)'; ctx.fillRect(18, H - lb - 6, W - 36, 3); ctx.fillStyle = '#ffd23f'; ctx.fillRect(18, H - lb - 6, (W - 36) * u, 3);
     ctx.restore(); }
-  const tkeyInfo = () => { const lp = LAPS, chips = [lp + (lp === 1 ? ' Runde' : ' Runden'), T.id === 'minhocao' || T.eight ? '∞ Acht' : CWT[T.id] ? '↻ rechtsherum' : '↺ linksherum', CCE[S.cc || 150] + ' ' + CCN[S.cc || 150]];
+  const tkeyInfo = () => { const lp = LAPS, chips = [lp + (lp === 1 ? ' Runde' : ' Runden'), T.id === 'minhocao' || T.eight ? '∞ Acht' : CWT[T.id] ? '↻ rechtsherum' : '↺ linksherum', CCE[S.cc || 150] + ' ' + CCN[S.cc || 150]]; if (S.wx) chips.push(WXE[S.wx] + ' ' + WXN[S.wx]);
     if (FALL) chips.push('⚠️ Abgrund: keine Bande'); if (LAPX[T.id] && LAPS > 1) chips.push('🔁 Strecke ändert sich'); return chips.join(' · '); };
   // Strecke ändert sich je Runde (LAPX): Stufe auslösen, sobald der Führende die Runde erreicht; herabfallende Hindernisse landen nach 0,7 s mit Staub
   function lapxStep() { const L = LAPX[T.id]; if (!L || S.tut || S.t <= 0) return; const lead = Math.max(...S.karts.map(k => k.lap));
@@ -2694,12 +2732,12 @@
     if (S.lxDrop) S.obst.forEach(o => { if (o.drop === undefined || o.landed || S.t - o.drop < .7) return; o.landed = 1; for (let j = 0; j < 8; j++) S.fx.push({x: o.x + rnd(-14, 14), y: o.y + rnd(-14, 14), dust: 1, t: 0, c: '210,190,160'});
       const m0 = S.karts[0]; if (Math.hypot(m0.x - o.x, m0.y - o.y) < 520) { S.shake = Math.max(S.shake, .1); noise(.12, .09, 0, 0, 0, 160); } }); }
   function lapxApply(st, li) {
-    if (st.tod && st.alt) { const tg = SET.tod === 'day' && st.tod === 'night' ? 'dusk' : st.tod; if (T.night || S.tod === tg || S.tod === 'night') st = st.alt; }   // ist es schon so dunkel, passiert stattdessen etwas anderes
+    if (st.tod && st.alt) { if (S.tod === st.tod || S.tod === 'night' || (!S.live && WXS.includes(WXSEL))) st = st.alt; }   // schon so dunkel bzw. Wetter fest gewählt: stattdessen etwas anderes   // ist es schon so dunkel, passiert stattdessen etwas anderes
     if (st.obst) { S.lxDrop = 1; st.obst.forEach(([f, l, kind]) => { const i = wrap(f * N), l2 = kind === 'car' || kind === 'van' ? l : Math.abs(l) * (LINE[i] > 0 ? -1 : 1), [x, y] = at(i, l2); S.obst.push({x, y, kind, r: OBR[kind] || 20, drop: S.t}); }); }   // fallende Dinge landen neben der Ideallinie (Stau-Autos bleiben auf ihrer Spur)
     if (st.mov) st.mov.forEach(([f, kind, range, speed]) => S.movers.push({i: wrap(f * N), l: -range, dir: 1, range, speed, kind, say: 1.5, x: 0, y: 0}));
     if (st.pud) st.pud.forEach(([f, l, r]) => { const [x, y] = at(f * N, l); S.puddles.push({x, y, r, r0: r}); });
     if (st.dol) st.dol.forEach(f => { const [x, y] = at(f * N, 0); S.dolphins.push({x, y, i: wrap(f * N), t: 0, cd: 0}); });
-    if (st.tod) S.tod = SET.tod === 'day' && st.tod === 'night' ? 'dusk' : st.tod;   // „immer Tag“ eingestellt: höchstens Abenddämmerung
+    if (st.tod) S.tod = st.tod;   // „immer Tag“ eingestellt: höchstens Abenddämmerung
     if (st.rain) S.rainX = st.rain; if (st.wave && S.wave) { S.waveEvery = st.wave; S.wave.next = Math.min(S.wave.next, st.wave[0]); } if (st.wh) S.waveH = st.wh;
     if (st.xt) xtLapx(st.xt);
     if (st.belt) S.beltX = st.belt; if (st.fog) S.fogX = st.fog; if (st.wind) S.windEvery = st.wind; if (st.flood) S.floodX = st.flood; if (st.fw) S.fwX = st.fw;
@@ -2828,7 +2866,7 @@
       if (k.cloud > 0) vmax *= .9; if (k.parrot > 0) vmax *= .9; if (k.saci > 0) vmax *= 1.12; if (k.tow) vmax = Math.max(vmax, Math.min(FALL ? 380 : 500, Math.max(k.tow.o.v * 1.45 + 80, 340)) * (Math.abs(k.lat) > TW / 2 ? .6 : 1));   // Regenwolke + Papagei bremsen, Saci-Wirbel schneller, Seil zieht   // Regenwolke (Niete) bremst, Seil zieht
       k.v += (vmax - k.v) * Math.min(1, dt * (k.v < vmax ? (k.boost > 0 || k.tow ? 4 : 1.6 * (.86 + k.cs.acc * .28) * k.vt[2] * k.pf.acc * (k.me ? 1 + S.tu.a * .05 : 1)) : 4));
       k.wallC = Math.max(0, (k.wallC || 0) - dt); k.inv = Math.max(0, k.inv - dt); k.glow = Math.max(0, k.glow - dt); k.blind = Math.max(0, k.blind - dt); k.slowT = Math.max(0, k.slowT - dt);
-      k.boost = Math.max(0, k.boost - dt / ((k.me ? 1 + S.tu.t * .07 : 1) * k.vx.b)); k.wet = Math.max(0, k.wet - dt);
+      k.boost = Math.max(0, k.boost - dt / ((k.me ? 1 + S.tu.t * .07 : 1) * k.vx.b)); k.wet = Math.max(0, k.wet - dt); k.ice = Math.max(0, (k.ice || 0) - dt);
       let turn = k.steer;   // Drift-Bogen als Anteil am vollen Lenkeinschlag: innen 1,02, mittel 0,62, außen 0,26 (vorher immer 1,25 × 1,14 ≈ 200° in 1,5 s)
       if (k.dr) { const s0 = k.drS || 0, dT = k.dr * (s0 >= 0 ? .62 + .4 * s0 : .62 + .36 * s0); k.drIn = Math.min(1, (k.drIn || 0) + dt / .3); turn = k.steer + (dT - k.steer) * k.drIn; }
       // Lenkung: im Stand wenig, bei Höchsttempo etwas weniger als in der Mitte
@@ -2836,7 +2874,7 @@
       const dA = turn * (k.me ? STEERS[STEER][1] : 2.7) * (.94 + k.cs.hdl * .12) * k.vt[1] * (k.me ? 1 + S.tu.s * .03 : 1) * (k.boost > 0 ? k.pf.bs : 1) * (CCF > 1 ? 1.08 : 1) * dt * sf;
       k.a += dA;
       // Querbewegung: Schwung bleibt beim Einlenken erhalten und wird über die Haftung abgebaut (Drift = wenig Haftung = Rutschen)
-      const grip0 = T.grip * (1 - S.storm.f * .2) * (S.rainX ? 1 - .08 * S.rainX : 1), lg = k.air ? .4 : k.spin > 0 ? 1.5 : k.dr ? Math.min(grip0, 4.5) : grip0 * (offT ? .8 : 1) * (k.me ? 1 + S.tu.r * .04 : 1) * k.vx.g;
+      const grip0 = T.grip * (1 - S.storm.f * .2) * (S.rainX ? 1 - .08 * S.rainX : 1) * (S.rainW && !T.rain ? .92 : 1) * (S.snow ? .8 : 1) * (k.ice > 0 ? .32 : 1), lg = k.air ? .4 : k.spin > 0 ? 1.5 : k.dr ? Math.min(grip0, 4.5) : grip0 * (offT ? .8 : 1) * (k.me ? 1 + S.tu.r * .04 : 1) * k.vx.g;   // Wetter: Regen −8 %, Schnee −20 %, auf Glatteis rutscht man
       k.vr = (k.vr - k.v * dA * .92 + (k.dr ? -k.dr * k.v * .3 * (k.drIn || 0) * k.vx.d * dt : 0)) * Math.exp(-lg * dt);
       k.vr = clamp(k.vr, -k.v * .8 - 20, k.v * .8 + 20);
       const ca = Math.cos(k.a), sa = Math.sin(k.a);
@@ -2969,7 +3007,7 @@
       else { b.f += dt; b.x += b.vx * dt; b.y += b.vy * dt; if (b.f > 9) { b.f = 0; b.x = b.x0; b.y = b.y0; } } });
     // Pfützen / Hochwasser (Paraty: Flut steigt und fällt)
     if (T.flood) { S.flood += dt; const f = (.75 + .45 * Math.sin(S.flood * TAU / 14)) * (S.floodX || 1); S.puddles.forEach(p => { p.r = p.r0 * f; }); if (f > 1.15 && !S.floodSaid) { S.floodSaid = 1; say('flood', 'Land unter!'); } if (f < .9) S.floodSaid = 0; }
-    S.puddles.forEach(p => ks.forEach(k => { if (ground(k) && Math.hypot(k.x - p.x, k.y - p.y) < p.r) { if (!k.wet) { if (k.me) SFX.splash(); for (let j = 0; j < 6; j++) S.sp.push({x: k.x, y: k.y, vx: rnd(-90, 90), vy: rnd(-90, 90), t: 0, c: '#bff3ff'}); } k.wet = .35; } }));
+    S.puddles.forEach(p => ks.forEach(k => { if (ground(k) && Math.hypot(k.x - p.x, k.y - p.y) < p.r) { if (p.ice) { if (!(k.ice > 0)) { if (k.me) { noise(.25, .07, 2600); floatTxt(k, '🧊 Glatteis!', '#d8f3ff'); vib(12); } for (let j = 0; j < 5; j++) S.sp.push({x: k.x, y: k.y, vx: rnd(-80, 80), vy: rnd(-80, 80), t: 0, c: '#ffffff'}); } k.ice = .45; return; } if (!k.wet) { if (k.me) SFX.splash(); for (let j = 0; j < 6; j++) S.sp.push({x: k.x, y: k.y, vx: rnd(-90, 90), vy: rnd(-90, 90), t: 0, c: '#bff3ff'}); } k.wet = .35; } }));
     // Delfine (Amazonas): springen auf, durchfahren = Turbo
     S.dolphins.forEach(d => { d.t += dt; d.cd = Math.max(0, d.cd - dt); const up = (d.t % 3.2) < 1.1;
       if (up && d.cd <= 0) ks.forEach(k => { if (k.dol <= 0 && Math.hypot(k.x - d.x, k.y - d.y) < 40) { k.boost = Math.max(k.boost, 1.1); k.dol = 2; d.cd = 1.2; if (k.me) { SFX.mini(2); ach('dolphin'); floatTxt(k, '🐬 Delfin-Turbo!', '#ff9ed2'); say('dolphin', 'Delfin-Turbo!'); } } }); });
@@ -2998,6 +3036,7 @@
     // Seitenwind auf der Brücke: Böen schieben alle zur Seite
     if (T.wind && S.t > 0) { const w0 = S.wind || (S.wind = {next: wrnd('wind', 4, 7), on: 0, dir: 1, warn: 0}); w0.next -= dt; if (w0.next < 1.2 && !w0.on) w0.warn = 1; if (w0.next < 0 && !w0.on) { w0.on = 1.6; w0.dir = wr('wind') < .5 ? -1 : 1; w0.warn = 0; noise(1.6, .12, 300); }
       if (w0.on > 0) { w0.on -= dt; ks.forEach(k => { if (!k.air) k.vr += w0.dir * 150 * (S.windEvery ? 1.12 : 1) * dt; }); if (w0.on <= 0) { w0.on = 0; w0.next = wrnd('wind', (S.windEvery || T.wind.every)[0], (S.windEvery || T.wind.every)[1]); } } }
+    if (S.t > 0) wxStep(dt, ks);
     // Tropengewitter: zieht auf, Regen, Blitze, Donner, rutschiger, neue Pfützen auf der Strecke
     { const st = S.storm; if (st.at > 0 && S.t > st.at) { st.f = Math.min(1, st.f + dt / 4);
         if (!st.said) { st.said = 1; say('storm', 'Tropengewitter! Achtung, rutschig!'); }
@@ -3108,7 +3147,10 @@
       for (let X = x0 - 60; X <= x1 + 60; X += 20) { const f = Math.sin(clamp((X - x0 + 60) / (x1 - x0 + 120), 0, 1) * Math.PI); ctx.lineTo(X, shore(X) - wv.h * f + 10 * Math.sin(X / 30 + tt * 6)); }
       ctx.lineTo(x1 + 60, shore(x1 + 60)); ctx.closePath(); ctx.fillStyle = 'rgba(47,196,201,.55)'; ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,.9)'; ctx.lineWidth = 7; ctx.stroke(); }
     // Pfützen
-    S.puddles.forEach(p => { if (!near(p.x, p.y)) return; ctx.fillStyle = T.id === 'iguacu' ? 'rgba(120,60,30,.7)' : 'rgba(70,150,190,.7)'; ctx.beginPath(); ctx.ellipse(p.x, p.y, p.r, p.r * .78, 0, 0, TAU); ctx.fill();
+    S.puddles.forEach(p => { if (!near(p.x, p.y)) return; if (p.ice) { ctx.fillStyle = 'rgba(214,240,255,.88)'; ctx.beginPath(); ctx.ellipse(p.x, p.y, p.r, p.r * .78, .3, 0, TAU); ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,.9)'; ctx.lineWidth = 2; ctx.stroke();   // Glatteis: hellblau, Risse, wandernder Glanz
+        ctx.strokeStyle = 'rgba(120,170,210,.55)'; ctx.lineWidth = 1.2; ctx.beginPath(); for (let j = 0; j < 4; j++) { const a0 = j * 1.7 + .4; ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + Math.cos(a0) * p.r * .8, p.y + Math.sin(a0) * p.r * .6); } ctx.stroke();
+        const gx = p.x - p.r * .6 + ((tt * .5) % 1) * p.r * 1.2; ctx.fillStyle = 'rgba(255,255,255,.55)'; ctx.beginPath(); ctx.ellipse(gx, p.y - p.r * .2, p.r * .12, p.r * .5, .5, 0, TAU); ctx.fill(); return; }
+      ctx.fillStyle = T.id === 'iguacu' ? 'rgba(120,60,30,.7)' : 'rgba(70,150,190,.7)'; ctx.beginPath(); ctx.ellipse(p.x, p.y, p.r, p.r * .78, 0, 0, TAU); ctx.fill();
       ctx.strokeStyle = 'rgba(255,255,255,.5)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(p.x, p.y, p.r * (.5 + .4 * ((tt * .6) % 1)), p.r * .78 * (.5 + .4 * ((tt * .6) % 1)), 0, 0, TAU); ctx.stroke(); });
     if (S.xt) xtGround(tt, near);
     // Reifenspuren
@@ -3252,14 +3294,14 @@
     // Wetter im Bild: Regen (Iguaçu), Gischt-Nebel am Wasserfall
     if (S.storm.f > 0) { ctx.save(); ctx.fillStyle = `rgba(10,20,40,${.38 * S.storm.f})`; ctx.fillRect(0, 0, W, H); ctx.strokeStyle = `rgba(200,225,255,${.5 * S.storm.f})`; ctx.lineWidth = 1.5; ctx.beginPath(); for (let j = 0; j < [50, 90, 130][SET.q] * S.storm.f; j++) { const x = (j * 97 + tt * 520) % (W + 60) - 30, y = (j * 53 + tt * 1100) % (H + 40) - 20; ctx.moveTo(x, y); ctx.lineTo(x - 8, y + 20); } ctx.stroke();
       if (S.storm.bolt > 0) { ctx.strokeStyle = 'rgba(255,255,240,.95)'; ctx.lineWidth = 3; ctx.beginPath(); let bx = W * (.2 + ((S.t * 7) % 1) * .6), by = 0; ctx.moveTo(bx, by); while (by < H * .45) { bx += rnd(-30, 30); by += rnd(20, 45); ctx.lineTo(bx, by); } ctx.stroke(); } ctx.restore(); }
-    if (T.rain || S.rainX) { ctx.save(); ctx.strokeStyle = 'rgba(200,225,255,.45)'; ctx.lineWidth = 1.5; ctx.beginPath(); for (let j = 0; j < [40, 70, 90][SET.q] * (S.rainX > 1 ? 1.6 : 1); j++) { const x = (j * 97 + tt * 420) % (W + 60) - 30, y = (j * 53 + tt * 900) % (H + 40) - 20; ctx.moveTo(x, y); ctx.lineTo(x - 6, y + 16); } ctx.stroke();
-      ctx.fillStyle = S.rainX > 1 ? 'rgba(30,50,70,.22)' : 'rgba(30,60,80,.12)'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
+    if (S.rainW || S.rainX || (T.rain && !S.wx)) { ctx.save(); ctx.strokeStyle = 'rgba(200,225,255,.45)'; ctx.lineWidth = 1.5; ctx.beginPath(); for (let j = 0; j < [40, 70, 90][SET.q] * (S.rainX > 1 ? 1.6 : 1); j++) { const x = (j * 97 + tt * 420) % (W + 60) - 30, y = (j * 53 + tt * 900) % (H + 40) - 20; ctx.moveTo(x, y); ctx.lineTo(x - 6, y + 16); } ctx.stroke();
+      ctx.fillStyle = S.rainX > 1 ? 'rgba(60,72,86,.32)' : 'rgba(70,82,96,.26)'; ctx.fillRect(0, 0, W, H); ctx.restore(); }   // trüber Regentag: grau und dunkler
     if (T.mist) { const dm = Math.hypot(k0.x - T.mist.x, k0.y - T.mist.y), f = clamp(1 - (dm - T.mist.r * .4) / T.mist.r, 0, 1) * .6;
       if (f > .02) { const g = ctx.createRadialGradient(W / 2, camY(), 60, W / 2, camY(), Math.max(W, H) * .8); g.addColorStop(0, `rgba(240,250,255,${f * .25})`); g.addColorStop(1, `rgba(240,250,255,${f})`); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); } }
-    { const ni = (S.ev && S.ev.cur && S.ev.cur.k === 'blackout') ? 1 : T.night ? .78 : S.tod === 'night' ? .7 : 0;
+    { const ni = (S.ev && S.ev.cur && S.ev.cur.k === 'blackout') ? 1 : S.tod === 'night' ? (T.night ? .78 : .7) : T.night && !S.wx ? .78 : 0;   // Nacht kommt jetzt aus dem Wetter (auch auf den Nachtstrecken kann Tag sein)
       if (ni > 0) darkness(ni >= 1 ? .97 : ni > .75 ? .86 : .8, sc, phi);
-      else if (S.tod === 'dusk') { ctx.fillStyle = 'rgba(255,120,40,.16)'; ctx.fillRect(0, 0, W, H); } else if (S.tod === 'dawn') { ctx.fillStyle = 'rgba(255,170,190,.12)'; ctx.fillRect(0, 0, W, H); }
-      if (T.fog) { const g = ctx.createRadialGradient(W / 2, camY(), 80, W / 2, camY(), Math.max(W, H) * .6); g.addColorStop(0, 'rgba(235,240,245,' + (S.fogX ? .18 : .05) + ')'); g.addColorStop(1, 'rgba(235,240,245,' + Math.min(.9, .72 * (S.fogX || 1)) + ')'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); } }
+      if (S.fogW || S.fogX || (T.fog && !S.wx)) { const g = ctx.createRadialGradient(W / 2, camY(), 80, W / 2, camY(), Math.max(W, H) * .6); g.addColorStop(0, 'rgba(235,240,245,' + (S.fogX ? .18 : .05) + ')'); g.addColorStop(1, 'rgba(235,240,245,' + Math.min(.9, .72 * (S.fogX || 1)) + ')'); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H); } }
+    wxDraw(tt);
     { const sp0 = Math.hypot(k0.v, k0.vr), inten = clamp((sp0 - 300) / 140, 0, 1) + (k0.boost > 0 ? .6 : 0);
       if (inten > .05 && !k0.done) { ctx.save(); ctx.strokeStyle = `rgba(255,255,255,${Math.min(.55, inten * .35)})`; ctx.lineWidth = 2; ctx.beginPath();
         for (let j = 0; j < 22; j++) { const an = rnd(0, TAU), r0 = Math.max(W, H) * rnd(.42, .55), r1 = r0 * rnd(.72, .86), cx = W / 2, cy = camY() - 40; ctx.moveTo(cx + Math.cos(an) * r0, cy + Math.sin(an) * r0); ctx.lineTo(cx + Math.cos(an) * r1, cy + Math.sin(an) * r1); }
@@ -3407,7 +3449,7 @@
       ctx.lineCap = 'round'; ctx.lineWidth = 7; ctx.strokeStyle = 'rgba(0,0,0,.35)'; ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI * .8, Math.PI * 2.2); ctx.stroke();
       ctx.strokeStyle = k.boost > 0 ? '#ff8a2a' : f > .85 ? '#ffd23f' : '#fff'; ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI * .8, Math.PI * (.8 + 1.4 * f)); ctx.stroke(); ctx.lineCap = 'butt';
       ctx.fillStyle = '#fff'; ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 4; ctx.textAlign = 'center'; ctx.font = '900 18px system-ui,sans-serif'; ctx.fillText(kmh, cx, cy - 10); ctx.font = '700 9px system-ui,sans-serif'; ctx.fillText('km/h', cx, cy + 9);
-      if (S.cc && S.cc !== 150) { ctx.font = '900 10px system-ui,sans-serif'; ctx.fillStyle = S.cc === 200 ? '#ff9a6b' : '#9fe8b0'; ctx.fillText(CCE[S.cc] + ' ' + CCN[S.cc], cx, cy - r - 12); ctx.fillStyle = '#fff'; }   // Klasse über dem Tacho
+      { const lb = [S.cc && S.cc !== 150 ? CCE[S.cc] + ' ' + CCN[S.cc] : '', S.wx && S.wx !== wxStd(T) ? WXE[S.wx] + ' ' + WXN[S.wx] : ''].filter(Boolean).join(' · '); if (lb) { ctx.font = '900 10px system-ui,sans-serif'; ctx.fillStyle = S.cc === 200 ? '#ff9a6b' : S.cc === 100 ? '#9fe8b0' : '#cfe8ff'; ctx.fillText(lb, cx, cy - r - 12); ctx.fillStyle = '#fff'; } }   // Klasse und besonderes Wetter über dem Tacho
       { const g0 = Math.round(slp(k.idx) * 900); if (Math.abs(g0) >= 3 && !k.air) { ctx.font = '900 11px system-ui,sans-serif'; ctx.fillStyle = g0 > 0 ? '#ffb86b' : '#7fe0ff'; ctx.fillText((g0 > 0 ? '⬆ ' : '⬇ ') + Math.abs(g0) + ' %', cx, cy + 24); } }   // Steigung/Gefälle unter dem Tacho
       ctx.shadowBlur = 0; }
     if (S.lapMsg && now < S.lapMsg.until && !S.pose) { const m = S.lapMsg, a0 = clamp((m.until - now) / 400, 0, 1); ctx.globalAlpha = a0; ctx.font = '800 15px system-ui,sans-serif'; ctx.textAlign = 'center'; ctx.shadowColor = 'rgba(0,0,0,.6)'; ctx.shadowBlur = 6;
@@ -3534,7 +3576,7 @@
     const mi0 = order.indexOf(mine), nbF = [order[mi0 - 1], order[mi0 + 1]].filter(o => o && o.done && mine.done && Math.abs(o.done - mine.done) < .15)[0], photo = nbF ? '📸 Fotofinish gegen ' + NAME(nbF.who || nbF.id) + ': ' + Math.round(Math.abs(nbF.done - mine.done) * 1000) + ' ms ' + (nbF.done > mine.done ? 'vorne!' : 'hinten.') + ' ' : '';
     const st0 = stats(), st1 = Object.assign({}, st0, {races: st0.races + 1, wins: st0.wins + (pl === 1 && !wasTut ? 1 : 0), ilha: st0.ilha + (T.id === 'ilha' ? 1 : 0), supers: st0.supers + S.supers});
     const rv = ks.find(o => o.id === S.rival), beatRival = rv && order.indexOf(mine) < order.indexOf(rv), earn = S.got + [10, 6, 4, 2, 1, 1][pl - 1] + (beatRival ? 5 : 0);
-    st1.smash = (st0.smash || 0) + (S.myBrk || 0); st1.coinsTot = st0.coinsTot + S.got; st1.rivals = st0.rivals + (beatRival ? 1 : 0); if (!st1.tracks.split(',').includes(T.id)) st1.tracks = (st1.tracks ? st1.tracks + ',' : '') + T.id; st1.tracksN = st1.tracks.split(',').filter(Boolean).length; st1.tds = (st0.tds || 0) + (S.td ? S.td.n : 0); st1.vtds = (st0.vtds || 0) + (S.td ? S.td.n : 0); st1.vsup = (st0.vsup || 0) + S.supers; addCoins(earn);
+    st1.smash = (st0.smash || 0) + (S.myBrk || 0); st1.coinsTot = st0.coinsTot + S.got; st1.rivals = st0.rivals + (beatRival ? 1 : 0); if (!st1.tracks.split(',').includes(T.id)) st1.tracks = (st1.tracks ? st1.tracks + ',' : '') + T.id; if (S.wx && !wasTut && !(st1.wx || '').split(',').includes(S.wx)) st1.wx = (st1.wx ? st1.wx + ',' : '') + S.wx; st1.tracksN = st1.tracks.split(',').filter(Boolean).length; st1.tds = (st0.tds || 0) + (S.td ? S.td.n : 0); st1.vtds = (st0.vtds || 0) + (S.td ? S.td.n : 0); st1.vsup = (st0.vsup || 0) + S.supers; addCoins(earn);
     if (S.rival) { const rr = loadJ('kartRival'), mi = order.indexOf(mine), nb = order[mi + 1] || order[mi - 1]; rr[me] = beatRival && nb ? nb.id : S.rival; store.set('kartRival', JSON.stringify(rr)); }   /* Fahrschule/ohne Rivale: gespeicherten Rivalen nicht löschen */
     store.set('kartStats', JSON.stringify(st1)); if (st1.smash >= 25) ach('smash'); const newV = VEHS.filter(v => v.need && st0[v.need[0]] < v.need[1] && st1[v.need[0]] >= v.need[1]);
     const lastCup = CUP && CUP.i === CUP.list.length - 1;
@@ -3542,9 +3584,9 @@
     if (pl === 1) fireworks(90);
     if (beatRival) setTimeout(() => say('rivalwin', 'Duell gewonnen! Rivale geschlagen!', 1), 2600);
     setTimeout(() => { ach('first'); if (pl === 1 && !wasTut && S && S.cc === 200) ach('cc200'); if (pl === 1 && !wasTut && S && S.cc === 100) ach('cc100'); if (pl === 1) { ach('win'); if (['sp', 'reveillon', 'cristo'].includes(T.id)) ach(T.id); } if (!S.myHits) ach('nohit'); if (st1.supers >= 10) ach('super10'); if (st1.coinsTot >= 100) ach('coins100');
-      if (S.tod === 'night' || T.night) ach('night'); if (TRACKS.every(x => st1.tracks.split(',').includes(x.id))) ach('all'); if (st1.rivals >= 5) ach('rival5'); }, 900);
+      if (S.tod === 'night') ach('night'); if (pl === 1 && !wasTut && S && S.wx === 'snow') ach('snow'); if (WXS.every(w => (st1.wx || '').split(',').includes(w))) ach('wxall'); if (TRACKS.every(x => st1.tracks.split(',').includes(x.id))) ach('all'); if (st1.rivals >= 5) ach('rival5'); }, 900);
     res.querySelector('.kr-res-t').textContent = (CUP ? T.e + ' ' : '') + msg[0];
-    res.querySelector('.kr-res-s').textContent = photo + msg[1] + (mine.done ? ' Deine Zeit: ' + fmt(mine.done * 1000) + (S.cc && S.cc !== 150 ? ' (' + CCN[S.cc] + ')' : '') + (rec ? ' · Neue Bestzeit!' : prev ? ' · Bestzeit: ' + fmt(prev) : '') : ' Nicht im Ziel angekommen.');   // vorher „0:00.0 · Bestzeit: NaN“, wenn das Rennen ohne eigenen Zieleinlauf endete oder es noch keine Bestzeit gab
+    res.querySelector('.kr-res-s').textContent = photo + msg[1] + (mine.done ? ' Deine Zeit: ' + fmt(mine.done * 1000) + (S.cc && S.cc !== 150 ? ' (' + CCN[S.cc] + ')' : '') + (S.wx && S.wx !== wxStd(T) ? ' ' + WXE[S.wx] : '') + (rec ? ' · Neue Bestzeit!' : prev ? ' · Bestzeit: ' + fmt(prev) : '') : ' Nicht im Ziel angekommen.');   // vorher „0:00.0 · Bestzeit: NaN“, wenn das Rennen ohne eigenen Zieleinlauf endete oder es noch keine Bestzeit gab
     const ol = res.querySelector('ol'); ol.innerHTML = '';
     order.forEach((k, i) => { const li = document.createElement('li'); if (k.me) li.className = 'me'; li.innerHTML = '<b>' + (i + 1) + '.</b>'; li.appendChild(headCv(k.id));
       li.insertAdjacentHTML('beforeend', '<span>' + esc(S.live && k.aiIdx === undefined && !k.me && k.who && k.who !== k.id ? NAME(k.who) + ' (' + NAME(k.id) + ')' : NAME(k.id)) + (S.live && k.aiIdx !== undefined ? ' 🤖' : '') + '</span><small>' + (k.done ? fmt(k.done * 1000) : k.out ? '📴 raus' : mine.done ? '+ ' + (k.est - mine.done).toFixed(1) + ' s' : 'noch unterwegs') + (CUP ? ' · +' + PTS[i] : '') + '</small>'); ol.appendChild(li); });
@@ -3840,23 +3882,27 @@
   let ANNSRC = null;
   // Zufallsrennen (Einzelrennen): Fahrer, Fahrzeug und Strecke laufen wie an einem Spielautomaten durch, halten nacheinander an, dann geht es sofort los
   const slot = document.createElement('div'); slot.className = 'kr-slot'; slot.hidden = true; box.appendChild(slot); let SLOTRUN = false;
-  function slotShow(d, t, v, boat, live, then, cc) { SLOTRUN = true; cc = CCS.includes(cc) ? cc : 150; const pick = a => a[Math.floor(Math.random() * a.length)], vs = VEHS.filter(unlocked);
+  // Menü-Zeile „Wetter“ (Schritt 4): Auswahl markieren, darunter was „Zufall“ bzw. „Standard“ auf der gewählten Strecke heißt; live entscheidet die Lobby-Einstellung
+  function wxRow() { const r = menu.querySelector('.kr-wxrow'); if (!r) return; r.hidden = MODE === 'live'; r.querySelectorAll('button[data-wx]').forEach(x => x.setAttribute('aria-pressed', x.dataset.wx === WXSEL));
+    const t = TRACKS.find(x => x.id === TRK) || TRACKS[0], sd = wxStd(t), xx = r.querySelector('.kr-wxx'); if (xx) xx.textContent = WXSEL === 'rnd' ? '🎲 Jedes Rennen neu: zu 50 % ' + WXE[sd] + ' ' + WXN[sd] + ' (Standard hier), sonst eine der anderen 7 Wetterlagen' : WXSEL === 'std' ? '🏁 Immer das Standardwetter der Strecke (hier ' + WXE[sd] + ' ' + WXN[sd] + ')' : WXE[WXSEL] + ' Immer ' + WXN[WXSEL] + ', auf jeder Strecke'; }
+  function slotShow(d, t, v, boat, live, then, cc, wx) { SLOTRUN = true; cc = CCS.includes(cc) ? cc : 150; wx = WXS.includes(wx) ? wx : 'day'; const pick = a => a[Math.floor(Math.random() * a.length)], vs = VEHS.filter(unlocked);
     const dEmo = id => (XBY[id] && XBY[id].e) || (SPECIAL[id] || {}).e || '🙂', vName = (v0, id) => v0.id === 'kart' && STYK(id) ? STN[STYK(id)] || v0.n : v0.n;
-    slot.innerHTML = '<div class="kr-slotc" role="dialog" aria-label="Zufallsrennen"><p class="kr-slott">🎲 Zufallsrennen' + (live ? ' für alle' : '') + '</p><div class="kr-reels">' + ['Fahrer', 'Fahrzeug', 'Strecke', 'Klasse'].map(n => '<div class="kr-reel spin"><small>' + n + '</small><span class="kr-rv"></span><b></b></div>').join('') + '</div><p class="kr-slotx">' + (live ? 'Der Automat lost für jeden …' : 'Der Automat entscheidet …') + '</p></div>';
-    slot.hidden = false; res.hidden = true; const R = [...slot.querySelectorAll('.kr-reel')], t0 = performance.now(), STOP = [950, 1550, 2150, 2750], done = [0, 0, 0, 0];
+    slot.innerHTML = '<div class="kr-slotc" role="dialog" aria-label="Zufallsrennen"><p class="kr-slott">🎲 Zufallsrennen' + (live ? ' für alle' : '') + '</p><div class="kr-reels">' + ['Fahrer', 'Fahrzeug', 'Strecke', 'Klasse', 'Wetter'].map(n => '<div class="kr-reel spin"><small>' + n + '</small><span class="kr-rv"></span><b></b></div>').join('') + '</div><p class="kr-slotx">' + (live ? 'Der Automat lost für jeden …' : 'Der Automat entscheidet …') + '</p></div>';
+    slot.hidden = false; res.hidden = true; const R = [...slot.querySelectorAll('.kr-reel')], t0 = performance.now(), STOP = [950, 1550, 2150, 2750, 3350], done = [0, 0, 0, 0, 0];
     const show = (r, emo, nm) => { R[r].querySelector('.kr-rv').textContent = emo; R[r].querySelector('b').textContent = nm; };
     const fin = r => { done[r] = 1; const el = R[r]; el.classList.remove('spin'); el.classList.add('stop'); const rv = el.querySelector('.kr-rv'); rv.textContent = ''; try { SFX.pick(); } catch (e) {}
       if (r === 0) { rv.appendChild(portrait(d, 92, 92, .9)); el.querySelector('b').textContent = NAME(d); try { announce(d); } catch (e) {} }
       if (r === 1) { if (boat || !v) show(1, '🛶', 'Boot (Amazonas)'); else { const c = vehSprite(paintOf(d).c || (LOOK[d] || {}).shirt || '#00a651', v.id, Object.assign({}, paintOf(d), partsPt()), d), cv = document.createElement('canvas'); cv.width = c.width; cv.height = c.height; cv.getContext('2d').drawImage(c, 0, 0); cv.className = 'kr-rveh'; rv.appendChild(cv); el.querySelector('b').textContent = vName(v, d); } }
       if (r === 2) { const c = thumb(t), cv = document.createElement('canvas'); cv.width = c.width; cv.height = c.height; cv.getContext('2d').drawImage(c, 0, 0); rv.appendChild(cv); el.querySelector('b').textContent = t.e + ' ' + t.name; }
-      if (r === 3) { show(3, CCE[cc], CCN[cc]); slot.querySelector('.kr-slotx').textContent = cc === 200 ? '🚀 Vollgas! Los geht’s!' : cc === 100 ? '🐢 Gemütlich … los geht’s!' : '🏁 Los geht’s!'; } };
+      if (r === 3) { show(3, CCE[cc], CCN[cc]); slot.querySelector('.kr-slotx').textContent = cc === 200 ? '🚀 Vollgas!' : cc === 100 ? '🐢 Gemütlich …' : '🏁 Normales Tempo …'; }
+      if (r === 4) { show(4, WXE[wx], WXN[wx]); slot.querySelector('.kr-slotx').textContent = ({day: '☀️ Sonnencreme raus! Los geht’s!', dawn: '🌅 Früh am Morgen! Los geht’s!', dusk: '🌇 Abendrot! Los geht’s!', night: '🌙 Licht an! Los geht’s!', rain: '🌧️ Scheibenwischer an! Los geht’s!', storm: '⛈️ Gewitter! Viel Glück!', fog: '🌫️ Blindflug! Los geht’s!', snow: '❄️ Schnee in Brasilien?! Los geht’s!'})[wx]; } };
     const iv = setInterval(() => { const el = performance.now() - t0; if (box.hidden) { clearInterval(iv); slot.hidden = true; SLOTRUN = false; return; }
-      [0, 1, 2, 3].forEach(r => { if (done[r]) return; if (el >= STOP[r]) return fin(r); if (r === 0) { const q = pick(DRVS); show(0, dEmo(q), NAME(q)); } else if (r === 1) { const q = pick(vs); show(1, q.e, q.n); } else if (r === 2) { const q = pick(TRACKS); show(2, q.e, q.name); } else { const q = pick(CCS); show(3, CCE[q], CCN[q]); } });
-      if (!done[3]) try { beep(1500 + Math.random() * 500, .018, 'square', .018); } catch (e) {}
-      if (done[3]) { clearInterval(iv); setTimeout(() => { slot.hidden = true; SLOTRUN = false; if (!box.hidden) then(); }, 1200); } }, 75); }
+      [0, 1, 2, 3, 4].forEach(r => { if (done[r]) return; if (el >= STOP[r]) return fin(r); if (r === 0) { const q = pick(DRVS); show(0, dEmo(q), NAME(q)); } else if (r === 1) { const q = pick(vs); show(1, q.e, q.n); } else if (r === 2) { const q = pick(TRACKS); show(2, q.e, q.name); } else if (r === 3) { const q = pick(CCS); show(3, CCE[q], CCN[q]); } else { const q = pick(WXS); show(4, WXE[q], WXN[q]); } });
+      if (!done[4]) try { beep(1500 + Math.random() * 500, .018, 'square', .018); } catch (e) {}
+      if (done[4]) { clearInterval(iv); setTimeout(() => { slot.hidden = true; SLOTRUN = false; if (!box.hidden) then(); }, 1200); } }, 75); }
   function randomRace() { if (SLOTRUN || MODE !== 'single') return; const pick = a => a[Math.floor(Math.random() * a.length)];
-    const d = pick(DRVS), t = pick(TRACKS), boat = t.veh === 'boat', v = pick(VEHS.filter(unlocked)), cc = pick(CCS), base = RNDR || {me0: me, trk0: TRK};   // Klasse wird mit ausgelost (Wunsch Patrick 10.10.), gilt nur für dieses Zufallsrennen
-    slotShow(d, t, v, boat, false, () => { RNDR = {me0: base.me0, trk0: base.trk0, veh: boat ? myVeh0() : v.id, cc}; me = d; TRK = t.id; makeVehicles(); startRace(); }, cc); }
+    const d = pick(DRVS), t = pick(TRACKS), boat = t.veh === 'boat', v = pick(VEHS.filter(unlocked)), cc = pick(CCS), wx = wxRoll(t, Math.random), base = RNDR || {me0: me, trk0: TRK};   // Klasse wird mit ausgelost (Wunsch Patrick 10.10.), gilt nur für dieses Zufallsrennen
+    slotShow(d, t, v, boat, false, () => { RNDR = {me0: base.me0, trk0: base.trk0, veh: boat ? myVeh0() : v.id, cc, wx}; me = d; TRK = t.id; makeVehicles(); startRace(); }, cc, wx); }
   const myVeh0 = () => { const r = RNDR; RNDR = null; const v = myVeh(); RNDR = r; return v; };
   function announce(id) { try { SFX.pick(); noise(.22, .08, 2400); beep(120, .35, 'sawtooth', .07, 50); } catch (e) {}
     const hv = TRIP.kartvo && TRIP.kartvo['h_' + id], hb = hv && BUF['ann' + (hv.f > 1 ? hv.f : '')];
@@ -3923,6 +3969,7 @@
       '<p class="kr-bx">' + (BX ? esc(BXT[BX][1]) + ' <b>' + esc(NAME(me)) + ': ' + (cs[BX] < .34 ? 'eher schwach' : cs[BX] < .67 ? 'mittel' : 'stark') + '.</b>' : 'ⓘ Einen Wert oben antippen, dann steht hier, was er bewirkt.') + '</p>' +
       (XBY[me] ? '<p class="kr-sp kr-xd">' + esc(XBY[me].x) + '</p>' : '') + '<p class="kr-sp">' + sp.e + ' <b>' + esc(sp.n) + '</b>: ' + esc(sp.x) + '</p>' + ((PERS[me] || {}).x ? '<p class="kr-sp kr-pp">🤖 Als Gegner: ' + esc(PERS[me].x) + '</p>' : '') + (pg > 0 ? '<p class="kr-sp">🍹 Heute schon ' + ((MEHUB.drinks || {})[baseOf(me)] || {}).today + ' Drinks: Lenkung wackelt!</p>' : '') + '</div>'; dv.querySelector('.kr-dch').replaceWith(portrait(me, 300, 300, .8)); { const bars0 = dv.querySelector('.kr-dc2 .kr-bars'); if (bars0) dv.querySelector('.kr-fst').appendChild(bars0); const bx0 = dv.querySelector('.kr-dc2 .kr-bx'); if (bx0) { if (BX) dv.querySelector('.kr-fst').appendChild(bx0); else bx0.remove(); } }   /* Erklärung zum angetippten Wert direkt unter den Balken */ { const x2 = document.createElement('div'), d2 = dv.querySelector('.kr-dc2'); x2.className = 'kr-drvx kr-dinfo' + (fresh ? ' in' : ''); x2.innerHTML = '<b>' + (sp ? sp.e + ' ' : '') + esc(NAME(me)) + ' <em>' + esc(gl) + '</em></b>'; d2.prepend(vehPreview(me)); x2.appendChild(d2); dv.appendChild(x2); }
     menu.querySelectorAll('.kr-diff button').forEach(x => x.setAttribute('aria-pressed', +x.dataset.d === DIFF));
+    wxRow();
     { const cr = menu.querySelector('.kr-cc'); if (cr) { cr.hidden = MODE === 'live'; cr.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', +x.dataset.cc === CC)); } }   // Live: Klasse kommt aus den Einstellungen für alle
     const mv = myVeh(), vc = menu.querySelector('.kr-vcar'), st0 = stats(), pt0 = Object.assign({}, paintOf(me), partsPt()), col0 = paintOf(me).c || (LOOK[me] || {}).shirt || '#00a651';
     if (!VINFO || !VEHS.some(v => v.id === VINFO)) VINFO = mv; const cn0 = coins();
@@ -3972,8 +4019,8 @@
     cx.textContent = CUPSEL.t.map(id => TBY[id].e + ' ' + TBY[id].name).join(' · ') + '. Punkte 10-8-6-5-4-3, am Ende Siegerehrung.' + (cw ? ' Deine Grand-Prix-Siege: ' + cw + ' 🏆' : '');
     { const V1 = VEHS.find(v => v.id === mv) || VEHS[0], av = menu.querySelector('.kr-sumav'), vn = ((MODE === 'single' || MODE === 'live') && TBY[TRK] && TBY[TRK].veh === 'boat' ? '🛶 Boot' : mv === 'kart' && STYK(me) ? STN[STYK(me)] : V1.n) + ' · '; menu.querySelector('.kr-sum1').textContent = NAME(me);
       av.innerHTML = ''; av.appendChild(portrait(me, 46, 46, .85));
-      menu.querySelector('.kr-best').textContent = vn + (MODE === 'cup' ? CUPSEL.e + ' ' + CUPSEL.n + ' · ' + DIFFS[DIFF].n + (CC !== 150 ? ' · ' + CCN[CC] : '') : MODE === 'live' ? '👥 Live · ' + lobby().length + ' im Raum'
-        : TBY[TRK].e + ' ' + TBY[TRK].name + ' · ' + DIFFS[DIFF].n + (CC !== 150 ? ' · ' + CCN[CC] : '') + (bt[tkey(TRK)] ? ' · ⏱ ' + fmt(bt[tkey(TRK)]) : '')); }
+      menu.querySelector('.kr-best').textContent = vn + (MODE === 'cup' ? CUPSEL.e + ' ' + CUPSEL.n + ' · ' + DIFFS[DIFF].n + (CC !== 150 ? ' · ' + CCN[CC] : '') + (WXSEL !== 'rnd' ? ' · ' + wxSelTxt(WXSEL) : '') : MODE === 'live' ? '👥 Live · ' + lobby().length + ' im Raum'
+        : TBY[TRK].e + ' ' + TBY[TRK].name + ' · ' + DIFFS[DIFF].n + (CC !== 150 ? ' · ' + CCN[CC] : '') + (WXSEL !== 'rnd' ? ' · ' + wxSelTxt(WXSEL) : '') + (bt[tkey(TRK)] ? ' · ⏱ ' + fmt(bt[tkey(TRK)]) : '')); }
     liveBox(); livePres();
     { const dc = menu.querySelector('.kr-dice'); if (dc) dc.hidden = MODE === 'cup'; }
     { const go = menu.querySelector('.kr-go'); go.textContent = MODE === 'cup' ? '🏆 Starten' : 'Los!'; go.classList.remove('kr-wait'); liveFoot(); }   // Live: der Knopf schaltet „bereit“, los geht es erst, wenn alle bereit sind
@@ -4006,18 +4053,19 @@
     if (LIVE.pending) { LIVE.race = LIVE.pending; LIVE.pending = null; } else if (MODE !== 'live') LIVE.race = null;
     const LR0 = LIVE.race, CF = LR0 && LR0.cfg || {}; if (LR0 && CF.laps) LAPS = CF.laps;
     makeVehicles(); { const MR = Math.random; if (LR0 && LR0.seed) Math.random = mulberry(hashS(LR0.seed)); if (LR0 && CF.diff >= 0) { if (LIVE.diff0 == null) LIVE.diff0 = DIFF; DIFF = CF.diff; } try { newRace(); } finally { Math.random = MR; } }
-    if (LR0) { S.seed = LR0.seed || LR0.id; S.wave.next = wrnd('wave', 9, 13); S.storm.at = CF.storm === 'on' ? wrnd('storm', 12, 26) : CF.storm === 'rnd' && T.id !== 'cristo' && wr('storm') < .33 ? wrnd('storm', 22, 40) : -1; if (CF.items === 'off') S.boxes = []; }
+    if (LR0) { S.seed = LR0.seed || LR0.id; S.wave.next = wrnd('wave', 9, 13); if (CF.items === 'off') S.boxes = []; }
     S.ev = {next: wrnd('ev', 15, 24), cur: null}; S.evOn = !TUTON && (LR0 ? CF.ev !== 'off' : SET.ev !== 'off');
     if (TUTON) { S.tut = {i: 0, ok: 0}; S.karts.length = 1; LAPS = 2; S.storm.at = -1; S.rival = null; }
+    wxSet(LR0, CF);
     S.rep.lap0 = +store.get('kartLap.' + tkey(T.id)) || 0; Object.values(VUSE).forEach(U => { U.last = null; });   // neues Rennen: Reihenfolge der Sprüche läuft weiter, nur die Sperre „gerade gesagt“ fällt weg   // beste Runde vor diesem Rennen (für den Rennbericht)
     // Strecken-Vorschau (Feedback Patrick 10.10.: „man sieht die Voransicht nicht mehr“: sie kam nur einmal je Strecke und Sitzung und nie live):
     // jetzt bei jedem Start, nur nicht bei „Nochmal“/Neustart auf derselben Strecke (INTROSKIP); live, wenn der Starter sie in den Vorlauf eingeplant hat (start.intro)
     if (!TUTON && SET.intro !== 'off' && (LIVE.race ? LIVE.race.intro > 0 : !INTROSKIP)) { S.intro = introMake(); box.classList.add('kr-intro'); } else box.classList.remove('kr-intro'); INTROSKIP = false;
     if (LIVE.race) { S.live = LIVE.race; S.live.t0p = LIVE.race.delay && LIVE.race.rt ? LIVE.race.rt + LIVE.race.delay : performance.now() + clamp(LIVE.race.at - Date.now(), 500, 6000); S.t = clamp((performance.now() - S.live.t0p) / 1000, -7 - (LIVE.race.intro || 0), -.5); LIVE.buf = {}; LIVE.lastN = {}; S.live.curHost = S.live.host; liveRejoinRestore(); liveClockSync(); LIVE.lastTrk = T.id;
       if (S.intro) { const room = -6.3 - S.t; if (room < 2.5) S.intro = null; else { S.intro.dur = Math.min(S.intro.dur, room); S.intro.s0 = S.t; } } }   // live: Vorschau endet, wenn die Startaufstellung dran ist (später Eingestiegene sehen sie kürzer oder gar nicht)
-    if (!TUTON && !(S.live && S.t > -3.4)) { S.grid = gridMake(!!S.live); box.classList.add('kr-intro'); } if (!S.intro && !S.grid) box.classList.remove('kr-intro'); box.classList.toggle('live', !!S.live); S.tod = T.night || SET.tod === 'day' ? 'day' : (h => h >= 19 || h < 6 ? 'night' : h >= 17 ? 'dusk' : h < 7 ? 'dawn' : 'day')(+new Intl.DateTimeFormat('en-GB', {timeZone: 'America/Sao_Paulo', hour: 'numeric', hour12: false}).format(new Date()) % 24);
+    if (!TUTON && !(S.live && S.t > -3.4)) { S.grid = gridMake(!!S.live); box.classList.add('kr-intro'); } if (!S.intro && !S.grid) box.classList.remove('kr-intro'); box.classList.toggle('live', !!S.live);
     if (!CUP && GHOST.mode !== 'off') { const tid = T.id, s0 = S; ghostFor(tid).then(g => { if (S === s0 && g) { S.ghost = g; ghostProg(g); } }); } audio(); MUS.on = false; MUS.fast = false; MUS.step = 0; MUS.next = 0; banner = null; last = 0; if (MG && AC) MG.gain.value = .5;
-    setTimeout(() => { if (S && S.tod === 'night' && !T.night) setTimeout(() => say('night', 'Es wird Nacht! Licht an!'), 2600); if (S && S.t < 0) say('t_' + T.id, 'Willkommen in ' + T.name + '!', 1); }, 150);
+    setTimeout(() => { if (S && S.wx && S.wx !== wxStd(T) && S.wx !== 'storm') { const s0 = S; setTimeout(() => { if (S === s0) S.wx === 'night' ? say('night', 'Es wird Nacht! Licht an!') : say('wx_' + S.wx, WXSAY[S.wx]); }, 2600); } if (S && S.t < 0) say('t_' + T.id, 'Willkommen in ' + T.name + '!', 1); }, 150);
     // Gastfahrer im Feld: eigene Ansage (Aufnahme g_<id> in kart6.mp3, sonst Handy-Stimme)
     { const gx = S.karts.map(k => XBY[k.id]).find(x => x && x.guest && x.ann); if (gx) setTimeout(() => { if (!S || S.t > 0) return; const gv = TRIP.kartvo && TRIP.kartvo['g_' + gx.id]; say(gv ? 'g_' + gx.id : 'guest', gx.ann, 1); if (gv && BUF['ann' + (gv.f > 1 ? gv.f : '')]) return; if (SOUND && ANN && window.speechSynthesis) try { const u = new SpeechSynthesisUtterance(gx.ann); u.lang = 'de-DE'; u.rate = 1.1; u.pitch = .7; speechSynthesis.cancel(); speechSynthesis.speak(u); } catch (e) {} }, 2500); }
   }
@@ -4049,7 +4097,7 @@
   const setT = (sel, txt) => box.querySelectorAll(sel).forEach(b => { b.textContent = txt; });
   const sndTxt = () => setT('.kr-snd', SOUND ? '🔊 Ton: an' : '🔇 Ton: aus'), steerTxt = () => setT('.kr-steer', '🎚 Lenkstärke: ' + STEERS[STEER][0]), annTxt = () => setT('.kr-ann', '🎙 Ansager: ' + (ANN ? 'an' : 'aus'));
   const setTxt = () => { sndTxt(); steerTxt(); annTxt(); setT('.kr-ctl', '🎮 Steuerung: ' + (SET.ctl === 'analog' ? 'Analog (Daumen-Position)' : 'Halten links/rechts'));
-    setT('.kr-q', '✨ Grafik: ' + ['Sparsam', 'Normal', 'Hoch'][SET.q]); setT('.kr-cam', '🎥 Kamera: ' + ['Nah', 'Normal', 'Weit'][SET.cam]); setT('.kr-tod', '🌗 Tageszeit: ' + (SET.tod === 'day' ? 'immer Tag' : 'wie in Rio')); setT('.kr-evt', '🎲 Ereignisse: ' + (SET.ev === 'off' ? 'aus' : 'an')); setT('.kr-intb', '🎬 Strecken-Vorschau: ' + (SET.intro === 'off' ? 'aus' : 'an')); setT('.kr-hd', '🗿 Köpfe: ' + ['Mini', 'Normal', 'Wackelkopf XXL'][SET.hd === undefined ? 1 : SET.hd]); setT('.kr-bub', '💬 Sprechblasen: ' + (SET.bub === 'off' ? 'aus' : SET.bub === 'all' ? 'alle' : 'wenige')); setT('.kr-mm', '🎵 Menü-Musik: ' + (SET.mm === 'off' ? 'aus' : 'an' + (MM.song ? ' · ' + SONGS[MM.song].n : ''))); };
+    setT('.kr-q', '✨ Grafik: ' + ['Sparsam', 'Normal', 'Hoch'][SET.q]); setT('.kr-cam', '🎥 Kamera: ' + ['Nah', 'Normal', 'Weit'][SET.cam]); setT('.kr-tod', '🌦️ Wetter: ' + wxSelTxt(WXSEL)); setT('.kr-evt', '🎲 Ereignisse: ' + (SET.ev === 'off' ? 'aus' : 'an')); setT('.kr-intb', '🎬 Strecken-Vorschau: ' + (SET.intro === 'off' ? 'aus' : 'an')); setT('.kr-hd', '🗿 Köpfe: ' + ['Mini', 'Normal', 'Wackelkopf XXL'][SET.hd === undefined ? 1 : SET.hd]); setT('.kr-bub', '💬 Sprechblasen: ' + (SET.bub === 'off' ? 'aus' : SET.bub === 'all' ? 'alle' : 'wenige')); setT('.kr-mm', '🎵 Menü-Musik: ' + (SET.mm === 'off' ? 'aus' : 'an' + (MM.song ? ' · ' + SONGS[MM.song].n : ''))); };
   setTxt();
   box.addEventListener('click', e => {
     if (e.target.closest('.kr-steer')) { STEER = (STEER + 1) % STEERS.length; store.set('kartSteer', STEER); }
@@ -4058,7 +4106,7 @@
     if (e.target.closest('.kr-ctl')) { SET.ctl = SET.ctl === 'analog' ? 'hold' : 'analog'; saveSet(); resize(); }
     if (e.target.closest('.kr-q')) { SET.q = (SET.q + 1) % 3; saveSet(); resize(); if (S && T) { drawBG(); } }
     if (e.target.closest('.kr-cam')) { SET.cam = (SET.cam + 1) % 3; saveSet(); }
-    if (e.target.closest('.kr-tod')) { SET.tod = SET.tod === 'day' ? 'real' : 'day'; saveSet(); }
+    if (e.target.closest('.kr-tod')) { WXSEL = WXSELS[(WXSELS.indexOf(WXSEL) + 1) % WXSELS.length]; store.set('kartWx', WXSEL); wxRow(); }
     if (e.target.closest('.kr-evt')) { SET.ev = SET.ev === 'off' ? 'on' : 'off'; saveSet(); }
     if (e.target.closest('.kr-intb')) { SET.intro = SET.intro === 'off' ? 'on' : 'off'; saveSet(); }
     if (e.target.closest('.kr-hd')) { SET.hd = ((SET.hd === undefined ? 1 : SET.hd) + 1) % 3; saveSet(); }
@@ -4119,6 +4167,7 @@
     if (e.target.closest('.kr-liveai')) { store.set('kartLiveAI', store.get('kartLiveAI') === '0' ? '1' : '0'); renderMenu(); return; }
     const pl0 = e.target.closest('.kr-pill'); if (pl0) { const d = menu.querySelector('.kr-' + pl0.dataset.open); if (d) { d.open = true; setTimeout(() => d.scrollIntoView({behavior: 'smooth', block: 'center'}), 30); } }
     const db0 = e.target.closest('.kr-diff button'); if (db0) { DIFF = +db0.dataset.d; store.set('kartDiff', DIFF); renderMenu(); }
+    const wxb = e.target.closest('.kr-wxrow button[data-wx]'); if (wxb) { WXSEL = wxb.dataset.wx; store.set('kartWx', WXSEL); try { SFX.pick(); } catch (e2) {} wxRow(); setTxt(); return; }
     const ccb = e.target.closest('.kr-cc button[data-cc]'); if (ccb) { CC = +ccb.dataset.cc; store.set('kartCC', CC); if (S && !box.classList.contains('racing')) S.cc = CC; renderMenu(); if (CC === 200) toast('🚀 <b>200 ccm</b>: Kurven früh bremsen oder driften!'); }
     const gb = e.target.closest('.kr-ghost:not(.kr-diff):not(.kr-cc) button'); if (gb) { GHOST.mode = gb.dataset.g; store.set('kartGhost', GHOST.mode); renderMenu(); }
     const t = e.target.closest('.kr-sgrid button[data-t]'); if (t) { TRK = t.dataset.t; store.set('kartTrack', TRK); renderMenu(); showTop(menu.querySelector('.kr-tinfo')); previewSoon(TRK); }   // Menü sofort, Strecke danach (Langstrecken brauchten auf dem Handy 1–2 s)
