@@ -5,7 +5,7 @@
 ![Reisebild: Route durch Brasilien](reisebild.png)
 
 **Webseite mit Heute-Ansicht, Karte, Drinks-Counter, Vorfreude-Kalender und Zeitkapsel:** https://claude.ai/artifact/3MHzcPCtQJY7Kx5XUHDGZE ·
-**Offline:** [PDF](brasilien-reise.pdf) · **Kalender fürs Handy:** [Gringos plus 1 Cevapi](kalender/gringos-plus-1-cevapi.ics) · [Daijo & Greisel](kalender/daijo-greisel.ics)
+**Offline:** [PDF](brasilien-reise.pdf) · **Kalender fürs Handy:** [Gringos plus 1 Cevapi](kalender/gringos-plus-1-cevapi.ics) · [Daijo & Greisel](kalender/daijo-greisel.ics) (am besten abonnieren, dann kommen Änderungen von selbst: Webseite, Reiter „Downloads“)
 (auf GitHub „Download raw file“, dann öffnen)
 
 Legende für den Status: ✅ gebucht · 🟡 gebucht, Details prüfen · ⏳ geplant, noch nicht gebucht · ❓ unklar
