@@ -57,33 +57,96 @@ def next_day(yyyymmdd):
     return (d + datetime.timedelta(days=1)).strftime('%Y%m%d')
 
 
-def build_ics(trip, group):
+ICS_NOW = None   # Zeitpunkt dieses Neubaus (UTC), für geänderte/neue Termine
+
+
+def ics_old(path):
+    """Termine der bisherigen Kalenderdatei (für feste UIDs und SEQUENCE)."""
+    if not os.path.exists(path):
+        return []
+    raw = open(path, encoding='utf-8', newline='').read().replace('\r\n ', '').replace('\r\n', '\n')
+    out = []
+    for blk in raw.split('BEGIN:VEVENT\n')[1:]:
+        f, body = {}, []
+        for line in blk.split('END:VEVENT')[0].strip('\n').split('\n'):
+            k = line.split(':', 1)[0].split(';', 1)[0]
+            if k in ('UID', 'DTSTAMP', 'SEQUENCE', 'LAST-MODIFIED'):
+                f[k] = line.split(':', 1)[1]
+            else:
+                body.append(line)
+        out.append({'uid': f['UID'], 'seq': int(f.get('SEQUENCE', 0)), 'stamp': f.get('DTSTAMP'),
+                    'mod': f.get('LAST-MODIFIED', f.get('DTSTAMP')), 'body': body})
+    return out
+
+
+def build_ics(trip, group, old=()):
+    """Kalender einer Gruppe. Termine behalten ihre UID aus der bisherigen Datei (gleicher Tag + Titel,
+    sonst gleicher Tag + Beginn, sonst eindeutiger Titel an einem anderen Tag = verschoben); bei
+    geänderten Angaben steigt SEQUENCE und DTSTAMP/LAST-MODIFIED = Neubau. So übernehmen Kalender-Apps
+    Änderungen beim erneuten Laden oder Abonnieren, statt Termine doppelt anzulegen."""
+    import datetime
+    global ICS_NOW
+    ICS_NOW = ICS_NOW or datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+
     def mine(g):
         return g in ('all', group)
-    ev = []
+    ev = []   # [Art, Vorschlag-UID, Zeilen]
     for d in trip['days']:
         if not mine(d['g']):
             continue
-        for i, it in enumerate(d['items']):
+        for it in d['items']:
             e = it.get('ics')
             if not e or not mine(e.get('g', 'all')):
                 continue
-            uid = f"{d['date']}-{i}-{group}@brasilien-26-27"
             if 'start' in e:
                 when = [f"DTSTART:{e['start']}", f"DTEND:{e['end']}"]
             else:
                 when = [f"DTSTART;VALUE=DATE:{e['date']}", f"DTEND;VALUE=DATE:{next_day(e['date'])}"]
-            ev.append([f'UID:{uid}', *when, f"SUMMARY:{ics_escape(e['summary'])}",
-                       f"DESCRIPTION:{ics_escape((e['desc'] + ' – ' if e.get('desc') else '') + 'Brasilien 26/27')}"])
+            h = hashlib.sha1(e['summary'].encode('utf-8')).hexdigest()[:6]
+            ev.append(['ev', f"{d['date']}-{h}-{group}", [*when, f"SUMMARY:{ics_escape(e['summary'])}",
+                       f"DESCRIPTION:{ics_escape((e['desc'] + ' – ' if e.get('desc') else '') + 'Brasilien 26/27')}"]])
     for s in trip['stays']:
         if not mine(s['g']):
             continue
-        ev.append([f"UID:stay-{s['from']}-{group}@brasilien-26-27", f"DTSTART;VALUE=DATE:{s['from']}",
-                   f"DTEND;VALUE=DATE:{s['to']}", f"SUMMARY:{ics_escape('🛏 ' + s['name'])}", 'TRANSP:TRANSPARENT'])
+        ev.append(['stay', f"stay-{s['from']}-{group}", [f"DTSTART;VALUE=DATE:{s['from']}", f"DTEND;VALUE=DATE:{s['to']}",
+                   f"SUMMARY:{ics_escape('🛏 ' + s['name'])}", 'TRANSP:TRANSPARENT']])
+
+    def key(body, k):
+        return next((l.split(':', 1)[1] for l in body if l.split(':', 1)[0].split(';', 1)[0] == k), '')
+    kind = lambda o: 'stay' if o['uid'].startswith('stay-') else 'ev'
+    free = list(old)
+    match = [None] * len(ev)
+    tests = [lambda e, o: key(e[2], 'DTSTART')[:8] == key(o['body'], 'DTSTART')[:8] and key(e[2], 'SUMMARY') == key(o['body'], 'SUMMARY'),
+             lambda e, o: key(e[2], 'DTSTART') == key(o['body'], 'DTSTART')]
+    for t in tests:
+        for i, e in enumerate(ev):
+            if match[i] is None:
+                o = next((o for o in free if kind(o) == e[0] and t(e, o)), None)
+                if o:
+                    match[i] = o
+                    free.remove(o)
+    for i, e in enumerate(ev):   # Termin auf einen anderen Tag verschoben: Titel ist auf beiden Seiten eindeutig
+        if match[i] is None:
+            sm = key(e[2], 'SUMMARY')
+            cand = [o for o in free if kind(o) == e[0] and key(o['body'], 'SUMMARY') == sm]
+            if len(cand) == 1 and sum(1 for j, x in enumerate(ev) if match[j] is None and key(x[2], 'SUMMARY') == sm) == 1:
+                match[i] = cand[0]
+                free.remove(cand[0])
+    used = {o['uid'] for o in match if o}
     lines = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Brasilien 26-27//Reiseuebersicht//DE',
-             'CALSCALE:GREGORIAN', f"X-WR-CALNAME:Brasilien 26/27 ({trip['groups'][group]['name']})"]
-    for e in ev:
-        lines += ['BEGIN:VEVENT', 'DTSTAMP:20260930T120000Z', *e, 'END:VEVENT']
+             'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', f"X-WR-CALNAME:Brasilien 26/27 ({trip['groups'][group]['name']})",
+             'REFRESH-INTERVAL;VALUE=DURATION:PT6H', 'X-PUBLISHED-TTL:PT6H']
+    for e, o in zip(ev, match):
+        if o:
+            uid = o['uid']
+            seq, stamp, mod = (o['seq'], o['stamp'], o['mod']) if o['body'] == e[2] else (o['seq'] + 1, ICS_NOW, ICS_NOW)
+        else:
+            uid, n = e[1] + '@brasilien-26-27', 2
+            while uid in used:
+                uid, n = f"{e[1]}-{n}@brasilien-26-27", n + 1
+            seq, stamp, mod = 0, ICS_NOW, ICS_NOW
+        used.add(uid)
+        lines += ['BEGIN:VEVENT', f'UID:{uid}', f'DTSTAMP:{stamp}', f'LAST-MODIFIED:{mod}', f'SEQUENCE:{seq}', *e[2], 'END:VEVENT']
     lines.append('END:VCALENDAR')
     return '\r\n'.join(fold(l) for l in lines) + '\r\n'
 
@@ -189,8 +252,10 @@ def main():
         full = json.loads(json.dumps(trip)); full['series'].update(private)
         write(read('web', 'page_head.html') + body.replace('%%MAP%%', inline) + '\n' + script_of(full, ['web', 'private']), 'web', 'private', 'brasilien-reise.html')
 
-    write(build_ics(trip, 'a'), 'kalender', 'gringos-plus-1-cevapi.ics')
-    write(build_ics(trip, 'b'), 'kalender', 'daijo-greisel.ics')
+    for g, fn in (('a', 'gringos-plus-1-cevapi.ics'), ('b', 'daijo-greisel.ics')):
+        ics = build_ics(trip, g, ics_old(os.path.join(ROOT, 'kalender', fn)))
+        if not os.path.exists(os.path.join(ROOT, 'kalender', fn)) or ics != read('kalender', fn):
+            write(ics, 'kalender', fn)
 
     sp = browser()
     if sp:

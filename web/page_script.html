@@ -532,6 +532,11 @@ function gcalLink(ev, fallbackDate) {
   return 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=' + encodeURIComponent(ev.summary) +
     '&dates=' + dates + '&details=' + encodeURIComponent((ev.desc || '') + '\nBrasilien 26/27');
 }
+document.addEventListener('click', async e => {   // Kalender-Abo: Link kopieren
+  const b = e.target.closest('[data-cal-copy]'); if (!b) return;
+  try { await navigator.clipboard.writeText(b.dataset.calCopy); b.textContent = '✓ Kopiert'; }
+  catch (err) { b.insertAdjacentHTML('afterend', '<input class="cal-url" readonly value="' + esc(b.dataset.calCopy) + '" aria-label="Kalender-Link">'); const u = b.nextElementSibling; b.remove(); u.focus(); u.select(); }
+});
 document.getElementById('gcal').innerHTML = TRIP.days.flatMap(d => d.items.filter(i => i.ics && /✈|🛬/.test(i.ics.summary)).map(i => {
   const f = fmtDay(d.date);
   return '<li><a href="' + esc(gcalLink(i.ics, d.date)) + '" target="_blank" rel="noopener">' + f.dm + ' ' + esc(i.ics.summary.replace(/^\S+\s/, '')) + '</a></li>';
