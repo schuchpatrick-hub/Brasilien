@@ -208,7 +208,7 @@ def build(standalone=False):
     s.append(f'<text class="sub" x="{tx-185:.0f}" y="{ty+28:.0f}" text-anchor="middle">Azul · 10:20 → 16:00 · 1 Umstieg</text>')
     tx, ty = (m[0]+r[0])/2, (m[1]+r[1])/2
     s.append(f'<text class="tag" x="{tx+70:.0f}" y="{ty-40:.0f}" text-anchor="middle">14.01. 01:45 MAO → GIG</text>')
-    s.append(f'<text class="sub" x="{tx+70:.0f}" y="{ty-22:.0f}" text-anchor="middle">☾ Nachtflug · ca. 4 h</text>')
+    s.append(f'<text class="sub" x="{tx+70:.0f}" y="{ty-22:.0f}" text-anchor="middle">☾ LATAM · an 06:40</text>')
 
     def stop(pt, n, name, sub, dx=16, dy=0, anchor='start', proj=P, r_=15, frm='', to='', sid='', extra=''):
         x, y = proj(*pt)
