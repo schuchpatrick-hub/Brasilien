@@ -409,11 +409,14 @@
       "g": "all",
       "place": "Ilha Grande",
       "title": "Auf die Insel",
-      "stay": "Ilha Grande (noch offen)",
+      "stay": "Lonier Nature Inn, Vila do Abraão",
       "items": [
         {
           "text": "Uber zum Bootsanleger, dann Boot nach Vila do Abraão (voraussichtlich)",
           "unsicher": true
+        },
+        {
+          "text": "Check-in Lonier Nature Inn in Vila do Abraão (3 Zimmer für alle sechs, gebucht von Jonas)"
         },
         {
           "text": "Abends: Footvolley am Strand von Abraão"
@@ -425,7 +428,7 @@
       "g": "all",
       "place": "Ilha Grande",
       "title": "Inselzeit",
-      "stay": "Ilha Grande (noch offen)",
+      "stay": "Lonier Nature Inn, Vila do Abraão",
       "items": [
         {
           "text": "Idee: Traumstrand Lopes Mendes, mit Bootstaxi oder zu Fuß"
@@ -437,7 +440,7 @@
       "g": "all",
       "place": "Ilha Grande",
       "title": "Inselzeit",
-      "stay": "Ilha Grande (noch offen)",
+      "stay": "Lonier Nature Inn, Vila do Abraão",
       "items": [
         {
           "text": "Idee: Wanderung zur Cachoeira da Feiticeira oder Bootstour"
@@ -452,7 +455,7 @@
       "g": "all",
       "place": "Ilha Grande",
       "title": "Inselzeit",
-      "stay": "Ilha Grande (noch offen)",
+      "stay": "Lonier Nature Inn, Vila do Abraão",
       "items": [
         {
           "text": "Idee: Wanderung zum Strand von Palmas"
@@ -470,7 +473,7 @@
       "stay": "Nachtflug nach Rom",
       "items": [
         {
-          "text": "Früh mit dem Boot aufs Festland, dann mit Uber zum Flughafen Rio-Galeão (GIG), ca. 2,5–3 h. Spätestens gegen 12:30 am Flughafen sein",
+          "text": "Check-out Lonier Nature Inn. Früh mit dem Boot aufs Festland, dann mit Uber zum Flughafen Rio-Galeão (GIG), ca. 2,5–3 h. Spätestens gegen 12:30 am Flughafen sein",
           "unsicher": true
         },
         {
@@ -490,10 +493,11 @@
       "g": "b",
       "place": "Ilha Grande",
       "title": "Noch ein Inseltag",
-      "stay": "Ilha Grande (noch offen)",
+      "stay": "Ilha Grande, Nacht 20.–21.01. noch offen",
       "items": [
         {
-          "text": "Die Gringos plus 1 Cevapi reisen ab"
+          "text": "Die Gringos plus 1 Cevapi reisen ab. Die Buchung im Lonier Nature Inn endet am 20.01., für die Nacht auf den 21.01. fehlt noch eine Unterkunft",
+          "unsicher": true
         }
       ]
     },
@@ -581,15 +585,15 @@
       "to": "20270116"
     },
     {
-      "g": "a",
-      "name": "Ilha Grande, Vila do Abraão (noch offen)",
+      "g": "all",
+      "name": "Lonier Nature Inn, Vila do Abraão (Ilha Grande)",
       "from": "20270116",
       "to": "20270120"
     },
     {
       "g": "b",
-      "name": "Ilha Grande, Vila do Abraão (noch offen)",
-      "from": "20270116",
+      "name": "Ilha Grande, Vila do Abraão (Nacht 20.–21.01. noch offen)",
+      "from": "20270120",
       "to": "20270121"
     }
   ],
@@ -2094,13 +2098,25 @@
     {
       "label": "Ilha Grande",
       "a": {
-        "k": "open"
+        "v": 162.5,
+        "k": "fix"
       },
+      "b": {
+        "v": 162.5,
+        "k": "fix"
+      },
+      "cat": "stay",
+      "sub": "Lonier Nature Inn · 4 Nächte, 3 Zimmer · 975 € für 6",
+      "url": "https://www.booking.com/searchresults.html?ss=Lonier+Nature+Inn+Ilha+Grande"
+    },
+    {
+      "label": "Ilha Grande, 5. Nacht",
+      "a": null,
       "b": {
         "k": "open"
       },
       "cat": "stay",
-      "sub": "Vila do Abraão · 4/5 Nächte, noch nicht gebucht"
+      "sub": "20.–21.01., nur Daijo & Greisel · noch nicht gebucht"
     }
   ],
   "advent": [
@@ -3405,8 +3421,8 @@
         "g": "all",
         "stays": [
           {
-            "name": "noch offen (Vila do Abraão)",
-            "q": "Vila do Abraão, Ilha Grande"
+            "name": "Lonier Nature Inn (16.–20.01., 3 Zimmer); Nacht 20.–21.01. für Daijo & Greisel noch offen",
+            "q": "Lonier Nature Inn, Vila do Abraão, Ilha Grande"
           }
         ],
         "arrive": "16.01. Uber zum Bootsanleger, dann Boot nach Vila do Abraão 🟡",
@@ -10293,6 +10309,7 @@
     ]
   },
   "news": [
+    {"id": "n261103ilg", "d": "2026-11-03", "tab": "uebersicht", "to": "stationen", "e": "🏝️", "t": "Ilha Grande gebucht: Lonier Nature Inn in Vila do Abraão, 16.–20.01., 3 Zimmer für alle sechs (162,50 € p. P., gebucht von Jonas). Damit stehen alle Flüge und Unterkünfte, nur Daijo & Greisel brauchen noch etwas für die Nacht auf den 21.01."},
     {"id": "n261103mao", "d": "2026-11-03", "tab": "reise", "to": "fluege", "e": "🎉", "t": "Alle Flüge gebucht! Nachtflug Manaus → Rio am 14.01.: LATAM LA 3891, 01:45 → 06:40 (200,83 € p. P., gebucht von Greisel). Achtung Gepäck: kein Handgepäck-Trolley inklusive, nur ein Rucksack (45 × 35 × 20 cm) plus Koffer bis 23 kg"},
     {"id": "n261103gig", "d": "2026-11-03", "tab": "reise", "to": "fluege", "e": "✈️", "t": "Flug Rio → Foz do Iguaçu gebucht: Mi 06.01., GOL G3 1894, 12:55 → 15:15, direkt, mit Koffer bis 23 kg (325,83 € p. P., gebucht von Greisel). Damit haben Daijo & Greisel nach der Landung knapp 7 Stunden Puffer"},
     {"id": "n261103igu", "d": "2026-11-03", "tab": "reise", "to": "fluege", "e": "✈️", "t": "Flug Foz do Iguaçu → Manaus gebucht: Sa 09.01., Azul AD2407 + AD4056, 10:20 → 16:00 Ortszeit Manaus, 1 Umstieg (441 € p. P., gebucht von Greisel). Dazu am 13.01. noch einmal die Casa 307 als Zimmer bis zum Nachtflug (Check-in ab 14:00, gebucht von Jonas)"},
