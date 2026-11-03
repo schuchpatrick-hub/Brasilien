@@ -34,7 +34,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | 4b | **Amazonas: Juma Lodge** | 10.01. – 13.01. | 3 | alle | Juma Kabanas, „Nature Experience“ | ✅ |
 | – | Manaus → Nachtflug | 13.01. → 14.01. | 0 | alle | Casa 307 als Zimmer bis zum Nachtflug (Flug 01:45) | ✅ |
 | 5 | **Paraty** | 14.01. – 16.01. | 2 | alle | Geko Pousada Paraty | ✅ |
-| 6 | **Ilha Grande** (Vila do Abraão) | 16.01. – 20.01. (Gringos plus 1 Cevapi) / 21.01. (Daijo & Greisel) | 4 / 5 | alle | **noch offen** (Vorschlag: Balaio Hostel) | ⏳ |
+| 6 | **Ilha Grande** (Vila do Abraão) | 16.01. – 20.01. (Gringos plus 1 Cevapi) / 21.01. (Daijo & Greisel) | 4 / 5 | alle | Lonier Nature Inn (16.–20.01.) | ✅ (Daijo & Greisel: Nacht 20.–21.01. ⏳) |
 | – | Heimreise A: Rio-GIG 15:35 → Rom → München / Rio-Verlängerung B | 20.01. → 21.01. / ab 21.01. | | | | ✅ / ❓ |
 
 ---
@@ -56,7 +56,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | **Mi 13.01.** | Abfahrt von der Lodge 08:00, Ankunft Manaus ca. 11:00. **Ab 14:00 Zimmer in der Casa 307** (bis zum Nachtflug, gebucht von Jonas): Gepäck abstellen, duschen, ausruhen. Abends zum Flughafen (spätestens ca. 23:30 dort) |
 | **Do 14.01.** | **01:45 Nachtflug LATAM LA 3891 MAO → Rio-Galeão, an 06:40.** Danach mit **Uber** nach Paraty (ca. 4 h) |
 | 15.01. | Paraty: Bootstour zu Inseln und Schnorchelspots; alternativ Steinrutsche oder Trindade. Abends Live-Musik in der Altstadt |
-| **Sa 16.01.** | Nach Ilha Grande (Vila do Abraão): voraussichtlich **Uber zum Bootsanleger, dann Boot** 🟡 |
+| **Sa 16.01.** | Nach Ilha Grande (Vila do Abraão): voraussichtlich **Uber zum Bootsanleger, dann Boot** 🟡. Check-in **Lonier Nature Inn** |
 | 17.–19.01. | Lopes Mendes, Cachoeira da Feiticeira, Palmas, Bootstouren, Footvolley (Details unten) |
 | **Mi 20.01.** | Gringos plus 1 Cevapi: früh mit dem Boot aufs Festland, mit **Uber** zum Flughafen **Rio-Galeão (GIG)** (ca. 2,5–3 h), **15:35 Abflug GIG → Rom** (ITA Airways, Nachtflug) |
 | **Do 21.01.** | Gringos plus 1 Cevapi: **08:35 Rom → München** (AZ432), **Landung 10:10 in München**. Daijo & Greisel: weiter nach Rio (evtl. noch São Paulo), später Rückflug über São Paulo nach München |
@@ -98,7 +98,8 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | Manaus | **Casa 307** (dieselbe Unterkunft) | 13.–14.01. | Zimmer bis zum Nachtflug: Check-in 14:00–00:00, Check-out 03:30–11:00. Gepäck abstellen, duschen, ausruhen; Gepäck vor 14:00 abstellen? vorher fragen 🟡 | 14,17 € p. P. (85 € für 6) | Jonas (03.11.) |
 | Amazonas | [**Juma Kabanas: Nature Experience Package**](https://www.jumakabanas.com/package/nature-experience-package-3-nights/) (3 Nächte) | 10.–13.01. | Übernachtung, Essen, Abholung und Rückfahrt zum Hotel inklusive, Bar extra. Rückfahrt 13.01. um 08:00, in Manaus ca. 11:00 | 520 € p. P. | Buchungsnummer liegt bei Marco oder Greisel |
 | Paraty | [**Geko Pousada Paraty**](https://www.booking.com/Share-zfyVPQM), Av. Orlando Carpinelli 111, Pontal 🟡 | 14.–16.01. | 3 Zimmer für 6 Personen, **inkl. Frühstück**, Frühstück am Strand, **kostenlos stornierbar** | 526 € gesamt (88 € p. P., über Check24) | Daijo & Greisel (16.09.) |
-| Ilha Grande | **offen**, muss in **Vila do Abraão** liegen. Vorschlag: [Balaio Hostel](https://www.booking.com/Share-dnNyRa) | 16.–20.01. (Gringos plus 1 Cevapi) / 21.01. (Daijo & Greisel) | | – | – |
+| Ilha Grande | [**Lonier Nature Inn**](https://www.booking.com/searchresults.html?ss=Lonier+Nature+Inn+Ilha+Grande), Vila do Abraão (Adresse 🟡) | 16.–20.01. | 3 Zimmer für alle sechs | 162,50 € p. P. (975 € für 6) | Jonas (03.11.) |
+| Ilha Grande | **offen**: Nacht 20.–21.01. nur Daijo & Greisel | 20.–21.01. | | – | – |
 
 
 Adressen mit 🟡 stammen aus den Booking-Einträgen, bitte mit der Buchungsbestätigung abgleichen. Auf der Webseite gibt es je Unterkunft eine **Fahrer-Karte** (Ziel groß auf Portugiesisch zum Zeigen).
@@ -114,7 +115,7 @@ Adressen mit 🟡 stammen aus den Booking-Einträgen, bitte mit der Buchungsbest
 | 06.01. Rio GIG → Foz do Iguaçu IGU (gebucht) | 325,83 € | 325,83 € |
 | 09.01. Foz do Iguaçu IGU → Manaus MAO (gebucht) | 441 € | 441 € |
 | 14.01. Manaus MAO → Rio GIG (gebucht) | 200,83 € | 200,83 € |
-| **🛏️ Unterkünfte** | **1.118,67 €** + Ilha Grande | **711,17 €** + Ilha Grande |
+| **🛏️ Unterkünfte** | **1.281,17 €** | **873,67 €** + 1 Nacht Ilha Grande |
 | Guarujá, Casa Praiana (3 Nächte, 530 € für 4) | 132,50 € | – |
 | Rio, Tabas – Cena Carioca (6 Nächte, 1.100 € für 4) | 275 € | – |
 | Foz do Iguaçu, TuCasa Flats (3 Nächte) | 75 € | 75 € |
@@ -122,8 +123,9 @@ Adressen mit 🟡 stammen aus den Booking-Einträgen, bitte mit der Buchungsbest
 | Manaus, Casa 307 (13.–14.01., Zimmer bis zum Nachtflug, 85 € für 6) | 14,17 € | 14,17 € |
 | Juma Lodge (3 Nächte, alles inklusive außer Bar) | 520 € | 520 € |
 | Paraty, Geko Pousada (2 Nächte) | 88 € | 88 € |
-| Ilha Grande (4/5 Nächte) | offen | offen |
-| **Summe bekannt** | **3.327,33 €** + Ilha Grande | **2.978,83 €** + Ilha Grande |
+| Ilha Grande, Lonier Nature Inn (4 Nächte, 975 € für 6) | 162,50 € | 162,50 € |
+| Ilha Grande, Nacht 20.–21.01. | – | offen |
+| **Summe** | **3.489,83 €** | **3.141,33 €** + 1 Nacht Ilha Grande |
 
 Abgerechnet wird über **Splitwise**, mit zwei Gruppen: eine für die Gringos plus 1 Cevapi (Guarujá, Rio), eine für alle sechs.
 
@@ -133,7 +135,7 @@ Abgerechnet wird über **Splitwise**, mit zwei Gruppen: eine für die Gringos pl
 
 Transfers laufen per **Uber** (GRU → Guarujá, Rio → Paraty, zum Flughafen am Ende); Paraty → Ilha Grande voraussichtlich Uber + Boot.
 
-1. **Unterkunft Ilha Grande** in Vila do Abraão für 16.–20.01. bzw. 21.01. buchen.
+1. **Ilha Grande, Nacht 20.–21.01. (Daijo & Greisel):** Das Lonier Nature Inn ist nur bis 20.01. gebucht. Verlängern oder eine andere Unterkunft für die letzte Nacht suchen.
 2. **Nachtflug 14.01. (LATAM LA 3891):** Abflug **01:45** heißt, man muss **am Abend des 13.01.** am Flughafen sein. **Handgepäck ist nicht inklusive**, nur ein Rucksack (45 × 35 × 20 cm) unter dem Sitz plus Koffer bis 23 kg: so packen oder Handgepäck dazubuchen.
 3. **Rückreise 20.01. planen:** Abflug **15:35 ab Rio-Galeão (GIG)**. Von Vila do Abraão: Boot zum Festland plus ca. 2,5–3 h Uber, internationaler Flug also gegen 12:30 am Flughafen sein. Frühes Boot (ca. 07:00–08:00) heraussuchen.
 4. **Gepäck in Manaus:** Für den 13.01. ist jetzt ein Zimmer in der Casa 307 gebucht (Check-in ab 14:00, bis zum Nachtflug). Da die Casa 307 nur lagert, wenn eine weitere Nacht gebucht ist, und das jetzt der Fall ist: nachfragen, ob das große Gepäck vom 10. bis 13.01. dort bleiben kann, statt es mit in die Lodge zu nehmen.
