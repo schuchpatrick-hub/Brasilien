@@ -2043,13 +2043,15 @@
     {
       "label": "Manaus vor dem Nachtflug",
       "a": {
-        "k": "open"
+        "v": 14.17,
+        "k": "fix"
       },
       "b": {
-        "k": "open"
+        "v": 14.17,
+        "k": "fix"
       },
       "cat": "stay",
-      "sub": "Casa 307 · 13.–14.01., Zimmer bis zum Nachtflug · Preis fehlt noch",
+      "sub": "Casa 307 · 13.–14.01., Zimmer bis zum Nachtflug · 85 € für 6",
       "url": "https://www.booking.com/Share-xSVoEp"
     },
     {
