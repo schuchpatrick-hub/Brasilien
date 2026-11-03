@@ -81,7 +81,8 @@ def ics_old(path):
 
 def build_ics(trip, group, old=()):
     """Kalender einer Gruppe. Termine behalten ihre UID aus der bisherigen Datei (gleicher Tag + Titel,
-    sonst gleicher Tag + Beginn, sonst eindeutiger Titel an einem anderen Tag = verschoben); bei
+    sonst gleicher Tag + Beginn, sonst gleicher Tag + gleiches Symbol (je einziger Termin), sonst eindeutiger
+    Titel an einem anderen Tag = verschoben); bei
     geänderten Angaben steigt SEQUENCE und DTSTAMP/LAST-MODIFIED = Neubau. So übernehmen Kalender-Apps
     Änderungen beim erneuten Laden oder Abonnieren, statt Termine doppelt anzulegen."""
     import datetime
@@ -125,6 +126,14 @@ def build_ics(trip, group, old=()):
                 if o:
                     match[i] = o
                     free.remove(o)
+    emo = lambda body: key(body, 'SUMMARY').split(' ', 1)[0]
+    for i, e in enumerate(ev):   # gleicher Tag, gleiches Symbol (z. B. ✈), auf beiden Seiten das einzige: Termin wurde genauer (gebucht, Uhrzeit)
+        if match[i] is None:
+            day, em = key(e[2], 'DTSTART')[:8], emo(e[2])
+            cand = [o for o in free if kind(o) == e[0] and key(o['body'], 'DTSTART')[:8] == day and emo(o['body']) == em]
+            if len(cand) == 1 and sum(1 for j, x in enumerate(ev) if match[j] is None and key(x[2], 'DTSTART')[:8] == day and emo(x[2]) == em) == 1:
+                match[i] = cand[0]
+                free.remove(cand[0])
     for i, e in enumerate(ev):   # Termin auf einen anderen Tag verschoben: Titel ist auf beiden Seiten eindeutig
         if match[i] is None:
             sm = key(e[2], 'SUMMARY')
@@ -163,8 +172,8 @@ def browser():
 
 
 def launch(p):
-    exe = '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
-    return p.chromium.launch(executable_path=exe) if os.path.exists(exe) else p.chromium.launch()
+    exe = next((x for x in ('/opt/pw-browsers/chromium', '/opt/pw-browsers/chromium-1194/chrome-linux/chrome') if os.path.exists(x)), None)
+    return p.chromium.launch(executable_path=exe) if exe else p.chromium.launch()
 
 
 def render_png(sp, html_path, png_path):
@@ -254,7 +263,8 @@ def main():
 
     for g, fn in (('a', 'gringos-plus-1-cevapi.ics'), ('b', 'daijo-greisel.ics')):
         ics = build_ics(trip, g, ics_old(os.path.join(ROOT, 'kalender', fn)))
-        if not os.path.exists(os.path.join(ROOT, 'kalender', fn)) or ics != read('kalender', fn):
+        old = os.path.join(ROOT, 'kalender', fn)
+        if not os.path.exists(old) or ics != open(old, encoding='utf-8', newline='').read():
             write(ics, 'kalender', fn)
 
     sp = browser()

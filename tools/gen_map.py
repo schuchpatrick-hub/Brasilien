@@ -204,8 +204,8 @@ def build(standalone=False):
     s.append(f'<text class="tag ht" x="{tx-50:.0f}" y="{ty+62:.0f}" text-anchor="middle">06.01. GIG → IGU</text>')
     s.append(f'<text class="sub ht" x="{tx-50:.0f}" y="{ty+79:.0f}" text-anchor="middle">ca. 2 h · alle sechs</text>')
     tx, ty = (i[0]+m[0])/2, (i[1]+m[1])/2
-    s.append(f'<text class="tag" x="{tx-118:.0f}" y="{ty+10:.0f}" text-anchor="middle">09.01. IGU → MAO</text>')
-    s.append(f'<text class="sub" x="{tx-118:.0f}" y="{ty+28:.0f}" text-anchor="middle">mit Umstieg · ca. 6–8 h</text>')
+    s.append(f'<text class="tag" x="{tx-185:.0f}" y="{ty+10:.0f}" text-anchor="middle">09.01. IGU → MAO</text>')
+    s.append(f'<text class="sub" x="{tx-185:.0f}" y="{ty+28:.0f}" text-anchor="middle">Azul · 10:20 → 16:00 · 1 Umstieg</text>')
     tx, ty = (m[0]+r[0])/2, (m[1]+r[1])/2
     s.append(f'<text class="tag" x="{tx+70:.0f}" y="{ty-40:.0f}" text-anchor="middle">14.01. 01:45 MAO → GIG</text>')
     s.append(f'<text class="sub" x="{tx+70:.0f}" y="{ty-22:.0f}" text-anchor="middle">☾ Nachtflug · ca. 4 h</text>')
