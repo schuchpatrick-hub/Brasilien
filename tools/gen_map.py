@@ -201,8 +201,8 @@ def build(standalone=False):
         c, mk = fcls(d0, f0)
         s.append(f'<path class="{c}" data-d="{d0}" marker-end="url(#{mk})" d="{arc(a_, b_, bd)}"/>')
     tx, ty = (r[0]+i[0])/2, (r[1]+i[1])/2
-    s.append(f'<text class="tag ht" x="{tx-50:.0f}" y="{ty+62:.0f}" text-anchor="middle">06.01. GIG → IGU</text>')
-    s.append(f'<text class="sub ht" x="{tx-50:.0f}" y="{ty+79:.0f}" text-anchor="middle">ca. 2 h · alle sechs</text>')
+    s.append(f'<text class="tag ht" x="{tx-72:.0f}" y="{ty+62:.0f}" text-anchor="middle">06.01. GIG → IGU</text>')
+    s.append(f'<text class="sub ht" x="{tx-72:.0f}" y="{ty+79:.0f}" text-anchor="middle">GOL · 12:55 → 15:15</text>')
     tx, ty = (i[0]+m[0])/2, (i[1]+m[1])/2
     s.append(f'<text class="tag" x="{tx-185:.0f}" y="{ty+10:.0f}" text-anchor="middle">09.01. IGU → MAO</text>')
     s.append(f'<text class="sub" x="{tx-185:.0f}" y="{ty+28:.0f}" text-anchor="middle">Azul · 10:20 → 16:00 · 1 Umstieg</text>')
