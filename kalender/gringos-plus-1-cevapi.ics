@@ -88,14 +88,16 @@ DESCRIPTION:Brasilien 26/27
 END:VEVENT
 BEGIN:VEVENT
 UID:2027-01-14-0-a@brasilien-26-27
-DTSTAMP:20260930T120000Z
-LAST-MODIFIED:20260930T120000Z
-SEQUENCE:0
+DTSTAMP:20261103T201142Z
+LAST-MODIFIED:20261103T201142Z
+SEQUENCE:1
 DTSTART:20270114T054500Z
 DTEND:20270114T094000Z
-SUMMARY:✈ MAO 01:45 → GIG 06:40 (Nachtflug)
-DESCRIPTION:Achtung: Abflug in der Nacht vom 13. auf den 14.01. Noch nicht 
- gebucht (Stand 30.09.). – Brasilien 26/27
+SUMMARY:✈ LA 3891 MAO 01:45 → GIG 06:40 (Nachtflug)
+DESCRIPTION:LATAM Airlines\, LA 3891\, Economy\, Direktflug\, 3 h 55 min. G
+ ebucht von Greisel für alle sechs. Abflug in der Nacht vom 13. auf den 14
+ .01. Handgepäck ist nicht inklusive: nur ein persönlicher Gegenstand (Ru
+ cksack\, 45 × 35 × 20 cm) plus 1 Koffer bis 23 kg. – Brasilien 26/27
 END:VEVENT
 BEGIN:VEVENT
 UID:2027-01-20-1-a@brasilien-26-27

@@ -304,8 +304,8 @@ function renderToday() {
   el.innerHTML = html;
   const hf = document.getElementById('hf-open');
   const nOpen = (TRIP.flights || []).filter(f => f.status === 'open').length, hot = document.getElementById('hf-ot');
-  if (hf) hf.textContent = nOpen;
-  if (hot) hot.textContent = nOpen === 1 ? ' Flug noch offen' : ' Flüge noch offen';
+  if (hf) { hf.textContent = nOpen; hf.hidden = !nOpen; }
+  if (hot) hot.textContent = !nOpen ? 'alle Flüge gebucht ✅' : nOpen === 1 ? ' Flug noch offen' : ' Flüge noch offen';
   const hn = document.getElementById('hf-n');
   if (hn) hn.innerHTML = G === 'b' ? '<b>16+</b> Nächte (2 im Flieger, Rio-Verlängerung offen)' : '<b>25</b> Nächte (3 davon im Flieger)';
 }
