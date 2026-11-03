@@ -48,7 +48,7 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | 29.–30.12. | Strand an der Praia da Enseada, Footvolley-Netze direkt vor der Tür |
 | **Do 31.12.** | Ca. 08:30 mit **Uber** von Guarujá nach São Paulo-**Congonhas (CGH)** (ca. 1,5–2 h). **11:50 Flug GOL G3 1016 → Rio-Santos Dumont (SDU), an 12:50**. Achtung: nicht die internationalen Flughäfen GRU/GIG. Check-in Tabas – Cena Carioca. Abends **Silvester an der Copacabana, Dresscode ganz in Weiß** |
 | 01.–05.01. | Rio: Copacabana/Ipanema, Christusstatue, Zuckerhut, Rodízio, Maracanã, Vidigal, Santa Teresa & Lapa, lokale Strände (Details unten) |
-| **Mi 06.01.** | Daijo & Greisel landen ca. **06:10 in Rio-Galeão (GIG)**. Treffpunkt GIG, gemeinsamer Flug GIG → Foz do Iguaçu (IGU) ca. **10:40** |
+| **Mi 06.01.** | Daijo & Greisel landen ca. **06:10 in Rio-Galeão (GIG)**. Gringos gegen 10:30 mit **Uber** zum GIG. **12:55 Flug GOL G3 1894 → Foz do Iguaçu (IGU), an 15:15**, alle sechs zusammen. Uber zu den TuCasa Flats |
 | 07.–08.01. | Iguaçu-Fälle: brasilianische und argentinische Seite (Reisepass mitnehmen!), Ideen siehe Tipps vor Ort |
 | **Sa 09.01.** | Ca. 08:30 mit **Uber** zum Flughafen IGU. **10:20 Flug Azul AD2407 + AD4056 → Manaus (MAO), 1 Umstieg, an 16:00 Ortszeit Manaus**. 1 Nacht in der Casa 307 |
 | **So 10.01.** | Abholung am Hotel zur **Juma Lodge** (3 Nächte, alles inklusive außer Bar) |
@@ -74,12 +74,12 @@ Ab dem **06.01.** reisen alle sechs zusammen, bis sich die Gruppen auf der Ilha 
 | Daijo & Greisel | MUC → Frankfurt → Rio GIG | an 06.01.27, 06:10 | | 1.300 € | ✅ |
 | Daijo & Greisel | Rio → São Paulo (Umstieg) → MUC | nach dem 21.01. | Datum im Chat nicht genannt | inkl. | ✅ |
 
-### Inlandsflüge (Stand 03.11.: CGH → SDU und IGU → MAO gebucht, Nr. 2 und 4 noch **nicht gebucht**)
+### Inlandsflüge (Stand 03.11.: Nr. 1–3 gebucht, Nr. 4 MAO → GIG noch **nicht gebucht**)
 
 | # | Datum | Strecke | Uhrzeit | Wer | Richtpreis* | Status |
 |---|---|---|---|---|---|---|
 | 1 | 31.12. | São Paulo **CGH** → Rio **SDU** (GOL **G3 1016**, Boeing 737-800, Economy) | **11:50 → 12:50** | A | 121 € (483,92 € für 4) | ✅ gebucht am 05.10. über Trip.com (Patrick); Freigepäck prüfen 🟡 |
-| 2 | 06.01. | Rio **GIG** → Foz do Iguaçu **IGU** | ca. 10:40 | alle 6 | ca. 140 € | ⏳ |
+| 2 | 06.01. | Rio **GIG** → Foz do Iguaçu **IGU** (GOL **G3 1894**, direkt; Gepäck p. P.: 10 kg + 12 kg Handgepäck, 23 kg Koffer) | **12:55 → 15:15** | alle 6 | 325,83 € (1.955 € für 6) | ✅ gebucht am 03.11. über Kiwi.com (Greisel) |
 | 3 | 09.01. | **IGU** → Manaus **MAO** (Azul **AD2407 + AD4056**, 1 Umstieg ❓ wo, Economy, Tarif „Mais Azul“) | **10:20 → 16:00** (Ortszeit, 6 h 40 min) | alle 6 | 441 € (2.646 € für 6) | ✅ gebucht am 03.11. über Booking.com (Greisel); Freigepäck laut Tarif prüfen 🟡 |
 | 4 | **14.01.** | **MAO** → Rio **GIG** | **01:45** (an 06:40) | alle 6 | ca. 190 € | ⏳ |
 
@@ -108,10 +108,10 @@ Adressen mit 🟡 stammen aus den Booking-Einträgen, bitte mit der Buchungsbest
 
 | Posten | Gringos plus 1 Cevapi | Daijo & Greisel |
 |---|---:|---:|
-| **✈️ Flüge** | **2.012 €** | **ca. 2.071 €** |
+| **✈️ Flüge** | **ca. 2.198 €** | **ca. 2.257 €** |
 | Langstrecke Europa ⇄ Brasilien | 1.120 € | 1.300 € |
 | 31.12. São Paulo CGH → Rio SDU (gebucht) | 121 € | – |
-| 06.01. Rio GIG → Foz do Iguaçu IGU (Richtpreis) | ca. 140 € | ca. 140 € |
+| 06.01. Rio GIG → Foz do Iguaçu IGU (gebucht) | 325,83 € | 325,83 € |
 | 09.01. Foz do Iguaçu IGU → Manaus MAO (gebucht) | 441 € | 441 € |
 | 14.01. Manaus MAO → Rio GIG (Richtpreis) | ca. 190 € | ca. 190 € |
 | **🛏️ Unterkünfte** | **1.118,67 €** + Ilha Grande | **711,17 €** + Ilha Grande |
@@ -123,7 +123,7 @@ Adressen mit 🟡 stammen aus den Booking-Einträgen, bitte mit der Buchungsbest
 | Juma Lodge (3 Nächte, alles inklusive außer Bar) | 520 € | 520 € |
 | Paraty, Geko Pousada (2 Nächte) | 88 € | 88 € |
 | Ilha Grande (4/5 Nächte) | offen | offen |
-| **Summe bekannt** | **ca. 3.130 €** + offene Posten | **ca. 2.780 €** + offene Posten |
+| **Summe bekannt** | **ca. 3.320 €** + offene Posten | **ca. 2.970 €** + offene Posten |
 
 Abgerechnet wird über **Splitwise**, mit zwei Gruppen: eine für die Gringos plus 1 Cevapi (Guarujá, Rio), eine für alle sechs.
 
@@ -133,11 +133,11 @@ Abgerechnet wird über **Splitwise**, mit zwei Gruppen: eine für die Gringos pl
 
 Transfers laufen per **Uber** (GRU → Guarujá, Rio → Paraty, zum Flughafen am Ende); Paraty → Ilha Grande voraussichtlich Uber + Boot.
 
-1. **Inlandsflüge buchen:** IGU → MAO ist gebucht (03.11.), offen sind noch GIG → IGU (06.01.) und MAO → GIG (14.01.). Beim Nachtflug Manaus → Rio aufpassen: **Abflug 14.01. um 01:45** heißt, man muss **am Abend des 13.01.** am Flughafen sein.
+1. **Inlandsflüge buchen:** GIG → IGU und IGU → MAO sind gebucht (03.11.), offen ist noch MAO → GIG (14.01.). Beim Nachtflug Manaus → Rio aufpassen: **Abflug 14.01. um 01:45** heißt, man muss **am Abend des 13.01.** am Flughafen sein.
 2. **Unterkunft Ilha Grande** in Vila do Abraão für 16.–20.01. bzw. 21.01. buchen.
 3. **Rückreise 20.01. planen:** Abflug **15:35 ab Rio-Galeão (GIG)**. Von Vila do Abraão: Boot zum Festland plus ca. 2,5–3 h Uber, internationaler Flug also gegen 12:30 am Flughafen sein. Frühes Boot (ca. 07:00–08:00) heraussuchen.
 4. **Gepäck in Manaus:** Für den 13.01. ist jetzt ein Zimmer in der Casa 307 gebucht (Check-in ab 14:00, bis zum Nachtflug). Da die Casa 307 nur lagert, wenn eine weitere Nacht gebucht ist, und das jetzt der Fall ist: nachfragen, ob das große Gepäck vom 10. bis 13.01. dort bleiben kann, statt es mit in die Lodge zu nehmen.
-5. **Umstieg am 06.01. (Daijo & Greisel):** Landung 06:10, Weiterflug 10:40 auf getrennten Tickets. Wenn der Flieger aus Frankfurt Verspätung hat, gibt es keinen Anspruch auf Umbuchung, also am besten einen flexiblen Tarif wählen.
+5. **Umstieg am 06.01. (Daijo & Greisel):** Landung 06:10, Weiterflug 12:55 auf getrennten Tickets, also knapp 7 h Puffer. Bei Verspätung aus Frankfurt gibt es keinen Anspruch auf Umbuchung.
 6. **Silvester-Outfit:** komplett weiß.
 
 ---

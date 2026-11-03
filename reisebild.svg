@@ -41,11 +41,11 @@
 <path class="fl flB" data-d="2027-01-06" marker-end="url(#arrB)" d="M1123.0,600.0 Q939.7,666.4 745.9,687.6"/>
 <text class="tag ht tagB" x="1119" y="588" text-anchor="end">06.01. MUC → FRA → GIG</text>
 <text class="sub ht" x="1119" y="570" text-anchor="end">☾ nur Daijo &amp; Greisel · an 06:10</text>
-<path class="fl open" data-d="2027-01-06" marker-end="url(#arrO)" d="M733.9,691.6 Q593.1,667.2 480.0,754.5"/>
+<path class="fl" data-d="2027-01-06" marker-end="url(#arr)" d="M733.9,691.6 Q593.1,667.2 480.0,754.5"/>
 <path class="fl" data-d="2027-01-09" marker-end="url(#arr)" d="M480.0,754.5 Q502.2,475.1 358.1,234.8"/>
 <path class="fl open" data-d="2027-01-14" marker-end="url(#arrO)" d="M358.1,234.8 Q482.1,515.8 733.9,691.6"/>
-<text class="tag ht" x="557" y="785" text-anchor="middle">06.01. GIG → IGU</text>
-<text class="sub ht" x="557" y="802" text-anchor="middle">ca. 2 h · alle sechs</text>
+<text class="tag ht" x="535" y="785" text-anchor="middle">06.01. GIG → IGU</text>
+<text class="sub ht" x="535" y="802" text-anchor="middle">GOL · 12:55 → 15:15</text>
 <text class="tag" x="234" y="505" text-anchor="middle">09.01. IGU → MAO</text>
 <text class="sub" x="234" y="523" text-anchor="middle">Azul · 10:20 → 16:00 · 1 Umstieg</text>
 <text class="tag" x="616" y="423" text-anchor="middle">14.01. 01:45 MAO → GIG</text>

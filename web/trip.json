@@ -228,15 +228,21 @@
           }
         },
         {
-          "time": "10:40",
-          "text": "Treffpunkt GIG, gemeinsamer Flug GIG → Foz do Iguaçu (IGU), noch nicht gebucht",
-          "unsicher": true,
+          "time": "ca. 10:30",
+          "text": "Gringos: Check-out Tabas (bis 11:00), mit Uber zum Flughafen Galeão (GIG), ca. 30–45 min. Daijo & Greisel warten dort"
+        },
+        {
+          "time": "12:55",
+          "text": "Flug GOL G3 1894 Rio-Galeão (GIG) → Foz do Iguaçu (IGU), alle sechs zusammen, an 15:15",
           "ics": {
-            "summary": "✈ GIG → IGU (geplant ca. 10:40)",
-            "start": "20270106T134000Z",
-            "end": "20270106T155000Z",
-            "desc": "Noch nicht gebucht (Stand 30.09.). Uhrzeit laut Planung."
+            "summary": "✈ G3 1894 GIG 12:55 → IGU 15:15",
+            "start": "20270106T155500Z",
+            "end": "20270106T181500Z",
+            "desc": "GOL Linhas Aéreas, G3 1894, Direktflug, 2 h 20 min. Gebucht von Greisel über Kiwi.com für alle sechs. Gepäck p. P.: 1 persönlicher Gegenstand (10 kg), 1 Handgepäck (12 kg), 1 Koffer (23 kg)."
           }
+        },
+        {
+          "text": "Mit Uber zu den TuCasa Flats (Centro, ca. 20 min), Check-in ab 14:00"
         }
       ]
     },
@@ -1845,12 +1851,14 @@
       "to": "IGU",
       "fromCity": "Rio (Galeão)",
       "toCity": "Foz do Iguaçu",
-      "time": "ca. 10:40",
-      "dur": "ca. 2 h",
-      "price": "ca. 140 €",
-      "status": "open",
-      "statusText": "noch nicht gebucht",
-      "warn": "Daijo & Greisel landen um 06:10 auf einem getrennten Ticket: flexiblen Tarif wählen, falls Frankfurt Verspätung hat.",
+      "time": "12:55 → 15:15",
+      "timeUnsure": false,
+      "dur": "2 h 20 min · GOL G3 1894, direkt",
+      "price": "325,83 €",
+      "status": "booked",
+      "statusText": "gebucht am 03.11.",
+      "warn": "Daijo & Greisel landen um 06:10 auf einem getrennten Ticket: knapp 7 h Puffer, falls Frankfurt Verspätung hat.",
+      "note": "GOL Linhas Aéreas, Direktflug. Gebucht über Kiwi.com von Greisel für alle sechs (1.955 € gesamt). Gepäck pro Person: 1 persönlicher Gegenstand (22 × 32 × 43 cm, 10 kg), 1 Handgepäck (25 × 35 × 55 cm, 12 kg), 1 Koffer (23 kg).",
       "from": "GIG"
     },
     {
@@ -1954,14 +1962,14 @@
     {
       "label": "06.01. Rio GIG → Foz do Iguaçu IGU",
       "cat": "flug",
-      "sub": "ca. 10:40, alle sechs · noch nicht gebucht (Richtpreis)",
+      "sub": "GOL G3 1894 · 1.955 € für 6, gebucht",
       "a": {
-        "v": 140,
-        "k": "ca"
+        "v": 325.83,
+        "k": "fix"
       },
       "b": {
-        "v": 140,
-        "k": "ca"
+        "v": 325.83,
+        "k": "fix"
       }
     },
     {
@@ -3266,7 +3274,7 @@
             }
           }
         ],
-        "arrive": "06.01. Flug GIG → IGU ca. 10:40, alle sechs zusammen.",
+        "arrive": "06.01. Flug GOL G3 1894 GIG 12:55 → IGU 15:15, alle sechs zusammen.",
         "hl": [
           {
             "t": "Wasserfälle, brasilianische Seite",
@@ -10284,6 +10292,7 @@
     ]
   },
   "news": [
+    {"id": "n261103gig", "d": "2026-11-03", "tab": "reise", "to": "fluege", "e": "✈️", "t": "Flug Rio → Foz do Iguaçu gebucht: Mi 06.01., GOL G3 1894, 12:55 → 15:15, direkt, mit Koffer bis 23 kg (325,83 € p. P., gebucht von Greisel). Damit haben Daijo & Greisel nach der Landung knapp 7 Stunden Puffer"},
     {"id": "n261103igu", "d": "2026-11-03", "tab": "reise", "to": "fluege", "e": "✈️", "t": "Flug Foz do Iguaçu → Manaus gebucht: Sa 09.01., Azul AD2407 + AD4056, 10:20 → 16:00 Ortszeit Manaus, 1 Umstieg (441 € p. P., gebucht von Greisel). Dazu am 13.01. noch einmal die Casa 307 als Zimmer bis zum Nachtflug (Check-in ab 14:00, gebucht von Jonas)"},
     {"id": "n251012cal", "d": "2026-10-12", "tab": "downloads", "to": "downloads", "e": "📅", "t": "Reisekalender jetzt zum Abonnieren: Unter Downloads „iPhone abonnieren“ oder „Google Kalender“ tippen, dann kommen neue Flüge, geänderte Uhrzeiten und gestrichene Termine von selbst aufs Handy. Wer die Datei früher nur importiert hat: einmal abonnieren und die importierten Termine löschen, sonst stehen sie doppelt drin"},
     {"id": "n251012pg", "d": "2026-10-12", "tab": "unterwegs-tab", "to": "rechner", "e": "🩺", "t": "Großer Seiten-Check: Im Real-Rechner ersetzt die erste Ziffer jetzt den vorgegebenen Betrag (vorher wurde aus 125 schnell 50125). Die Flüge springen am Reisetag erst nach dem Abflug zum nächsten Flug. Drinks-Tabelle und Karten rechnen bei vielen Einträgen dreimal so schnell. Die Filme laden erst, wenn du gerade nicht scrollst, und die kleinen Klappkästen sind leichter zu treffen"},
